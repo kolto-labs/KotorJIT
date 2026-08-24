@@ -3,6 +3,10 @@
 
 "OnScriptLoad",
 "OnScriptUnload",
+"OnConsoleCommand",
+"OnRunScriptDone",
+"OnSave",
+"OnLoad",
 "OnTick",
 "OnRunScript",
 "OnDialogConditional",

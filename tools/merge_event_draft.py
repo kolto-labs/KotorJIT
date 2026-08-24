@@ -29,8 +29,14 @@ ROOT = Path(__file__).resolve().parent.parent
 DRAFT = ROOT / "data" / "events.draft.toml"
 OUT = ROOT / "data" / "events.toml"
 
-# Events the runtime raises itself. They are not in the draft because they have
-# no counterpart in the game's own dispatch.
+# Events the runtime raises itself. They are not in the draft because the draft
+# was derived from the game's own event dispatch, and these have no counterpart
+# there -- they come from our hooks, or from the runtime's own lifecycle.
+#
+# An earlier merge dropped everything not in the draft, which silently disabled
+# console dispatch: the runtime raised OnConsoleCommand, the name was absent
+# from callbacks.inc, and Host::dispatch skips any callback a script is not
+# recorded as defining. Nothing errored; the event simply never fired.
 RUNTIME_EVENTS = """
 [[event]]
 lua_name = "OnScriptLoad"
@@ -56,6 +62,59 @@ blocking = false
 engine_return = "Passthrough"
 confidence = "high"
 doc = "Called before the script is unloaded, including on reload and on quarantine."
+
+[[event]]
+lua_name = "OnConsoleCommand"
+hook_site = "console.do_console"
+args = [{ name = "line", type = "string" }]
+returns = ["bool"]
+fallback = "true"
+blocking = true
+engine_return = "ReportSuccess"
+confidence = "high"
+doc = \"\"\"Called for every line typed into the cheat console, including lines the
+game does not recognise. Return false to consume the line so the game never sees it,
+which is how a script adds its own commands. The console hook receives one keystroke
+at a time and buffers to a line, so this fires on Enter.\"\"\"
+
+[[event]]
+lua_name = "OnRunScriptDone"
+hook_site = "vm.run_script"
+args = [
+  { name = "script_name", type = "string" },
+  { name = "object_id",   type = "object" },
+  { name = "ran",         type = "bool"   },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = \"\"\"Called after an NWScript finishes. `ran` is the engine's own return value:
+true when the script loaded and ran with a balanced stack.\"\"\"
+
+[[event]]
+lua_name = "OnSave"
+hook_site = "vm.save_script_situation"
+args = []
+returns = ["string"]
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "medium"
+doc = \"\"\"Return a string to persist alongside the save. It comes back to OnLoad when
+that save is loaded.\"\"\"
+
+[[event]]
+lua_name = "OnLoad"
+hook_site = "vm.load_script_situation"
+args = [{ name = "state", type = "string" }]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "medium"
+doc = "Receives whatever OnSave returned when this save was written."
 
 [[event]]
 lua_name = "OnTick"
@@ -116,7 +175,8 @@ def main() -> int:
     events = draft.get("event", [])
 
     out = [HEADER, RUNTIME_EVENTS.strip(), ""]
-    seen = {"OnScriptLoad", "OnScriptUnload", "OnTick"}
+    seen = {"OnScriptLoad", "OnScriptUnload", "OnTick", "OnConsoleCommand",
+            "OnRunScriptDone", "OnSave", "OnLoad"}
     kept = skipped = 0
 
     for e in events:
