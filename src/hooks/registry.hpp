@@ -53,6 +53,10 @@ struct Site {
     bool           resolved = false;   // false when the generator could not bind it
     std::uintptr_t addr = 0;           // absolute VA, as recorded against image_base
     double         confidence = 0.0;
+    // Bytes the generator read at this address from a plaintext reference image.
+    // The hook engine verifies against these before patching, so a stale table
+    // or a mismatched build fails at the site instead of corrupting it.
+    std::vector<std::uint8_t> expected;
 };
 
 // A parsed data/addresses/<build>.json.
@@ -89,14 +93,10 @@ private:
 struct HookRequest {
     std::string               site;    // logical name
     void*                     detour = nullptr;
-    // Bytes the caller expects to find at the site. Empty means "do not verify",
-    // which is a weaker guarantee and should be the exception.
-    //
-    // KNOWN GAP: the generated address tables carry no expected-bytes field
-    // today, so this cannot be data-driven yet and every caller supplies its own
-    // pattern. Filling it belongs to the table generator, which should emit at
-    // least the site's full displaced prologue -- verification is only as wide
-    // as the pattern, so a short pattern leaves relocated bytes unchecked.
+    // Bytes the caller expects to find at the site. Leave empty to use the ones
+    // the address table recorded, which is the normal case and the stronger
+    // guarantee -- the generator writes the site's full displaced prologue, and
+    // verification is only as wide as the pattern it is given.
     std::vector<std::uint8_t> expect;
 };
 
