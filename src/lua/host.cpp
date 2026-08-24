@@ -35,8 +35,10 @@ int traceback_handler(lua_State* L) {
 
 // ---------------------------------------------------------------- Script ----
 
-Script::Script(std::string name, std::string path)
-    : name_(std::move(name)), path_(std::move(path)) {}
+Script::Script(std::string name, std::string path,
+               const std::function<void(lua_State*)>* on_state_created)
+    : name_(std::move(name)), path_(std::move(path)),
+      on_state_created_(on_state_created) {}
 
 Script::~Script() { unload(); }
 
@@ -64,10 +66,25 @@ bool Script::load(std::string& error) {
     if (!L_) { error = "out of memory creating lua state"; state_ = ScriptState::FailedToLoad; return false; }
     luaL_openlibs(L_);
 
+    // debug.getmetatable and debug.setmetatable bypass a protected __metatable
+    // field, which is the only thing stopping a script from replacing the
+    // metatable on a userdata handle and hijacking every field access through
+    // it. Nothing legitimate here needs them, so they go before any script
+    // chunk runs. The rest of the debug library stays: tracebacks come from it.
+    lua_getglobal(L_, "debug");
+    if (lua_istable(L_, -1)) {
+        lua_pushnil(L_); lua_setfield(L_, -2, "getmetatable");
+        lua_pushnil(L_); lua_setfield(L_, -2, "setmetatable");
+        lua_pushnil(L_); lua_setfield(L_, -2, "getregistry");
+    }
+    lua_pop(L_, 1);
+
     // Let host functions find us again from a bare lua_State.
     lua_pushlightuserdata(L_, const_cast<char*>(&kOwnerKey));
     lua_pushlightuserdata(L_, this);
     lua_rawset(L_, LUA_REGISTRYINDEX);
+
+    if (on_state_created_ && *on_state_created_) (*on_state_created_)(L_);
 
     if (luaL_loadfile(L_, path_.c_str()) != 0) {
         error = lua_tostring(L_, -1) ? lua_tostring(L_, -1) : "load failed";
@@ -154,7 +171,8 @@ void Host::sort_scripts() {
 }
 
 bool Host::load_one(const std::string& path, std::string& error) {
-    auto s = std::make_unique<Script>(fs::path(path).stem().string(), path);
+    auto s = std::make_unique<Script>(fs::path(path).stem().string(), path,
+                                     &cfg_.on_state_created);
     if (!s->load(error)) return false;
     scripts_.push_back(std::move(s));
     sort_scripts();

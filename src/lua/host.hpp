@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_set>
@@ -44,7 +45,10 @@ struct ScriptError {
 
 class Script {
 public:
-    Script(std::string name, std::string path);
+    // `on_state_created` is borrowed from the owning Host's config and may be
+    // null. It outlives every Script the Host holds.
+    Script(std::string name, std::string path,
+           const std::function<void(lua_State*)>* on_state_created = nullptr);
     ~Script();
 
     Script(const Script&) = delete;
@@ -91,12 +95,23 @@ private:
     int         priority_ = 0;
     std::unordered_set<std::string> defined_;
     std::vector<ScriptError> errors_;
+    const std::function<void(lua_State*)>* on_state_created_ = nullptr;
 };
 
 struct HostConfig {
     std::string script_dir;
     unsigned    error_budget = 8;   // errors in one callback before quarantine
     bool        hot_reload = true;
+
+    // Called on each freshly created lua_State, after the standard libraries
+    // are open and before the script's own chunk runs.
+    //
+    // This exists so the host stays domain-free. Calling the game's API
+    // registration from here directly would make src/lua/ depend on src/api/,
+    // and this host is otherwise usable by anything that wants prioritised,
+    // arbitrated Lua callbacks. The runtime installs the hook; the host never
+    // learns what it does.
+    std::function<void(lua_State*)> on_state_created;
 };
 
 class Host {
