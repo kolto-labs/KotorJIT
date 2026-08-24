@@ -9,6 +9,7 @@
   "identity": {
     "sha256": "34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88"
   },
+  "format_kind": "pe",
   "note": "Steam build. .text is ciphertext on disk; identical to GOG once deciphered.",
   "adjudicated_bindings": 0,
   "sites": {

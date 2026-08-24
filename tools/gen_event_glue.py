@@ -106,14 +106,27 @@ def gen_docs(events: list[dict]) -> str:
     for e in events:
         by_conf.setdefault(e.get("confidence", "low"), []).append(e)
 
+    # The worked example is built from a real row, not typed out. A hand-written
+    # sample drifts the moment an event is renamed, and it drifts in the one
+    # artifact script authors actually copy from -- which is a quieter version
+    # of the bug this whole generated-from-one-table arrangement exists to stop.
+    sample = next((e for e in events if e["hook_site"] == "vm.run_script"
+                   and e.get("blocking")), None) or events[0]
+    sample_args = [a["name"] for a in sample.get("args", [])] + ["relevant"]
+    sample_sig = f'function {sample["lua_name"]}({", ".join(sample_args)})'
+    first_arg = sample_args[0] if sample_args else "arg"
+
     L = ["# Lua API reference", "",
          "Generated from `data/events.toml`. Do not edit by hand.", "",
          "## How to write a script", "",
          "Define only the callbacks you want. Anything you leave out costs nothing.",
          "", "```lua", "priority = 10   -- optional; higher runs first, ties break on filename",
-         "", "function OnScriptEvent(script, object, relevant)",
-         '    if script == "k_def_heartbeat01" then return false end',
+         "", sample_sig,
+         f'    if {first_arg} == "k_def_heartbeat01" then return false end',
          "end", "```", "",
+         "The trailing `relevant` argument always comes last, after every argument",
+         "the event declares. It is false when another script has already decided",
+         "the outcome.", "",
          "## When several scripts answer the same event", "",
          "Every script that defines the callback is called, in priority order. The first",
          "one to return a usable value decides the outcome. Later scripts still run, and",

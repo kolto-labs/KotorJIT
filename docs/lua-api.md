@@ -9,10 +9,14 @@ Define only the callbacks you want. Anything you leave out costs nothing.
 ```lua
 priority = 10   -- optional; higher runs first, ties break on filename
 
-function OnScriptEvent(script, object, relevant)
-    if script == "k_def_heartbeat01" then return false end
+function OnRunScript(script_name, object_id, has_object, relevant)
+    if script_name == "k_def_heartbeat01" then return false end
 end
 ```
+
+The trailing `relevant` argument always comes last, after every argument
+the event declares. It is false when another script has already decided
+the outcome.
 
 ## When several scripts answer the same event
 
