@@ -1,0 +1,140 @@
+# Two naming dialects for one API.
+#
+# Scripts for this kind of runtime were written against one of two Halo server
+# mods, and the two never agreed on names. One writes `readbyte`, `getplayer`,
+# `say`; the other writes `read_byte`, `get_player`, `say_all`. Existing scripts
+# and existing habits are split down that line, and a compatibility shim written
+# in Lua -- which is how people currently paper over it -- costs a table lookup
+# on every call and breaks whenever either side changes.
+#
+# So both dialects are native here. Every entry below is an alias installed
+# alongside the canonical name, pointing at the same C function. A script author
+# uses whichever they already know, and mixing them in one file is fine.
+#
+# `dialect` records where a name comes from, so the reference can say so and a
+# script can ask. It does not restrict anything: every alias is always present.
+#
+#   canonical  the name this runtime documents
+#   alias      the name being added
+#   dialect    "phasor" | "sapp" | "both"
+#   note       only when the mapping is not a straight rename
+
+version = 1
+
+# The alias list below runs in this order: raw memory (the largest group by call
+# volume, where one dialect concatenates and the other underscores), then output,
+# then entities and objects, then miscellany.
+#
+# Output collapses hardest. KOTOR is one machine, so the server-to-client
+# distinctions the two mods drew -- say vs say_all vs rprint vs privatesay --
+# all reach either the log or the in-game console here.
+#
+# --- events -------------------------------------------------------------------
+#
+# The two dialects disagree about more than names here. One expects a script to
+# define `function OnTick()` and finds it by looking; the other expects
+# `register_callback(cb.EVENT_TICK, "my_handler")` at runtime. Both work, and a
+# script may use either or both.
+#
+# The mapping below is by MEANING, not by spelling. Several of these have no
+# KOTOR counterpart at all -- there are no teams, no vehicles and no network
+# players in a single-player RPG -- and those are recorded as unmapped rather
+# than quietly bound to something that looks similar. A callback registered for
+# an unmapped event never fires, and asking for it logs once saying so.
+
+# Halo concepts with no KOTOR equivalent. Present as constants so a script that
+# references one still loads, but never raised.
+
+alias = [
+  { canonical = "readbit", alias = "read_bit", dialect = "sapp" },
+  { canonical = "readbyte", alias = "read_byte", dialect = "sapp" },
+  { canonical = "readchar", alias = "read_char", dialect = "sapp" },
+  { canonical = "readword", alias = "read_word", dialect = "sapp" },
+  { canonical = "readshort", alias = "read_short", dialect = "sapp" },
+  { canonical = "readdword", alias = "read_dword", dialect = "sapp" },
+  { canonical = "readint", alias = "read_int", dialect = "sapp" },
+  { canonical = "readfloat", alias = "read_float", dialect = "sapp" },
+  { canonical = "readdouble", alias = "read_double", dialect = "sapp" },
+  { canonical = "readstring", alias = "read_string", dialect = "sapp" },
+  { canonical = "readwidestring", alias = "read_wide_string", dialect = "sapp" },
+  { canonical = "writebit", alias = "write_bit", dialect = "sapp" },
+  { canonical = "writebyte", alias = "write_byte", dialect = "sapp" },
+  { canonical = "writechar", alias = "write_char", dialect = "sapp" },
+  { canonical = "writeword", alias = "write_word", dialect = "sapp" },
+  { canonical = "writeshort", alias = "write_short", dialect = "sapp" },
+  { canonical = "writedword", alias = "write_dword", dialect = "sapp" },
+  { canonical = "writeint", alias = "write_int", dialect = "sapp" },
+  { canonical = "writefloat", alias = "write_float", dialect = "sapp" },
+  { canonical = "writedouble", alias = "write_double", dialect = "sapp" },
+  { canonical = "writestring", alias = "write_string", dialect = "sapp" },
+  { canonical = "writewidestring", alias = "write_wide_string", dialect = "sapp" },
+  { canonical = "readbyte", alias = "safe_read", dialect = "sapp" },
+  { canonical = "writebyte", alias = "safe_write", dialect = "sapp" },
+  { canonical = "findsig", alias = "sig_scan", dialect = "sapp" },
+  { canonical = "readvector", alias = "read_vector3d", dialect = "sapp" },
+  { canonical = "writevector", alias = "write_vector3d", dialect = "sapp" },
+  { canonical = "log", alias = "hprintf", dialect = "phasor" },
+  { canonical = "log", alias = "log_msg", dialect = "phasor" },
+  { canonical = "console", alias = "cprint", dialect = "sapp" },
+  { canonical = "console", alias = "sendconsoletext", dialect = "phasor" },
+  { canonical = "feedback", alias = "say", dialect = "phasor" },
+  { canonical = "feedback", alias = "say_all", dialect = "sapp" },
+  { canonical = "feedback", alias = "privatesay", dialect = "phasor" },
+  { canonical = "feedback", alias = "rprint", dialect = "sapp" },
+  { canonical = "feedback", alias = "respond", dialect = "phasor" },
+  { canonical = "getplayer", alias = "get_player", dialect = "sapp" },
+  { canonical = "getplayerobject", alias = "get_dynamic_player", dialect = "sapp" },
+  { canonical = "getobject", alias = "get_object_memory", dialect = "sapp" },
+  { canonical = "createobject", alias = "spawn_object", dialect = "sapp" },
+  { canonical = "destroyobject", alias = "destroy_object", dialect = "sapp" },
+  { canonical = "gettagid", alias = "lookup_tag", dialect = "sapp" },
+  { canonical = "gettagid", alias = "lookuptag", dialect = "phasor" },
+  { canonical = "gettagaddress", alias = "get_tag", dialect = "sapp" },
+  { canonical = "movobjectcoords", alias = "moveobjectcoords", dialect = "phasor" },
+  { canonical = "resolveplayer", alias = "to_real_index", dialect = "sapp" },
+  { canonical = "rresolveplayer", alias = "to_player_index", dialect = "sapp" },
+  { canonical = "playerpresent", alias = "player_present", dialect = "sapp" },
+  { canonical = "assignweapon", alias = "assign_weapon", dialect = "sapp" },
+  { canonical = "entervehicle", alias = "enter_vehicle", dialect = "sapp" },
+  { canonical = "exitvehicle", alias = "exit_vehicle", dialect = "sapp" },
+  { canonical = "updateammo", alias = "sync_ammo", dialect = "sapp" },
+  { canonical = "halointersect", alias = "intersect", dialect = "sapp" },
+  { canonical = "getrandomnumber", alias = "rand", dialect = "sapp" },
+  { canonical = "svcmd", alias = "execute_command", dialect = "sapp" },
+  { canonical = "registertimer", alias = "timer", dialect = "sapp" },
+  { canonical = "removetimer", alias = "stop_timer", dialect = "sapp" },
+]
+
+event_alias = [
+  { sapp = "EVENT_TICK", lua_name = "OnTick" },
+  { sapp = "EVENT_COMMAND", lua_name = "OnConsoleCommand" },
+  { sapp = "EVENT_GAME_START", lua_name = "OnModuleLoad" },
+  { sapp = "EVENT_SPAWN", lua_name = "OnCreatureSpawn" },
+  { sapp = "EVENT_DIE", lua_name = "OnCreatureDeath" },
+  { sapp = "EVENT_DAMAGE_APPLICATION", lua_name = "OnCreatureDamaged" },
+  { sapp = "EVENT_AREA_ENTER", lua_name = "OnAreaEnter" },
+  { sapp = "EVENT_AREA_EXIT", lua_name = "OnAreaExit" },
+  { sapp = "EVENT_OBJECT_SPAWN", lua_name = "OnObjectSpawn" },
+  { sapp = "EVENT_CHAT", lua_name = "OnDialogue" },
+  { sapp = "EVENT_JOIN", lua_name = "", note = "no network players" },
+  { sapp = "EVENT_PREJOIN", lua_name = "", note = "no network players" },
+  { sapp = "EVENT_LEAVE", lua_name = "", note = "no network players" },
+  { sapp = "EVENT_LOGIN", lua_name = "", note = "no network players" },
+  { sapp = "EVENT_TEAM_SWITCH", lua_name = "", note = "no teams" },
+  { sapp = "EVENT_BETRAY", lua_name = "", note = "no teams" },
+  { sapp = "EVENT_SCORE", lua_name = "", note = "no scoring" },
+  { sapp = "EVENT_GAME_END", lua_name = "", note = "no match end" },
+  { sapp = "EVENT_MAP_RESET", lua_name = "", note = "no map cycle" },
+  { sapp = "EVENT_VEHICLE_ENTER", lua_name = "", note = "no vehicles" },
+  { sapp = "EVENT_VEHICLE_EXIT", lua_name = "", note = "no vehicles" },
+  { sapp = "EVENT_WEAPON_DROP", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_WEAPON_PICKUP", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_KILL", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_SUICIDE", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_ALIVE", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_WARP", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_CAMP", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_SNAP", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_ECHO", lua_name = "", note = "not yet mapped" },
+  { sapp = "EVENT_PRESPAWN", lua_name = "", note = "not yet mapped" },
+]
