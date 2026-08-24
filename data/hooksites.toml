@@ -179,9 +179,18 @@ name = "event.creature"
 class = "CSWSCreature"
 method = "EventHandler"
 kind = "detour"
-required = true
+# Deliberately NOT required. Six creature script slots -- heartbeat, spawn,
+# damaged, end-of-round, death and end-of-dialogue -- never reach this handler
+# at all; the engine runs them from elsewhere. For creature events vm.run_script
+# is strictly the richer site, and refusing to install without this one would
+# trade real coverage for none.
+required = false
 convention = "thiscall"
-purpose = "undefined __thiscall(this, int eventType, int* eventData, CSWSObject* caller)"
+# Five parameters, not three:
+#   (nEventId, nCallerObjectId, void* pEventData, nCalendarDay, nTimeOfDay)
+# The payload type varies by event id -- CVirtualMachineScript, CScriptEvent,
+# CSWSSpellScriptData, CSWSCombatAttackData or CSWCCMessageData.
+purpose = "__thiscall(this, int nEventId, ulong nCaller, void* pEventData, ulong day, ulong time)"
 
 [[site]]
 name = "event.door"

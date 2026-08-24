@@ -1,0 +1,2043 @@
+# KotorPhasor event table -- DRAFT
+#
+# Derived from recovered C for K1 GOG (swkotor.exe, md5 9a44891011437deb6536d992bccdfe4b),
+# corpus root:
+#   /home/brunner56/biodecompwarehouse/kotorxid/output/kotor_readable/
+#     K1__k1_win_gog_swkotor.exe/src/AspyrBuild/depot/KOTOR/PC_Source/Dev/
+# All `file:line` citations below are relative to that root.
+# All decompiled sources carry `authority: advisory-ghidra` -- readable, NOT byte-verified.
+#
+# Layer collisions -- 0xB, 0x1A and 0x1B each mean different things as an engine
+# event id (outer_event_id) and as a CScriptEvent type (event_type). Never read
+# one of these numbers without knowing which column it came from.
+#
+# Script event types 5 (ON_DISTURBED), 8 (ON_SPAWN_IN) and 9 (ON_RESTED) are named
+# by the engine's log table but consumed by NO handler in any of the ten object
+# types. They are omitted from this file deliberately.
+#
+# READ docs/event-semantics.md BEFORE USING THIS FILE. Two premises in the
+# original brief are wrong and are corrected there:
+#   1. CScriptEvent's four parameter blocks are CExoArrayList (data,size,capacity),
+#      NOT fixed 3-element arrays. They are variable length. Bounds-check.
+#   2. CSWSCreature::EventHandler does not branch on {0,1,2,4,5,8,9}. It branches on
+#      {1,4,5,8,9,0xA,0xB,0xE,0xF,0x12,0x13,0x14,0x15,0x16,0x1B}.
+#
+# Field meanings
+#   hook_site       name from data/hooksites.toml where this event is observable
+#   outer_event_id  CServerAIMaster event id (arg 1 of EventHandler), if queue-delivered
+#   event_type      CScriptEvent.event_type -- only meaningful when outer_event_id = 10
+#   script_slot     GFF field name of the resref the engine runs
+#   slot_index      index into the object's CExoString script array (the code-level truth)
+#   default_script  hardcoded fallback found IN THE BINARY. Omitted where the only
+#                   default is blueprint/template data, which is not in the executable.
+#   args            what the handler has read by the time RunScript is called
+#   returns         values the Lua handler may return that the engine can act on
+#   fallback        value assumed when no Lua handler is registered
+#   blocking        true = suppressing the RunScript call is survivable for the engine
+#   engine_return   what the engine does with RunScript's result
+#
+# `source` values inside args:
+#   "this"                the object whose EventHandler ran (RunScript's object id)
+#   "caller"              arg 2 of EventHandler (nCallerObjectId)
+#   "calendar_day"        arg 4
+#   "time_of_day"         arg 5
+#   "int_params[N]"       CScriptEvent::GetInteger(N)      -> 0 if N >= size
+#   "float_params[N]"     CScriptEvent::GetFloat(N)        -> 0.0 if N >= size
+#   "string_params[N]"    CScriptEvent::GetString(N)       -> "" if N >= size
+#   "object_params[N]"    CScriptEvent::GetObjectID(N)     -> 0x7f000000 if N >= size
+
+[meta]
+version = 1
+binary = "K1__k1_win_gog_swkotor.exe"
+md5 = "9a44891011437deb6536d992bccdfe4b"
+event_handler_signature = "void __thiscall EventHandler(this, ulong nEventId, ulong nCallerObjectId, void* pEventData, ulong nCalendarDay, ulong nTimeOfDay)"
+event_handler_evidence = "game/servercore/nwsmodule.cpp:1130 and 9 sibling handlers; call sites game/servercore/serveraimaster.cpp:1004,1010,1016"
+script_event_carrier = "outer_event_id 10 (EVENT_SIGNAL_EVENT) carries a CScriptEvent*; its event_type selects the script slot"
+
+# =============================================================================
+# LAYER 0 -- the VM itself. Everything funnels here.
+# =============================================================================
+
+[[event]]
+lua_name    = "OnRunScript"
+hook_site   = "vm.run_script"
+object_type = "any"
+script_slot = ""
+args = [
+  { name = "script_name", type = "string", source = "arg1 CExoString*" },
+  { name = "object_id",   type = "object", source = "arg2 ulong" },
+  { name = "has_object",  type = "int",    source = "arg3 int" },
+]
+returns   = ["bool"]
+fallback  = "true"
+blocking  = true
+engine_return = "int: 1 = script loaded and ran with a balanced stack, 0 = did not run. Only one caller in the whole binary reads it (see OnDialogConditional)."
+confidence = "high"
+evidence  = "libsource/nwscript/nwvmachineinternal.cpp:005d45d0 body: returns 0 on empty name, on ReadScriptFile failure, or on stack imbalance; returns 1 after RunScriptFile succeeds. Stores a trailing INTEGER stack value into field1_0x1c=3/field2_0x20 for GetRunScriptReturnValue."
+notes = "This is the only universal chokepoint. Several script slots (creature heartbeat, spawn, damaged, death, endround, enddialogue) are reachable ONLY here -- they never pass through any EventHandler."
+
+[[event]]
+lua_name    = "OnDialogConditional"
+hook_site   = "vm.run_script"
+object_type = "any"
+script_slot = "dialog node Active/StartingConditional resref"
+args = [
+  { name = "script_name", type = "string", source = "arg1 CExoString*" },
+  { name = "speaker",     type = "object", source = "arg2 ulong" },
+]
+returns   = ["bool"]
+fallback  = "true"
+blocking  = true
+engine_return = "consumed"
+confidence = "high"
+evidence  = "game/servercore/nwsdialog.cpp:213-247 CSWSDialog::CheckScript -- empty resref returns 1 immediately; otherwise RunScript, and if it returned 1, GetRunScriptReturnValue is read and the node is shown only when the returned type is INTEGER(3) and the value is nonzero."
+notes = "The ONLY consumer of GetRunScriptReturnValue in the entire recovered tree (single grep hit: nwsdialog.cpp:238). Every other event's return value is discarded. If Lua wants a real veto anywhere else, it must suppress the call, not change the result."
+
+# =============================================================================
+# CREATURE -- CSWSCreature::EventHandler, K1 0x004FECE0, nwscreature.cpp:11456-12137
+# script array: CExoString script_resrefs[14] (nwscreature.cpp:7137, ctor count 0xe)
+# index -> GFF field, from SaveCreature nwscreature.cpp:12564-12591:
+#   0 ScriptHeartbeat  1 ScriptOnNotice 2 ScriptSpellAt  3 ScriptAttacked
+#   4 ScriptDamaged    5 ScriptDisturbed 6 ScriptEndRound 7 ScriptDialogue
+#   8 ScriptSpawn      9 ScriptRested   10 ScriptDeath   11 ScriptUserDefine
+#  12 ScriptOnBlocked 13 ScriptEndDialogue
+# =============================================================================
+
+[[event]]
+lua_name       = "OnCreaturePerception"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 1
+script_slot    = "ScriptOnNotice"
+slot_index     = 1
+args = [
+  { name = "creature",  type = "object", source = "this" },
+  { name = "perceived", type = "object", source = "object_params[0]" },
+  { name = "how",       type = "int",    source = "int_params[0]", values = "1 = seen, 0 = heard, 3 = inaudible, 2 = vanished" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:11934-11989 case 1: GetObjectID(0) -> field323_0x900 (last perceived); GetInteger(0) compared against 1/0/3/2 setting the four perception flag fields; RunScript(script_resrefs+1). RunScript is the last statement in the branch."
+notes = "The int_params[0] -> flag mapping is read off the four comparisons at nwscreature.cpp:11938,11948,11955,11963. The engine keeps four separate booleans, so a Lua binding should expose all four rather than a single enum if it wants to round-trip."
+
+[[event]]
+lua_name       = "OnCreatureSpellCastAt"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 2
+script_slot    = "ScriptSpellAt"
+slot_index     = 2
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "caster",   type = "object", source = "object_params[0]" },
+  { name = "spell_id", type = "int",    source = "int_params[0]" },
+  { name = "harmful",  type = "int",    source = "int_params[1]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:11990-12048 case 2: GetObjectID(0) resolved to a creature, or if it is an AREAOFEFFECT object its creator creature is substituted, into field92_0x1d8; GetInteger(0) -> field93_0x1dc; GetInteger(1) -> field94_0x1e0 and when 1 SetLastHostileActor; RunScript(script_resrefs+2) at :12024."
+notes = "Combat-state broadcast and SetExcitedState happen AFTER the RunScript call (:12030-12044), so blocking at event.creature would break combat entry. Blocking at vm.run_script is safe."
+
+[[event]]
+lua_name       = "OnCreatureDialogue"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 7
+script_slot    = "ScriptDialogue"
+slot_index     = 7
+default_script = "k_hen_dialogue01"
+args = [
+  { name = "creature",         type = "object", source = "this" },
+  { name = "speaker",          type = "object", source = "caller" },
+  { name = "listen_pattern",   type = "int",    source = "int_params[1]" },
+  { name = "conversation",     type = "string", source = "string_params[0]" },
+  { name = "action_conv_flag", type = "int",    source = "int_params[2]" },
+  { name = "ignore_range",     type = "int",    source = "int_params[3]" },
+  { name = "match_count",      type = "int",    source = "int_params[0]" },
+  { name = "matches",          type = "string[]", source = "string_params[1 .. int_params[0]-1]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:12050-12093 case 7: caller stored to object.field76_0x17c; GetInteger(1) -> field80_0x198; GetString(0) copied to field78_0x184 and to CServerExoApp::SetLastConversation; GetInteger(2) -> field77_0x180; GetInteger(3) -> SetIgnoreConversationStartRange; a loop from index 1 to GetInteger(0) feeds AddMatchedExpressionString. At :12084-12090 slot 7 is rewritten to \"k_hen_dialogue01\" when empty or equal to \"default\", then RunScript."
+notes = "blocking=false because this script is what actually starts the conversation in stock K1. Suppressing it leaves the engine with SetActionConversation(1) already set and no dialogue running."
+
+[[event]]
+lua_name       = "OnCreatureUserDefined"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "ScriptUserDefine"
+slot_index     = 11
+args = [
+  { name = "creature",     type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:12095-12103 case 0xb: GetInteger(0) -> object.field65_0x150 (what GetUserDefinedEventNumber reads); RunScript(script_resrefs+0xb). Nothing follows."
+
+[[event]]
+lua_name       = "OnCreatureInventoryDisturbed"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 27
+script_slot    = "ScriptDisturbed"
+slot_index     = 5
+args = [
+  { name = "creature",     type = "object", source = "this" },
+  { name = "disturber",    type = "object", source = "caller" },
+  { name = "disturb_type", type = "int",    source = "int_params[0]", values = "1 = item added, 0 = item removed" },
+  { name = "item",         type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:12104-12117 case 0x1b: caller -> field70_0x164 and SetLastHostileActor; GetInteger(0) -> field75_0x178; GetObjectID(0) -> field74_0x174; RunScript(script_resrefs+5). Producer nwsitem.cpp:243-250 sets int 1 and object = item id; nwsitem.cpp:272-279 sets int 0 and object = item id."
+notes = "Slot index is 5 (ScriptDisturbed) even though the event constant is 0x1B. The two numbering spaces are unrelated -- see docs/event-semantics.md."
+
+[[event]]
+lua_name       = "OnCreaturePathBlocked"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 10
+event_type     = 31
+script_slot    = "ScriptOnBlocked"
+slot_index     = 12
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "blocker",  type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:12120-12132 case 0x1f: skipped entirely if the creature is a client-controlled player (GetClientObjectByObjectId non-null); otherwise caller -> field13_0x33c and RunScript(script_resrefs+0xc). Producers nwscreatureai.cpp:2259, 2614, 3361, 9269, 10711, 11841 build the event with no parameters set."
+notes = "Carries NO CScriptEvent parameters. Everything the script sees comes from the caller id."
+
+[[event]]
+lua_name       = "OnCreatureAttacked"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 15
+script_slot    = "ScriptAttacked"
+slot_index     = 3
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "attacker", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:11673-11762, outer id 0xF = EVENT_ON_MELEE_ATTACKED (serveraimaster.cpp:353). pEventData is a CSWSCombatAttackData, not a CScriptEvent. caller -> object.field68_0x15c and SetLastHostileActor; BroadcastCombatStateToParty and RemoveCombatInvisibilityEffects run first; RunScript(script_resrefs+3) at :11759 is the last statement, gated on the creature being alive (:11753-11758)."
+notes = "All engine bookkeeping precedes the RunScript, so suppressing the script alone is safe. Suppressing the whole event is not -- it would leak the CSWSCombatAttackData and skip combat-state broadcast."
+
+[[event]]
+lua_name       = "OnCreatureHeartbeat"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptHeartbeat"
+slot_index     = 0
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:462-464 inside the creature AI update, gated on the creature being alive; NOT reachable through CSWSCreature::EventHandler -- that function has no branch for outer id 0 and no CScriptEvent case 0."
+notes = "IMPORTANT: creature heartbeat does not go through event.creature. A detour on event.creature will never see it. Immediately after, nwscreature.cpp:466-486 may run a second script pulled from statescripts.2da column SCRIPTNAME for creature state 1 or 2 -- that is a separate RunScript call."
+
+[[event]]
+lua_name       = "OnCreatureSpawn"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptSpawn"
+slot_index     = 8
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "two call sites, both plain RunScript: nwscreature.cpp:443-448 in the AI update when create_on_script_fired is 0 (the flag is then set independently of the script result), and nwseffectlist.cpp:579 immediately after AddToArea for a summoned creature."
+notes = "Not reachable through event.creature."
+
+[[event]]
+lua_name       = "OnCreatureDamaged"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptDamaged"
+slot_index     = 4
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwseffectlist.cpp:6624-6636 inside CSWSEffectListHandler::OnApplyDamage (function header nwseffectlist.cpp:6232): run only when the creature is alive AND CSWPartyTable::GetIsLeader returns 0. Plain RunScript, no CScriptEvent."
+notes = "Two caveats. (a) The party leader never gets ScriptDamaged -- the GetIsLeader==0 guard at :6632. (b) The damager and the damage amount are NOT passed to this call; the script must read them from engine state the handler wrote earlier. A separate CScriptEvent with event_type 4 (ON_DAMAGED) carrying int_params[0] = damage amount and caller = effect creator is queued at nwseffectlist.cpp:6386-6402, but CSWSCreature::EventHandler has no case 4, so for creatures that event is constructed, delivered, and dropped. Confidence is medium because I did not read the full 536-line OnApplyDamage to prove the two paths are unconditional siblings."
+
+[[event]]
+lua_name       = "OnCreatureDeath"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptDeath"
+slot_index     = 10
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwseffectlist.cpp:7166-7168 inside CSWSEffectListHandler::OnApplyDeath (header nwseffectlist.cpp:6940), after ApplyDeathExperience, faction re-add and EndCombatRound. Plain RunScript."
+notes = "The killer id was written to object.field66_0x154 at nwseffectlist.cpp:7158 before the call. Not reachable through event.creature."
+
+[[event]]
+lua_name       = "OnCreatureEndCombatRound"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptEndRound"
+slot_index     = 6
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "two sites: nwscombatround.cpp:2060-2062 at the end of a combat round, guarded on the creature being alive and not the player-controlled character; nwseffectlist.cpp:2109-2111 when an effect of subtype 1 or 3..10 is applied."
+
+[[event]]
+lua_name       = "OnCreatureEndDialogue"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "ScriptEndDialogue"
+slot_index     = 13
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwscreature.cpp:3111-3125 CSWSCreature::OnEndDialog is a 27-byte function whose entire body is RunScript(script_resrefs + 0xd)."
+
+[[event]]
+lua_name       = "OnCreatureRested"
+hook_site      = "none"
+object_type    = "creature"
+script_slot    = "ScriptRested"
+slot_index     = 9
+args      = []
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "n/a"
+confidence = "high"
+evidence  = "DEAD SLOT. An exhaustive grep for `script_resrefs` across the whole recovered tree returns 14 hits; index 9 appears only in SaveCreature (nwscreature.cpp:12582) and the matching load. No RunScript anywhere reaches it."
+notes = "Do not expose to Lua as a creature event. Player rest is a MODULE event (Mod_OnPlrRest, script event type 0x23)."
+
+# --- creature engine events that carry no script slot ------------------------
+
+[[event]]
+lua_name       = "OnCreatureTimedEvent"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 1
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "script_situation", type = "pointer", source = "arg3 CVirtualMachineScript*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 1 = EVENT_TIMED_EVENT (serveraimaster.cpp:299). nwscreature.cpp:11580-11588 calls CVirtualMachine::RunScriptSituation. serveraimaster.cpp:847-849 confirms the payload type by destroying it with DeleteScriptSituation."
+notes = "This is DelayCommand / AssignCommand resumption. Hook vm.run_script_situation for the script identity; blocking here silently drops the queued command and leaks nothing but loses the work."
+
+[[event]]
+lua_name       = "OnCreatureApplyEffect"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 5
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "effect",   type = "pointer", source = "arg3 CGameEffect*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 5 = EVENT_APPLY_EFFECT (serveraimaster.cpp:311). nwscreature.cpp:11513-11530: if the effect's object_type word is 0x28 a guard flag object.field63_0x148 is raised, then CSWSObject::ApplyEffect, then the flag is lowered."
+notes = "No script runs. This is a pure engine operation. blocking=false: suppressing it silently discards an effect the rest of the engine already believes was applied."
+
+[[event]]
+lua_name       = "OnCreatureRemoveEffect"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 14
+args = [
+  { name = "creature",  type = "object", source = "this" },
+  { name = "effect_id", type = "int",    source = "arg3, reinterpreted as the effect's 64-bit id" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0xE = EVENT_REMOVE_EFFECT (serveraimaster.cpp:338). nwscreature.cpp:11531-11546 packs bytes out of the argument and calls CSWSObject::RemoveEffectById."
+notes = "confidence medium: the decompiler renders the argument as a CSWSObject* whose fields are byte-sliced into a LARGE_INTEGER. The value is an effect id, not an object, but the exact packing is not readable from this output."
+
+[[event]]
+lua_name       = "OnCreatureRemoveFromArea"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 4
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "flag",     type = "int",    source = "arg3 (used as an int, not a pointer)" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 4 = EVENT_REMOVE_FROM_AREA (serveraimaster.cpp:308). nwscreature.cpp:11547-11555 calls RemoveFromArea(this, (int)param_3). CServerAIEventNode::SaveNode serializes id 4's payload as a single BYTE 'Value' (serveraimaster.cpp:559), which corroborates that arg3 is an immediate, not a pointer."
+notes = "No script. The meaning of the byte is not determined."
+
+[[event]]
+lua_name       = "OnCreaturePlayAnimation"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 9
+args = [
+  { name = "creature",  type = "object", source = "this" },
+  { name = "animation", type = "int",    source = "arg3 (used as an immediate)" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 9 = EVENT_PLAY_ANIMATION (serveraimaster.cpp:323). nwscreature.cpp:11556-11579: returns early if the creature is dead or GetDeadTemp is set, otherwise calls vtable slot field31_0x7c with the argument. nwseffectlist.cpp:6364-6370 queues id 9 with animation constants 0x2726 / 0x275c."
+notes = "confidence medium: the animation constant identity is inferred from the queue site, not from a named table."
+
+[[event]]
+lua_name       = "OnCreatureDestroy"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 11
+args = [
+  { name = "creature", type = "object", source = "this" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 0xB = EVENT_DESTROY_OBJECT (serveraimaster.cpp:329). nwscreature.cpp:11808-11915: spawns a body bag, reads appearance.2da column FadeDelayOnDeath, removes the creature from every trigger/door/placeable occupant list in the area, decrements the owning encounter's active count, then invokes the object destructor."
+notes = "blocking=false and it is not negotiable. The last statement is the destructor. Suppressing or reordering anything here leaves dangling ids in area occupant lists."
+
+[[event]]
+lua_name       = "OnCreatureSpellImpact"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 8
+script_slot    = "spell impact script, carried in the event payload"
+args = [
+  { name = "creature",       type = "object", source = "this" },
+  { name = "caster",         type = "object", source = "caller" },
+  { name = "spell_data",     type = "pointer", source = "arg3 CSWSSpellScriptData*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 8 = EVENT_SPELL_IMPACT (serveraimaster.cpp:320); payload type confirmed by serveraimaster.cpp:850-854 destroying it as CSWSSpellScriptData. nwscreature.cpp:11764-11807: the branch runs only when the payload's embedded id equals the caller id, sets spell target position, then RunScript with a CExoString taken from inside the payload."
+notes = "The script name is NOT a GFF slot -- it comes from the spell's row in spells.2da via the payload. Ghidra renders the payload field access as `&(this_00->tag).length`, which is a mislabelled offset; the offset itself is what matters. Confidence medium on the exact payload offset."
+
+[[event]]
+lua_name       = "OnCreatureItemOnHitSpellImpact"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 19
+args = [
+  { name = "creature",   type = "object", source = "this" },
+  { name = "caster",     type = "object", source = "caller" },
+  { name = "spell_data", type = "pointer", source = "arg3 CSWSSpellScriptData*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0x13 = EVENT_ITEM_ON_HIT_SPELL_IMPACT (serveraimaster.cpp:353). Shares the branch with id 8 at nwscreature.cpp:11764; the only differences are at :11793-11797 (sets field349_0x964, copies a level value, calls CalculateLastSpellProjectileTime) and the matching teardown at :11803-11806."
+
+[[event]]
+lua_name       = "OnCreatureForcedAction"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 18
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "action",   type = "pointer", source = "arg3 CSWSForcedAction*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0x12 = EVENT_FORCED_ACTION (serveraimaster.cpp:350). nwscreature.cpp:11916-11923: CancelAction at :11917, then ForceMoveToPoint when the payload discriminator is 1."
+notes = "No script. confidence medium: the CancelAction argument is read out of the payload with an offset the decompiler labels as a game object id, which is unlikely to be correct."
+
+[[event]]
+lua_name       = "OnCreatureBroadcastAOO"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 20
+args      = []
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 0x14 = EVENT_BROADCAST_AOO (serveraimaster.cpp:356). nwscreature.cpp:11590-11593: the entire branch is a return. The constant survives from NWN's attack-of-opportunity system, which K1 does not use."
+notes = "Delivered but inert. Safe to expose as a pure observation point; nothing to block."
+
+[[event]]
+lua_name       = "OnCreatureBroadcastSafeProjectile"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 21
+args = [
+  { name = "creature",    type = "object", source = "this" },
+  { name = "attacker",    type = "object", source = "caller" },
+  { name = "attack_data", type = "pointer", source = "arg3 CSWSCombatAttackData*" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0x15 = EVENT_BROADCAST_SAFE_PROJECTILE (serveraimaster.cpp:377); payload type confirmed by serveraimaster.cpp:859-862. nwscreature.cpp:11594-11614 resolves attacker and target creatures, looks up the weapon's base item for its ammunition type, calls BroadcastSafeProjectile, then destroys the payload."
+notes = "Presentation only, but the branch owns the payload lifetime -- it ends with the destructor and a free."
+
+[[event]]
+lua_name       = "OnCreatureFeedbackMessage"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 22
+args = [
+  { name = "creature",     type = "object", source = "this" },
+  { name = "other",        type = "object", source = "caller" },
+  { name = "message_data", type = "pointer", source = "arg3 CSWCCMessageData*" },
+  { name = "message_kind", type = "int",    source = "first byte of arg3", values = "1 = saving throw data, 3 = feedback to caller only, 4 = feedback to self only, other = both" },
+  { name = "message_id",   type = "int",    source = "message_data int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0x16 = EVENT_FEEDBACK_MESSAGE (serveraimaster.cpp:362); payload destroyed as CSWCCMessageData at serveraimaster.cpp:863-866. nwscreature.cpp:11615-11672 dispatches on the first byte of the payload."
+notes = "This is the ONLY event id whose payload the engine treats as CSWCCMessageData rather than CScriptEvent. The two classes are 52 bytes each with the same accessor set but distinct constructors and destructors (0x004d69f0/0x004d6a40 vs 0x004d7540/0x004d7590 -- SQLite func table, binary_id 8). Treat the layouts as identical only provisionally."
+
+[[event]]
+lua_name       = "OnCreatureControllerRumble"
+hook_site      = "event.creature"
+object_type    = "creature"
+outer_event_id = 27
+args = [
+  { name = "pattern", type = "int", source = "arg3 (immediate)" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 0x1B = EVENT_CONTROLLER_RUMBLE (serveraimaster.cpp:377). nwscreature.cpp:11924-11931: reached only via the `param_1 != 10` / `param_1 != 0x1b` fall-through; the whole branch is CClientExoApp::PlayRumblePattern at :11929."
+
+# =============================================================================
+# MODULE -- CSWSModule::EventHandler, nwsmodule.cpp:1130-1268
+# script array: CExoString scripts[15] (nwsmodule.cpp:3593, count 0xf)
+# index -> GFF field, from SaveModule nwsmodule.cpp:2830-2856 plus the load-only
+# field at nwsmodule.cpp:4470:
+#   0 Mod_OnHeartbeat 1 Mod_OnUsrDefined 2 Mod_OnModLoad  3 Mod_OnModStart
+#   4 Mod_OnClientEntr 5 Mod_OnClientLeav 6 Mod_OnActvtItem 7 Mod_OnAcquirItem
+#   8 Mod_OnUnAqreItem 9 Mod_OnPlrDeath  10 Mod_OnPlrDying 11 Mod_OnSpawnBtnDn
+#  12 Mod_OnPlrRest   13 Mod_OnPlrLvlUp  14 Mod_OnEquipItem (read, never written)
+# =============================================================================
+
+[[event]]
+lua_name       = "OnModuleHeartbeat"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 0
+script_slot    = "Mod_OnHeartbeat"
+slot_index     = 0
+args = [
+  { name = "calendar_day", type = "int", source = "calendar_day" },
+  { name = "time_of_day",  type = "int", source = "time_of_day" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1156-1161 case 0: arg 4 -> field26_0x128 and arg 5 -> field27_0x12c, then RunScript(scripts+0)."
+notes = "This case is the direct proof that EventHandler takes 5 arguments after `this`: the branch reads args 4 and 5, which Ghidra otherwise never uses."
+
+[[event]]
+lua_name       = "OnModuleUserDefined"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "Mod_OnUsrDefined"
+slot_index     = 1
+args = [ { name = "event_number", type = "int", source = "int_params[0]" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1169-1174 case 0xb: GetInteger(0) -> field32_0x148, RunScript(scripts+1)."
+
+[[event]]
+lua_name       = "OnModuleLoad"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 17
+script_slot    = "Mod_OnModLoad"
+slot_index     = 2
+args      = []
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1191-1194 case 0x11 (ON_MODULE_LOAD, serveraimaster.cpp:435) -> RunScript(scripts+2). No parameters read."
+
+[[event]]
+lua_name       = "OnModuleStart"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 16
+script_slot    = "Mod_OnModStart"
+slot_index     = 3
+args      = []
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1187-1190 case 0x10 (ON_MODULE_START, serveraimaster.cpp:432) -> RunScript(scripts+3)."
+
+[[event]]
+lua_name       = "OnModulePlayerEnter"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 14
+script_slot    = "Mod_OnClientEntr"
+slot_index     = 4
+args = [ { name = "player", type = "object", source = "object_params[0]" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1175-1180 case 0xe: GetObjectID(0) -> field33_0x14c, RunScript(scripts+4)."
+
+[[event]]
+lua_name       = "OnModulePlayerExit"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 15
+script_slot    = "Mod_OnClientLeav"
+slot_index     = 5
+args = [ { name = "player", type = "object", source = "object_params[0]" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1181-1186 case 0xf: GetObjectID(0) -> field34_0x150, RunScript(scripts+5)."
+
+[[event]]
+lua_name       = "OnModuleActivateItem"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 18
+script_slot    = "Mod_OnActvtItem"
+slot_index     = 6
+args = [
+  { name = "item",         type = "object", source = "object_params[0]" },
+  { name = "activator",    type = "object", source = "object_params[1]" },
+  { name = "target",       type = "object", source = "object_params[2]" },
+  { name = "obj_param_3",  type = "object", source = "object_params[3]" },
+  { name = "target_x",     type = "float",  source = "float_params[0]" },
+  { name = "target_y",     type = "float",  source = "float_params[1]" },
+  { name = "target_z",     type = "float",  source = "float_params[2]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwsmodule.cpp:1195-1213 case 0x12: GetObjectID(0..3) -> field44_0x178, field45_0x17c, field46_0x180, field47_0x184; GetFloat(0),(1),(2) -> field48_0x188, field49_0x18c, field50_0x190; RunScript(scripts+6)."
+notes = "The four object slots are read but the field names give no clue which is item vs activator vs target. The names above are the conventional NWScript ordering for GetItemActivated / GetItemActivator / GetItemActivatedTarget and are INFERRED, not read. The three floats are read in the order 2,1,0 in the decompiled listing but stored to consecutive fields in the order 0,1,2 -- a location, almost certainly x,y,z. Treat every arg name here as low confidence until the matching engine routines (GetItemActivatedTargetLocation etc.) are read from nwvmachinecommands.cpp."
+
+[[event]]
+lua_name       = "OnModuleAcquireItem"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 19
+script_slot    = "Mod_OnAcquirItem"
+slot_index     = 7
+args = [
+  { name = "item",              type = "object", source = "object_params[0]" },
+  { name = "previous_possessor", type = "object", source = "object_params[1]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "producer nwsitem.cpp:67-77 sets event_type 0x13, SetObjectID(0, the item's own id), SetObjectID(1, param_1 = the previous holder). Consumer nwsmodule.cpp:1214-1221 reads GetObjectID(1) -> field36_0x158 and GetObjectID(0) -> field35_0x154, then RunScript(scripts+7)."
+
+[[event]]
+lua_name       = "OnModuleLoseItem"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 20
+script_slot    = "Mod_OnUnAqreItem"
+slot_index     = 8
+args = [
+  { name = "item",   type = "object", source = "object_params[0]" },
+  { name = "loser",  type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "producer nwsitem.cpp:148-158 sets event_type 0x14 and SetObjectID(0, the item id). Consumer nwsmodule.cpp:1222-1228: GetObjectID(0) -> field37_0x15c, caller -> field38_0x160, RunScript(scripts+8)."
+
+[[event]]
+lua_name       = "OnModulePlayerDeath"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 10
+script_slot    = "Mod_OnPlrDeath"
+slot_index     = 9
+args = [ { name = "player", type = "object", source = "caller" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1164-1168 case 10 (ON_DEATH): caller -> field41_0x16c, RunScript(scripts+9). Producers nwseffectlist.cpp:7090 and :7294 set event_type 10."
+
+[[event]]
+lua_name       = "OnModulePlayerDying"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 32
+script_slot    = "Mod_OnPlrDying"
+slot_index     = 10
+args = [ { name = "player", type = "object", source = "caller" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1229-1233 case 0x20 (ON_PLAYER_DYING, serveraimaster.cpp:480): caller -> field42_0x170, RunScript(scripts+10). Producers nwseffectlist.cpp:1027 and :6724 set event_type 0x20."
+
+[[event]]
+lua_name       = "OnModuleRespawnButtonPressed"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 33
+script_slot    = "Mod_OnSpawnBtnDn"
+slot_index     = 11
+args = [ { name = "player", type = "object", source = "caller" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1234-1238 case 0x21 (ON_RESPAWN_BUTTON_PRESSED, serveraimaster.cpp:483): caller -> field43_0x174, RunScript(scripts+0xb)."
+
+[[event]]
+lua_name       = "OnModulePlayerRest"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 35
+script_slot    = "Mod_OnPlrRest"
+slot_index     = 12
+args = [
+  { name = "player",     type = "object", source = "caller" },
+  { name = "rest_phase", type = "int",    source = "int_params[0]", note = "truncated to a byte by the engine" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1239-1245 case 0x23 (ON_PLAYER_REST, serveraimaster.cpp:489): caller -> field39_0x164, GetInteger(0) stored as a single char into field40_0x168, RunScript(scripts+0xc)."
+notes = "This, not creature ScriptRested, is how rest reaches scripts in K1."
+
+[[event]]
+lua_name       = "OnModulePlayerLevelUp"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 37
+script_slot    = "Mod_OnPlrLvlUp"
+slot_index     = 13
+args = [ { name = "player", type = "object", source = "caller" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1257-1261 case 0x25 (ON_PLAYER_LEVEL_UP, serveraimaster.cpp:495): caller -> field51_0x194, RunScript(scripts+0xd)."
+
+[[event]]
+lua_name       = "OnModuleEquipItem"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 38
+script_slot    = "Mod_OnEquipItem"
+slot_index     = 14
+args = [ { name = "item", type = "object", source = "object_params[0]" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1262-1267 case 0x26 (ON_EQUIP_ITEM, serveraimaster.cpp:498): GetObjectID(0) -> field53_0x19c, RunScript(scripts+0xe)."
+notes = "Slot 14 is READ from the module IFO at nwsmodule.cpp:4470 but is NOT written back by SaveModule (nwsmodule.cpp:2830-2856 stops at slot 13). A module that is saved and reloaded loses its equip-item script. This is an engine bug, not a recovery gap."
+
+[[event]]
+lua_name       = "OnModuleDestroyPlayerCreature"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 10
+event_type     = 36
+args = [ { name = "creature", type = "object", source = "caller" } ]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1246-1256 case 0x24 (ON_DESTROYPLAYERCREATURE, serveraimaster.cpp:492): looks the object up, calls a vtable predicate at +0x30, and on success CGameObjectArray::Delete. NO RunScript -- it jumps straight to the teardown label."
+notes = "Script event type with no script slot. Suppressing it leaks the object array entry."
+
+[[event]]
+lua_name       = "OnModuleTimedEvent"
+hook_site      = "event.module"
+object_type    = "module"
+outer_event_id = 1
+args = [ { name = "script_situation", type = "pointer", source = "arg3 CVirtualMachineScript*" } ]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsmodule.cpp:1145-1151: outer id 1 -> RunScriptSituation on the module object id."
+
+# =============================================================================
+# AREA -- CSWSArea::EventHandler, nwsarea.cpp:5518+
+# Scripts are four NAMED CExoString members, not an indexed array
+# (constructed as a 4-element vector at nwsarea.cpp:5251).
+# GFF fields from LoadARE nwsarea.cpp:3233-3257.
+# =============================================================================
+
+[[event]]
+lua_name       = "OnAreaHeartbeat"
+hook_site      = "event.area"
+object_type    = "area"
+outer_event_id = 10
+event_type     = 0
+script_slot    = "OnHeartbeat"
+args = [
+  { name = "area",         type = "object", source = "this" },
+  { name = "calendar_day", type = "int",    source = "calendar_day" },
+  { name = "time_of_day",  type = "int",    source = "time_of_day" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsarea.cpp:5626-5632: arg4 -> field8_0x13c, arg5 -> field9_0x140, RunScript(&script_on_heart_beat). Field name binding at nwsarea.cpp:3233-3236."
+notes = "A second, unrelated heartbeat call exists at nwsarea.cpp:3066 reached from a different path."
+
+[[event]]
+lua_name       = "OnAreaUserDefined"
+hook_site      = "event.area"
+object_type    = "area"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "OnUserDefined"
+args = [
+  { name = "area",         type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsarea.cpp:5633-5639: GetInteger(0) -> field41_0x1dc, RunScript(&script_on_user_defined). Field binding nwsarea.cpp:3240-3243."
+
+[[event]]
+lua_name       = "OnAreaEnter"
+hook_site      = "event.area"
+object_type    = "area"
+outer_event_id = 10
+event_type     = 12
+script_slot    = "OnEnter"
+args = [
+  { name = "area",           type = "object", source = "this" },
+  { name = "entering",       type = "object", source = "caller" },
+  { name = "from_save_game", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsarea.cpp:5640-5649: caller -> field39_0x1d4; the previous GetLoadFromSaveGame value is saved, replaced with GetInteger(0), the script runs, and the old value is RESTORED afterwards. Producer nwsarea.cpp:6043-6053 sets event_type 0xc and SetInteger(0, GetLoadFromSaveGame())."
+notes = "blocking=false at the event layer: the save/restore of the global load-from-savegame flag brackets the RunScript call. Blocking at vm.run_script is safe because the restore is unconditional."
+
+[[event]]
+lua_name       = "OnAreaExit"
+hook_site      = "event.area"
+object_type    = "area"
+outer_event_id = 10
+event_type     = 13
+script_slot    = "OnExit"
+args = [
+  { name = "area",    type = "object", source = "this" },
+  { name = "leaving", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsarea.cpp:5652-5657: caller -> field40_0x1d8, RunScript(&script_on_exit). Producer nwsarea.cpp:5832-5840 sets event_type 0xd with no parameters."
+notes = "A second OnExit call exists at serverexoappinternal.cpp:2281, outside any EventHandler."
+
+[[event]]
+lua_name       = "OnAreaSpawnBodyBag"
+hook_site      = "event.area"
+object_type    = "area"
+outer_event_id = 17
+args = [
+  { name = "area",     type = "object", source = "this" },
+  { name = "bag_id",   type = "object", source = "arg3 first dword" },
+  { name = "position", type = "vector", source = "arg3 + 4" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 0x11 = EVENT_SPAWN_BODY_BAG (serveraimaster.cpp:362). nwsarea.cpp:5566-5601 reads an object id from the payload, adds the placeable to the area at the payload's vector, and if it is a corpse budges nearby creatures out of its bounding box. No script."
+notes = "confidence medium: the payload is an ad-hoc struct, not CScriptEvent, and DeleteEventData has no case for id 0x11, so nothing corroborates the layout."
+
+# =============================================================================
+# DOOR -- CSWSDoor::EventHandler, nwsdoor.cpp:1487-2060
+# script array: CExoString scripts[15]
+# index -> GFF field, from LoadDoor nwsdoor.cpp:1140-1287:
+#   0 OnOpen  1 OnClosed  2 OnDamaged  3 OnDeath  4 OnDisarm  5 OnHeartbeat
+#   6 OnLock  7 OnMeleeAttacked  8 OnSpellCastAt  9 OnTrapTriggered
+#  10 OnUnlock 11 OnUserDefined 12 OnClick 13 OnDialog 14 OnFailToOpen
+# =============================================================================
+
+[[event]]
+lua_name       = "OnDoorHeartbeat"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 0
+script_slot    = "OnHeartbeat"
+slot_index     = 5
+args = [
+  { name = "door",         type = "object", source = "this" },
+  { name = "calendar_day", type = "int",    source = "calendar_day" },
+  { name = "time_of_day",  type = "int",    source = "time_of_day" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1741-1748 case 0: arg4/arg5 -> field42_0x30c/field43_0x310, scripts+5."
+
+[[event]]
+lua_name       = "OnDoorSpellCastAt"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 2
+script_slot    = "OnSpellCastAt"
+slot_index     = 8
+args = [
+  { name = "door",     type = "object", source = "this" },
+  { name = "caster",   type = "object", source = "object_params[0]" },
+  { name = "spell_id", type = "int",    source = "int_params[0]" },
+  { name = "harmful",  type = "int",    source = "int_params[1]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1751-1771 case 2: GetObjectID(0), GetInteger(0), GetInteger(1); when harmful, SetLastHostileActor plus combat-state broadcast, all BEFORE scripts+8 runs."
+
+[[event]]
+lua_name       = "OnDoorDamaged"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 4
+script_slot    = "OnDamaged"
+slot_index     = 2
+args = [
+  { name = "door",    type = "object", source = "this" },
+  { name = "damager", type = "object", source = "caller" },
+  { name = "amount",  type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwsdoor.cpp:1772-1778 case 4: caller -> object.field69_0x160 and SetLastHostileActor, then scripts+2. Producer nwseffectlist.cpp:6386-6402 builds event_type 4 with SetInteger(0, damage amount) and caller = the effect's creator_id."
+notes = "confidence medium on `amount`: the door branch never reads int_params[0], so the value is only visible to the script through GetTotalDamageDealt-style engine state. The producer definitely writes it."
+
+[[event]]
+lua_name       = "OnDoorDialogue"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 7
+script_slot    = "OnDialog"
+slot_index     = 13
+default_script = "k_hen_dialogue01"
+args = [
+  { name = "door",           type = "object", source = "this" },
+  { name = "speaker",        type = "object", source = "caller" },
+  { name = "listen_pattern", type = "int",    source = "int_params[1]" },
+  { name = "conversation",   type = "string", source = "string_params[0]" },
+  { name = "match_count",    type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1779-1820 case 7 -- structurally identical to the creature case at nwscreature.cpp:12050; slot 0xd selected at :1814 and the \"k_hen_dialogue01\" substitution at :1815-1818."
+
+[[event]]
+lua_name       = "OnDoorDeath"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 10
+script_slot    = "OnDeath"
+slot_index     = 3
+args = [
+  { name = "door",   type = "object", source = "this" },
+  { name = "killer", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1821-1826 case 10: caller -> object.field66_0x154, scripts+3."
+
+[[event]]
+lua_name       = "OnDoorUserDefined"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "OnUserDefined"
+slot_index     = 11
+args = [
+  { name = "door",         type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1827-1833 case 0xb: GetInteger(0) -> object.field65_0x150, scripts+0xb."
+
+[[event]]
+lua_name       = "OnDoorDisarm"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 24
+script_slot    = "OnDisarm"
+slot_index     = 4
+args = [
+  { name = "door",     type = "object", source = "this" },
+  { name = "disarmer", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1834-1851 case 0x18 (ON_DISARM, serveraimaster.cpp:456): only if trap_flag is set; clears trap_flag, caller -> field49_0x328, scripts+4; then frees the trap's tracking list."
+
+[[event]]
+lua_name       = "OnDoorTrapTriggered"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 26
+script_slot    = "OnTrapTriggered"
+slot_index     = 9
+default_script = "traps.2da column MineScript for this door's TrapType"
+args = [
+  { name = "door",      type = "object", source = "this" },
+  { name = "triggerer", type = "object", source = "caller" },
+  { name = "force",     type = "int",    source = "int_params[0]", note = "nonzero bypasses the reputation and faction checks" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1852-1894 case 0x1a (ON_MINE_TRIGGERED, serveraimaster.cpp:462): GetInteger(0) gates the reputation < 90 and faction-mismatch tests; also skipped when the triggerer has effect immunity 5. On success caller -> field48_0x324, scripts+9 at :1869, then one-shot removal. Self-producer at nwsdoor.cpp:1651-1658 (posted from the melee-attacked branch). Default from traps.2da at nwsdoor.cpp:1293-1310."
+
+[[event]]
+lua_name       = "OnDoorLocked"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 28
+script_slot    = "OnLock"
+slot_index     = 6
+args = [
+  { name = "door",   type = "object", source = "this" },
+  { name = "locker", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1895-1900 case 0x1c (ON_LOCKED, serveraimaster.cpp:468): caller -> field44_0x314, scripts+6."
+
+[[event]]
+lua_name       = "OnDoorUnlocked"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 29
+script_slot    = "OnUnlock"
+slot_index     = 10
+args = [
+  { name = "door",     type = "object", source = "this" },
+  { name = "unlocker", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1901-1906 case 0x1d (ON_UNLOCKED, serveraimaster.cpp:471): caller -> field45_0x318, scripts+10."
+
+[[event]]
+lua_name       = "OnDoorClicked"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 30
+script_slot    = "OnClick"
+slot_index     = 12
+default_script = "NW_G0_Transition"
+args = [
+  { name = "door",      type = "object", source = "this" },
+  { name = "clicker",   type = "object", source = "object_params[0]" },
+  { name = "pending_id", type = "int",   source = "int_params[0]", note = "only on the re-posted second pass" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1907-2021 case 0x1e (ON_CLICKED, serveraimaster.cpp:474). Two distinct behaviours. If the door is LINKED to another module it never runs a script: it starts a global fade, marks the area transition pending, and re-posts itself as another event_type 0x1e with a 500 ms delay carrying SetObjectID(0, clicker) and SetInteger(0, the pending id) (nwsdoor.cpp:1946-1964; event_type written at :1953, queued at :1964); the second pass compares int_params[0] against the area's current pending id and, if they match, calls SetMoveToModulePending at :1985. If the door is NOT linked, scripts+0xc runs, with \"NW_G0_Transition\" substituted at :2000-2005 when empty or \"default\"."
+notes = "blocking=false. This is the K1 area-transition state machine. Blocking either pass strands the player behind a global fade with SetPauseState(2) still applied."
+
+[[event]]
+lua_name       = "OnDoorFailToOpen"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 10
+event_type     = 34
+script_slot    = "OnFailToOpen"
+slot_index     = 14
+args = [
+  { name = "door",   type = "object", source = "this" },
+  { name = "opener", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:2022-2053 case 0x22 (ON_FAIL_TO_OPEN, serveraimaster.cpp:486): caller -> field48_0x324, scripts+0xe runs FIRST, then if the door is locked a 'door is locked' feedback message is sent."
+
+[[event]]
+lua_name       = "OnDoorOpen"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 7
+script_slot    = "OnOpen"
+slot_index     = 0
+args = [
+  { name = "door",   type = "object", source = "this" },
+  { name = "opener", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "outer id 7 = EVENT_OPEN_OBJECT (serveraimaster.cpp:323). nwsdoor.cpp:1672-1677 calls OpenDoor(this, caller); the OnOpen script itself is run at nwsdoor.cpp:711 inside OpenDoor."
+notes = "confidence medium: I did not read OpenDoor in full, so I cannot state what else at nwsdoor.cpp:711's site depends on the script running."
+
+[[event]]
+lua_name       = "OnDoorClose"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 6
+script_slot    = "OnClosed"
+slot_index     = 1
+args = [
+  { name = "door",   type = "object", source = "this" },
+  { name = "closer", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 6 = EVENT_CLOSE_OBJECT (serveraimaster.cpp:311). nwsdoor.cpp:1678-1692: caller -> field47_0x320, SetOpenState(0), the linked door is closed too, THEN scripts+1 runs last."
+
+[[event]]
+lua_name       = "OnDoorAttacked"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 15
+script_slot    = "OnMeleeAttacked"
+slot_index     = 7
+args = [
+  { name = "door",     type = "object", source = "this" },
+  { name = "attacker", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1561-1661, outer id 0xF: caller -> object.field68_0x15c and SetLastHostileActor, combat broadcast, then scripts+7 at :1626. After the script, if the door is a live trap and the attacker is within 4 units, a self-directed event_type 0x1a is posted (:1644-1659; type set at :1651, queued at :1658)."
+
+[[event]]
+lua_name       = "OnDoorDestroy"
+hook_site      = "event.door"
+object_type    = "door"
+outer_event_id = 11
+args = [ { name = "door", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1702-1723 (outer id 0xB): unlinked doors are removed from the area and destructed; linked doors instead have their static bounding box removed and are set to open-state 3. No script."
+
+# =============================================================================
+# PLACEABLE -- CSWSPlaceable::EventHandler, nwsplaceable.cpp:1864-2385
+# script array: CExoString scripts[16]
+# index -> GFF field, LoadPlaceable nwsplaceable.cpp:797-919, SavePlaceable :1284-1315:
+#   0 OnClosed  1 OnDamaged  2 OnDeath  3 OnDisarm  4 OnHeartbeat
+#   5 OnInvDisturbed  6 OnLock  7 OnMeleeAttacked  8 OnOpen  9 OnSpellCastAt
+#  10 OnTrapTriggered 11 OnUnlock 12 OnUsed 13 OnUserDefined 14 OnDialog
+#  15 OnEndDialogue
+# =============================================================================
+
+[[event]]
+lua_name       = "OnPlaceableHeartbeat"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 0
+script_slot    = "OnHeartbeat"
+slot_index     = 4
+args = [
+  { name = "placeable",    type = "object", source = "this" },
+  { name = "calendar_day", type = "int",    source = "calendar_day" },
+  { name = "time_of_day",  type = "int",    source = "time_of_day" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2149-2160 case 0."
+
+[[event]]
+lua_name       = "OnPlaceableSpellCastAt"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 2
+script_slot    = "OnSpellCastAt"
+slot_index     = 9
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "caster",    type = "object", source = "object_params[0]" },
+  { name = "spell_id",  type = "int",    source = "int_params[0]" },
+  { name = "harmful",   type = "int",    source = "int_params[1]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2161-2184 case 2, identical in shape to the door case."
+
+[[event]]
+lua_name       = "OnPlaceableDamaged"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 4
+script_slot    = "OnDamaged"
+slot_index     = 1
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "damager",   type = "object", source = "caller" },
+  { name = "amount",    type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwsplaceable.cpp:2185-2191 case 4: caller -> object.field69_0x160, SetLastHostileActor, scripts+1. Amount from the producer at nwseffectlist.cpp:6393-6396."
+notes = "Same caveat as OnDoorDamaged: the handler does not read int_params[0]."
+
+[[event]]
+lua_name       = "OnPlaceableDialogue"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 7
+script_slot    = "OnDialog"
+slot_index     = 14
+default_script = "k_hen_dialogue01"
+args = [
+  { name = "placeable",      type = "object", source = "this" },
+  { name = "speaker",        type = "object", source = "caller" },
+  { name = "listen_pattern", type = "int",    source = "int_params[1]" },
+  { name = "conversation",   type = "string", source = "string_params[0]" },
+  { name = "match_count",    type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2192-2237 case 7, with the \"k_hen_dialogue01\" substitution at :2228-2234 (slot 0xe selected at :2227)."
+
+[[event]]
+lua_name       = "OnPlaceableDeath"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 10
+script_slot    = "OnDeath"
+slot_index     = 2
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "killer",    type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2238-2247 case 10: plays animation 0x2758 via the vtable, caller -> object.field66_0x154, scripts+2."
+
+[[event]]
+lua_name       = "OnPlaceableUserDefined"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "OnUserDefined"
+slot_index     = 13
+args = [
+  { name = "placeable",    type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2248-2254 case 0xb."
+
+[[event]]
+lua_name       = "OnPlaceableOpen"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 22
+script_slot    = "OnOpen"
+slot_index     = 8
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "opener",    type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2255-2260 case 0x16 (ON_OPEN, serveraimaster.cpp:450): caller -> field42_0x350, scripts+8."
+
+[[event]]
+lua_name       = "OnPlaceableClose"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 23
+script_slot    = "OnClosed"
+slot_index     = 0
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "closer",    type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2261-2269 case 0x17 (ON_CLOSE, serveraimaster.cpp:453): caller -> field43_0x354, scripts+0."
+
+[[event]]
+lua_name       = "OnPlaceableDisarm"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 24
+script_slot    = "OnDisarm"
+slot_index     = 3
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "disarmer",  type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2270-2289 case 0x18 (scripts+3 at :2277): gated on trap_flag; clears it, caller -> field46_0x360, scripts+3, then frees the trap tracking list."
+
+[[event]]
+lua_name       = "OnPlaceableUsed"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 25
+script_slot    = "OnUsed"
+slot_index     = 12
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "user",      type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2290-2299 case 0x19 (ON_USED, serveraimaster.cpp:459): runs only when the placeable's `usable` flag is set; caller -> field44_0x358, scripts+0xc."
+
+[[event]]
+lua_name       = "OnPlaceableTrapTriggered"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 26
+script_slot    = "OnTrapTriggered"
+slot_index     = 10
+default_script = "traps.2da column MineScript for this placeable's TrapType"
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "triggerer", type = "object", source = "caller" },
+  { name = "force",     type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2300-2344 case 0x1a (scripts+10 at :2317), structurally identical to the door case. Default from traps.2da at nwsplaceable.cpp:907-919."
+
+[[event]]
+lua_name       = "OnPlaceableInventoryDisturbed"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 27
+script_slot    = "OnInvDisturbed"
+slot_index     = 5
+args = [
+  { name = "placeable",    type = "object", source = "this" },
+  { name = "disturber",    type = "object", source = "caller" },
+  { name = "disturb_type", type = "int",    source = "int_params[0]", values = "1 = item added, 0 = item removed" },
+  { name = "item",         type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2345-2357 case 0x1b -- same field writes as the creature case. Producer nwsitem.cpp:243-252 and :272-281."
+
+[[event]]
+lua_name       = "OnPlaceableLocked"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 28
+script_slot    = "OnLock"
+slot_index     = 6
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "locker",    type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2358-2367 case 0x1c."
+
+[[event]]
+lua_name       = "OnPlaceableUnlocked"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 10
+event_type     = 29
+script_slot    = "OnUnlock"
+slot_index     = 11
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "unlocker",  type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:2368-2376 case 0x1d."
+
+[[event]]
+lua_name       = "OnPlaceableAttacked"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 15
+script_slot    = "OnMeleeAttacked"
+slot_index     = 7
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "attacker",  type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsplaceable.cpp:1927-2030, outer id 0xF; scripts+7 at :1992; a self-directed event_type 0x1a is posted afterwards for live traps (queued at :2026)."
+
+[[event]]
+lua_name       = "OnPlaceableEndDialogue"
+hook_site      = "vm.run_script"
+object_type    = "placeable"
+script_slot    = "OnEndDialogue"
+slot_index     = 15
+args = [ { name = "placeable", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwsplaceable.cpp:537 -- a bare RunScript(scripts+0xf). Not reachable through event.placeable."
+notes = "confidence medium: I did not identify the enclosing function."
+
+[[event]]
+lua_name       = "OnPlaceableAcquireItem"
+hook_site      = "event.placeable"
+object_type    = "placeable"
+outer_event_id = 25
+args = [
+  { name = "placeable", type = "object", source = "this" },
+  { name = "item",      type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "outer id 0x19 = EVENT_ACQUIRE_ITEM (serveraimaster.cpp:371). nwsplaceable.cpp:2031-2041 (outer id 0x19): resolves the caller as an item and calls AcquireItem. No script."
+
+# =============================================================================
+# TRIGGER -- CSWSTrigger::EventHandler, nwstrigger.cpp:1536-1700
+# script array: CExoString scripts[7]
+# index -> GFF field, SaveTrigger nwstrigger.cpp:1281-1293:
+#   0 ScriptHeartbeat 1 ScriptOnEnter 2 ScriptOnExit 3 ScriptUserDefine
+#   4 OnTrapTriggered 5 OnDisarm 6 OnClick
+# =============================================================================
+
+[[event]]
+lua_name       = "OnTriggerEnter"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 10
+event_type     = 12
+script_slot    = "ScriptOnEnter"
+slot_index     = 1
+args = [
+  { name = "trigger",  type = "object", source = "this" },
+  { name = "entering", type = "object", source = "object_params[0]" },
+  { name = "int0",     type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1595 is the `sVar1 != 0xc` guard; the 0xc path is the fall-through beginning at :1643. Three mutually exclusive paths: a mine trigger calls OnEnterMine at :1652 (which runs scripts+4 and scripts+1 at :666-667); a module-linked trigger runs the same fade/re-post area transition machine as the door, re-posting event_type 0xc (type written at :1697, queued at :1710) with SetObjectID(0, entering) and the pending id; an ordinary trigger runs scripts+1 at :1656."
+notes = "blocking=false because of the transition path. int_params[0]'s meaning on the FIRST pass is not determined; on the re-posted pass it is the area transition pending id."
+
+[[event]]
+lua_name       = "OnTriggerExit"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 10
+event_type     = 13
+script_slot    = "ScriptOnExit"
+slot_index     = 2
+args = [
+  { name = "trigger", type = "object", source = "this" },
+  { name = "leaving", type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1596-1602: GetObjectID(0) -> field14_0x2a0, scripts+2."
+
+[[event]]
+lua_name       = "OnTriggerUserDefined"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "ScriptUserDefine"
+slot_index     = 3
+args = [
+  { name = "trigger",      type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1603-1609: GetInteger(0) -> field39_0x2f8, scripts+3, and the RunScript object id is `param_2` (the CALLER), not the trigger."
+notes = "ENGINE QUIRK, verified: every other user-defined handler passes its own object id. The trigger passes the caller. A Lua binding that reports OBJECT_SELF for this event will disagree with the game. See nwstrigger.cpp:1608 `uVar5 = param_2;` (slot chosen at :1607, RunScript at :1640) versus nwscreature.cpp:12095-12102 (case 0xb passes the creature's own id)."
+
+[[event]]
+lua_name       = "OnTriggerDisarm"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 10
+event_type     = 24
+script_slot    = "OnDisarm"
+slot_index     = 5
+args = [
+  { name = "trigger",  type = "object", source = "this" },
+  { name = "disarmer", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1610-1615: caller -> field15_0x2a4, scripts+5."
+
+[[event]]
+lua_name       = "OnTriggerClicked"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 10
+event_type     = 30
+script_slot    = "OnClick"
+slot_index     = 6
+default_script = "NW_G0_Transition"
+args = [
+  { name = "trigger", type = "object", source = "this" },
+  { name = "clicker", type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1616-1639 case 0x1e: GetObjectID(0) -> field13_0x29c; \"NW_G0_Transition\" substituted at :1626 when the slot is empty or \"default\" AND the trigger is module-linked; the clicker's area-transition loading screen is set; scripts+6 runs."
+
+[[event]]
+lua_name       = "OnTriggerTrapTriggered"
+hook_site      = "vm.run_script"
+object_type    = "trigger"
+script_slot    = "OnTrapTriggered"
+slot_index     = 4
+default_script = "traps.2da column MineScript"
+args = [ { name = "trigger", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwstrigger.cpp:666 and :683 inside OnEnterMine, reached from the enter branch at nwstrigger.cpp:1648. Not a distinct CScriptEvent type for triggers."
+notes = "confidence medium: :666 and :667 run scripts+4 then scripts+1 back to back, and :683 runs scripts+5 on a different object id. I did not read OnEnterMine's control flow in full."
+
+[[event]]
+lua_name       = "OnTriggerHeartbeat"
+hook_site      = "vm.run_script"
+object_type    = "trigger"
+script_slot    = "ScriptHeartbeat"
+slot_index     = 0
+args = [ { name = "trigger", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwstrigger.cpp:773 -- a bare RunScript(scripts+0). CSWSTrigger::EventHandler has NO case 0, so the trigger heartbeat is not queue-delivered."
+notes = "confidence medium: enclosing function not identified."
+
+[[event]]
+lua_name       = "OnTriggerDestroy"
+hook_site      = "event.trigger"
+object_type    = "trigger"
+outer_event_id = 11
+args = [ { name = "trigger", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwstrigger.cpp:1581-1590: gated on is_destroyable, then RemoveFromArea and the destructor."
+
+# =============================================================================
+# ENCOUNTER -- CSWSEncounter::EventHandler, nwsencounter.cpp:2572-2620
+# Scripts are named members. GFF fields from SaveEncounter nwsencounter.cpp:853-863.
+# This handler accepts ONLY outer id 10; every other id returns immediately.
+# =============================================================================
+
+[[event]]
+lua_name       = "OnEncounterHeartbeat"
+hook_site      = "event.encounter"
+object_type    = "encounter"
+outer_event_id = 10
+event_type     = 0
+script_slot    = "OnHeartbeat"
+args = [ { name = "encounter", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsencounter.cpp:2603-2606. Producer nwsencounter.cpp:2541 sets event_type 0."
+
+[[event]]
+lua_name       = "OnEncounterEnter"
+hook_site      = "event.encounter"
+object_type    = "encounter"
+outer_event_id = 10
+event_type     = 12
+script_slot    = "OnEntered"
+args = [
+  { name = "encounter", type = "object", source = "this" },
+  { name = "entering",  type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsencounter.cpp:2587-2595: GetObjectID(0) -> last_entered, then SpawnIfAppropriate(entering, -1.0) runs BEFORE the script."
+notes = "blocking=false at event.encounter: the spawn happens inside the branch. Blocking at vm.run_script is safe."
+
+[[event]]
+lua_name       = "OnEncounterExit"
+hook_site      = "event.encounter"
+object_type    = "encounter"
+outer_event_id = 10
+event_type     = 13
+script_slot    = "OnExit"
+args = [
+  { name = "encounter", type = "object", source = "this" },
+  { name = "leaving",   type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsencounter.cpp:2596-2602: GetObjectID(0) -> last_left, UpdateActivateAreaList, then the script."
+
+[[event]]
+lua_name       = "OnEncounterExhausted"
+hook_site      = "event.encounter"
+object_type    = "encounter"
+outer_event_id = 10
+event_type     = 21
+script_slot    = "OnExhausted"
+args = [ { name = "encounter", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsencounter.cpp:2607-2610 case 0x15 (ON_ENCOUNTER_EXHAUSTED, serveraimaster.cpp:447). Producer nwsencounter.cpp:2683 in RemoveFromActiveCreatureCount."
+
+[[event]]
+lua_name       = "OnEncounterUserDefined"
+hook_site      = "event.encounter"
+object_type    = "encounter"
+outer_event_id = 10
+event_type     = 11
+script_slot    = "OnUserDefined"
+args = [
+  { name = "encounter",    type = "object", source = "this" },
+  { name = "event_number", type = "int",    source = "int_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsencounter.cpp:2611-2617: GetInteger(0) -> custom_script_id, then the script."
+
+# =============================================================================
+# AREA-OF-EFFECT OBJECT -- nwsspellimpact.cpp:1156-1200
+# =============================================================================
+
+[[event]]
+lua_name       = "OnAoeEnter"
+hook_site      = "event.aoe"
+object_type    = "aoe"
+outer_event_id = 10
+event_type     = 12
+script_slot    = "OnEnter (named member script_on_enter)"
+args = [
+  { name = "aoe",      type = "object", source = "this" },
+  { name = "entering", type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsspellimpact.cpp:1183-1189: GetObjectID(0) -> last_entered, then RunScript. Producers nwsspellimpact.cpp:752, :779 set event_type 0xc."
+
+[[event]]
+lua_name       = "OnAoeExit"
+hook_site      = "event.aoe"
+object_type    = "aoe"
+outer_event_id = 10
+event_type     = 13
+script_slot    = "OnExit (named member script_on_exit)"
+args = [
+  { name = "aoe",     type = "object", source = "this" },
+  { name = "leaving", type = "object", source = "object_params[0]" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsspellimpact.cpp:1190-1196. Producers nwsspellimpact.cpp:806, :906 set event_type 0xd."
+
+# =============================================================================
+# STORE -- nwsstore.cpp:181-207. One script, one event.
+# =============================================================================
+
+[[event]]
+lua_name       = "OnStoreOpen"
+hook_site      = "event.store"
+object_type    = "store"
+outer_event_id = 10
+event_type     = 22
+script_slot    = "OnOpenStore"
+args = [
+  { name = "store",  type = "object", source = "this" },
+  { name = "opener", type = "object", source = "caller" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsstore.cpp:187-194: only event_type 0x16 (ON_OPEN) is handled; caller -> field4_0x23c, RunScript(&on_open_store). GFF field name from SaveStore nwsstore.cpp:112."
+
+# =============================================================================
+# WAYPOINT -- nwswaypoint.cpp:49-57. The smallest handler in the engine.
+# =============================================================================
+
+[[event]]
+lua_name       = "OnWaypointDestroy"
+hook_site      = "event.waypoint"
+object_type    = "waypoint"
+outer_event_id = 11
+args = [ { name = "waypoint", type = "object", source = "this" } ]
+returns   = []
+fallback  = "none"
+blocking  = false
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwswaypoint.cpp:49-57: the entire body is `if (eventId == 0xb && is_destroyable) destructor()`. Waypoints run no scripts and receive no other event."
+notes = "event.waypoint is a hook site with essentially nothing behind it. Consider dropping it from hooksites.toml."
+
+# =============================================================================
+# NON-SLOT SCRIPTS -- named by the engine, not by any GFF field.
+# Reachable only at vm.run_script.
+# =============================================================================
+
+[[event]]
+lua_name       = "OnCreatureStateScript"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "statescripts.2da column SCRIPTNAME"
+args = [
+  { name = "creature", type = "object", source = "this" },
+  { name = "state",    type = "int",    source = "creature field_0x8ed", values = "1 -> 2da row 3, 2 -> 2da row 2" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "medium"
+evidence  = "nwscreature.cpp:466-486, immediately after the heartbeat script. The row index is chosen by field_0x8ed and the resulting resref is run, then object.field49_0xe8 is cleared."
+notes = "confidence medium: the meaning of field_0x8ed is not established beyond the two comparisons."
+
+[[event]]
+lua_name       = "OnAreaTransitionFail"
+hook_site      = "vm.run_script"
+object_type    = "any"
+script_slot    = "hardcoded"
+default_script = "k_trg_transfail"
+args = [ { name = "creature", type = "object", source = "the creature that tried to transition" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwsdoor.cpp:1949-1956 and nwstrigger.cpp:1680-1684: run when CSWParty::IsPartyTogether returns 0 at a module transition."
+
+[[event]]
+lua_name       = "OnItemUse"
+hook_site      = "vm.run_script"
+object_type    = "any"
+script_slot    = "hardcoded"
+default_script = "itemuse"
+args = [ { name = "object", type = "object", source = "object id read from the client message" } ]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwshandleplayermessage.cpp:2506-2515, message case 0xc."
+
+[[event]]
+lua_name       = "OnClientRequestedScript"
+hook_site      = "vm.run_script"
+object_type    = "creature"
+script_slot    = "arbitrary, supplied by the client message"
+args = [
+  { name = "script_name", type = "string", source = "CExoString read from the message, max 0x20" },
+  { name = "creature",    type = "object", source = "the sending player's creature" },
+]
+returns   = []
+fallback  = "none"
+blocking  = true
+engine_return = "ignored"
+confidence = "high"
+evidence  = "nwshandleplayermessage.cpp:595-615, player message subtype 8: reads a string from the wire and runs it as a script on the player's creature."
+notes = "Security-relevant. A Lua sandbox that trusts script provenance should know this path exists."

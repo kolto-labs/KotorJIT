@@ -10,6 +10,7 @@
     "md5": "1ffa92993d8015c9bb93ceac96c508c0"
   },
   "note": "Binary not on this machine; table emitted to prove the generator generalises.",
+  "adjudicated_bindings": 0,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -231,7 +232,7 @@
       "cls": "CSWSCreature",
       "method": "EventHandler",
       "kind": "detour",
-      "required": true,
+      "required": false,
       "addr": 6847232,
       "source": "func",
       "confidence": 1.0,
@@ -407,11 +408,14 @@
       "addr_hex": "0x0072AAA0"
     }
   },
+  "reference_image": null,
+  "error": "reference image not available",
   "summary": {
     "total": 33,
     "resolved": 32,
     "by_func": 32,
     "by_identity": 0,
+    "by_adjudication": 0,
     "refused_ambiguous": [],
     "unresolved": [
       "console.funcs_add"
