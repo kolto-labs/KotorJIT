@@ -1,0 +1,29 @@
+# Build output
+/build/
+/out/
+*.o
+*.a
+*.dll
+*.so
+*.exe
+*.pdb
+
+# Harness scratch: wine prefixes, game copies, screenshots, logs
+/tmp/
+/tmp_*.log
+
+# Third-party sources are fetched, not vendored
+/third_party/
+
+# Never commit game content or binaries
+*.bif
+*.key
+*.mod
+*.rim
+*.erf
+*.tlk
+*.bik
+
+__pycache__/
+*.pyc
+.venv/

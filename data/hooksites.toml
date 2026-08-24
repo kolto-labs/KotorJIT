@@ -1,0 +1,304 @@
+# KotorPhasor hook site manifest.
+#
+# Sites are named LOGICALLY (class + method). Addresses never appear here — they
+# are resolved per build by tools/gen_address_tables.py against the RE corpus and
+# emitted to data/addresses/<build>.json. Adding a game build is a data change.
+#
+# `required` sites must resolve or the runtime refuses to install on that build.
+# `optional` sites degrade gracefully: the feature they carry is disabled.
+
+[meta]
+version = 1
+
+# --- The script VM: the backbone of the event pipeline ------------------------
+
+[[site]]
+name     = "vm.run_script"
+class    = "CVirtualMachineInternal"
+method   = "RunScript"
+kind     = "detour"
+required = true
+purpose  = """Every NWScript event the engine fires funnels through here. Yields the
+script name and owning object, and allows observe / block / override."""
+# int __thiscall RunScript(this, CExoString* name, ulong objectId, int hasObject)
+convention = "thiscall"
+returns    = "int"
+
+[[site]]
+name     = "vm.run_script_situation"
+class    = "CVirtualMachineInternal"
+method   = "RunScriptSituation"
+kind     = "detour"
+required = false
+purpose  = "Resumed/delayed scripts (DelayCommand, AssignCommand)."
+convention = "thiscall"
+
+[[site]]
+name     = "vm.execute_code"
+class    = "CVirtualMachineInternal"
+method   = "ExecuteCode"
+kind     = "reference"
+required = false
+purpose  = "Bytecode interpreter loop. Referenced for diagnostics, not hooked in M1."
+convention = "thiscall"
+
+[[site]]
+name     = "vm.execute_command"
+class    = "CSWVirtualMachineCommands"
+method   = "ExecuteCommand"
+kind     = "reference"
+required = true
+purpose  = """Engine-routine dispatch. NOT hooked - we write entries in the runtime
+function-pointer table it indexes. Resolved so we can locate that table."""
+convention = "thiscall"
+
+# --- Script state persistence -------------------------------------------------
+
+[[site]]
+name     = "vm.save_script_situation"
+class    = "CVirtualMachineInternal"
+method   = "SaveScriptSituation"
+kind     = "detour"
+required = false
+purpose  = "Persist Lua-owned state alongside the engine's script state on save."
+convention = "thiscall"
+
+[[site]]
+name     = "vm.load_script_situation"
+class    = "CVirtualMachine"
+method   = "LoadScriptSituation"
+kind     = "detour"
+required = false
+purpose  = "Restore Lua-owned state on load."
+convention = "thiscall"
+
+# --- VM stack marshalling: how Lua passes args to engine routines --------------
+
+[[site]]
+name = "vm.stack_pop_integer"
+class = "CVirtualMachine"
+method = "StackPopInteger"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_integer"
+class = "CVirtualMachine"
+method = "StackPushInteger"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_pop_float"
+class = "CVirtualMachine"
+method = "StackPopFloat"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_float"
+class = "CVirtualMachine"
+method = "StackPushFloat"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_pop_string"
+class = "CVirtualMachine"
+method = "StackPopString"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_string"
+class = "CVirtualMachine"
+method = "StackPushString"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_pop_object"
+class = "CVirtualMachine"
+method = "StackPopObject"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_object"
+class = "CVirtualMachine"
+method = "StackPushObject"
+kind = "call"
+required = true
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_pop_vector"
+class = "CVirtualMachine"
+method = "StackPopVector"
+kind = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_vector"
+class = "CVirtualMachine"
+method = "StackPushVector"
+kind = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_pop_engine_structure"
+class = "CVirtualMachine"
+method = "StackPopEngineStructure"
+kind = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "vm.stack_push_engine_structure"
+class = "CVirtualMachine"
+method = "StackPushEngineStructure"
+kind = "call"
+required = false
+convention = "thiscall"
+
+# --- Per-object typed event handlers -----------------------------------------
+# One logical cave, ten sites. Signatures differ per type, so each is declared
+# separately and each gets its own verified prototype before it is hooked.
+
+[[site]]
+name = "event.creature"
+class = "CSWSCreature"
+method = "EventHandler"
+kind = "detour"
+required = true
+convention = "thiscall"
+purpose = "undefined __thiscall(this, int eventType, int* eventData, CSWSObject* caller)"
+
+[[site]]
+name = "event.door"
+class = "CSWSDoor"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.placeable"
+class = "CSWSPlaceable"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.trigger"
+class = "CSWSTrigger"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.module"
+class = "CSWSModule"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+purpose = "void __thiscall(this, ulong, ulong, void*, ulong, ulong) - 6 params, differs from creature"
+
+[[site]]
+name = "event.area"
+class = "CSWSArea"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.encounter"
+class = "CSWSEncounter"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.aoe"
+class = "CSWSAreaOfEffectObject"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.store"
+class = "CSWSStore"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+[[site]]
+name = "event.waypoint"
+class = "CSWSWaypoint"
+method = "EventHandler"
+kind = "detour"
+required = false
+convention = "thiscall"
+
+# --- Tick, console, module lifecycle -----------------------------------------
+
+[[site]]
+name     = "app.server_main_loop"
+class    = "CServerExoAppInternal"
+method   = "MainLoop"
+kind     = "detour"
+required = true
+purpose  = "Per-tick scheduler: Lua timers and coroutine resume."
+convention = "thiscall"
+
+[[site]]
+name     = "app.client_main_loop"
+class    = "CClientExoAppInternal"
+method   = "MainLoop"
+kind     = "reference"
+required = false
+purpose  = "Client/render tick. Resolved for diagnostics; not hooked in M1."
+convention = "thiscall"
+
+[[site]]
+name     = "console.do_console"
+class    = ""
+method   = "DoConsole"
+kind     = "detour"
+required = true
+purpose  = """In-game cheat console. Intercepts the whole input line, including
+commands the game does not recognise - which registration-based extension cannot do.
+Also the headless demo surface."""
+
+[[site]]
+name     = "console.funcs_add"
+class    = ""
+method   = "ConsoleFuncs_Add"
+kind     = "call"
+required = false
+purpose  = "Register native console commands."
+
+[[site]]
+name     = "module.load_start"
+class    = "CSWSModule"
+method   = "LoadModuleStart"
+kind     = "detour"
+required = false
+purpose  = "Module lifecycle boundary; script reload point. Spare sixth cave."
+convention = "thiscall"
