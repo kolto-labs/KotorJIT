@@ -1,0 +1,8006 @@
+{
+ "structs": [
+  {
+   "name": "CSWSCreature",
+   "size": 2760,
+   "how_to_obtain": "g_pAppManager (global at 0x007A39FC) -> +8 CServerExoApp* -> CServerExoApp::GetCreatureByGameObjectID(0x4AE770, id). That thunk does `mov ecx,[ecx+4]` then jumps to CServerExoAppInternal::GetCreatureByGameObjectID (0x4B1790), which looks the id up in the object array, checks the type byte at obj+8 == 5, and calls vtable+0x30. Slot 0x30 on the creature vtable (0x7470C8) is `mov eax,ecx; ret`, so the returned CSWSCreature* is bit-identical to the CGameObject* -- no pointer adjustment.",
+   "fields": [
+    {
+     "name": "object",
+     "offset": 0,
+     "type": "CSWSObject",
+     "meaning": "embedded server object (552 bytes)"
+    },
+    {
+     "name": "field_228",
+     "offset": 552,
+     "type": "u16"
+    },
+    {
+     "name": "field_22a",
+     "offset": 554,
+     "type": "u16"
+    },
+    {
+     "name": "joining_xp",
+     "offset": 556,
+     "type": "i32"
+    },
+    {
+     "name": "script_resrefs",
+     "offset": 560,
+     "type": "CExoString[14]",
+     "meaning": "script slot names, 8 bytes each",
+     "confidence": "med"
+    },
+    {
+     "name": "field_2a0",
+     "offset": 672,
+     "type": "CExoString[14]",
+     "meaning": "second 112-byte block of 8-byte string slots",
+     "confidence": "low"
+    },
+    {
+     "name": "field_310",
+     "offset": 784,
+     "type": "u32"
+    },
+    {
+     "name": "field_314",
+     "offset": 788,
+     "type": "u32"
+    },
+    {
+     "name": "field_318",
+     "offset": 792,
+     "type": "u32"
+    },
+    {
+     "name": "field_31c",
+     "offset": 796,
+     "type": "u32"
+    },
+    {
+     "name": "field_320",
+     "offset": 800,
+     "type": "u32"
+    },
+    {
+     "name": "field_324",
+     "offset": 804,
+     "type": "CExoArrayList",
+     "meaning": "area-of-effect object ids; data ptr at 0x324, size at 0x328, u32 elements"
+    },
+    {
+     "name": "field_330",
+     "offset": 816,
+     "type": "CExoArrayList",
+     "meaning": "object id list; data ptr at 0x330, size at 0x334, u32 elements"
+    },
+    {
+     "name": "field_33c",
+     "offset": 828,
+     "type": "u32"
+    },
+    {
+     "name": "path_find_info",
+     "offset": 832,
+     "type": "ptr"
+    },
+    {
+     "name": "field_344",
+     "offset": 836,
+     "type": "u32"
+    },
+    {
+     "name": "field_348",
+     "offset": 840,
+     "type": "u32"
+    },
+    {
+     "name": "create_on_script_fired",
+     "offset": 844,
+     "type": "i32"
+    },
+    {
+     "name": "field_350",
+     "offset": 848,
+     "type": "u32"
+    },
+    {
+     "name": "field_354",
+     "offset": 852,
+     "type": "u32"
+    },
+    {
+     "name": "field_358",
+     "offset": 856,
+     "type": "u32"
+    },
+    {
+     "name": "field_35c",
+     "offset": 860,
+     "type": "u32"
+    },
+    {
+     "name": "field_360",
+     "offset": 864,
+     "type": "u32"
+    },
+    {
+     "name": "field_364",
+     "offset": 868,
+     "type": "u32"
+    },
+    {
+     "name": "field_368",
+     "offset": 872,
+     "type": "u32"
+    },
+    {
+     "name": "field_36c",
+     "offset": 876,
+     "type": "u32"
+    },
+    {
+     "name": "field_370",
+     "offset": 880,
+     "type": "u32"
+    },
+    {
+     "name": "field_374",
+     "offset": 884,
+     "type": "u32"
+    },
+    {
+     "name": "field_378",
+     "offset": 888,
+     "type": "u32"
+    },
+    {
+     "name": "field_37c",
+     "offset": 892,
+     "type": "u32"
+    },
+    {
+     "name": "field_380",
+     "offset": 896,
+     "type": "u32"
+    },
+    {
+     "name": "field_384",
+     "offset": 900,
+     "type": "u32"
+    },
+    {
+     "name": "field_388",
+     "offset": 904,
+     "type": "u32"
+    },
+    {
+     "name": "field_38c",
+     "offset": 908,
+     "type": "u32"
+    },
+    {
+     "name": "field_390",
+     "offset": 912,
+     "type": "u32"
+    },
+    {
+     "name": "field_394",
+     "offset": 916,
+     "type": "u32"
+    },
+    {
+     "name": "field_398",
+     "offset": 920,
+     "type": "u32"
+    },
+    {
+     "name": "field_39c",
+     "offset": 924,
+     "type": "u32"
+    },
+    {
+     "name": "field_3a0",
+     "offset": 928,
+     "type": "u32"
+    },
+    {
+     "name": "field_3a4",
+     "offset": 932,
+     "type": "u32"
+    },
+    {
+     "name": "field_3a8",
+     "offset": 936,
+     "type": "u8[0x118]"
+    },
+    {
+     "name": "party_follow_info",
+     "offset": 1216,
+     "type": "ptr"
+    },
+    {
+     "name": "ambient_animation_state",
+     "offset": 1220,
+     "type": "u8"
+    },
+    {
+     "name": "field_4c5",
+     "offset": 1221,
+     "type": "u8"
+    },
+    {
+     "name": "field_4c6",
+     "offset": 1222,
+     "type": "u8"
+    },
+    {
+     "name": "field_4c7",
+     "offset": 1223,
+     "type": "u8"
+    },
+    {
+     "name": "field_4c8",
+     "offset": 1224,
+     "type": "u8[0x8]"
+    },
+    {
+     "name": "detect_mode",
+     "offset": 1232,
+     "type": "u8"
+    },
+    {
+     "name": "stealth_mode",
+     "offset": 1233,
+     "type": "u8"
+    },
+    {
+     "name": "field_4d2",
+     "offset": 1234,
+     "type": "u8"
+    },
+    {
+     "name": "field_4d3",
+     "offset": 1235,
+     "type": "u8"
+    },
+    {
+     "name": "field_4d4",
+     "offset": 1236,
+     "type": "u32"
+    },
+    {
+     "name": "field_4d8",
+     "offset": 1240,
+     "type": "u8"
+    },
+    {
+     "name": "field_4d9",
+     "offset": 1241,
+     "type": "u8"
+    },
+    {
+     "name": "field_4da",
+     "offset": 1242,
+     "type": "u8"
+    },
+    {
+     "name": "field_4db",
+     "offset": 1243,
+     "type": "u8"
+    },
+    {
+     "name": "field_4dc",
+     "offset": 1244,
+     "type": "u32"
+    },
+    {
+     "name": "field_4e0",
+     "offset": 1248,
+     "type": "u32"
+    },
+    {
+     "name": "field_4e4",
+     "offset": 1252,
+     "type": "u32"
+    },
+    {
+     "name": "field_4e8",
+     "offset": 1256,
+     "type": "u32"
+    },
+    {
+     "name": "field_4ec",
+     "offset": 1260,
+     "type": "u32"
+    },
+    {
+     "name": "field_4f0",
+     "offset": 1264,
+     "type": "u32"
+    },
+    {
+     "name": "disarmable",
+     "offset": 1268,
+     "type": "i32"
+    },
+    {
+     "name": "creature_size",
+     "offset": 1272,
+     "type": "i32"
+    },
+    {
+     "name": "field_4fc",
+     "offset": 1276,
+     "type": "u32"
+    },
+    {
+     "name": "field_500",
+     "offset": 1280,
+     "type": "u32"
+    },
+    {
+     "name": "field_504",
+     "offset": 1284,
+     "type": "u32"
+    },
+    {
+     "name": "field_508",
+     "offset": 1288,
+     "type": "u32"
+    },
+    {
+     "name": "field_50c",
+     "offset": 1292,
+     "type": "u32"
+    },
+    {
+     "name": "field_510",
+     "offset": 1296,
+     "type": "u32"
+    },
+    {
+     "name": "field_514",
+     "offset": 1300,
+     "type": "u32"
+    },
+    {
+     "name": "field_518",
+     "offset": 1304,
+     "type": "u32"
+    },
+    {
+     "name": "field_51c",
+     "offset": 1308,
+     "type": "u32"
+    },
+    {
+     "name": "field_520",
+     "offset": 1312,
+     "type": "u32"
+    },
+    {
+     "name": "field_524",
+     "offset": 1316,
+     "type": "u32"
+    },
+    {
+     "name": "field_528",
+     "offset": 1320,
+     "type": "u32"
+    },
+    {
+     "name": "field_52c",
+     "offset": 1324,
+     "type": "u32"
+    },
+    {
+     "name": "field_530",
+     "offset": 1328,
+     "type": "u32"
+    },
+    {
+     "name": "field_534",
+     "offset": 1332,
+     "type": "u32"
+    },
+    {
+     "name": "field_538",
+     "offset": 1336,
+     "type": "u32"
+    },
+    {
+     "name": "field_53c",
+     "offset": 1340,
+     "type": "u32"
+    },
+    {
+     "name": "field_540",
+     "offset": 1344,
+     "type": "i32"
+    },
+    {
+     "name": "field_544",
+     "offset": 1348,
+     "type": "i32"
+    },
+    {
+     "name": "field_548",
+     "offset": 1352,
+     "type": "i32"
+    },
+    {
+     "name": "field_54c",
+     "offset": 1356,
+     "type": "i32"
+    },
+    {
+     "name": "field_550",
+     "offset": 1360,
+     "type": "u32"
+    },
+    {
+     "name": "field_554",
+     "offset": 1364,
+     "type": "u32"
+    },
+    {
+     "name": "field_558",
+     "offset": 1368,
+     "type": "u32"
+    },
+    {
+     "name": "field_55c",
+     "offset": 1372,
+     "type": "u32"
+    },
+    {
+     "name": "field_560",
+     "offset": 1376,
+     "type": "u32"
+    },
+    {
+     "name": "field_564",
+     "offset": 1380,
+     "type": "i32"
+    },
+    {
+     "name": "field_568",
+     "offset": 1384,
+     "type": "u32"
+    },
+    {
+     "name": "field_56c",
+     "offset": 1388,
+     "type": "u32"
+    },
+    {
+     "name": "field_570",
+     "offset": 1392,
+     "type": "u32"
+    },
+    {
+     "name": "field_574",
+     "offset": 1396,
+     "type": "u32"
+    },
+    {
+     "name": "field_578",
+     "offset": 1400,
+     "type": "u32"
+    },
+    {
+     "name": "field_57c",
+     "offset": 1404,
+     "type": "u32"
+    },
+    {
+     "name": "field_580",
+     "offset": 1408,
+     "type": "u32"
+    },
+    {
+     "name": "field_584",
+     "offset": 1412,
+     "type": "u32"
+    },
+    {
+     "name": "field_588",
+     "offset": 1416,
+     "type": "u32"
+    },
+    {
+     "name": "field_58c",
+     "offset": 1420,
+     "type": "u32"
+    },
+    {
+     "name": "field_590",
+     "offset": 1424,
+     "type": "u32"
+    },
+    {
+     "name": "field_594",
+     "offset": 1428,
+     "type": "u32"
+    },
+    {
+     "name": "field_598",
+     "offset": 1432,
+     "type": "u32"
+    },
+    {
+     "name": "field_59c",
+     "offset": 1436,
+     "type": "u32"
+    },
+    {
+     "name": "field_5a0",
+     "offset": 1440,
+     "type": "u32"
+    },
+    {
+     "name": "field_5a4",
+     "offset": 1444,
+     "type": "u32"
+    },
+    {
+     "name": "field_5a8",
+     "offset": 1448,
+     "type": "u32"
+    },
+    {
+     "name": "field_5ac",
+     "offset": 1452,
+     "type": "u32"
+    },
+    {
+     "name": "field_5b0",
+     "offset": 1456,
+     "type": "u32"
+    },
+    {
+     "name": "field_5b4",
+     "offset": 1460,
+     "type": "u32"
+    },
+    {
+     "name": "field_5b8",
+     "offset": 1464,
+     "type": "u32"
+    },
+    {
+     "name": "field_5bc",
+     "offset": 1468,
+     "type": "u32"
+    },
+    {
+     "name": "field_5c0",
+     "offset": 1472,
+     "type": "u32"
+    },
+    {
+     "name": "field_5c4",
+     "offset": 1476,
+     "type": "u32"
+    },
+    {
+     "name": "field_5c8",
+     "offset": 1480,
+     "type": "u32"
+    },
+    {
+     "name": "field_5cc",
+     "offset": 1484,
+     "type": "u32"
+    },
+    {
+     "name": "field_5d0",
+     "offset": 1488,
+     "type": "u32"
+    },
+    {
+     "name": "field_5d4",
+     "offset": 1492,
+     "type": "u32"
+    },
+    {
+     "name": "field_5d8",
+     "offset": 1496,
+     "type": "u32"
+    },
+    {
+     "name": "field_5dc",
+     "offset": 1500,
+     "type": "u32"
+    },
+    {
+     "name": "field_5e0",
+     "offset": 1504,
+     "type": "u32"
+    },
+    {
+     "name": "field_5e4",
+     "offset": 1508,
+     "type": "u32"
+    },
+    {
+     "name": "field_5e8",
+     "offset": 1512,
+     "type": "u32"
+    },
+    {
+     "name": "field_5ec",
+     "offset": 1516,
+     "type": "u32"
+    },
+    {
+     "name": "field_5f0",
+     "offset": 1520,
+     "type": "u32"
+    },
+    {
+     "name": "field_5f4",
+     "offset": 1524,
+     "type": "u32"
+    },
+    {
+     "name": "field_5f8",
+     "offset": 1528,
+     "type": "u32"
+    },
+    {
+     "name": "field_5fc",
+     "offset": 1532,
+     "type": "u32"
+    },
+    {
+     "name": "field_600",
+     "offset": 1536,
+     "type": "u32"
+    },
+    {
+     "name": "field_604",
+     "offset": 1540,
+     "type": "u32"
+    },
+    {
+     "name": "field_608",
+     "offset": 1544,
+     "type": "u32"
+    },
+    {
+     "name": "field_60c",
+     "offset": 1548,
+     "type": "u32"
+    },
+    {
+     "name": "field_610",
+     "offset": 1552,
+     "type": "u32"
+    },
+    {
+     "name": "field_614",
+     "offset": 1556,
+     "type": "u32"
+    },
+    {
+     "name": "field_618",
+     "offset": 1560,
+     "type": "u32"
+    },
+    {
+     "name": "field_61c",
+     "offset": 1564,
+     "type": "u32"
+    },
+    {
+     "name": "field_620",
+     "offset": 1568,
+     "type": "u32"
+    },
+    {
+     "name": "field_624",
+     "offset": 1572,
+     "type": "u32"
+    },
+    {
+     "name": "field_628",
+     "offset": 1576,
+     "type": "u32"
+    },
+    {
+     "name": "field_62c",
+     "offset": 1580,
+     "type": "u32"
+    },
+    {
+     "name": "field_630",
+     "offset": 1584,
+     "type": "u32"
+    },
+    {
+     "name": "field_634",
+     "offset": 1588,
+     "type": "u32"
+    },
+    {
+     "name": "field_638",
+     "offset": 1592,
+     "type": "u32"
+    },
+    {
+     "name": "field_63c",
+     "offset": 1596,
+     "type": "u32"
+    },
+    {
+     "name": "field_640",
+     "offset": 1600,
+     "type": "u32"
+    },
+    {
+     "name": "field_644",
+     "offset": 1604,
+     "type": "u32"
+    },
+    {
+     "name": "field_648",
+     "offset": 1608,
+     "type": "u32"
+    },
+    {
+     "name": "field_64c",
+     "offset": 1612,
+     "type": "u32"
+    },
+    {
+     "name": "field_650",
+     "offset": 1616,
+     "type": "u32"
+    },
+    {
+     "name": "field_654",
+     "offset": 1620,
+     "type": "u32"
+    },
+    {
+     "name": "field_658",
+     "offset": 1624,
+     "type": "u32"
+    },
+    {
+     "name": "field_65c",
+     "offset": 1628,
+     "type": "u32"
+    },
+    {
+     "name": "field_660",
+     "offset": 1632,
+     "type": "u32"
+    },
+    {
+     "name": "field_664",
+     "offset": 1636,
+     "type": "u32"
+    },
+    {
+     "name": "field_668",
+     "offset": 1640,
+     "type": "u32"
+    },
+    {
+     "name": "field_66c",
+     "offset": 1644,
+     "type": "u32"
+    },
+    {
+     "name": "field_670",
+     "offset": 1648,
+     "type": "u32"
+    },
+    {
+     "name": "field_674",
+     "offset": 1652,
+     "type": "u32"
+    },
+    {
+     "name": "field_678",
+     "offset": 1656,
+     "type": "u32"
+    },
+    {
+     "name": "field_67c",
+     "offset": 1660,
+     "type": "u32"
+    },
+    {
+     "name": "field_680",
+     "offset": 1664,
+     "type": "u32"
+    },
+    {
+     "name": "field_684",
+     "offset": 1668,
+     "type": "u32"
+    },
+    {
+     "name": "field_688",
+     "offset": 1672,
+     "type": "u32"
+    },
+    {
+     "name": "field_68c",
+     "offset": 1676,
+     "type": "u32"
+    },
+    {
+     "name": "field_690",
+     "offset": 1680,
+     "type": "u32"
+    },
+    {
+     "name": "field_694",
+     "offset": 1684,
+     "type": "u32"
+    },
+    {
+     "name": "field_698",
+     "offset": 1688,
+     "type": "u32"
+    },
+    {
+     "name": "field_69c",
+     "offset": 1692,
+     "type": "u32"
+    },
+    {
+     "name": "field_6a0",
+     "offset": 1696,
+     "type": "u32"
+    },
+    {
+     "name": "field_6a4",
+     "offset": 1700,
+     "type": "u32"
+    },
+    {
+     "name": "field_6a8",
+     "offset": 1704,
+     "type": "u32"
+    },
+    {
+     "name": "field_6ac",
+     "offset": 1708,
+     "type": "u32"
+    },
+    {
+     "name": "field_6b0",
+     "offset": 1712,
+     "type": "u32"
+    },
+    {
+     "name": "field_6b4",
+     "offset": 1716,
+     "type": "u32"
+    },
+    {
+     "name": "field_6b8",
+     "offset": 1720,
+     "type": "u32"
+    },
+    {
+     "name": "field_6bc",
+     "offset": 1724,
+     "type": "u32"
+    },
+    {
+     "name": "field_6c0",
+     "offset": 1728,
+     "type": "u32"
+    },
+    {
+     "name": "field_6c4",
+     "offset": 1732,
+     "type": "u32"
+    },
+    {
+     "name": "field_6c8",
+     "offset": 1736,
+     "type": "u32"
+    },
+    {
+     "name": "field_6cc",
+     "offset": 1740,
+     "type": "u32"
+    },
+    {
+     "name": "field_6d0",
+     "offset": 1744,
+     "type": "u32"
+    },
+    {
+     "name": "field_6d4",
+     "offset": 1748,
+     "type": "u32"
+    },
+    {
+     "name": "field_6d8",
+     "offset": 1752,
+     "type": "u32"
+    },
+    {
+     "name": "field_6dc",
+     "offset": 1756,
+     "type": "u32"
+    },
+    {
+     "name": "field_6e0",
+     "offset": 1760,
+     "type": "u32"
+    },
+    {
+     "name": "field_6e4",
+     "offset": 1764,
+     "type": "u32"
+    },
+    {
+     "name": "field_6e8",
+     "offset": 1768,
+     "type": "u32"
+    },
+    {
+     "name": "field_6ec",
+     "offset": 1772,
+     "type": "u32"
+    },
+    {
+     "name": "field_6f0",
+     "offset": 1776,
+     "type": "u32"
+    },
+    {
+     "name": "field_6f4",
+     "offset": 1780,
+     "type": "u32"
+    },
+    {
+     "name": "field_6f8",
+     "offset": 1784,
+     "type": "u32"
+    },
+    {
+     "name": "field_6fc",
+     "offset": 1788,
+     "type": "u32"
+    },
+    {
+     "name": "field_700",
+     "offset": 1792,
+     "type": "u32"
+    },
+    {
+     "name": "field_704",
+     "offset": 1796,
+     "type": "u32"
+    },
+    {
+     "name": "field_708",
+     "offset": 1800,
+     "type": "u32"
+    },
+    {
+     "name": "field_70c",
+     "offset": 1804,
+     "type": "u32"
+    },
+    {
+     "name": "field_710",
+     "offset": 1808,
+     "type": "u32"
+    },
+    {
+     "name": "field_714",
+     "offset": 1812,
+     "type": "u32"
+    },
+    {
+     "name": "field_718",
+     "offset": 1816,
+     "type": "u32"
+    },
+    {
+     "name": "field_71c",
+     "offset": 1820,
+     "type": "u32"
+    },
+    {
+     "name": "field_720",
+     "offset": 1824,
+     "type": "u32"
+    },
+    {
+     "name": "field_724",
+     "offset": 1828,
+     "type": "u32"
+    },
+    {
+     "name": "field_728",
+     "offset": 1832,
+     "type": "u32"
+    },
+    {
+     "name": "field_72c",
+     "offset": 1836,
+     "type": "u32"
+    },
+    {
+     "name": "field_730",
+     "offset": 1840,
+     "type": "u32"
+    },
+    {
+     "name": "field_734",
+     "offset": 1844,
+     "type": "u32"
+    },
+    {
+     "name": "field_738",
+     "offset": 1848,
+     "type": "u32"
+    },
+    {
+     "name": "field_73c",
+     "offset": 1852,
+     "type": "u32"
+    },
+    {
+     "name": "field_740",
+     "offset": 1856,
+     "type": "u32"
+    },
+    {
+     "name": "field_744",
+     "offset": 1860,
+     "type": "u32"
+    },
+    {
+     "name": "field_748",
+     "offset": 1864,
+     "type": "u32"
+    },
+    {
+     "name": "field_74c",
+     "offset": 1868,
+     "type": "u32"
+    },
+    {
+     "name": "field_750",
+     "offset": 1872,
+     "type": "u32"
+    },
+    {
+     "name": "field_754",
+     "offset": 1876,
+     "type": "u32"
+    },
+    {
+     "name": "field_758",
+     "offset": 1880,
+     "type": "u32"
+    },
+    {
+     "name": "field_75c",
+     "offset": 1884,
+     "type": "u32"
+    },
+    {
+     "name": "field_760",
+     "offset": 1888,
+     "type": "u32"
+    },
+    {
+     "name": "field_764",
+     "offset": 1892,
+     "type": "u32"
+    },
+    {
+     "name": "field_768",
+     "offset": 1896,
+     "type": "u32"
+    },
+    {
+     "name": "field_76c",
+     "offset": 1900,
+     "type": "u32"
+    },
+    {
+     "name": "field_770",
+     "offset": 1904,
+     "type": "u32"
+    },
+    {
+     "name": "field_774",
+     "offset": 1908,
+     "type": "u32"
+    },
+    {
+     "name": "field_778",
+     "offset": 1912,
+     "type": "u32"
+    },
+    {
+     "name": "field_77c",
+     "offset": 1916,
+     "type": "u32"
+    },
+    {
+     "name": "field_780",
+     "offset": 1920,
+     "type": "u32"
+    },
+    {
+     "name": "field_784",
+     "offset": 1924,
+     "type": "u32"
+    },
+    {
+     "name": "field_788",
+     "offset": 1928,
+     "type": "u32"
+    },
+    {
+     "name": "field_78c",
+     "offset": 1932,
+     "type": "u32"
+    },
+    {
+     "name": "field_790",
+     "offset": 1936,
+     "type": "u32"
+    },
+    {
+     "name": "field_794",
+     "offset": 1940,
+     "type": "u32"
+    },
+    {
+     "name": "field_798",
+     "offset": 1944,
+     "type": "u32"
+    },
+    {
+     "name": "field_79c",
+     "offset": 1948,
+     "type": "u32"
+    },
+    {
+     "name": "field_7a0",
+     "offset": 1952,
+     "type": "u32"
+    },
+    {
+     "name": "field_7a4",
+     "offset": 1956,
+     "type": "u32"
+    },
+    {
+     "name": "field_7a8",
+     "offset": 1960,
+     "type": "u32"
+    },
+    {
+     "name": "field_7ac",
+     "offset": 1964,
+     "type": "u32"
+    },
+    {
+     "name": "field_7b0",
+     "offset": 1968,
+     "type": "u32"
+    },
+    {
+     "name": "field_7b4",
+     "offset": 1972,
+     "type": "u32"
+    },
+    {
+     "name": "field_7b8",
+     "offset": 1976,
+     "type": "u32"
+    },
+    {
+     "name": "field_7bc",
+     "offset": 1980,
+     "type": "u32"
+    },
+    {
+     "name": "field_7c0",
+     "offset": 1984,
+     "type": "u32"
+    },
+    {
+     "name": "field_7c4",
+     "offset": 1988,
+     "type": "u32"
+    },
+    {
+     "name": "field_7c8",
+     "offset": 1992,
+     "type": "u32"
+    },
+    {
+     "name": "field_7cc",
+     "offset": 1996,
+     "type": "u32"
+    },
+    {
+     "name": "field_7d0",
+     "offset": 2000,
+     "type": "u32"
+    },
+    {
+     "name": "field_7d4",
+     "offset": 2004,
+     "type": "u32"
+    },
+    {
+     "name": "field_7d8",
+     "offset": 2008,
+     "type": "u32"
+    },
+    {
+     "name": "field_7dc",
+     "offset": 2012,
+     "type": "u32"
+    },
+    {
+     "name": "field_7e0",
+     "offset": 2016,
+     "type": "u32"
+    },
+    {
+     "name": "field_7e4",
+     "offset": 2020,
+     "type": "u32"
+    },
+    {
+     "name": "field_7e8",
+     "offset": 2024,
+     "type": "u32"
+    },
+    {
+     "name": "field_7ec",
+     "offset": 2028,
+     "type": "u32"
+    },
+    {
+     "name": "field_7f0",
+     "offset": 2032,
+     "type": "u32"
+    },
+    {
+     "name": "field_7f4",
+     "offset": 2036,
+     "type": "u32"
+    },
+    {
+     "name": "field_7f8",
+     "offset": 2040,
+     "type": "u32"
+    },
+    {
+     "name": "field_7fc",
+     "offset": 2044,
+     "type": "u32"
+    },
+    {
+     "name": "field_800",
+     "offset": 2048,
+     "type": "u32"
+    },
+    {
+     "name": "field_804",
+     "offset": 2052,
+     "type": "u32"
+    },
+    {
+     "name": "field_808",
+     "offset": 2056,
+     "type": "u32"
+    },
+    {
+     "name": "field_80c",
+     "offset": 2060,
+     "type": "u32"
+    },
+    {
+     "name": "field_810",
+     "offset": 2064,
+     "type": "u32"
+    },
+    {
+     "name": "field_814",
+     "offset": 2068,
+     "type": "u32"
+    },
+    {
+     "name": "field_818",
+     "offset": 2072,
+     "type": "u32"
+    },
+    {
+     "name": "field_81c",
+     "offset": 2076,
+     "type": "u32"
+    },
+    {
+     "name": "field_820",
+     "offset": 2080,
+     "type": "u32"
+    },
+    {
+     "name": "field_824",
+     "offset": 2084,
+     "type": "u32"
+    },
+    {
+     "name": "field_828",
+     "offset": 2088,
+     "type": "u32"
+    },
+    {
+     "name": "field_82c",
+     "offset": 2092,
+     "type": "u32"
+    },
+    {
+     "name": "field_830",
+     "offset": 2096,
+     "type": "u32"
+    },
+    {
+     "name": "field_834",
+     "offset": 2100,
+     "type": "u32"
+    },
+    {
+     "name": "field_838",
+     "offset": 2104,
+     "type": "u32"
+    },
+    {
+     "name": "field_83c",
+     "offset": 2108,
+     "type": "u32"
+    },
+    {
+     "name": "field_840",
+     "offset": 2112,
+     "type": "u32"
+    },
+    {
+     "name": "field_844",
+     "offset": 2116,
+     "type": "u32"
+    },
+    {
+     "name": "field_848",
+     "offset": 2120,
+     "type": "u32"
+    },
+    {
+     "name": "field_84c",
+     "offset": 2124,
+     "type": "u32"
+    },
+    {
+     "name": "field_850",
+     "offset": 2128,
+     "type": "u32"
+    },
+    {
+     "name": "field_854",
+     "offset": 2132,
+     "type": "u32"
+    },
+    {
+     "name": "field_858",
+     "offset": 2136,
+     "type": "u32"
+    },
+    {
+     "name": "field_85c",
+     "offset": 2140,
+     "type": "u32"
+    },
+    {
+     "name": "field_860",
+     "offset": 2144,
+     "type": "u32"
+    },
+    {
+     "name": "field_864",
+     "offset": 2148,
+     "type": "u32"
+    },
+    {
+     "name": "field_868",
+     "offset": 2152,
+     "type": "u32"
+    },
+    {
+     "name": "field_86c",
+     "offset": 2156,
+     "type": "u32"
+    },
+    {
+     "name": "field_870",
+     "offset": 2160,
+     "type": "u32"
+    },
+    {
+     "name": "field_874",
+     "offset": 2164,
+     "type": "u32"
+    },
+    {
+     "name": "field_878",
+     "offset": 2168,
+     "type": "u32"
+    },
+    {
+     "name": "field_87c",
+     "offset": 2172,
+     "type": "u32"
+    },
+    {
+     "name": "field_880",
+     "offset": 2176,
+     "type": "u32"
+    },
+    {
+     "name": "field_884",
+     "offset": 2180,
+     "type": "u32"
+    },
+    {
+     "name": "field_888",
+     "offset": 2184,
+     "type": "u32"
+    },
+    {
+     "name": "field_88c",
+     "offset": 2188,
+     "type": "u32"
+    },
+    {
+     "name": "field_890",
+     "offset": 2192,
+     "type": "u32"
+    },
+    {
+     "name": "field_894",
+     "offset": 2196,
+     "type": "u32"
+    },
+    {
+     "name": "field_898",
+     "offset": 2200,
+     "type": "u32"
+    },
+    {
+     "name": "field_89c",
+     "offset": 2204,
+     "type": "u32"
+    },
+    {
+     "name": "field_8a0",
+     "offset": 2208,
+     "type": "u32"
+    },
+    {
+     "name": "field_8a4",
+     "offset": 2212,
+     "type": "u32"
+    },
+    {
+     "name": "field_8a8",
+     "offset": 2216,
+     "type": "u32"
+    },
+    {
+     "name": "field_8ac",
+     "offset": 2220,
+     "type": "u32"
+    },
+    {
+     "name": "field_8b0",
+     "offset": 2224,
+     "type": "u32"
+    },
+    {
+     "name": "field_8b4",
+     "offset": 2228,
+     "type": "u32"
+    },
+    {
+     "name": "field_8b8",
+     "offset": 2232,
+     "type": "u32"
+    },
+    {
+     "name": "field_8bc",
+     "offset": 2236,
+     "type": "u32"
+    },
+    {
+     "name": "field_8c0",
+     "offset": 2240,
+     "type": "u32"
+    },
+    {
+     "name": "field_8c4",
+     "offset": 2244,
+     "type": "u32"
+    },
+    {
+     "name": "field_8c8",
+     "offset": 2248,
+     "type": "u32"
+    },
+    {
+     "name": "field_8cc",
+     "offset": 2252,
+     "type": "u32"
+    },
+    {
+     "name": "field_8d0",
+     "offset": 2256,
+     "type": "u32"
+    },
+    {
+     "name": "field_8d4",
+     "offset": 2260,
+     "type": "u32"
+    },
+    {
+     "name": "field_8d8",
+     "offset": 2264,
+     "type": "u32"
+    },
+    {
+     "name": "field_8dc",
+     "offset": 2268,
+     "type": "u32"
+    },
+    {
+     "name": "field_8e0",
+     "offset": 2272,
+     "type": "u16"
+    },
+    {
+     "name": "field_8e2",
+     "offset": 2274,
+     "type": "u16"
+    },
+    {
+     "name": "field_8e4",
+     "offset": 2276,
+     "type": "u32"
+    },
+    {
+     "name": "field_8e8",
+     "offset": 2280,
+     "type": "u32"
+    },
+    {
+     "name": "field_8ec",
+     "offset": 2284,
+     "type": "u8"
+    },
+    {
+     "name": "field_8ed",
+     "offset": 2285,
+     "type": "u8"
+    },
+    {
+     "name": "field_8ee",
+     "offset": 2286,
+     "type": "u8"
+    },
+    {
+     "name": "field_8ef",
+     "offset": 2287,
+     "type": "u8"
+    },
+    {
+     "name": "effect_spell_id",
+     "offset": 2288,
+     "type": "i32"
+    },
+    {
+     "name": "effect_icons",
+     "offset": 2292,
+     "type": "CExoArrayList",
+     "meaning": "effect icon list"
+    },
+    {
+     "name": "field_900",
+     "offset": 2304,
+     "type": "u32"
+    },
+    {
+     "name": "field_904",
+     "offset": 2308,
+     "type": "u32"
+    },
+    {
+     "name": "field_908",
+     "offset": 2312,
+     "type": "u32"
+    },
+    {
+     "name": "field_90c",
+     "offset": 2316,
+     "type": "u32"
+    },
+    {
+     "name": "field_910",
+     "offset": 2320,
+     "type": "u32"
+    },
+    {
+     "name": "primary_range",
+     "offset": 2324,
+     "type": "f32"
+    },
+    {
+     "name": "secondary_range",
+     "offset": 2328,
+     "type": "f32"
+    },
+    {
+     "name": "field_91c",
+     "offset": 2332,
+     "type": "u32"
+    },
+    {
+     "name": "perceptions",
+     "offset": 2336,
+     "type": "CExoArrayList",
+     "meaning": "perception list"
+    },
+    {
+     "name": "field_92c",
+     "offset": 2348,
+     "type": "u32"
+    },
+    {
+     "name": "invited_to_party",
+     "offset": 2352,
+     "type": "i32"
+    },
+    {
+     "name": "field_934",
+     "offset": 2356,
+     "type": "u32"
+    },
+    {
+     "name": "field_938",
+     "offset": 2360,
+     "type": "u32"
+    },
+    {
+     "name": "field_93c",
+     "offset": 2364,
+     "type": "u32"
+    },
+    {
+     "name": "field_940",
+     "offset": 2368,
+     "type": "u32"
+    },
+    {
+     "name": "lock_orientation_to_object",
+     "offset": 2372,
+     "type": "u32"
+    },
+    {
+     "name": "field_948",
+     "offset": 2376,
+     "type": "i32"
+    },
+    {
+     "name": "field_94c",
+     "offset": 2380,
+     "type": "u8"
+    },
+    {
+     "name": "field_94d",
+     "offset": 2381,
+     "type": "u8"
+    },
+    {
+     "name": "field_94e",
+     "offset": 2382,
+     "type": "u8"
+    },
+    {
+     "name": "field_94f",
+     "offset": 2383,
+     "type": "u8"
+    },
+    {
+     "name": "field_950",
+     "offset": 2384,
+     "type": "u32"
+    },
+    {
+     "name": "field_954",
+     "offset": 2388,
+     "type": "u32"
+    },
+    {
+     "name": "field_958",
+     "offset": 2392,
+     "type": "u32"
+    },
+    {
+     "name": "field_95c",
+     "offset": 2396,
+     "type": "u32"
+    },
+    {
+     "name": "field_960",
+     "offset": 2400,
+     "type": "u32"
+    },
+    {
+     "name": "field_964",
+     "offset": 2404,
+     "type": "u32"
+    },
+    {
+     "name": "base_class_level",
+     "offset": 2408,
+     "type": "i32"
+    },
+    {
+     "name": "field_96c",
+     "offset": 2412,
+     "type": "u32"
+    },
+    {
+     "name": "field_970",
+     "offset": 2416,
+     "type": "u32"
+    },
+    {
+     "name": "field_974",
+     "offset": 2420,
+     "type": "u32"
+    },
+    {
+     "name": "field_978",
+     "offset": 2424,
+     "type": "u32"
+    },
+    {
+     "name": "field_97c",
+     "offset": 2428,
+     "type": "u32"
+    },
+    {
+     "name": "field_980",
+     "offset": 2432,
+     "type": "u32"
+    },
+    {
+     "name": "field_984",
+     "offset": 2436,
+     "type": "u32"
+    },
+    {
+     "name": "field_988",
+     "offset": 2440,
+     "type": "u32"
+    },
+    {
+     "name": "field_98c",
+     "offset": 2444,
+     "type": "u32"
+    },
+    {
+     "name": "field_990",
+     "offset": 2448,
+     "type": "u32"
+    },
+    {
+     "name": "field_994",
+     "offset": 2452,
+     "type": "u32"
+    },
+    {
+     "name": "field_998",
+     "offset": 2456,
+     "type": "u32"
+    },
+    {
+     "name": "field_99c",
+     "offset": 2460,
+     "type": "u32"
+    },
+    {
+     "name": "field_9a0",
+     "offset": 2464,
+     "type": "u32"
+    },
+    {
+     "name": "field_9a4",
+     "offset": 2468,
+     "type": "u32"
+    },
+    {
+     "name": "field_9a8",
+     "offset": 2472,
+     "type": "u32"
+    },
+    {
+     "name": "field_9ac",
+     "offset": 2476,
+     "type": "u32"
+    },
+    {
+     "name": "field_9b0",
+     "offset": 2480,
+     "type": "u32"
+    },
+    {
+     "name": "field_9b4",
+     "offset": 2484,
+     "type": "u32"
+    },
+    {
+     "name": "field_9b8",
+     "offset": 2488,
+     "type": "u32"
+    },
+    {
+     "name": "field_9bc",
+     "offset": 2492,
+     "type": "u32"
+    },
+    {
+     "name": "field_9c0",
+     "offset": 2496,
+     "type": "u32"
+    },
+    {
+     "name": "field_9c4",
+     "offset": 2500,
+     "type": "u32"
+    },
+    {
+     "name": "combat_round",
+     "offset": 2504,
+     "type": "ptr"
+    },
+    {
+     "name": "field_9cc",
+     "offset": 2508,
+     "type": "u32"
+    },
+    {
+     "name": "gold",
+     "offset": 2512,
+     "type": "u32"
+    },
+    {
+     "name": "field_9d4",
+     "offset": 2516,
+     "type": "u32"
+    },
+    {
+     "name": "sound_set_file",
+     "offset": 2520,
+     "type": "i16"
+    },
+    {
+     "name": "body_bag",
+     "offset": 2522,
+     "type": "u8"
+    },
+    {
+     "name": "field_9db",
+     "offset": 2523,
+     "type": "u8"
+    },
+    {
+     "name": "field_9dc",
+     "offset": 2524,
+     "type": "u32"
+    },
+    {
+     "name": "field_9e0",
+     "offset": 2528,
+     "type": "u32"
+    },
+    {
+     "name": "field_9e4",
+     "offset": 2532,
+     "type": "u32"
+    },
+    {
+     "name": "field_9e8",
+     "offset": 2536,
+     "type": "i32"
+    },
+    {
+     "name": "field_9ec",
+     "offset": 2540,
+     "type": "i32"
+    },
+    {
+     "name": "field_9f0",
+     "offset": 2544,
+     "type": "u16"
+    },
+    {
+     "name": "field_9f2",
+     "offset": 2546,
+     "type": "u8"
+    },
+    {
+     "name": "field_9f3",
+     "offset": 2547,
+     "type": "u8"
+    },
+    {
+     "name": "field_9f4",
+     "offset": 2548,
+     "type": "u32"
+    },
+    {
+     "name": "field_9f8",
+     "offset": 2552,
+     "type": "u8"
+    },
+    {
+     "name": "field_9f9",
+     "offset": 2553,
+     "type": "u8"
+    },
+    {
+     "name": "field_9fa",
+     "offset": 2554,
+     "type": "u8"
+    },
+    {
+     "name": "field_9fb",
+     "offset": 2555,
+     "type": "u8"
+    },
+    {
+     "name": "activity",
+     "offset": 2556,
+     "type": "u32"
+    },
+    {
+     "name": "field_a00",
+     "offset": 2560,
+     "type": "u32"
+    },
+    {
+     "name": "field_a04",
+     "offset": 2564,
+     "type": "u32"
+    },
+    {
+     "name": "movement_rate_factor",
+     "offset": 2568,
+     "type": "f32"
+    },
+    {
+     "name": "field_a0c",
+     "offset": 2572,
+     "type": "f32"
+    },
+    {
+     "name": "field_a10",
+     "offset": 2576,
+     "type": "u8"
+    },
+    {
+     "name": "field_a11",
+     "offset": 2577,
+     "type": "u8"
+    },
+    {
+     "name": "field_a12",
+     "offset": 2578,
+     "type": "u8"
+    },
+    {
+     "name": "field_a13",
+     "offset": 2579,
+     "type": "u8"
+    },
+    {
+     "name": "field_a14",
+     "offset": 2580,
+     "type": "u32"
+    },
+    {
+     "name": "field_a18",
+     "offset": 2584,
+     "type": "u32"
+    },
+    {
+     "name": "field_a1c",
+     "offset": 2588,
+     "type": "u32"
+    },
+    {
+     "name": "field_a20",
+     "offset": 2592,
+     "type": "u32"
+    },
+    {
+     "name": "field_a24",
+     "offset": 2596,
+     "type": "u32"
+    },
+    {
+     "name": "field_a28",
+     "offset": 2600,
+     "type": "u32"
+    },
+    {
+     "name": "inventory",
+     "offset": 2604,
+     "type": "ptr"
+    },
+    {
+     "name": "item_repo",
+     "offset": 2608,
+     "type": "ptr",
+     "meaning": "CItemRepository*"
+    },
+    {
+     "name": "field_a34",
+     "offset": 2612,
+     "type": "u16"
+    },
+    {
+     "name": "field_a36",
+     "offset": 2614,
+     "type": "u16"
+    },
+    {
+     "name": "field_a38",
+     "offset": 2616,
+     "type": "u32"
+    },
+    {
+     "name": "field_a3c",
+     "offset": 2620,
+     "type": "u32"
+    },
+    {
+     "name": "field_a40",
+     "offset": 2624,
+     "type": "u32"
+    },
+    {
+     "name": "field_a44",
+     "offset": 2628,
+     "type": "u32"
+    },
+    {
+     "name": "is_disguised",
+     "offset": 2632,
+     "type": "i32"
+    },
+    {
+     "name": "appearance",
+     "offset": 2636,
+     "type": "u16"
+    },
+    {
+     "name": "field_a4e",
+     "offset": 2638,
+     "type": "u16"
+    },
+    {
+     "name": "appearance_info",
+     "offset": 2640,
+     "type": "u8[0x24]"
+    },
+    {
+     "name": "creature_stats",
+     "offset": 2676,
+     "type": "ptr",
+     "meaning": "CSWSCreatureStats* - all ability scores, feats, class levels live behind this pointer"
+    },
+    {
+     "name": "field_a78",
+     "offset": 2680,
+     "type": "u32"
+    },
+    {
+     "name": "field_a7c",
+     "offset": 2684,
+     "type": "u32"
+    },
+    {
+     "name": "field_a80",
+     "offset": 2688,
+     "type": "u32"
+    },
+    {
+     "name": "field_a84",
+     "offset": 2692,
+     "type": "u32"
+    },
+    {
+     "name": "field_a88",
+     "offset": 2696,
+     "type": "u32"
+    },
+    {
+     "name": "field_a8c",
+     "offset": 2700,
+     "type": "i32"
+    },
+    {
+     "name": "field_a90",
+     "offset": 2704,
+     "type": "u32"
+    },
+    {
+     "name": "field_a94",
+     "offset": 2708,
+     "type": "u32"
+    },
+    {
+     "name": "field_a98",
+     "offset": 2712,
+     "type": "u32"
+    },
+    {
+     "name": "body_fuel",
+     "offset": 2716,
+     "type": "u32"
+    },
+    {
+     "name": "field_aa0",
+     "offset": 2720,
+     "type": "u32"
+    },
+    {
+     "name": "field_aa4",
+     "offset": 2724,
+     "type": "u32"
+    },
+    {
+     "name": "field_aa8",
+     "offset": 2728,
+     "type": "i32"
+    },
+    {
+     "name": "field_aac",
+     "offset": 2732,
+     "type": "i32"
+    },
+    {
+     "name": "field_ab0",
+     "offset": 2736,
+     "type": "u32"
+    },
+    {
+     "name": "field_ab4",
+     "offset": 2740,
+     "type": "f32"
+    },
+    {
+     "name": "field_ab8",
+     "offset": 2744,
+     "type": "u32"
+    },
+    {
+     "name": "field_abc",
+     "offset": 2748,
+     "type": "u32"
+    },
+    {
+     "name": "field_ac0",
+     "offset": 2752,
+     "type": "u8"
+    },
+    {
+     "name": "field_ac1",
+     "offset": 2753,
+     "type": "u8"
+    },
+    {
+     "name": "field_ac2",
+     "offset": 2754,
+     "type": "u8"
+    },
+    {
+     "name": "field_ac3",
+     "offset": 2755,
+     "type": "u8"
+    },
+    {
+     "name": "field_ac4",
+     "offset": 2756,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CSWCCreature",
+   "size": 1100,
+   "how_to_obtain": "Two ways. Cheap: get the CSWSCreature first, then read CSWSObject+548 (client_object) -- CSWSObject::GetClientObject 0x4CC2B0 does exactly that. Independent: g_pAppManager (0x007A39FC) -> +4 CClientExoApp* -> CClientExoApp::GetCreatureByGameObjectID (0x5ED5B0), which forwards to CClientExoAppInternal::GetCreatureByGameObjectID (0x5F1180).",
+   "fields": [
+    {
+     "name": "object",
+     "offset": 0,
+     "type": "CSWCObject",
+     "meaning": "embedded client object (252 bytes)"
+    },
+    {
+     "name": "field_fc",
+     "offset": 252,
+     "type": "u32"
+    },
+    {
+     "name": "field_100",
+     "offset": 256,
+     "type": "u32"
+    },
+    {
+     "name": "field_104",
+     "offset": 260,
+     "type": "u32"
+    },
+    {
+     "name": "field_108",
+     "offset": 264,
+     "type": "u32"
+    },
+    {
+     "name": "field_10c",
+     "offset": 268,
+     "type": "u32"
+    },
+    {
+     "name": "field_110",
+     "offset": 272,
+     "type": "u32"
+    },
+    {
+     "name": "field_114",
+     "offset": 276,
+     "type": "u32"
+    },
+    {
+     "name": "field_118",
+     "offset": 280,
+     "type": "u32"
+    },
+    {
+     "name": "field_11c",
+     "offset": 284,
+     "type": "u32"
+    },
+    {
+     "name": "field_120",
+     "offset": 288,
+     "type": "u32"
+    },
+    {
+     "name": "field_124",
+     "offset": 292,
+     "type": "u32"
+    },
+    {
+     "name": "field_128",
+     "offset": 296,
+     "type": "u32"
+    },
+    {
+     "name": "field_12c",
+     "offset": 300,
+     "type": "u32"
+    },
+    {
+     "name": "field_130",
+     "offset": 304,
+     "type": "u32"
+    },
+    {
+     "name": "field_134",
+     "offset": 308,
+     "type": "u32"
+    },
+    {
+     "name": "field_138",
+     "offset": 312,
+     "type": "u32"
+    },
+    {
+     "name": "engaged_state",
+     "offset": 316,
+     "type": "u32"
+    },
+    {
+     "name": "field_140",
+     "offset": 320,
+     "type": "u32"
+    },
+    {
+     "name": "gold",
+     "offset": 324,
+     "type": "u32"
+    },
+    {
+     "name": "field_148",
+     "offset": 328,
+     "type": "u32"
+    },
+    {
+     "name": "field_14c",
+     "offset": 332,
+     "type": "u32"
+    },
+    {
+     "name": "field_150",
+     "offset": 336,
+     "type": "u32"
+    },
+    {
+     "name": "field_154",
+     "offset": 340,
+     "type": "u32"
+    },
+    {
+     "name": "field_158",
+     "offset": 344,
+     "type": "u32"
+    },
+    {
+     "name": "field_15c",
+     "offset": 348,
+     "type": "u32"
+    },
+    {
+     "name": "field_160",
+     "offset": 352,
+     "type": "u32"
+    },
+    {
+     "name": "field_164",
+     "offset": 356,
+     "type": "u32"
+    },
+    {
+     "name": "field_168",
+     "offset": 360,
+     "type": "u32"
+    },
+    {
+     "name": "field_16c",
+     "offset": 364,
+     "type": "u32"
+    },
+    {
+     "name": "field_170",
+     "offset": 368,
+     "type": "u32"
+    },
+    {
+     "name": "field_174",
+     "offset": 372,
+     "type": "u32"
+    },
+    {
+     "name": "field_178",
+     "offset": 376,
+     "type": "u32"
+    },
+    {
+     "name": "field_17c",
+     "offset": 380,
+     "type": "u32"
+    },
+    {
+     "name": "field_180",
+     "offset": 384,
+     "type": "u32"
+    },
+    {
+     "name": "field_184",
+     "offset": 388,
+     "type": "u16"
+    },
+    {
+     "name": "field_186",
+     "offset": 390,
+     "type": "u16"
+    },
+    {
+     "name": "field_188",
+     "offset": 392,
+     "type": "u32"
+    },
+    {
+     "name": "field_18c",
+     "offset": 396,
+     "type": "u32"
+    },
+    {
+     "name": "field_190",
+     "offset": 400,
+     "type": "u32"
+    },
+    {
+     "name": "stealth_state",
+     "offset": 404,
+     "type": "i32"
+    },
+    {
+     "name": "field_198",
+     "offset": 408,
+     "type": "u32"
+    },
+    {
+     "name": "field_19c",
+     "offset": 412,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a0",
+     "offset": 416,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a4",
+     "offset": 420,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a8",
+     "offset": 424,
+     "type": "u32"
+    },
+    {
+     "name": "field_1ac",
+     "offset": 428,
+     "type": "u32"
+    },
+    {
+     "name": "field_1b0",
+     "offset": 432,
+     "type": "u32"
+    },
+    {
+     "name": "field_1b4",
+     "offset": 436,
+     "type": "u32"
+    },
+    {
+     "name": "field_1b8",
+     "offset": 440,
+     "type": "u32"
+    },
+    {
+     "name": "field_1bc",
+     "offset": 444,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c0",
+     "offset": 448,
+     "type": "u32"
+    },
+    {
+     "name": "moving_orientation",
+     "offset": 452,
+     "type": "Vector",
+     "meaning": "SetMovingOrientation 0x60B380 copies 3 dwords here from a Vector*"
+    },
+    {
+     "name": "stationary_orientation",
+     "offset": 464,
+     "type": "Vector",
+     "meaning": "stationary facing",
+     "confidence": "med"
+    },
+    {
+     "name": "field_1dc",
+     "offset": 476,
+     "type": "Vector",
+     "meaning": "flds 0x1dc/0x1e0/0x1e4 subtracted from position at 0x24/0x28/0x2c -- a destination point, NOT an array list"
+    },
+    {
+     "name": "desired_position_timer",
+     "offset": 488,
+     "type": "u32"
+    },
+    {
+     "name": "field_1ec",
+     "offset": 492,
+     "type": "u8"
+    },
+    {
+     "name": "field_1ed",
+     "offset": 493,
+     "type": "u8"
+    },
+    {
+     "name": "field_1ee",
+     "offset": 494,
+     "type": "u8"
+    },
+    {
+     "name": "field_1ef",
+     "offset": 495,
+     "type": "u8"
+    },
+    {
+     "name": "field_1f0",
+     "offset": 496,
+     "type": "u8"
+    },
+    {
+     "name": "field_1f1",
+     "offset": 497,
+     "type": "u8"
+    },
+    {
+     "name": "field_1f2",
+     "offset": 498,
+     "type": "u8"
+    },
+    {
+     "name": "field_1f3",
+     "offset": 499,
+     "type": "u8"
+    },
+    {
+     "name": "field_1f4",
+     "offset": 500,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f8",
+     "offset": 504,
+     "type": "u32"
+    },
+    {
+     "name": "field_1fc",
+     "offset": 508,
+     "type": "u32"
+    },
+    {
+     "name": "field_200",
+     "offset": 512,
+     "type": "u32"
+    },
+    {
+     "name": "field_204",
+     "offset": 516,
+     "type": "u32"
+    },
+    {
+     "name": "field_208",
+     "offset": 520,
+     "type": "u32"
+    },
+    {
+     "name": "field_20c",
+     "offset": 524,
+     "type": "f32"
+    },
+    {
+     "name": "field_210",
+     "offset": 528,
+     "type": "f32"
+    },
+    {
+     "name": "field_214",
+     "offset": 532,
+     "type": "u32"
+    },
+    {
+     "name": "creature_type",
+     "offset": 536,
+     "type": "u8"
+    },
+    {
+     "name": "field_219",
+     "offset": 537,
+     "type": "u8"
+    },
+    {
+     "name": "field_21a",
+     "offset": 538,
+     "type": "u8"
+    },
+    {
+     "name": "field_21b",
+     "offset": 539,
+     "type": "u8"
+    },
+    {
+     "name": "appearance",
+     "offset": 540,
+     "type": "ptr"
+    },
+    {
+     "name": "head_id",
+     "offset": 544,
+     "type": "u32"
+    },
+    {
+     "name": "torso_id",
+     "offset": 548,
+     "type": "u32"
+    },
+    {
+     "name": "field_228",
+     "offset": 552,
+     "type": "u32"
+    },
+    {
+     "name": "hands_id",
+     "offset": 556,
+     "type": "u32"
+    },
+    {
+     "name": "main_hand_id",
+     "offset": 560,
+     "type": "u32"
+    },
+    {
+     "name": "off_hand_id",
+     "offset": 564,
+     "type": "u32"
+    },
+    {
+     "name": "field_238",
+     "offset": 568,
+     "type": "u32"
+    },
+    {
+     "name": "left_arm_band_id",
+     "offset": 572,
+     "type": "u32"
+    },
+    {
+     "name": "right_arm_band_id",
+     "offset": 576,
+     "type": "u32"
+    },
+    {
+     "name": "implant_id",
+     "offset": 580,
+     "type": "u32"
+    },
+    {
+     "name": "belt_id",
+     "offset": 584,
+     "type": "u32"
+    },
+    {
+     "name": "left_claw_id",
+     "offset": 588,
+     "type": "u32"
+    },
+    {
+     "name": "right_claw_id",
+     "offset": 592,
+     "type": "u32"
+    },
+    {
+     "name": "bite_id",
+     "offset": 596,
+     "type": "u32"
+    },
+    {
+     "name": "hide_id",
+     "offset": 600,
+     "type": "u32"
+    },
+    {
+     "name": "field_25c",
+     "offset": 604,
+     "type": "u32"
+    },
+    {
+     "name": "field_260",
+     "offset": 608,
+     "type": "u32"
+    },
+    {
+     "name": "field_264",
+     "offset": 612,
+     "type": "u32"
+    },
+    {
+     "name": "field_268",
+     "offset": 616,
+     "type": "u32"
+    },
+    {
+     "name": "field_26c",
+     "offset": 620,
+     "type": "u32"
+    },
+    {
+     "name": "head_last_instant",
+     "offset": 624,
+     "type": "i32"
+    },
+    {
+     "name": "torso_last_instant",
+     "offset": 628,
+     "type": "i32"
+    },
+    {
+     "name": "field_278",
+     "offset": 632,
+     "type": "i32"
+    },
+    {
+     "name": "hands_last_instant",
+     "offset": 636,
+     "type": "i32"
+    },
+    {
+     "name": "main_hand_last_instant",
+     "offset": 640,
+     "type": "i32"
+    },
+    {
+     "name": "off_hand_last_instant",
+     "offset": 644,
+     "type": "i32"
+    },
+    {
+     "name": "field_288",
+     "offset": 648,
+     "type": "i32"
+    },
+    {
+     "name": "left_arm_band_last_instant",
+     "offset": 652,
+     "type": "i32"
+    },
+    {
+     "name": "right_arm_band_last_instant",
+     "offset": 656,
+     "type": "i32"
+    },
+    {
+     "name": "implant_last_instant",
+     "offset": 660,
+     "type": "i32"
+    },
+    {
+     "name": "belt_last_instant",
+     "offset": 664,
+     "type": "i32"
+    },
+    {
+     "name": "left_claw_last_instant",
+     "offset": 668,
+     "type": "i32"
+    },
+    {
+     "name": "right_claw_last_instant",
+     "offset": 672,
+     "type": "i32"
+    },
+    {
+     "name": "bite_last_instant",
+     "offset": 676,
+     "type": "i32"
+    },
+    {
+     "name": "hide_last_instant",
+     "offset": 680,
+     "type": "i32"
+    },
+    {
+     "name": "field_2ac",
+     "offset": 684,
+     "type": "u32"
+    },
+    {
+     "name": "field_2b0",
+     "offset": 688,
+     "type": "u32"
+    },
+    {
+     "name": "field_2b4",
+     "offset": 692,
+     "type": "u32"
+    },
+    {
+     "name": "combat_attack_data_1",
+     "offset": 696,
+     "type": "ptr"
+    },
+    {
+     "name": "combat_attack_data_2",
+     "offset": 700,
+     "type": "ptr"
+    },
+    {
+     "name": "field_2c0",
+     "offset": 704,
+     "type": "u32"
+    },
+    {
+     "name": "field_2c4",
+     "offset": 708,
+     "type": "u32"
+    },
+    {
+     "name": "field_2c8",
+     "offset": 712,
+     "type": "u32"
+    },
+    {
+     "name": "field_2cc",
+     "offset": 716,
+     "type": "u32"
+    },
+    {
+     "name": "field_2d0",
+     "offset": 720,
+     "type": "u16"
+    },
+    {
+     "name": "field_2d2",
+     "offset": 722,
+     "type": "u16"
+    },
+    {
+     "name": "field_2d4",
+     "offset": 724,
+     "type": "u32"
+    },
+    {
+     "name": "field_2d8",
+     "offset": 728,
+     "type": "u32"
+    },
+    {
+     "name": "field_2dc",
+     "offset": 732,
+     "type": "u8"
+    },
+    {
+     "name": "field_2dd",
+     "offset": 733,
+     "type": "u8[0x10]"
+    },
+    {
+     "name": "field_2ed",
+     "offset": 749,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ee",
+     "offset": 750,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ef",
+     "offset": 751,
+     "type": "u8"
+    },
+    {
+     "name": "spell_cast_visual",
+     "offset": 752,
+     "type": "ptr"
+    },
+    {
+     "name": "field_2f4",
+     "offset": 756,
+     "type": "u32"
+    },
+    {
+     "name": "lvl_up_stats",
+     "offset": 760,
+     "type": "ptr"
+    },
+    {
+     "name": "sound_set",
+     "offset": 764,
+     "type": "u16"
+    },
+    {
+     "name": "field_2fe",
+     "offset": 766,
+     "type": "u16"
+    },
+    {
+     "name": "field_300",
+     "offset": 768,
+     "type": "u32"
+    },
+    {
+     "name": "field_304",
+     "offset": 772,
+     "type": "u32"
+    },
+    {
+     "name": "field_308",
+     "offset": 776,
+     "type": "u32"
+    },
+    {
+     "name": "field_30c",
+     "offset": 780,
+     "type": "u32"
+    },
+    {
+     "name": "field_310",
+     "offset": 784,
+     "type": "u32"
+    },
+    {
+     "name": "field_314",
+     "offset": 788,
+     "type": "u32"
+    },
+    {
+     "name": "field_318",
+     "offset": 792,
+     "type": "u32"
+    },
+    {
+     "name": "appearance_info",
+     "offset": 796,
+     "type": "u8[0x3c]"
+    },
+    {
+     "name": "field_358",
+     "offset": 856,
+     "type": "u32"
+    },
+    {
+     "name": "field_35c",
+     "offset": 860,
+     "type": "u32"
+    },
+    {
+     "name": "visibility_list",
+     "offset": 864,
+     "type": "CExoArrayList",
+     "meaning": "visibility list"
+    },
+    {
+     "name": "field_36c",
+     "offset": 876,
+     "type": "u32"
+    },
+    {
+     "name": "field_370",
+     "offset": 880,
+     "type": "u32"
+    },
+    {
+     "name": "field_374",
+     "offset": 884,
+     "type": "u32"
+    },
+    {
+     "name": "field_378",
+     "offset": 888,
+     "type": "u32"
+    },
+    {
+     "name": "field_37c",
+     "offset": 892,
+     "type": "u32"
+    },
+    {
+     "name": "field_380",
+     "offset": 896,
+     "type": "u32"
+    },
+    {
+     "name": "field_384",
+     "offset": 900,
+     "type": "u32"
+    },
+    {
+     "name": "field_388",
+     "offset": 904,
+     "type": "u32"
+    },
+    {
+     "name": "field_38c",
+     "offset": 908,
+     "type": "u32"
+    },
+    {
+     "name": "field_390",
+     "offset": 912,
+     "type": "u32"
+    },
+    {
+     "name": "field_394",
+     "offset": 916,
+     "type": "u32"
+    },
+    {
+     "name": "field_398",
+     "offset": 920,
+     "type": "u32"
+    },
+    {
+     "name": "area_id",
+     "offset": 924,
+     "type": "u32"
+    },
+    {
+     "name": "spell_like_abilities",
+     "offset": 928,
+     "type": "u32"
+    },
+    {
+     "name": "field_3a4",
+     "offset": 932,
+     "type": "u32"
+    },
+    {
+     "name": "field_3a8",
+     "offset": 936,
+     "type": "u32"
+    },
+    {
+     "name": "field_3ac",
+     "offset": 940,
+     "type": "u32"
+    },
+    {
+     "name": "field_3b0",
+     "offset": 944,
+     "type": "u32"
+    },
+    {
+     "name": "field_3b4",
+     "offset": 948,
+     "type": "u32"
+    },
+    {
+     "name": "field_3b8",
+     "offset": 952,
+     "type": "u32"
+    },
+    {
+     "name": "field_3bc",
+     "offset": 956,
+     "type": "u32"
+    },
+    {
+     "name": "field_3c0",
+     "offset": 960,
+     "type": "u32"
+    },
+    {
+     "name": "field_3c4",
+     "offset": 964,
+     "type": "u32"
+    },
+    {
+     "name": "thrown_lightsaber",
+     "offset": 968,
+     "type": "u32"
+    },
+    {
+     "name": "field_3cc",
+     "offset": 972,
+     "type": "u32"
+    },
+    {
+     "name": "field_3d0",
+     "offset": 976,
+     "type": "u32"
+    },
+    {
+     "name": "field_3d4",
+     "offset": 980,
+     "type": "u32"
+    },
+    {
+     "name": "field_3d8",
+     "offset": 984,
+     "type": "i32"
+    },
+    {
+     "name": "field_3dc",
+     "offset": 988,
+     "type": "u32"
+    },
+    {
+     "name": "isRunning",
+     "offset": 992,
+     "type": "i32"
+    },
+    {
+     "name": "field_3e4",
+     "offset": 996,
+     "type": "u32"
+    },
+    {
+     "name": "field_3e8",
+     "offset": 1000,
+     "type": "u32"
+    },
+    {
+     "name": "footstep_sound_callback",
+     "offset": 1004,
+     "type": "ptr"
+    },
+    {
+     "name": "hit_callback",
+     "offset": 1008,
+     "type": "ptr"
+    },
+    {
+     "name": "field_3f4",
+     "offset": 1012,
+     "type": "ptr"
+    },
+    {
+     "name": "hitground_sound_callback",
+     "offset": 1016,
+     "type": "ptr"
+    },
+    {
+     "name": "swing_short_callback",
+     "offset": 1020,
+     "type": "ptr"
+    },
+    {
+     "name": "swing_long_callback",
+     "offset": 1024,
+     "type": "ptr"
+    },
+    {
+     "name": "swing_twirl_callback",
+     "offset": 1028,
+     "type": "ptr"
+    },
+    {
+     "name": "clash_callback",
+     "offset": 1032,
+     "type": "ptr"
+    },
+    {
+     "name": "contact_callback",
+     "offset": 1036,
+     "type": "ptr"
+    },
+    {
+     "name": "hit_parry_callback",
+     "offset": 1040,
+     "type": "ptr"
+    },
+    {
+     "name": "blur_start_callback",
+     "offset": 1044,
+     "type": "ptr"
+    },
+    {
+     "name": "blur_end_callback",
+     "offset": 1048,
+     "type": "ptr"
+    },
+    {
+     "name": "done_attack_01_callback",
+     "offset": 1052,
+     "type": "ptr"
+    },
+    {
+     "name": "done_attack_02_callback",
+     "offset": 1056,
+     "type": "ptr"
+    },
+    {
+     "name": "get_personal_radius_callback",
+     "offset": 1060,
+     "type": "ptr"
+    },
+    {
+     "name": "get_creature_radius_callback",
+     "offset": 1064,
+     "type": "ptr"
+    },
+    {
+     "name": "get_path_callback",
+     "offset": 1068,
+     "type": "ptr"
+    },
+    {
+     "name": "field_430",
+     "offset": 1072,
+     "type": "u32"
+    },
+    {
+     "name": "field_434",
+     "offset": 1076,
+     "type": "u32"
+    },
+    {
+     "name": "field_438",
+     "offset": 1080,
+     "type": "u32"
+    },
+    {
+     "name": "field_43c",
+     "offset": 1084,
+     "type": "u32"
+    },
+    {
+     "name": "field_440",
+     "offset": 1088,
+     "type": "u32"
+    },
+    {
+     "name": "field_444",
+     "offset": 1092,
+     "type": "u16"
+    },
+    {
+     "name": "field_446",
+     "offset": 1094,
+     "type": "u16"
+    },
+    {
+     "name": "field_448",
+     "offset": 1096,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CSWSCreatureStats",
+   "size": 440,
+   "how_to_obtain": "CSWSCreature + 2676 (creature_stats pointer). Not reachable directly from the object array; you must have the creature first. The back-pointer at CSWSCreatureStats+36 returns to the owning CSWSCreature.",
+   "fields": [
+    {
+     "name": "feats",
+     "offset": 0,
+     "type": "CExoArrayList",
+     "meaning": "feat list; data ptr at 0, size at 4, capacity at 8. Elements are u16 feat ids"
+    },
+    {
+     "name": "feat_remaining_uses",
+     "offset": 12,
+     "type": "CExoArrayList",
+     "meaning": "per-feat remaining uses"
+    },
+    {
+     "name": "bonus_feats",
+     "offset": 24,
+     "type": "CExoArrayList",
+     "meaning": "bonus feat list"
+    },
+    {
+     "name": "creature",
+     "offset": 36,
+     "type": "ptr",
+     "meaning": "CSWSCreature* back-pointer to the owner"
+    },
+    {
+     "name": "level_stats",
+     "offset": 40,
+     "type": "CExoArrayList",
+     "meaning": "per-level stats list (CSWLevelStats elements)"
+    },
+    {
+     "name": "first_name",
+     "offset": 52,
+     "type": "CExoString",
+     "meaning": "first name",
+     "confidence": "med"
+    },
+    {
+     "name": "last_name",
+     "offset": 60,
+     "type": "CExoString",
+     "meaning": "last name",
+     "confidence": "med"
+    },
+    {
+     "name": "conversation",
+     "offset": 68,
+     "type": "CResRef",
+     "meaning": "conversation resref",
+     "confidence": "med"
+    },
+    {
+     "name": "interruptable",
+     "offset": 84,
+     "type": "i32"
+    },
+    {
+     "name": "description",
+     "offset": 88,
+     "type": "CExoString",
+     "meaning": "description",
+     "confidence": "med"
+    },
+    {
+     "name": "age",
+     "offset": 96,
+     "type": "i32"
+    },
+    {
+     "name": "gender",
+     "offset": 100,
+     "type": "u8"
+    },
+    {
+     "name": "field_65",
+     "offset": 101,
+     "type": "u8"
+    },
+    {
+     "name": "field_66",
+     "offset": 102,
+     "type": "u8"
+    },
+    {
+     "name": "field_67",
+     "offset": 103,
+     "type": "u8"
+    },
+    {
+     "name": "experience",
+     "offset": 104,
+     "type": "u32"
+    },
+    {
+     "name": "is_pc",
+     "offset": 108,
+     "type": "i32"
+    },
+    {
+     "name": "field_70",
+     "offset": 112,
+     "type": "u32"
+    },
+    {
+     "name": "field_74",
+     "offset": 116,
+     "type": "u32"
+    },
+    {
+     "name": "faction_id",
+     "offset": 120,
+     "type": "u16"
+    },
+    {
+     "name": "field_7a",
+     "offset": 122,
+     "type": "u16"
+    },
+    {
+     "name": "field_7c",
+     "offset": 124,
+     "type": "u32"
+    },
+    {
+     "name": "field_80",
+     "offset": 128,
+     "type": "u32"
+    },
+    {
+     "name": "challenge_rating",
+     "offset": 132,
+     "type": "f32"
+    },
+    {
+     "name": "starting_package",
+     "offset": 136,
+     "type": "u8"
+    },
+    {
+     "name": "class_count",
+     "offset": 137,
+     "type": "u8"
+    },
+    {
+     "name": "field_8a",
+     "offset": 138,
+     "type": "u8"
+    },
+    {
+     "name": "field_8b",
+     "offset": 139,
+     "type": "u8"
+    },
+    {
+     "name": "classes",
+     "offset": 140,
+     "type": "u8[0x50]",
+     "meaning": "class table, 5 entries of 16 bytes",
+     "confidence": "low"
+    },
+    {
+     "name": "race",
+     "offset": 220,
+     "type": "i16",
+     "meaning": "race id. Two bytes, NOT the int Ghidra emits -- the next field is named field_de, which pins it"
+    },
+    {
+     "name": "field_de",
+     "offset": 222,
+     "type": "u16"
+    },
+    {
+     "name": "subrace",
+     "offset": 224,
+     "type": "CExoString",
+     "meaning": "subrace name",
+     "confidence": "med"
+    },
+    {
+     "name": "subrace_index",
+     "offset": 232,
+     "type": "u8"
+    },
+    {
+     "name": "strength",
+     "offset": 233,
+     "type": "u8"
+    },
+    {
+     "name": "str_mod",
+     "offset": 234,
+     "type": "u8"
+    },
+    {
+     "name": "dexterity",
+     "offset": 235,
+     "type": "u8"
+    },
+    {
+     "name": "dex_mod",
+     "offset": 236,
+     "type": "u8"
+    },
+    {
+     "name": "constitution",
+     "offset": 237,
+     "type": "u8"
+    },
+    {
+     "name": "con_mod",
+     "offset": 238,
+     "type": "u8"
+    },
+    {
+     "name": "intelligence",
+     "offset": 239,
+     "type": "u8"
+    },
+    {
+     "name": "int_mod",
+     "offset": 240,
+     "type": "u8"
+    },
+    {
+     "name": "wisdom",
+     "offset": 241,
+     "type": "u8"
+    },
+    {
+     "name": "wis_mod",
+     "offset": 242,
+     "type": "u8"
+    },
+    {
+     "name": "charisma",
+     "offset": 243,
+     "type": "u8"
+    },
+    {
+     "name": "cha_mod",
+     "offset": 244,
+     "type": "u8"
+    },
+    {
+     "name": "natural_ac",
+     "offset": 245,
+     "type": "u8"
+    },
+    {
+     "name": "field_f6",
+     "offset": 246,
+     "type": "u8"
+    },
+    {
+     "name": "field_f7",
+     "offset": 247,
+     "type": "u8"
+    },
+    {
+     "name": "field_f8",
+     "offset": 248,
+     "type": "u8"
+    },
+    {
+     "name": "field_f9",
+     "offset": 249,
+     "type": "u8"
+    },
+    {
+     "name": "field_fa",
+     "offset": 250,
+     "type": "u8"
+    },
+    {
+     "name": "field_fb",
+     "offset": 251,
+     "type": "u8"
+    },
+    {
+     "name": "field_fc",
+     "offset": 252,
+     "type": "u8"
+    },
+    {
+     "name": "field_fd",
+     "offset": 253,
+     "type": "u8"
+    },
+    {
+     "name": "field_fe",
+     "offset": 254,
+     "type": "u8"
+    },
+    {
+     "name": "field_ff",
+     "offset": 255,
+     "type": "u8"
+    },
+    {
+     "name": "field_100",
+     "offset": 256,
+     "type": "u8"
+    },
+    {
+     "name": "field_101",
+     "offset": 257,
+     "type": "u8"
+    },
+    {
+     "name": "base_atk_bonus",
+     "offset": 258,
+     "type": "u8"
+    },
+    {
+     "name": "field_103",
+     "offset": 259,
+     "type": "u8"
+    },
+    {
+     "name": "field_104",
+     "offset": 260,
+     "type": "u32"
+    },
+    {
+     "name": "field_108",
+     "offset": 264,
+     "type": "u32"
+    },
+    {
+     "name": "field_10c",
+     "offset": 268,
+     "type": "u32"
+    },
+    {
+     "name": "field_110",
+     "offset": 272,
+     "type": "u32"
+    },
+    {
+     "name": "field_114",
+     "offset": 276,
+     "type": "u8"
+    },
+    {
+     "name": "field_115",
+     "offset": 277,
+     "type": "u8"
+    },
+    {
+     "name": "field_116",
+     "offset": 278,
+     "type": "u8"
+    },
+    {
+     "name": "field_117",
+     "offset": 279,
+     "type": "u8"
+    },
+    {
+     "name": "combat_info",
+     "offset": 280,
+     "type": "ptr"
+    },
+    {
+     "name": "field_11c",
+     "offset": 284,
+     "type": "u8"
+    },
+    {
+     "name": "field_11d",
+     "offset": 285,
+     "type": "u8"
+    },
+    {
+     "name": "field_11e",
+     "offset": 286,
+     "type": "u8"
+    },
+    {
+     "name": "force_resistance",
+     "offset": 287,
+     "type": "i8"
+    },
+    {
+     "name": "force_resistance_penalty",
+     "offset": 288,
+     "type": "i8"
+    },
+    {
+     "name": "field_121",
+     "offset": 289,
+     "type": "u8"
+    },
+    {
+     "name": "force_points",
+     "offset": 290,
+     "type": "i16"
+    },
+    {
+     "name": "field_124",
+     "offset": 292,
+     "type": "u16"
+    },
+    {
+     "name": "field_126",
+     "offset": 294,
+     "type": "u16"
+    },
+    {
+     "name": "special_abilities",
+     "offset": 296,
+     "type": "ptr"
+    },
+    {
+     "name": "field_12c",
+     "offset": 300,
+     "type": "u16"
+    },
+    {
+     "name": "acincrease_index",
+     "offset": 302,
+     "type": "u16"
+    },
+    {
+     "name": "attackincrease_index",
+     "offset": 304,
+     "type": "u16"
+    },
+    {
+     "name": "damagereduction_index",
+     "offset": 306,
+     "type": "u16"
+    },
+    {
+     "name": "damageresistance_index",
+     "offset": 308,
+     "type": "u16"
+    },
+    {
+     "name": "damageincrease_index",
+     "offset": 310,
+     "type": "u16"
+    },
+    {
+     "name": "field_138",
+     "offset": 312,
+     "type": "u16"
+    },
+    {
+     "name": "ai_state",
+     "offset": 314,
+     "type": "u16"
+    },
+    {
+     "name": "field_13c",
+     "offset": 316,
+     "type": "u16"
+    },
+    {
+     "name": "field_13e",
+     "offset": 318,
+     "type": "u16"
+    },
+    {
+     "name": "field_140",
+     "offset": 320,
+     "type": "u16"
+    },
+    {
+     "name": "field_142",
+     "offset": 322,
+     "type": "u16"
+    },
+    {
+     "name": "field_144",
+     "offset": 324,
+     "type": "u16"
+    },
+    {
+     "name": "field_146",
+     "offset": 326,
+     "type": "u16"
+    },
+    {
+     "name": "field_148",
+     "offset": 328,
+     "type": "u16"
+    },
+    {
+     "name": "field_14a",
+     "offset": 330,
+     "type": "u16"
+    },
+    {
+     "name": "field_14c",
+     "offset": 332,
+     "type": "u16"
+    },
+    {
+     "name": "field_14e",
+     "offset": 334,
+     "type": "u16"
+    },
+    {
+     "name": "field_150",
+     "offset": 336,
+     "type": "u16"
+    },
+    {
+     "name": "field_152",
+     "offset": 338,
+     "type": "u16"
+    },
+    {
+     "name": "field_154",
+     "offset": 340,
+     "type": "u16"
+    },
+    {
+     "name": "field_156",
+     "offset": 342,
+     "type": "u16"
+    },
+    {
+     "name": "field_158",
+     "offset": 344,
+     "type": "u16"
+    },
+    {
+     "name": "field_15a",
+     "offset": 346,
+     "type": "u16"
+    },
+    {
+     "name": "field_15c",
+     "offset": 348,
+     "type": "u16"
+    },
+    {
+     "name": "field_15e",
+     "offset": 350,
+     "type": "u16"
+    },
+    {
+     "name": "field_160",
+     "offset": 352,
+     "type": "u32"
+    },
+    {
+     "name": "skill_points",
+     "offset": 356,
+     "type": "u16"
+    },
+    {
+     "name": "field_166",
+     "offset": 358,
+     "type": "u16"
+    },
+    {
+     "name": "skill_ranks",
+     "offset": 360,
+     "type": "ptr"
+    },
+    {
+     "name": "field_16c",
+     "offset": 364,
+     "type": "u8"
+    },
+    {
+     "name": "field_16d",
+     "offset": 365,
+     "type": "u8"
+    },
+    {
+     "name": "portrait",
+     "offset": 366,
+     "type": "CResRef",
+     "meaning": "portrait resref; note this is at an odd offset (0x16e), not dword-aligned",
+     "confidence": "med"
+    },
+    {
+     "name": "good_evil",
+     "offset": 382,
+     "type": "i16"
+    },
+    {
+     "name": "field_180",
+     "offset": 384,
+     "type": "u8"
+    },
+    {
+     "name": "field_181",
+     "offset": 385,
+     "type": "u8"
+    },
+    {
+     "name": "skin_color",
+     "offset": 386,
+     "type": "u8"
+    },
+    {
+     "name": "hair_color",
+     "offset": 387,
+     "type": "u8"
+    },
+    {
+     "name": "tattoo1_color",
+     "offset": 388,
+     "type": "u8"
+    },
+    {
+     "name": "tattoo2_color",
+     "offset": 389,
+     "type": "u8"
+    },
+    {
+     "name": "appearance_type",
+     "offset": 390,
+     "type": "u16"
+    },
+    {
+     "name": "phenotype",
+     "offset": 392,
+     "type": "u8"
+    },
+    {
+     "name": "appearance_head",
+     "offset": 393,
+     "type": "u8"
+    },
+    {
+     "name": "duplicating_head",
+     "offset": 394,
+     "type": "u8"
+    },
+    {
+     "name": "field_18b",
+     "offset": 395,
+     "type": "u8"
+    },
+    {
+     "name": "use_backup_head",
+     "offset": 396,
+     "type": "i32"
+    },
+    {
+     "name": "tail",
+     "offset": 400,
+     "type": "u8"
+    },
+    {
+     "name": "wings",
+     "offset": 401,
+     "type": "u8"
+    },
+    {
+     "name": "field_192",
+     "offset": 402,
+     "type": "u8"
+    },
+    {
+     "name": "field_193",
+     "offset": 403,
+     "type": "u8"
+    },
+    {
+     "name": "movement_rate",
+     "offset": 404,
+     "type": "i32"
+    },
+    {
+     "name": "runrate",
+     "offset": 408,
+     "type": "u32"
+    },
+    {
+     "name": "walkrate",
+     "offset": 412,
+     "type": "u32"
+    },
+    {
+     "name": "fortitude_bonus",
+     "offset": 416,
+     "type": "u8"
+    },
+    {
+     "name": "will_bonus",
+     "offset": 417,
+     "type": "u8"
+    },
+    {
+     "name": "reflex_bonus",
+     "offset": 418,
+     "type": "u8"
+    },
+    {
+     "name": "field_1a3",
+     "offset": 419,
+     "type": "u8"
+    },
+    {
+     "name": "deity",
+     "offset": 420,
+     "type": "CExoString",
+     "meaning": "deity name",
+     "confidence": "med"
+    },
+    {
+     "name": "hp_accumulator",
+     "offset": 428,
+     "type": "u32"
+    },
+    {
+     "name": "fp_accumulator",
+     "offset": 432,
+     "type": "u32"
+    },
+    {
+     "name": "field_1b4",
+     "offset": 436,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CSWSObject",
+   "size": 552,
+   "how_to_obtain": "g_pAppManager (0x007A39FC) -> +8 CServerExoApp* -> CServerExoApp::GetGameObject(0x4AE750, id) returns a CGameObject*. Every server-side subclass embeds CSWSObject at a known offset (creature/placeable/door/trigger at 0, item at 16), so once the type byte tells you which subclass it is, the CSWSObject sits at that fixed offset from the returned pointer.",
+   "fields": [
+    {
+     "name": "game_object",
+     "offset": 0,
+     "type": "CGameObject",
+     "meaning": "embedded base object: vtable, id, type byte"
+    },
+    {
+     "name": "last_name",
+     "offset": 12,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "field_14",
+     "offset": 20,
+     "type": "u16"
+    },
+    {
+     "name": "field_16",
+     "offset": 22,
+     "type": "u16"
+    },
+    {
+     "name": "tag",
+     "offset": 24,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "portrait",
+     "offset": 32,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "portrait_id",
+     "offset": 48,
+     "type": "u16"
+    },
+    {
+     "name": "field_32",
+     "offset": 50,
+     "type": "u16"
+    },
+    {
+     "name": "field_34",
+     "offset": 52,
+     "type": "ptr"
+    },
+    {
+     "name": "dlg_delay_day",
+     "offset": 56,
+     "type": "u32"
+    },
+    {
+     "name": "dlg_delay_ms",
+     "offset": 60,
+     "type": "u32"
+    },
+    {
+     "name": "dlg_last_time_day",
+     "offset": 64,
+     "type": "u32"
+    },
+    {
+     "name": "dlg_last_time_ms",
+     "offset": 68,
+     "type": "u32"
+    },
+    {
+     "name": "field_48",
+     "offset": 72,
+     "type": "u32"
+    },
+    {
+     "name": "field_4c",
+     "offset": 76,
+     "type": "u32"
+    },
+    {
+     "name": "field_50",
+     "offset": 80,
+     "type": "u32"
+    },
+    {
+     "name": "dialog_owner",
+     "offset": 84,
+     "type": "ptr"
+    },
+    {
+     "name": "field_58",
+     "offset": 88,
+     "type": "u32"
+    },
+    {
+     "name": "field_5c",
+     "offset": 92,
+     "type": "u32"
+    },
+    {
+     "name": "field_60",
+     "offset": 96,
+     "type": "u32"
+    },
+    {
+     "name": "field_64",
+     "offset": 100,
+     "type": "u32"
+    },
+    {
+     "name": "field_68",
+     "offset": 104,
+     "type": "u32"
+    },
+    {
+     "name": "field_6c",
+     "offset": 108,
+     "type": "u32"
+    },
+    {
+     "name": "field_70",
+     "offset": 112,
+     "type": "u32"
+    },
+    {
+     "name": "field_74",
+     "offset": 116,
+     "type": "u32"
+    },
+    {
+     "name": "ai_level",
+     "offset": 120,
+     "type": "i32"
+    },
+    {
+     "name": "field_7c",
+     "offset": 124,
+     "type": "u32"
+    },
+    {
+     "name": "field_80",
+     "offset": 128,
+     "type": "u32"
+    },
+    {
+     "name": "field_84",
+     "offset": 132,
+     "type": "u32"
+    },
+    {
+     "name": "field_88",
+     "offset": 136,
+     "type": "u32"
+    },
+    {
+     "name": "area_id",
+     "offset": 140,
+     "type": "u32"
+    },
+    {
+     "name": "position",
+     "offset": 144,
+     "type": "Vector",
+     "meaning": "world position x,y,z -- flds 0x90/0x94/0x98 throughout CSWSObject. This is the field a Phasor-style script would call readfloat(base+0xF8) for"
+    },
+    {
+     "name": "orientation",
+     "offset": 156,
+     "type": "Vector",
+     "meaning": "facing vector; CSWSObject::SetOrientation 0x4CD170 copies exactly 3 dwords here from a Vector*"
+    },
+    {
+     "name": "field_a8",
+     "offset": 168,
+     "type": "u32"
+    },
+    {
+     "name": "field_ac",
+     "offset": 172,
+     "type": "u32"
+    },
+    {
+     "name": "field_b0",
+     "offset": 176,
+     "type": "u32"
+    },
+    {
+     "name": "field_b4",
+     "offset": 180,
+     "type": "u32"
+    },
+    {
+     "name": "field_b8",
+     "offset": 184,
+     "type": "u32"
+    },
+    {
+     "name": "field_bc",
+     "offset": 188,
+     "type": "u32"
+    },
+    {
+     "name": "field_c0",
+     "offset": 192,
+     "type": "u32"
+    },
+    {
+     "name": "field_c4",
+     "offset": 196,
+     "type": "u32"
+    },
+    {
+     "name": "field_c8",
+     "offset": 200,
+     "type": "u32"
+    },
+    {
+     "name": "field_cc",
+     "offset": 204,
+     "type": "u32"
+    },
+    {
+     "name": "field_d0",
+     "offset": 208,
+     "type": "u32"
+    },
+    {
+     "name": "animation",
+     "offset": 212,
+     "type": "i32"
+    },
+    {
+     "name": "field_d8",
+     "offset": 216,
+     "type": "u32"
+    },
+    {
+     "name": "current_hp",
+     "offset": 220,
+     "type": "u32"
+    },
+    {
+     "name": "hit_points",
+     "offset": 224,
+     "type": "i32",
+     "meaning": "max hit points"
+    },
+    {
+     "name": "field_e4",
+     "offset": 228,
+     "type": "u32"
+    },
+    {
+     "name": "field_e8",
+     "offset": 232,
+     "type": "u32"
+    },
+    {
+     "name": "is_destroyable",
+     "offset": 236,
+     "type": "i32"
+    },
+    {
+     "name": "is_raiseable",
+     "offset": 240,
+     "type": "i32"
+    },
+    {
+     "name": "dead_selectable",
+     "offset": 244,
+     "type": "i32"
+    },
+    {
+     "name": "plot",
+     "offset": 248,
+     "type": "u32"
+    },
+    {
+     "name": "action_nodes",
+     "offset": 252,
+     "type": "u8[0x4]"
+    },
+    {
+     "name": "field_100",
+     "offset": 256,
+     "type": "u32"
+    },
+    {
+     "name": "field_104",
+     "offset": 260,
+     "type": "u32"
+    },
+    {
+     "name": "field_108",
+     "offset": 264,
+     "type": "u32"
+    },
+    {
+     "name": "field_10c",
+     "offset": 268,
+     "type": "u32"
+    },
+    {
+     "name": "script_var_table_2",
+     "offset": 272,
+     "type": "CScriptVarTable",
+     "meaning": "20-byte script variable table",
+     "confidence": "med"
+    },
+    {
+     "name": "effects",
+     "offset": 292,
+     "type": "CExoArrayList",
+     "meaning": "applied CGameEffect* list. data ptr at 0x124, size at 0x128, capacity at 0x12c"
+    },
+    {
+     "name": "looping_vis_fx",
+     "offset": 304,
+     "type": "CExoArrayList",
+     "meaning": "looping visual effect list"
+    },
+    {
+     "name": "effect_targets",
+     "offset": 316,
+     "type": "CExoArrayList",
+     "meaning": "effect target list"
+    },
+    {
+     "name": "field_148",
+     "offset": 328,
+     "type": "u32"
+    },
+    {
+     "name": "field_14c",
+     "offset": 332,
+     "type": "u32"
+    },
+    {
+     "name": "field_150",
+     "offset": 336,
+     "type": "i32"
+    },
+    {
+     "name": "field_154",
+     "offset": 340,
+     "type": "u32"
+    },
+    {
+     "name": "field_158",
+     "offset": 344,
+     "type": "u32"
+    },
+    {
+     "name": "field_15c",
+     "offset": 348,
+     "type": "u32"
+    },
+    {
+     "name": "field_160",
+     "offset": 352,
+     "type": "u32"
+    },
+    {
+     "name": "field_164",
+     "offset": 356,
+     "type": "u32"
+    },
+    {
+     "name": "field_168",
+     "offset": 360,
+     "type": "u32"
+    },
+    {
+     "name": "field_16c",
+     "offset": 364,
+     "type": "u32"
+    },
+    {
+     "name": "field_170",
+     "offset": 368,
+     "type": "u32"
+    },
+    {
+     "name": "field_174",
+     "offset": 372,
+     "type": "u32"
+    },
+    {
+     "name": "field_178",
+     "offset": 376,
+     "type": "u32"
+    },
+    {
+     "name": "field_17c",
+     "offset": 380,
+     "type": "u32"
+    },
+    {
+     "name": "field_180",
+     "offset": 384,
+     "type": "u32"
+    },
+    {
+     "name": "field_184",
+     "offset": 388,
+     "type": "u8[0x8]"
+    },
+    {
+     "name": "expression_list",
+     "offset": 396,
+     "type": "CExoArrayList",
+     "meaning": "expression list"
+    },
+    {
+     "name": "field_198",
+     "offset": 408,
+     "type": "u32"
+    },
+    {
+     "name": "listening",
+     "offset": 412,
+     "type": "i32"
+    },
+    {
+     "name": "matched_expression_strings",
+     "offset": 416,
+     "type": "CExoArrayList",
+     "meaning": "matched expression strings"
+    },
+    {
+     "name": "field_1ac",
+     "offset": 428,
+     "type": "u32"
+    },
+    {
+     "name": "spell_target_position",
+     "offset": 432,
+     "type": "Vector",
+     "meaning": "spell target position (flds 0x1b0)"
+    },
+    {
+     "name": "field_1bc",
+     "offset": 444,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c0",
+     "offset": 448,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c4",
+     "offset": 452,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c8",
+     "offset": 456,
+     "type": "u32"
+    },
+    {
+     "name": "field_1cc",
+     "offset": 460,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d0",
+     "offset": 464,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d4",
+     "offset": 468,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d8",
+     "offset": 472,
+     "type": "u32"
+    },
+    {
+     "name": "field_1dc",
+     "offset": 476,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e0",
+     "offset": 480,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e4",
+     "offset": 484,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e8",
+     "offset": 488,
+     "type": "u32"
+    },
+    {
+     "name": "field_1ec",
+     "offset": 492,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f0",
+     "offset": 496,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f4",
+     "offset": 500,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f8",
+     "offset": 504,
+     "type": "u32"
+    },
+    {
+     "name": "field_1fc",
+     "offset": 508,
+     "type": "u32",
+     "meaning": "dirty/update flag word: SetOrientation ORs bit 2 into it"
+    },
+    {
+     "name": "min1hp",
+     "offset": 512,
+     "type": "i32"
+    },
+    {
+     "name": "field_204",
+     "offset": 516,
+     "type": "u32"
+    },
+    {
+     "name": "keep_corpse",
+     "offset": 520,
+     "type": "u32"
+    },
+    {
+     "name": "field_20c",
+     "offset": 524,
+     "type": "u32"
+    },
+    {
+     "name": "field_210",
+     "offset": 528,
+     "type": "u32"
+    },
+    {
+     "name": "field_214",
+     "offset": 532,
+     "type": "u32"
+    },
+    {
+     "name": "party_interact",
+     "offset": 536,
+     "type": "i32"
+    },
+    {
+     "name": "reorienting",
+     "offset": 540,
+     "type": "i32"
+    },
+    {
+     "name": "field_220",
+     "offset": 544,
+     "type": "u32"
+    },
+    {
+     "name": "client_object",
+     "offset": 548,
+     "type": "ptr",
+     "meaning": "CSWCObject* client half; CSWSObject::GetClientObject 0x4CC2B0 reads and caches this slot"
+    }
+   ]
+  },
+  {
+   "name": "CSWCObject",
+   "size": 252,
+   "how_to_obtain": "CSWSObject + 548 (client_object), or g_pAppManager -> +4 CClientExoApp* -> CClientExoApp::GetGameObject (0x5ED580). The back-link is CSWCObject+248, read by CSWCObject::GetServerObject 0x63D4B0.",
+   "fields": [
+    {
+     "name": "game_object",
+     "offset": 0,
+     "type": "CGameObject",
+     "meaning": "embedded base object"
+    },
+    {
+     "name": "field_c",
+     "offset": 12,
+     "type": "u32"
+    },
+    {
+     "name": "field_10",
+     "offset": 16,
+     "type": "u32"
+    },
+    {
+     "name": "field_14",
+     "offset": 20,
+     "type": "u32"
+    },
+    {
+     "name": "field_18",
+     "offset": 24,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c",
+     "offset": 28,
+     "type": "u32"
+    },
+    {
+     "name": "field_20",
+     "offset": 32,
+     "type": "u32"
+    },
+    {
+     "name": "position",
+     "offset": 36,
+     "type": "Vector",
+     "meaning": "client world position"
+    },
+    {
+     "name": "orientation",
+     "offset": 48,
+     "type": "Vector",
+     "meaning": "client facing; CSWCObject::SetOrientation 0x63C110 copies 3 dwords here"
+    },
+    {
+     "name": "field_3c",
+     "offset": 60,
+     "type": "u32"
+    },
+    {
+     "name": "field_40",
+     "offset": 64,
+     "type": "u32"
+    },
+    {
+     "name": "field_44",
+     "offset": 68,
+     "type": "u32"
+    },
+    {
+     "name": "current_animation",
+     "offset": 72,
+     "type": "u16"
+    },
+    {
+     "name": "field_4a",
+     "offset": 74,
+     "type": "u16"
+    },
+    {
+     "name": "field_4c",
+     "offset": 76,
+     "type": "f32"
+    },
+    {
+     "name": "field_50",
+     "offset": 80,
+     "type": "u32"
+    },
+    {
+     "name": "field_54",
+     "offset": 84,
+     "type": "u32"
+    },
+    {
+     "name": "looping_animation",
+     "offset": 88,
+     "type": "u16"
+    },
+    {
+     "name": "field_5a",
+     "offset": 90,
+     "type": "u16"
+    },
+    {
+     "name": "field_5c",
+     "offset": 92,
+     "type": "ptr"
+    },
+    {
+     "name": "field_60",
+     "offset": 96,
+     "type": "u8"
+    },
+    {
+     "name": "field_61",
+     "offset": 97,
+     "type": "u8"
+    },
+    {
+     "name": "field_62",
+     "offset": 98,
+     "type": "u8"
+    },
+    {
+     "name": "field_63",
+     "offset": 99,
+     "type": "u8"
+    },
+    {
+     "name": "field_64",
+     "offset": 100,
+     "type": "u8"
+    },
+    {
+     "name": "field_65",
+     "offset": 101,
+     "type": "u8"
+    },
+    {
+     "name": "field_66",
+     "offset": 102,
+     "type": "u8"
+    },
+    {
+     "name": "field_67",
+     "offset": 103,
+     "type": "u8"
+    },
+    {
+     "name": "anim_base",
+     "offset": 104,
+     "type": "ptr"
+    },
+    {
+     "name": "vis_effects",
+     "offset": 108,
+     "type": "ptr"
+    },
+    {
+     "name": "field_70",
+     "offset": 112,
+     "type": "u32"
+    },
+    {
+     "name": "field_74",
+     "offset": 116,
+     "type": "u32"
+    },
+    {
+     "name": "field_78",
+     "offset": 120,
+     "type": "u32"
+    },
+    {
+     "name": "field_7c",
+     "offset": 124,
+     "type": "u32"
+    },
+    {
+     "name": "field_80",
+     "offset": 128,
+     "type": "u32"
+    },
+    {
+     "name": "field_84",
+     "offset": 132,
+     "type": "u32"
+    },
+    {
+     "name": "field_88",
+     "offset": 136,
+     "type": "u32"
+    },
+    {
+     "name": "field_8c",
+     "offset": 140,
+     "type": "u32"
+    },
+    {
+     "name": "field_90",
+     "offset": 144,
+     "type": "u32"
+    },
+    {
+     "name": "field_94",
+     "offset": 148,
+     "type": "u32"
+    },
+    {
+     "name": "field_98",
+     "offset": 152,
+     "type": "u32"
+    },
+    {
+     "name": "field_9c",
+     "offset": 156,
+     "type": "u32"
+    },
+    {
+     "name": "field_a0",
+     "offset": 160,
+     "type": "u32"
+    },
+    {
+     "name": "field_a4",
+     "offset": 164,
+     "type": "f32"
+    },
+    {
+     "name": "portrait",
+     "offset": 168,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "field_b8",
+     "offset": 184,
+     "type": "u32"
+    },
+    {
+     "name": "field_bc",
+     "offset": 188,
+     "type": "u32"
+    },
+    {
+     "name": "field_c0",
+     "offset": 192,
+     "type": "u32"
+    },
+    {
+     "name": "field_c4",
+     "offset": 196,
+     "type": "u32"
+    },
+    {
+     "name": "field_c8",
+     "offset": 200,
+     "type": "u32"
+    },
+    {
+     "name": "field_cc",
+     "offset": 204,
+     "type": "u32"
+    },
+    {
+     "name": "field_d0",
+     "offset": 208,
+     "type": "u32"
+    },
+    {
+     "name": "field_d4",
+     "offset": 212,
+     "type": "u32"
+    },
+    {
+     "name": "field_d8",
+     "offset": 216,
+     "type": "u32"
+    },
+    {
+     "name": "field_dc",
+     "offset": 220,
+     "type": "u32"
+    },
+    {
+     "name": "field_e0",
+     "offset": 224,
+     "type": "u32"
+    },
+    {
+     "name": "field_e4",
+     "offset": 228,
+     "type": "ptr"
+    },
+    {
+     "name": "field_e8",
+     "offset": 232,
+     "type": "u8[0x8]"
+    },
+    {
+     "name": "field_f0",
+     "offset": 240,
+     "type": "u8"
+    },
+    {
+     "name": "field_f1",
+     "offset": 241,
+     "type": "u8"
+    },
+    {
+     "name": "field_f2",
+     "offset": 242,
+     "type": "u8"
+    },
+    {
+     "name": "field_f3",
+     "offset": 243,
+     "type": "u8"
+    },
+    {
+     "name": "field_f4",
+     "offset": 244,
+     "type": "u8"
+    },
+    {
+     "name": "field_f5",
+     "offset": 245,
+     "type": "u8"
+    },
+    {
+     "name": "field_f6",
+     "offset": 246,
+     "type": "u8"
+    },
+    {
+     "name": "field_f7",
+     "offset": 247,
+     "type": "u8"
+    },
+    {
+     "name": "server_object",
+     "offset": 248,
+     "type": "ptr",
+     "meaning": "CSWSObject* server half; CSWCObject::GetServerObject 0x63D4B0 reads and caches this slot"
+    }
+   ]
+  },
+  {
+   "name": "CGameObject",
+   "size": 12,
+   "how_to_obtain": "CGameObjectArray::GetGameObject (0x4D8230) writes one of these into its out-parameter. Every game object begins with this header, so the pointer you get from the id lookup IS a CGameObject*.",
+   "fields": [
+    {
+     "name": "vtable",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "vtable. Slots 0x18/0x30/0x38/0x50/0x58/0x5c/0x64/0x68 are type-checked downcasts: on the matching class the slot is `mov eax,ecx; ret`, otherwise `xor eax,eax; ret`"
+    },
+    {
+     "name": "id",
+     "offset": 4,
+     "type": "u32",
+     "meaning": "object id. Bit 31 selects one of two id spaces; the low 12 bits are the hash bucket"
+    },
+    {
+     "name": "object_type",
+     "offset": 8,
+     "type": "u8",
+     "meaning": "object type, ONE byte (Ghidra emits `int` here and that is wrong). Verified: 4=area 5=creature 6=item 7=trigger 9=placeable 10=door 11=area-of-effect 12=waypoint 13=encounter 16=sound. Byte compare at 0x4B17BE and 0x4CC114"
+    },
+    {
+     "name": "_pad9",
+     "offset": 9,
+     "type": "u8[0x3]",
+     "meaning": "padding to 12 bytes"
+    }
+   ]
+  },
+  {
+   "name": "CSWSArea",
+   "size": 724,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetAreaByGameObjectID (0x4AE780). Or from any object: read CSWSObject+140 (area_id) and look that id up the same way. Note the embedded CGameObject is at +284, not +0.",
+   "fields": [
+    {
+     "name": "sw_area",
+     "offset": 0,
+     "type": "u8[0x100]",
+     "meaning": "256-byte area header ahead of the embedded CGameObject",
+     "confidence": "low"
+    },
+    {
+     "name": "res_helper",
+     "offset": 256,
+     "type": "u8[0x1c]",
+     "confidence": "low"
+    },
+    {
+     "name": "game_object",
+     "offset": 284,
+     "type": "CGameObject",
+     "meaning": "embedded base object"
+    },
+    {
+     "name": "field_128",
+     "offset": 296,
+     "type": "u32"
+    },
+    {
+     "name": "field_12c",
+     "offset": 300,
+     "type": "u32"
+    },
+    {
+     "name": "field_130",
+     "offset": 304,
+     "type": "u32"
+    },
+    {
+     "name": "field_134",
+     "offset": 308,
+     "type": "u32"
+    },
+    {
+     "name": "field_138",
+     "offset": 312,
+     "type": "u32"
+    },
+    {
+     "name": "field_13c",
+     "offset": 316,
+     "type": "u32"
+    },
+    {
+     "name": "field_140",
+     "offset": 320,
+     "type": "u32"
+    },
+    {
+     "name": "expansion_list",
+     "offset": 324,
+     "type": "u8[0x4]"
+    },
+    {
+     "name": "comments",
+     "offset": 328,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "name",
+     "offset": 336,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "tag",
+     "offset": 344,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "header_info",
+     "offset": 352,
+     "type": "ptr"
+    },
+    {
+     "name": "script_on_heart_beat",
+     "offset": 356,
+     "type": "CExoString",
+     "meaning": "OnHeartbeat script name",
+     "confidence": "med"
+    },
+    {
+     "name": "script_on_user_defined",
+     "offset": 364,
+     "type": "CExoString",
+     "meaning": "OnUserDefined script name",
+     "confidence": "med"
+    },
+    {
+     "name": "script_on_enter",
+     "offset": 372,
+     "type": "CExoString",
+     "meaning": "OnEnter script name",
+     "confidence": "med"
+    },
+    {
+     "name": "script_on_exit",
+     "offset": 380,
+     "type": "CExoString",
+     "meaning": "OnExit script name",
+     "confidence": "med"
+    },
+    {
+     "name": "chance_fog",
+     "offset": 388,
+     "type": "u32"
+    },
+    {
+     "name": "mod_spot_check",
+     "offset": 392,
+     "type": "u32"
+    },
+    {
+     "name": "mod_listen_check",
+     "offset": 396,
+     "type": "u32"
+    },
+    {
+     "name": "game_objects",
+     "offset": 400,
+     "type": "ptr",
+     "meaning": "CExoArrayList.data - u32 object ids of everything in the area. Ghidra split this list into three scalar fields instead of one blob (CSWSArea::AddObjectToArea 0x50DFD0)"
+    },
+    {
+     "name": "game_object_count",
+     "offset": 404,
+     "type": "i32",
+     "meaning": "CExoArrayList.size for the list at 0x190"
+    },
+    {
+     "name": "field_198",
+     "offset": 408,
+     "type": "i32",
+     "meaning": "CExoArrayList.capacity for the list at 0x190"
+    },
+    {
+     "name": "field_19c",
+     "offset": 412,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a0",
+     "offset": 416,
+     "type": "ptr",
+     "meaning": "CExoArrayList.data - grown through CExoArrayList::Allocate 0x5E03C0 from CSWSDoor::AddToArea. Another split-form list"
+    },
+    {
+     "name": "field_1a4",
+     "offset": 420,
+     "type": "i32",
+     "meaning": "CExoArrayList.size for the list at 0x1a0"
+    },
+    {
+     "name": "field_1a8",
+     "offset": 424,
+     "type": "i32",
+     "meaning": "CExoArrayList.capacity for the list at 0x1a0"
+    },
+    {
+     "name": "field_1ac",
+     "offset": 428,
+     "type": "ptr"
+    },
+    {
+     "name": "pathfind_info",
+     "offset": 432,
+     "type": "ptr"
+    },
+    {
+     "name": "field_1b4",
+     "offset": 436,
+     "type": "ptr"
+    },
+    {
+     "name": "field_1b8",
+     "offset": 440,
+     "type": "u32"
+    },
+    {
+     "name": "field_1bc",
+     "offset": 444,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c0",
+     "offset": 448,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c4",
+     "offset": 452,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c8",
+     "offset": 456,
+     "type": "u32"
+    },
+    {
+     "name": "field_1cc",
+     "offset": 460,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d0",
+     "offset": 464,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d4",
+     "offset": 468,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d8",
+     "offset": 472,
+     "type": "u32"
+    },
+    {
+     "name": "field_1dc",
+     "offset": 476,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e0",
+     "offset": 480,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e4",
+     "offset": 484,
+     "type": "u32"
+    },
+    {
+     "name": "field_1e8",
+     "offset": 488,
+     "type": "u32"
+    },
+    {
+     "name": "field_1ec",
+     "offset": 492,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f0",
+     "offset": 496,
+     "type": "u32"
+    },
+    {
+     "name": "script_var_table",
+     "offset": 500,
+     "type": "CScriptVarTable",
+     "meaning": "20-byte script variable table",
+     "confidence": "med"
+    },
+    {
+     "name": "ambient_sounds",
+     "offset": 520,
+     "type": "ptr"
+    },
+    {
+     "name": "current_weather",
+     "offset": 524,
+     "type": "i32"
+    },
+    {
+     "name": "weather_started",
+     "offset": 528,
+     "type": "i32"
+    },
+    {
+     "name": "field_214",
+     "offset": 532,
+     "type": "i32"
+    },
+    {
+     "name": "field_218",
+     "offset": 536,
+     "type": "i32"
+    },
+    {
+     "name": "field_21c",
+     "offset": 540,
+     "type": "u32"
+    },
+    {
+     "name": "field_220",
+     "offset": 544,
+     "type": "u8"
+    },
+    {
+     "name": "field_221",
+     "offset": 545,
+     "type": "u8"
+    },
+    {
+     "name": "lighting_scheme",
+     "offset": 546,
+     "type": "u8"
+    },
+    {
+     "name": "field_223",
+     "offset": 547,
+     "type": "u8"
+    },
+    {
+     "name": "field_224",
+     "offset": 548,
+     "type": "u32"
+    },
+    {
+     "name": "load_screen_ID",
+     "offset": 552,
+     "type": "u32"
+    },
+    {
+     "name": "rooms_count",
+     "offset": 556,
+     "type": "u32"
+    },
+    {
+     "name": "rooms",
+     "offset": 560,
+     "type": "ptr"
+    },
+    {
+     "name": "mini_game",
+     "offset": 564,
+     "type": "u32"
+    },
+    {
+     "name": "path_points_count",
+     "offset": 568,
+     "type": "u32"
+    },
+    {
+     "name": "path_points",
+     "offset": 572,
+     "type": "ptr"
+    },
+    {
+     "name": "path_connections_count",
+     "offset": 576,
+     "type": "u32"
+    },
+    {
+     "name": "path_connections",
+     "offset": 580,
+     "type": "ptr"
+    },
+    {
+     "name": "field_248",
+     "offset": 584,
+     "type": "u32"
+    },
+    {
+     "name": "field_24c",
+     "offset": 588,
+     "type": "u32"
+    },
+    {
+     "name": "path_point_dfs_trans_table",
+     "offset": 592,
+     "type": "u32"
+    },
+    {
+     "name": "field_254",
+     "offset": 596,
+     "type": "u32"
+    },
+    {
+     "name": "field_258",
+     "offset": 600,
+     "type": "u32"
+    },
+    {
+     "name": "room_names",
+     "offset": 604,
+     "type": "ptr"
+    },
+    {
+     "name": "env_audios",
+     "offset": 608,
+     "type": "ptr"
+    },
+    {
+     "name": "ambient_scales",
+     "offset": 612,
+     "type": "ptr"
+    },
+    {
+     "name": "room_count",
+     "offset": 616,
+     "type": "u32"
+    },
+    {
+     "name": "field_26c",
+     "offset": 620,
+     "type": "u32"
+    },
+    {
+     "name": "field_270",
+     "offset": 624,
+     "type": "u32"
+    },
+    {
+     "name": "field_274",
+     "offset": 628,
+     "type": "u32"
+    },
+    {
+     "name": "field_278",
+     "offset": 632,
+     "type": "u32"
+    },
+    {
+     "name": "field_27c",
+     "offset": 636,
+     "type": "u32"
+    },
+    {
+     "name": "field_280",
+     "offset": 640,
+     "type": "u32"
+    },
+    {
+     "name": "field_284",
+     "offset": 644,
+     "type": "u32"
+    },
+    {
+     "name": "field_288",
+     "offset": 648,
+     "type": "u32"
+    },
+    {
+     "name": "field_28c",
+     "offset": 652,
+     "type": "u32"
+    },
+    {
+     "name": "field_290",
+     "offset": 656,
+     "type": "u32"
+    },
+    {
+     "name": "omen_events",
+     "offset": 660,
+     "type": "CExoArrayList",
+     "meaning": "omen event list"
+    },
+    {
+     "name": "field_2a0",
+     "offset": 672,
+     "type": "u32"
+    },
+    {
+     "name": "field_2a4",
+     "offset": 676,
+     "type": "u32"
+    },
+    {
+     "name": "field_2a8",
+     "offset": 680,
+     "type": "u32"
+    },
+    {
+     "name": "unescapable",
+     "offset": 684,
+     "type": "i32"
+    },
+    {
+     "name": "restrict_mode",
+     "offset": 688,
+     "type": "i32"
+    },
+    {
+     "name": "stealth_xp_max",
+     "offset": 692,
+     "type": "u32"
+    },
+    {
+     "name": "stealth_xp_current",
+     "offset": 696,
+     "type": "u32"
+    },
+    {
+     "name": "stealth_xp_loss",
+     "offset": 700,
+     "type": "u32"
+    },
+    {
+     "name": "stealth_xp_enabled",
+     "offset": 704,
+     "type": "i32"
+    },
+    {
+     "name": "trans_pending",
+     "offset": 708,
+     "type": "i32"
+    },
+    {
+     "name": "next_transition_pending_id",
+     "offset": 712,
+     "type": "u8"
+    },
+    {
+     "name": "trans_pend_curr_id",
+     "offset": 713,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ca",
+     "offset": 714,
+     "type": "u8"
+    },
+    {
+     "name": "field_2cb",
+     "offset": 715,
+     "type": "u8"
+    },
+    {
+     "name": "field_2cc",
+     "offset": 716,
+     "type": "ptr"
+    },
+    {
+     "name": "client_area",
+     "offset": 720,
+     "type": "ptr"
+    }
+   ]
+  },
+  {
+   "name": "CSWSModule",
+   "size": 548,
+   "how_to_obtain": "g_pAppManager (0x007A39FC) -> +8 CServerExoApp* -> CServerExoApp::GetModule (0x4AE6B0). That thunk hops to CServerExoAppInternal::GetModule (0x4B14F0), which reads the module object id at CServerExoAppInternal+0x10060 and resolves it through the same object array. Only one module is live at a time.",
+   "fields": [
+    {
+     "name": "vtable",
+     "offset": 0,
+     "type": "ptr"
+    },
+    {
+     "name": "field_4",
+     "offset": 4,
+     "type": "i32"
+    },
+    {
+     "name": "gff",
+     "offset": 8,
+     "type": "ptr"
+    },
+    {
+     "name": "field_c",
+     "offset": 12,
+     "type": "u8[0x10]"
+    },
+    {
+     "name": "game_object",
+     "offset": 28,
+     "type": "ptr"
+    },
+    {
+     "name": "field_20",
+     "offset": 32,
+     "type": "u32"
+    },
+    {
+     "name": "field_24",
+     "offset": 36,
+     "type": "u32"
+    },
+    {
+     "name": "expansion_list",
+     "offset": 40,
+     "type": "u8[0x4]"
+    },
+    {
+     "name": "cutscene_list",
+     "offset": 44,
+     "type": "u8[0x4]"
+    },
+    {
+     "name": "area_name",
+     "offset": 48,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "area_id",
+     "offset": 64,
+     "type": "u32"
+    },
+    {
+     "name": "field_44",
+     "offset": 68,
+     "type": "u32"
+    },
+    {
+     "name": "player_list",
+     "offset": 72,
+     "type": "u8[0x4]"
+    },
+    {
+     "name": "description",
+     "offset": 76,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "id",
+     "offset": 84,
+     "type": "ptr"
+    },
+    {
+     "name": "entry",
+     "offset": 88,
+     "type": "ptr"
+    },
+    {
+     "name": "field_5c",
+     "offset": 92,
+     "type": "u8[0x8]"
+    },
+    {
+     "name": "name_localized",
+     "offset": 100,
+     "type": "CExoLocString",
+     "meaning": "8-byte localized string",
+     "confidence": "med"
+    },
+    {
+     "name": "field_6c",
+     "offset": 108,
+     "type": "u8[0x10]"
+    },
+    {
+     "name": "start_movie",
+     "offset": 124,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "script_var_table",
+     "offset": 140,
+     "type": "u32"
+    },
+    {
+     "name": "field_90",
+     "offset": 144,
+     "type": "i32"
+    },
+    {
+     "name": "field_94",
+     "offset": 148,
+     "type": "i32"
+    },
+    {
+     "name": "field_98",
+     "offset": 152,
+     "type": "i32"
+    },
+    {
+     "name": "var_table",
+     "offset": 156,
+     "type": "CScriptVarTable",
+     "meaning": "20-byte script variable table",
+     "confidence": "med"
+    },
+    {
+     "name": "scripts",
+     "offset": 176,
+     "type": "CExoString[15]",
+     "meaning": "module script slots",
+     "confidence": "med"
+    },
+    {
+     "name": "field_128",
+     "offset": 296,
+     "type": "u32"
+    },
+    {
+     "name": "field_12c",
+     "offset": 300,
+     "type": "u32"
+    },
+    {
+     "name": "object_lookup_table",
+     "offset": 304,
+     "type": "CExoArrayList",
+     "meaning": "object lookup table; data ptr at 0x130, size at 0x134, elements are 40 (0x28) bytes each"
+    },
+    {
+     "name": "field_13c",
+     "offset": 316,
+     "type": "u32"
+    },
+    {
+     "name": "field_140",
+     "offset": 320,
+     "type": "u32"
+    },
+    {
+     "name": "field_144",
+     "offset": 324,
+     "type": "u32"
+    },
+    {
+     "name": "field_148",
+     "offset": 328,
+     "type": "u32"
+    },
+    {
+     "name": "field_14c",
+     "offset": 332,
+     "type": "u32"
+    },
+    {
+     "name": "field_150",
+     "offset": 336,
+     "type": "u32"
+    },
+    {
+     "name": "field_154",
+     "offset": 340,
+     "type": "u32"
+    },
+    {
+     "name": "field_158",
+     "offset": 344,
+     "type": "u32"
+    },
+    {
+     "name": "field_15c",
+     "offset": 348,
+     "type": "u32"
+    },
+    {
+     "name": "field_160",
+     "offset": 352,
+     "type": "u32"
+    },
+    {
+     "name": "field_164",
+     "offset": 356,
+     "type": "u32"
+    },
+    {
+     "name": "field_168",
+     "offset": 360,
+     "type": "u32"
+    },
+    {
+     "name": "field_16c",
+     "offset": 364,
+     "type": "u32"
+    },
+    {
+     "name": "field_170",
+     "offset": 368,
+     "type": "u32"
+    },
+    {
+     "name": "field_174",
+     "offset": 372,
+     "type": "u32"
+    },
+    {
+     "name": "field_178",
+     "offset": 376,
+     "type": "u32"
+    },
+    {
+     "name": "field_17c",
+     "offset": 380,
+     "type": "u32"
+    },
+    {
+     "name": "field_180",
+     "offset": 384,
+     "type": "u32"
+    },
+    {
+     "name": "field_184",
+     "offset": 388,
+     "type": "u32"
+    },
+    {
+     "name": "field_188",
+     "offset": 392,
+     "type": "u32"
+    },
+    {
+     "name": "field_18c",
+     "offset": 396,
+     "type": "u32"
+    },
+    {
+     "name": "field_190",
+     "offset": 400,
+     "type": "u32"
+    },
+    {
+     "name": "field_194",
+     "offset": 404,
+     "type": "u32"
+    },
+    {
+     "name": "field_198",
+     "offset": 408,
+     "type": "u32"
+    },
+    {
+     "name": "field_19c",
+     "offset": 412,
+     "type": "u32"
+    },
+    {
+     "name": "minutes_per_hour",
+     "offset": 416,
+     "type": "u8"
+    },
+    {
+     "name": "dawn_hour",
+     "offset": 417,
+     "type": "u8"
+    },
+    {
+     "name": "dusk_hour",
+     "offset": 418,
+     "type": "u8"
+    },
+    {
+     "name": "start_month",
+     "offset": 419,
+     "type": "u8"
+    },
+    {
+     "name": "start_day",
+     "offset": 420,
+     "type": "u8"
+    },
+    {
+     "name": "start_hour",
+     "offset": 421,
+     "type": "u8"
+    },
+    {
+     "name": "xp_scale",
+     "offset": 422,
+     "type": "u8"
+    },
+    {
+     "name": "field_1a7",
+     "offset": 423,
+     "type": "u8"
+    },
+    {
+     "name": "start_year",
+     "offset": 424,
+     "type": "u32"
+    },
+    {
+     "name": "current_month",
+     "offset": 428,
+     "type": "u32"
+    },
+    {
+     "name": "current_day",
+     "offset": 432,
+     "type": "u32"
+    },
+    {
+     "name": "current_hour",
+     "offset": 436,
+     "type": "u32"
+    },
+    {
+     "name": "transition",
+     "offset": 440,
+     "type": "u32"
+    },
+    {
+     "name": "field_1bc",
+     "offset": 444,
+     "type": "u8"
+    },
+    {
+     "name": "field_1bd",
+     "offset": 445,
+     "type": "u8"
+    },
+    {
+     "name": "field_1be",
+     "offset": 446,
+     "type": "u8"
+    },
+    {
+     "name": "field_1bf",
+     "offset": 447,
+     "type": "u8"
+    },
+    {
+     "name": "world_time_day",
+     "offset": 448,
+     "type": "u32"
+    },
+    {
+     "name": "world_time_ms",
+     "offset": 452,
+     "type": "u32"
+    },
+    {
+     "name": "is_save_game",
+     "offset": 456,
+     "type": "u32"
+    },
+    {
+     "name": "field_1cc",
+     "offset": 460,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d0",
+     "offset": 464,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d4",
+     "offset": 468,
+     "type": "u32"
+    },
+    {
+     "name": "field_1d8",
+     "offset": 472,
+     "type": "u32"
+    },
+    {
+     "name": "limbo_creature_list",
+     "offset": 476,
+     "type": "CExoArrayList",
+     "meaning": "limbo creature list"
+    },
+    {
+     "name": "field_1e8",
+     "offset": 488,
+     "type": "u32"
+    },
+    {
+     "name": "field_1ec",
+     "offset": 492,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f0",
+     "offset": 496,
+     "type": "u32"
+    },
+    {
+     "name": "field_1f4",
+     "offset": 500,
+     "type": "u32"
+    },
+    {
+     "name": "tag",
+     "offset": 504,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "is_nwm_file",
+     "offset": 512,
+     "type": "u32"
+    },
+    {
+     "name": "nwm_res_name",
+     "offset": 516,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "table_count",
+     "offset": 524,
+     "type": "u32"
+    },
+    {
+     "name": "field_210",
+     "offset": 528,
+     "type": "u32"
+    },
+    {
+     "name": "field_214",
+     "offset": 532,
+     "type": "u32"
+    },
+    {
+     "name": "field_218",
+     "offset": 536,
+     "type": "ptr"
+    },
+    {
+     "name": "field_21c",
+     "offset": 540,
+     "type": "u32"
+    },
+    {
+     "name": "area",
+     "offset": 544,
+     "type": "ptr",
+     "meaning": "CSWSArea* of the currently loaded area"
+    }
+   ]
+  },
+  {
+   "name": "CSWSPlaceable",
+   "size": 1108,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetPlaceableByGameObjectID (0x4AE7A0). Internal at 0x4B18D0 checks the type byte == 9 and calls vtable+0x58.",
+   "fields": [
+    {
+     "name": "object",
+     "offset": 0,
+     "type": "CSWSObject",
+     "meaning": "embedded server object"
+    },
+    {
+     "name": "loc_name",
+     "offset": 552,
+     "type": "CExoLocString",
+     "meaning": "8-byte localized string",
+     "confidence": "med"
+    },
+    {
+     "name": "appearance",
+     "offset": 560,
+     "type": "u32"
+    },
+    {
+     "name": "description",
+     "offset": 564,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "faction",
+     "offset": 572,
+     "type": "u32"
+    },
+    {
+     "name": "conversation",
+     "offset": 576,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "field_250",
+     "offset": 592,
+     "type": "u32"
+    },
+    {
+     "name": "ground_pile",
+     "offset": 596,
+     "type": "i32"
+    },
+    {
+     "name": "hardness",
+     "offset": 600,
+     "type": "i32"
+    },
+    {
+     "name": "field_25c",
+     "offset": 604,
+     "type": "u32"
+    },
+    {
+     "name": "locked",
+     "offset": 608,
+     "type": "i32"
+    },
+    {
+     "name": "key_name",
+     "offset": 612,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "key_required",
+     "offset": 620,
+     "type": "i32"
+    },
+    {
+     "name": "auto_remove_key",
+     "offset": 624,
+     "type": "i32"
+    },
+    {
+     "name": "open_lock_dc",
+     "offset": 628,
+     "type": "i16"
+    },
+    {
+     "name": "trap_detect_dc",
+     "offset": 630,
+     "type": "i16"
+    },
+    {
+     "name": "trap_flag",
+     "offset": 632,
+     "type": "i32"
+    },
+    {
+     "name": "disarm_dc",
+     "offset": 636,
+     "type": "i32"
+    },
+    {
+     "name": "trap_disarmable",
+     "offset": 640,
+     "type": "i32"
+    },
+    {
+     "name": "trap_detectable",
+     "offset": 644,
+     "type": "i32"
+    },
+    {
+     "name": "trap_one_shot",
+     "offset": 648,
+     "type": "i32"
+    },
+    {
+     "name": "field_28c",
+     "offset": 652,
+     "type": "u32"
+    },
+    {
+     "name": "trap_type",
+     "offset": 656,
+     "type": "i32"
+    },
+    {
+     "name": "scripts",
+     "offset": 660,
+     "type": "CExoString[16]",
+     "meaning": "placeable script slots",
+     "confidence": "med"
+    },
+    {
+     "name": "fortitude",
+     "offset": 788,
+     "type": "u8"
+    },
+    {
+     "name": "will",
+     "offset": 789,
+     "type": "u8"
+    },
+    {
+     "name": "reflex",
+     "offset": 790,
+     "type": "u8"
+    },
+    {
+     "name": "field_317",
+     "offset": 791,
+     "type": "u8"
+    },
+    {
+     "name": "field_318",
+     "offset": 792,
+     "type": "u32"
+    },
+    {
+     "name": "field_31c",
+     "offset": 796,
+     "type": "u32"
+    },
+    {
+     "name": "field_320",
+     "offset": 800,
+     "type": "u32"
+    },
+    {
+     "name": "field_324",
+     "offset": 804,
+     "type": "u32"
+    },
+    {
+     "name": "usable",
+     "offset": 808,
+     "type": "i32"
+    },
+    {
+     "name": "field_32c",
+     "offset": 812,
+     "type": "u32"
+    },
+    {
+     "name": "lockable",
+     "offset": 816,
+     "type": "i32"
+    },
+    {
+     "name": "has_inventory",
+     "offset": 820,
+     "type": "i32"
+    },
+    {
+     "name": "open",
+     "offset": 824,
+     "type": "i32"
+    },
+    {
+     "name": "field_33c",
+     "offset": 828,
+     "type": "u32"
+    },
+    {
+     "name": "field_340",
+     "offset": 832,
+     "type": "u32"
+    },
+    {
+     "name": "field_344",
+     "offset": 836,
+     "type": "u32"
+    },
+    {
+     "name": "field_348",
+     "offset": 840,
+     "type": "u32"
+    },
+    {
+     "name": "field_34c",
+     "offset": 844,
+     "type": "u32"
+    },
+    {
+     "name": "field_350",
+     "offset": 848,
+     "type": "u32"
+    },
+    {
+     "name": "field_354",
+     "offset": 852,
+     "type": "u32"
+    },
+    {
+     "name": "field_358",
+     "offset": 856,
+     "type": "u32"
+    },
+    {
+     "name": "field_35c",
+     "offset": 860,
+     "type": "u32"
+    },
+    {
+     "name": "field_360",
+     "offset": 864,
+     "type": "u32"
+    },
+    {
+     "name": "field_364",
+     "offset": 868,
+     "type": "u32"
+    },
+    {
+     "name": "field_368",
+     "offset": 872,
+     "type": "u32"
+    },
+    {
+     "name": "item_repository",
+     "offset": 876,
+     "type": "ptr",
+     "meaning": "CItemRepository*"
+    },
+    {
+     "name": "field_370",
+     "offset": 880,
+     "type": "u32"
+    },
+    {
+     "name": "field_374",
+     "offset": 884,
+     "type": "u32"
+    },
+    {
+     "name": "template_res_ref",
+     "offset": 888,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "effect_spell_id",
+     "offset": 904,
+     "type": "u32"
+    },
+    {
+     "name": "light_state",
+     "offset": 908,
+     "type": "i32"
+    },
+    {
+     "name": "light_is_on",
+     "offset": 912,
+     "type": "i32"
+    },
+    {
+     "name": "body_bag",
+     "offset": 916,
+     "type": "i32"
+    },
+    {
+     "name": "static",
+     "offset": 920,
+     "type": "u32"
+    },
+    {
+     "name": "field_39c",
+     "offset": 924,
+     "type": "u32"
+    },
+    {
+     "name": "surface_mesh",
+     "offset": 928,
+     "type": "u8[0x88]"
+    },
+    {
+     "name": "orientation",
+     "offset": 1064,
+     "type": "f32[4]",
+     "meaning": "orientation quaternion",
+     "confidence": "low"
+    },
+    {
+     "name": "field_438",
+     "offset": 1080,
+     "type": "u32"
+    },
+    {
+     "name": "field_43c",
+     "offset": 1084,
+     "type": "u32"
+    },
+    {
+     "name": "is_body_bag",
+     "offset": 1088,
+     "type": "i32"
+    },
+    {
+     "name": "field_444",
+     "offset": 1092,
+     "type": "u32"
+    },
+    {
+     "name": "field_448",
+     "offset": 1096,
+     "type": "u32"
+    },
+    {
+     "name": "is_corpse",
+     "offset": 1100,
+     "type": "i32"
+    },
+    {
+     "name": "field_450",
+     "offset": 1104,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CSWSDoor",
+   "size": 976,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetDoorByGameObjectID (0x4AE7C0). Internal at 0x4B1920 checks the type byte == 10 and calls vtable+0x18, which on the door vtable (0x7498B0) is `mov eax,ecx; ret`.",
+   "fields": [
+    {
+     "name": "object",
+     "offset": 0,
+     "type": "CSWSObject",
+     "meaning": "embedded server object"
+    },
+    {
+     "name": "scripts",
+     "offset": 552,
+     "type": "CExoString[15]",
+     "meaning": "door script slots",
+     "confidence": "med"
+    },
+    {
+     "name": "appearance",
+     "offset": 672,
+     "type": "u8"
+    },
+    {
+     "name": "generic_type",
+     "offset": 673,
+     "type": "u8"
+    },
+    {
+     "name": "conversation",
+     "offset": 674,
+     "type": "CResRef",
+     "confidence": "med"
+    },
+    {
+     "name": "field_2b2",
+     "offset": 690,
+     "type": "u16"
+    },
+    {
+     "name": "bearing",
+     "offset": 692,
+     "type": "f32"
+    },
+    {
+     "name": "faction",
+     "offset": 696,
+     "type": "u32"
+    },
+    {
+     "name": "fortitude",
+     "offset": 700,
+     "type": "u8"
+    },
+    {
+     "name": "reflex",
+     "offset": 701,
+     "type": "u8"
+    },
+    {
+     "name": "will",
+     "offset": 702,
+     "type": "u8"
+    },
+    {
+     "name": "open_lock_dc",
+     "offset": 703,
+     "type": "u8"
+    },
+    {
+     "name": "close_lock_dc",
+     "offset": 704,
+     "type": "u8"
+    },
+    {
+     "name": "secret_door_dc",
+     "offset": 705,
+     "type": "u8"
+    },
+    {
+     "name": "hardness",
+     "offset": 706,
+     "type": "u8"
+    },
+    {
+     "name": "field_2c3",
+     "offset": 707,
+     "type": "u8"
+    },
+    {
+     "name": "locked",
+     "offset": 708,
+     "type": "u32"
+    },
+    {
+     "name": "lockable",
+     "offset": 712,
+     "type": "u32"
+    },
+    {
+     "name": "open_state",
+     "offset": 716,
+     "type": "u8"
+    },
+    {
+     "name": "also_open_state",
+     "offset": 717,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ce",
+     "offset": 718,
+     "type": "u8"
+    },
+    {
+     "name": "field_2cf",
+     "offset": 719,
+     "type": "u8"
+    },
+    {
+     "name": "key_name",
+     "offset": 720,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "key_required",
+     "offset": 728,
+     "type": "i32"
+    },
+    {
+     "name": "field_2dc",
+     "offset": 732,
+     "type": "u32"
+    },
+    {
+     "name": "field_2e0",
+     "offset": 736,
+     "type": "u32"
+    },
+    {
+     "name": "field_2e4",
+     "offset": 740,
+     "type": "u32"
+    },
+    {
+     "name": "trap_flag",
+     "offset": 744,
+     "type": "u32"
+    },
+    {
+     "name": "disarm_dc",
+     "offset": 748,
+     "type": "u8"
+    },
+    {
+     "name": "detect_dc",
+     "offset": 749,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ee",
+     "offset": 750,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ef",
+     "offset": 751,
+     "type": "u8"
+    },
+    {
+     "name": "auto_remove_key",
+     "offset": 752,
+     "type": "u32"
+    },
+    {
+     "name": "field_2f4",
+     "offset": 756,
+     "type": "u32"
+    },
+    {
+     "name": "trap_type",
+     "offset": 760,
+     "type": "u8"
+    },
+    {
+     "name": "field_2f9",
+     "offset": 761,
+     "type": "u8"
+    },
+    {
+     "name": "field_2fa",
+     "offset": 762,
+     "type": "u8"
+    },
+    {
+     "name": "field_2fb",
+     "offset": 763,
+     "type": "u8"
+    },
+    {
+     "name": "trap_disarmable",
+     "offset": 764,
+     "type": "u32"
+    },
+    {
+     "name": "trap_detectable",
+     "offset": 768,
+     "type": "u32"
+    },
+    {
+     "name": "trap_one_shot",
+     "offset": 772,
+     "type": "u32"
+    },
+    {
+     "name": "field_308",
+     "offset": 776,
+     "type": "u32"
+    },
+    {
+     "name": "field_30c",
+     "offset": 780,
+     "type": "u32"
+    },
+    {
+     "name": "field_310",
+     "offset": 784,
+     "type": "u32"
+    },
+    {
+     "name": "field_314",
+     "offset": 788,
+     "type": "u32"
+    },
+    {
+     "name": "field_318",
+     "offset": 792,
+     "type": "u32"
+    },
+    {
+     "name": "field_31c",
+     "offset": 796,
+     "type": "u32"
+    },
+    {
+     "name": "field_320",
+     "offset": 800,
+     "type": "u32"
+    },
+    {
+     "name": "field_324",
+     "offset": 804,
+     "type": "u32"
+    },
+    {
+     "name": "field_328",
+     "offset": 808,
+     "type": "u32"
+    },
+    {
+     "name": "surface_mesh",
+     "offset": 812,
+     "type": "ptr"
+    },
+    {
+     "name": "field_330",
+     "offset": 816,
+     "type": "u32"
+    },
+    {
+     "name": "field_334",
+     "offset": 820,
+     "type": "u32"
+    },
+    {
+     "name": "bounding_box_1",
+     "offset": 824,
+     "type": "Vector",
+     "meaning": "bounding box corner, passed as a Vector* in CSWSDoor::AddToArea 0x58B6D0",
+     "confidence": "med"
+    },
+    {
+     "name": "bounding_box_2",
+     "offset": 836,
+     "type": "Vector",
+     "meaning": "bounding box corner",
+     "confidence": "med"
+    },
+    {
+     "name": "corners",
+     "offset": 848,
+     "type": "Vector[4]",
+     "meaning": "four corner points",
+     "confidence": "low"
+    },
+    {
+     "name": "corner_count",
+     "offset": 896,
+     "type": "u32"
+    },
+    {
+     "name": "linked_to_flags",
+     "offset": 900,
+     "type": "u8"
+    },
+    {
+     "name": "field_385",
+     "offset": 901,
+     "type": "u8"
+    },
+    {
+     "name": "field_386",
+     "offset": 902,
+     "type": "u8"
+    },
+    {
+     "name": "field_387",
+     "offset": 903,
+     "type": "u8"
+    },
+    {
+     "name": "linked_to",
+     "offset": 904,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "linked_to_module",
+     "offset": 912,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "field_398",
+     "offset": 920,
+     "type": "u32"
+    },
+    {
+     "name": "loc_name",
+     "offset": 924,
+     "type": "CExoLocString",
+     "meaning": "8-byte localized string",
+     "confidence": "med"
+    },
+    {
+     "name": "description",
+     "offset": 932,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "load_screen_id_lower",
+     "offset": 940,
+     "type": "u8"
+    },
+    {
+     "name": "load_screen_id_upper",
+     "offset": 941,
+     "type": "u8"
+    },
+    {
+     "name": "field_3ae",
+     "offset": 942,
+     "type": "u8"
+    },
+    {
+     "name": "field_3af",
+     "offset": 943,
+     "type": "u8"
+    },
+    {
+     "name": "field_3b0",
+     "offset": 944,
+     "type": "u32"
+    },
+    {
+     "name": "field_3b4",
+     "offset": 948,
+     "type": "u32"
+    },
+    {
+     "name": "field_3b8",
+     "offset": 952,
+     "type": "u32"
+    },
+    {
+     "name": "field_3bc",
+     "offset": 956,
+     "type": "u32"
+    },
+    {
+     "name": "static",
+     "offset": 960,
+     "type": "u32"
+    },
+    {
+     "name": "field_3c4",
+     "offset": 964,
+     "type": "u32"
+    },
+    {
+     "name": "transition_destination",
+     "offset": 968,
+     "type": "CExoString",
+     "confidence": "med"
+    }
+   ]
+  },
+  {
+   "name": "CSWSTrigger",
+   "size": 792,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetTriggerByGameObjectID (0x4AE790). Internal at 0x4B1880 checks the type byte == 7.",
+   "fields": [
+    {
+     "name": "object",
+     "offset": 0,
+     "type": "CSWSObject",
+     "meaning": "embedded server object"
+    },
+    {
+     "name": "localized_name",
+     "offset": 552,
+     "type": "CExoLocString",
+     "meaning": "8-byte localized string",
+     "confidence": "med"
+    },
+    {
+     "name": "linked_to",
+     "offset": 560,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "linked_to_module",
+     "offset": 568,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "linked_to_flags",
+     "offset": 576,
+     "type": "u32"
+    },
+    {
+     "name": "scripts",
+     "offset": 580,
+     "type": "CExoString[7]",
+     "meaning": "trigger script slots",
+     "confidence": "med"
+    },
+    {
+     "name": "key_name",
+     "offset": 636,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "geometry_count",
+     "offset": 644,
+     "type": "i32"
+    },
+    {
+     "name": "geometry",
+     "offset": 648,
+     "type": "ptr"
+    },
+    {
+     "name": "field_28c",
+     "offset": 652,
+     "type": "u32"
+    },
+    {
+     "name": "field_290",
+     "offset": 656,
+     "type": "u32"
+    },
+    {
+     "name": "geometry_indices_count",
+     "offset": 660,
+     "type": "u32"
+    },
+    {
+     "name": "geometry_indices",
+     "offset": 664,
+     "type": "ptr"
+    },
+    {
+     "name": "field_29c",
+     "offset": 668,
+     "type": "u32"
+    },
+    {
+     "name": "field_2a0",
+     "offset": 672,
+     "type": "u32"
+    },
+    {
+     "name": "field_2a4",
+     "offset": 676,
+     "type": "u32"
+    },
+    {
+     "name": "field_2a8",
+     "offset": 680,
+     "type": "u32"
+    },
+    {
+     "name": "field_2ac",
+     "offset": 684,
+     "type": "u32"
+    },
+    {
+     "name": "field_2b0",
+     "offset": 688,
+     "type": "u32"
+    },
+    {
+     "name": "field_2b4",
+     "offset": 692,
+     "type": "u32"
+    },
+    {
+     "name": "faction",
+     "offset": 696,
+     "type": "u32"
+    },
+    {
+     "name": "is_trap",
+     "offset": 700,
+     "type": "u32"
+    },
+    {
+     "name": "trap_detectable",
+     "offset": 704,
+     "type": "u32"
+    },
+    {
+     "name": "trap_disarmable",
+     "offset": 708,
+     "type": "u32"
+    },
+    {
+     "name": "field_2c8",
+     "offset": 712,
+     "type": "u32"
+    },
+    {
+     "name": "auto_remove_key",
+     "offset": 716,
+     "type": "u32"
+    },
+    {
+     "name": "trap_one_shot",
+     "offset": 720,
+     "type": "u32"
+    },
+    {
+     "name": "trap_type",
+     "offset": 724,
+     "type": "u8"
+    },
+    {
+     "name": "field_2d5",
+     "offset": 725,
+     "type": "u8"
+    },
+    {
+     "name": "field_2d6",
+     "offset": 726,
+     "type": "u8"
+    },
+    {
+     "name": "field_2d7",
+     "offset": 727,
+     "type": "u8"
+    },
+    {
+     "name": "detect_dc_mod",
+     "offset": 728,
+     "type": "u32"
+    },
+    {
+     "name": "disarm_dc_mod",
+     "offset": 732,
+     "type": "u32"
+    },
+    {
+     "name": "highlight_height",
+     "offset": 736,
+     "type": "u32"
+    },
+    {
+     "name": "creator_id",
+     "offset": 740,
+     "type": "u32"
+    },
+    {
+     "name": "bbox_min_x",
+     "offset": 744,
+     "type": "f32"
+    },
+    {
+     "name": "bbox_min_y",
+     "offset": 748,
+     "type": "f32"
+    },
+    {
+     "name": "bbox_max_x",
+     "offset": 752,
+     "type": "f32"
+    },
+    {
+     "name": "bbox_max_y",
+     "offset": 756,
+     "type": "f32"
+    },
+    {
+     "name": "field_2f8",
+     "offset": 760,
+     "type": "u32"
+    },
+    {
+     "name": "cursor",
+     "offset": 764,
+     "type": "u8"
+    },
+    {
+     "name": "field_2fd",
+     "offset": 765,
+     "type": "u8"
+    },
+    {
+     "name": "field_2fe",
+     "offset": 766,
+     "type": "u8"
+    },
+    {
+     "name": "field_2ff",
+     "offset": 767,
+     "type": "u8"
+    },
+    {
+     "name": "field_300",
+     "offset": 768,
+     "type": "u32"
+    },
+    {
+     "name": "field_304",
+     "offset": 772,
+     "type": "u32"
+    },
+    {
+     "name": "load_screen_id",
+     "offset": 776,
+     "type": "u16"
+    },
+    {
+     "name": "field_30a",
+     "offset": 778,
+     "type": "u16"
+    },
+    {
+     "name": "transition_destination",
+     "offset": 780,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "set_by_player_party",
+     "offset": 788,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CSWSItem",
+   "size": 664,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetItemByGameObjectID (0x4AE760). Internal at 0x4B1740 checks the type byte == 6 and calls vtable+0x38. Careful: the embedded CSWSObject starts at +16, not +0, so the raw CGameObject* is at item+16, not item+0.",
+   "fields": [
+    {
+     "name": "item",
+     "offset": 0,
+     "type": "u8[0x10]",
+     "meaning": "16-byte item header ahead of the embedded CSWSObject",
+     "confidence": "low"
+    },
+    {
+     "name": "server_object",
+     "offset": 16,
+     "type": "CSWSObject",
+     "meaning": "embedded server object"
+    },
+    {
+     "name": "field_238",
+     "offset": 568,
+     "type": "u8"
+    },
+    {
+     "name": "field_239",
+     "offset": 569,
+     "type": "u8"
+    },
+    {
+     "name": "field_23a",
+     "offset": 570,
+     "type": "u8"
+    },
+    {
+     "name": "field_23b",
+     "offset": 571,
+     "type": "u8"
+    },
+    {
+     "name": "field_23c",
+     "offset": 572,
+     "type": "u8"
+    },
+    {
+     "name": "field_23d",
+     "offset": 573,
+     "type": "u8"
+    },
+    {
+     "name": "field_23e",
+     "offset": 574,
+     "type": "u8"
+    },
+    {
+     "name": "field_23f",
+     "offset": 575,
+     "type": "u8"
+    },
+    {
+     "name": "field_240",
+     "offset": 576,
+     "type": "u8"
+    },
+    {
+     "name": "field_241",
+     "offset": 577,
+     "type": "u8"
+    },
+    {
+     "name": "field_242",
+     "offset": 578,
+     "type": "u8"
+    },
+    {
+     "name": "field_243",
+     "offset": 579,
+     "type": "u8"
+    },
+    {
+     "name": "base_ac",
+     "offset": 580,
+     "type": "i32"
+    },
+    {
+     "name": "active_property_count",
+     "offset": 584,
+     "type": "i32"
+    },
+    {
+     "name": "passive_property_count",
+     "offset": 588,
+     "type": "i32"
+    },
+    {
+     "name": "active_properties_pointer",
+     "offset": 592,
+     "type": "ptr"
+    },
+    {
+     "name": "passive_property_pointer",
+     "offset": 596,
+     "type": "ptr"
+    },
+    {
+     "name": "charges",
+     "offset": 600,
+     "type": "u32"
+    },
+    {
+     "name": "max_charges",
+     "offset": 604,
+     "type": "u32"
+    },
+    {
+     "name": "add_cost",
+     "offset": 608,
+     "type": "u32"
+    },
+    {
+     "name": "model_variation",
+     "offset": 612,
+     "type": "u8"
+    },
+    {
+     "name": "body_variation",
+     "offset": 613,
+     "type": "u8"
+    },
+    {
+     "name": "texture_variation",
+     "offset": 614,
+     "type": "u8"
+    },
+    {
+     "name": "field_267",
+     "offset": 615,
+     "type": "u8"
+    },
+    {
+     "name": "some_obj_id",
+     "offset": 616,
+     "type": "i32"
+    },
+    {
+     "name": "item_repo",
+     "offset": 620,
+     "type": "ptr",
+     "meaning": "CItemRepository* that currently holds this item"
+    },
+    {
+     "name": "description_indentified",
+     "offset": 624,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "description",
+     "offset": 632,
+     "type": "CExoString",
+     "confidence": "med"
+    },
+    {
+     "name": "localized_name",
+     "offset": 640,
+     "type": "CExoLocString",
+     "meaning": "8-byte localized string",
+     "confidence": "med"
+    },
+    {
+     "name": "bit_flags",
+     "offset": 648,
+     "type": "u32"
+    },
+    {
+     "name": "stack_size",
+     "offset": 652,
+     "type": "u16"
+    },
+    {
+     "name": "field_28e",
+     "offset": 654,
+     "type": "u8"
+    },
+    {
+     "name": "field_28f",
+     "offset": 655,
+     "type": "u8"
+    },
+    {
+     "name": "weight",
+     "offset": 656,
+     "type": "u32"
+    },
+    {
+     "name": "upgrades",
+     "offset": 660,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CItemRepository",
+   "size": 24,
+   "how_to_obtain": "CSWSCreature+2608 (item_repo), CSWSPlaceable+876 (item_repository), or CSWPartyTable+280 (pt_item_repo). Items name their owning repository at CSWSItem+620.",
+   "fields": [
+    {
+     "name": "field_0",
+     "offset": 0,
+     "type": "u32"
+    },
+    {
+     "name": "field_4",
+     "offset": 4,
+     "type": "u32"
+    },
+    {
+     "name": "field_8",
+     "offset": 8,
+     "type": "u32"
+    },
+    {
+     "name": "items_list",
+     "offset": 12,
+     "type": "ptr",
+     "meaning": "element storage of an inlined CExoArrayList: data at 12, size at 16, capacity at 20"
+    },
+    {
+     "name": "item_count",
+     "offset": 16,
+     "type": "i32",
+     "meaning": "CExoArrayList.size for the list at 12"
+    },
+    {
+     "name": "field_14",
+     "offset": 20,
+     "type": "u32",
+     "meaning": "CExoArrayList.capacity for the list at 12",
+     "confidence": "med"
+    }
+   ]
+  },
+  {
+   "name": "CExoString",
+   "size": 8,
+   "how_to_obtain": "Always inline in a parent struct. Never heap-allocated on its own in these layouts.",
+   "fields": [
+    {
+     "name": "c_string",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "char* buffer; may be NULL for an empty string"
+    },
+    {
+     "name": "length",
+     "offset": 4,
+     "type": "u32",
+     "meaning": "byte length, not including the terminator"
+    }
+   ]
+  },
+  {
+   "name": "CExoArrayList",
+   "size": 12,
+   "how_to_obtain": "Always inline in a parent struct. This is the single most important 12 bytes in the whole set -- see access_notes.",
+   "fields": [
+    {
+     "name": "data",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "element storage. Reading this slot as an int gives you a POINTER, not element 0. operator[] at 0x437C40 is `mov eax,[ecx]; lea eax,[eax+i*elemsize]`"
+    },
+    {
+     "name": "size",
+     "offset": 4,
+     "type": "i32",
+     "meaning": "live element count. CExoArrayList::Add increments this slot (`incl 0x4(%esi)` at 0x42141F). Iterate 0 .. size-1"
+    },
+    {
+     "name": "capacity",
+     "offset": 8,
+     "type": "i32",
+     "meaning": "allocated slots. Add compares size against this and doubles (min 8) when they are equal. Never iterate to capacity"
+    }
+   ]
+  },
+  {
+   "name": "CExoLinkedList",
+   "size": 4,
+   "how_to_obtain": "Inline in a parent struct. Ghidra recovered no interior structure -- it is four opaque bytes, almost certainly a single head pointer.",
+   "fields": [
+    {
+     "name": "field_0",
+     "offset": 0,
+     "type": "u8"
+    },
+    {
+     "name": "field_1",
+     "offset": 1,
+     "type": "u8"
+    },
+    {
+     "name": "field_2",
+     "offset": 2,
+     "type": "u8"
+    },
+    {
+     "name": "field_3",
+     "offset": 3,
+     "type": "u8"
+    }
+   ]
+  },
+  {
+   "name": "CScriptEvent",
+   "size": 52,
+   "how_to_obtain": "Handed to script-event handlers by the engine; not looked up by id. THIS IS THE STRUCT THE PROJECT ALREADY GOT WRONG ONCE.",
+   "fields": [
+    {
+     "name": "event_type",
+     "offset": 0,
+     "type": "u16"
+    },
+    {
+     "name": "field_2",
+     "offset": 2,
+     "type": "u16"
+    },
+    {
+     "name": "int_params",
+     "offset": 4,
+     "type": "CExoArrayList",
+     "meaning": "NOT an int array. 0x4 = data pointer, 0x8 = size, 0xc = capacity. The ints live at *(int**)(ev+4)"
+    },
+    {
+     "name": "float_params",
+     "offset": 16,
+     "type": "CExoArrayList",
+     "meaning": "0x10 = data pointer, 0x14 = size, 0x18 = capacity"
+    },
+    {
+     "name": "string_params",
+     "offset": 28,
+     "type": "CExoArrayList",
+     "meaning": "0x1c = data pointer (to CExoString elements), 0x20 = size, 0x24 = capacity"
+    },
+    {
+     "name": "object_params",
+     "offset": 40,
+     "type": "CExoArrayList",
+     "meaning": "0x28 = data pointer (to u32 object ids), 0x2c = size, 0x30 = capacity"
+    }
+   ]
+  },
+  {
+   "name": "CVirtualMachine",
+   "size": 4,
+   "how_to_obtain": "A 4-byte wrapper holding one pointer. All 22 public methods (RunScript 0x5D0FC0, StackPopInteger 0x5D1000, StackPushObject 0x5D10D0, ...) are thin forwarders onto the internal.",
+   "fields": [
+    {
+     "name": "internal",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "CVirtualMachineInternal*"
+    }
+   ]
+  },
+  {
+   "name": "CVirtualMachineInternal",
+   "size": 984,
+   "how_to_obtain": "CVirtualMachine+0. The CVirtualMachine itself is a process global reached from the VM entry points, not from CAppManager.",
+   "fields": [
+    {
+     "name": "res_helper",
+     "offset": 0,
+     "type": "u8[0x1c]",
+     "meaning": "resource-helper header",
+     "confidence": "low"
+    },
+    {
+     "name": "field_1c",
+     "offset": 28,
+     "type": "u32"
+    },
+    {
+     "name": "field_20",
+     "offset": 32,
+     "type": "u32"
+    },
+    {
+     "name": "instructions_ran",
+     "offset": 36,
+     "type": "u32"
+    },
+    {
+     "name": "field_28",
+     "offset": 40,
+     "type": "i32"
+    },
+    {
+     "name": "field_2c",
+     "offset": 44,
+     "type": "u8[0x140]"
+    },
+    {
+     "name": "field_16c",
+     "offset": 364,
+     "type": "u32"
+    },
+    {
+     "name": "field_170",
+     "offset": 368,
+     "type": "u32"
+    },
+    {
+     "name": "field_174",
+     "offset": 372,
+     "type": "u32"
+    },
+    {
+     "name": "field_178",
+     "offset": 376,
+     "type": "u32"
+    },
+    {
+     "name": "field_17c",
+     "offset": 380,
+     "type": "u32"
+    },
+    {
+     "name": "field_180",
+     "offset": 384,
+     "type": "u32"
+    },
+    {
+     "name": "field_184",
+     "offset": 388,
+     "type": "u32"
+    },
+    {
+     "name": "field_188",
+     "offset": 392,
+     "type": "u32"
+    },
+    {
+     "name": "field_18c",
+     "offset": 396,
+     "type": "u32"
+    },
+    {
+     "name": "field_190",
+     "offset": 400,
+     "type": "u32"
+    },
+    {
+     "name": "field_194",
+     "offset": 404,
+     "type": "u32"
+    },
+    {
+     "name": "field_198",
+     "offset": 408,
+     "type": "u32"
+    },
+    {
+     "name": "field_19c",
+     "offset": 412,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a0",
+     "offset": 416,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a4",
+     "offset": 420,
+     "type": "u32"
+    },
+    {
+     "name": "field_1a8",
+     "offset": 424,
+     "type": "u32"
+    },
+    {
+     "name": "stack",
+     "offset": 428,
+     "type": "u8[0x18]",
+     "meaning": "VM stack descriptor",
+     "confidence": "low"
+    },
+    {
+     "name": "call_stack_size",
+     "offset": 452,
+     "type": "i32"
+    },
+    {
+     "name": "call_stack",
+     "offset": 456,
+     "type": "u8[0x200]",
+     "meaning": "VM call stack",
+     "confidence": "low"
+    },
+    {
+     "name": "field_3c8",
+     "offset": 968,
+     "type": "u32"
+    },
+    {
+     "name": "field_3cc",
+     "offset": 972,
+     "type": "u32"
+    },
+    {
+     "name": "field_3d0",
+     "offset": 976,
+     "type": "u32"
+    },
+    {
+     "name": "command_implementer",
+     "offset": 980,
+     "type": "ptr",
+     "meaning": "CVirtualMachineCmdImplementer*, set by CVirtualMachine::SetCommandImplementer 0x5D0FF0"
+    }
+   ]
+  },
+  {
+   "name": "CServerExoApp",
+   "size": 8,
+   "how_to_obtain": "*(CAppManager**)0x007A39FC then +8. Every server-side object getter hangs off this.",
+   "fields": [
+    {
+     "name": "vtable",
+     "offset": 0,
+     "type": "ptr"
+    },
+    {
+     "name": "internal",
+     "offset": 4,
+     "type": "ptr",
+     "meaning": "CServerExoAppInternal*. Every public getter starts `mov ecx,[ecx+4]` and jumps to the internal method"
+    }
+   ]
+  },
+  {
+   "name": "CAppManager",
+   "size": 32,
+   "how_to_obtain": "*(CAppManager**)0x007A39FC. This one global is the root of everything. 5680 instructions in the image reference it.",
+   "fields": [
+    {
+     "name": "buffer",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "large temp buffer, allocated lazily by CAppManager::AllocLargeTempBuffer 0x4010A0"
+    },
+    {
+     "name": "client",
+     "offset": 4,
+     "type": "ptr",
+     "meaning": "CClientExoApp*"
+    },
+    {
+     "name": "server",
+     "offset": 8,
+     "type": "ptr",
+     "meaning": "CServerExoApp*. This is the hop every server lookup makes: `mov ecx,[g_pAppManager]; mov ecx,[ecx+8]`"
+    },
+    {
+     "name": "obj_table_manager_1",
+     "offset": 12,
+     "type": "ptr",
+     "meaning": "CAppManager::GetObjectTableManager(0) returns this (0x401060)"
+    },
+    {
+     "name": "obj_table_manager_2",
+     "offset": 16,
+     "type": "ptr",
+     "meaning": "CAppManager::GetObjectTableManager(1) returns this"
+    },
+    {
+     "name": "reentrant_server_stats",
+     "offset": 20,
+     "type": "ptr"
+    },
+    {
+     "name": "app_id",
+     "offset": 24,
+     "type": "u32"
+    },
+    {
+     "name": "field_1c",
+     "offset": 28,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CGameObjectArray",
+   "size": 24,
+   "how_to_obtain": "CServerExoAppInternal + 0x1005C. Client side: CClientExoApp::GetGameObjectArray 0x5ED570.",
+   "fields": [
+    {
+     "name": "object_tree",
+     "offset": 0,
+     "type": "ptr",
+     "meaning": "hash table, NOT a tree despite the name. 8192 dword buckets. bucket index = ((id>>31)&1)*0x1000 + (id & 0xFFF). Each chain node is 12 bytes {u32 id_masked, void* object, node* next} (CGameObjectArray::GetGameObject 0x4D8230)"
+    },
+    {
+     "name": "next_object_id_0",
+     "offset": 4,
+     "type": "u32"
+    },
+    {
+     "name": "next_object_id_1",
+     "offset": 8,
+     "type": "u32"
+    },
+    {
+     "name": "next_char_id_0",
+     "offset": 12,
+     "type": "u32"
+    },
+    {
+     "name": "next_char_id_1",
+     "offset": 16,
+     "type": "u32"
+    },
+    {
+     "name": "field_14",
+     "offset": 20,
+     "type": "i32"
+    }
+   ]
+  },
+  {
+   "name": "CSWPartyTable",
+   "size": 408,
+   "how_to_obtain": "g_pAppManager -> +8 CServerExoApp* -> CServerExoApp::GetPartyTable (0x4AEE70).",
+   "fields": [
+    {
+     "name": "pt_num_members",
+     "offset": 0,
+     "type": "u32"
+    },
+    {
+     "name": "pt_member_ids",
+     "offset": 4,
+     "type": "u8[0x2c]"
+    },
+    {
+     "name": "pt_avail_npcs",
+     "offset": 48,
+     "type": "u8[0x24]"
+    },
+    {
+     "name": "pt_selected_npcs",
+     "offset": 84,
+     "type": "u8[0x9]"
+    },
+    {
+     "name": "field_5d",
+     "offset": 93,
+     "type": "u8"
+    },
+    {
+     "name": "field_5e",
+     "offset": 94,
+     "type": "u8"
+    },
+    {
+     "name": "field_5f",
+     "offset": 95,
+     "type": "u8"
+    },
+    {
+     "name": "available_planets",
+     "offset": 96,
+     "type": "u8[0x40]"
+    },
+    {
+     "name": "selectable_planets",
+     "offset": 160,
+     "type": "u8[0x40]"
+    },
+    {
+     "name": "galaxy_map_selected_planet",
+     "offset": 224,
+     "type": "i32"
+    },
+    {
+     "name": "pt_aistate",
+     "offset": 228,
+     "type": "i32"
+    },
+    {
+     "name": "pt_followstate",
+     "offset": 232,
+     "type": "i32"
+    },
+    {
+     "name": "pt_leader_id",
+     "offset": 236,
+     "type": "i32"
+    },
+    {
+     "name": "pt_controlled_npc",
+     "offset": 240,
+     "type": "i32"
+    },
+    {
+     "name": "in_gameinprogress",
+     "offset": 244,
+     "type": "i32"
+    },
+    {
+     "name": "pt_xp_pool",
+     "offset": 248,
+     "type": "i32"
+    },
+    {
+     "name": "pt_gold",
+     "offset": 252,
+     "type": "u32"
+    },
+    {
+     "name": "show_return_to_eh",
+     "offset": 256,
+     "type": "i32"
+    },
+    {
+     "name": "return_to_eh_string_ref",
+     "offset": 260,
+     "type": "u32"
+    },
+    {
+     "name": "return_to_eh_query_string_ref",
+     "offset": 264,
+     "type": "u32"
+    },
+    {
+     "name": "field_10c",
+     "offset": 268,
+     "type": "u32"
+    },
+    {
+     "name": "field_110",
+     "offset": 272,
+     "type": "u32"
+    },
+    {
+     "name": "pt_playedseconds",
+     "offset": 276,
+     "type": "u32"
+    },
+    {
+     "name": "pt_item_repo",
+     "offset": 280,
+     "type": "ptr",
+     "meaning": "CItemRepository* holding the party inventory"
+    },
+    {
+     "name": "party_journal",
+     "offset": 284,
+     "type": "ptr",
+     "meaning": "CSWSJournal*, returned by CSWPartyTable::GetPartyJournal 0x5633C0"
+    },
+    {
+     "name": "pt_pazaakcards",
+     "offset": 288,
+     "type": "u8[0x48]"
+    },
+    {
+     "name": "pt_paz_sidedeck",
+     "offset": 360,
+     "type": "u8[0x28]"
+    },
+    {
+     "name": "pt_solomode",
+     "offset": 400,
+     "type": "u32"
+    },
+    {
+     "name": "pt_cheat_used",
+     "offset": 404,
+     "type": "u32"
+    }
+   ]
+  },
+  {
+   "name": "CGameEffect",
+   "size": 140,
+   "how_to_obtain": "Elements of the CExoArrayList at CSWSObject+292 (effects). Read the data pointer at +292, the count at +296, then index CGameEffect* elements.",
+   "fields": [
+    {
+     "name": "id",
+     "offset": 0,
+     "type": "u64"
+    },
+    {
+     "name": "type",
+     "offset": 8,
+     "type": "u16",
+     "meaning": "effect type. TWO bytes -- `movzwl 0x8(%ecx),%edx` at 0x503A70 proves it. Ghidra emits `int` here, which shifts every later field by 2 and makes the whole struct wrong"
+    },
+    {
+     "name": "subtype",
+     "offset": 10,
+     "type": "u16"
+    },
+    {
+     "name": "duration",
+     "offset": 12,
+     "type": "f32"
+    },
+    {
+     "name": "expire_day",
+     "offset": 16,
+     "type": "u32",
+     "meaning": "SetExpiryTime 0x503750 writes 0x10 and 0x14"
+    },
+    {
+     "name": "expire_time",
+     "offset": 20,
+     "type": "u32"
+    },
+    {
+     "name": "creator_id",
+     "offset": 24,
+     "type": "u32",
+     "meaning": "SetCreator 0x503A00 writes 0x18"
+    },
+    {
+     "name": "spell_id",
+     "offset": 28,
+     "type": "i32"
+    },
+    {
+     "name": "is_exposed",
+     "offset": 32,
+     "type": "i32"
+    },
+    {
+     "name": "creator_level",
+     "offset": 36,
+     "type": "i32"
+    },
+    {
+     "name": "linked_effect_1",
+     "offset": 40,
+     "type": "ptr"
+    },
+    {
+     "name": "linked_effect_2",
+     "offset": 44,
+     "type": "ptr"
+    },
+    {
+     "name": "num_integers",
+     "offset": 48,
+     "type": "i32",
+     "meaning": "SetNumIntegers 0x503630 writes 0x30 then reallocates the array at 0x34"
+    },
+    {
+     "name": "integer_list",
+     "offset": 52,
+     "type": "ptr",
+     "meaning": "heap int array of num_integers entries. GetInteger 0x503690: `mov eax,[ecx+0x34]; mov eax,[eax+i*4]`"
+    },
+    {
+     "name": "float_list",
+     "offset": 56,
+     "type": "f32[4]",
+     "meaning": "inline, not a pointer. GetFloat 0x5036C0: `flds 0x38(%ecx,%eax,4)`"
+    },
+    {
+     "name": "string_list",
+     "offset": 72,
+     "type": "CExoString[6]",
+     "meaning": "inline array of six 8-byte CExoStrings. CopyStringFromList 0x503700: `lea ecx,[ecx+i*8+0x48]`"
+    },
+    {
+     "name": "object_list",
+     "offset": 120,
+     "type": "u32[4]",
+     "meaning": "inline array of four object ids. GetObjectID 0x5036E0: `mov eax,[ecx+i*4+0x78]`"
+    },
+    {
+     "name": "skip_on_load",
+     "offset": 136,
+     "type": "i32"
+    }
+   ]
+  },
+  {
+   "name": "C2DA",
+   "size": 84,
+   "how_to_obtain": "Owned by the resource manager, not by the object array. Not reachable from CAppManager in these layouts -- you need a 2DA cache lookup by name.",
+   "fields": [
+    {
+     "name": "res_helper",
+     "offset": 0,
+     "type": "u8[0x1c]",
+     "meaning": "resource-helper header",
+     "confidence": "low"
+    },
+    {
+     "name": "field_1c",
+     "offset": 28,
+     "type": "CExoString",
+     "meaning": "2DA resource name",
+     "confidence": "med"
+    },
+    {
+     "name": "row_count",
+     "offset": 36,
+     "type": "i32"
+    },
+    {
+     "name": "columns_count",
+     "offset": 40,
+     "type": "i32"
+    },
+    {
+     "name": "field_2c",
+     "offset": 44,
+     "type": "u32"
+    },
+    {
+     "name": "field_30",
+     "offset": 48,
+     "type": "u32"
+    },
+    {
+     "name": "field_34",
+     "offset": 52,
+     "type": "u32"
+    },
+    {
+     "name": "field_38",
+     "offset": 56,
+     "type": "u32"
+    },
+    {
+     "name": "field_3c",
+     "offset": 60,
+     "type": "u32"
+    },
+    {
+     "name": "field_40",
+     "offset": 64,
+     "type": "u32"
+    },
+    {
+     "name": "field_44",
+     "offset": 68,
+     "type": "u32"
+    },
+    {
+     "name": "field_48",
+     "offset": 72,
+     "type": "u32"
+    },
+    {
+     "name": "field_4c",
+     "offset": 76,
+     "type": "u32"
+    },
+    {
+     "name": "field_50",
+     "offset": 80,
+     "type": "u32"
+    }
+   ]
+  }
+ ],
+ "access_notes": "SOURCE AND HOW TO RE-DERIVE\n\nCorpus: `python3 tools/kpdiscover.py --corpus` gives the sqlite path. All 25 definitions come from `ghidra_type` at `binary_id=8` (K1 Windows GOG swkotor.exe, md5 9a44891011437deb6536d992bccdfe4b, image base 0x400000). Every disassembly claim below was checked against the matching raw image in the corpus `extract/raw` tree with `i686-w64-mingw32-objdump -d --start-address= --stop-address=`, addresses are absolute VAs. binary_id 5 and 19 carry the same type names with zero fields, so binary_id=8 is the only rich K1 source.\n\nDURABLE ARTIFACT (repo-relative, promote if wanted): `tmp/structwork/k1_structs.json` (full), `tmp/structwork/k1_structs_slim.json` (what is reproduced above), `tmp/structwork/listing.txt` (flat), `tmp/structwork/oracle.py` (the verifier).\n\nTYPE SHORTHAND: ptr=32-bit pointer, u8/u16/u32/u64 unsigned, i8/i16/i32 signed, f32 float. `T[0xN]` is an inline array of N elements. CExoArrayList/Vector/CExoString/CExoLocString/CResRef/CScriptVarTable/CGameObject/CSWSObject/CSWCObject are the named structs, embedded inline.\n\nCONFIDENCE: absent = high (Ghidra field plus, where noted, a disassembly check). `med` = the name is Ghidra's and the type is inferred from size plus naming. `low` = shape unknown. A field named `field_<hex>` or `_pad<hex>` is a Ghidra placeholder: the offset and width are exact, the meaning was never recovered. Treat all of those as low-confidence in meaning. Where a placeholder-named field carries a type or meaning claim from me, an explicit confidence is attached.\n\nHOW THE LAYOUTS WERE VERIFIED (this matters, totals alone prove nothing)\nTwo compensating width errors cancel in a size total and leave every offset between them wrong. So I did not stop at the size assert. Ghidra names each unrecovered field after its own hex offset, which is ~1000 free assertions. `oracle.py` walks each struct packing fields sequentially, and for every `field_<hex>` / `_pad<hex>` asserts computed_offset == the offset in the name. All 25 structs now pass both the anchor check and the asserted size.\n\nThat check found three places where Ghidra's emitted C does NOT match the binary. All three are fixed above:\n1. CGameObject.object_type is 1 byte at 8, not `int`. Proof: `mov 0x8(%ecx),%al` at 0x4B17BE, 0x4B17C1, 0x4CC114. The `_pad9[3]` Ghidra emitted only makes sense if the field before it ends at 9.\n2. CSWSCreatureStats.race is 2 bytes at 0xDC, not `int`. Proof: the next field is named field_de.\n3. CGameEffect.type is 2 bytes at 8, not `int`. Proof: `movzwl 0x8(%ecx),%edx` at 0x503A70, cross-checked by four accessors that pin later offsets exactly: GetInteger reads +0x34, GetFloat reads +0x38, CopyStringFromList reads +0x48, GetObjectID reads +0x78. With Ghidra's `int` every one of those lands 2 bytes off.\nIf you regenerate from `data/` at some point, keep these three overrides or the structs silently break.\n\nTHE CExoArrayList HAZARD (the thing most likely to be got wrong)\nCExoArrayList is `{void* data; int size; int capacity}`, 12 bytes. Slot order verified, not assumed: `CExoArrayList::operator[]` 0x437C40 is `mov eax,[ecx]; lea eax,[eax+i*sz]` so +0 is the data pointer; `Add` 0x4213E0 compares [this+4] against [this+8], grows by doubling (min 8) through Allocate, writes at index [this+4], then `incl 0x4(%esi)` -- so +4 is size and +8 is capacity. Ghidra's names are correct and not swapped.\n\nReading slot 0 of one of these as an int returns THE DATA POINTER, not a value. Ghidra hides them as opaque `unsigned char x[0xc]`. I enumerated all 34 twelve-byte blobs across these 25 structs and classified every one by disassembly. The ones that ARE CExoArrayList:\n- CSWSObject: effects 0x124, looping_vis_fx 0x130, effect_targets 0x13C, expression_list 0x18C, matched_expression_strings 0x1A0\n- CSWSCreature: field_324 0x324, field_330 0x330, effect_icons 0x8F4, perceptions 0x920\n- CSWSCreatureStats: feats 0x0, feat_remaining_uses 0xC, bonus_feats 0x18, level_stats 0x28\n- CSWCCreature: visibility_list 0x360\n- CSWSArea: omen_events 0x294\n- CSWSModule: object_lookup_table 0x130, limbo_creature_list 0x1DC\n- CScriptEvent: int_params 0x4, float_params 0x10, string_params 0x1C, object_params 0x28  <-- this is the one the project already got wrong once. `*(int*)(ev+4)` is a pointer. The ints are at `*(int**)(ev+4)[0..*(int*)(ev+8)-1]`.\nThe twelve-byte blobs that are NOT lists: CSWSObject.position 0x90, .orientation 0x9C, .spell_target_position 0x1B0; CSWCObject.position 0x24, .orientation 0x30; CSWCCreature.moving_orientation 0x1C4, .stationary_orientation 0x1D0, .field_1DC; CSWSDoor.bounding_box_1 0x338, .bounding_box_2 0x344 -- all Vector (3 floats). And CSWSObject/CSWCObject/CSWSArea `game_object` is an embedded CGameObject.\nDiscriminator used: Vector shows `flds`/`fsubs` at base, base+4 and base+8; a list shows a dword load at base that is then dereferenced with base+4 as the loop bound. Two cases came out opposite to the name: CSWCCreature.field_1DC is a Vector (`flds 0x1dc/0x1e0/0x1e4` subtracted from position), and CSWSCreature.field_324 / field_330 are lists of u32 object ids.\n\nSECOND, LESS OBVIOUS FORM OF THE SAME HAZARD\nGhidra sometimes splits a CExoArrayList into three separate scalar fields instead of one blob, so it does not look like a list at all. Two proven cases in CSWSArea: 0x190/0x194/0x198 (all object ids in the area -- CSWSArea::AddObjectToArea 0x50DFD0 loops `[ebx+0x194]` times over `[ebx+0x190]` with stride 4) and 0x1A0/0x1A4/0x1A8 (grown through CExoArrayList::Allocate 0x5E03C0). CItemRepository 12/16/20 is the same shape. This census is NOT complete -- I only proved the cases I hit. Detection recipe for the rest: in a class's own methods look for `cmp` of [this+N+4] against [this+N+8] followed by `test/je/add reg,reg` (the doubling), or a `lea 0xN(%this),%ecx` immediately before a call into the CExoArrayList method family; N is the data pointer. Attribution is unreliable when the base register came out of a call, so confirm each hit by eye.\n\nHOW A SCRIPT GETS A POINTER TO A LIVE OBJECT (the chain that makes all of this usable)\n\n1. `CAppManager** g_pAppManager = (CAppManager**)0x007A39FC`. One global, in .data. 5680 instructions reference it. The idiom throughout the image is `mov ecx,[0x7A39FC]; mov ecx,[ecx+8]`.\n2. `CAppManager+8` is the `CServerExoApp*`. (`+4` is the `CClientExoApp*`.)\n3. `CServerExoApp::GetGameObject` (0x4AE750) is two instructions: `mov ecx,[ecx+4]` (CServerExoApp+4 = CServerExoAppInternal*) then `jmp 0x4B1700`.\n4. `CServerExoAppInternal::GetGameObject` (0x4B1700) does `mov ecx,[ecx+0x1005C]` -- that field is the `CGameObjectArray*` -- and calls 0x4D8230 with (id, &out). It then compares AL against the byte at 0x74666C, which is 0, so AL==0 means found.\n5. `CGameObjectArray::GetGameObject` (0x4D8230) is a hash lookup, not a tree walk despite the field name. bucket = `((id>>31)&1)*0x1000 + (id & 0xFFF)` into an 8192-entry dword table at CGameObjectArray+0. Each chain node is 12 bytes `{u32 id_masked, void* object, node* next}`; it compares node[0] against `id & 0x7FFFFFFF` and follows node[8] on a miss. On hit it writes node[4] to the out-parameter and returns AL=0; on miss it writes NULL and returns AL=1. Return polarity is inverted from what you would guess.\n\nTyped getters add one check on top. `CServerExoApp::GetCreatureByGameObjectID` (0x4AE770 -> internal 0x4B1790) does the lookup, compares the type byte at obj+8 against the constant at 0x746634 (= 5), then calls `vtable+0x30`. The type constants are all in .rdata and I read every one from the getter that uses it: area 4 (0x746633, getter 0x4B17E0), creature 5 (0x746634), item 6 (0x746635, getter 0x4B1740, vtable+0x38), trigger 7 (0x746636, getter 0x4B1880), placeable 9 (0x746638, getter 0x4B18D0, vtable+0x58), door 10 (0x746639, getter 0x4B1920, vtable+0x18), area-of-effect 11 (0x74663A, getter 0x4B1970, vtable+0x50), waypoint 12 (0x74663B, getter 0x4B19C0), encounter 13 (0x74663C, getter 0x4B1A10, vtable+0x5C), sound 16 (0x74663E, getter 0x4B1A60, vtable+0x68). There is one more getter (0x4B1AB0, vtable+0x64) matching type 14; I did not name it, so do not assume \"store\".\n\nTHE DOWNCAST IS FREE, AND I CHECKED\nThose vtable slots are type-checked casts, not accessors. On the CSWSCreature vtable (0x7470C8) slot 0x30 points at 0x641DB0 = `mov eax,ecx; ret` and every other slot in the 0x28..0x5C block points at 0x63E7F0 = `xor eax,eax; ret`. On the CSWSDoor vtable (0x7498B0) the identity is at slot 0x18 instead, and 0x30 is the null stub. So: once the type byte matches, the subclass pointer is bit-identical to the CGameObject* -- no adjustment. A runtime may check `obj->object_type` itself and cast directly, and does not have to make the virtual call. CSWSItem is the exception to watch: its embedded CSWSObject starts at +16, so `item+16` is the CSWSObject and `item+16` is where the CGameObject header lives.\n\nCLIENT SIDE\nThe cheap path is the cross-link, not a second traversal: CSWSObject+548 holds the `CSWCObject*` (read and cached by CSWSObject::GetClientObject 0x4CC2B0) and CSWCObject+248 holds the `CSWSObject*` back (CSWCObject::GetServerObject 0x63D4B0). Both offsets verified by disassembling those two accessors. The independent path is `CAppManager+4` -> CClientExoApp -> GetGameObject 0x5ED580 / GetCreatureByGameObjectID 0x5ED5B0 / GetGameObjectArray 0x5ED570.\n\nTWO SMALL CAVEATS\n`CScriptVarTable` is a name I coined for the recurring 20-byte script-variable blob (CSWSObject+272, CSWSArea+500, CSWSModule+156). There is no type by that name in the corpus, so do not send a generator looking for one.\nThe 8-byte string blobs are split between CExoString `{char*, u32 len}` and CExoLocString `{void*, i32 strref}` -- both are 8 bytes, so size cannot tell them apart. I used the field name (anything with loc/localized reads as CExoLocString) and marked all of them `med`. Verify per field before a script exposes one as text."
+}
