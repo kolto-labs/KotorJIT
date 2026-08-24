@@ -20,6 +20,10 @@
 #include "image/sha256.hpp"
 #include "api/enginestruct.hpp"
 #include "api/routines.hpp"
+#include "api/output.hpp"
+#include "api/entity.hpp"
+#include "api/structs.hpp"
+#include "api/memory.hpp"
 #include "lua/host.hpp"
 #include "lua/value.hpp"
 #include "platform/platform.hpp"
@@ -394,8 +398,14 @@ bool Runtime::boot_scripts(const Config& cfg) {
     // The Lua host takes this as a hook precisely so it does not have to know
     // what a KOTOR routine is -- see the note on HostConfig.
     hc.on_state_created = [](lua_State* L) {
-        api::register_all(L);          // kotor.<RoutineName> for every routine
-        api::open_engine_structs(L);   // effect/event/location/talent handles
+        // Order matters in one place only: the engine-structure metatables must
+        // exist before anything can hand a script one of those handles.
+        api::open_engine_structs(L);      // effect/event/location/talent handles
+        api::register_all(L);             // kotor.<RoutineName>, all 769
+        api::memory::register_all(L);     // raw read/write, the escape hatch
+        api::structs::register_all(L);    // named typed field access
+        api::entity::register_all(L);     // objects, party, resolution
+        api::register_support(L);         // output, timers and strings together
     };
 
     auto host = std::make_unique<lua::Host>(hc);
