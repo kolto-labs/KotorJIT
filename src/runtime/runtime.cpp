@@ -18,6 +18,8 @@
 #include "hooks/registry.hpp"
 #include "image/image.hpp"
 #include "image/sha256.hpp"
+#include "api/enginestruct.hpp"
+#include "api/routines.hpp"
 #include "lua/host.hpp"
 #include "lua/value.hpp"
 #include "platform/platform.hpp"
@@ -352,6 +354,14 @@ bool Runtime::boot_scripts(const Config& cfg) {
     hc.script_dir = cfg.script_dir;
     hc.error_budget = cfg.error_budget;
     hc.hot_reload = cfg.hot_reload;
+
+    // Everything a script can call is registered here, on each fresh state.
+    // The Lua host takes this as a hook precisely so it does not have to know
+    // what a KOTOR routine is -- see the note on HostConfig.
+    hc.on_state_created = [](lua_State* L) {
+        api::register_all(L);          // kotor.<RoutineName> for every routine
+        api::open_engine_structs(L);   // effect/event/location/talent handles
+    };
 
     auto host = std::make_unique<lua::Host>(hc);
     std::vector<std::string> errors;

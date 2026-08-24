@@ -71,6 +71,12 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/hooks/hooks.cmake)
 
 # The runtime, and the two libraries it ships as: kphasor.dll and libkphasor.so.
 # After hooks.cmake because it links what image_win32 and hooks_win32 compile.
+# Host API modules. Each fragment is self-contained and order-independent.
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/routines.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/structs.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.

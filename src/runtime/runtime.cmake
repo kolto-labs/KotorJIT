@@ -25,7 +25,29 @@ set(KP_RUNTIME_SOURCES
 set(KP_LUA_SOURCES
     "${KP_SRC_ROOT}/lua/host.cpp"
     "${KP_SRC_ROOT}/lua/value.cpp"
+    "${KP_SRC_ROOT}/events/dispatch.cpp"
 )
+
+# The host API. Compiled in here rather than linked, for the same reason as the
+# Lua host: these are what a script actually calls, so they have to live in the
+# same binary as the interpreter. Each src/api fragment publishes its own source
+# list; this is the one place that decides they all ship together.
+set(KP_API_SOURCES
+    "${KP_SRC_ROOT}/api/routines.cpp"
+    "${KP_SRC_ROOT}/api/enginestruct.cpp"
+    "${KP_SRC_ROOT}/api/structs.cpp"
+    "${KP_SRC_ROOT}/api/entity.cpp"
+    "${KP_SRC_ROOT}/api/memory.cpp"
+    "${KP_SRC_ROOT}/api/output.cpp"
+    "${KP_SRC_ROOT}/api/timers.cpp"
+    "${KP_SRC_ROOT}/api/strings.cpp"
+)
+foreach(f ${KP_API_SOURCES})
+    if(NOT EXISTS ${f})
+        list(REMOVE_ITEM KP_API_SOURCES ${f})
+        message(STATUS "kphasor: ${f} not present yet, skipping")
+    endif()
+endforeach()
 
 set(KP_LUAJIT_WIN_DIR "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
 
@@ -47,7 +69,7 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
     # Listing them explicitly is the only thing that makes this correct.
     file(GLOB KP_GENERATED_HEADERS "${KP_SRC_ROOT}/generated/*.inc")
 
-    foreach(src ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES})
+    foreach(src ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_RT_WIN32_OBJDIR}/rt_${name}.obj")
         add_custom_command(
@@ -130,12 +152,18 @@ if(UNIX AND NOT WIN32)
     get_target_property(KP_IMAGE_SRC kp_image SOURCES)
     get_target_property(KP_HOOKS_SRC kp_hooks SOURCES)
 
-    add_library(kphasor SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES}
+    add_library(kphasor SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES}
                                ${KP_IMAGE_SRC} ${KP_HOOKS_SRC}
                                ${KP_LUAJIT_LINUX_LIB})
     set_target_properties(kphasor PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    # Both LuaJIT header paths. The build-time copy is what the archive is built
+    # from, but it does not exist until its custom command runs, and object
+    # compiles do not all order after that. The pristine source tree has the same
+    # headers and is always there, so listing it second removes the race without
+    # changing which archive is linked.
     target_include_directories(kphasor PRIVATE "${KP_SRC_ROOT}"
-                                               "${KP_LUAJIT_LINUX_DIR}/src")
+                                               "${KP_LUAJIT_LINUX_DIR}/src"
+                                               "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
     target_compile_options(kphasor PRIVATE -m32 -Wall -Wextra)
     target_link_options(kphasor PRIVATE -m32)
     # LuaJIT's own two dependencies on Linux. Nothing else we link pulls them
