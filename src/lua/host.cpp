@@ -218,6 +218,7 @@ events::Outcome Host::dispatch(const events::EventContract& ev,
             const char* msg = lua_tostring(L, -1);
             s.record_error(ev.lua_name, msg ? msg : "(no message)",
                            tick_, cfg_.error_budget);
+            ++out.errored;
             lua_settop(L, base);
             continue;                            // other scripts still run
         }
@@ -243,6 +244,13 @@ events::Outcome Host::dispatch(const events::EventContract& ev,
             } else {
                 ++out.abstained;
             }
+        } else {
+            // Someone already claimed. Still record whether this script had an
+            // answer, so the totals reconcile and a reader can see how many
+            // scripts were overruled rather than silent.
+            std::vector<Value> discarded;
+            if (convert_tuple(L, base + 2, ev.results, discarded)) ++out.ignored;
+            else ++out.abstained;
         }
         lua_settop(L, base);
     }

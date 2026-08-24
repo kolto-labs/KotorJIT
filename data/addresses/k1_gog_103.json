@@ -9,6 +9,7 @@
   "identity": {
     "md5": "9a44891011437deb6536d992bccdfe4b"
   },
+  "format_kind": "pe",
   "note": null,
   "adjudicated_bindings": 0,
   "sites": {
@@ -444,6 +445,7 @@
   },
   "reference_image": "/home/brunner56/biodecompwarehouse/agentdecompile/target/swkotor-gog/swkotor.exe.gog",
   "reference_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "derived_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
   "sentinel": {
     "va": 5423312,
     "va_hex": "0x0052C0D0",
