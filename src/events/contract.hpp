@@ -71,7 +71,10 @@ struct EventContract {
 // A void event has zero results, so the conversion that decides "claimed"
 // trivially succeeds and the first script to define it always claims. That is
 // faithful to the model we are matching, but it means every later script sees
-// relevant == false. Flagged rather than silently inherited.
+// relevant == false, which surprises people.
+//
+// 27 of the current events are void. Defined in dispatch.cpp so tools can report
+// it rather than each rediscovering the rule.
 bool always_claimed_by_first(const EventContract&);
 
 // The outcome of dispatching one event across all loaded scripts.
@@ -81,8 +84,15 @@ struct Outcome {
     bool        bool_result = false;
     std::int64_t int_result = 0;
     std::string string_result;
-    unsigned    called = 0;     // scripts invoked
-    unsigned    abstained = 0;
+
+    // These reconcile: called == abstained + errored + (claimed ? 1 : 0) + ignored.
+    // Counting only abstentions before a claim, as an earlier version did, made
+    // called=2/abstained=0 mean either "one script voted and lost" or "one
+    // script crashed" -- the two an operator most needs to tell apart.
+    unsigned called = 0;        // scripts invoked
+    unsigned abstained = 0;     // returned nothing usable, before OR after a claim
+    unsigned errored = 0;       // threw; its answer, if any, was discarded
+    unsigned ignored = 0;       // answered, but someone had already claimed
 };
 
 }  // namespace kp::events
