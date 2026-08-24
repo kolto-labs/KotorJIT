@@ -144,6 +144,16 @@ struct OpTables {
         set(two, 0xAC, 0xAC, F_MODRM | F_IB);
         set(two, 0xAD, 0xAF, F_MODRM);
         set(two, 0xB0, 0xC1, F_MODRM);
+        // 0F BA is Group 8 -- bt/bts/btr/btc r/m32, imm8 -- so it carries an
+        // immediate that the rest of this range does not. Without F_IB it
+        // decodes one byte short, which is worse than refusing: a wrong length
+        // splits the following instruction and the game dies somewhere
+        // unrelated, much later.
+        //
+        // MSVC never emits it, so KOTOR 1 contains none and a sweep over that
+        // binary alone cannot find this. GCC does emit it, and the TSL Linux
+        // build has two.
+        set(two, 0xBA, 0xBA, F_MODRM | F_IB);
         set(two, 0xC2, 0xC2, F_MODRM | F_IB);
         set(two, 0xC3, 0xC3, F_MODRM);
         set(two, 0xC4, 0xC6, F_MODRM | F_IB);

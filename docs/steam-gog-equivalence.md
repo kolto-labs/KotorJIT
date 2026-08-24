@@ -32,7 +32,7 @@ An earlier draft of this project's notes called the wrapper "SafeDisc-style". Th
 and it mattered: SafeDisc and SteamStub need different handling, and only one of them is
 removed by the tooling we have.
 
-## Steam and GOG differ only by the wrapper
+## Steam and GOG differ by the wrapper, and by 38 bytes of letter case
 
 | | Steam | GOG |
 |---|---|---|
@@ -52,10 +52,45 @@ Deciphering the Steam image and comparing its `.text` against GOG's, page by pag
 - both entry points resolve to `0x006fb38d`
 - all four shared sections sit at the same virtual addresses
 
+The other three sections are not quite untouched, and the difference is worth stating
+precisely rather than rounding to zero:
+
+| section | bytes differing, Steam vs GOG |
+|---|---|
+| `.rdata` | **38** of 327,680 |
+| `.data` | 0 of 94,208 |
+| `.rsrc` | 0 of 225,280 |
+
+All 38 are the letter case of imported DLL names — Steam writes `KERNEL32.dll`,
+`OPENGL32.dll`, `USER32.dll`; GOG writes them lowercase. No vtable, string literal, or
+function-pointer table is affected, so nothing a hook touches differs.
+
 So the Steam build **is** the GOG build with a DRM wrapper bolted on. Every GOG address
 applies verbatim to the Steam build once `.text` has been deciphered in memory.
 
-Two independent checks agree:
+## Why this is not circular
+
+Comparing the unpacked image against GOG and finding the code identical would prove
+nothing on its own: someone splicing GOG's code into a Steam shell would produce exactly
+that result. What rules it out is an asymmetry in the *other* sections.
+
+```
+           steam-vs-gog   unpacked-vs-steam   unpacked-vs-gog
+.rdata           38                0                38
+.data             0                0                 0
+.rsrc             0                0                 0
+```
+
+The unpacked image's `.rdata` matches **Steam**, not GOG, while its `.text` matches
+**GOG**. A splice would have carried GOG's `.rdata` across too. It did not, so the
+unpacker decrypted the Steam file in place — which is the thing we needed to believe.
+
+Independently of the unpacker at all: Steam's own on-disk `.data` and `.rsrc` are already
+byte-identical to GOG's, and Steam `.text` matches GOG in 13,270 of 3,391,488 bytes —
+1 in 256, exactly chance, confirming the whole section is encrypted rather than partly
+shared.
+
+Two further checks agree:
 
 1. A separate project derived Steam addresses for the VM stack accessors by its own means and
    landed on `0x005D1000`, `0x005D1010`, `0x005D1080`, `0x005D1090` — precisely the GOG

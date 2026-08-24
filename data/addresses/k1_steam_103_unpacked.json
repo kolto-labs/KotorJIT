@@ -9,6 +9,7 @@
   "identity": {
     "sha256": "2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05"
   },
+  "format_kind": "pe",
   "note": "The deciphered Steam image. The headless harness runs this, because the shipped executable will not start without Steam, so the runtime meets it and must recognise it.",
   "adjudicated_bindings": 0,
   "sites": {

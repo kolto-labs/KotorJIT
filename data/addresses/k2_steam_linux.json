@@ -10,6 +10,7 @@
     "sha256": "ed043d21a4578fd1c6f1557f0f72bde5589ba3572a5b6f1a687ed9feeab49ac3",
     "md5": "b3420a36a4385fec8189f37c5d5eaad1"
   },
+  "format_kind": "elf",
   "note": "Native Aspyr ELF, EXEC (not PIE). VM entry points hand-adjudicated.",
   "adjudicated_bindings": 55,
   "sites": {
@@ -449,6 +450,11 @@
     {
       "section": ".text",
       "sha256": "79df1007e09581fb9f487d71a36c9402627e86d41a37bf3859eedbbbb5d326ad"
+    },
+    {
+      "section": "seg0",
+      "sha256": "223d2684747cae6bc1c116dcdee7a85cd2dc9ce2315fb36d37fa55efc7e1dd81",
+      "note": "runtime view: what a live process sees when section headers are not mapped"
     }
   ],
   "summary": {

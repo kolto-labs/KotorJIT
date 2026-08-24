@@ -130,6 +130,11 @@ int main(int argc, char** argv) {
     std::printf("\nresult\n");
     std::printf("  called      : %u\n", out.called);
     std::printf("  abstained   : %u\n", out.abstained);
+    std::printf("  errored     : %u\n", out.errored);
+    std::printf("  ignored     : %u  (answered, but someone claimed first)\n", out.ignored);
+    std::printf("  reconciles  : %s\n",
+                out.called == out.abstained + out.errored + out.ignored +
+                              (out.claimed ? 1u : 0u) ? "yes" : "NO");
     std::printf("  claimed     : %s\n", out.claimed ? "yes" : "no (fallback applied)");
     if (out.claimed) std::printf("  claimed by  : %s\n", out.claimed_by.c_str());
     if (!ev->results.empty()) {
