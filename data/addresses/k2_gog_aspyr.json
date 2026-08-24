@@ -9,6 +9,7 @@
   "identity": {
     "md5": "1ffa92993d8015c9bb93ceac96c508c0"
   },
+  "format_kind": "pe",
   "note": "Binary not on this machine; table emitted to prove the generator generalises.",
   "adjudicated_bindings": 0,
   "sites": {
