@@ -346,6 +346,41 @@ bool Runtime::install() {
     hooks_ = std::move(set);
     bind_originals(*hooks_);
     log("installed %zu hooks", hooks_->installed_count());
+
+    // The routine bridge's addresses come straight from the table we just
+    // resolved. Doing it here means a missing site is reported while someone is
+    // reading the install log, not on the first script the game happens to run.
+    {
+        api::VmSites sites;
+        auto at = [&](const char* name) -> std::uintptr_t {
+            const hooks::Site* s = table_->find(name);
+            return (s != nullptr && s->resolved) ? s->addr : 0;
+        };
+        sites.execute_command    = at("vm.execute_command");
+        sites.stack_push_integer = at("vm.stack_push_integer");
+        sites.stack_pop_integer  = at("vm.stack_pop_integer");
+        sites.stack_push_float   = at("vm.stack_push_float");
+        sites.stack_pop_float    = at("vm.stack_pop_float");
+        sites.stack_push_string  = at("vm.stack_push_string");
+        sites.stack_pop_string   = at("vm.stack_pop_string");
+        sites.stack_push_object  = at("vm.stack_push_object");
+        sites.stack_pop_object   = at("vm.stack_pop_object");
+        sites.stack_push_vector  = at("vm.stack_push_vector");
+        sites.stack_pop_vector   = at("vm.stack_pop_vector");
+        sites.stack_push_engine_structure = at("vm.stack_push_engine_structure");
+        sites.stack_pop_engine_structure  = at("vm.stack_pop_engine_structure");
+        set_vm_sites(sites);
+        log("vm: %d of 13 stack sites resolved; the two VM objects are captured "
+            "from the first script the game runs",
+            (sites.execute_command ? 1 : 0) + (sites.stack_push_integer ? 1 : 0) +
+            (sites.stack_pop_integer ? 1 : 0) + (sites.stack_push_float ? 1 : 0) +
+            (sites.stack_pop_float ? 1 : 0) + (sites.stack_push_string ? 1 : 0) +
+            (sites.stack_pop_string ? 1 : 0) + (sites.stack_push_object ? 1 : 0) +
+            (sites.stack_pop_object ? 1 : 0) + (sites.stack_push_vector ? 1 : 0) +
+            (sites.stack_pop_vector ? 1 : 0) +
+            (sites.stack_push_engine_structure ? 1 : 0) +
+            (sites.stack_pop_engine_structure ? 1 : 0));
+    }
     return true;
 }
 
@@ -459,6 +494,60 @@ void Runtime::stop() {
 
     phase_ = Phase::Idle;
     log("stopped");
+}
+
+}  // namespace kp::runtime
+
+// ------------------------------------------------------ binding the VM ------
+
+namespace kp::runtime {
+
+namespace {
+
+api::VmSites      g_sites;
+std::atomic<bool> g_vm_bound{false};
+
+// CVirtualMachineInternal is size-asserted at 0x3D8 and command_implementer is
+// its last member, so it sits at 0x3D4. Carried as a constant here rather than
+// in the address table because it is a struct layout, not an address -- a build
+// where it moves needs a different recovered layout, not a different table.
+constexpr std::uint32_t kCommandImplementerOffset = 0x3D4;
+
+// A CVirtualMachine is one pointer to its internal. The stack accessors are
+// thunks that do `mov ecx,[ecx]` and tail-jump into the internal version --
+// confirmed by disassembling K1's StackPopInteger at 0x5D1000. So rather than
+// hunting for the real singleton, we hold the internal in a variable and hand
+// out its address: dereferencing that gives exactly what the thunk wants.
+void* g_vm_wrapper = nullptr;
+
+}  // namespace
+
+void set_vm_sites(const api::VmSites& s) { g_sites = s; }
+bool vm_bound() { return g_vm_bound.load(std::memory_order_acquire); }
+
+void capture_vm(void* internal) {
+    if (g_vm_bound.load(std::memory_order_acquire) || internal == nullptr) return;
+
+    if (!platform::is_readable(internal, kCommandImplementerOffset + sizeof(void*))) return;
+    void* implementer = *reinterpret_cast<void* const*>(
+        static_cast<const char*>(internal) + kCommandImplementerOffset);
+    if (implementer == nullptr) return;   // not wired up yet; try again next script
+
+    g_vm_wrapper = internal;
+    g_sites.virtual_machine     = &g_vm_wrapper;
+    g_sites.command_implementer = implementer;
+
+    std::string error;
+    if (!api::bind_sites(g_sites, error)) {
+        Runtime::instance().log("vm: cannot bind the routine bridge: %s", error.c_str());
+        // Latch anyway. Retrying on every script would repeat this line forever,
+        // and the reason will not change between calls.
+        g_vm_bound.store(true, std::memory_order_release);
+        return;
+    }
+    g_vm_bound.store(true, std::memory_order_release);
+    Runtime::instance().log("vm: routine bridge bound (implementer %p, %u commands)",
+                            implementer, g_sites.commands_count);
 }
 
 }  // namespace kp::runtime

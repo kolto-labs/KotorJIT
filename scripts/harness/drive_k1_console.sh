@@ -23,7 +23,33 @@ CONSOLE_KEY="${CONSOLE_KEY:-grave}"
 
 COMMANDS=("$@")
 if [[ ${#COMMANDS[@]} -eq 0 ]]; then
-  COMMANDS=("lua status" "lua reload")
+  # A save sitting still fires heartbeats and almost nothing else, so it proves
+  # one hook works and says nothing about the rest. This sequence deliberately
+  # moves, fights and mutates state, because those drive the events the caves
+  # exist to intercept:
+  #
+  #   warp         tears a module down and builds another: module load/unload,
+  #                area enter/exit, creature spawn, trigger setup
+  #   end_m01aa    the Endar Spire, which has hostile Sith aboard, so arriving
+  #                starts real combat: attack rounds, damage, death
+  #   heal etc.    mutate creature and party state, which drives the stat and
+  #                effect paths rather than only the idle ones
+  #
+  # Short on purpose. Every warp costs a module load under llvmpipe, so the value
+  # is in variety rather than repetition.
+  COMMANDS=(
+    "lua status"
+    "warp end_m01aa"     # combat module: Sith aboard
+    "heal"
+    "addlevel"
+    "givecredits 5000"
+    "revealmap"
+    "lua status"
+    "warp tar_m02aa"     # Taris apartments: transition, no combat
+    "lua status"
+    "warp danm13"        # Dantooine: a third, different area type
+    "lua status"
+  )
 fi
 
 mkdir -p "$OUT"
@@ -65,6 +91,8 @@ WID=""
 for i in $(seq 1 "$BOOT_WAIT"); do
   for w in $(xdotool search --onlyvisible --name '.*' 2>/dev/null); do
     (( w == ROOT_WID )) && continue
+    # skip the intro movie window; see the note in spike_headless_k1.sh
+    case "$(xdotool getwindowname "$w" 2>/dev/null)" in *Movie*) continue ;; esac
     read -r W H < <(xdotool getwindowgeometry --shell "$w" 2>/dev/null |
                     sed -n 's/^WIDTH=//p;s/^HEIGHT=//p' | paste -sd' ')
     [[ -z "${W:-}" ]] && continue
@@ -82,12 +110,83 @@ import -window "$WID" "$OUT/00_menu.png" 2>/dev/null
 
 xdotool windowactivate --sync "$WID" 2>/dev/null || xdotool windowfocus "$WID" 2>/dev/null
 
+# Input has to look real. xdotool's --window form uses XSendEvent, and the game
+# reads input through DirectInput, which ignores synthetic events -- the menu
+# renders, the keystrokes land nowhere, and it looks like the game hung. Driving
+# the pointer and keyboard through XTEST instead produces events indistinguishable
+# from a person, at the cost of needing the window focused and real coordinates.
+read -r WX WY WW WH < <(xdotool getwindowgeometry --shell "$WID" 2>/dev/null |
+                        sed -n 's/^X=//p;s/^Y=//p;s/^WIDTH=//p;s/^HEIGHT=//p' | paste -sd' ')
+click_at() {  # $1,$2 = fraction of the window, 0..1
+  local x y
+  x=$(python3 -c "print(int($WX + $WW * $1))")
+  y=$(python3 -c "print(int($WY + $WH * $2))")
+  log "  click ($x,$y)"
+  # Separate invocations on purpose. Chaining move and click in one xdotool
+  # command sends them faster than the game samples the pointer, and the click
+  # lands at the old position or is missed entirely -- which looks exactly like
+  # bad coordinates and sent me hunting the wrong thing twice.
+  xdotool mousemove --sync "$x" "$y"
+  sleep 0.4
+  xdotool click --clearmodifiers 1
+  sleep 0.4
+}
+
+# Click, then check the picture actually changed. A menu button that swallows a
+# click leaves the harness waiting on something that already failed.
+click_until_changed() {  # $1,$2 = fraction, $3 = attempts, $4 = what it is
+  local before after
+  for attempt in $(seq 1 "${3:-3}"); do
+    before=$(identify -format "%#" <(import -window "$WID" png:- 2>/dev/null) 2>/dev/null || echo a)
+    click_at "$1" "$2"
+    sleep 2
+    after=$(identify -format "%#" <(import -window "$WID" png:- 2>/dev/null) 2>/dev/null || echo b)
+    if [[ "$before" != "$after" ]]; then
+      log "  $4 took effect (attempt $attempt)"
+      return 0
+    fi
+    log "  $4 did not change the screen, retrying"
+  done
+  return 1
+}
+
 # The console only exists in gameplay, so a save has to be loaded first. Without
 # one, this stops at the menu and says so rather than typing into nothing.
 if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" ]]; then
-  log "loading a save to reach gameplay"
-  xdotool key --window "$WID" --clearmodifiers Down Down Return; sleep 12
+  log "loading a save to reach gameplay (window ${WW}x${WH} at ${WX},${WY})"
+  click_until_changed 0.583 0.530 3 "LOAD GAME" || { log "main menu did not respond"; exit 5; }
+  import -window "$WID" "$OUT/01a_loadmenu.png" 2>/dev/null
+  # Coordinates read off tmp/drive-k1/01a_loadmenu.png at 1024x768: the first
+  # save entry sits at (383,256) and the LOAD button at (512,568). The topmost
+  # save is already selected when the menu opens, so clicking it is belt and
+  # braces rather than required.
+  click_at 0.374 0.333        # first save in the list
+  click_until_changed 0.500 0.740 4 "LOAD" || { log "LOAD never took"; exit 5; }
+
+  # Waiting on the picture does not work. A fixed sleep either wastes time or
+  # gives up mid-load; "wait for colour" fires instantly because the menu is
+  # still up when LOAD is clicked; and "wait for dark then colour" fires on
+  # KOTOR's own loading screen, which has art on it.
+  #
+  # So ask the game instead of looking at it. k_def_heartbt01 is the stock
+  # creature heartbeat: it cannot run until the module is up and creatures
+  # exist, and the runtime already logs every script the engine runs. That is an
+  # oracle for "we are in gameplay" rather than a proxy for it.
+  LOADED=0
+  for i in $(seq 1 "${LOAD_WAIT:-180}"); do
+    if grep -qE "k_def_heartbt01|k_ai_master" "$OUT/wine.log" 2>/dev/null; then
+      LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; break
+    fi
+    if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
+    sleep 1
+  done
   import -window "$WID" "$OUT/01_loading.png" 2>/dev/null
+  if (( LOADED == 0 )); then
+    log "no gameplay script ran within ${LOAD_WAIT:-180}s; the console needs"
+    log "gameplay, so stopping rather than typing into the menu"
+    exit 4
+  fi
+  sleep 3   # let a few more heartbeats run before typing
 else
   log "no saves present: the console needs gameplay, so stopping at the menu"
   log "put a save in $GAME_DIR/Saves to drive the console"
@@ -95,16 +194,20 @@ else
 fi
 
 log "opening console ($CONSOLE_KEY)"
-xdotool key --window "$WID" --clearmodifiers "$CONSOLE_KEY"; sleep 1
+xdotool key --clearmodifiers "$CONSOLE_KEY"; sleep 1
 import -window "$WID" "$OUT/02_console.png" 2>/dev/null
 
 n=3
 for cmd in "${COMMANDS[@]}"; do
   log "typing: $cmd"
-  xdotool type --window "$WID" --clearmodifiers --delay 40 "$cmd"
+  xdotool type --clearmodifiers --delay 60 "$cmd"
   sleep 0.5
-  xdotool key --window "$WID" --clearmodifiers Return
-  sleep 2
+  xdotool key --clearmodifiers Return
+  # A warp is a whole module load, so it needs far longer than a status query.
+  case "$cmd" in
+    warp*) log "  warping, waiting for the module"; sleep "${WARP_WAIT:-45}" ;;
+    *)     sleep 3 ;;
+  esac
   import -window "$WID" "$(printf '%s/%02d_after.png' "$OUT" "$n")" 2>/dev/null
   n=$((n+1))
 done
