@@ -53,6 +53,28 @@ Called before the script is unloaded, including on reload and on quarantine.
 
 Returns: nothing. 
 
+#### `OnConsoleCommand(line, relevant)`
+
+Called for every line typed into the cheat console, including lines the game does not recognise. Return false to consume the line so the game never sees it, which is how a script adds its own commands. The console hook receives one keystroke at a time and buffers to a line, so this fires on Enter.
+
+| argument | type |
+|---|---|
+| `line` | string |
+
+Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
+
+#### `OnRunScriptDone(script_name, object_id, ran, relevant)`
+
+Called after an NWScript finishes. `ran` is the engine's own return value: true when the script loaded and ran with a balanced stack.
+
+| argument | type |
+|---|---|
+| `script_name` | string |
+| `object_id` | object |
+| `ran` | bool |
+
+Returns: nothing. 
+
 #### `OnTick(tick, relevant)`
 
 Called once per server frame. The highest-frequency callback: a script that does not define it pays nothing, one that does should keep the body short.
@@ -998,6 +1020,22 @@ Returns: bool. Returning false stops the game's own handler.
 ### Medium confidence
 
 Argument mapping is partly verified. Check before relying on it.
+
+#### `OnSave(relevant)`
+
+Return a string to persist alongside the save. It comes back to OnLoad when that save is loaded.
+
+Returns: string. 
+
+#### `OnLoad(state, relevant)`
+
+Receives whatever OnSave returned when this save was written.
+
+| argument | type |
+|---|---|
+| `state` | string |
+
+Returns: nothing. 
 
 #### `OnCreatureDamaged(creature, relevant)`
 
