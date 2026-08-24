@@ -1,0 +1,190 @@
+# The event contract. One row per Lua callback.
+#
+# This file is the source of truth. tools/gen_event_glue.py generates from it:
+#   - src/generated/callbacks.inc   the name list dispatch and the
+#                                   undefined-callback probe both read
+#   - src/generated/events.inc      the contract table the dispatcher walks
+#   - docs/lua-api.md               the reference scripts are written against
+#
+# Generating all three from one file is the point. The design this follows
+# shipped a bug where one event was dispatched but missing from the name list,
+# so every script that did not define it threw on every call. Keeping the list
+# and the dispatcher in separate hand-maintained places is what allowed that.
+#
+# Fields:
+#   lua_name      what a script defines
+#   hook_site     key into data/addresses/<build>.json
+#   args          ordered; a trailing `relevant` boolean is appended by the
+#                 dispatcher and is not listed here
+#   returns       [] means void, and a void event is always claimed by the first
+#                 script that defines it
+#   fallback      applied when no script claims: true | false | identity | none
+#   blocking      whether a claimed result can suppress the game's own handler
+#   engine_return what the engine is told when Lua blocks. Separate from
+#                 `blocking` on purpose: RunScript returning 0 means "the script
+#                 did not run", which is not what "do not run the game's
+#                 handler" should tell the caller.
+#   confidence    high | medium | low. Low means the argument mapping is not
+#                 yet verified against the recovered C.
+
+[meta]
+version = 1
+game = "k1"
+
+# --- Runtime lifecycle -------------------------------------------------------
+
+[[event]]
+lua_name = "OnScriptLoad"
+hook_site = "runtime"
+args = [
+  { name = "game",    type = "string" },
+  { name = "build",   type = "string" },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = "Called once after the script loads. `build` is the identified game build, e.g. k1_steam_103."
+
+[[event]]
+lua_name = "OnScriptUnload"
+hook_site = "runtime"
+args = []
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = "Called before the script is unloaded, including on reload and on quarantine."
+
+[[event]]
+lua_name = "OnTick"
+hook_site = "app.server_main_loop"
+args = [
+  { name = "tick", type = "int" },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = """Called once per server frame. This is the highest-frequency callback --
+a script that does not define it pays nothing, but one that does should keep the
+body short."""
+
+# --- The script VM -----------------------------------------------------------
+# Everything the engine runs as NWScript passes through here, so this is the
+# broadest surface a script has.
+
+[[event]]
+lua_name = "OnScriptEvent"
+hook_site = "vm.run_script"
+args = [
+  { name = "script", type = "string", source = "CExoString* param_1" },
+  { name = "object", type = "object", source = "ulong param_2" },
+]
+returns = ["bool"]
+fallback = "true"
+blocking = true
+engine_return = "ReportSuccess"
+confidence = "high"
+doc = """Called before the engine runs any NWScript. `script` is the resref, e.g.
+"k_def_heartbeat01". Return false to stop it running. The engine is told the
+script ran, so blocking stays invisible to whatever asked for it."""
+
+[[event]]
+lua_name = "OnScriptEventDone"
+hook_site = "vm.run_script"
+args = [
+  { name = "script", type = "string" },
+  { name = "object", type = "object" },
+  { name = "ran",    type = "bool"   },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = "Called after an NWScript finishes. `ran` is the engine's own return value."
+
+# --- Console -----------------------------------------------------------------
+
+[[event]]
+lua_name = "OnConsoleCommand"
+hook_site = "console.do_console"
+args = [
+  { name = "line", type = "string" },
+]
+returns = ["bool"]
+fallback = "true"
+blocking = true
+engine_return = "ReportSuccess"
+confidence = "high"
+doc = """Called for every line typed into the cheat console, including lines the
+game does not recognise. Return false to consume the line so the game never sees
+it -- which is how a script adds its own commands."""
+
+# --- Module lifecycle --------------------------------------------------------
+
+[[event]]
+lua_name = "OnModuleLoad"
+hook_site = "module.load_start"
+args = [
+  { name = "module", type = "string" },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "medium"
+doc = "Called when a module begins loading. The argument mapping is not yet verified."
+
+# --- Save and load -----------------------------------------------------------
+
+[[event]]
+lua_name = "OnSave"
+hook_site = "vm.save_script_situation"
+args = []
+returns = ["string"]
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "medium"
+doc = """Return a string to persist alongside the save. It comes back to OnLoad
+when that save is loaded."""
+
+[[event]]
+lua_name = "OnLoad"
+hook_site = "vm.load_script_situation"
+args = [
+  { name = "state", type = "string" },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "medium"
+doc = "Receives whatever OnSave returned when this save was written."
+
+# --- Per-object events -------------------------------------------------------
+# These come from the engine's own EventHandler dispatch rather than from
+# NWScript, so they carry typed arguments read out of CScriptEvent. The
+# event-type constants and slot meanings are being verified against the
+# recovered C; entries stay at low confidence until that lands.
+
+[[event]]
+lua_name = "OnCreatureEvent"
+hook_site = "event.creature"
+args = [
+  { name = "creature",   type = "object", source = "this" },
+  { name = "event_type", type = "int",    source = "param_1" },
+  { name = "caller",     type = "object", source = "param_3" },
+]
+returns = ["bool"]
+fallback = "true"
+blocking = true
+engine_return = "ReportSuccess"
+confidence = "low"
+doc = """Called for engine-level creature events. `event_type` is the raw engine
+constant; named per-type events replace this once the constants are verified."""
