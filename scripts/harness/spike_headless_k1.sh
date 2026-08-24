@@ -7,8 +7,19 @@
 # AND a window at least 640x480 AND a non-uniform frame.
 set -uo pipefail
 
-VANILLA="${VANILLA:-/run/media/brunner56/MyBook/kotor_vanilla_refs/K1_vanilla}"
-ROOT="${ROOT:-/run/media/brunner56/MyBook/Workspaces/KotorPhasor}"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+# Where the game is, without anyone writing down a path. KOTOR1_DIR overrides;
+# otherwise kpdiscover walks Steam's own library list and the platform defaults,
+# and identifies an install by the files it contains rather than its name.
+if [[ -z "${VANILLA:-}" ]]; then
+  VANILLA="$(python3 "$ROOT/tools/kpdiscover.py" --k1 2>/dev/null || true)"
+fi
+if [[ -z "${VANILLA:-}" || ! -d "$VANILLA" ]]; then
+  echo "no KOTOR 1 install found." >&2
+  echo "Set KOTOR1_DIR, or add [paths] k1 = \"...\" to kotorphasor.toml." >&2
+  exit 1
+fi
 GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 OUT="${OUT:-$ROOT/tmp/spike-k1}"
 PREFIX="${WINEPREFIX:-$ROOT/tmp/wineprefix-k1}"

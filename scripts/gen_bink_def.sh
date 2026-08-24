@@ -9,9 +9,20 @@
 # and one proxy that carries the union serves both.
 set -euo pipefail
 
-K1="${K1_BINK:-/run/media/brunner56/MyBook/kotor_vanilla_refs/K1_vanilla/binkw32.dll}"
-K2="${K2_BINK:-/run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets/binkw32.dll}"
-OUT="${OUT:-$(dirname "$0")/../src/proxy/binkw32.def}"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+OUT="${OUT:-$ROOT/src/proxy/binkw32.def}"
+
+find_bink() {  # $1 = k1|k2
+  local dir
+  dir="$(python3 "$ROOT/tools/kpdiscover.py" "--$1" 2>/dev/null || true)"
+  [[ -n "$dir" ]] || return 0
+  # Case varies by platform and the file can sit one level up from the data dir.
+  find "$dir" "$dir/.." -maxdepth 1 -iname "binkw32.dll" 2>/dev/null | head -1
+}
+
+K1="${K1_BINK:-$(find_bink k1)}"
+K2="${K2_BINK:-$(find_bink k2)}"
+[[ -n "$K1$K2" ]] || { echo "no game install found; set K1_BINK or K2_BINK" >&2; exit 1; }
 
 command -v winedump >/dev/null || { echo "winedump not found (dnf install wine-core)" >&2; exit 1; }
 
