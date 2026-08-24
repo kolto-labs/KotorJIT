@@ -128,8 +128,13 @@ ScriptVerdict decide(const events::EventContract& ev, const events::Outcome& out
     return v;
 }
 
+// `self` is the CVirtualMachineInternal, which is the only place the two live
+// VM objects the routine bridge needs can be reached from. Capturing here costs
+// one relaxed atomic load per script once bound.
 int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t object_id,
                                 int has_object) {
+    if (!vm_bound()) capture_vm(self);
+
     auto orig = reinterpret_cast<RunScriptFn>(g_orig_run_script.load(std::memory_order_acquire));
 
     // One load, used for the whole call. Reading the published pointer twice

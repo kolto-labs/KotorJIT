@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 
+#include "api/enginestruct.hpp"
 #include "events/contract.hpp"
 #include "runtime/runtime.hpp"
 
@@ -75,6 +76,24 @@ void* do_console_detour();
 // handler never has to ask the Runtime for anything: a fault handler that
 // allocates or takes a lock can deadlock against the thing that faulted.
 void set_fault_log_path(const char* path);
+
+// ------------------------------------------------------ binding the VM ------
+//
+// The routine bridge needs two live pointers that no address table can carry,
+// because they are objects rather than code: the CVirtualMachine the stack
+// accessors are called on, and the CSWVirtualMachineCommands the dispatcher
+// indexes. Both are reachable from the CVirtualMachineInternal that
+// CVirtualMachineInternal::RunScript is called on, so they are captured the
+// first time that hook fires rather than hunted for at startup.
+//
+// Called from the RunScript body. Cheap after the first success.
+void capture_vm(void* virtual_machine_internal);
+
+// Address-only half, filled from the address table at install time. Kept apart
+// from capture_vm so a missing site is reported during installation, when
+// someone is reading the log, rather than on the first script the game runs.
+void set_vm_sites(const api::VmSites&);
+bool vm_bound();
 
 class FaultFrame {
 public:
