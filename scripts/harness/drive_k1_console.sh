@@ -52,7 +52,25 @@ if [[ ${#COMMANDS[@]} -eq 0 ]]; then
   )
 fi
 
+# A previous run that was interrupted leaves the game and its Xvfb alive. The
+# next run then shares the display and the log files with a process it does not
+# know about, and the two interleave: one writes "loading..." while the other
+# waits for a window it will never own. That is a confusing hour, so refuse to
+# start rather than inherit it.
+if pgrep -f "swkotor.exe" >/dev/null 2>&1 || pgrep -f "Xvfb :$DISPLAY_NUM" >/dev/null 2>&1; then
+  if [[ "${FORCE:-0}" == "1" ]]; then
+    echo "killing a previous run (FORCE=1)" >&2
+    pkill -f 'swkotor.exe' 2>/dev/null; pkill -f "Xvfb :$DISPLAY_NUM" 2>/dev/null
+    WINEPREFIX="$PREFIX" wineserver -k 2>/dev/null
+    sleep 3
+  else
+    echo "a game or Xvfb from a previous run is still alive; re-run with FORCE=1" >&2
+    exit 6
+  fi
+fi
+
 mkdir -p "$OUT"
+rm -f "$OUT"/drive.log "$OUT"/wine.log     # never append across runs
 export WINEPREFIX="$PREFIX" WINEDEBUG="${WINEDEBUG:--all}"
 export LIBGL_ALWAYS_SOFTWARE=1 DISPLAY=":$DISPLAY_NUM"
 
