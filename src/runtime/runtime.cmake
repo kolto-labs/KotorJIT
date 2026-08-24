@@ -39,6 +39,14 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
     set(KP_RT_WIN32_OBJDIR "${CMAKE_BINARY_DIR}/win32")
     set(KP_RT_WIN32_OBJECTS)
 
+    # Generated headers are #included, not compiled, so a hand-written
+    # add_custom_command sees no dependency on them and happily reuses a stale
+    # object. That is not theoretical: a regenerated event table left the DLL
+    # five minutes older than the table it was supposed to contain, and the
+    # runtime reported two events as missing from a file that plainly had them.
+    # Listing them explicitly is the only thing that makes this correct.
+    file(GLOB KP_GENERATED_HEADERS "${KP_SRC_ROOT}/generated/*.inc")
+
     foreach(src ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_RT_WIN32_OBJDIR}/rt_${name}.obj")
@@ -48,7 +56,7 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
             COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
                     -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
                     -c ${src} -o ${obj}
-            DEPENDS ${src}
+            DEPENDS ${src} ${KP_GENERATED_HEADERS}
             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"
             VERBATIM)
         list(APPEND KP_RT_WIN32_OBJECTS ${obj})
