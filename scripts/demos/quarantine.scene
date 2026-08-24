@@ -1,0 +1,8 @@
+say "A mod that throws an error on every single frame."
+run "cat scripts/examples/edge_quarantine/always_errors.lua"
+beat
+say "Dispatch it five times. Watch what the runtime does about it."
+run "./build/kp_luatest scripts/examples/edge_quarantine OnTick 1 --repeat 5 2>&1 | grep -vE 'traceback|in function|^\\s+\\[C\\]' | tail -14"
+beat 3
+say "Quarantined on its third strike. The game was never told."
+beat 2

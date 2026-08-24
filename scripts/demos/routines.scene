@@ -1,0 +1,7 @@
+say "KOTOR's own scripting language has 772 built-in functions."
+say "All of them are callable from Lua. This is the generated table."
+run "python3 -c \"import json;d=json.load(open('data/routines/k1.json'));r=d if isinstance(d,list) else d['routines'];print(len(r),'routines');[print(' ',x['name']) for x in r[:12]]\""
+beat 3
+say "And both API dialects are native, so either spelling works."
+run "head -32 docs/api-dialects.md"
+beat 3
