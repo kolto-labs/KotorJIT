@@ -301,6 +301,55 @@ it by 8 bytes per entry (Itanium `{{ptr, adj}}` member pointers), and returns
    the payload type varies by event id. Six creature script slots -- heartbeat,
    spawn, damaged, end-of-round, death, end-of-dialogue -- never reach it at all.
 
+## The engine-routine dispatch, from building a working bridge against it
+
+Findings from making Lua call KOTOR 1's engine routines for real. All addresses
+are K1 GOG, which is byte-identical to the deciphered Steam build.
+
+**NWScript defaults are a compiler feature, and the handlers do not agree about
+it.** The compiler emits the default expression at the call site; each engine
+handler then pops what its own signature says. Read out of the binary, two
+handlers behave differently:
+
+- `ExecuteCommandSuppressStatusSummaryEntry` (`0x547E50`) pops its one int
+  unconditionally and never looks at `paramCount`.
+- `ExecuteCommandCreateItemOnObject` (`0x52F570`) does `cmp DWORD PTR
+  [esp+0x3c],0x3` -- it checks `paramCount` before popping three.
+
+So anything calling routines from outside the VM must push the FULL declared
+parameter count, not just the arguments it was given. Pushing fewer makes every
+handler of the first kind pop whatever happens to be underneath. This makes the
+recovered default VALUES load-bearing rather than documentation.
+
+**`CVirtualMachine` is one pointer, and its accessors are two-instruction
+thunks.** `CVirtualMachine::StackPopInteger` at `0x5D1000` is exactly:
+
+    mov ecx, [ecx]        ; this = this->internal
+    jmp 0x5D24C0          ; CVirtualMachineInternal::StackPopInteger
+
+so a `CVirtualMachine*` is a pointer to a pointer to the internal. Anything
+holding a `CVirtualMachineInternal*` can synthesise a usable `CVirtualMachine*`
+by taking the address of a variable that holds it, without locating the real
+singleton.
+
+**`CVirtualMachineInternal::command_implementer` is at `+0x3D4`**, the last
+member of the size-asserted `0x3D8` struct. That is the reachable path from the
+`RunScript` receiver to `CSWVirtualMachineCommands`, and from there to the
+command table at `[implementer+0x0C]`.
+
+**The live command table on K1 holds 772 entries**, read back out of a running
+game rather than inferred: the count matches both the header's routine count and
+the dispatcher's own `cmp edx,0x304`.
+
+**`StackPushVector` takes the Vector by value.** The K1 thunk at `0x5D1050`
+reads `[esp+4]`, `[esp+8]`, `[esp+0xC]` and returns `ret 0xC` -- three stacked
+floats under `__thiscall`, not a pointer and not three separate scalar pushes,
+which would leave three stack entries with the wrong type tags.
+
+**`StackPopEngineStructure` takes the bare structure id, 0..3.** The VM adds the
+`0x10` that makes it a stack tag itself; passing the tag fails the comparison at
+`0x5D265D` and pops nothing.
+
 ## Also worth recording
 
 `0F BA` (Group 8: `bt`/`bts`/`btr`/`btc r/m32, imm8`) carries an `imm8`. Any length
@@ -346,7 +395,8 @@ def main() -> int:
     print(f"bindings   : {len(bindings)} accepted, from data/adjudication/")
 
     if args.notes_only:
-        p = write_notes(wh, {"insert": [], "already_present": bindings}, False)
+        p = write_notes(wh, {"insert": [], "already_present": bindings,
+                             "corroborated": [], "conflict": [], "no_binary": []}, False)
         print(f"wrote {p}")
         return 0
 
