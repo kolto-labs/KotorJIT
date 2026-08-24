@@ -2,7 +2,7 @@
 -- return value is discarded whether or not it checks.
 priority = 10
 
-function OnScriptEvent(script, object, relevant)
+function OnRunScript(script, object, has_object, relevant)
     if not relevant then
         print("[40_too_late]  relevant=false, my answer will be ignored")
     end

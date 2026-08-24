@@ -5,7 +5,7 @@
 -- Compare with 25_claims_via_string, which returns "1" and does convert.
 priority = 90
 
-function OnScriptEvent(script, object, relevant)
+function OnRunScript(script, object, has_object, relevant)
     print(("[20_abstain_badstring]  relevant=%s -> \"not-a-number\"")
           :format(tostring(relevant)))
     return "not-a-number"

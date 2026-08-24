@@ -1,0 +1,77 @@
+// Shared internals of the image module. Not part of the public contract.
+#pragma once
+
+#include <cstdint>
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "image.hpp"
+#include "loaded_image.hpp"
+#include "pe_elf.hpp"
+
+namespace kp::image {
+
+// How a section map was recovered. Worth carrying because the routes are not
+// equally trustworthy and the ELF fallback loses section names entirely.
+enum class ParseRoute {
+    PeSectionTable,     // PE: headers are inside SizeOfHeaders, always mapped
+    ElfSectionHeaders,  // ELF: e_shoff reachable -- only true of a file image
+    ElfProgramHeaders,  // ELF: segments only, names synthesised
+};
+
+const char* to_string(ParseRoute);
+
+// Exposed separately from classify() so diagnostics can report entropy per chunk
+// as well as per section. Uniformity across chunks is what distinguishes an
+// encrypted section from one that merely holds a compressed blob.
+double shannon_entropy(const std::uint8_t*, std::size_t);
+
+std::optional<Format> detect_format(const LoadedImage&);
+
+// Header reads sized from the image itself. The DOS stub length varies between
+// builds -- 0x80 on the Steam image, 0x910 on GOG -- so no fixed window works.
+std::optional<pe::Headers> read_pe_headers(const LoadedImage&);
+
+// Parse headers out of whatever address space is handed in. `route` reports
+// which path produced the answer.
+std::optional<std::vector<Section>> parse_image(const LoadedImage&, Format, ParseRoute* route = nullptr);
+
+std::optional<std::uintptr_t> image_base_of(const LoadedImage&, Format);
+
+// A code-section digest we know the right answer for. Keyed by section name
+// because the same build yields different names by route: the DRM stub leaves
+// `.text`, the offline unpacker renames it `.textU`, and an ELF parsed from
+// segments alone has no name but `seg0`.
+struct KnownText {
+    const char* section;
+    const char* sha256;
+};
+
+struct BuildRecord {
+    const char*      alias;
+    const char*      sha256;      // of the file on disk
+    Format           format;
+    std::uintptr_t   image_base;
+    bool             encrypted;
+    // Empty bytes mean "nothing to wait for": the image is plaintext already.
+    std::uintptr_t   sentinel_va;
+    const char*      sentinel_bytes;   // hex, no separators
+    const char*      sentinel_describes;
+    const KnownText* texts;
+    std::size_t      text_count;
+    const char*      note;
+};
+
+const BuildRecord* lookup_build(const std::string& sha256);
+const BuildRecord* build_table(std::size_t& count);
+
+std::vector<std::uint8_t> parse_hex(const char*);
+
+// dump() takes a LoadResult, which carries no bytes -- the bytes live in the
+// address space it was parsed from. This is the form that can actually write.
+bool dump_from(const LoadedImage&, const LoadResult&, const std::string& out_path, std::string& error);
+
+void sleep_ms(unsigned);
+
+}  // namespace kp::image
