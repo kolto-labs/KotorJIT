@@ -57,10 +57,14 @@ fi
 # know about, and the two interleave: one writes "loading..." while the other
 # waits for a window it will never own. That is a confusing hour, so refuse to
 # start rather than inherit it.
-if pgrep -f "swkotor.exe" >/dev/null 2>&1 || pgrep -f "Xvfb :$DISPLAY_NUM" >/dev/null 2>&1; then
+if pgrep -x swkotor.exe >/dev/null 2>&1 || pgrep -f "Xvfb :$DISPLAY_NUM" >/dev/null 2>&1; then
   if [[ "${FORCE:-0}" == "1" ]]; then
     echo "killing a previous run (FORCE=1)" >&2
-    pkill -f 'swkotor.exe' 2>/dev/null; pkill -f "Xvfb :$DISPLAY_NUM" 2>/dev/null
+    # Match the process NAME, not the whole command line. -f matches any process
+  # whose arguments merely mention the game -- on this machine an unrelated
+  # analysis job runs with the executable's path in its argv, and killing on -f
+  # would have killed that. -x on the name matches only the game itself.
+  pkill -x swkotor.exe 2>/dev/null; pkill -f "Xvfb :$DISPLAY_NUM" 2>/dev/null
     WINEPREFIX="$PREFIX" wineserver -k 2>/dev/null
     sleep 3
   else
@@ -75,8 +79,19 @@ export WINEPREFIX="$PREFIX" WINEDEBUG="${WINEDEBUG:--all}"
 export LIBGL_ALWAYS_SOFTWARE=1 DISPLAY=":$DISPLAY_NUM"
 
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/drive.log"; }
+
+# RECORD=1 captures the session to mp4. Unset, these are no-ops, so a normal run
+# is byte-for-byte the run it was before recording existed.
+if [[ "${RECORD:-0}" == "1" ]]; then
+  source "$ROOT/scripts/harness/record.sh"
+else
+  rec_start() { :; }; rec_mark() { :; }; rec_stop() { :; }
+fi
+
 cleanup() {
-  pkill -f 'swkotor.exe' 2>/dev/null
+  # Before the display goes away, or ffmpeg is capturing a server that has left.
+  rec_stop
+  pkill -x swkotor.exe 2>/dev/null
   wineserver -k 2>/dev/null || true
   [[ -n "${XVFB_PID:-}" ]] && kill "$XVFB_PID" 2>/dev/null
   return 0
@@ -100,8 +115,11 @@ xdpyinfo >/dev/null 2>&1 || { log "Xvfb failed"; exit 1; }
 ROOT_WID=$(( $(xwininfo -root 2>/dev/null | sed -n 's/.*Window id: \([0-9a-vx]*\).*/\1/p' | head -1) ))
 log "Xvfb up, root $ROOT_WID"
 
+rec_start "$DISPLAY_NUM" "$OUT/session"
+
 wineboot -i >"$OUT/wineboot.log" 2>&1; wineserver -w
 log "launching"
+rec_mark "game launched"
 ( cd "$GAME_DIR" && exec wine swkotor.exe ) >"$OUT/wine.log" 2>&1 &
 
 # Wait for a real game window, not the prefix dialog and not the desktop.
@@ -124,6 +142,7 @@ for i in $(seq 1 "$BOOT_WAIT"); do
 done
 [[ -n "$WID" ]] || { log "no rendered game window in ${BOOT_WAIT}s"; exit 2; }
 log "game window $WID ('$(xdotool getwindowname "$WID")')"
+rec_mark "main menu"
 import -window "$WID" "$OUT/00_menu.png" 2>/dev/null
 
 xdotool windowactivate --sync "$WID" 2>/dev/null || xdotool windowfocus "$WID" 2>/dev/null
@@ -188,16 +207,22 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   #
   # So ask the game instead of looking at it. k_def_heartbt01 is the stock
   # creature heartbeat: it cannot run until the module is up and creatures
-  # exist, and the runtime already logs every script the engine runs. That is an
-  # oracle for "we are in gameplay" rather than a proxy for it.
+  # exist, so seeing it is proof of gameplay rather than a proxy for it.
+  #
+  # The runtime does NOT log the scripts the engine runs -- a probe script does,
+  # by defining OnRunScript and printing what it gets. So this oracle only works
+  # when scripts/examples/probe is deployed alongside whatever is being demoed.
+  # An earlier version of this comment claimed the runtime logged it, which cost
+  # two ten-minute runs that could never have succeeded: the harness sat waiting
+  # for a line nothing was ever going to write.
   LOADED=0
   for i in $(seq 1 "${LOAD_WAIT:-180}"); do
     # Watch the RUNTIME log, not wine.log. The game's stdout is block-buffered to
     # a redirected file under Wine, so a script's output sits in a 4 KB buffer and
     # shows up minutes late -- which reads as "gameplay never happened" when it
     # happened five minutes ago. The runtime log is flushed per line.
-    if grep -qE "k_def_heartbt01|k_ai_master" "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
-      LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; break
+    if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
+      LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; rec_mark "gameplay reached"; break
     fi
     if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
     sleep 1
@@ -215,12 +240,14 @@ else
   exit 3
 fi
 
+rec_mark "opening console"
 log "opening console ($CONSOLE_KEY)"
 xdotool key --clearmodifiers "$CONSOLE_KEY"; sleep 1
 import -window "$WID" "$OUT/02_console.png" 2>/dev/null
 
 n=3
 for cmd in "${COMMANDS[@]}"; do
+  rec_mark "cmd: $cmd"
   log "typing: $cmd"
   xdotool type --clearmodifiers --delay 60 "$cmd"
   sleep 0.5

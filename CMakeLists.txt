@@ -79,5 +79,9 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
+# The Lua host on its own, for exercising the arbitration rule without the game.
+# After runtime.cmake: it links the native LuaJIT that target builds.
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/lua/luahost.cmake)
+
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
