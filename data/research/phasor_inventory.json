@@ -1,0 +1,762 @@
+{
+ "categories": [
+  "memory",
+  "output",
+  "player-info",
+  "string",
+  "misc",
+  "misc-halo",
+  "halo-objects",
+  "damage",
+  "timers",
+  "http",
+  "legacy-removed"
+ ],
+ "functions": [
+  {
+   "name": "readbit",
+   "category": "memory",
+   "signature": "readbit(base_address: number, [address_offset: number], bit_offset: number) -> boolean",
+   "semantics": "Reads one bit. Arity-dispatched on lua_gettop==3 for the legacy 3-arg form; 2 args means (address, bit_offset). bit_offset is normalised first: address += bit_offset/8, bit_offset %= 8, so a bit offset of 20 reads bit 4 of address+2. Bit 0 is the LEAST significant bit (inverted versus Phasor 1). Returns a Lua boolean via lua_pushboolean, not 1/0 -- the doxygen header claiming '1 or 0' is stale.",
+   "returns_on_error": "Raises a Lua error 'invalid read: N bytes from 0xXXXXXXXX' when VirtualProtect fails on the target page. Never returns nil for a bad address. Wrong arg type -> luaL_argerror 'expected number, got <type>'.",
+   "uses": 137
+  },
+  {
+   "name": "readbyte",
+   "category": "memory",
+   "signature": "readbyte(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads uint8 [0,255]. address_offset is a trailing boost::optional, so 1 or 2 args both work and readbyte(a,3) == readbyte(a+3).",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' when VirtualProtect fails. Never nil for a bad address. Wrong type -> luaL_argerror 'expected number, got <type>'.",
+   "uses": 149
+  },
+  {
+   "name": "readchar",
+   "category": "memory",
+   "signature": "readchar(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads int8 [-128,127].",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. Never nil.",
+   "uses": 23
+  },
+  {
+   "name": "readword",
+   "category": "memory",
+   "signature": "readword(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads uint16 [0,65535].",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. Never nil.",
+   "uses": 175
+  },
+  {
+   "name": "readshort",
+   "category": "memory",
+   "signature": "readshort(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads int16 [-32768,32767].",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. Never nil.",
+   "uses": 16
+  },
+  {
+   "name": "readdword",
+   "category": "memory",
+   "signature": "readdword(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads uint32. The workhorse for pointer chasing.",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. A stale-but-mapped pointer reads fine and returns garbage.",
+   "uses": 234
+  },
+  {
+   "name": "readint",
+   "category": "memory",
+   "signature": "readint(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads int32.",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. Never nil.",
+   "uses": 2
+  },
+  {
+   "name": "readfloat",
+   "category": "memory",
+   "signature": "readfloat(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads IEEE754 float32. Highest-traffic call in the corpus.",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. A wrong-but-mapped offset returns a valid float, so errors are silent.",
+   "uses": 461
+  },
+  {
+   "name": "readdouble",
+   "category": "memory",
+   "signature": "readdouble(base_address: number, [address_offset: number]) -> number",
+   "semantics": "Reads float64.",
+   "returns_on_error": "Raises 'invalid read: N bytes from 0xXXXXXXXX' on an unmapped page. Never nil.",
+   "uses": 0
+  },
+  {
+   "name": "readstring",
+   "category": "memory",
+   "signature": "readstring(address: number, [length: number]) -> string",
+   "semantics": "Reads a NUL-terminated narrow string. There is NO address_offset form here, unlike the numeric readers -- the second parameter is length. Default and hard maximum is 160 characters (kMaxStringElements); the header's '80 characters' note is stale. Always NUL-terminates the destination buffer itself.",
+   "returns_on_error": "length > 160 -> luaL_argerror on arg 2, 'can only read strings to a maximum size of 160 characters'. Unmapped page -> 'invalid read: N bytes from 0xXXXXXXXX'.",
+   "uses": 66
+  },
+  {
+   "name": "readwidestring",
+   "category": "memory",
+   "signature": "readwidestring(address: number, [length: number]) -> string",
+   "semantics": "Same as readstring but each element is a wchar_t. length counts wide characters, and up to length*2 bytes are read. Phasor narrows the result before pushing, since Lua has no wide strings.",
+   "returns_on_error": "Same as readstring: length > 160 is an argerror on arg 2, unmapped page raises 'invalid read'.",
+   "uses": 12
+  },
+  {
+   "name": "writebit",
+   "category": "memory",
+   "signature": "writebit(base_address: number, [address_offset: number], bit_offset: number, value: boolean|number) -> nothing",
+   "semantics": "Read-modify-write of a single bit. Arity-dispatched on lua_gettop==4 for the legacy form. Same bit_offset normalisation as readbit. value is popped as bool: true, or the number 1, sets the bit; anything else clears it (Pop<bool> is x==1, so writebit(a,0,2) clears rather than errors).",
+   "returns_on_error": "Raises 'invalid write: N bytes from 0xXXXXXXXX' when the page cannot be made writable. Reads the byte first, so an unreadable page raises 'invalid read' instead.",
+   "uses": 20
+  },
+  {
+   "name": "writebyte",
+   "category": "memory",
+   "signature": "writebyte(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Arity-dispatched on lua_gettop==3 for the offset form. Writes uint8.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX' when the page cannot be made writable; 'invalid write: value (N) outside of type's range' when the value does not fit uint8.",
+   "uses": 41
+  },
+  {
+   "name": "writechar",
+   "category": "memory",
+   "signature": "writechar(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes int8. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX', or 'invalid write: value (N) outside of type's range'.",
+   "uses": 0
+  },
+  {
+   "name": "writeword",
+   "category": "memory",
+   "signature": "writeword(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes uint16. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX', or 'invalid write: value (N) outside of type's range'.",
+   "uses": 35
+  },
+  {
+   "name": "writeshort",
+   "category": "memory",
+   "signature": "writeshort(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes int16. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX', or 'invalid write: value (N) outside of type's range'.",
+   "uses": 28
+  },
+  {
+   "name": "writedword",
+   "category": "memory",
+   "signature": "writedword(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes uint32. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX', or 'invalid write: value (N) outside of type's range'. Note a negative value fails the uint32 range check rather than wrapping.",
+   "uses": 22
+  },
+  {
+   "name": "writeint",
+   "category": "memory",
+   "signature": "writeint(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes int32. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX', or 'invalid write: value (N) outside of type's range'.",
+   "uses": 3
+  },
+  {
+   "name": "writefloat",
+   "category": "memory",
+   "signature": "writefloat(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes float32. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX'. The range check is against float's min/max, so ordinary values always pass.",
+   "uses": 69
+  },
+  {
+   "name": "writedouble",
+   "category": "memory",
+   "signature": "writedouble(base_address: number, [address_offset: number], data: number) -> nothing",
+   "semantics": "Writes float64. gettop==3 dispatch selects the offset form.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX'.",
+   "uses": 0
+  },
+  {
+   "name": "writestring",
+   "category": "memory",
+   "signature": "writestring(address: number, [address_offset: number], str: string) -> nothing",
+   "semantics": "gettop==3 dispatch selects the offset form. Writes the bytes then a separate trailing NUL, so it always touches len+1 bytes. No length cap on the write path, unlike readstring's 160.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX' if either the body or the NUL lands on a page that cannot be made writable.",
+   "uses": 2
+  },
+  {
+   "name": "writewidestring",
+   "category": "memory",
+   "signature": "writewidestring(address: number, [address_offset: number], str: string) -> nothing",
+   "semantics": "As writestring but widens the Lua string first; writes len*2 bytes plus a 2-byte NUL.",
+   "returns_on_error": "'invalid write: N bytes from 0xXXXXXXXX'.",
+   "uses": 0
+  },
+  {
+   "name": "findsig",
+   "category": "memory",
+   "signature": "findsig(signature: string, [occurrence: number]) -> number|nil",
+   "semantics": "Byte-signature scan of the main module's PE code section. signature is a hex string where '?' is a nibble wildcard, so '4?' matches high-nibble 4 and '??' matches any byte. An odd-length signature gets a trailing '?' appended. occurrence defaults to 0 (first match). Results are memoised in a process-global map keyed by signature+occurrence, including negative results.",
+   "returns_on_error": "Returns nil when no match. Empty signature or a non-hex, non-'?' character -> luaL_argerror on arg 1.",
+   "uses": 0
+  },
+  {
+   "name": "hprintf",
+   "category": "output",
+   "signature": "hprintf(str: string, [player: number]) -> nothing",
+   "semantics": "Writes to the server console. AccessMode kAlways, so it still works after OnScriptUnload. The second parameter is undocumented but real and used in the corpus: when supplied it redirects to that player's console stream, preserving the Phasor 1 hprintf(msg, player) overload. The message is popped as ProcessedString: split on newlines into separate messages, with '{id}' replaced by that player's name.",
+   "returns_on_error": "Invalid player in the optional slot is silently ignored (the optional player pop yields none, so it falls back to the console). Zero args -> \"'l_hprintf' expects at least 1 argument(s) (got 0)\".",
+   "uses": 15
+  },
+  {
+   "name": "say",
+   "category": "output",
+   "signature": "say(str: string, [prepend: boolean]) -> nothing",
+   "semantics": "Broadcasts chat to everyone. prepend defaults to true and controls the '** SERVER **' prefix by selecting say_stream vs say_stream_raw. The message is popped as ProcessedString: split on newlines, with '{id}' replaced by that player's name.",
+   "returns_on_error": "Raises on missing or mistyped args; there is no failure return value.",
+   "uses": 58
+  },
+  {
+   "name": "privatesay",
+   "category": "output",
+   "signature": "privatesay(player: number, str: string, [prepend: boolean]) -> nothing",
+   "semantics": "Chat to one player. prepend defaults to true. The message is popped as ProcessedString: split on newlines, with '{id}' replaced by that player's name.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id' (non-optional player pop, raised before the body runs).",
+   "uses": 66
+  },
+  {
+   "name": "sendconsoletext",
+   "category": "output",
+   "signature": "sendconsoletext(player: number, str: string) -> nothing",
+   "semantics": "Writes to one player's rcon console stream. The message is popped as ProcessedString: split on newlines, with '{id}' replaced by that player's name.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 28
+  },
+  {
+   "name": "respond",
+   "category": "output",
+   "signature": "respond(str: string) -> nothing",
+   "semantics": "Writes to whoever is executing the current command: the server console when there is no executing player, otherwise that player's console stream. The correct reply channel for OnServerCommand. Message popped as ProcessedString.",
+   "returns_on_error": "Cannot fail on a valid string. Note it is registered kWhileLoaded despite http.h claiming it survives unload, so it raises 'cannot use api function' after OnScriptUnload.",
+   "uses": 0
+  },
+  {
+   "name": "log_msg",
+   "category": "output",
+   "signature": "log_msg(log_id: number, str: string) -> nothing",
+   "semantics": "Appends to one of Phasor's log streams. 1 = game log, 2 = Phasor log, 3 = rcon log, 4 = script log. AccessMode kAlways. Message popped as ProcessedString, so '{id}' name substitution works in logs too.",
+   "returns_on_error": "Any log_id outside 1..4 -> luaL_argerror on arg 1, 'invalid log id'.",
+   "uses": 1
+  },
+  {
+   "name": "resolveplayer",
+   "category": "player-info",
+   "signature": "resolveplayer(player: number) -> number",
+   "semantics": "Memory id (0-15) to rcon id. Returns mem->playerNum + 1, so rcon ids are 1-based. Required before passing a player into any svcmd string.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 47
+  },
+  {
+   "name": "rresolveplayer",
+   "category": "player-info",
+   "signature": "rresolveplayer(rcon_id: number) -> number|nil",
+   "semantics": "Rcon id to memory id. Internally looks up rcon_id - 1.",
+   "returns_on_error": "Returns nil when no player holds that rcon id. Does not raise -- it takes a raw number, not a player, so the pop layer has nothing to validate.",
+   "uses": 5
+  },
+  {
+   "name": "getplayer",
+   "category": "player-info",
+   "signature": "getplayer([player: number]) -> number|nil",
+   "semantics": "Address of the player's memory struct. This is the sanctioned validity probe: it is the one player function that takes an optional player and so tolerates a bad id. Every other player function assumes you checked here first.",
+   "returns_on_error": "Returns nil for an invalid or absent player id. Never raises on a bad id.",
+   "uses": 117
+  },
+  {
+   "name": "getip",
+   "category": "player-info",
+   "signature": "getip(player: number) -> string",
+   "semantics": "Dotted-quad IP string.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 41
+  },
+  {
+   "name": "getport",
+   "category": "player-info",
+   "signature": "getport(player: number) -> number",
+   "semantics": "Network port.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 2
+  },
+  {
+   "name": "getteam",
+   "category": "player-info",
+   "signature": "getteam(player: number) -> number",
+   "semantics": "Current team; 0 red, 1 blue.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 39
+  },
+  {
+   "name": "getname",
+   "category": "player-info",
+   "signature": "getname(player: number) -> string",
+   "semantics": "Player name, narrowed from the engine's wide string.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 183
+  },
+  {
+   "name": "gethash",
+   "category": "player-info",
+   "signature": "gethash(player: number) -> string",
+   "semantics": "CD-key hash string, the stable identity used for admin and ban lookups.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 46
+  },
+  {
+   "name": "getteamsize",
+   "category": "player-info",
+   "signature": "getteamsize(team: number) -> number",
+   "semantics": "Counts players on a team by walking all 16 player slots and comparing mem->team. Takes a raw team number, not a player id.",
+   "returns_on_error": "Silently wrong rather than erroring. The argument is popped as size_t and then narrowed into an `unsigned char team`, so getteamsize(256) truncates to 0 and returns the RED team's count, and getteamsize(257) returns blue's. There is no range check anywhere. A non-numeric argument does raise luaL_argerror 'expected number, got <type>'.",
+   "uses": 11
+  },
+  {
+   "name": "getplayerobject",
+   "category": "player-info",
+   "signature": "getplayerobject([player: number]) -> number|nil",
+   "semantics": "Address of the player's biped object. Equivalent to getobject(getplayerobjectid(player)).",
+   "returns_on_error": "Returns nil for an invalid player and for a live player who is currently dead. Never raises on a bad id.",
+   "uses": 32
+  },
+  {
+   "name": "getplayerobjectid",
+   "category": "player-info",
+   "signature": "getplayerobjectid([player: number]) -> number|nil",
+   "semantics": "The player's object id (an ident, not an address).",
+   "returns_on_error": "Returns nil for an invalid player and when mem->object_id is not valid (dead). Never raises on a bad id.",
+   "uses": 26
+  },
+  {
+   "name": "isadmin",
+   "category": "player-info",
+   "signature": "isadmin(player: number) -> boolean",
+   "semantics": "Reads the in-memory is_admin flag, which setadmin can set for the session.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 1
+  },
+  {
+   "name": "getadminlvl",
+   "category": "player-info",
+   "signature": "getadminlvl(player: number) -> number|nil",
+   "semantics": "Admin level looked up by the player's hash in the Admin table. Note this consults the persistent admin file, not the session is_admin flag, so a setadmin'd player can be isadmin true with getadminlvl nil.",
+   "returns_on_error": "Returns nil when the hash is not an admin. An invalid player still raises 'invalid player id'.",
+   "uses": 0
+  },
+  {
+   "name": "setadmin",
+   "category": "player-info",
+   "signature": "setadmin(player: number) -> nothing",
+   "semantics": "Sets is_admin for the rest of the game or until the player leaves. Does not persist to the admin file and does not assign a level.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 0
+  },
+  {
+   "name": "tokenizestring",
+   "category": "string",
+   "signature": "tokenizestring(str: string, delims: string) -> table (1-based array of string)",
+   "semantics": "Splits str at any character in delims and returns a 1-based array. AccessMode kAlways. Replaces Phasor 1's gettoken/gettokencount pair, which were removed.",
+   "returns_on_error": "Non-string args -> luaL_argerror 'expected string, got <type>'. An empty result is an empty table, not nil.",
+   "uses": 10
+  },
+  {
+   "name": "tokenizecmdstring",
+   "category": "string",
+   "signature": "tokenizecmdstring(str: string) -> table (1-based array of string)",
+   "semantics": "Command-line style split: whitespace separated, with double-quoted runs kept as one token. AccessMode kAlways. Replaces getcmdtoken/getcmdtokencount.",
+   "returns_on_error": "Non-string arg -> luaL_argerror 'expected string, got <type>'. Empty input yields an empty table.",
+   "uses": 4
+  },
+  {
+   "name": "getticks",
+   "category": "misc",
+   "signature": "getticks() -> number",
+   "semantics": "Windows GetTickCount(), milliseconds since boot. AccessMode kAlways. The registered name is getticks; misc.h's 'gettick()' example is a typo. Wraps after ~49 days.",
+   "returns_on_error": "Any argument -> \"'l_getticks' expects at most 0 argument(s) (got N)\".",
+   "uses": 0
+  },
+  {
+   "name": "getrandomnumber",
+   "category": "misc",
+   "signature": "getrandomnumber(min: number, max: number) -> number",
+   "semantics": "Draws from a process-global mt19937 seeded once from the system clock. The range is HALF-OPEN: the distribution is built as uniform_int_distribution(min, max-1). The single edge case is min == max, which short-circuits and returns max. AccessMode kAlways.",
+   "returns_on_error": "min > max produces an invalid distribution range (undefined behaviour, not an error). Both args are popped as size_t, so negative values wrap to huge positives.",
+   "uses": 3
+  },
+  {
+   "name": "changeteam",
+   "category": "misc-halo",
+   "signature": "changeteam(player: number, forcekill: boolean, [team: number]) -> nothing",
+   "semantics": "Moves a player. forcekill is required, not optional -- it is the second of three parameters and only team is trailing. When team is omitted the new team is the logical NOT of the current one, which only makes sense for two-team games.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'. Calling it in a non-team game is not detected.",
+   "uses": 12
+  },
+  {
+   "name": "kill",
+   "category": "misc-halo",
+   "signature": "kill(player: number) -> nothing",
+   "semantics": "Kills the player immediately.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'. Killing an already-dead player is a silent no-op.",
+   "uses": 16
+  },
+  {
+   "name": "applycamo",
+   "category": "misc-halo",
+   "signature": "applycamo(player: number, duration: number) -> nothing",
+   "semantics": "Active camouflage for duration seconds (popped as float).",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 5
+  },
+  {
+   "name": "svcmd",
+   "category": "misc-halo",
+   "signature": "svcmd(cmd: string, [want_result: boolean]) -> table (array of string) | <no values>",
+   "semantics": "Executes a server command as the console. When want_result is true Phasor attaches a RecordStream to the console stream, runs the command, and returns everything that would have been printed as a 1-based array of strings. Otherwise it returns no values at all. Player arguments inside cmd must be rcon ids, so pass resolveplayer(mem_id).",
+   "returns_on_error": "A cmd whose first token is 'sv_script_reload' -> luaL_argerror on arg 1, \"scripts cannot execute 'sv_script_reload'\". An empty command string returns 0 values silently. A command the server rejects is not distinguishable from one that succeeded unless you asked for the result text.",
+   "uses": 15
+  },
+  {
+   "name": "svcmdplayer",
+   "category": "misc-halo",
+   "signature": "svcmdplayer(cmd: string, player: number, [want_result: boolean]) -> table (array of string) | <no values>",
+   "semantics": "As svcmd but executed with that player as the command's originator, so permission checks and output routing use them. Note player here is the MEMORY id even though player ids embedded in cmd must be rcon ids.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'. Same sv_script_reload block as svcmd, reported on arg 1.",
+   "uses": 3
+  },
+  {
+   "name": "updateammo",
+   "category": "misc-halo",
+   "signature": "updateammo(weapon_object_id: number) -> nothing",
+   "semantics": "Forces a network resync of that weapon's clip and pack ammo after a script has written them directly with writeword.",
+   "returns_on_error": "An object id that does not resolve -> luaL_argerror on arg 1, 'invalid weapon id'. The id is popped as a raw ident, so the check happens inside the function body, not in the pop layer -- and it is not checked that the object is actually a weapon, only that it exists.",
+   "uses": 8
+  },
+  {
+   "name": "setammo",
+   "category": "misc-halo",
+   "signature": "setammo(weapon_object_id: number, clip_ammo: number, pack_ammo: number) -> nothing",
+   "semantics": "Sets both ammo counts and resyncs in one step. Counts are popped as unsigned short. Note the Lua argument order is (clip, pack) but the internal call is SetAmmo(pack, clip).",
+   "returns_on_error": "An unresolvable weapon id -> luaL_argerror on arg 1, 'invalid weapon id'. Counts above 65535 wrap silently rather than erroring.",
+   "uses": 0
+  },
+  {
+   "name": "setspeed",
+   "category": "misc-halo",
+   "signature": "setspeed(player: number, speed: number) -> nothing",
+   "semantics": "Player speed multiplier; 1.0 is default. Popped as float.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'. No clamping on speed.",
+   "uses": 5
+  },
+  {
+   "name": "getprofilepath",
+   "category": "misc-halo",
+   "signature": "getprofilepath() -> string",
+   "semantics": "Halo's data directory, where banned.txt lives. AccessMode kAlways.",
+   "returns_on_error": "Any argument -> \"'l_getprofilepath' expects at most 0 argument(s) (got N)\".",
+   "uses": 1
+  },
+  {
+   "name": "getservername",
+   "category": "misc-halo",
+   "signature": "getservername() -> string",
+   "semantics": "Current server name read from the server info struct. AccessMode kAlways.",
+   "returns_on_error": "Any argument -> \"'l_getservername' expects at most 0 argument(s) (got N)\".",
+   "uses": 0
+  },
+  {
+   "name": "getobject",
+   "category": "halo-objects",
+   "signature": "getobject([object_id: number]) -> number|nil",
+   "semantics": "Address of an object's struct. The sanctioned object validity probe, mirroring getplayer. Every other object function assumes you checked here first.",
+   "returns_on_error": "Returns nil for an invalid or absent object id. Never raises on a bad id.",
+   "uses": 96
+  },
+  {
+   "name": "getobjectcoords",
+   "category": "halo-objects",
+   "signature": "getobjectcoords(object_id: number) -> number, number, number",
+   "semantics": "Returns x, y, z as three separate values. Undocumented but important: if the object is seated in a vehicle, the coordinates returned are the VEHICLE's, not the biped's.",
+   "returns_on_error": "Invalid object id -> luaL_argerror 'invalid object id', raised in the pop layer before the body runs.",
+   "uses": 20
+  },
+  {
+   "name": "objectaddrtoplayer",
+   "category": "halo-objects",
+   "signature": "objectaddrtoplayer(object_address: number) -> number|nil",
+   "semantics": "Reverse lookup from a raw object ADDRESS to a player memory id by scanning all 16 slots. Player bipeds only, not bullets or dropped items.",
+   "returns_on_error": "Returns nil when no player owns that address. Does not raise -- the argument is a plain unsigned long, so the pop layer validates nothing.",
+   "uses": 0
+  },
+  {
+   "name": "objectidtoplayer",
+   "category": "halo-objects",
+   "signature": "objectidtoplayer([object_id: number]) -> number|nil",
+   "semantics": "Reverse lookup from an object ID to a player memory id, scanning 16 slots. This is the Phasor 2 replacement for Phasor 1's objecttoplayer at every corpus call site.",
+   "returns_on_error": "Returns nil for an unowned or invalid id; the optional pop means a nil argument is tolerated rather than raising.",
+   "uses": 5
+  },
+  {
+   "name": "createobject",
+   "category": "halo-objects",
+   "signature": "createobject(tag_id: number, parent_object_id: number, respawn_time: number|nil, do_respawn: boolean, x: number, y: number, z: number) -> number | <no values>",
+   "semantics": "Spawns an object. ALL SEVEN ARGUMENTS ARE REQUIRED. respawn_time is a boost::optional in the C++ but it is not the trailing parameter, and getArguments only counts trailing optionals, so it does not reduce the arity -- it only means you may pass nil in that slot. parent_object_id 0 means no parent. do_respawn chooses respawn versus destroy, and is ignored for weapons and equipment, which are always destroyed. Phasor 2 takes a tag id here; the Phasor 1 form took (tag_type, tag_name) and had 8 arguments, which is why the corpus shows 9 seven-argument and 8 eight-argument call sites.",
+   "returns_on_error": "On engine failure it returns ZERO values, not nil -- 'local id = createobject(...)' still reads as nil, but 'f(createobject(...))' passes no argument at all. A tag id that does not resolve -> luaL_argerror 'invalid tag id' from the pop layer.",
+   "uses": 17
+  },
+  {
+   "name": "destroyobject",
+   "category": "halo-objects",
+   "signature": "destroyobject(object_id: number) -> nothing",
+   "semantics": "Destroys the object immediately. The id is popped as a raw ident, so validity is checked inside the body.",
+   "returns_on_error": "An unknown id -> luaL_argerror on arg 1, 'invalid object id.' (note the trailing period, unlike the pop layer's message).",
+   "uses": 10
+  },
+  {
+   "name": "assignweapon",
+   "category": "halo-objects",
+   "signature": "assignweapon(player: number, weapon_object_id: number) -> boolean",
+   "semantics": "Gives and equips an existing weapon object. Pair it with createobject -- it does not create the weapon for you.",
+   "returns_on_error": "Returns false when the engine refuses (for example the player's hands are full). Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 11
+  },
+  {
+   "name": "entervehicle",
+   "category": "halo-objects",
+   "signature": "entervehicle(player: number, vehicle_object_id: number, seat: number) -> nothing",
+   "semantics": "Forces a player into a seat. 0 driver, 1 passenger, 2 gunner.",
+   "returns_on_error": "A bad object or a non-vehicle -> luaL_argerror on arg 2, 'invalid vehicle id %08x (either bad object or not a vehicle)'. Success is not reported.",
+   "uses": 4
+  },
+  {
+   "name": "isinvehicle",
+   "category": "halo-objects",
+   "signature": "isinvehicle(player: number) -> boolean",
+   "semantics": "Whether the player is currently seated in a vehicle.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 1
+  },
+  {
+   "name": "exitvehicle",
+   "category": "halo-objects",
+   "signature": "exitvehicle(player: number) -> nothing",
+   "semantics": "Ejects the player from their current vehicle. Silent no-op if not seated.",
+   "returns_on_error": "Invalid player -> luaL_argerror 'invalid player id'.",
+   "uses": 2
+  },
+  {
+   "name": "movobjectcoords",
+   "category": "halo-objects",
+   "signature": "movobjectcoords(object_id: number, x: number, y: number, z: number) -> nothing",
+   "semantics": "Teleports an object. Two side effects worth knowing: if the object is in a vehicle the VEHICLE is moved instead, and the object's stationary flag is cleared so gravity resumes. To keep it stationary, follow with writebit(m_obj + 0x10, 5, 1).",
+   "returns_on_error": "Invalid object id -> luaL_argerror 'invalid object id' from the pop layer.",
+   "uses": 9
+  },
+  {
+   "name": "moveobjectcoords",
+   "category": "halo-objects",
+   "signature": "moveobjectcoords(object_id: number, x: number, y: number, z: number) -> nothing",
+   "semantics": "Alias for movobjectcoords. Registered as a second name bound to the same l_movobjectcoords, which is why 84 registered names map to 83 distinct implementations. Same vehicle-retarget and stationary-flag side effects.",
+   "returns_on_error": "Invalid object id -> luaL_argerror 'invalid object id'.",
+   "uses": 0
+  },
+  {
+   "name": "gettagid",
+   "category": "halo-objects",
+   "signature": "gettagid(tag_type: string, tag_name: string) -> number|nil",
+   "semantics": "Looks up a map tag id from its 4-character type and its path, e.g. gettagid('weap', 'weapons\\\\pistol\\\\pistol'). Slow -- the documented pattern is to resolve every tag once in OnNewGame and cache the ids. One of only two object-family functions that returns nil rather than raising.",
+   "returns_on_error": "Returns nil when the tag is not in the current map. Does not raise for an unknown tag; only a non-string argument raises.",
+   "uses": 67
+  },
+  {
+   "name": "gettaginfo",
+   "category": "halo-objects",
+   "signature": "gettaginfo(tag_id: number) -> string, string",
+   "semantics": "Inverse of gettagid. Returns tag_name first, then tag_type -- the opposite order to gettagid's parameters, which is an easy mistake to make.",
+   "returns_on_error": "An unknown tag id -> luaL_argerror 'invalid tag id' from the pop layer, before the body runs.",
+   "uses": 1
+  },
+  {
+   "name": "gettagaddress",
+   "category": "halo-objects",
+   "signature": "gettagaddress([tag_id: number]) -> number|nil",
+   "semantics": "Address of the tag entry, which is where tag data offsets are chased from. This is Phasor 1's lookuptag functionality, split out so id lookup and address lookup are separate steps.",
+   "returns_on_error": "Returns nil for an unknown or absent tag id; the optional pop tolerates nil instead of raising.",
+   "uses": 1
+  },
+  {
+   "name": "halointersect",
+   "category": "halo-objects",
+   "signature": "halointersect(dist: number, x: number, y: number, z: number, vx: number, vy: number, vz: number, [ignore_object_id: number]) -> boolean, number, number, number, number|nil",
+   "semantics": "Ray cast. The direction vector is multiplied by dist internally, so pass a unit-ish direction and a scalar range. Returns hit, hit_x, hit_y, hit_z, hit_object_id. When firing from a player's view you must pass their object id as ignore_object_id or the ray starts inside their own head and immediately hits them.",
+   "returns_on_error": "hit is false and the coordinates are 0,0,0 when nothing is struck; the fifth value is nil when the ray hit level geometry rather than an object.",
+   "uses": 0
+  },
+  {
+   "name": "applydmg",
+   "category": "damage",
+   "signature": "applydmg(receiver_object_id: number, multiplier: number, [causer_object_id: number], [flags: number]) -> boolean",
+   "semantics": "Applies generic damage. flags is a raw bitfield VALUE here, unlike odl_flags which takes a bit index: build it as 2^0 + 2^2 + 2^5 for vehicle-hits, instant-kill and ignore-shields. causer defaults to no object, flags to 0.",
+   "returns_on_error": "Returns false when the engine refuses. Argument type errors raise in the pop layer.",
+   "uses": 0
+  },
+  {
+   "name": "applydmgtag",
+   "category": "damage",
+   "signature": "applydmgtag(receiver_object_id: number, dmg_tag_id: number, [multiplier: number], [causer_object_id: number], [flags: number]) -> nothing",
+   "semantics": "Applies a specific 'jpt!' damage tag, which carries its own damage model. multiplier defaults to 1.0, flags to 0, causer to no object. Hit location cannot be set and defaults to a body shot.",
+   "returns_on_error": "A tag that is not TAG_JPT -> luaL_argerror on arg 2, 'tag %08X is not a damage tag.' Returns nothing on success, so unlike applydmg you cannot tell whether the engine actually applied it.",
+   "uses": 0
+  },
+  {
+   "name": "odl_causer",
+   "category": "damage",
+   "signature": "odl_causer(object_id: number) -> nothing",
+   "semantics": "Reattributes the damage to a different causer, and re-derives causer_player from it. 0xFFFFFFFF means no causing object. Only meaningful inside OnDamageLookup. Phasor arbitrates with a first-claimant rule per damage event: a StateTracker records which lua_State first set each of the five fields, and later writes from a different script are dropped SILENTLY.",
+   "returns_on_error": "Never raises for being out of context. Outside OnDamageLookup the internal opts pointer is null, canSet returns false, and the write is simply ignored.",
+   "uses": 0
+  },
+  {
+   "name": "odl_receiver",
+   "category": "damage",
+   "signature": "odl_receiver(object_id: number) -> nothing",
+   "semantics": "Redirects the damage to a different object. Same first-claimant arbitration per damage event: whichever lua_State set receiver first owns it, and later writers are dropped silently.",
+   "returns_on_error": "Never raises for being out of context; the write is ignored when opts is null or another script already claimed the field.",
+   "uses": 0
+  },
+  {
+   "name": "odl_tag",
+   "category": "damage",
+   "signature": "odl_tag(tag_id: number) -> nothing",
+   "semantics": "Swaps the damage tag, changing the whole damage model. Same first-claimant arbitration.",
+   "returns_on_error": "A tag id that does not resolve -> luaL_argerror 'invalid tag id'. Note the pop layer only checks that the tag exists, not that it is a 'jpt!' damage tag, unlike applydmgtag which does check. Out-of-context calls are silently ignored.",
+   "uses": 0
+  },
+  {
+   "name": "odl_flags",
+   "category": "damage",
+   "signature": "odl_flags(bit_offset: number, [new_value: boolean]) -> boolean | nothing",
+   "semantics": "Read/write one bit of the damage flags. With one argument it READS and returns a boolean; with two it writes and returns nothing. Known bits: 0 hits on the player's vehicle do no damage, 2 instant kill, 5 ignore shields. Bit 7 (flag 0x80, suicide) is silently ignored because setting it destabilises the engine. Writes use the same first-claimant arbitration as the other odl_ functions.",
+   "returns_on_error": "The READ path dereferences the opts pointer with no null check, so odl_flags(n) called outside OnDamageLookup is a null-pointer read that takes the game down. Every write path is guarded; only the read path is not. This is a genuine Phasor bug and the one place its arbitration model is unsafe.",
+   "uses": 0
+  },
+  {
+   "name": "odl_multiplier",
+   "category": "damage",
+   "signature": "odl_multiplier(multiplier: number) -> nothing",
+   "semantics": "Scales the damage. To block damage entirely, return false from OnDamageLookup rather than passing 0. Same first-claimant arbitration per damage event.",
+   "returns_on_error": "Never raises for being out of context; the write is ignored when opts is null or another script already claimed the field.",
+   "uses": 5
+  },
+  {
+   "name": "registertimer",
+   "category": "timers",
+   "signature": "registertimer(delay_ms: number, callback_name: string, [userdata: any]) -> number",
+   "semantics": "Schedules callback_name (a STRING naming a global function, not a function value) to run once after delay_ms. Exactly one userdata value, but it may be a table, and it is held as a Lua registry ref so it survives. The callback receives (id, call_count, userdata) where call_count starts at 1, and returning true renews the timer. Timers are per-script: the id is also written into the script's registry under 'phasor_timer_<id>'. A timer whose script has been unloaded or made inactive silently stops firing. Arity is handled by pushing a nil when lua_gettop==2, not by the trailing-optional count.",
+   "returns_on_error": "Returns the new timer id; there is no failure return. A callback_name that does not resolve to a global function fails at fire time inside the pcall, not at registration, so a typo is invisible until the timer expires.",
+   "uses": 49
+  },
+  {
+   "name": "removetimer",
+   "category": "timers",
+   "signature": "removetimer([id: number]) -> nothing",
+   "semantics": "Cancels a timer. Deliberately forgiving: a nil id, an unknown id, or an id belonging to a different script are all ignored without error, because the id is checked against this script's registry key first.",
+   "returns_on_error": "Calling it on the timer that is currently executing -> luaL_error 'attempt to remove timer within its callback'. The documented way to stop a running timer is to return false from its callback instead.",
+   "uses": 13
+  },
+  {
+   "name": "http",
+   "category": "http",
+   "signature": "http(url: string, callback_name: string, [userdata: any], [values: table<string, string|number>], [mode: number], [headers: table<string, string>]) -> nothing",
+   "semantics": "Asynchronous HTTP. THE PARAMETER ORDER IS values THEN mode -- http.h documents mode before values and is wrong; the .cpp tuple is (base_url, callback, userdata, requestData, mode, headers). mode is HTTP_GET (0) or HTTP_POST (1) and defaults to GET. values is a string->string/number map encoded as a query string, appended to the URL for GET and sent as the body for POST. headers is a string->string map. The callback is named by string and is invoked later as f(result, headers, body, userdata), where headers is a map of header name to an ARRAY of values. An outstanding request keeps the script object alive past OnScriptUnload, during which the script receives no events and can only call the 8 kAlways functions.",
+   "returns_on_error": "https:// -> luaL_error 'cannot perform request : https is not supported'. An unparseable URL -> luaL_argerror on arg 1, 'badly formatted url'. Transport failures reach the callback rather than raising: boost system errors arrive as result = 1000 + error code with headers nil and the error text as body; anything else arrives as result = -1. Responses are capped at 1MB, and exceeding it fails with -1 and the first 1MB as body.",
+   "uses": 0
+  },
+  {
+   "name": "httpraw",
+   "category": "http",
+   "signature": "httpraw(url: string, callback_name: string, [userdata: any], [post_body: string], [headers: table<string, string>]) -> nothing",
+   "semantics": "Always POSTs, with post_body sent verbatim instead of a key/value map, so you control the encoding. Same callback signature, same nil-padding of the userdata slot at gettop==2, and the same script-lifetime extension as http.",
+   "returns_on_error": "Same as http: https rejected with luaL_error, a bad URL is an argerror on arg 1, and transport failures are delivered to the callback as result 1000+code or -1 rather than raised.",
+   "uses": 0
+  },
+  {
+   "name": "objecttoplayer",
+   "category": "legacy-removed",
+   "signature": "objecttoplayer(object_addr_or_id: number) -> number|nil",
+   "semantics": "Phasor 1 only. Split in Phasor 2 into objectaddrtoplayer (takes an address) and objectidtoplayer (takes an id). Every corpus call site passes an id from OnDamageLookup or OnDamageApplication, so the Phasor 2 replacement is objectidtoplayer. Attested from call sites only: always 1 argument, in HFVkZVRJ, HR2f9wjY and afj3tCST, all of which declare GetRequiredVersion 10057/10058.",
+   "returns_on_error": "Returned nil for an unowned object. Calling it under Phasor 2 is an 'attempt to call a nil value' error.",
+   "uses": 5
+  },
+  {
+   "name": "lookuptag",
+   "category": "legacy-removed",
+   "signature": "lookuptag(tag_type: string, tag_name: string) -> number",
+   "semantics": "Phasor 1 only, explicitly deprecated in ScriptingChanges.h. Returned a tag ADDRESS directly from type plus name. The Phasor 2 replacement is gettagaddress(gettagid(type, name)); use gettagid alone if you only want an id. Attested from call sites only: always 2 string arguments.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 4
+  },
+  {
+   "name": "gettoken",
+   "category": "legacy-removed",
+   "signature": "gettoken(str: string, delims: string, index: number) -> string",
+   "semantics": "Phasor 1 only. Zero-based indexed access to one token. Removed in Phasor 2 in favour of tokenizestring, which returns the whole 1-based array at once. Attested from call sites only: always 3 arguments, and every call site is written as gettoken(s, ' ', i - 1), which confirms the index is 0-based against a 1-based Lua loop.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 3
+  },
+  {
+   "name": "gettokencount",
+   "category": "legacy-removed",
+   "signature": "gettokencount(str: string, delims: string) -> number",
+   "semantics": "Phasor 1 only. Token count for the same split as gettoken. Removed in favour of #tokenizestring(str, delims). Attested from call sites only: always 2 arguments.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 3
+  },
+  {
+   "name": "getcmdtoken",
+   "category": "legacy-removed",
+   "signature": "getcmdtoken(cmd_str: string, index: number) -> string",
+   "semantics": "Phasor 1 only. Zero-based indexed access to one quote-aware command token. Removed in favour of tokenizecmdstring. Attested from call sites only: always 2 arguments, with index 0 used for the command name itself.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 3
+  },
+  {
+   "name": "getcmdtokencount",
+   "category": "legacy-removed",
+   "signature": "getcmdtokencount(cmd_str: string) -> number",
+   "semantics": "Phasor 1 only. Count of quote-aware command tokens. Removed in favour of #tokenizecmdstring(str). Attested from call sites only: always 1 argument.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 2
+  },
+  {
+   "name": "raiseerror",
+   "category": "legacy-removed",
+   "signature": "raiseerror(message: string) -> does not return",
+   "semantics": "Registered in the Phasor 1 table as {l_raiseerror, 'raiseerror', 1, {TYPE_STRING}}, recovered from git show 9a816b2^:Phasor/Old/PhasorAPI/PhasorAPI_old.cpp. Raises a Lua error from script code with script attribution. Its Phasor 2 registration exists but is COMMENTED OUT under the heading 'Script management functions', so it is absent at runtime even though the corpus still calls it -- including from BEHfXamw.txt, which declares GetRequiredVersion() == 200. Scripts use it in the 'x = tonumber(x) or raiseerror(...)' idiom, which needs a function whose call is an expression; plain error() serves the same purpose.",
+   "returns_on_error": "Under Phasor 2 this is an 'attempt to call a nil value' error, which is itself an error, so the idiom accidentally still aborts -- with the wrong message and the wrong stack position.",
+   "uses": 5
+  },
+  {
+   "name": "alias_search",
+   "category": "legacy-removed",
+   "signature": "alias_search(name_or_hash: string, mode: string) -> table",
+   "semantics": "Phasor 1 alias-database query over Phasor's record of names seen per hash. Registered in the Phasor 1 table with 2 string arguments. Its Phasor 2 registration is commented out under 'Alias related functions: see alias_script.h'. No corpus call sites, so no observed arity to cross-check against.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 0
+  },
+  {
+   "name": "alias_hash",
+   "category": "legacy-removed",
+   "signature": "alias_hash(name_or_hash: string, mode: string) -> table",
+   "semantics": "Phasor 1 companion to alias_search, looking up hashes rather than names. Registered with 2 string arguments. Also commented out in Phasor 2. No corpus call sites.",
+   "returns_on_error": "'attempt to call a nil value' under Phasor 2.",
+   "uses": 0
+  }
+ ],
+ "notes": "SOURCES. Registration table (authoritative for what exists): Phasor/Scripts/PhasorAPI/phasorapi.cpp, 84 live entries (87 brace-initialisers minus 3 commented out: alias_search, alias_hash, raiseerror). 84 names bind 83 distinct C functions, because movobjectcoords and moveobjectcoords both point at l_movobjectcoords. Semantics were taken from the .cpp files and the generic binding layer (Phasor/Scripts/lua-bindings.hpp, phasor-lua.hpp), NOT from the doxygen headers, which have drifted. Call-site counts come from the 13 scripts in /tmp/phasor_refs, tokenised with a Lua-aware stripper that removes --line and --[[block]] comments, collapses string literals to a single token so an all-string argument list is not miscounted as zero-arity, and skips method calls (a preceding . or :) and \"function NAME(\" definition headers. 2606 API call sites total.\n\nTHE VERSION SPLIT. The corpus is not one API. GetRequiredVersion() returns 200 (Phasor 2) in BEHfXamw, CkCgQxqx, uShm5EYm, z4eqrjVN, 0fNpR8Wv; and 10057/10058 (Phasor 1.00.57/58) in HFVkZVRJ, afj3tCST, HR2f9wjY, 3vNMrGpq, EHTFmf8Q, yrxDpGJD, z54AUewa. kQSYgwKd declares none. That is why the corpus calls 9 names that no longer exist, listed here under category legacy-removed. Six of them (objecttoplayer, lookuptag, gettoken, gettokencount, getcmdtoken, getcmdtokencount) predate the repo's history entirely and are marked \"attested from call sites only\" -- the signature is the observed arity plus the ScriptingChanges.h migration note, not decompiled code. Three (raiseerror, alias_search, alias_hash) DO have real Phasor 1 registrations, recovered from `git show 9a816b2^:Phasor/Old/PhasorAPI/PhasorAPI_old.cpp`, the last commit before the rewrite deleted the old tree. That table also proves the createobject change: Phasor 1 took (tag_type, tag_name, ...) for 8 arguments, Phasor 2 takes a tag id for 7, and the corpus shows 9 seven-argument and 8 eight-argument call sites.\n\nONE ARGUMENT CONTRACT FOR THE WHOLE SURFACE. Every function funnels through lua::callback::getArguments, so optionality and arity errors are uniform and you can implement them once rather than per function:\n  * Optionality is decided by counting boost::optional<> parameters FROM THE END. The count stops at the first non-optional. nargs < required -> luaL_error \"'<fn>' expects at least N argument(s) (got M)\". nargs > required+optional -> \"'<fn>' expects at most N argument(s) (got M)\". Missing trailing optionals are padded with nil before popping.\n  * A non-trailing optional does NOT create an optional parameter. createobject's respawn_time is boost::optional<int> but sits at position 3 of 7, so all 7 arguments are still required; the optional only permits nil in that slot. Any generic marshaller that treats \"optional in C++\" as \"omittable in Lua\" will get createobject wrong.\n  * Two families bypass the count and dispatch on lua_gettop directly, because their optional parameter is in the MIDDLE: the memory family (readbit==3, writebit==4, write<T>==3, writestring==3 select the legacy address_offset form) and registertimer/http/httpraw (gettop==2 pushes a nil so the userdata slot always exists). The numeric readers do not need this because their offset is genuinely trailing.\n  * Coercion is loose. Anything arithmetic accepts a number, a boolean (true->1, false->0), or a fully numeric string; a string with trailing junk raises. Booleans are popped as (x == 1), so writebit(addr, bit, 2) silently CLEARS the bit instead of erroring.\n  * Type mismatch -> luaL_argerror(n, \"expected <number|string|boolean>, got <luatype>\").\n  * Arity messages name the C++ symbol, not the Lua name. getArguments is handed __FUNCTION__ from inside l_readbyte, l_getticks and so on, and the templated helpers (readNumber, writeNumber, readstring, writestring) take it as a parameter so the prefix survives. Every arity error therefore reads \"'l_readbyte' expects at least 1 argument(s) (got 0)\" with the l_ prefix intact. Copy that only if you want bug-for-bug parity.\n  * Domain types raise inside the pop layer, before the function body runs: invalid player -> \"invalid player id\", invalid object -> \"invalid object id\", invalid tag -> \"invalid tag id\". The boost::optional<> variants of those same types yield nil instead of raising, which is exactly why getplayer, getobject, getplayerobject, getplayerobjectid, gettagaddress and objectidtoplayer are the validity probes and everything else is strict.\n  * Message parameters are a distinct pop type (ProcessedString), not a plain string. Popping one splits it on '\\n' into independent messages AND substitutes '{id}' with that player's name for any 1-2 digit id. say/privatesay/hprintf/sendconsoletext/respond/log_msg all get this for free.\n\nACCESS MODE. Each table entry carries kAlways or kWhileLoaded. When a script goes inactive (PhasorScript::inactive, reached after OnScriptUnload while the object is still alive because HTTP requests are outstanding), every kWhileLoaded name is rebound to l_func_inactive, which raises \"cannot use api function : unavailable after OnScriptUnload\". Exactly 8 functions are kAlways: hprintf, log_msg, tokenizestring, tokenizecmdstring, getticks, getrandomnumber, getprofilepath, getservername. Note http.h claims respond survives unload; the table says kWhileLoaded, so the doc is wrong.\n\nHOST-PROVIDED GLOBALS, NOT FUNCTIONS. Phasor sets exactly two globals per script, in http_requests::setupScript: HTTP_GET = 0 and HTTP_POST = 1. http.h also documents HTTP_PUT and HTTP_HEAD -- they are never defined and validateMode only accepts 0..1, so those two are vapour.\n\nEXCLUDED BY DIRECTION. The 32 On* handlers plus GetRequiredVersion are script->host, the opposite direction from this inventory, and are already covered by data/events.toml. For the record the corpus defines: OnScriptLoad, OnScriptUnload, OnNewGame, OnGameEnd, OnServerChat, OnServerCommand, OnServerCommandAttempt, OnPlayerJoin, OnPlayerLeave, OnPlayerKill, OnPlayerSpawn, OnPlayerSpawnEnd, OnPlayerAction, OnClientUpdate, OnTeamChange, OnTeamDecision, OnFFATeamChange, OnKillMultiplier, OnObjectCreation, OnObjectCreationAttempt, OnObjectInteraction, OnDamageLookup, OnDamageApplication, OnWeaponAssignment, OnWeaponReload, OnWeaponFire, OnVehicleEntry, OnVehicleEject, OnNameRequest, OnBanCheck, OnCamoAssignment, OnGrenadeSwap.\n\nHEADERS THAT LIE. Worth knowing before anyone ports a doc comment:\n  * readbit returns a Lua BOOLEAN (lua_pushboolean), not 1/0 as memory.h says.\n  * Strings cap at 160 elements (kMaxStringElements), not the 80 memory.h claims.\n  * memory.h's file header says all read/write gained the no-offset overload; readstring and readwidestring never had an offset form at all -- their second parameter is length.\n  * misc.h's example calls gettick(); the registered name is getticks.\n  * http's real parameter order is (url, callback, userdata, values, mode, headers). http.h documents mode before values.\n  * hprintf's optional second player parameter is undocumented but live, and is used twice in the corpus (EHTFmf8Q). It is the surviving Phasor 1 hprintf(msg, player) overload.\n  * getrandomnumber is half-open [min, max) -- confirmed by both the code (uniform_int_distribution(min, max-1)) and HEAD's commit message \"Revert regression in l_getrandomnumber ([a,b) -> [a,b])\". The single exception is min == max, which returns max.\n\nTWO BEHAVIOURS TO COPY DELIBERATELY, ONE NOT TO. (a) getobjectcoords and movobjectcoords silently retarget the VEHICLE when the object is seated -- undocumented, and the reason naive teleport scripts move the warthog. (b) odl_* uses a first-claimant arbitration identical in spirit to src/events/contract.hpp: a StateTracker remembers which lua_State first set each of the five damage fields for that event, and later writes from other scripts are dropped SILENTLY, with no error and no way for the loser to detect it. (c) The bug not to copy: odl_flags(bit) with one argument takes the READ path, which dereferences the opts pointer with no null check. Called outside OnDamageLookup that is a null-pointer read that takes the game down. Every write path is guarded; only the read path is not.\n\nCOUNTING CAVEAT. \"uses\" is call sites of the NAME, which is the honest raw number, but uShm5EYm.txt (8589 lines, one script) defines ~21 local wrappers that shadow API names, and HFVkZVRJ, CkCgQxqx, HR2f9wjY and z4eqrjVN shadow a few more. Excluding files that shadow a name, the direct-call counts drop for: getname 183->40, getplayer 117->57, getobject 96->65, privatesay 66->38, gethash 46->23, resolveplayer 47->27, getip 41->5, getteam 39->17, getplayerobject 32->0, writeshort 28->4, getobjectcoords 20->7, tokenizestring 10->0, tokenizecmdstring 4->0, svcmdplayer 3->0. One wrapper worth flagging: uShm5EYm's local privatesay is declared privatesay(message, playerId), the REVERSE of the API's privatesay(player, str).\n\nNOT API -- SCRIPT-LOCAL HELPERS. Confirmed defined inside the corpus and deliberately excluded: memoize, round, convertbase, validate_ipv4, timetoword, wordtotime, netMatch, ip2long, endian, todec, tohex, tobinary, convertSign, rshift, getLowerWord16, readident, readColorARGB, readcolorrgb, gettagdata, getobjecttag, getBodyPart, getplayervehicle, getplayervehicleid, getplayerweapon, getplayerweaponid, getplayermachinenum, objIsProjectile, sendresponse, cmdreply, gettag, Say, privateSay, sayWizard, halo_svcmd, halo_svcmdplayer, WriteLog, intable, ChooseRandomPlayer, SelectRandomPlayer, makezombie, makehuman, LoadTags, GetGameAddresses, ReturnScriptBooleanCheck, object_in_sphere.\nEvery callee in the corpus is now accounted for: subtracting the 84 registered names, the 9 legacy names, Lua stdlib, Lua keywords that precede a '(', and every name defined anywhere in the corpus by any of `function f(`, `f = function(`, `local f = function(` or `[\"f\"] = function`, the residue is 8 names and all 8 resolve: cmdreply, player_table, ip_table and TM are script-local tables carrying an __call metamethod; writefunc and f are local parameters holding functions; getsuckyrand is an alias; and movobjcoords is a TYPO. That last one is worth its own line. HFVkZVRJ.txt:1608 calls `movobjcoords(m_objectId, x, y, z - 20)` -- one letter short of movobjectcoords, and no such global exists in any Phasor version. Phasor validates nothing at load time, so the typo sits dormant until that branch runs and then throws \"attempt to call a nil value\" from inside a game callback. A host that knows its own API surface can reject that at script load.\nSpecial case: getsuckyrand LOOKS like an API function but is `getsuckyrand = math.random` -- both BEHfXamw and uShm5EYm alias Lua's RNG under that name and then replace math.random with an inclusive-range wrapper, because they trust neither Phasor's getrandomnumber nor Lua's math.random.\n\n============================================================================\nHOW A SCRIPT READS STRUCTURED GAME STATE -- THE IDIOM, VERBATIM\n============================================================================\nThere is no struct support. A \"typed view\" is a flat run of assignments, one per field, each an independent read of base + literal offset. From /tmp/phasor_refs/z4eqrjVN.txt, OnClientUpdate at line 427 (that file is a 2300-line memory map, the largest in the corpus):\n\n    function OnClientUpdate(player, m_objectId)\n        local thisHash = gethash(player)\n        local team = getteam(player)\n        if thisHash ~= nil then\n            --stats struct (size = 0x30 = 48 bytes)\n            stats_base = stats_globals + player*0x30\n            stats_player_ingame = readbyte(stats_base + 0x0)   -- From Silentk (1 = Ingame, 0 if not)\n            --unkByte[3] 0x1-0x4 (???)\n            stats_player_id = readident(stats_base, 0x4)       --Confirmed. Full DWORD ID of player.\n            stats_player_kills = readword(stats_base + 0x8)    -- Confirmed.\n            --unkByte[6] 0xA-0x10 (???)\n            stats_player_assists = readword(stats_base + 0x10) -- From Silentk\n            ...\n            -- ctf globals (size = 0x34 = 52 bytes)\n            ctf_flag_coords_pointer = readdword(ctf_globals + team*4)   -- Confirmed. Pointer to the coords\n                ctf_flag_x_coord = readfloat(ctf_flag_coords_pointer)   -- Confirmed.\n                ctf_flag_y_coord = readfloat(ctf_flag_coords_pointer + 0x4)\n                ctf_flag_z_coord = readfloat(ctf_flag_coords_pointer + 0x8)\n            ctf_team_score = readdword(ctf_globals + team*4 + 0x10)     -- Confirmed.\n            ctf_team_missing_flag_bool = readbit(ctf_globals + 0x1C+team, 0)\n\nThe three supporting moves that complete the idiom:\n\n1. Base addresses are a per-build if/else block, not data. z4eqrjVN.txt line 200:\n       function GetGameAddresses(game)\n           if game == \"PC\" then\n               stats_globals = 0x639898\n               ctf_globals   = 0x639B98\n               network_struct = 0x745BA0\n               obj_header_pointer = 0x744C18\n               game_globals = \"???\"  -- (???) Why do I not have this for PC?\n           else\n               stats_header = 0x5BD740   -- the CE branch\n           ...\n   Two things there. game_globals is literally the STRING \"???\" on the PC branch, so any later arithmetic on it is a runtime type error rather than a load-time failure. And the second branch is a bare `else`, not `elseif game == \"CE\"`, so any unrecognised build silently gets CE's addresses.\n\n2. Handle decoding is hand-rolled arithmetic. z4eqrjVN.txt line 1887, getobject:\n       local obj_table_index = getLowerWord16(m_objectId)\n       local obj_table_flags = rshift(m_objectId, 4*4) - rshift(m_objectId, 6*4) * 0x100\n       local obj_table_type  = rshift(m_objectId, 6*4)\n       local obj_table_address = obj_table_base + (obj_table_index * obj_table_size) + 0x8\n       local obj_struct = readdword(obj_table_address + 0x0)  -- Confirmed with getobject().\n   That is Phasor's own getobject reimplemented in Lua so the script can see the intermediate fields. rshift itself is script-local, defined at line 1883.\n\n3. Field decoding leaks globals. z4eqrjVN.txt line 1793:\n       function readident(address, offset)\n           address = address + (offset or 0)\n           identity = readdword(address)                  -- DWORD ID.\n           ident_table_index = readword(address)          -- Confirmed.\n           ident_table_flags = readbyte(address + 0x2)    -- Tested. 0x44 by default, dunno what for.\n           ident_type = readbyte(address + 0x3)           -- Confirmed. [Weapon = 6, Vehicle = 8, ...]\n           return identity\n       end\n   The extra fields are returned by writing four GLOBALS. So is stats_base above -- no `local`.\n\nWHAT MAKES IT FRAGILE\n  1. Offsets are magic numbers in code, not data. Changing build, or supporting a second one, means editing Lua. That is precisely the failure HARD RULE 2 exists to prevent, and it is why KotorPhasor keeps offsets in data/addresses/<build>.json with expected_bytes and a sentinel.\n  2. A wrong offset returns plausible garbage, not an error. readfloat on the wrong field is a valid float. Silent corruption, and no schema to check it against.\n  3. No type distinction. A pointer field, a handle and an int are all readdword; the only thing separating them is which variable name the author typed. Nothing stops chasing an int as a pointer.\n  4. No base validity check. `readdword(ctf_globals + team*4)` yields a pointer that is dereferenced immediately with no null or range test. Phasor raises \"invalid read\" only when VirtualProtect fails on an unmapped page; a stale-but-mapped pointer reads fine and returns nonsense.\n  5. Confidence is a comment, not a contract. The corpus tags fields \"Confirmed\", \"Tested\", \"From Silentk\", \"Guess.\", \"Needs to be tested.\", \"Wrong offset?\", \"Incorrect?\", \"(???)\". The engine cannot see any of that, so a Guess field behaves exactly like a Confirmed one.\n  6. Aliased offsets are unresolvable at read time. stats_base+0x1E is flag_steals, hill_time or race_time depending on the gametype; the script reads all three into different variables from the same address and relies on the author picking the right one later.\n  7. Every access re-walks the chain, with no caching and no invalidation. getobject above does 14 reads to resolve one object, on every call, inside OnClientUpdate -- which fires per player per tick. uShm5EYm's answer to this is a hand-rolled `memoize` with 34 call sites, i.e. every serious script reinvents a cache the host should have provided.\n  8. Field extraction leaks globals (identity, ident_table_index, ident_table_flags, ident_type, stats_base, ctf_*), so two reads interleaved across coroutines or handlers silently clobber each other, and nothing is scoped to the read that produced it.\n\nThe generalisable lesson for src/api: the shape scripts actually want is a declared struct layout (name -> offset -> type -> per-build validity) living in data/, with the engine producing a typed, bounds-checked, cached view. Ship read<T>(addr[, offset]) for parity, but the memory map itself belongs beside data/routines/*.json and data/addresses/*.json, not inside a Lua file."
+}

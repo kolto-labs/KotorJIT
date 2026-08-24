@@ -1,0 +1,394 @@
+{
+ "mappings": [
+  {
+   "phasor_function": "readbit / readbyte / readchar / readword / readshort / readdword / readint / readfloat  (1071 call sites across the 13 reference scripts)",
+   "kotor_equivalent": "Raw typed reads at module_base + RVA, but fed by generated typed views instead of hand-counted offsets",
+   "mechanism": "src/image (PE32/ELF32 runtime parse) + src/platform module base. The 'improve on' is generating named views from the corpus ghidra_type table: e.g. CSWSObject.position +0x90, orientation +0x9C, animation +0xD4, current_hp +0xDC, hit_points +0xE0, area_id +0x8C, tag +0x18, plot +0xF8, effects +0x124",
+   "confidence": "high",
+   "evidence": "tmp/mapscratch/check.py walks every Ghidra field_<hex> name and compares to the walked offset. CSWSObject: 77/77 names match, size checksums to 0x228. CSWSCreature: 413/413, 0xac8. CSWParty 47/47, CSWSItem 32/32, CSWSDoor 35/35, CSWSPlaceable 29/29. Independent confirmation of position +0x90: decompiled ExecuteCommandGetPosition (0x0053cae0) reads local_10[0xc].vtable/.id/.object_type off a 12-byte CGameObject and pushes them as x/y/z; element 0xc x 12 = byte 0x90."
+  },
+  {
+   "phasor_function": "writebit / writebyte / writeword / writeshort / writedword / writeint / writefloat",
+   "kotor_equivalent": "Same typed views, write side",
+   "mechanism": "src/platform page protection (VirtualProtect / mprotect) + src/image. Writes must prefer the engine's own setter where one exists - see the setspeed row for why",
+   "confidence": "high",
+   "evidence": "Infrastructure listed as done in the project brief; offsets validated as above."
+  },
+  {
+   "phasor_function": "readstring / writestring",
+   "kotor_equivalent": "CExoString read/write",
+   "mechanism": "struct CExoString (size 0x8): c_string pointer +0x00, length +0x04. Safe read path is routine 168 GetTag or 253 GetName",
+   "confidence": "high",
+   "evidence": "ghidra_type CExoString size 8, both fields named, walk checksums exactly. CSWSObject.tag at +0x18 is a CExoString."
+  },
+  {
+   "phasor_function": "readwidestring / writewidestring",
+   "kotor_equivalent": "No widestring in the KOTOR object model; localised text is a TLK strref",
+   "mechanism": "routine 239 GetStringByStrRef(int nStrRef); CSWSObject.last_name +0x0C and CSWSCreatureStats.first_name +0x34 are CExoLocString-shaped 8-byte fields, not UTF-16",
+   "confidence": "medium",
+   "evidence": "13 readwidestring call sites in the Phasor corpus have no KOTOR counterpart; the engine stores single-byte CExoString plus a strref index. Mapping is a substitution, not an equivalence."
+  },
+  {
+   "phasor_function": "readident (Halo salt<<16|index object ident)",
+   "kotor_equivalent": "KOTOR object id, which also has structure - two allocation ranges, not a flat counter",
+   "mechanism": "struct CGameObject: vtable +0x00, id +0x04, object_type +0x08 (size 0xC). Allocation split proven in CGameObjectArray::AddInternalObject 0x004d80e0",
+   "confidence": "high",
+   "evidence": "AddInternalObject: if param_3==0 the id comes from next_object_id_0 (+0x04) and increments; otherwise from next_char_id_0 (+0x0C) and decrements. next_object_id_1 (+0x08) and next_char_id_1 (+0x10) are high-water marks kept by AddExternalObject. So normal objects count up and character objects count down toward each other. A readident equivalent must not assume flatness."
+  },
+  {
+   "phasor_function": "The base+offset typed-map idiom itself (z4eqrjVN.txt stats_base / ctf_globals / koth_globals blocks)",
+   "kotor_equivalent": "Generated typed views, one per engine struct, emitted from the RE corpus",
+   "mechanism": "corpus table ghidra_type (1565 types for binary_id=8) -> a generator alongside tools/gen_routine_table.py. Adding a struct becomes a data change, per project rule 2",
+   "confidence": "high",
+   "evidence": "The Phasor scripts hand-maintain comments like 'Confirmed' / 'Guess' next to each offset and disagree with each other. The corpus already carries the layouts with names and a size checksum. Hazard to encode: CSWSItem puts its CSWSObject base at +0x10, not +0x00, so current_hp is +0xDC for creature/door/placeable/trigger and +0xEC for items."
+  },
+  {
+   "phasor_function": "getobject(objid) -> object memory address",
+   "kotor_equivalent": "Object id -> typed object pointer",
+   "mechanism": "hook app.server_main_loop (CServerExoAppInternal::MainLoop, already required) supplies the `this` receiver; then CServerExoAppInternal::GetGameObject 0x004B1700, or the typed family GetCreatureByGameObjectID 0x004B1790, GetDoorByGameObjectID 0x004B1920, GetPlaceableByGameObjectID 0x004B18D0, GetTriggerByGameObjectID 0x004B1880, GetAreaByGameObjectID 0x004B17E0, GetStoreByGameObjectID 0x004B1AB0, GetWaypointByGameObjectID 0x004B19C0, GetEncounterByGameObjectID 0x004B1A10, GetAreaOfEffectByGameObjectID 0x004B1970, GetSoundObjectByGameObjectID 0x004B1A60. Add as kind=\"call\" sites in data/hooksites.toml",
+   "confidence": "high",
+   "evidence": "data/addresses/k1_steam_103.json resolves app.server_main_loop to 0x004BABB0, exactly the corpus address for CServerExoAppInternal::MainLoop in binary_id=8, so corpus addresses are directly usable for that build. The CServerExoApp-receiver variants (GetGameObject 0x4ae750, GetObjectArray 0x4aed70) are NOT usable alone - they need an AppManager global, and the corpus has no data-symbol table to resolve one from. KOTOR-typed lookup is strictly better than Phasor's untyped getobject."
+  },
+  {
+   "phasor_function": "getobjectcoords(objid) -> x, y, z  (21 call sites)",
+   "kotor_equivalent": "GetPosition",
+   "mechanism": "routine id 27 GetPosition(object oTarget) -> vector; read path CSWSObject.position +0x90 (three floats)",
+   "confidence": "high",
+   "evidence": "Both verified: id 27 present in k1.json with that exact signature, and ExecuteCommandGetPosition (0x0053cae0) reads +0x90/+0x94/+0x98 and pushes a vector."
+  },
+  {
+   "phasor_function": "movobjectcoords / movobjcoords(objid, x, y, z)  (9 + 2 call sites)",
+   "kotor_equivalent": "Teleport an arbitrary object",
+   "mechanism": "routine id 507 CutsceneMove(object oObject, vector vPosition, int nRun) - takes the object explicitly. Alternative: write CSWVirtualMachineCommands.caller_object_id +0x08 then call routine id 313 JumpToLocation with 215 Location + 142 Vector",
+   "confidence": "high",
+   "evidence": "id 507 verified in k1.json; ExecuteCommandCutsceneMove present in the decompiled nwvmachinecommands.cpp. Raw write to CSWSObject.position +0x90 is the crude alternative and skips room/area bookkeeping."
+  },
+  {
+   "phasor_function": "createobject(tagId, parentObjId, respawnTime, doRecycle, x, y, z) -> objid  (17 call sites)",
+   "kotor_equivalent": "CreateObject at a location",
+   "mechanism": "routine id 243 CreateObject(int nObjectType, string sTemplate, location lLocation, int bUseAppearAnimation) composed with id 215 Location(vector, float) and id 142 Vector(float,float,float). Item variants: id 31 CreateItemOnObject, id 766 CreateItemOnFloor",
+   "confidence": "high",
+   "evidence": "All four ids verified in k1.json; ExecuteCommandCreateObject and ExecuteCommandCreateItemOnObject present in decomp. Note the shape difference: Phasor needs a numeric tag id from gettag first, KOTOR takes the resref string directly, so the resolution step disappears."
+  },
+  {
+   "phasor_function": "destroyobject(objid)  (11 call sites)",
+   "kotor_equivalent": "DestroyObject",
+   "mechanism": "routine id 241 DestroyObject(object oDestroy, float fDelay, int bNoFade, float fDelayUntilFade)",
+   "confidence": "high",
+   "evidence": "id 241 verified in k1.json; ExecuteCommandDestroyObject present in decomp. KOTOR adds a delay and fade control Phasor has no equivalent for."
+  },
+  {
+   "phasor_function": "objecttoplayer(objAddr) / objectidtoplayer(objid)  (5 + 6 call sites)",
+   "kotor_equivalent": "Object -> party slot, or object -> is-this-the-PC",
+   "mechanism": "routine id 576 IsObjectPartyMember(object) plus a scan of id 577 GetPartyMemberByIndex(int) bounded by id 126 GetPartyMemberCount(); id 217 GetIsPC(object) for the PC test",
+   "confidence": "medium",
+   "evidence": "All three ids verified in k1.json, but there is no single reverse-lookup routine - this composes several, which my rubric caps at medium. The struct alternative is CSWParty.party_member_datas +0x24, stride 0x88, CSWPartyMemberData.client_object_id +0x00."
+  },
+  {
+   "phasor_function": "getobjecttag(objid)  (7 call sites)",
+   "kotor_equivalent": "GetTag",
+   "mechanism": "routine id 168 GetTag(object oObject) -> string; read path CSWSObject.tag +0x18 (CExoString)",
+   "confidence": "high",
+   "evidence": "id 168 verified; tag field offset validated by the field_<hex> walk on CSWSObject."
+  },
+  {
+   "phasor_function": "applydmg(objid, multiplier) / applydmgobject(receiver, causer, multiplier)",
+   "kotor_equivalent": "Build a damage effect attributed to a chosen source, then apply it",
+   "mechanism": "write CSWVirtualMachineCommands.has_caller_object +0x04 and caller_object_id +0x08 to pick the damage source, then routine id 79 EffectDamage(int nDamageAmount, int nDamageType, int nDamagePower) and routine id 220 ApplyEffectToObject(int nDurationType, effect, object oTarget, float fDuration). Read back with id 91 GetEffectCreator, id 346 GetLastDamager",
+   "confidence": "medium",
+   "evidence": "KOTOR side is verified in decompilation: ExecuteCommandEffectDamage ends with `id = this->caller_object_id; ... CGameEffect::SetCreator(eff, this->caller_object_id);` before StackPushEngineStructure(VirtualMachine, EFFECT, eff), so the causer really is stamped at construction. Capped at medium because the Phasor side is recall-only - applydmg and applydmgobject have ZERO call sites in the 13 reference scripts."
+  },
+  {
+   "phasor_function": "Object-table enumeration (Phasor scripts walk the object table by hand)",
+   "kotor_equivalent": "Engine-provided iterators",
+   "mechanism": "routine ids 93 GetFirstObjectInArea / 94 GetNextObjectInArea, 128 GetFirstObjectInShape / 129 GetNextObjectInShape (with bLineOfSight), 227 GetNearestObject, 229 GetNearestObjectByTag, 200 GetObjectByTag, 339/340 inventory iterators",
+   "confidence": "high",
+   "evidence": "All ids verified in k1.json. KOTOR gives filtered, shape-bounded iteration that Phasor scripts had to reimplement (see object_in_sphere helpers in the reference corpus)."
+  },
+  {
+   "phasor_function": "resolveplayer(playerIndex) -> memory id  (51 call sites)",
+   "kotor_equivalent": "Party slot index -> creature object id",
+   "mechanism": "routine id 577 GetPartyMemberByIndex(int nIndex) -> object; bound with id 126 GetPartyMemberCount()",
+   "confidence": "high",
+   "evidence": "Both ids verified in k1.json; ExecuteCommandGetPartyMemberByIndex present in decomp. This is one half of Phasor's index<->id indirection."
+  },
+  {
+   "phasor_function": "rresolveplayer(objid) -> playerIndex  (6 call sites)",
+   "kotor_equivalent": "Creature object id -> party slot index",
+   "mechanism": "no reverse routine exists. Either scan id 577 over id 126, or read CSWParty directly: party_count +0x00, party_member_datas +0x24 with stride 0x88 (CSWPartyMemberData), client_object_id +0x00 of each entry",
+   "confidence": "medium",
+   "evidence": "CSWParty walk validated (47/47 field names, size 0x2e0) and CSWPartyMemberData validated (26/26, size 0x88). Capped at medium because reaching the CSWParty instance still needs a receiver, and the routine path is a composed scan rather than one call."
+  },
+  {
+   "phasor_function": "getplayer(player) / getplayerobject(player) -> player struct address  (126 + 35 call sites)",
+   "kotor_equivalent": "Party slot -> CSWSCreature pointer",
+   "mechanism": "routine id 577 GetPartyMemberByIndex for the id, then CServerExoAppInternal::GetCreatureByGameObjectID 0x004B1790 with the receiver captured by the app.server_main_loop detour",
+   "confidence": "high",
+   "evidence": "Routine id verified; the lookup address is the corpus address for binary_id=8, which shares its image layout with k1_steam_103.json (MainLoop matches at 0x004BABB0). Returns a typed CSWSCreature*, unlike Phasor's untyped address."
+  },
+  {
+   "phasor_function": "getplayerobjectid(player)  (28 call sites)",
+   "kotor_equivalent": "The controlled character's object id",
+   "mechanism": "routine id 548 GetFirstPC() (with 549 GetNextPC), or id 577 GetPartyMemberByIndex(0) for the party leader",
+   "confidence": "high",
+   "evidence": "ids 548, 549, 577 verified in k1.json. KOTOR has one PC and up to three party slots, so the 16-player indirection collapses."
+  },
+  {
+   "phasor_function": "getname(player)  (214 call sites - the second most used builtin)",
+   "kotor_equivalent": "GetName",
+   "mechanism": "routine id 253 GetName(object oObject) -> string; read path CSWSCreatureStats.first_name +0x34 and last_name +0x3C (both CExoString-shaped), reached via CSWSCreature.creature_stats +0xA74",
+   "confidence": "high",
+   "evidence": "id 253 verified. creature_stats +0xA74 is validated by the CSWSCreature field walk (413/413). The +0x34/+0x3C offsets sit before CSWSCreatureStats' drift point (first mismatch is field_de) so they are trustworthy."
+  },
+  {
+   "phasor_function": "getteam(player)  (40 call sites)",
+   "kotor_equivalent": "Standard faction",
+   "mechanism": "routine id 713 GetStandardFaction(object oObject) -> int; also id 172 GetFactionEqual, 235 GetIsEnemy, 236 GetIsFriend, 237 GetIsNeutral. Read path CSWSCreatureStats.faction_id +0x78",
+   "confidence": "high",
+   "evidence": "id 713 verified and ExecuteCommandGetStandardFaction is present in the corpus at 0x00...(named). faction_id +0x78 is before the CSWSCreatureStats drift point and its neighbour field_7a checks out. CSWSCreature also has CSWSCreature::GetStandardFactionReputation/SetStandardFactionReputation in the corpus."
+  },
+  {
+   "phasor_function": "changeteam(player, team)  (13 call sites)",
+   "kotor_equivalent": "Change faction",
+   "mechanism": "routine id 412 ChangeToStandardFaction(object oCreatureToChange, int nStandardFaction), or id 173 ChangeFaction(object, object oMemberOfFactionToJoin); bulk form id 737 ChangeFactionByFaction",
+   "confidence": "high",
+   "evidence": "ids 412, 173, 737 verified in k1.json. KOTOR factions are richer than Halo's red/blue - reputation is a matrix, adjustable with id 209 AdjustReputation and readable with id 208 GetReputation."
+  },
+  {
+   "phasor_function": "getteamsize(team)  (11 call sites)",
+   "kotor_equivalent": "Count creatures in a faction, or party size",
+   "mechanism": "routine ids 380 GetFirstFactionMember / 381 GetNextFactionMember walked to exhaustion; id 126 GetPartyMemberCount() for the party-sized answer",
+   "confidence": "medium",
+   "evidence": "All three ids verified, but there is no direct count routine - this is a composed walk, which the rubric caps at medium."
+  },
+  {
+   "phasor_function": "kill(player)  (17 call sites)",
+   "kotor_equivalent": "Apply a death effect",
+   "mechanism": "routine id 133 EffectDeath(int nSpectacularDeath, int nDisplayFeedback) + routine id 220 ApplyEffectToObject. Optionally set caller_object_id +0x08 first so GetLastKiller (id 437) attributes correctly",
+   "confidence": "high",
+   "evidence": "ids 133, 220, 437 verified in k1.json. Deliberately NOT a write to CSWSObject.current_hp +0xDC: that bypasses the death script dispatch, the effects list at +0x124, and is_destroyable/is_raiseable/dead_selectable at +0xEC/+0xF0/+0xF4. The creator-stamping mechanism is the same one verified in ExecuteCommandEffectDamage."
+  },
+  {
+   "phasor_function": "setspeed(player, speed)  (6 call sites)",
+   "kotor_equivalent": "Movement rate factor",
+   "mechanism": "preferred: routine id 165 EffectMovementSpeedIncrease(int nNewSpeedPercent) / id 451 EffectMovementSpeedDecrease + id 220 ApplyEffectToObject (survives save/load). Direct: CSWSCreature::SetMovementRateFactor 0x004EC3B0 as a kind=\"call\" site. Read only: CSWSCreature.movement_rate_factor +0xA08; report with id 496 GetMovementRate",
+   "confidence": "high",
+   "evidence": "Offset +0xA08 validated (neighbours field_a04 and field_a0c both match their names). The setter's decompiled body clamps: `if (p < 0.125) => 0.125; if (1.5 < p) => 1.5; else p`. A raw write to +0xA08 skips that clamp and skips ComputeModifiedMovementRate 0x004F6D70, which is why the effect routines lead."
+  },
+  {
+   "phasor_function": "applycamo(player, duration)  (5 call sites)",
+   "kotor_equivalent": "Invisibility or concealment effect",
+   "mechanism": "routine id 457 EffectInvisibility(int nInvisibilityType) or id 458 EffectConcealment(int nPercentage) + id 220 ApplyEffectToObject with fDuration; related id 465 EffectTrueSeeing, id 466 EffectSeeInvisible",
+   "confidence": "high",
+   "evidence": "ids verified in k1.json. ApplyEffectToObject's nDurationType + fDuration parameters carry Phasor's duration argument natively."
+  },
+  {
+   "phasor_function": "assignweapon(player, weaponObjId)  (11 call sites)",
+   "kotor_equivalent": "Equip an item into a creature's weapon slot",
+   "mechanism": "write CSWVirtualMachineCommands.has_caller_object +0x04 / caller_object_id +0x08 to the target creature, then routine id 32 ActionEquipItem(object oItem, int nInventorySlot, int bInstant). Give first with id 271 GiveItem or id 31 CreateItemOnObject; read back with id 155 GetItemInSlot",
+   "confidence": "medium",
+   "evidence": "All routine ids verified. The caller_object_id retargeting is proven for ExecuteCommandClearAllActions specifically; generalising it to ActionEquipItem is inference, and the row composes several calls, so medium. This path exists because routine id 6 AssignCommand cannot be marshalled (its `action` parameter is a script closure)."
+  },
+  {
+   "phasor_function": "getplayerweapon(player)  (10 call sites)",
+   "kotor_equivalent": "Item in the equipped weapon slot",
+   "mechanism": "routine id 155 GetItemInSlot(int nInventorySlot, object oCreature) with INVENTORY_SLOT_RIGHTWEAPON; also id 328 GetLastWeaponUsed, id 511 GetWeaponRanged",
+   "confidence": "high",
+   "evidence": "ids verified in k1.json; ExecuteCommandGetItemInSlot present in decomp."
+  },
+  {
+   "phasor_function": "updateammo(weaponObjId)  (8 call sites)",
+   "kotor_equivalent": "Item charges and stack size",
+   "mechanism": "struct CSWSItem: charges +0x258, max_charges +0x25C, stack_size +0x28C, bit_flags +0x288. Routines id 138 GetItemStackSize, id 150 SetItemStackSize, id 475 GetNumStackedItems",
+   "confidence": "high",
+   "evidence": "CSWSItem walk validated 32/32 with size 0x298; routine ids verified. Reminder: CSWSItem's CSWSObject base sits at +0x10, so its current_hp is +0xEC not +0xDC."
+  },
+  {
+   "phasor_function": "setscore(player, n)  (4 call sites)",
+   "kotor_equivalent": "Experience points",
+   "mechanism": "routine id 394 SetXP(object oCreature, int nXpAmount), id 395 GetXP, id 393 GiveXPToCreature, id 714 GivePlotXP; read path CSWSCreatureStats.experience +0x68",
+   "confidence": "high",
+   "evidence": "All ids verified; +0x68 is before the CSWSCreatureStats drift point and its neighbour is_pc at +0x6C also checks out. XP is the closest single-player analogue of a score - there is no scoreboard."
+  },
+  {
+   "phasor_function": "Reading player health and shields (Phasor scripts do this via readfloat on the player object)",
+   "kotor_equivalent": "Hit points and Force points",
+   "mechanism": "routine ids 49 GetCurrentHitPoints, 50 GetMaxHitPoints, 758 SetMaxHitPoints, 55 GetCurrentForcePoints, 56 GetMaxForcePoints, 459 EffectForceShield. Read path CSWSObject.current_hp +0xDC, hit_points +0xE0",
+   "confidence": "high",
+   "evidence": "Routine ids verified; CSWSObject offsets validated by the 77/77 field-name walk plus the independent GetPosition confirmation of the same struct. Force points are the nearest thing to Halo's shield - a second depletable pool with its own regen."
+  },
+  {
+   "phasor_function": "gettag / gettagid / lookuptag(tagType, tagPath) -> numeric tag id  (110 + 69 + 4 call sites)",
+   "kotor_equivalent": "There is no numeric tag id - KOTOR templates are resref strings and the resolution step disappears",
+   "mechanism": "routine id 243 CreateObject takes `string sTemplate` directly; id 200 GetObjectByTag(string sTag, int nNth) finds instances; id 168 GetTag reads one back; id 697 AddAvailableNPCByTemplate takes a resref",
+   "confidence": "high",
+   "evidence": "Signatures in k1.json confirm the template parameters are `string`, not `int`. This is a simplification rather than a loss: three of the top ten Phasor builtins exist only to turn a path into an integer, and KOTOR needs none of them."
+  },
+  {
+   "phasor_function": "gettaginfo(mapId) -> tag type, tag name  (1 call site)",
+   "kotor_equivalent": "Object type and base item type",
+   "mechanism": "routine id 106 GetObjectType(object oTarget), id 397 GetBaseItemType(object oItem), id 524 GetAppearanceType(object oCreature); struct CGameObject.object_type +0x08",
+   "confidence": "high",
+   "evidence": "ids verified; object_type +0x08 confirmed by ExecuteCommandGetPosition's guard `AREA < local_10->object_type`."
+  },
+  {
+   "phasor_function": "say(message)  (75 call sites)",
+   "kotor_equivalent": "No broadcast channel exists in single player; nearest is on-screen or floating text",
+   "mechanism": "routine id 582 AurPostString(string, int nX, int nY, float fLife) for a screen-positioned line; id 526 FloatingTextStringOnCreature; id 671 BarkString(object, int strRef); id 221 SpeakString",
+   "confidence": "medium",
+   "evidence": "All ids verified in k1.json and ExecuteCommandAurPostString / ExecuteCommandFloatingText are present in the corpus. Medium because the semantics differ: Phasor's say reaches every connected player, these reach one screen. The recipient concept does not survive the port."
+  },
+  {
+   "phasor_function": "privatesay(player, message)  (70 call sites)",
+   "kotor_equivalent": "Message to the player character",
+   "mechanism": "routine id 374 SendMessageToPC(object oPlayer, string szMessage); id 366 DisplayFeedBackText(object oCreature, int nTextConstant) for engine-canned strings",
+   "confidence": "high",
+   "evidence": "Both ids verified; ExecuteCommandSendMessageToPC and ExecuteCommandDisplayFeedBackText present in decomp. With one player this is the closest true equivalent of any Phasor messaging call."
+  },
+  {
+   "phasor_function": "sendconsoletext(player, message)  (28 call sites)",
+   "kotor_equivalent": "Write to the in-game console / log",
+   "mechanism": "hook console.do_console (DoConsole, required, resolves to 0x00401F00 in k1_steam_103.json) for the console surface; routine id 560 WriteTimestampedLogEntry(string) for the log file",
+   "confidence": "high",
+   "evidence": "console.do_console is already a required detour in data/hooksites.toml and resolves in every committed address table; id 560 verified in k1.json."
+  },
+  {
+   "phasor_function": "respond(message) / the OnServerCommand reply channel",
+   "kotor_equivalent": "Return text from the console line the script just handled",
+   "mechanism": "hook console.do_console - the detour owns the whole input line and its response path",
+   "confidence": "medium",
+   "evidence": "Mechanism is solid (console.do_console is required and resolved), but `respond` has zero call sites in the 13 reference scripts - the scripts define their own sendresponse wrapper instead - so the Phasor side is recall-only."
+  },
+  {
+   "phasor_function": "hprintf(message)  (32 call sites)",
+   "kotor_equivalent": "Diagnostic output",
+   "mechanism": "hook console.do_console for the console echo, routine id 582 AurPostString for on-screen, src/platform logging for the file. Not a game-state call",
+   "confidence": "high",
+   "evidence": "id 582 verified; console.do_console already required. src/platform logging is listed as done in the project brief."
+  },
+  {
+   "phasor_function": "svcmd(commandLine)  (19 call sites)",
+   "kotor_equivalent": "Run an engine command or a game script by name",
+   "mechanism": "hook console.do_console - the detour can synthesise a console line, which is how the cheat console's own commands are driven; routine id 8 ExecuteScript(string sScript, object oTarget, int nScriptVar) for running a compiled NCS",
+   "confidence": "medium",
+   "evidence": "id 8 verified and console.do_console is required. Medium because Phasor's svcmd targets a dedicated server command set (sv_kick, sv_map_reset, sv_ban in the reference scripts) whose entries mostly have no single-player counterpart - only the shape of the mechanism ports, not the command vocabulary."
+  },
+  {
+   "phasor_function": "getcmdtoken(cmd, n) / getcmdtokencount(cmd)",
+   "kotor_equivalent": "Tokenising the console line",
+   "mechanism": "hook console.do_console supplies the raw line; splitting is Lua-side string work, no engine call needed",
+   "confidence": "high",
+   "evidence": "Both observed in the reference scripts. DoConsole's prototype in the corpus is `void __cdecl DoConsole(char input)` and the hooksites.toml purpose note already states the detour intercepts the whole input line including unrecognised commands."
+  },
+  {
+   "phasor_function": "registertimer(ms, callbackName) / removetimer(id)  (51 + 13 call sites)",
+   "kotor_equivalent": "Per-tick scheduler driven from the game loop",
+   "mechanism": "hook app.server_main_loop (CServerExoAppInternal::MainLoop, required, 0x004BABB0 in k1_steam_103.json). NOT routine id 7 DelayCommand",
+   "confidence": "high",
+   "evidence": "data/hooksites.toml already states app.server_main_loop's purpose as 'Per-tick scheduler: Lua timers and coroutine resume'. DelayCommand (id 7) takes an `action` parameter - a script closure - and is one of exactly three K1 routines that cannot be marshalled from Lua, alongside id 6 AssignCommand and id 294 ActionDoCommand. That is the 772 minus 3 equals 769 in the project brief."
+  },
+  {
+   "phasor_function": "getticks()",
+   "kotor_equivalent": "Tick counter, or the in-world clock (these are different things)",
+   "mechanism": "real ticks: a counter incremented by the app.server_main_loop detour. World clock: routine ids 16 GetTimeHour, 17 GetTimeMinute, 18 GetTimeSecond, 19 GetTimeMillisecond, settable with id 12 SetTime",
+   "confidence": "medium",
+   "evidence": "Routine ids verified; the hook is required and resolved. Capped at medium because getticks has zero call sites in the reference scripts, and because the two answers are not interchangeable - the world clock advances with game time and stops when paused (id 57 PauseGame)."
+  },
+  {
+   "phasor_function": "getrandomnumber(min, max)",
+   "kotor_equivalent": "Engine RNG",
+   "mechanism": "routine id 0 Random(int nMaxInteger) -> int; dice forms ids 95-103 (d2, d3, d4, d6, d8, d10, d12, d20, d100)",
+   "confidence": "high",
+   "evidence": "All ids verified in k1.json. Using the engine RNG rather than Lua's matters here because KOTOR's saves replay from engine RNG state."
+  },
+  {
+   "phasor_function": "raiseerror(message)",
+   "kotor_equivalent": "Script error that never reaches game code",
+   "mechanism": "luaL_error routed through the existing src/lua per-script error quarantine and lua_pcall boundary",
+   "confidence": "high",
+   "evidence": "src/lua error quarantine is listed as done and verified in the project brief; the hard rule that a Lua error must never reach game code already governs it. src/api/routines.hpp's own comment states errors are raised as Lua errors so the host's pcall turns them into a script error rather than a crash."
+  },
+  {
+   "phasor_function": "halointersect(dist, origin, direction, ignoreObj) -> hit, x, y, z, objid",
+   "kotor_equivalent": "Area line-of-sight raycast",
+   "mechanism": "CSWSArea::ClearLineOfSight 0x50C330, signature `int __thiscall (CSWSArea*, Vector* from, Vector* to, Vector* outHit, ulong* outObjId, ulong, ulong, int, int)`; also CSWSArea::IntersectingLineSegment 0x4BF2C0 and CSWSRoom::ClearLineOfSight. Receiver from CServerExoAppInternal::GetAreaByGameObjectID 0x004B17E0 plus routine id 24 GetArea. Routine-only approximation: id 128 GetFirstObjectInShape with bLineOfSight=TRUE",
+   "confidence": "medium",
+   "evidence": "The ClearLineOfSight signature is an exact structural match - two endpoints in, hit point and hit object id out. Capped at medium because halointersect has zero call sites in the reference scripts and because these would be new call sites whose parameter meanings (the two trailing ulongs and two ints) are not yet pinned."
+  },
+  {
+   "phasor_function": "getprofilepath()  (1 call site)",
+   "kotor_equivalent": "Game install / save directory",
+   "mechanism": "src/platform module base and process image path. No engine routine returns it; routine id 210 GetModuleFileName and id 561 GetModuleName return the module resref, not a filesystem path",
+   "confidence": "medium",
+   "evidence": "Both routine ids verified and neither answers the question. src/platform already resolves module base, so the path is available there. Medium because it is a platform capability rather than an engine mechanism."
+  },
+  {
+   "phasor_function": "getservername / getcurrentmap / getnextmap / setnextmap / changegametype",
+   "kotor_equivalent": "Module name and module transition; there is no server or gametype",
+   "mechanism": "routine id 561 GetModuleName(), id 210 GetModuleFileName(), id 242 GetModule(); transition with id 509 StartNewModule(string sModuleName, string sWayPoint, movies...). Hook module.load_start (CSWSModule::LoadModuleStart) marks the boundary",
+   "confidence": "medium",
+   "evidence": "Routine ids verified and module.load_start is already in data/hooksites.toml. Medium because none of these five Phasor functions appear in the reference scripts, and because server name and gametype have no counterpart at all - only the map half of the mapping is real."
+  },
+  {
+   "phasor_function": "OnScriptLoad(process_id, game_version, first_time) - the build-identification argument",
+   "kotor_equivalent": "Build identity handed to the script at load",
+   "mechanism": "src/image ciphertext detection and PE32/ELF32 runtime parse, plus data/app_signatures.toml; the resolved build name keys data/addresses/<build>.json",
+   "confidence": "high",
+   "evidence": "data/addresses currently carries five builds (k1_gog_103, k1_steam_103, k1_steam_103_unpacked, k2_gog_aspyr, k2_steam_linux), each with image_base, identity, sentinel and expected_bytes. This is a strictly stronger version of Phasor's single game_version integer."
+  },
+  {
+   "phasor_function": "Halo tag-address lookup (gettagaddress / readtagname in the reference scripts)",
+   "kotor_equivalent": "Resource and 2DA table lookup",
+   "mechanism": "C2DA::GetINTEntry 0x413660, GetFLOATEntry 0x413430, GetCExoStringEntry 0x413270, GetRowIndex 0x4138B0, GetColumnIndex 0x413100; struct C2DA size 0x54",
+   "confidence": "medium",
+   "evidence": "Signatures recovered, e.g. `int __thiscall GetINTEntry(C2DA* this, int row, CExoString* column, int* out)`, and the C2DA walk validates 11/11. Medium because obtaining a loaded C2DA instance still needs a receiver path that is not yet pinned, and because the Phasor side is a loose analogy - Halo tags and KOTOR 2DA rows are not the same kind of thing."
+  },
+  {
+   "phasor_function": "OnServerChat / OnServerCommand entry point",
+   "kotor_equivalent": "Console command interception",
+   "mechanism": "hook console.do_console (required); event OnConsoleCommand already exists in data/events.toml",
+   "confidence": "high",
+   "evidence": "data/events.toml lists OnConsoleCommand among its 111 lua_name entries, and console.do_console is a required detour resolving to 0x00401F00 in k1_steam_103.json."
+  },
+  {
+   "phasor_function": "Per-script persistent state across map changes (Phasor scripts fall back to io.open / io.lines)",
+   "kotor_equivalent": "Engine-backed globals plus save-hooked script state",
+   "mechanism": "routine ids 578/579 GetGlobalBoolean/SetGlobalBoolean, 580/581 GetGlobalNumber/SetGlobalNumber, 194/160 GetGlobalString/SetGlobalString, 692/693 GetGlobalLocation/SetGlobalLocation; per-object 679/680 GetLocalBoolean/SetLocalBoolean, 681/682 GetLocalNumber/SetLocalNumber. Hooks vm.save_script_situation and vm.load_script_situation carry Lua-owned state into the save",
+   "confidence": "high",
+   "evidence": "All ten routine ids verified in k1.json; ExecuteCommandGetGlobalNumber / SetGlobalNumber present in decomp. Both save/load hooks are already declared in data/hooksites.toml with exactly this purpose. Phasor has no save-game concept, so this is strictly additional."
+  }
+ ],
+ "unmappable": [
+  "gethash(player) - Halo CD-key hash. Single-player KOTOR has no network identity, no account, and no per-player credential. Nothing to map to. 49 call sites in the reference scripts, all for ban lists and admin tables.",
+  "getip(player) / getport(player) - no network peer exists. 43 and several call sites respectively, all feeding kick/ban logic.",
+  "isadmin(player) / getaccess(player) / the whole privilege tier system - there is one player and they already own the process. A privilege check is meaningless.",
+  "votekick / ban / hashban / nameban / ipadminadd / kick / sv_kick - moderation of remote players. No remote players.",
+  "svcmdplayer(player, cmd) / privilegedcmd / rcon - executing a server command as or on behalf of another player. Both halves of the concept are absent.",
+  "getservername() / changegametype() - no server, and KOTOR has exactly one game mode. GetModuleName (id 561) answers a different question and should not be dressed up as this one.",
+  "entervehicle(player, vehicleObjId, seat) / exitvehicle(player) / getplayervehicle(player) - KOTOR has no drivable vehicles and no seat model. The swoop and turret sequences are the SWMG_ subsystem (routine ids 583-688), a separate object model with its own follower/gun-bank/obstacle types; SWMG_GetPlayer (611) and SWMG_GetEnemy (613) do not return CSWSObject-derived objects at all. Presenting SWMG as a vehicle API would mislead.",
+  "OnBanCheck(hash, ip) and OnServerCommandAttempt(player, cmd, password) - both are join-time and auth-time hooks on a connection that does not exist.",
+  "setnavpoint / the HUD navpoint API - KOTOR's nearest surface is the minimap pin (routine id 386 SetMapPinEnabled), but that toggles an existing designer-placed pin rather than creating a world-space marker, so it is not the same capability.",
+  "OnClientUpdate(player, objid) as a per-player position-sync callback - the reference scripts lean on it heavily (it is where the whole z4eqrjVN memory map lives) but it fires from network state replication. The KOTOR replacement is the app.server_main_loop tick, which is a different guarantee: it is not per-player and it is not tied to movement.",
+  "OnTeamDecision / OnTeamChange arbitration and team-balance logic - the concept of an auto-balanced team assignment has no KOTOR counterpart. Faction change (id 412) exists, but nothing decides it on the player's behalf."
+ ],
+ "kotor_only_opportunities": [
+  "OBJECT_SELF is writable, and that is the single largest capability Phasor has no analogue for. CSWVirtualMachineCommands is 0x10 bytes: vtable +0x00, has_caller_object +0x04, caller_object_id +0x08, commands +0x0C. Verified in the decompiled ExecuteCommandClearAllActions (0x0052f4a0), whose body is literally `if (this->has_caller_object != 0) { id = this->caller_object_id; ... }`. Writing those two fields before dispatch retargets every routine that defaults an argument to OBJECT_SELF and every Action* routine in the table. It is also the generic replacement for routine id 6 AssignCommand, one of only three non-marshallable routines. Independently, the commands table at +0x0C is confirmed by the expected_bytes already committed for vm.execute_command in data/addresses/k1_steam_103.json: 8b54240481fa040300007d178b410c8b decodes to mov edx,[esp+4] / cmp edx,0x304 / jge / mov eax,[ecx+0x0C], and 0x304 equals 772, the exact routine count in data/routines/k1.json.",
+  "Dialogue as a scriptable surface. Routine ids 204 ActionStartConversation, 255 BeginConversation, 417 SpeakOneLinerConversation, 701 GetIsConversationActive, 711 GetLastConversation, 238 GetPCSpeaker, 445 GetIsInConversation, 284 SetCustomToken (token substitution into dialogue text), 749 ResetDialogState, 461 SetDialogPlaceableCamera, 505 SetLockOrientationInDialog, 757 CancelPostDialogCharacterSwitch, 205/206 pause and resume. Plus data/events.toml already carries OnDialogConditional, OnCreatureDialogue and OnCreatureEndDialogue on the vm.run_script hook. A Lua runtime that can rewrite a dialogue conditional at runtime is something Halo has no shape for.",
+  "Journal and quest state. Routine ids 367 AddJournalQuestEntry, 368 RemoveJournalQuestEntry, 369 GetJournalEntry, 384 GetJournalQuestExperience, 678 SetJournalQuestEntryPicture, 669 AddJournalWorldEntry, 670 AddJournalWorldEntryStrref, 672 DeleteJournalWorldAllEntries, 673 DeleteJournalWorldEntry, 674 DeleteJournalWorldEntryStrref. Struct side: CSWPartyTable::GetPartyJournal 0x5633C0 and CSWPartyTable::LoadJournal 0x563430, reachable from a CSWPartyTable obtained via the server app, and CSWGuiJournalItemEntry (size 460) for the display rows.",
+  "Alignment. Routine ids 125 GetGoodEvilValue, 750 SetGoodEvilValue, 201 AdjustAlignment, 127 GetAlignmentGoodEvil, 187 GetFactionAverageGoodEvilAlignment, 355 VersusAlignmentEffect. Struct read is CSWSCreatureStats.good_evil, but note the caveat: the naive offset walk puts it at +0x180 while Ghidra's own field names show a two-byte drift starting at field_de, so the true offset is nearer +0x17E. Use the routines and treat the struct offset as unverified.",
+  "Force powers and the talent system. Routine ids 377 GetHasSpell, 48 ActionCastSpellAtObject, 234 ActionCastSpellAtLocation, 301 TalentSpell, 302 TalentFeat, 303 TalentSkill, 306 GetCreatureHasTalent, 307 GetCreatureTalentRandom, 308 GetCreatureTalentBest, 723 GetLastForcePowerUsed, 726 GetWasForcePowerSuccessful, 731 SetForcePowerUnsuccessful, 169 ResistForce, 402 EffectForceResisted, 55/56 current and max Force points, 156 EffectTemporaryForcePoints, 372 EffectDamageForcePoints, 373 EffectHealForcePoints, 212 EffectForceResistanceIncrease, 459 EffectForceShield. `talent` is one of the four VM engine structures (talent = 3 per k1.json engine_structs and src/api/routines.hpp EngineStruct), so it is a first-class Lua value, not an integer handle.",
+  "Party management. Routine ids 126 GetPartyMemberCount, 577 GetPartyMemberByIndex, 574 AddPartyMember, 575 RemovePartyMember, 576 IsObjectPartyMember, 572 AddToParty, 573 RemoveFromParty, 11 SwitchPlayerCharacter, 13 SetPartyLeader, 694 AddAvailableNPCByObject, 697 AddAvailableNPCByTemplate, 695 RemoveAvailableNPC, 696 IsAvailableCreature, 698 SpawnAvailableNPC, 699 IsNPCPartyMember, 708 SetNPCSelectability, 709 GetNPCSelectability, 712 ShowPartySelectionGUI, 753 SetSoloMode, 462 GetSoloMode, 704/706 party AI style, 729 SetFormation, 730 ActionFollowLeader, 734 SaveNPCState. Struct side: CSWParty.party_count +0x00 and party_member_datas +0x24 (stride 0x88, CSWPartyMemberData.client_object_id +0x00, follow_state +0x04), both validated; CSWPartyTable via CServerExoApp::GetPartyTable; CSWSCreature.invited_to_party +0x930 and party_follow_info +0x4C0.",
+  "2DA table access, which has NO NWScript routine at all - the entire rules database is invisible to game scripts and would be new capability. C2DA::GetINTEntry 0x413660 `int(C2DA*, int row, CExoString* column, int* out)`, GetFLOATEntry 0x413430, GetCExoStringEntry 0x413270, GetRowIndex 0x4138B0, GetColumnIndex 0x413100, plus C2DA::Load2DArray 0x4144F0-ish and CRes2DA. Typed row structs already exist in the corpus: Appearance2DA (112), Animations2DA (56), AppearanceSounds2DA (24), CreatureSpeed2DA (8, RUNRATE and WALKRATE). Exposing feat, spell, appearance and baseitem tables to Lua is a capability neither Phasor nor NWScript has.",
+  "Inventory and items. Routine ids 339/340 GetFirstItemInInventory / GetNextItemInInventory, 155 GetItemInSlot, 31 CreateItemOnObject, 766 CreateItemOnFloor, 271 GiveItem, 29 GetItemPossessor, 30 GetItemPossessedBy, 397 GetBaseItemType, 138/150 stack size, 475 GetNumStackedItems, 332/333 identified flag, 401 GetItemACValue, 398 GetItemHasItemProperty, 266 SetItemNonEquippable, 311 GetGoldPieceValue, 747 ChangeItemCost, 354 ShowUpgradeScreen, 378 OpenStore, 418 GetGold, 322 GiveGoldToCreature, 444 TakeGoldFromCreature, 570 GetHasInventory. Struct side: CSWSCreature.inventory +0xA2C, item_repo +0xA30, gold +0x9D0; CSWSItem base_ac +0x244, active_property_count +0x248, charges +0x258, bit_flags +0x288, stack_size +0x28C, upgrades +0x294; CSWSPlaceable.item_repository +0x36C and has_inventory +0x334. All offsets from validated walks.",
+  "Module transitions and the galaxy map. Routine ids 509 StartNewModule, 242 GetModule, 210 GetModuleFileName, 561 GetModuleName, 198 GetTransitionTarget, 739 ShowGalaxyMap, 740/741 SetPlanetSelectable / GetPlanetSelectable, 742/743 SetPlanetAvailable / GetPlanetAvailable, 744 GetSelectedPlanet, 512 DoSinglePlayerAutoSave, 564 EndGame, 403 ExploreAreaForPlayer, 515 RevealMap. Hook module.load_start (CSWSModule::LoadModuleStart) is already declared as a script reload point, and data/events.toml already carries OnModuleLoad, OnModuleStart, OnModulePlayerEnter and OnAreaTransitionFail. Halo's map cycle is a pale version of this.",
+  "The effect system as a first-class Lua type. 87 of the 772 K1 routines return `effect`, applied through id 220 ApplyEffectToObject or id 216 ApplyEffectAtLocation, composed with id 199 EffectLinkEffects, scoped with 112 MagicalEffect / 113 SupernaturalEffect / 114 ExtraordinaryEffect, filtered with 355 VersusAlignmentEffect / 356 VersusRacialTypeEffect / 357 VersusTrapEffect, enumerated with 85 GetFirstEffect / 86 GetNextEffect, inspected with 170 GetEffectType / 89 GetEffectDurationType / 91 GetEffectCreator, removed with 87 RemoveEffect and 710 ClearAllEffects. Verified in decomp: ExecuteCommandEffectDamage builds a CGameEffect, stamps SetCreator from caller_object_id, and returns it through StackPushEngineStructure(VirtualMachine, EFFECT, eff). Phasor has no engine-struct concept whatsoever - its damage API is a float multiplier.",
+  "Save and load awareness. Hooks vm.save_script_situation (CVirtualMachineInternal::SaveScriptSituation) and vm.load_script_situation (CVirtualMachine::LoadScriptSituation) are already declared in data/hooksites.toml for persisting Lua-owned state alongside the engine's. Combined with routine id 251 GetLoadFromSaveGame and id 512 DoSinglePlayerAutoSave, a script can survive a save/load round trip. Phasor scripts have no save concept and fall back to writing their own text files.",
+  "Cutscene, camera and movie control. Routine ids 503 CutsceneAttack, 507 CutsceneMove, 504 SetCameraMode, 45 SetCameraFacing, 461 SetDialogPlaceableCamera, 733 PlayMovie, 769 QueueMovie, 770 PlayMovieQueue, 768 IsMoviePlaying, 508 EnableVideoEffect, 510 DisableVideoEffect, 719 SetGlobalFadeIn, 720 SetGlobalFadeOut, 518 StartCreditSequence, 759 NoClicksFor, 760 HoldWorldFadeInForDialog, 738 PlayRoomAnimation, 754-756 the CutScene* effects.",
+  "Character build: feats, skills, classes, levels, abilities. Routine ids 285 GetHasFeat, 543 GetHasFeatEffect, 286 GetHasSkill, 315 GetSkillRank, 287 ActionUseFeat, 288 ActionUseSkill, 341 GetClassByPosition, 342 GetLevelByPosition, 343 GetLevelByClass, 389 AddMultiClass, 265 ShowLevelUpGUI, 542 GetPCLevellingUp, 166 GetHitDice, 139 GetAbilityScore, 331 GetAbilityModifier, 116 GetAC, 107 GetRacialType, 497 GetSubRace, 494 GetChallengeRating. Struct side: CSWSCreatureStats.feats +0x00, class_count +0x89, classes +0x8C (0x50 bytes), experience +0x68, is_pc +0x6C, faction_id +0x78 - all before the struct's drift point, so trustworthy; anything past +0x7A in that struct needs re-derivation.",
+  "Locks, traps, doors and placeables as a scripted surface. Routine ids 324/325 SetLocked / GetLocked, 483/484 ActionUnlockObject / ActionLockObject, 537-541 the lock property getters, 527-536 the trap property getters, 550 SetTrapDetectedBy, 551 GetIsTrapped, 555 SetTrapDisabled, 488 GetNearestTrapToObject, 337/338 door action query and execute, 546/547 placeable action query and execute, 443 GetIsOpen, 544/545 placeable illumination. Struct side, all from validated walks: CSWSDoor.locked +0x2C4, lockable +0x2C8, open_lock_dc +0x2BF, secret_door_dc +0x2C1, key_name +0x2D0, key_required +0x2D8, trap_flag +0x2E8, disarm_dc +0x2EC, open_state +0x2CC, transition_destination +0x3C8; CSWSPlaceable.locked +0x260, usable +0x328, has_inventory +0x334, open +0x338, item_repository +0x36C, is_body_bag +0x440.",
+  "Stealth XP, a scoring system with no Halo analogue. Routine ids 474 GetCurrentStealthXP, 478 SetCurrentStealthXP, 464 GetMaxStealthXP, 468 SetMaxStealthXP, 480 AwardStealthXP, 481 GetStealthXPEnabled, 482 SetStealthXPEnabled, 498/499 the decrement. Struct side: CSWSCreature.stealth_mode +0x4D1 and detect_mode +0x4D0 (single bytes, both validated by neighbouring field names). Caveat: k1.json records source disagreements at ids 463, 467, 473 and 477, where a secondary enum source names these same StealthXP routines. The disagreement is a systematic off-by-one - in 7 of 8 cases the other source's name lands at exactly id+1 in the chosen table - so the nwscript.nss ids used here are the internally consistent set, but anything cited in the 463-478 band deserves a live check.",
+  "Pazaak and the swoop/turret minigames as separately scriptable subsystems. Routine ids 364 PlayPazaak, 365 GetLastPazaakResult; and the whole SWMG_ family, ids 583-688, roughly 100 routines covering follower hit points, gun banks, bullet damage, camera clip planes, player tunnel bounds and obstacle counts. This is effectively a second game inside the game with its own object model, and no Phasor concept touches it.",
+  "Typed object lookup, which is better than what Phasor exposes. Phasor's getobject returns an untyped address and every script re-derives the type by reading bytes. KOTOR offers eleven typed lookups off one receiver: GetCreatureByGameObjectID 0x004B1790, GetDoorByGameObjectID 0x004B1920, GetPlaceableByGameObjectID 0x004B18D0, GetTriggerByGameObjectID 0x004B1880, GetAreaByGameObjectID 0x004B17E0, GetStoreByGameObjectID 0x004B1AB0, GetWaypointByGameObjectID 0x004B19C0, GetEncounterByGameObjectID 0x004B1A10, GetAreaOfEffectByGameObjectID 0x004B1970, GetSoundObjectByGameObjectID 0x004B1A60, GetClientObjectByObjectId 0x004B2FD0-region. Exposing these gives Lua a checked cast instead of a guess.",
+  "Music, ambience and sound as scriptable state. Routine ids 425-436 MusicBackgroundPlay/Stop/SetDelay/ChangeDay/ChangeNight, MusicBattlePlay/Stop/Change, AmbientSoundPlay/Stop/ChangeDay/ChangeNight, 558/559/569 the track getters, 567/568 the volume setters, 745 SoundObjectFadeAndStop, 413-416 the SoundObject family, 765 SetMusicVolume, 46 PlaySound, 571 GetStrRefSoundDuration."
+ ]
+}
