@@ -19,6 +19,7 @@
 #include "image/image.hpp"
 #include "image/sha256.hpp"
 #include "api/enginestruct.hpp"
+#include "api/compat.hpp"
 #include "api/routines.hpp"
 #include "api/output.hpp"
 #include "api/entity.hpp"
@@ -406,6 +407,12 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::structs::register_all(L);    // named typed field access
         api::entity::register_all(L);     // objects, party, resolution
         api::register_support(L);         // output, timers and strings together
+
+        // Last, because an alias can only point at a function that already
+        // exists. This is what makes both API dialects work without a script
+        // having to require anything.
+        api::compat::install_print(L);    // print -> the runtime log, flushed
+        api::compat::install(L);          // aliases, cb table, register_callback
     };
 
     auto host = std::make_unique<lua::Host>(hc);

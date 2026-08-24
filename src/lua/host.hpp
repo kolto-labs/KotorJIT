@@ -20,6 +20,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -63,11 +64,30 @@ public:
     int                priority() const { return priority_; }
     lua_State*         L() const { return L_; }
 
-    // True when the script defined this callback. Answered from the set built
-    // at load time; no Lua call is made.
+    // True when the script will handle this callback, either because it defined
+    // a global of that name at load time or because it registered a handler
+    // afterwards. Answered from sets and maps; no Lua call is made.
     bool defines(const std::string& callback) const {
-        return defined_.count(callback) != 0;
+        return defined_.count(callback) != 0 || bound_.count(callback) != 0;
     }
+
+    // Bind a Lua function to an event at RUNTIME, taking ownership of a registry
+    // reference to it.
+    //
+    // The load-time probe cannot see these. One of the two API dialects this
+    // runtime supports registers handlers by calling a function from inside
+    // another callback -- typically the load callback -- so the handler simply
+    // does not exist as a global when the probe runs. Without this, every such
+    // script loads cleanly and then receives nothing.
+    //
+    // Rebinding the same event replaces the previous handler and releases its
+    // reference. Passing LUA_NOREF unbinds.
+    void bind_callback(const std::string& event, int registry_ref);
+    bool bound(const std::string& event) const { return bound_.count(event) != 0; }
+
+    // Push the handler for `callback` onto the stack. Returns false and pushes
+    // nothing when there is none.
+    bool push_handler(const std::string& callback) const;
 
     // Errors seen so far, and the budget before quarantine. Quarantine exists
     // because the alternative -- what the design we are following actually
@@ -94,6 +114,7 @@ private:
     ScriptState state_ = ScriptState::Unloaded;
     int         priority_ = 0;
     std::unordered_set<std::string> defined_;
+    std::unordered_map<std::string, int> bound_;   // event -> registry ref
     std::vector<ScriptError> errors_;
     const std::function<void(lua_State*)>* on_state_created_ = nullptr;
 };

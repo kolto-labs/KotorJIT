@@ -192,7 +192,11 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   # oracle for "we are in gameplay" rather than a proxy for it.
   LOADED=0
   for i in $(seq 1 "${LOAD_WAIT:-180}"); do
-    if grep -qE "k_def_heartbt01|k_ai_master" "$OUT/wine.log" 2>/dev/null; then
+    # Watch the RUNTIME log, not wine.log. The game's stdout is block-buffered to
+    # a redirected file under Wine, so a script's output sits in a 4 KB buffer and
+    # shows up minutes late -- which reads as "gameplay never happened" when it
+    # happened five minutes ago. The runtime log is flushed per line.
+    if grep -qE "k_def_heartbt01|k_ai_master" "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
       LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; break
     fi
     if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
