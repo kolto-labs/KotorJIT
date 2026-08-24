@@ -10,6 +10,7 @@
     "sha256": "34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88"
   },
   "note": "Steam build. .text is ciphertext on disk; identical to GOG once deciphered.",
+  "adjudicated_bindings": 0,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -21,7 +22,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D45D0"
+      "addr_hex": "0x005D45D0",
+      "expected_bytes": "535556578b7c241433ed3bfd8bf10f84"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -33,7 +35,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D4AD0"
+      "addr_hex": "0x005D4AD0",
+      "expected_bytes": "53568bf18d9eac010000578bcbe85ed6"
     },
     "vm.execute_code": {
       "cls": "CVirtualMachineInternal",
@@ -45,7 +48,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D2BD0"
+      "addr_hex": "0x005D2BD0",
+      "expected_bytes": "6aff64a10000000068813e7200506489"
     },
     "vm.execute_command": {
       "cls": "CSWVirtualMachineCommands",
@@ -57,7 +61,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x0052C0D0"
+      "addr_hex": "0x0052C0D0",
+      "expected_bytes": "8b54240481fa040300007d178b410c8b"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -69,7 +74,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D47A0"
+      "addr_hex": "0x005D47A0",
+      "expected_bytes": "53558b6c240c8b451085c056578bf174"
     },
     "vm.load_script_situation": {
       "cls": "CVirtualMachine",
@@ -81,7 +87,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1100"
+      "addr_hex": "0x005D1100",
+      "expected_bytes": "8b09e9e9150000909090909090909090"
     },
     "vm.stack_pop_integer": {
       "cls": "CVirtualMachine",
@@ -93,7 +100,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1000"
+      "addr_hex": "0x005D1000",
+      "expected_bytes": "8b09e9b9140000909090909090909090"
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
@@ -105,7 +113,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1010"
+      "addr_hex": "0x005D1010",
+      "expected_bytes": "8b09e939080000909090909090909090"
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
@@ -117,7 +126,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1020"
+      "addr_hex": "0x005D1020",
+      "expected_bytes": "8b09e9e9140000909090909090909090"
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -129,7 +139,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1030"
+      "addr_hex": "0x005D1030",
+      "expected_bytes": "8b09e949080000909090909090909090"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
@@ -141,7 +152,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1080"
+      "addr_hex": "0x005D1080",
+      "expected_bytes": "8b09e959150000909090909090909090"
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
@@ -153,7 +165,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1090"
+      "addr_hex": "0x005D1090",
+      "expected_bytes": "8b09e999080000909090909090909090"
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -165,7 +178,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D10C0"
+      "addr_hex": "0x005D10C0",
+      "expected_bytes": "8b09e9d9150000909090909090909090"
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
@@ -177,7 +191,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D10D0"
+      "addr_hex": "0x005D10D0",
+      "expected_bytes": "8b09e939090000909090909090909090"
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
@@ -189,7 +204,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1040"
+      "addr_hex": "0x005D1040",
+      "expected_bytes": "8b09e919150000909090909090909090"
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
@@ -201,7 +217,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D1050"
+      "addr_hex": "0x005D1050",
+      "expected_bytes": "8b5424048b0983ec0c8bc489108b5424"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
@@ -213,7 +230,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D10A0"
+      "addr_hex": "0x005D10A0",
+      "expected_bytes": "8b09e989150000909090909090909090"
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
@@ -225,19 +243,21 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005D10B0"
+      "addr_hex": "0x005D10B0",
+      "expected_bytes": "8b09e909090000909090909090909090"
     },
     "event.creature": {
       "cls": "CSWSCreature",
       "method": "EventHandler",
       "kind": "detour",
-      "required": true,
+      "required": false,
       "addr": 5237984,
       "source": "func",
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x004FECE0"
+      "addr_hex": "0x004FECE0",
+      "expected_bytes": "6aff64a10000000068a6b67100506489"
     },
     "event.door": {
       "cls": "CSWSDoor",
@@ -249,7 +269,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x0058B850"
+      "addr_hex": "0x0058B850",
+      "expected_bytes": "64a1000000006aff6864087200508b44"
     },
     "event.placeable": {
       "cls": "CSWSPlaceable",
@@ -261,7 +282,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x00587BA0"
+      "addr_hex": "0x00587BA0",
+      "expected_bytes": "64a1000000006aff68ae057200508b44"
     },
     "event.trigger": {
       "cls": "CSWSTrigger",
@@ -273,7 +295,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x0058F140"
+      "addr_hex": "0x0058F140",
+      "expected_bytes": "64a1000000006aff680b0b7200508b44"
     },
     "event.module": {
       "cls": "CSWSModule",
@@ -285,7 +308,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x004C5120"
+      "addr_hex": "0x004C5120",
+      "expected_bytes": "8b44240483ec0c568bf13b05b8417400"
     },
     "event.area": {
       "cls": "CSWSArea",
@@ -297,7 +321,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x0050D6C0"
+      "addr_hex": "0x0050D6C0",
+      "expected_bytes": "558bec83e4f86aff68bbbe710064a100"
     },
     "event.encounter": {
       "cls": "CSWSEncounter",
@@ -309,7 +334,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x00594220"
+      "addr_hex": "0x00594220",
+      "expected_bytes": "8b442404568bf13b05dc4174000f85d2"
     },
     "event.aoe": {
       "cls": "CSWSAreaOfEffectObject",
@@ -321,7 +347,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005964E0"
+      "addr_hex": "0x005964E0",
+      "expected_bytes": "8b442404568bf13b05b841740075228b"
     },
     "event.store": {
       "cls": "CSWSStore",
@@ -333,7 +360,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005C6EE0"
+      "addr_hex": "0x005C6EE0",
+      "expected_bytes": "8b4424043b05dc4174007541568b7424"
     },
     "event.waypoint": {
       "cls": "CSWSWaypoint",
@@ -345,7 +373,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x005C7F10"
+      "addr_hex": "0x005C7F10",
+      "expected_bytes": "8b4424043b05e041740075108b81ec00"
     },
     "app.server_main_loop": {
       "cls": "CServerExoAppInternal",
@@ -357,7 +386,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x004BABB0"
+      "addr_hex": "0x004BABB0",
+      "expected_bytes": "558bec83e4f86aff683393710064a100"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -369,7 +399,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x00602EB0"
+      "addr_hex": "0x00602EB0",
+      "expected_bytes": "558bec83e4f86aff68a873720064a100"
     },
     "console.do_console": {
       "cls": "",
@@ -381,7 +412,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x00401F00"
+      "addr_hex": "0x00401F00",
+      "expected_bytes": "6aff68683f710064a100000000506489"
     },
     "console.funcs_add": {
       "cls": "",
@@ -393,7 +425,8 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x0044BA80"
+      "addr_hex": "0x0044BA80",
+      "expected_bytes": "a1b88f7b005533ed85c07e688b542408"
     },
     "module.load_start": {
       "cls": "CSWSModule",
@@ -405,14 +438,34 @@
       "confidence": 1.0,
       "method_detail": "user_defined",
       "candidates": 1,
-      "addr_hex": "0x004C9050"
+      "addr_hex": "0x004C9050",
+      "expected_bytes": "558bec83e4f86aff68df9b710064a100"
     }
   },
+  "reference_image": "/home/brunner56/biodecompwarehouse/agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+  "reference_sha256": "2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05",
+  "sentinel": {
+    "va": 5423312,
+    "va_hex": "0x0052C0D0",
+    "bytes": "8b54240481fa04030000",
+    "describes": "vm.execute_command"
+  },
+  "known_text": [
+    {
+      "section": ".text",
+      "sha256": "39bcd9f2c21de0e24aef77bcc2912f313fe9ed57803f505819d19a59ee0d4135"
+    },
+    {
+      "section": ".textU",
+      "sha256": "39bcd9f2c21de0e24aef77bcc2912f313fe9ed57803f505819d19a59ee0d4135"
+    }
+  ],
   "summary": {
     "total": 33,
     "resolved": 33,
     "by_func": 33,
     "by_identity": 0,
+    "by_adjudication": 0,
     "refused_ambiguous": [],
     "unresolved": [],
     "multi_candidate": [],
