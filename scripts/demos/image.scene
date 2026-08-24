@@ -1,0 +1,6 @@
+say "The Steam build ships its code encrypted. Read it off disk and you get noise."
+run "./build/kp_imagetool classify /dev/shm/kp_k1/swkotor.exe"
+beat 3
+say "So the runtime waits for the game's own stub to decrypt it, then checks the result."
+run "./build/kp_imagetool identify /dev/shm/kp_k1/swkotor.exe"
+beat 3
