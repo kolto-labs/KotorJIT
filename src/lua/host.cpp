@@ -116,7 +116,39 @@ bool Script::load(std::string& error) {
     return true;
 }
 
+void Script::bind_callback(const std::string& event, int ref) {
+    if (!L_) return;
+    auto it = bound_.find(event);
+    if (it != bound_.end()) {
+        luaL_unref(L_, LUA_REGISTRYINDEX, it->second);
+        bound_.erase(it);
+    }
+    if (ref != LUA_NOREF && ref != LUA_REFNIL) bound_[event] = ref;
+}
+
+bool Script::push_handler(const std::string& callback) const {
+    if (!L_) return false;
+    // A runtime binding wins over a same-named global, because a script that
+    // registered one asked for it explicitly and the global may be the stub it
+    // registered FROM.
+    auto it = bound_.find(callback);
+    if (it != bound_.end()) {
+        lua_rawgeti(L_, LUA_REGISTRYINDEX, it->second);
+        if (lua_isfunction(L_, -1)) return true;
+        lua_pop(L_, 1);
+        return false;
+    }
+    if (defined_.count(callback) == 0) return false;
+    lua_getglobal(L_, callback.c_str());
+    if (lua_isfunction(L_, -1)) return true;
+    lua_pop(L_, 1);
+    return false;
+}
+
 void Script::release_state() {
+    // The refs live in this state's registry, so closing it releases them; we
+    // just drop the map so a reload does not carry stale indices forward.
+    bound_.clear();
     if (L_) { lua_close(L_); L_ = nullptr; }
     defined_.clear();
 }
@@ -224,7 +256,7 @@ events::Outcome Host::dispatch(const events::EventContract& ev,
         const int base = lua_gettop(L);
 
         lua_pushcfunction(L, traceback_handler);
-        lua_getglobal(L, ev.lua_name.c_str());
+        if (!s.push_handler(ev.lua_name)) { lua_settop(L, base); continue; }
         for (const auto& a : args) a.push(L);
         lua_pushboolean(L, relevant);            // trailing argument
 

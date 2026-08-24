@@ -41,6 +41,7 @@ set(KP_API_SOURCES
     "${KP_SRC_ROOT}/api/output.cpp"
     "${KP_SRC_ROOT}/api/timers.cpp"
     "${KP_SRC_ROOT}/api/strings.cpp"
+    "${KP_SRC_ROOT}/api/compat.cpp"
 )
 foreach(f ${KP_API_SOURCES})
     if(NOT EXISTS ${f})
