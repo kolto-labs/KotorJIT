@@ -5,6 +5,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <string_view>
 
@@ -43,6 +44,17 @@ const events::EventContract* find_contract(std::string_view lua_name);
 // body, and clearing it is also how a fault takes every body out of service.
 bool live();
 void set_live(bool);
+
+// How a fresh lua_State gets the host API installed on it.
+//
+// The console keeps a state of its own so that a typo there cannot quarantine a
+// loaded script. But a bare state can only do arithmetic: `lua exec` could parse
+// Lua and never reach the game, which is a strange thing for a game console to
+// be. The runtime publishes the same initialiser it hands every script state and
+// the console runs it, so both surfaces share one definition of "the API"
+// instead of drifting apart.
+void set_state_init(std::function<void(lua_State*)>);
+void init_lua_state(lua_State*);
 
 // The Lua host a hook body should dispatch into, or null.
 //

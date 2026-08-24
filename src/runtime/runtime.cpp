@@ -122,6 +122,15 @@ void set_live(bool v) { g_live.store(v, std::memory_order_release); }
 lua::Host* active_host() { return g_host.load(std::memory_order_acquire); }
 void set_active_host(lua::Host* h) { g_host.store(h, std::memory_order_release); }
 
+// Written once during boot, on the worker thread, before any hook body can run;
+// read afterwards from the console, which is a game thread. Not atomic: the
+// publish happens-before the first body through set_live's release, and a
+// std::function is not a thing to put in an atomic anyway.
+std::function<void(lua_State*)> g_state_init;
+
+void set_state_init(std::function<void(lua_State*)> fn) { g_state_init = std::move(fn); }
+void init_lua_state(lua_State* L) { if (g_state_init) g_state_init(L); }
+
 std::string directory_of(const std::string& path) {
     const std::size_t cut = path.find_last_of("/\\");
     return cut == std::string::npos ? std::string(".") : path.substr(0, cut);
@@ -414,6 +423,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::compat::install_print(L);    // print -> the runtime log, flushed
         api::compat::install(L);          // aliases, cb table, register_callback
     };
+
+    // The console builds a state of its own and needs the same API on it.
+    set_state_init(hc.on_state_created);
 
     auto host = std::make_unique<lua::Host>(hc);
     std::vector<std::string> errors;
