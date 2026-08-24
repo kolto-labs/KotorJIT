@@ -30,10 +30,34 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CORPUS = Path("/home/brunner56/biodecompwarehouse/kotorxid/db/kotorxid.sqlite")
-NSS_DIR = Path("/run/media/brunner56/MyBook/Workspaces/bioware_projects/odynsscomp"
-               "/docs/corpus/nwscript")
+sys.path.insert(0, str(ROOT / "tools"))
+import kpdiscover  # noqa: E402
+
 OUTDIR = ROOT / "data" / "routines"
+
+
+def _nss(game: str) -> Path | None:
+    """The game's own nwscript.nss.
+
+    Preferred from a copy vendored into this repo, so a checkout regenerates
+    without anything else present. Otherwise found wherever it lives on this
+    machine, including inside an installed game.
+    """
+    vendored = ROOT / "data" / "nwscript" / game / "nwscript.nss"
+    if vendored.is_file():
+        return vendored
+    hit = kpdiscover.find_data_file(
+        f"bioware_projects/odynsscomp/docs/corpus/nwscript/{game}/nwscript.nss",
+        f"odynsscomp/docs/corpus/nwscript/{game}/nwscript.nss",
+        env=f"KP_NWSCRIPT_{game.upper()}")
+    if hit:
+        return hit
+    for root in kpdiscover.find_all_games(game):
+        for rel in ("nwscript.nss", "Override/nwscript.nss", "override/nwscript.nss"):
+            p = root / rel
+            if p.is_file():
+                return p
+    return None
 
 # nwscript's type vocabulary. `action` is a routine returning nothing that also
 # queues an action; for marshalling it behaves as void.
@@ -49,8 +73,8 @@ TYPES = {
 ENGINE_STRUCTS = {"effect": 0, "event": 1, "location": 2, "talent": 3}
 
 GAMES = {
-    "k1": {"nss": NSS_DIR / "k1" / "nwscript.nss", "binary_id": 8,  "expect": 772},
-    "k2": {"nss": NSS_DIR / "k2" / "nwscript.nss", "binary_id": 22, "expect": 877},
+    "k1": {"binary_id": 8,  "expect": 772},
+    "k2": {"binary_id": 22, "expect": 877},
 }
 
 # `// 123: text` or `// 123. text`.
@@ -166,10 +190,15 @@ def parse_nss(path: Path) -> tuple[list[Routine], list[str]]:
 
 
 def enum_names(binary_id: int) -> dict[int, str]:
-    """The ScriptFunctions enum recovered from the binary, as a cross-check."""
-    if not CORPUS.exists():
+    """The ScriptFunctions enum recovered from the binary, as a cross-check.
+
+    Optional. Without the corpus the header alone still produces a complete K1
+    table; only K2, whose header leaves 71 routines unnumbered, depends on it.
+    """
+    corpus = kpdiscover.find_corpus()
+    if corpus is None:
         return {}
-    db = sqlite3.connect(f"file:{CORPUS}?mode=ro", uri=True)
+    db = sqlite3.connect(f"file:{corpus}?mode=ro", uri=True)
     row = db.execute(
         "SELECT definition FROM ghidra_type WHERE binary_id=? AND name='ScriptFunctions'",
         (binary_id,)).fetchone()
@@ -206,7 +235,13 @@ def build(game: str, _check_enum: bool) -> int:
     rather than globally is the whole point.
     """
     spec = GAMES[game]
-    routines, problems = parse_nss(spec["nss"])
+    nss = _nss(game)
+    if nss is None:
+        raise SystemExit(
+            f"nwscript.nss for {game} not found.\n"
+            f"Vendor it at data/nwscript/{game}/nwscript.nss, set "
+            f"KP_NWSCRIPT_{game.upper()}, or install the game.")
+    routines, problems = parse_nss(nss)
 
     sig_by_name = {r.name: r for r in routines}
     nss_ids: dict[int, str] = {}
@@ -246,7 +281,7 @@ def build(game: str, _check_enum: bool) -> int:
     report = {
         "game": game,
         "id_source": chosen,
-        "signature_source": str(spec["nss"]),
+        "signature_source": str(nss),
         "count": len(id_map),
         "expected": spec["expect"],
         "max_id": top,

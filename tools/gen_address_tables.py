@@ -31,7 +31,9 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CORPUS = Path("/home/brunner56/biodecompwarehouse/kotorxid/db/kotorxid.sqlite")
+sys.path.insert(0, str(ROOT / "tools"))
+import kpdiscover  # noqa: E402
+
 MANIFEST = ROOT / "data" / "hooksites.toml"
 OUTDIR = ROOT / "data" / "addresses"
 
@@ -42,7 +44,28 @@ OUTDIR = ROOT / "data" / "addresses"
 # nobody analysed it. But we proved the unpacked Steam .text is byte-identical to
 # GOG (828/828 pages), so GOG addresses are correct for it once deciphered. That
 # is why it borrows GOG's symbol source. See docs/steam-gog-equivalence.md.
-UNPACK = Path("/home/brunner56/biodecompwarehouse/agentdecompile/target")
+def _game_file(game: str, *names: str, env: str | None = None):
+    """A file inside an installed game, found by locating the install first."""
+    import os
+    if env and os.environ.get(env) and Path(os.environ[env]).exists():
+        return Path(os.environ[env])
+    for root in kpdiscover.find_all_games(game):
+        for cand in (root, root.parent):
+            for n in names:
+                p = cand / n
+                if p.is_file():
+                    return p
+    return None
+
+
+def _ref(*rel: str, env: str | None = None):
+    """A plaintext reference image, wherever it happens to live on this machine.
+
+    Returns None when it is absent, which is not fatal: the sentinel and the
+    known-good digest for that build simply cannot be derived, and the generator
+    says so instead of writing a wrong one.
+    """
+    return kpdiscover.find_data_file(*rel, env=env)
 
 # `reference_image` is a PLAINTEXT copy of the build's code. It is what the
 # sentinel bytes and the known-good code digest are read from, so neither has to
@@ -58,7 +81,9 @@ BUILDS = {
         "sha256": "34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88",
         "game": "K1", "platform": "win", "format": "pe", "image_base": 0x400000,
         "encrypted": True,
-        "reference_image": UNPACK / "swkotor-unpack" / "swkotor.exe.unpacked.exe",
+        "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                "agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                env="KP_K1_UNPACKED"),
         "code_sections": [".text", ".textU"],
         "note": "Steam build. .text is ciphertext on disk; identical to GOG once deciphered.",
     },
@@ -67,7 +92,9 @@ BUILDS = {
         "sha256": "2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05",
         "game": "K1", "platform": "win", "format": "pe", "image_base": 0x400000,
         "encrypted": False,
-        "reference_image": UNPACK / "swkotor-unpack" / "swkotor.exe.unpacked.exe",
+        "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                "agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                env="KP_K1_UNPACKED"),
         "code_sections": [".textU", ".text"],
         "note": ("The deciphered Steam image. The headless harness runs this, because "
                  "the shipped executable will not start without Steam, so the runtime "
@@ -78,7 +105,9 @@ BUILDS = {
         "md5": "9a44891011437deb6536d992bccdfe4b",
         "game": "K1", "platform": "win", "format": "pe", "image_base": 0x400000,
         "encrypted": False,
-        "reference_image": UNPACK / "swkotor-gog" / "swkotor.exe.gog",
+        "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-gog/swkotor.exe.gog",
+                                "agentdecompile/target/swkotor-gog/swkotor.exe.gog",
+                                env="KP_K1_GOG_EXE"),
         "code_sections": [".text"],
     },
     "k2_steam_linux": {
@@ -87,8 +116,8 @@ BUILDS = {
         "md5": "b3420a36a4385fec8189f37c5d5eaad1",
         "game": "K2", "platform": "linux", "format": "elf", "image_base": 0x8048000,
         "encrypted": False,
-        "reference_image": Path("/run/media/brunner56/MyBook/SteamLibrary/steamapps"
-                                "/common/Knights of the Old Republic II/kotor2"),
+        # The TSL Linux build is its own reference: it ships unencrypted.
+        "reference_image": _game_file("k2", "kotor2", env="KP_K2_ELF"),
         "code_sections": [".text"],
         # DoConsole is a KOTOR 1 symbol. TSL reaches its console through a
         # different function that has not been adjudicated, so the site is
@@ -433,12 +462,17 @@ def main() -> int:
     if unknown:
         ap.error(f"unknown build(s): {', '.join(unknown)}")
 
-    if not CORPUS.exists():
-        raise SystemExit(f"corpus not found: {CORPUS}")
+    corpus = kpdiscover.find_corpus()
+    if corpus is None:
+        raise SystemExit(
+            "reverse-engineering corpus not found.\n"
+            "Set KOTORXID_DB, or add [paths] corpus = \"...\" to kotorphasor.toml.\n"
+            "It is only needed to REGENERATE these tables; a checkout with\n"
+            "data/addresses/ committed builds and runs without it.")
 
     sites = load_sites()
     OUTDIR.mkdir(parents=True, exist_ok=True)
-    db = sqlite3.connect(f"file:{CORPUS}?mode=ro", uri=True)
+    db = sqlite3.connect(f"file:{corpus}?mode=ro", uri=True)
 
     rc = 0
     for alias in targets:
