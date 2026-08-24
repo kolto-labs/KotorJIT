@@ -1,0 +1,9 @@
+say "Six mods. One event. They disagree on purpose."
+run "ls scripts/examples/arbitration/"
+beat
+say "Each one votes. The rule decides who wins."
+run "./build/kp_luatest scripts/examples/arbitration OnRunScript k_def_heartbt01 0 0"
+beat 3
+say "Priority 80 claimed it -- not the highest priority in the room."
+say "The two above it abstained, so they never had a vote to lose."
+beat 2

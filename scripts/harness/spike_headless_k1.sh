@@ -36,7 +36,11 @@ log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/spike.log"; }
 
 cleanup() {
   log "cleanup"
-  pkill -f 'swkotor.exe' 2>/dev/null
+  # Match the process NAME, not the whole command line. -f matches any process
+  # whose arguments merely mention the game -- on this machine an unrelated
+  # analysis job runs with the executable's path in its argv, and killing on -f
+  # would have killed that. -x on the name matches only the game itself.
+  pkill -x swkotor.exe 2>/dev/null
   wineserver -k 2>/dev/null || true
   [[ -n "${XVFB_PID:-}" ]] && kill "$XVFB_PID" 2>/dev/null
   return 0
@@ -93,7 +97,7 @@ LAUNCH_PID=$!
 # 4. wait for a real game window ----------------------------------------------
 RENDERED=0
 for i in $(seq 1 "$BOOT_WAIT"); do
-  ALIVE=no; pgrep -f 'swkotor.exe' >/dev/null 2>&1 && ALIVE=yes
+  ALIVE=no; pgrep -x swkotor.exe >/dev/null 2>&1 && ALIVE=yes
 
   best_w=0; best_id=""
   for WID in $(xdotool search --onlyvisible --name '.*' 2>/dev/null); do
