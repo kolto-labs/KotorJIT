@@ -1,0 +1,1827 @@
+# The host API contract. One row per function a script can call.
+#
+# The mirror image of data/events.toml. That file says what the game calls in a
+# script; this one says what a script can call in the game. Both are read by a
+# generator, neither is read at runtime:
+#
+#   tools/gen_hostapi_glue.py turns this into:
+#     src/generated/hostapi.inc      the name -> C function registration table,
+#                                    the Phasor alias list, and the doc strings
+#                                    the runtime reports in error messages
+#     docs/lua-api-host.md           the reference script authors read
+#
+# The 769 callable NWScript routines are NOT listed here one by one. They are
+# already data in data/routines/<game>.json and already generate a C++ table.
+# One row below describes the whole family; adding a routine stays a change to
+# that file.
+#
+# ============================================================================
+# THE FOUR LAYERS, AND WHY THERE ARE FOUR
+# ============================================================================
+#
+#   kotor.<RoutineName>()   the engine's own routines. Safest: the engine does
+#                           its own bookkeeping, and anything a game script can
+#                           do a Lua script can now do.
+#   kp.obj.*                object identity and lookup. Ids in, ids out.
+#   kp.struct.*             named, size-asserted field access on engine structs.
+#                           Replaces the base+offset idiom with something that
+#                           can tell you that you spelled the field wrong.
+#   kp.mem.*                raw typed reads and writes at an address. The escape
+#                           hatch. Present because every reference script uses
+#                           it and because the typed layer will always lag the
+#                           game.
+#
+# A script should reach for the highest layer that answers its question. The
+# lower layers are not deprecated, they are just less protected, and each entry
+# below says exactly how much less.
+#
+# ============================================================================
+# WHAT IS GUARDED, AND WHAT IS NOT
+# ============================================================================
+#
+# Guarded, on every call:
+#
+#  1. Address range. Every raw read and write asks the platform layer whether
+#     the whole span is mapped, and for a write whether the page can be made
+#     writable. A failure raises a Lua error naming the size and the address.
+#     It never returns nil, because a nil that means "bad address" is
+#     indistinguishable from a nil that means "the field is zero".
+#  2. The null page. Writes below 0x10000 are refused outright. That address
+#     range is how a stale pointer usually presents.
+#  3. Code. Writes that land in an executable section are refused unless the
+#     script sets `allow_code_writes = true` at chunk scope, next to `priority`.
+#     A bad data write corrupts one object and shows up where you did it; a bad
+#     code write corrupts the instruction stream and shows up somewhere else
+#     entirely. Patching code is what data/hooksites.toml and the hook engine
+#     are for, and they verify expected bytes first.
+#  4. Our own bytes. Writes into an installed trampoline or a patched prologue
+#     are refused regardless of the opt-in. The hook registry knows those spans.
+#  5. Object liveness. A typed view holds an object id, not a pointer. It
+#     re-resolves on first use in a new tick, so a view of a destroyed object
+#     raises rather than reading freed memory. This is the single largest
+#     safety difference from the Phasor idiom, where a script keeps a bare
+#     address across frames and finds out the hard way.
+#  6. Field names. Typed access is checked against the generated layout at
+#     access time. `view.positon` raises and names the struct; it does not read
+#     offset zero and it does not quietly return nil.
+#  7. Field extent. A typed write is bounds-checked against the field's declared
+#     size and refused if it would straddle the end of the struct.
+#  8. Field confidence. Fields the RE corpus marks `med` or `low` are readable
+#     but not writable unless the script sets `allow_unverified_writes = true`.
+#     Eleven fields in the K1 set are `low` and fifty-six are `med`; writing one
+#     of those is writing to an offset nobody has confirmed. The other 1460 carry
+#     no marking and are treated as high. That default is load-bearing, so it is
+#     stated rather than assumed: those fields come from a walk whose field names
+#     and running offsets agree all the way to the struct's asserted size. A
+#     layout that cannot make that claim has to mark its fields.
+#  9. Routine calls. Arity and types are checked, the VM binding is checked, the
+#     marshallers the signature needs are checked, and the VM stack depth is
+#     compared before and after. A depth mismatch disables the whole bridge for
+#     the rest of the session and says so, because continuing to push arguments
+#     onto a stack we have already corrupted turns one bad call into a crash
+#     with no relation to its cause.
+#
+# Not guarded, deliberately:
+#
+#  * Meaning. Writing 0 into current_hp, or 47 into faction_id, is a legal
+#    write of a legal value to a real field. There is no oracle for "sane", and
+#    inventing one means inventing rules we have not verified. The answer is
+#    that the typed layer and the engine routines are easier to use than the raw
+#    ones, not that the raw ones are policed.
+#  * Stale-but-mapped addresses in kp.mem.*. Reading a freed object's old
+#    address succeeds and returns rubbish. That is exactly the hazard the typed
+#    layer removes, which is why the typed layer exists.
+#  * The engine's own preconditions behind a routine call. kotor.* goes through
+#    the same dispatch a game script does and gets the same treatment.
+#
+# The backstop under all of it is KP_HOOK_GUARD: script code runs inside a hook
+# body, so a fault that gets past every check above is caught, logged, and takes
+# that hook site out of service instead of killing the process. It is the last
+# resort and not the first line, because a longjmp skips every destructor
+# between the fault and the recovery point. Everything above exists so the
+# backstop stays unused.
+#
+# ============================================================================
+# HOW A FUNCTION REPORTS FAILURE
+# ============================================================================
+#
+# `failure` is one of:
+#   never    cannot fail once its arguments type-check
+#   nil      returns nil, and nil means exactly the documented thing
+#   false    returns false
+#   empty    returns an empty table
+#   error    raises a Lua error, which the host's pcall turns into a script
+#            error against the calling script's budget
+#
+# `on_failure` says what the nil means, or what the message reads like. A
+# function whose failure is `nil` never also raises for the same condition, and
+# one whose failure is `error` never returns a sentinel. Mixing the two is how
+# Phasor ended up with getplayer returning nil and getname raising for the same
+# bad id.
+#
+# `requires` says what must already be true for the call to work:
+#   none          always available, including before the game is identified
+#   image         needs the parsed game image (module base, sections)
+#   vm            needs the VM binding, which resolves during hook install
+#   server_tick   needs the CServerExoAppInternal receiver, which is captured by
+#                 the app.server_main_loop detour. Returns its documented
+#                 failure value before the first tick of a loaded game.
+#
+# `phasor_alias` installs a bare global of that name for a Phasor author's
+# muscle memory. The kp.* name is canonical and the alias is a second binding to
+# the same C function, never a second implementation.
+
+[meta]
+version = 1
+game = "k1"
+source = "hand-written; the kotor.* family is generated from data/routines/<game>.json"
+struct_source = "data/structs/<game>.json"
+
+# =============================================================================
+# memory -- raw typed access at an address
+# =============================================================================
+# The numeric readers take (address) or (address, offset), so readbyte(a, 3) and
+# readbyte(a + 3) are the same call. That is Phasor's shape and the reference
+# scripts are full of both forms.
+#
+# All ten raise on an unmapped span rather than returning nil, and the message
+# is Phasor's, verbatim, because the corpus greps for it.
+
+[[function]]
+lua_name = "kp.mem.readbyte"
+module = "memory"
+phasor_alias = "readbyte"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "int"
+failure = "error"
+on_failure = "invalid read: 1 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of uint8"
+doc = "Reads one unsigned byte, 0 to 255."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readchar"
+module = "memory"
+phasor_alias = "readchar"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "int"
+failure = "error"
+on_failure = "invalid read: 1 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of int8"
+doc = "Reads one signed byte, -128 to 127."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readword"
+module = "memory"
+phasor_alias = "readword"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "int"
+failure = "error"
+on_failure = "invalid read: 2 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of uint16"
+doc = "Reads an unsigned 16-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readshort"
+module = "memory"
+phasor_alias = "readshort"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "int"
+failure = "error"
+on_failure = "invalid read: 2 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of int16"
+doc = "Reads a signed 16-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readdword"
+module = "memory"
+phasor_alias = "readdword"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "number"
+failure = "error"
+on_failure = "invalid read: 4 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of uint32"
+doc = "Reads an unsigned 32-bit value. The workhorse for chasing pointers."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readint"
+module = "memory"
+phasor_alias = "readint"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "int"
+failure = "error"
+on_failure = "invalid read: 4 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of int32"
+doc = "Reads a signed 32-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readfloat"
+module = "memory"
+phasor_alias = "readfloat"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "float"
+failure = "error"
+on_failure = "invalid read: 4 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of IEEE754 binary32"
+doc = """Reads a 32-bit float. A wrong-but-mapped offset returns a plausible
+number, so this is the primitive that fails most quietly. Prefer kp.struct."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readdouble"
+module = "memory"
+phasor_alias = "readdouble"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+]
+returns = "float"
+failure = "error"
+on_failure = "invalid read: 8 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of IEEE754 binary64"
+doc = "Reads a 64-bit float. The engine stores almost nothing this way."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readbit"
+module = "memory"
+phasor_alias = "readbit"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "bit", type = "int" },
+]
+returns = "bool"
+failure = "error"
+on_failure = "invalid read: 1 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked load of uint8, then a shift"
+doc = """Reads one bit as a boolean. The bit index is normalised first, so bit 20
+is bit 4 of address+2. Bit 0 is the least significant bit."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readstring"
+module = "memory"
+phasor_alias = "readstring"
+params = [
+  { name = "address", type = "address" },
+  { name = "max_length", type = "int", optional = true, default = "160" },
+]
+returns = "string"
+failure = "error"
+on_failure = "invalid read: N bytes from 0xXXXXXXXX, or 'max_length above 4096'"
+requires = "none"
+mechanism = "page-checked byte scan to the first NUL"
+doc = """Reads a NUL-terminated narrow string. There is no offset form: the
+second argument is a length, as in Phasor. Stops at max_length, cap 4096."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readwidestring"
+module = "memory"
+phasor_alias = "readwidestring"
+params = [
+  { name = "address", type = "address" },
+  { name = "max_length", type = "int", optional = true, default = "160" },
+]
+returns = "string"
+failure = "error"
+on_failure = "invalid read: N bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-checked uint16 scan to the first NUL, narrowed to bytes"
+doc = """Reads a UTF-16 string and narrows it. Present for Phasor parity only.
+KOTOR's object model stores single-byte CExoString plus a TLK strref; use
+kp.str.cexo or kp.str.strref for game text."""
+confidence = "low"
+
+[[function]]
+lua_name = "kp.mem.readbytes"
+module = "memory"
+params = [
+  { name = "address", type = "address" },
+  { name = "count", type = "int" },
+]
+returns = "string"
+failure = "error"
+on_failure = "invalid read: N bytes from 0xXXXXXXXX, or 'count above 65536'"
+requires = "none"
+mechanism = "page-checked block copy"
+doc = "Reads count raw bytes into a Lua string, NULs included."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writebyte"
+module = "memory"
+phasor_alias = "writebyte"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "int" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 1 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store uint8, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes one unsigned byte."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writechar"
+module = "memory"
+phasor_alias = "writechar"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "int" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 1 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store int8, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes one signed byte."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writeword"
+module = "memory"
+phasor_alias = "writeword"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "int" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 2 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store uint16, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes an unsigned 16-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writeshort"
+module = "memory"
+phasor_alias = "writeshort"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "int" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 2 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store int16, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes a signed 16-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writedword"
+module = "memory"
+phasor_alias = "writedword"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "number" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 4 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store uint32, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = """Writes an unsigned 32-bit value. A negative argument fails the range
+check rather than wrapping; pass the unsigned form."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writeint"
+module = "memory"
+phasor_alias = "writeint"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "int" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 4 bytes from 0xXXXXXXXX, or 'value (N) outside of type's range'"
+requires = "none"
+mechanism = "page-protect, store int32, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes a signed 32-bit value."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writefloat"
+module = "memory"
+phasor_alias = "writefloat"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "float" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 4 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-protect, store IEEE754 binary32, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes a 32-bit float."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writedouble"
+module = "memory"
+phasor_alias = "writedouble"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "value", type = "float" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 8 bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-protect, store IEEE754 binary64, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes a 64-bit float."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writebit"
+module = "memory"
+phasor_alias = "writebit"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "bit", type = "int" },
+  { name = "value", type = "bool" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: 1 bytes from 0xXXXXXXXX; an unreadable page raises the read message first"
+requires = "none"
+mechanism = "page-checked read-modify-write of one byte"
+guard = "null page, code sections, our own patched bytes"
+doc = """Sets or clears one bit. Same index normalisation as kp.mem.readbit.
+Unlike Phasor, the value must be a boolean or 0/1; anything else raises rather
+than silently clearing the bit."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writestring"
+module = "memory"
+phasor_alias = "writestring"
+params = [
+  { name = "address", type = "address" },
+  { name = "offset", type = "int", optional = true, default = "0" },
+  { name = "text", type = "string" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: N bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-protect, store bytes plus a trailing NUL, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = """Writes the string and a terminator, so it always touches #text+1 bytes.
+It does not know how large the destination buffer is. Overwriting a CExoString's
+inline storage this way is how you corrupt a save; use kp.str.cexo to read one
+and an engine routine to change one."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writebytes"
+module = "memory"
+params = [
+  { name = "address", type = "address" },
+  { name = "bytes", type = "string" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "invalid write: N bytes from 0xXXXXXXXX"
+requires = "none"
+mechanism = "page-protect, block copy, restore protection"
+guard = "null page, code sections, our own patched bytes"
+doc = "Writes a Lua string's bytes verbatim, with no terminator."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.readable"
+module = "memory"
+params = [
+  { name = "address", type = "address" },
+  { name = "count", type = "int", optional = true, default = "1" },
+]
+returns = "bool"
+failure = "never"
+on_failure = "false for an unmapped or partly unmapped span"
+requires = "none"
+mechanism = "platform page query"
+doc = """Asks whether a span can be read without raising. The one place a bad
+address is a value rather than an error, so a script can probe a chased pointer
+before dereferencing it."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.writable"
+module = "memory"
+params = [
+  { name = "address", type = "address" },
+  { name = "count", type = "int", optional = true, default = "1" },
+]
+returns = "bool"
+failure = "never"
+on_failure = "false when the span is unmapped, is code without the opt-in, or overlaps our own patched bytes"
+requires = "none"
+mechanism = "platform page query plus the write guard's own rules"
+doc = "Asks whether a write to this span would be allowed. Answers the guard, not just the page."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.base"
+module = "memory"
+params = []
+returns = "address"
+failure = "never"
+on_failure = "0 before the image is parsed"
+requires = "image"
+mechanism = "src/image module base"
+doc = """Load address of the game executable. The K1 PE declares 0x400000 and
+cannot relocate, so this is a constant there and a real question on the TSL ELF."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.findsig"
+module = "memory"
+phasor_alias = "findsig"
+params = [
+  { name = "pattern", type = "string" },
+  { name = "occurrence", type = "int", optional = true, default = "0" },
+]
+returns = "address"
+failure = "nil"
+on_failure = "nil when the pattern does not occur that many times"
+requires = "image"
+mechanism = "scan of the parsed executable sections from src/image"
+doc = """Byte-signature search, '?' being a nibble wildcard, so '4?' matches any
+byte whose high nibble is 4. Results are memoised per pattern, misses included.
+Only scans after the image has deciphered, so it never reads ciphertext."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.mem.allow_code_writes"
+module = "memory"
+params = [{ name = "enable", type = "bool" }]
+returns = "bool"
+failure = "never"
+on_failure = "returns the previous setting"
+requires = "none"
+mechanism = "per-script flag on the write guard"
+doc = """Lets this script's raw writes touch executable sections. Off by default
+and per script, not global. Equivalent to declaring `allow_code_writes = true` at
+chunk scope, which is read at load time the way `priority` is; this is the same
+switch thrown later. The honest use is a one-off byte patch the address tables do
+not cover; the dishonest use is anything you would rather do with a hook site."""
+confidence = "high"
+
+# =============================================================================
+# structs -- named field access, generated from the RE corpus
+# =============================================================================
+# What the Phasor idiom looks like today, from the reference corpus:
+#
+#     stats_player_kills = readword(stats_base + 0x8)    -- Confirmed.
+#
+# The offset is a literal, the type is chosen by which function you called, and
+# "Confirmed" is a comment. Nothing checks any of it, and two scripts in the same
+# corpus disagree about the same offset.
+#
+# What replaces it:
+#
+#     local c = kp.struct.view(id)          -- picks CSWSCreature from the type byte
+#     print(c.object.current_hp, c.object.position.x)
+#     c.movement_rate_factor = 1.2          -- refused: engine setter clamps, use the effect
+#
+# The layouts come from data/structs/<game>.json, which carries every field's
+# name, offset, type, size checksum and confidence, and is emitted from the same
+# corpus that produced the address tables. tools/gen_struct_glue.py turns it into
+# src/generated/structs_<game>.inc. Adding a struct is a data change.
+#
+# Three things this buys that the offset idiom cannot:
+#
+#   * A misspelled field raises and names the struct. An offset typo reads
+#     whatever is next door.
+#   * A view holds an object id and re-resolves it, so it cannot outlive its
+#     object. A bare address can and does.
+#   * Embedded bases are data. CSWSItem carries its CSWSObject at +0x10 while
+#     every other type carries it at +0x00, so `item.server_object.current_hp`
+#     resolves to +0xEC and `door.object.current_hp` to +0xDC without either
+#     script knowing there was a difference.
+
+[[function]]
+lua_name = "kp.struct.view"
+module = "structs"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "type_name", type = "string", optional = true, default = "chosen from the object's type byte" },
+]
+returns = "view"
+failure = "nil"
+on_failure = "nil when the id does not resolve, or when the object's type has no layout in data/structs"
+requires = "server_tick"
+mechanism = "kp.obj.address, then CGameObject.object_type +0x08 selects the layout"
+doc = """Typed view of a live object. Index it by field name. Pass type_name to
+force a layout, which is how you look at a subobject the type byte does not
+describe."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.at"
+module = "structs"
+params = [
+  { name = "address", type = "address" },
+  { name = "type_name", type = "string" },
+]
+returns = "view"
+failure = "error"
+on_failure = "'no layout named X' for an unknown type"
+requires = "image"
+mechanism = "wraps a raw address in the named layout"
+doc = """Typed view of an address you already have. The bridge between the raw
+layer and the typed one: chase a pointer with kp.mem.readdword, then name what
+you landed on. Unlike kp.struct.view this does not track liveness -- it is an
+address, so it is your problem when it goes stale."""
+confidence = "high"
+
+[[function]]
+lua_name = "view.<field>"
+module = "structs"
+params = []
+returns = "any"
+failure = "error"
+on_failure = "'CSWSCreature has no field named positon', or 'view of object 0x... is stale'"
+requires = "server_tick"
+mechanism = "__index metamethod over the generated field table"
+doc = """Reads a named field. Integers and floats come back as numbers, a nested
+struct or a Vector comes back as another view, a CExoString comes back as a Lua
+string, a CExoArrayList comes back as a view with a length and an index. The
+field name is checked against the layout, and the view's object id is
+re-resolved once per tick before the first read of that tick."""
+confidence = "high"
+
+[[function]]
+lua_name = "view.<field> = value"
+module = "structs"
+params = []
+returns = "nothing"
+failure = "error"
+on_failure = "'no field named X', 'field X is unverified; set allow_unverified_writes', 'value out of range for u16', or the raw write guard's message"
+requires = "server_tick"
+mechanism = "__newindex metamethod, then the same guarded store kp.mem.write* uses"
+doc = """Writes a named field. Bounds-checked to the field's declared size, and
+refused outright for fields the corpus marks med or low confidence unless the
+script opts in. Writing a field the engine has a setter for is still writing
+around the setter: CSWSCreature.movement_rate_factor has a clamp behind
+CSWSCreature::SetMovementRateFactor, and this does not run it."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.types"
+module = "structs"
+params = []
+returns = "table"
+failure = "empty"
+on_failure = "empty table if no layout set is loaded"
+requires = "none"
+mechanism = "generated layout table"
+doc = "Every struct name the running build has a layout for, as an array of strings."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.fields"
+module = "structs"
+params = [{ name = "type_name", type = "string" }]
+returns = "table"
+failure = "nil"
+on_failure = "nil for an unknown type name"
+requires = "none"
+mechanism = "generated layout table"
+doc = """Describes a layout: an array of { name, offset, type, size, confidence }.
+This is how a script discovers what it can read instead of guessing, and how a
+tool prints a struct without hardcoding anything."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.typeof"
+module = "structs"
+params = [{ name = "value", type = "any" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil when the value is not a view"
+requires = "none"
+mechanism = "view metatable tag"
+doc = "The layout name behind a view, e.g. 'CSWSCreature'."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.address"
+module = "structs"
+params = [{ name = "view", type = "view" }]
+returns = "address"
+failure = "nil"
+on_failure = "nil when the view is stale or is not a view"
+requires = "server_tick"
+mechanism = "re-resolves the view, then returns the base address"
+doc = """The address a view currently sits at, for handing to kp.mem.*. Re-read
+it rather than caching it: the answer can change when the object moves in memory."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.valid"
+module = "structs"
+params = [{ name = "view", type = "view" }]
+returns = "bool"
+failure = "never"
+on_failure = "false for a stale view, a destroyed object, or a non-view"
+requires = "server_tick"
+mechanism = "re-resolves the view's object id"
+doc = "Whether a view still points at a live object. The only view call that answers rather than raises."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.size"
+module = "structs"
+params = [{ name = "type_name", type = "string" }]
+returns = "int"
+failure = "nil"
+on_failure = "nil for an unknown type name"
+requires = "none"
+mechanism = "generated layout table"
+doc = """Byte size of a layout, as asserted by the corpus walk. Useful for
+striding an array of structs by hand, e.g. CSWPartyMemberData at 0x88."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.struct.allow_unverified_writes"
+module = "structs"
+params = [{ name = "enable", type = "bool" }]
+returns = "bool"
+failure = "never"
+on_failure = "returns the previous setting"
+requires = "none"
+mechanism = "per-script flag on the typed write path"
+doc = """Lets this script write fields whose offset the corpus marks med or low
+confidence. Equivalent to declaring `allow_unverified_writes = true` at chunk
+scope. Reads of those fields never needed the opt-in; a wrong read is a wrong
+number and a wrong write is a corrupted neighbour."""
+confidence = "high"
+
+# =============================================================================
+# object -- identity, lookup and the things every script does with an id
+# =============================================================================
+# KOTOR object ids are not a flat counter. CGameObjectArray::AddInternalObject
+# hands normal objects an id from next_object_id_0 counting up and character
+# objects one from next_char_id_0 counting down, so the two ranges grow toward
+# each other. Nothing here assumes an id is small, dense, or ordered.
+#
+# The receiver problem, stated once: the typed lookups on CServerExoAppInternal
+# need that object as `this`, and the corpus has no data-symbol table to resolve
+# a global from. The app.server_main_loop detour IS a CServerExoAppInternal
+# method, so its `this` is the receiver, captured on the first tick. That is why
+# the address lookups here say requires = "server_tick" and return their
+# documented failure value before then, while the entries that go through an
+# engine routine only need the VM binding. It is a real state, not an edge case:
+# OnScriptLoad runs before the first tick.
+
+[[function]]
+lua_name = "kp.obj.valid"
+module = "object"
+params = [{ name = "object_id", type = "object" }]
+returns = "bool"
+failure = "never"
+on_failure = "false for an unknown id, and false before the VM binding exists"
+requires = "vm"
+mechanism = "routine GetIsObjectValid (k1 id 42)"
+doc = "Whether an id names a live object. The cheap check to do before anything else."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.address"
+module = "object"
+phasor_alias = "getobject"
+params = [{ name = "object_id", type = "object" }]
+returns = "address"
+failure = "nil"
+on_failure = "nil for an unknown id, and nil before the first tick"
+requires = "server_tick"
+mechanism = "CServerExoAppInternal::GetGameObject, receiver from the app.server_main_loop detour"
+doc = """Address of an object's struct. The counterpart of Phasor's getobject and
+the same sanctioned validity probe: it returns nil rather than raising, so it is
+the thing you test. Prefer kp.struct.view unless you need the number."""
+confidence = "high"
+evidence = "capability mapping resolves CServerExoAppInternal::GetGameObject at 0x004B1700 for binary_id=8, whose MainLoop address matches k1_steam_103's app.server_main_loop at 0x004BABB0"
+
+[[function]]
+lua_name = "kp.obj.typed_address"
+module = "object"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "kind", type = "string" },
+]
+returns = "address"
+failure = "nil"
+on_failure = "nil when the id does not resolve or is not of that kind"
+requires = "server_tick"
+mechanism = """the CServerExoAppInternal GetXByGameObjectID family: creature 0x4B1790,
+door 0x4B1920, placeable 0x4B18D0, trigger 0x4B1880, area 0x4B17E0, store 0x4B1AB0,
+waypoint 0x4B19C0, encounter 0x4B1A10, areaofeffect 0x4B1970, sound 0x4B1A60"""
+doc = """Address of an object, checked to be of the kind you named. Stricter than
+kp.obj.address: asking for a creature and being handed a door is the mistake this
+prevents, and it is the engine doing the checking, not us."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.obj.type"
+module = "object"
+params = [{ name = "object_id", type = "object" }]
+returns = "int"
+failure = "nil"
+on_failure = "nil for an unknown id"
+requires = "vm"
+mechanism = "routine GetObjectType (k1 id 106)"
+doc = "The engine's object type constant."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.typename"
+module = "object"
+params = [{ name = "object_id", type = "object" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil for an unknown id, or when the type byte names no known layout"
+requires = "server_tick"
+mechanism = "CGameObject.object_type at +0x08, mapped to a layout name"
+doc = """The struct name behind an id, e.g. 'CSWSCreature'. What kp.struct.view
+uses to pick a layout, exposed so a script can branch on it."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.self"
+module = "object"
+params = []
+returns = "object"
+failure = "nil"
+on_failure = "nil when no caller object is set, which is the normal state outside a retargeted call"
+requires = "vm"
+mechanism = "CSWVirtualMachineCommands.has_caller_object +0x04 and caller_object_id +0x08"
+doc = """The object routines will treat as OBJECT_SELF right now. Reads the same
+two fields kp.as writes. Most K1 routines default an object parameter to
+OBJECT_SELF, so this is worth knowing before you call one."""
+confidence = "high"
+evidence = "ExecuteCommandClearAllActions 0x0052f4a0 body reads has_caller_object then caller_object_id"
+
+[[function]]
+lua_name = "kp.obj.pc"
+module = "object"
+params = []
+returns = "object"
+failure = "nil"
+on_failure = "nil when no game is loaded"
+requires = "vm"
+mechanism = "routine GetFirstPC (k1 id 548)"
+doc = """The player character. Phasor's getplayer with the 16-slot indirection
+gone -- and deliberately NOT aliased to that name, because getplayer returned a
+struct address and this returns an object id. Two kinds of number under one name
+is worse than no alias."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.party"
+module = "object"
+params = []
+returns = "table"
+failure = "empty"
+on_failure = "empty table when no game is loaded"
+requires = "vm"
+mechanism = "routine GetPartyMemberCount (k1 id 126) walked with GetPartyMemberByIndex (k1 id 577)"
+doc = """Every party member's object id, in slot order, index 1 being the leader.
+Phasor's resolveplayer over a fixed 16 slots collapses to this."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.party_slot"
+module = "object"
+phasor_alias = "rresolveplayer"
+params = [{ name = "object_id", type = "object" }]
+returns = "int"
+failure = "nil"
+on_failure = "nil when the object is not in the party"
+requires = "vm"
+mechanism = "scan of GetPartyMemberByIndex (k1 id 577) bounded by GetPartyMemberCount (k1 id 126)"
+doc = """Reverse of kp.obj.party. There is no engine routine for this, so it is a
+scan over at most a handful of slots. The struct alternative is CSWParty
+party_member_datas at +0x24, stride 0x88."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.obj.module"
+module = "object"
+params = []
+returns = "object"
+failure = "nil"
+on_failure = "nil when no module is loaded"
+requires = "vm"
+mechanism = "routine GetModule (k1 id 242)"
+doc = "The module object, which is where module-scope variables live."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.area"
+module = "object"
+params = [{ name = "object_id", type = "object", optional = true, default = "kp.obj.pc()" }]
+returns = "object"
+failure = "nil"
+on_failure = "nil when the object is not in an area"
+requires = "vm"
+mechanism = "routine GetArea (k1 id 24)"
+doc = "The area an object is in."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.tag"
+module = "object"
+params = [{ name = "object_id", type = "object" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil for an unknown id"
+requires = "vm"
+mechanism = "routine GetTag (k1 id 168); the struct path is CSWSObject.tag +0x18, a CExoString"
+doc = "An object's tag. Phasor needed gettagid to turn a name into a number; KOTOR uses the string directly."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.name"
+module = "object"
+phasor_alias = "getname"
+params = [{ name = "object_id", type = "object" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil for an unknown id"
+requires = "vm"
+mechanism = "routine GetName (k1 id 253)"
+doc = "An object's display name."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.find"
+module = "object"
+params = [
+  { name = "tag", type = "string" },
+  { name = "nth", type = "int", optional = true, default = "0" },
+]
+returns = "object"
+failure = "nil"
+on_failure = "nil when no nth object has that tag"
+requires = "vm"
+mechanism = "routine GetObjectByTag (k1 id 200)"
+doc = "Finds an object by tag. nth is zero-based, as the engine counts it."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.in_area"
+module = "object"
+params = [
+  { name = "area", type = "object", optional = true, default = "the PC's area" },
+  { name = "filter", type = "int", optional = true, default = "all types" },
+]
+returns = "function"
+failure = "empty"
+on_failure = "an iterator that yields nothing when the area does not resolve"
+requires = "vm"
+mechanism = "routines GetFirstObjectInArea (k1 id 93) and GetNextObjectInArea (k1 id 94)"
+doc = """A for-loop iterator over every object in an area. The engine keeps one
+walk cursor per area, so do not nest two of these over the same area -- the
+inner one moves the outer one's cursor. Collect ids first if you need to."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.near"
+module = "object"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "radius", type = "float" },
+  { name = "filter", type = "int", optional = true, default = "all types" },
+  { name = "line_of_sight", type = "bool", optional = true, default = "false" },
+]
+returns = "table"
+failure = "empty"
+on_failure = "empty table when the object does not resolve"
+requires = "vm"
+mechanism = """routines GetFirstObjectInShape (k1 id 128) and GetNextObjectInShape
+(k1 id 129) over a sphere, with Location (k1 id 215) built from the object's position"""
+doc = """Object ids within radius, nearest first. Needs the vector marshallers,
+because the shape routines take a location. The reference scripts hand-rolled
+this as object_in_sphere; the engine has done it all along."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.obj.position"
+module = "object"
+phasor_alias = "getobjectcoords"
+params = [{ name = "object_id", type = "object" }]
+returns = "table"
+failure = "nil"
+on_failure = "nil for an unknown id, and nil when the vector marshallers did not resolve on this build"
+requires = "vm"
+mechanism = "routine GetPosition (k1 id 27); read path CSWSObject.position +0x90"
+doc = """Where an object is, as { x =, y =, z = }. Unlike Phasor's three return
+values this is one table, because that is what the routine bridge already uses
+for a vector and having two shapes for one concept is how mistakes happen."""
+confidence = "high"
+evidence = "ExecuteCommandGetPosition 0x0053cae0 reads +0x90/+0x94/+0x98 and pushes a vector"
+
+[[function]]
+lua_name = "kp.obj.move"
+module = "object"
+phasor_alias = "movobjectcoords"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "position", type = "vector" },
+  { name = "run", type = "bool", optional = true, default = "false" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false when the object does not resolve or the vector marshallers are unavailable"
+requires = "vm"
+mechanism = "routine CutsceneMove (k1 id 507)"
+doc = """Moves an object to a point. Goes through the engine rather than writing
+CSWSObject.position, so room and area bookkeeping happens. Writing the position
+field directly is possible and is how you get an object standing in a wall."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.create"
+module = "object"
+phasor_alias = "createobject"
+params = [
+  { name = "object_type", type = "int" },
+  { name = "template", type = "string" },
+  { name = "position", type = "vector" },
+  { name = "facing", type = "float", optional = true, default = "0.0" },
+  { name = "appear_animation", type = "bool", optional = true, default = "false" },
+]
+returns = "object"
+failure = "nil"
+on_failure = "nil when the engine refuses, e.g. an unknown template resref"
+requires = "vm"
+mechanism = "routines Location (k1 id 215) then CreateObject (k1 id 243)"
+doc = """Spawns an object from a template resref. Phasor needed a numeric tag id
+from gettagid first; KOTOR takes the resref, so that step is gone. Returns nil on
+failure rather than Phasor's zero return values, which read as nil in an
+assignment and as nothing in an argument list."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.destroy"
+module = "object"
+phasor_alias = "destroyobject"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "delay", type = "float", optional = true, default = "0.0" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false for an unknown id"
+requires = "vm"
+mechanism = "routine DestroyObject (k1 id 241)"
+doc = """Destroys an object, optionally after a delay. Any typed view of it goes
+stale on the next tick and raises rather than reading freed memory."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.obj.INVALID"
+module = "object"
+params = []
+returns = "object"
+failure = "never"
+on_failure = "not a function; a constant"
+requires = "none"
+mechanism = "the engine's OBJECT_INVALID sentinel"
+doc = "The id that means no object. Compare against it rather than writing the literal."
+confidence = "high"
+
+# =============================================================================
+# output -- saying something, to a screen or to a log
+# =============================================================================
+# Phasor's output functions all assume a server with connected players. KOTOR is
+# one player at one screen, so 'broadcast', 'private message' and 'rcon console'
+# collapse into a much shorter list. What survives is: tell the player, put text
+# on the screen, write to our log, and answer a console line.
+
+[[function]]
+lua_name = "kp.print"
+module = "output"
+phasor_alias = "hprintf"
+params = [{ name = "text", type = "string" }]
+returns = "nothing"
+failure = "never"
+on_failure = "silently drops the line if the log file cannot be opened"
+requires = "none"
+mechanism = "src/platform logging, plus an echo to the in-game console when one is open"
+doc = """Diagnostic output. Works at every phase including before the game is
+identified, which makes it the one thing that always works when nothing else
+does. Not game state: nobody in the world hears it."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.log"
+module = "output"
+params = [
+  { name = "text", type = "string" },
+  { name = "level", type = "string", optional = true, default = "\"info\"" },
+]
+returns = "nothing"
+failure = "never"
+on_failure = "an unknown level is treated as info rather than raising"
+requires = "none"
+mechanism = "src/platform logging"
+doc = "Writes to the runtime log with a level tag. Levels are debug, info, warn, error."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.echo"
+module = "output"
+phasor_alias = "respond"
+params = [{ name = "text", type = "string" }]
+returns = "bool"
+failure = "false"
+on_failure = "false when called outside OnConsoleCommand, having written to the log instead"
+requires = "none"
+mechanism = "the console.do_console detour owns the input line and its response path"
+doc = """Replies to the console line being handled. This is the OnConsoleCommand
+reply channel and the reason a script can add its own commands. Outside that
+callback there is nothing to reply to, so it logs and returns false."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.tell"
+module = "output"
+phasor_alias = "privatesay"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "text", type = "string" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false when the object does not resolve"
+requires = "vm"
+mechanism = "routine SendMessageToPC (k1 id 374)"
+doc = "Sends a message to the player. The closest true equivalent of any Phasor messaging call."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.say"
+module = "output"
+phasor_alias = "say"
+params = [
+  { name = "text", type = "string" },
+  { name = "x", type = "int", optional = true, default = "0" },
+  { name = "y", type = "int", optional = true, default = "0" },
+  { name = "life", type = "float", optional = true, default = "5.0" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false when no game is loaded"
+requires = "vm"
+mechanism = "routine AurPostString (k1 id 582)"
+doc = """Puts a line on the screen at a position for a number of seconds. Named
+after Phasor's say for the muscle memory, but it reaches one screen rather than
+every connected player -- the recipient concept does not survive the port."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.float_text"
+module = "output"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "text", type = "string" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false when the object does not resolve"
+requires = "vm"
+mechanism = "routine FloatingTextStringOnCreature (k1 id 526)"
+doc = "Floats a line of text above a creature."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.speak"
+module = "output"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "text", type = "string" },
+  { name = "volume", type = "int", optional = true, default = "0" },
+]
+returns = "bool"
+failure = "false"
+on_failure = "false when the object does not resolve"
+requires = "vm"
+mechanism = "kp.as around routine SpeakString (k1 id 221), which speaks as OBJECT_SELF"
+doc = """Makes a creature say something in the world. SpeakString has no object
+parameter, so this retargets OBJECT_SELF for the duration of the call, which is
+what kp.as is for."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.console"
+module = "output"
+phasor_alias = "svcmd"
+params = [{ name = "line", type = "string" }]
+returns = "bool"
+failure = "false"
+on_failure = "false for an empty line, and false when the console detour is not installed"
+requires = "none"
+mechanism = "feeds a synthesised line to the console.do_console detour's own handler"
+doc = """Runs a line as if it had been typed into the cheat console. The nearest
+thing to Phasor's svcmd, and the shape ports even though the vocabulary does not:
+Phasor's server commands were kick, ban and map_reset, none of which exist here.
+Reentrancy is refused -- a line submitted from inside OnConsoleCommand returns
+false rather than recursing. To run a compiled game script instead, call
+kotor.ExecuteScript."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.game_log"
+module = "output"
+phasor_alias = "log_msg"
+params = [{ name = "text", type = "string" }]
+returns = "bool"
+failure = "false"
+on_failure = "false when no game is loaded"
+requires = "vm"
+mechanism = "routine WriteTimestampedLogEntry (k1 id 560)"
+doc = "Writes a line into the game's own log rather than ours."
+confidence = "high"
+
+# =============================================================================
+# timers -- and the replacement for the three routines Lua cannot call
+# =============================================================================
+# AssignCommand, DelayCommand and ActionDoCommand each take an `action`: a script
+# closure the NWScript compiler builds as STORE_STATE bytecode capturing a
+# subroutine and its frame. There is no way to synthesise one from outside the
+# VM, so those three are the only K1 routines the bridge cannot call. They are
+# not a gap to work around; they are two separate features that Lua does better
+# natively:
+#
+#   DelayCommand(f, action)     -> kp.timer.after(ms, function() ... end)
+#   AssignCommand(obj, action)  -> kp.as(obj, function() ... end)
+#
+# The clock. kp.timer runs on app.server_main_loop, which is the server tick. It
+# stops when the game is paused and it stops in menus, which is usually what a
+# script wants and is NOT wall time. kp.time() is wall time; kp.timer.tick() is
+# the tick counter. All three are different questions and none of them is a
+# substitute for another.
+#
+# Timers do not survive a save. They hold a Lua closure and a closure cannot be
+# serialised. OnSave and OnLoad are the persistence path: save what you need to
+# rebuild the timer, and rebuild it in OnLoad.
+
+[[function]]
+lua_name = "kp.timer.after"
+module = "timers"
+phasor_alias = "registertimer"
+params = [
+  { name = "delay_ms", type = "int" },
+  { name = "callback", type = "function" },
+  { name = "userdata", type = "any", optional = true, default = "nil" },
+]
+returns = "int"
+failure = "error"
+on_failure = "'delay must be zero or more' for a negative delay; a non-function, non-string callback is an argument error"
+requires = "none"
+mechanism = "the app.server_main_loop detour drains a per-script due list each tick"
+doc = """Runs a callback once, after a delay in server-clock milliseconds. The
+callback receives (id, count, userdata). Unlike Phasor this takes a function
+value, so a typo is caught at registration rather than when the timer fires; a
+string naming a global is still accepted for Phasor parity and still resolves
+late. Returning true from the callback re-arms it, as Phasor does."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.every"
+module = "timers"
+params = [
+  { name = "interval_ms", type = "int" },
+  { name = "callback", type = "function" },
+  { name = "userdata", type = "any", optional = true, default = "nil" },
+]
+returns = "int"
+failure = "error"
+on_failure = "'interval must be one or more'; an interval of zero would fire forever inside one tick"
+requires = "none"
+mechanism = "as kp.timer.after, re-armed after each call"
+doc = """Runs a callback repeatedly. Return false from the callback to stop it.
+Ticks are not evenly spaced, so a slow frame does not fire the timer twice to
+catch up -- it fires once and the next due time is measured from now."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.after_ticks"
+module = "timers"
+params = [
+  { name = "ticks", type = "int" },
+  { name = "callback", type = "function" },
+  { name = "userdata", type = "any", optional = true, default = "nil" },
+]
+returns = "int"
+failure = "error"
+on_failure = "'ticks must be one or more'"
+requires = "none"
+mechanism = "tick counter comparison in the app.server_main_loop detour"
+doc = """Runs a callback after a number of server frames. Use this rather than a
+millisecond delay when you mean 'next frame', because a frame is not a fixed
+number of milliseconds."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.cancel"
+module = "timers"
+phasor_alias = "removetimer"
+params = [{ name = "id", type = "int", optional = true, default = "nil" }]
+returns = "bool"
+failure = "false"
+on_failure = "false for nil, an unknown id, or another script's id -- none of which raise"
+requires = "none"
+mechanism = "removal from this script's timer list"
+doc = """Cancels a timer. Deliberately forgiving about ids it does not recognise,
+because cancelling twice is a normal thing for cleanup code to do. Cancelling the
+timer currently executing is allowed here and is a no-op; return false from the
+callback instead, which is clearer."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.list"
+module = "timers"
+params = []
+returns = "table"
+failure = "empty"
+on_failure = "empty table when this script has no timers"
+requires = "none"
+mechanism = "this script's timer list"
+doc = "This script's live timers, as an array of { id, due_in_ms, repeating, fired }."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.tick"
+module = "timers"
+params = []
+returns = "int"
+failure = "never"
+on_failure = "0 before the first tick"
+requires = "none"
+mechanism = "the counter the app.server_main_loop detour increments"
+doc = "Server frames since the runtime started. Monotonic, and stops advancing when the game is paused."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.timer.clock"
+module = "timers"
+phasor_alias = "getticks"
+params = []
+returns = "number"
+failure = "never"
+on_failure = "0 before the first tick"
+requires = "none"
+mechanism = "milliseconds accumulated across ticks by the app.server_main_loop detour"
+doc = """The server clock in milliseconds: the clock kp.timer.after measures
+against. Frozen while the game is paused, which is the difference between it and
+kp.time()."""
+confidence = "high"
+
+# =============================================================================
+# strings -- tokenising, and reading the engine's own string types
+# =============================================================================
+
+[[function]]
+lua_name = "kp.str.split"
+module = "strings"
+phasor_alias = "tokenizestring"
+params = [
+  { name = "text", type = "string" },
+  { name = "delimiters", type = "string" },
+]
+returns = "table"
+failure = "empty"
+on_failure = "empty table for an empty input; a non-string argument is an argument error"
+requires = "none"
+mechanism = "pure Lua-side string work"
+doc = "Splits on any character in delimiters. Returns a 1-based array."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.str.cmdsplit"
+module = "strings"
+phasor_alias = "tokenizecmdstring"
+params = [{ name = "text", type = "string" }]
+returns = "table"
+failure = "empty"
+on_failure = "empty table for an empty input"
+requires = "none"
+mechanism = "pure Lua-side string work"
+doc = """Command-line split: whitespace separated, double-quoted runs kept whole.
+What OnConsoleCommand hands you wants exactly this."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.str.cexo"
+module = "strings"
+params = [{ name = "address", type = "address" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil when the CExoString's pointer or its span is unmapped"
+requires = "none"
+mechanism = "CExoString: char* at +0x00, length at +0x04, size 0x8"
+doc = """Reads a CExoString at an address. The engine's string type everywhere:
+CSWSObject.tag at +0x18 is one. kp.struct returns these as Lua strings already;
+this is for when you only have an address."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.str.strref"
+module = "strings"
+params = [{ name = "strref", type = "int" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil for a strref the loaded TLK does not have"
+requires = "vm"
+mechanism = "routine GetStringByStrRef (k1 id 239)"
+doc = """Looks up localised text by its dialog.tlk index. This is what KOTOR has
+instead of wide strings: the object carries a number and the text lives in the
+TLK, so it is already translated."""
+confidence = "high"
+
+# =============================================================================
+# misc -- what the runtime knows about itself and the world clock
+# =============================================================================
+
+[[function]]
+lua_name = "kp.random"
+module = "misc"
+phasor_alias = "getrandomnumber"
+params = [
+  { name = "min", type = "int" },
+  { name = "max", type = "int" },
+]
+returns = "int"
+failure = "error"
+on_failure = "'min must not exceed max'"
+requires = "vm"
+mechanism = "routine Random (k1 id 0), offset into the range"
+doc = """A random integer from min to max, INCLUSIVE at both ends. Phasor's
+getrandomnumber was half-open and the reference scripts wrote their own wrapper
+to fix it; this is the wrapper. Uses the engine RNG rather than Lua's because
+KOTOR saves replay from engine RNG state."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.build"
+module = "misc"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "'unknown' before identification finishes"
+requires = "none"
+mechanism = "the build name from src/image identification, which keys data/addresses/<build>.json"
+doc = """Which build this is, e.g. 'k1_steam_103'. Phasor handed scripts a single
+game_version integer; this names an exact executable, which is what you actually
+need before you trust an offset."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.game"
+module = "misc"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "'unknown' before identification finishes"
+requires = "none"
+mechanism = "the game field of the loaded address table"
+doc = "'k1' or 'k2'. The coarse question, when kp.build() is finer than you need."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.version"
+module = "misc"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "not applicable"
+requires = "none"
+mechanism = "compiled-in version string"
+doc = "The runtime's own version."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.gamedir"
+module = "misc"
+phasor_alias = "getprofilepath"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "empty string before the runtime has started"
+requires = "none"
+mechanism = "src/platform module path, from the OS rather than reconstructed"
+doc = """Directory the game executable lives in. No engine routine answers this:
+GetModuleName and GetModuleFileName return the module resref, which is a
+different question."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.scriptdir"
+module = "misc"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "empty string before the runtime has started"
+requires = "none"
+mechanism = "HostConfig::script_dir"
+doc = "Directory the Lua scripts were loaded from."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.scriptname"
+module = "misc"
+params = []
+returns = "string"
+failure = "never"
+on_failure = "not applicable; every lua_State has an owning script"
+requires = "none"
+mechanism = "kp::lua::Script::owner on the calling lua_State"
+doc = "The calling script's own name. Useful in a shared log line."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.time"
+module = "misc"
+params = []
+returns = "number"
+failure = "never"
+on_failure = "not applicable"
+requires = "none"
+mechanism = "GetTickCount on Windows, CLOCK_MONOTONIC on Linux"
+doc = """Wall-clock milliseconds, monotonic. Keeps counting while the game is
+paused, which is exactly when kp.timer.clock does not."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.gametime"
+module = "misc"
+params = []
+returns = "table"
+failure = "nil"
+on_failure = "nil when no module is loaded"
+requires = "vm"
+mechanism = "routines GetTimeHour (k1 id 16), GetTimeMinute (k1 id 17), GetTimeSecond (k1 id 18), GetTimeMillisecond (k1 id 19)"
+doc = "The in-world clock, as { hour =, minute =, second =, millisecond = }. Advances with game time."
+confidence = "high"
+
+# =============================================================================
+# routines -- the bridge to the engine's own 769
+# =============================================================================
+
+[[function]]
+lua_name = "kotor.<RoutineName>"
+module = "routines"
+family = true
+family_source = "data/routines/<game>.json"
+params = []
+returns = "any"
+failure = "error"
+on_failure = """'kotor.GetPosition needs vm.stack_pop_vector, which did not resolve
+on this build'; 'kotor.GetName expects at least 1 argument (got 0)'; 'the routine
+bridge is disabled after a VM stack imbalance in kotor.X'"""
+requires = "vm"
+mechanism = """CSWVirtualMachineCommands::ExecuteCommand, reached through the runtime
+function-pointer table at +0x0C that vm.execute_command indexes. Arguments are
+pushed onto the VM stack in reverse declaration order and the result is popped."""
+doc = """Every engine routine, callable by name: kotor.GetModule(),
+kotor.SendMessageToPC(kotor.GetFirstPC(), "hello"). 769 of K1's 772 and 803 of
+K2's 877. Arguments follow the declaration order in the game's own nwscript.nss
+and trailing defaulted parameters may be omitted.
+
+Names, not ids. The id is an annotation in this file; register_all binds by name,
+K2's ids differ from K1's, and eight K1 ids have conflicting names between
+nwscript.nss and the engine's own enum.
+
+How the types cross:
+
+  int, float, string, object   plain Lua values.
+  vector                       a table { x =, y =, z = }, both directions. The VM
+                               has dedicated StackPushVector/StackPopVector, so
+                               this is one push, not three.
+  effect, event, location,     an opaque userdata. Hold it, pass it back, do not
+  talent                       index it. Four of them and no more: NWN's fifth,
+                               itemproperty, does not exist in KOTOR, and pushing
+                               its type id would be rejected by the VM.
+
+Degrading honestly on a build where the optional marshallers are missing:
+vm.stack_push_vector, vm.stack_pop_vector, vm.stack_push_engine_structure and
+vm.stack_pop_engine_structure are all `required = false` in data/hooksites.toml.
+If they do not resolve, the 22 vector routines and the 140 engine-struct routines
+are uncallable while the other 607 still work. Those names are registered anyway
+and raise a message naming the missing site. Leaving the global nil would read
+like a typo; this reads like what it is."""
+confidence = "high"
+
+[[function]]
+lua_name = "kotor.AssignCommand"
+module = "routines"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "action", type = "any" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "'AssignCommand takes a script closure and cannot be called from Lua. Use kp.as(object, function() ... end).'"
+requires = "none"
+mechanism = "registered as a refusal, not dispatched"
+doc = """Registered so that calling it explains itself. Its `action` parameter is
+STORE_STATE bytecode the NWScript compiler builds, and nothing outside the VM can
+construct one. kp.as does the same job by retargeting OBJECT_SELF."""
+confidence = "high"
+
+[[function]]
+lua_name = "kotor.DelayCommand"
+module = "routines"
+params = [
+  { name = "seconds", type = "float" },
+  { name = "action", type = "any" },
+]
+returns = "nothing"
+failure = "error"
+on_failure = "'DelayCommand takes a script closure and cannot be called from Lua. Use kp.timer.after(ms, function() ... end).'"
+requires = "none"
+mechanism = "registered as a refusal, not dispatched"
+doc = "Same closure problem as AssignCommand. kp.timer.after is the replacement and takes milliseconds."
+confidence = "high"
+
+[[function]]
+lua_name = "kotor.ActionDoCommand"
+module = "routines"
+params = [{ name = "action", type = "any" }]
+returns = "nothing"
+failure = "error"
+on_failure = "'ActionDoCommand takes a script closure and cannot be called from Lua. Use kp.timer.after_ticks(1, function() ... end).'"
+requires = "none"
+mechanism = "registered as a refusal, not dispatched"
+doc = """Same closure problem. Queueing work onto an object's action queue from
+outside is not possible; running it next frame is, and is usually what was meant."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.as"
+module = "routines"
+params = [
+  { name = "object_id", type = "object" },
+  { name = "body", type = "function" },
+]
+variadic = true
+returns = "any"
+failure = "error"
+on_failure = """'kp.as needs the VM binding' before hooks install; an error raised
+inside body propagates after the caller fields are restored"""
+requires = "vm"
+mechanism = """writes CSWVirtualMachineCommands.has_caller_object +0x04 and
+caller_object_id +0x08, calls body, then restores both to what they were"""
+doc = """Runs a function with OBJECT_SELF set to an object. This is the generic
+replacement for AssignCommand, and it is worth more than that sounds: most K1
+routines default an object parameter to OBJECT_SELF, and every Action* routine
+queues onto OBJECT_SELF's queue. Inside kp.as, kotor.ClearAllActions() clears
+that object's actions and kotor.SpeakString(...) speaks as it.
+
+The previous values are saved and restored around the call, including when body
+raises, so nesting is safe and an error does not leave the VM retargeted.
+
+Confidence is medium on purpose. The mechanism is proven for
+ExecuteCommandClearAllActions, whose decompiled body reads exactly these two
+fields; that every routine honours them the same way is inference until it is
+watched happening."""
+confidence = "medium"
+evidence = "ExecuteCommandClearAllActions 0x0052f4a0: `if (this->has_caller_object != 0) { id = this->caller_object_id; ... }`"
+
+[[function]]
+lua_name = "kp.vec"
+module = "routines"
+params = [
+  { name = "x", type = "float" },
+  { name = "y", type = "float" },
+  { name = "z", type = "float" },
+]
+returns = "vector"
+failure = "never"
+on_failure = "not applicable"
+requires = "none"
+mechanism = "builds a plain Lua table"
+doc = """Builds the { x =, y =, z = } table the vector routines take. A vector is
+an ordinary table, so this is a convenience and not a type -- kp.obj.position()
+returns something you can pass straight back in."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.routine"
+module = "routines"
+params = [{ name = "name_or_id", type = "any" }]
+returns = "table"
+failure = "nil"
+on_failure = "nil for a name or id the table does not carry"
+requires = "none"
+mechanism = "the generated kp::api::Routine table"
+doc = """Describes a routine without calling it: { id, name, returns, params,
+required, callable, why_not }. This is how a script asks whether a routine exists
+on this build before calling it, and how a tool prints the API. `callable` is
+false when the routine needs a marshaller this build did not resolve, and
+`why_not` says which."""
+confidence = "high"
+
+[[function]]
+lua_name = "kp.routines"
+module = "routines"
+params = []
+returns = "table"
+failure = "empty"
+on_failure = "empty table before the routine table is loaded"
+requires = "none"
+mechanism = "the generated kp::api::Routine table"
+doc = "Every routine name, as an array of strings."
+confidence = "high"
+
+[[function]]
+lua_name = "kp.engine_type"
+module = "routines"
+params = [{ name = "value", type = "any" }]
+returns = "string"
+failure = "nil"
+on_failure = "nil when the value is not an engine-structure handle"
+requires = "none"
+mechanism = "userdata metatable tag"
+doc = """'effect', 'event', 'location' or 'talent' for a handle from a routine.
+The handles are opaque and this is all you can learn about one. They are owned by
+the VM: a handle stays usable while the script holds it, and the runtime releases
+its VM-side reference when Lua collects it."""
+confidence = "medium"
+
+[[function]]
+lua_name = "kp.vm_ready"
+module = "routines"
+params = []
+returns = "bool"
+failure = "never"
+on_failure = "false before hooks install, and false after a stack imbalance disabled the bridge"
+requires = "none"
+mechanism = "VmBinding::usable plus the poison flag"
+doc = """Whether kotor.* will work right now. False in OnScriptLoad, which runs
+before the VM is bound, and false for the rest of the session if the bridge
+disabled itself. A script that wants to run at load time should check this rather
+than discover it in an error."""
+confidence = "high"
