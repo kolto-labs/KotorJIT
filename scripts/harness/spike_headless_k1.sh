@@ -98,6 +98,12 @@ for i in $(seq 1 "$BOOT_WAIT"); do
   best_w=0; best_id=""
   for WID in $(xdotool search --onlyvisible --name '.*' 2>/dev/null); do
     (( WID == ROOT_DEC )) && continue          # skip the desktop itself
+    # The game opens a separate "SW Movie Player Window" for the intro before it
+    # opens the real one. A scan that takes the first large window gets the movie
+    # and then waits forever for something that already happened.
+    case "$(xdotool getwindowname "$WID" 2>/dev/null)" in
+      *Movie*) continue ;;
+    esac
     GEO=$(xdotool getwindowgeometry --shell "$WID" 2>/dev/null)
     W=$(sed -n 's/^WIDTH=//p' <<<"$GEO"); H=$(sed -n 's/^HEIGHT=//p' <<<"$GEO")
     [[ -z "${W:-}" || -z "${H:-}" ]] && continue
