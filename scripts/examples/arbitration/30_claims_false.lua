@@ -2,7 +2,7 @@
 -- NWScript at all.
 priority = 70
 
-function OnScriptEvent(script, object, relevant)
+function OnRunScript(script, object, has_object, relevant)
     print(("[30_claims_false]  relevant=%s -> false (BLOCK)")
           :format(tostring(relevant)))
     return false
