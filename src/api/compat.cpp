@@ -127,19 +127,59 @@ bool alias_global(lua_State* L, const char* from, const char* to) {
     return true;
 }
 
-// The same, inside the kotor table, for names registered there rather than as
-// globals. Also promotes the canonical name to a global, because both dialects
-// expect these unqualified.
+// Find `name` in the kotor table or any of its sub-tables, one level down, and
+// bind it to `to` both as kotor.<to> and as a bare global.
+//
+// Searching sub-tables matters because modules group their functions: raw memory
+// lives at kotor.mem.readbyte rather than kotor.readbyte. Requiring the alias
+// table to spell out each group would make it track internal layout, and it
+// silently installed 11 of 57 aliases before this did.
+//
+// Both dialects expect these unqualified, so the bare global is the point; the
+// kotor.<to> copy is for scripts that prefer to be explicit.
 bool alias_in_table(lua_State* L, const char* from, const char* to) {
     lua_getglobal(L, "kotor");
     if (!lua_istable(L, -1)) { lua_pop(L, 1); return false; }
-    lua_getfield(L, -1, from);
-    if (lua_isnil(L, -1)) { lua_pop(L, 2); return false; }
-    lua_pushvalue(L, -1);
-    lua_setfield(L, -3, to);          // kotor.<alias>
-    lua_setglobal(L, to);             // and bare <alias>
+    const int kotor = lua_gettop(L);
+
+    lua_getfield(L, kotor, from);
+    if (!lua_isnil(L, -1)) {
+        lua_pushvalue(L, -1);
+        lua_setfield(L, kotor, to);
+        lua_setglobal(L, to);
+        lua_pop(L, 1);
+        return true;
+    }
     lua_pop(L, 1);
-    return true;
+
+    lua_pushnil(L);
+    while (lua_next(L, kotor) != 0) {
+        // key at -2, value at -1
+        if (lua_istable(L, -1)) {
+            lua_getfield(L, -1, from);
+            if (!lua_isnil(L, -1)) {
+                lua_pushvalue(L, -1);
+                lua_setfield(L, kotor, to);   // kotor.<alias>
+                lua_setglobal(L, to);         // and bare <alias>
+                lua_pop(L, 3);                // value, key, kotor
+                return true;
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);                        // value; key stays for lua_next
+    }
+    lua_pop(L, 1);
+    return false;
+}
+
+// Both dialects also expect the CANONICAL names unqualified, not only the
+// aliases. A script written for this runtime says readbyte(), not
+// kotor.mem.readbyte().
+void promote_canonical(lua_State* L, const char* name) {
+    lua_getglobal(L, name);
+    const bool have = !lua_isnil(L, -1);
+    lua_pop(L, 1);
+    if (!have) alias_in_table(L, name, name);
 }
 
 }  // namespace
@@ -186,11 +226,15 @@ void install(lua_State* L) {
     //    table depending on which module registered it, so try both.
     unsigned installed = 0, missing = 0;
     for (unsigned i = 0; i < kAliasCount; ++i) {
+        promote_canonical(L, kAliases[i].canonical);
         if (alias_global(L, kAliases[i].canonical, kAliases[i].alias) ||
             alias_in_table(L, kAliases[i].canonical, kAliases[i].alias)) {
             ++installed;
         } else {
             ++missing;
+            platform::log(platform::LogLevel::Debug,
+                          "api: no function named %s, so %s was not aliased",
+                          kAliases[i].canonical, kAliases[i].alias);
         }
     }
 

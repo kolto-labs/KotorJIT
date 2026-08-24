@@ -265,8 +265,14 @@ lua_State* console_state() {
     g_console_L = luaL_newstate();
     if (g_console_L == nullptr) return nullptr;
     luaL_openlibs(g_console_L);
-    // The game has no stdout worth writing to, so print goes to the log. That
-    // is what makes this drivable: type in the game, read kotorphasor.log.
+    // The same API every script gets. Without this the console can evaluate Lua
+    // and not reach the game, so `lua exec kotor.GetFirstPC()` -- the obvious
+    // first thing anyone types -- would answer "attempt to index a nil value".
+    init_lua_state(g_console_L);
+    // After the API, so this wins over the one compat installs: console output
+    // reads better tagged as console output. The game has no stdout worth
+    // writing to, so print goes to the log either way. That is what makes this
+    // drivable: type in the game, read kotorphasor.log.
     lua_pushcfunction(g_console_L, console_print);
     lua_setglobal(g_console_L, "print");
     return g_console_L;
