@@ -1,0 +1,67 @@
+# How to recognise an installed application, as data.
+#
+# tools/kpdiscover.py knows nothing about any particular program. It knows how to
+# walk Steam library lists, platform install directories and the Windows
+# registry, and then how to test a directory against the rules below. Teaching it
+# about a new application is an entry here, not a code change.
+#
+# Recognition is by CONTENT, never by directory name. Vendors use different
+# folder names per platform and per storefront, and people rename things.
+#
+#   requires    every one of these must be present (case-insensitive)
+#   any_of      at least one must be present
+#   excludes    if any of these is present, it is NOT this application
+#   subdirs     also test these paths beneath a candidate; some layouts keep
+#               data one level down (macOS bundles, Aspyr's Linux ports)
+#
+# `excludes` is what separates applications that share marker files. Both KOTOR
+# games ship chitin.key, so each rules the other out by its unique files.
+
+[meta]
+version = 1
+
+[app.k1]
+name = "Star Wars: Knights of the Old Republic"
+requires = ["chitin.key"]
+any_of   = ["swkotor.exe", "swkotor.ini"]
+excludes = ["swkotor2.exe", "swkotor2.ini", "kotor2", "steamassets"]
+
+[app.k2]
+name = "Star Wars: Knights of the Old Republic II - The Sith Lords"
+requires = ["chitin.key"]
+any_of   = ["swkotor2.exe", "swkotor2.ini", "kotor2", "steamassets"]
+excludes = []
+
+# Search roots, per platform. Steam libraries are found from Steam's own library
+# list rather than guessed, which is the only way to see installs on a second
+# drive. These are the NON-Steam locations.
+[roots]
+Windows = [
+  "{drive}/GOG Games",
+  "{drive}/Program Files/LucasArts",
+  "{drive}/Program Files (x86)/LucasArts",
+  "{drive}/Amazon Games/Library",
+]
+Darwin = [
+  "/Applications",
+  "~/Applications",
+]
+Linux = [
+  "~/GOG Games",
+  "~/Games",
+  "/opt",
+  "/usr/local/games",
+  # WSL sees the Windows drives.
+  "/mnt/c/GOG Games",
+  "/mnt/c/Program Files (x86)/LucasArts",
+]
+
+# Paths beneath a candidate that are also worth testing, because some layouts
+# keep the data one level down from the install root.
+[nested]
+subdirs = [
+  "steamassets",
+  "Contents/Assets",
+  "Contents/GameData",
+  "Contents/Resources",
+]

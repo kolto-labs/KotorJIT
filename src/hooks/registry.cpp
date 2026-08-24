@@ -271,6 +271,20 @@ bool AddressTable::parse(std::string_view json, AddressTable& out, std::string& 
             s.addr = static_cast<std::uintptr_t>(a->number);
             s.resolved = s.addr != 0;
         }
+        if (const JValue* e = entry.member("expected_bytes"); e && e->type == JType::String) {
+            const std::string& hex = e->str;
+            for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
+                auto nib = [](char ch) -> int {
+                    if (ch >= '0' && ch <= '9') return ch - '0';
+                    if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
+                    if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
+                    return -1;
+                };
+                const int hi = nib(hex[i]), lo = nib(hex[i + 1]);
+                if (hi < 0 || lo < 0) { s.expected.clear(); break; }
+                s.expected.push_back(static_cast<std::uint8_t>((hi << 4) | lo));
+            }
+        }
         if (const JValue* c = entry.member("confidence"); c && c->type == JType::Number) {
             s.confidence = c->number;
         }
@@ -349,6 +363,7 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
     struct Resolved {
         const HookRequest* request;
         std::uintptr_t     addr;
+        const Site*        site;
     };
     std::vector<Resolved> plan;
     plan.reserve(requests_.size());
@@ -375,7 +390,7 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
             error = "site \"" + r.site + "\" has no detour function";
             return false;
         }
-        plan.push_back({&r, static_cast<std::uintptr_t>(site->addr + delta)});
+        plan.push_back({&r, static_cast<std::uintptr_t>(site->addr + delta), site});
     }
 
     // --- installation, with rollback --------------------------------------
@@ -383,10 +398,17 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
     for (const Resolved& p : plan) {
         auto detour = std::make_unique<Detour>();
         std::string detail;
+
+        // Prefer what the table recorded over what the caller guessed. The
+        // generator read the site's prologue straight out of a plaintext
+        // reference image, so it is both wider and less likely to be stale
+        // than a pattern typed at a call site.
+        const std::vector<std::uint8_t>& expect =
+            !p.site->expected.empty() ? p.site->expected : p.request->expect;
+
         const HookStatus st = detour->install(
             reinterpret_cast<void*>(p.addr), p.request->detour,
-            p.request->expect.empty() ? nullptr : p.request->expect.data(),
-            p.request->expect.size(), &detail);
+            expect.empty() ? nullptr : expect.data(), expect.size(), &detail);
 
         if (st != HookStatus::Ok) {
             error = "site \"" + p.request->site + "\" at 0x";
