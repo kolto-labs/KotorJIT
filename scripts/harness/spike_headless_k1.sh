@@ -31,6 +31,11 @@ export WINEPREFIX="$PREFIX"
 export WINEDEBUG="${WINEDEBUG:--all}"
 export LIBGL_ALWAYS_SOFTWARE=1
 export DISPLAY=":$DISPLAY_NUM"
+# Without this, wine inherits the real desktop's D-Bus session and Wayland
+# display, and its portal calls (file dialogs, some DXVK paths) register
+# against the REAL session -- see env_isolate.sh.
+source "$ROOT/scripts/harness/env_isolate.sh"
+isolate_desktop_env
 
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/spike.log"; }
 
