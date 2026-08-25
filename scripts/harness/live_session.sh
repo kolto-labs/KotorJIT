@@ -180,7 +180,15 @@ while [[ ! -f "$OUT/stop" ]]; do
       log "screenshot -> shot_$(printf '%03d' "$sent").png" ;;
     "#console")
       xdotool windowactivate --sync "$WID" 2>/dev/null || true
-      xdotool key --clearmodifiers "$CONSOLE_KEY"; log "toggled console" ;;
+      xdotool key --clearmodifiers "$CONSOLE_KEY"
+      # The console needs a moment to actually start accepting text, especially
+      # right after a warp -- the engine is still busy tearing down/building the
+      # module. Found live: toggle-then-type-1s-later lost the whole line with
+      # no error anywhere, which read as "the command silently did nothing"
+      # rather than what it was, a race. Every send() that types a line right
+      # after this one now has real margin instead of none.
+      sleep 1
+      log "toggled console" ;;
     "#focus")
       xdotool windowactivate --sync "$WID" 2>/dev/null || xdotool windowfocus "$WID" 2>/dev/null
       log "refocused" ;;
