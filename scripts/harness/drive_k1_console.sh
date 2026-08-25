@@ -93,13 +93,9 @@ trap cleanup EXIT
 
 [[ -f "$GAME_DIR/swkotor.exe" ]] || { log "no game at $GAME_DIR (run spike_headless_k1.sh first)"; exit 1; }
 
-# Cheats gate the console entirely; without this the key does nothing.
-INI="$GAME_DIR/swkotor.ini"
-if [[ -f "$INI" ]]; then
-  grep -qi "EnableCheats" "$INI" || sed -i '/^\[Game Options\]/a EnableCheats=1' "$INI"
-  sed -i 's/^EnableCheats=.*/EnableCheats=1/I' "$INI"
-  log "EnableCheats: $(grep -i EnableCheats "$INI" | head -1)"
-fi
+source "$ROOT/scripts/harness/ini_tune.sh"
+ini_headless "$GAME_DIR/swkotor.ini"
+log "EnableCheats: $(grep -i EnableCheats "$GAME_DIR/swkotor.ini" | head -1); $(grep -i '^Frame Buffer=' "$GAME_DIR/swkotor.ini" | head -1)"
 
 Xvfb ":$DISPLAY_NUM" -screen 0 1024x768x24 -nolisten tcp >"$OUT/xvfb.log" 2>&1 &
 XVFB_PID=$!

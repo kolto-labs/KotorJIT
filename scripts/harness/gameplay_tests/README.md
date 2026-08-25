@@ -35,6 +35,17 @@ The pattern, every time:
    the boot itself hangs at "no gameplay script ran" until `LOAD_WAIT` expires.
    See `lib.sh`'s `deploy_scripts`.
 
+   If the test drives movement (`#key w` and friends), also deploy
+   `scripts/examples/probe/10_position_trace.lua`. There is no visual way to
+   confirm a keypress actually moved the character under headless llvmpipe --
+   the world renders black there as of this writing -- so this is the only
+   confirmation that `#key w` did anything at all rather than landing on an
+   unfocused window. It prints `[trace] t=<tick> pos X Y Z face F` whenever the
+   player's position or facing changes by more than a small threshold; a test
+   that drives movement and sees no `[trace]` lines has a focus or input
+   problem, not a combat problem, and should fix that before doubting anything
+   else.
+
 2. **Boot once, drive many.** `live_session.sh` boots the game, loads the
    first save, opens the console, and then blocks reading a queue file --
    append a line, it gets typed; `#screenshot` / `#console` / `#key X` /

@@ -67,11 +67,8 @@ trap cleanup EXIT
 
 [[ -f "$GAME_DIR/swkotor.exe" ]] || { log "no game at $GAME_DIR"; exit 1; }
 
-INI="$GAME_DIR/swkotor.ini"
-if [[ -f "$INI" ]]; then
-  grep -qi "EnableCheats" "$INI" || sed -i '/^\[Game Options\]/a EnableCheats=1' "$INI"
-  sed -i 's/^EnableCheats=.*/EnableCheats=1/I' "$INI"
-fi
+source "$ROOT/scripts/harness/ini_tune.sh"
+ini_headless "$GAME_DIR/swkotor.ini"
 
 Xvfb ":$DISPLAY_NUM" -screen 0 1024x768x24 -nolisten tcp >"$OUT/xvfb.log" 2>&1 &
 XVFB_PID=$!
