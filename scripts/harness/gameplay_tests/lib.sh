@@ -37,9 +37,66 @@ summary_and_exit() {
 # testing -- see scripts/examples/probe/00_probe.lua's own header for why: the
 # runtime does not itself log which scripts the engine runs, only the probe
 # does, and that is the gameplay-reached oracle live_session.sh depends on.
+#
+# A test that drives movement (`#key w` and friends) should also pass
+# 10_position_trace.lua -- see its own header. There is no visual way to
+# confirm a keypress actually moved the character, so a test that drives
+# movement and never checks for [trace] lines can pass on a hang.
 deploy_scripts() {
   local game_dir="$1"; shift
   mkdir -p "$game_dir/kotorphasor/scripts"
   rm -f "$game_dir/kotorphasor/scripts"/*.lua
   cp "$ROOT/scripts/examples/probe/00_probe.lua" "$@" "$game_dir/kotorphasor/scripts/"
+}
+
+# start_live_session <game-dir> <out-dir> <display-num>
+#
+# Boots live_session.sh in the background, waits for it to reach gameplay, and
+# leaves send() ready to use. On failure to reach gameplay, records it and
+# exits the whole test script -- there is nothing a caller can usefully do
+# with a session that never came up.
+#
+# Every one of the four live tests had grown its own copy of this. Two of the
+# numbers in it are not arbitrary: a GAME_DIR backed by real disk (as opposed
+# to /dev/shm) has been observed taking close to two minutes just to reach
+# gameplay. A flat 120s outer ceiling left effectively no margin against
+# that -- one run failed with "session never reached gameplay" when the
+# session was in fact seconds from succeeding: the outer poll gave up, its own
+# EXIT trap touched `stop`, and live_session.sh saw that stop file the instant
+# it opened its queue, before ever reading a command. 240s gives real headroom
+# without letting a genuinely hung boot run forever.
+start_live_session() {
+  local game_dir="$1" out="$2" display="$3"
+  # A global, not a local: cleanup() is invoked later by the EXIT trap, after
+  # this function has already returned and its locals no longer exist. A
+  # `local out` here reads fine at a glance but crashes under `set -u` the
+  # first time the trap actually fires -- found by running this for real, not
+  # by re-reading the script.
+  LIVE_OUT="$out"
+  GAME_DIR="$game_dir" OUT="$out" DISPLAY_NUM="$display" \
+    BOOT_WAIT=300 LOAD_WAIT=600 \
+    "$ROOT/scripts/harness/live_session.sh" > "$out.nohup.log" 2>&1 &
+  SESSION_PID=$!
+  cleanup() { touch "$LIVE_OUT/stop" 2>/dev/null; wait "$SESSION_PID" 2>/dev/null; }
+  trap cleanup EXIT
+
+  for _ in $(seq 1 240); do [[ -f "$out/ready" ]] && break; sleep 1; done
+  if [[ ! -f "$out/ready" ]]; then
+    bad "session never reached gameplay -- see $out.nohup.log and $out/drive.log"
+    summary_and_exit; exit $?
+  fi
+
+  Q="$out/queue"; D="$out/done"
+}
+
+# send <console-line-or-control-line>
+#
+# Requires start_live_session first. Blocks until live_session.sh reports the
+# line processed, or 90s pass. Generous on purpose: a warp or a multi-second
+# #sleep genuinely takes a while, and a slow queue is a different, far more
+# common failure than a truly hung one.
+send() {
+  echo "$1" >> "$Q"
+  local n; n=$(wc -l < "$Q")
+  for _ in $(seq 1 180); do [[ "$(cat "$D" 2>/dev/null)" == "$n" ]] && break; sleep 0.5; done
 }
