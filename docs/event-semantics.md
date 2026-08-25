@@ -509,6 +509,18 @@ Compare `nwscreature.cpp:12095-12102`, which uses
 `OBJECT_SELF` is whoever signalled the event, not the trigger. A Lua binding
 that helpfully "fixes" this will disagree with every stock K1 script.
 
+**`RunScript`'s script-name `CExoString` reports a length one byte too long.**
+Found empirically, not from the readable C: hex-dumping the bytes a live,
+running game handed to a Lua script for `k_def_attacked01` gave
+`6B 5F 64 65 66 5F 61 74 74 61 63 6B 65 64 30 31 00` -- 16 real characters
+plus a trailing `00`, with `length` reporting 17. Every other `CExoString`
+this runtime reads is not NUL-terminated by contract (see `read_exostring` in
+`src/runtime/hook_bodies.cpp`), so nothing about the type signature suggested
+this one would be different, and a `script_name == "k_def_attacked01"`
+comparison silently failed no matter how carefully the literal was typed. The
+fix strips one trailing NUL if present, in the one place every script name is
+read, rather than teaching every script to know about it.
+
 ## Confidence and how to raise it
 
 105 entries: **87 high**, **18 medium**, **0 low**.

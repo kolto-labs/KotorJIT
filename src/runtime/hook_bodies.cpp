@@ -63,7 +63,20 @@ std::string read_exostring(const CExoString* s) {
     if (s == nullptr || !platform::is_readable(s, sizeof *s)) return {};
     if (s->c_string == nullptr || s->length == 0 || s->length > kMaxEngineString) return {};
     if (!platform::is_readable(s->c_string, s->length)) return {};
-    return std::string(s->c_string, s->length);
+
+    // Verified live: RunScript's script-name CExoString reports length 17 for
+    // "k_def_attacked01" (16 real characters) -- the engine's length INCLUDES a
+    // trailing NUL for this particular string, contrary to the "not NUL-
+    // terminated by contract" comment above, which held for every other
+    // CExoString this runtime reads but not for this one. The embedded NUL
+    // survived into the Lua string unnoticed because it prints identically to
+    // the clean name in a terminal; every `script_name == "..."` comparison in
+    // every script silently failed until this was found by hex-dumping the
+    // bytes. Strip exactly one trailing NUL, and only a NUL -- anything else at
+    // that position is real content, not a terminator, and must not be eaten.
+    std::uint32_t len = s->length;
+    if (len > 0 && s->c_string[len - 1] == '\0') --len;
+    return std::string(s->c_string, len);
 }
 
 // ------------------------------------------------------- site-local state ---
