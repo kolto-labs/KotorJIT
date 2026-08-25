@@ -69,6 +69,8 @@ if [[ -f "$INI" ]]; then
   sed -i 's/^FullScreen=.*/FullScreen=0/I; s/^Width=.*/Width=800/I; s/^Height=.*/Height=600/I' "$INI"
   grep -iE "^(FullScreen|Width|Height|Disable Movies)=" "$INI" | while read -r l; do log "  ini: $l"; done
 fi
+source "$ROOT/scripts/harness/ini_tune.sh"
+ini_headless "$INI"   # EnableCheats + Frame Buffer=0, see ini_tune.sh
 
 # 1. virtual display -----------------------------------------------------------
 Xvfb ":$DISPLAY_NUM" -screen 0 1024x768x24 -nolisten tcp >"$OUT/xvfb.log" 2>&1 &
