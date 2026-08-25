@@ -52,31 +52,23 @@ if [[ ${#COMMANDS[@]} -eq 0 ]]; then
   )
 fi
 
-# A previous run that was interrupted leaves the game and its Xvfb alive. The
-# next run then shares the display and the log files with a process it does not
-# know about, and the two interleave: one writes "loading..." while the other
-# waits for a window it will never own. That is a confusing hour, so refuse to
-# start rather than inherit it.
-if pgrep -x swkotor.exe >/dev/null 2>&1 || pgrep -f "Xvfb :$DISPLAY_NUM" >/dev/null 2>&1; then
-  if [[ "${FORCE:-0}" == "1" ]]; then
-    echo "killing a previous run (FORCE=1)" >&2
-    # Match the process NAME, not the whole command line. -f matches any process
-  # whose arguments merely mention the game -- on this machine an unrelated
-  # analysis job runs with the executable's path in its argv, and killing on -f
-  # would have killed that. -x on the name matches only the game itself.
-  pkill -x swkotor.exe 2>/dev/null; pkill -f "Xvfb :$DISPLAY_NUM" 2>/dev/null
-    WINEPREFIX="$PREFIX" wineserver -k 2>/dev/null
-    sleep 3
-  else
-    echo "a game or Xvfb from a previous run is still alive; re-run with FORCE=1" >&2
-    exit 6
-  fi
+# A previous run that was interrupted (host swap, cancelled task) leaves the
+# game and its Xvfb alive with nothing left to notice. lock_acquire detects
+# that automatically -- a dead or PID-recycled owner is reclaimed without
+# needing FORCE=1; a genuinely live one still refuses, or is taken with it.
+source "$ROOT/scripts/harness/lock.sh"
+source "$ROOT/scripts/harness/env_isolate.sh"
+LOCK_DIR="$ROOT/tmp/harness-locks"
+if ! lock_acquire "$LOCK_DIR/display-$DISPLAY_NUM.lock" "$DISPLAY_NUM" swkotor.exe; then
+  echo "a live session already owns display $DISPLAY_NUM; re-run with FORCE=1 to take it" >&2
+  exit 6
 fi
 
 mkdir -p "$OUT"
 rm -f "$OUT"/drive.log "$OUT"/wine.log     # never append across runs
 export WINEPREFIX="$PREFIX" WINEDEBUG="${WINEDEBUG:--all}"
 export LIBGL_ALWAYS_SOFTWARE=1 DISPLAY=":$DISPLAY_NUM"
+isolate_desktop_env
 
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/drive.log"; }
 
@@ -94,6 +86,7 @@ cleanup() {
   pkill -x swkotor.exe 2>/dev/null
   wineserver -k 2>/dev/null || true
   [[ -n "${XVFB_PID:-}" ]] && kill "$XVFB_PID" 2>/dev/null
+  lock_release
   return 0
 }
 trap cleanup EXIT

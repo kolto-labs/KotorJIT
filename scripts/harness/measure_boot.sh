@@ -26,6 +26,8 @@ LABEL="${LABEL:-default}"
 
 mkdir -p "$OUT"
 export WINEPREFIX="$PREFIX" WINEDEBUG="${WINEDEBUG:--all}" DISPLAY=":$DISPLAY_NUM"
+source "$ROOT/scripts/harness/env_isolate.sh"
+isolate_desktop_env
 [[ "${SOFTWARE:-1}" == "1" ]] && export LIBGL_ALWAYS_SOFTWARE=1 || unset LIBGL_ALWAYS_SOFTWARE
 [[ -n "${LP_NUM_THREADS:-}" ]] && export LP_NUM_THREADS
 [[ -n "${MESA_LOADER_DRIVER_OVERRIDE:-}" ]] && export MESA_LOADER_DRIVER_OVERRIDE
