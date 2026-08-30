@@ -26,6 +26,9 @@ set(KP_LUA_SOURCES
     "${KP_SRC_ROOT}/lua/host.cpp"
     "${KP_SRC_ROOT}/lua/value.cpp"
     "${KP_SRC_ROOT}/events/dispatch.cpp"
+    "${KP_SRC_ROOT}/events/table.cpp"
+    "${KP_SRC_ROOT}/events/payload.cpp"
+    "${KP_SRC_ROOT}/events/situation.cpp"
 )
 
 # The host API. Compiled in here rather than linked, for the same reason as the
