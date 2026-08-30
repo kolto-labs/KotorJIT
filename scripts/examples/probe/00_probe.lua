@@ -25,12 +25,31 @@ function OnRunScript(script_name, object_id, has_object, relevant)
     note("script:" .. tostring(script_name))
 end
 
+-- MainLoop cave: one log per 100 server frames so the file stays readable.
+function OnTick(tick)
+    note("OnTick")
+end
+
+-- Save/LoadScriptSituation caves. Returning a string from OnSave is what the
+-- sidecar persists; OnLoad sees it on the next situation the VM restores.
+function OnSave()
+    note("OnSave")
+    return "cave-witness"
+end
+
+function OnLoad(state)
+    note("OnLoad")
+end
+
 function OnCreatureAttacked(creature, attacker, relevant)  note("OnCreatureAttacked") end
 function OnCreatureDeath(creature, relevant)               note("OnCreatureDeath") end
 function OnCreatureSpawn(creature, relevant)               note("OnCreatureSpawn") end
 function OnCreatureEndCombatRound(creature, relevant)      note("OnCreatureEndCombatRound") end
 function OnAreaEnter(area, entering, from_save)            note("OnAreaEnter") end
 function OnModuleLoad()                                    note("OnModuleLoad") end
+function OnModuleStart()                                   note("OnModuleStart") end
+function OnModulePlayerEnter(player, relevant)             note("OnModulePlayerEnter") end
+function OnModuleHeartbeat(day, time)                      note("OnModuleHeartbeat") end
 function OnConsoleCommand(line, relevant)                  note("console:" .. tostring(line)) end
 
 function OnScriptLoad(game, build)

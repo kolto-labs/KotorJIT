@@ -8,6 +8,8 @@ GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 OUT="${OUT:-$ROOT/tmp/gameplay-test-ahto-city-law}"
 DISPLAY_NUM="${DISPLAY_NUM:-87}"
 
+"$ROOT/scripts/harness/pick_save.sh" any
+
 deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/10_ahto_city_law.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
@@ -26,8 +28,11 @@ send "#key w"; send "#sleep 1.5"
 send "#key w"; send "#sleep 1.5"
 send "#key w"; send "#sleep 3"
 send "#console"
+send "lua exec local pc=kotor.GetFirstPC(); local t=kotor.GetNearestCreature(3,1,pc,1,0,0,0,0); if t and t~=0 then kotor.ActionAttack(t,pc,0) end"
+send "#console"
+send "#sleep 6"
 
-assert_contains "$GAME_DIR/kotorphasor.log" "manm26ad" "warp landed on the Sith base module"
+assert_contains_re "$GAME_DIR/kotorphasor.log" 'manm26ad|MOD=manm26ad' "warp landed on the Sith base module"
 assert_contains_re "$GAME_DIR/kotorphasor.log" '\[trace\]' \
   "the #key presses actually moved the character (not a stuck-console or lost-focus false pass)"
 assert_contains_re "$GAME_DIR/kotorphasor.log" '\[probe\] script:k_def_attacked01' \

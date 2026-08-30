@@ -12,7 +12,9 @@
 // So calling a routine is: push its arguments onto the VM stack in reverse,
 // invoke the dispatcher with the id and argument count, and pop the result. No
 // per-routine hook, no new bytecode, and no patched nwscript.nss -- one generic
-// bridge covers all 772 routines on KOTOR 1 and 806 documented ones on KOTOR 2.
+// bridge covers 769 of 772 routines on KOTOR 1 and 803 documented ones on
+// KOTOR 2. AssignCommand, DelayCommand, and ActionDoCommand take a script
+// closure and are refused; kotor.registertimer replaces DelayCommand.
 //
 // Argument order matters and is easy to get wrong. The VM stack is a stack:
 // the routine pops its first declared parameter first, so we push the LAST

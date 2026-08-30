@@ -3,10 +3,9 @@
 # without the game hanging or logging the same stack trace forever.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
-TMP=$(mktemp)
+TMP=$(test_capture "$ROOT/build/kp_luatest" "$ROOT/scripts/examples/edge_quarantine" \
+  OnTick 1 --repeat 5)
 trap 'rm -f "$TMP"' EXIT
-"$ROOT/build/kp_luatest" "$ROOT/scripts/examples/edge_quarantine" \
-  OnTick 1 --repeat 5 > "$TMP" 2>&1
 
 assert_contains "$TMP" "quarantined after 3 errors" "the script quarantines on its third strike"
 # Exactly 3 stack traces -- one per strike before quarantine -- not 5 (the
