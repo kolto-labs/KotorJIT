@@ -17,6 +17,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+source "$ROOT/scripts/harness/harness_paths.sh"
 source "$ROOT/scripts/harness/record.sh"
 
 OUT_BASE="${1:?usage: record_terminal.sh <out-basename> <scene-file> [w] [h]}"
@@ -43,7 +44,7 @@ trap cleanup EXIT
 # The driver wraps the scene with the helpers and a prompt that looks like a
 # prompt. It is generated rather than kept as a file because it has to carry the
 # scene's own path and the repo root into a shell that xterm starts fresh.
-DRIVER="$(mktemp /tmp/kp_scene_XXXXXX.sh)"
+DRIVER="$(harness_mktemp sh)"
 cat > "$DRIVER" <<DRIVER_EOF
 #!/usr/bin/env bash
 cd "$ROOT" || exit 1
@@ -79,17 +80,24 @@ sleep 3
 DRIVER_EOF
 chmod +x "$DRIVER"
 
-Xvfb ":$DISPLAY_NUM" -screen 0 "${W}x${H}x24" -nolisten tcp \
-  >"$OUT_BASE.xvfb.log" 2>&1 &
-XVFB_PID=$!
-export DISPLAY=":$DISPLAY_NUM"
-for _ in $(seq 1 40); do xdpyinfo >/dev/null 2>&1 && break; sleep 0.25; done
-xdpyinfo >/dev/null 2>&1 || { echo "Xvfb failed" >&2; exit 1; }
+if [[ -n "${KP_TERM_DISPLAY:-}" ]]; then
+  export DISPLAY="$KP_TERM_DISPLAY"
+  rec_disp="${DISPLAY#:}"
+else
+  preflight_tmp_write || exit 1
+  Xvfb ":$DISPLAY_NUM" -screen 0 "${W}x${H}x24" -nolisten tcp \
+    >"$OUT_BASE.xvfb.log" 2>&1 &
+  XVFB_PID=$!
+  export DISPLAY=":$DISPLAY_NUM"
+  rec_disp="$DISPLAY_NUM"
+  for _ in $(seq 1 40); do xdpyinfo >/dev/null 2>&1 && break; sleep 0.25; done
+  xdpyinfo >/dev/null 2>&1 || { echo "Xvfb failed; see $OUT_BASE.xvfb.log" >&2; exit 1; }
+fi
 
 # Colours chosen to survive gif quantisation: a near-black background and a small
 # number of saturated foregrounds stay legible at 256 colours, where a
 # low-contrast theme turns to mud.
-xterm -display ":$DISPLAY_NUM" \
+xterm -display "$DISPLAY" \
       -fa "${FONT_NAME:-Noto Sans Mono}" -fs "$FONT_SIZE" \
       -bg '#0b0e14' -fg '#c8d3e0' -cr '#7ee787' \
       -geometry 200x60+0+0 -b 14 -bc -sb -si -sk \
@@ -98,7 +106,7 @@ xterm -display ":$DISPLAY_NUM" \
 XTERM_PID=$!
 
 sleep 2
-rec_start "$DISPLAY_NUM" "$OUT_BASE"
+rec_start "$rec_disp" "$OUT_BASE"
 
 # Wait for the scene to finish on its own; the timeout is a backstop for a demo
 # command that hangs, not the expected path.

@@ -23,6 +23,17 @@
 KP_REC_FPS="${KP_REC_FPS:-15}"
 KP_REC_CRF="${KP_REC_CRF:-23}"
 
+_harness_root_for_rec() {
+  if [[ -n "${ROOT:-}" ]]; then echo "$ROOT"
+  elif [[ -n "${BASH_SOURCE[0]:-}" ]]; then cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd
+  else echo "/tmp"; fi
+}
+_rec_scratch() {
+  local dir="${HARNESS_SCRATCH:-$(_harness_root_for_rec)/tmp/scratch}"
+  mkdir -p "$dir"
+  echo "$dir"
+}
+
 _kp_rec_pid=""
 _kp_rec_base=""
 _kp_rec_t0=""
@@ -113,7 +124,7 @@ rec_gif() {
   local src="$1" out="$2" start="$3" dur="$4" width="${5:-720}"
   rec_available || return 0
   [[ -s "$src" ]] || { echo "record: $src missing, no gif" >&2; return 1; }
-  local pal; pal=$(mktemp --suffix=.png)
+  local pal; pal=$(_rec_scratch)/kp_palette_$$.png
   local fps="${KP_GIF_FPS:-12}"
   local filters="fps=$fps,scale=$width:-1:flags=lanczos"
 

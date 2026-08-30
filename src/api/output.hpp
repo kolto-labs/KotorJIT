@@ -1,24 +1,9 @@
 // Saying things: the log file, the in-game console, and the screen.
 //
-// Phasor has six output functions and every one of them is shaped by a server
-// talking to sixteen clients. KOTOR is one machine with one player, so the
-// recipient argument has nothing to address and the six collapse to three
-// surfaces that actually exist:
-//
-//   Phasor                     here          why
-//   ------------------------   -----------   ------------------------------
-//   hprintf(msg)               console       diagnostic echo; no server console
-//   log_msg(stream, msg)       log           one log, not four streams
-//   sendconsoletext(p, msg)    console       the player IS the console
-//   respond(msg)               console       the console line's own reply path
-//   say(msg)                   feedback      no broadcast channel exists
-//   privatesay(p, msg)         feedback      one player, so "private" is moot
-//
-// Collapsing is the honest move rather than keeping six names that would differ
-// only in which one lied about reaching somebody else.
-//
-// The three surfaces reach the game by three different routes, and that is why
-// they are three functions rather than one with a channel argument:
+// The local server has one hardcoded client (GetFirstPC /
+// CServerExoApp::GetPlayerCreatureId). Feedback goes through SendMessageToPC
+// and AurPostString to that creature. Three routes into the game, which is
+// why they are not one function with a channel argument:
 //
 //   log       src/platform logging, which the runtime points at kotorphasor.log.
 //             Always available, including before hooks are installed.
@@ -41,9 +26,9 @@
 // reconciling by whoever writes the generator.
 //
 // One name in that overlap means opposite things and will bite: kp.console
-// there RUNS a line as if it had been typed into the cheat console, which is
-// Phasor's svcmd. kotor.console here WRITES a line to the console. Same word,
-// opposite direction.
+// there RUNS a line as if it had been typed into the cheat console.
+// kotor.console here WRITES a line to the console. Same word, opposite
+// direction.
 //
 // Routines are reached BY NAME through the script's own `kotor` table, not by
 // id and not by linking the routines bridge. Two reasons, both load-bearing:
@@ -71,10 +56,8 @@ void push_kotor_table(lua_State*);
 // detour is installed; unbound, console output goes to the log.
 //
 // One line per call: the writer never receives an embedded newline, because a
-// multi-line message is split before it gets here. Phasor does the same thing
-// (its ProcessedString pop splits on '\n' into independent messages) and the
-// reason is the same -- a console surface that scrolls by lines should not be
-// handed a paragraph.
+// multi-line message is split before it gets here. A console surface that
+// scrolls by lines should not be handed a paragraph.
 using ConsoleWriter = void (*)(const char* line, void* user);
 
 void bind_console(ConsoleWriter, void* user);

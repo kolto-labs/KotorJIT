@@ -25,6 +25,7 @@
 
 #include "api/routines.hpp"
 
+#include <cstdint>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -310,6 +311,37 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 
 // ------------------------------------------------------------ register ------
 
+// CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08.
+// data/hostapi.toml `kp.as` — write, call body, restore (including on error).
+int l_as(lua_State* L) {
+    const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
+    luaL_checktype(L, 2, LUA_TFUNCTION);
+    const VmBinding& vm = binding();
+    if (vm.command_implementer == nullptr)
+        return luaL_error(L, "kp.as needs the VM binding");
+
+    struct Commands {
+        void*         vtable;
+        std::int32_t  has_caller;
+        std::uint32_t caller_id;
+    };
+    auto* cmds = static_cast<Commands*>(vm.command_implementer);
+    const std::int32_t old_has = cmds->has_caller;
+    const std::uint32_t old_id = cmds->caller_id;
+    cmds->has_caller = 1;
+    cmds->caller_id = id;
+
+    const int extras = lua_gettop(L) - 2;
+    const int base = lua_gettop(L);
+    lua_pushvalue(L, 2);
+    for (int i = 0; i < extras; ++i) lua_pushvalue(L, 3 + i);
+    const int rc = lua_pcall(L, extras, LUA_MULTRET, 0);
+    cmds->has_caller = old_has;
+    cmds->caller_id = old_id;
+    if (rc != 0) return lua_error(L);
+    return lua_gettop(L) - base;
+}
+
 void register_all(lua_State* L) {
     // Share one `kotor` table with the other modules rather than replacing it.
     lua_getglobal(L, "kotor");
@@ -328,6 +360,18 @@ void register_all(lua_State* L) {
         lua_pushcclosure(L, dispatch, 1);
         lua_setfield(L, -2, r.name);
     }
+    lua_pop(L, 1);
+
+    // kp.as — specified in data/hostapi.toml; the generator is not in-tree.
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_newtable(L);
+        lua_pushvalue(L, -1);
+        lua_setglobal(L, "kp");
+    }
+    lua_pushcfunction(L, l_as);
+    lua_setfield(L, -2, "as");
     lua_pop(L, 1);
 
     platform::log(platform::LogLevel::Info,

@@ -8,10 +8,9 @@
 # scripts running first and abstaining.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
-TMP=$(mktemp)
+TMP=$(test_capture "$ROOT/build/kp_luatest" "$ROOT/scripts/examples/arbitration" \
+  OnRunScript k_def_heartbt01 0 0)
 trap 'rm -f "$TMP"' EXIT
-"$ROOT/build/kp_luatest" "$ROOT/scripts/examples/arbitration" \
-  OnRunScript k_def_heartbt01 0 0 > "$TMP" 2>&1
 
 assert_contains "$TMP" "claimed by  : 25_claims_via_string" "correct script claims the event"
 assert_contains "$TMP" "reconciles  : yes" "called/abstained/errored/ignored/claimed reconcile"

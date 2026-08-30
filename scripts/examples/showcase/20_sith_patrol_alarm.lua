@@ -6,8 +6,14 @@ priority = 25
 -- noticed.
 local PERCEIVED = "k_def_percept01"
 
+local function norm_script(name)
+  if type(name) ~= "string" then return "" end
+  return name:gsub("%z+$", "")
+end
+
 local alarms = 0
 local raised = {}
+local last_module = nil
 
 -- Every engine call goes through here: the API is absent until the runtime binds
 -- the VM, and a routine can be missing on a build this script was not written
@@ -32,6 +38,12 @@ local shouts = {
 }
 
 function OnRunScript(script_name, object_id, has_object, relevant)
+    script_name = norm_script(script_name)
+    local m = q("GetModuleName")
+    if type(m) == "string" and m ~= last_module then
+        last_module = m
+        raised = {}
+    end
     if script_name ~= PERCEIVED then return end
     if raised[object_id] then return end
 
@@ -45,6 +57,3 @@ function OnRunScript(script_name, object_id, has_object, relevant)
           :format(tostring(q("GetName", object_id)), alarms))
     q("SpeakString", shouts[(alarms - 1) % #shouts + 1], 0)
 end
-
--- A new module is a new patrol, and nobody there has seen you yet.
-function OnModuleLoad() raised = {} end

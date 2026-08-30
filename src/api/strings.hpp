@@ -1,11 +1,10 @@
 // Tokenising: turning one string into the pieces a command handler wants.
 //
-// Two functions, both straight from Phasor, and the reason they are worth a
-// module of their own is that KOTOR's console hook hands a script a whole input
-// line. Splitting it is the first thing any console-command script does, and
-// every script that had to write its own splitter wrote a slightly different
-// one -- the reference corpus contains at least two reimplementations that
-// disagree with each other about empty fields.
+// Two functions, and the reason they are worth a module of their own is that
+// KOTOR's console hook hands a script a whole input line. Splitting it is the
+// first thing any console-command script does, and every script that had to
+// write its own splitter wrote a slightly different one -- two reimplementations
+// in the wild already disagree about empty fields.
 //
 //   tokenizestring(str, delims)   split at any character in delims
 //   tokenizecmdstring(line)       command-line split, quotes kept together
@@ -15,14 +14,10 @@
 // before indexing.
 //
 // EMPTY FIELDS ARE DROPPED by tokenizestring. "a,,b" split on "," is two
-// tokens, not three. This is stated rather than derived: Phasor's own C++
-// splitter is not in this repository, and neither the inventory nor the
-// mapping records the behaviour. Two things decided it. The reference corpus
-// contains a script-side reimplementation of tokenizestring that drops empty
-// parts, written by an author who believed they were matching the host. And
-// dropping is what the call sites want -- splitting a comma-separated name
-// list, or an address on '/', a trailing separator should not produce a token
-// that is the empty string and then get treated as a name.
+// tokens, not three. Dropping is what the call sites want -- splitting a
+// comma-separated name list, or an address on '/', a trailing separator
+// should not produce a token that is the empty string and then get treated
+// as a name.
 //
 // tokenizecmdstring is the opposite, and deliberately: `""` on a command line
 // is an explicit empty argument and survives as an empty token, while runs of
