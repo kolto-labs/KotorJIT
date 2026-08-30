@@ -3,29 +3,28 @@
 What a Lua script can call. The event pipeline decides *when* a script runs; this decides
 what it can *do* once it is running.
 
-Grounded in three research artifacts under `data/research/`, produced by reading Phasor's
-registration table and its 13 real scripts, the KOTOR engine routine tables, and the
-recovered struct layouts:
+Grounded in the KOTOR engine routine tables, the recovered struct layouts, and the
+event catalog in `data/events.toml`.
 
-- `phasor_inventory.json` — 93 host functions Phasor provides, with signatures and call-site
-  counts. The registration table is authoritative for what exists; the scripts are
-  authoritative for how it is used.
-- `phasor_mapping.json` — 51 capability mappings onto KOTOR mechanisms, 37 high confidence,
-  plus 11 that genuinely do not map and 18 things KOTOR can do that Halo cannot.
-- `phasor_structs.json` — 25 engine struct layouts with field offsets.
+KOTOR is a dedicated server in-process (`CServerExoApp`) with one hardcoded client.
+That creature is `CServerExoApp::GetFirstPCObject` / `GetPlayerCreatureId` /
+`GetFirstPC`. Client attach and leave are `OnModulePlayerEnter` (`Mod_OnClientEntr`)
+and `OnModulePlayerExit`
+(`Mod_OnClientLeav`). Objects are `CServerExoApp::GetGameObject` / `CGameObject`,
+not a Halo player-memory slot.
 
 ## The shape of the problem
 
-Phasor's API is Halo-shaped: players, teams, weapons, vehicles, tags. Most of it maps, but
-not by copying names. `kill(player)` becomes an engine routine call; `getteamsize` becomes
-party size; `gettagid` becomes a resref lookup.
+KOTOR already has a scripting language. 769 of 772 engine routines become
+`kotor.GetFirstPC()`, `kotor.CreateObject(...)`, `kotor.SpeakString(...)`. The local
+server's player list is that one client plus party slots. Areas, dialogue, journal,
+alignment, and force powers are engine questions, answered by engine routines.
 
-Three quarters of the surface is not really API at all — it is **1,071 call sites** of
-`readfloat(base + 0x1C)` and friends. Phasor scripts build typed views of engine state out
-of raw reads, and `z4eqrjVN.txt` is 150 KB of exactly that, annotated `-- Confirmed.` A
-wrong offset there is a silent wrong answer.
+The rest of the surface exists because those routines are not enough:
 
-We can do better, because we have size-asserted struct layouts. So the design is:
+- A field that is not in the generated layouts still needs a read.
+- `DelayCommand` takes an NWScript closure Lua cannot push.
+- The cheat console hands a script a whole input line that has to be split.
 
 **Typed access first, raw memory as the escape hatch.**
 
@@ -37,8 +36,7 @@ Each is file-disjoint so they can be built in parallel.
 `src/api/routines.cpp`, `src/api/enginestruct.{hpp,cpp}`
 
 The highest-value module. 769 of KOTOR 1's 772 engine routines become
-`kotor.GetModule()`, `kotor.CreateObject(...)` and so on. The generated tables already
-exist and are included by nothing.
+`kotor.GetModule()`, `kotor.CreateObject(...)` and so on.
 
 Marshalling has three kinds. Scalars are plain Lua values. Vectors are `{x=,y=,z=}` tables
 and use the VM's own vector push/pop, not three scalar pushes. Effects, events, locations
@@ -55,8 +53,8 @@ closure the compiler emits as `STORE_STATE` bytecode. The `timers` module replac
 ### `structs` — generated typed views
 `src/api/structs.{hpp,cpp}`, `tools/gen_structs.py`, `src/generated/structs_*.inc`
 
-Turns `phasor_structs.json` into named field access with the offset and width baked in at
-build time. A field that does not exist is an error at the call, not a wrong number.
+Named field access with the offset and width baked in at build time. A field that does
+not exist is an error at the call, not a wrong number.
 
 **The trap, already hit once on this project:** several fields Ghidra emits as
 `unsigned char[0xC]` are `CExoArrayList {void* data; int size; int capacity}`. Reading slot
@@ -66,8 +64,8 @@ accessor, never an integer read.
 ### `memory` — the escape hatch
 `src/api/memory.{hpp,cpp}`
 
-`readbyte`/`readfloat`/`writeword` and the rest, 23 functions. Kept because every Phasor
-script uses them and because the typed layer will always lag what someone needs today.
+`readbyte`/`readfloat`/`writeword` and the rest, 23 functions. The typed layer will always
+lag what someone needs today.
 
 Reads are probe-guarded: a bad address returns nil rather than faulting. Writes are the
 sharp edge and stay sharp — a scripting runtime that cannot write memory cannot do what
@@ -76,15 +74,16 @@ people install it for. The line is drawn at *reporting*, not prevention.
 ### `entity` — objects and party
 `src/api/entity.{hpp,cpp}`
 
-Resolving an object id to a typed handle, the player, party members, area contents. This is
-where Phasor's `resolveplayer`/`getplayer`/`getplayerobject` land, reshaped: KOTOR has a
-party of up to three, not sixteen network players.
+Resolving an object id to a typed handle, the local client (`GetFirstPC` /
+`CServerExoApp::GetPlayerCreatureId`), party members via `GetPartyMemberByIndex`
+/ `CSWPartyTable`, and area contents. Almost everything here calls an engine
+routine; the handle is what the routine bridge does not have.
 
 ### `output` — saying things
 `src/api/output.{hpp,cpp}`
 
-Log, console, and on-screen feedback. Phasor's six output functions assume a server talking
-to clients; KOTOR is one machine, so `say`/`privatesay` collapse to feedback and dialogue.
+Log, cheat-console text, and on-screen feedback (`SendMessageToPC`, `AurPostString`,
+`SpeakString`) to the `GetFirstPC` creature.
 
 ### `timers` — deferred work
 `src/api/timers.{hpp,cpp}`
@@ -99,17 +98,16 @@ to clients; KOTOR is one machine, so `say`/`privatesay` collapse to feedback and
 
 ## What we are not doing
 
-- **HTTP.** Phasor has it for ban lists on a game server. A single-player RPG mod that
-  phones home is a bad default, and it can be added later if someone wants it.
-- **Multiplayer.** Deferred deliberately.
+- **HTTP.** A local-server RPG mod that phones home is a bad default.
+- **A second network client.** The engine is already a server; a second
+  attachable client is not wired yet. The player/chat/join surface stays.
 - **`itemproperty`.** Not a KOTOR type.
 
-## KOTOR-only surface
+## What only KOTOR has
 
-18 capabilities Halo has no analogue for, so Phasor never needed them, all reachable through
-the routine bridge once it exists: dialogue, journal and quest state, alignment, force
-powers and talents, party management, inventory, module transitions, and the 2DA rules
-database — which has no NWScript routine at all and is currently invisible to scripts.
+Dialogue, journal and quest state, alignment, force powers and talents, party management,
+inventory, module transitions, and the 2DA rules database — which has no NWScript routine
+at all and is currently invisible to scripts.
 
 `OBJECT_SELF` being writable is the single largest one. A script can run engine routines as
-any object, which Halo's model simply has no equivalent for.
+any object.

@@ -1,18 +1,17 @@
 // The escape hatch: raw typed reads and writes at an address, and a signature
 // scan to find one.
 //
-// Three quarters of every real Phasor script is this module. 1,071 call sites
-// across the 13 reference scripts are `readfloat(base + 0x1C)` and friends, and
-// the typed layer above will always lag what somebody needs today. So the raw
-// surface stays, with Phasor's names and Phasor's argument shapes, because the
-// corpus is written against them.
+// The typed struct layer will always lag what somebody needs today -- a field
+// that is not in the generated layouts, or an offset found in the binary this
+// afternoon. So the raw surface stays: kotor.mem.readbyte / readfloat /
+// writeword, with an optional offset so readbyte(a, 3) and readbyte(a + 3)
+// are the same call.
 //
 // READS NEVER FAULT, AND NEVER RAISE
 // ==================================
 // Every read asks platform::is_readable about the whole span first and returns
-// nil when the answer is no. Phasor raised "invalid read: N bytes from 0x..."
-// instead; we return nil because pointer chasing is the normal case here, not
-// the exceptional one:
+// nil when the answer is no. Pointer chasing is the normal case here, not the
+// exceptional one, and a raise would cost a pcall per hop:
 //
 //     local p = kotor.mem.readdword(base + 0x10)
 //     local hp = p and kotor.mem.readfloat(p + 0x1C)

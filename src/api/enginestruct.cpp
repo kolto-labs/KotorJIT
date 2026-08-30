@@ -104,6 +104,21 @@ int handle_tostring(lua_State* L) {
 void bind_engine_access(const VmEngineAccess& a) { g_access = a; }
 const VmEngineAccess& engine_access() { return g_access; }
 
+std::uint32_t discover_command_count(const VmSites& s) {
+    std::uint32_t bound = s.commands_count ? s.commands_count : 0x304;
+    if (s.execute_command != 0) {
+        const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
+        if (platform::is_readable(p, 32)) {
+            std::uint8_t buf[32];
+            std::memcpy(buf, p, sizeof buf);
+            std::uint32_t imm = 0;
+            if (decode_execute_command_bound(buf, sizeof buf, imm) && imm > bound)
+                bound = imm;
+        }
+    }
+    return bound;
+}
+
 bool bind_sites(const VmSites& s, std::string& error) {
     auto need = [&](std::uintptr_t v, const char* name) {
         if (!v && error.empty()) error = std::string("unresolved site: ") + name;
@@ -174,13 +189,14 @@ bool bind_sites(const VmSites& s, std::string& error) {
     // The command array. Reading it is a dereference of an address that came
     // out of a data file, so it is probed first: a wrong build must refuse the
     // read rather than fault inside the refusal path.
+    const std::uint32_t count = discover_command_count(s);
     const auto base = reinterpret_cast<std::uintptr_t>(s.command_implementer);
     const void* slot = reinterpret_cast<const void*>(base + s.commands_offset);
     if (platform::is_readable(slot, sizeof(void*))) {
         void* const* table = *reinterpret_cast<void* const* const*>(slot);
-        if (table && platform::is_readable(table, sizeof(void*) * s.commands_count)) {
+        if (table && platform::is_readable(table, sizeof(void*) * count)) {
             a.commands = table;
-            a.command_count = s.commands_count;
+            a.command_count = count;
         }
     }
     if (!a.commands) {

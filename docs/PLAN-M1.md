@@ -660,6 +660,34 @@ No tests are written in M1, per the stated sequencing — functionality is confi
 headless harness first, and the `scripts/` corpus from item 12 becomes the basis of the
 automated suite in M2.
 
+## Status (2026-08-30, afternoon)
+
+M1 is **not closed**. Host gates are green. All five PLAN-M1 caves have fired in a
+live `swkotor` process. Tier 2 console drive still needs the splash-wait so
+DoConsole/OnSave are not typed into the LOADING bar.
+
+**TSL fallback (taken):** inject and resolve VM sites on `k2_steam_linux`; skip
+`console.do_console` when unresolved; EventHandler/save/load install when the table
+binds them. Typed TSL events are not separately proven.
+
+### Delta Update
+- Landed: five caves wired and live-fired (15 hooks). Load body is three
+  stack args / `ret $0xC` (not one / `ret $4`); hook stays on the
+  `0x005D1100` thunk. Cave-reality drive 2026-08-30 14:15: `DRIVE_EXIT:0`,
+  gameplay at t+5s, `[probe] OnLoad x1`, no Wine fault at `0x41168A`.
+  `kp_eventtest` 0 failures (`Load probe emits ret $0xC`).
+- Landed (same day, 14:42): splash-wait in `scripts/harness/ui_wait.sh`.
+  Cave-reality drive `DRIVE_EXIT:0` — splash gone at t+13s (`#004874`,
+  69638 colours), `console smoke ok`, `status: phase=running live=yes`,
+  `[probe] console:warp end_m01aa`, `[probe] OnSave x1`. All five caves
+  now have unique live lines in one 15-hook session.
+- Partial: EventHandler argument values still host-proven more than
+  live-asserted; K2 Aspyr still has no `expected_bytes`.
+- Next: coverage harness Layer 1 (`scripts/harness/coverage.sh`) is the
+  modder soft-lock loop; reply-pick cave and campaign walker are Layer
+  2–3 — see `docs/coverage-harness.md`. External: `arrenkaetris` git
+  access, Odyssey Steam-image deposit.
+
 ## Verification — tiered, so partial failure doesn't block everything
 
 Deliberately staged because the riskiest dependency (D3D8 under llvmpipe) is also the one
