@@ -56,7 +56,17 @@ enum class EngineReturn {
 struct Argument {
     std::string name;
     ValueType   type = ValueType::None;
+    // How the EventHandler cave fills this slot. Empty for events the runtime
+    // raises itself (OnTick, OnRunScript, ...). Values match the draft:
+    // "this", "caller", "calendar_day", "time_of_day", "int_params[N]",
+    // "float_params[N]", "string_params[N]", "object_params[N]".
+    std::string source;
 };
+
+// Layer-1 id that carries a CScriptEvent*. event_type is only meaningful then.
+// 0x18 and 0x1A also carry a CScriptEvent, but those match on outer id alone.
+inline constexpr int kSignalEvent = 10;
+inline constexpr std::uint32_t kObjectInvalid = 0x7f000000;
 
 struct EventContract {
     std::string            lua_name;      // e.g. "OnCreatureDeath"
@@ -66,6 +76,10 @@ struct EventContract {
     Fallback               fallback = Fallback::None;
     bool                   blocking = false;
     EngineReturn           engine_return = EngineReturn::Passthrough;
+    // -1 = not keyed by EventHandler identity (OnRunScript, OnTick, lifecycle).
+    int                    outer_event_id = -1;
+    // -1 = unused. Meaningful only when outer_event_id == kSignalEvent.
+    int                    event_type = -1;
 };
 
 // A void event has zero results, so the conversion that decides "claimed"
@@ -73,7 +87,7 @@ struct EventContract {
 // faithful to the model we are matching, but it means every later script sees
 // relevant == false, which surprises people.
 //
-// 27 of the current events are void. Defined in dispatch.cpp so tools can report
+// 29 of the current events are void. Defined in dispatch.cpp so tools can report
 // it rather than each rediscovering the rule.
 bool always_claimed_by_first(const EventContract&);
 
@@ -92,7 +106,16 @@ struct Outcome {
     unsigned called = 0;        // scripts invoked
     unsigned abstained = 0;     // returned nothing usable, before OR after a claim
     unsigned errored = 0;       // threw; its answer, if any, was discarded
-    unsigned ignored = 0;       // answered, but someone had already claimed
+    unsigned ignored = 0;        // answered, but someone had already claimed
 };
+
+// Whether Lua claimed a block, and what a returning cave should tell the engine.
+// EventHandler is void -- skip_original is the only lever there.
+struct BlockVerdict {
+    bool skip_original = false;
+    int  engine_result = 1;
+};
+
+BlockVerdict blocking_verdict(const EventContract&, const Outcome&);
 
 }  // namespace kp::events

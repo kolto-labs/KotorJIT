@@ -163,6 +163,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 1
 doc = "Object type: creature. Script slot: ScriptOnNotice. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:11934-11989 case 1: GetObjectID(0) -> field323_0x900 (last perceived); GetInteger(0) compared against 1/0/3/2 setting the four perception flag fields; RunScript(script_resrefs+1). RunScript is the last statement in the branch."
 
@@ -180,6 +182,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 2
 doc = "Object type: creature. Script slot: ScriptSpellAt. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:11990-12048 case 2: GetObjectID(0) resolved to a creature, or if it is an AREAOFEFFECT object its creator creature is substituted, into field92_0x1d8; GetInteger(0) -> field93_0x1dc; GetInteger(1) -> field94_0x1e0 and when 1 SetLastHostileActor; RunScript(script_resrefs+2) at :12024."
 
@@ -200,6 +204,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 7
 doc = "Object type: creature. Script slot: ScriptDialogue. Default script: k_hen_dialogue01."
 evidence = "nwscreature.cpp:12050-12093 case 7: caller stored to object.field76_0x17c; GetInteger(1) -> field80_0x198; GetString(0) copied to field78_0x184 and to CServerExoApp::SetLastConversation; GetInteger(2) -> field77_0x180; GetInteger(3) -> SetIgnoreConversationStartRange; a loop from index 1 to GetInteger(0) feeds AddMatchedExpressionString. At :12084-12090 slot 7 is rewritten to \"k_hen_dialogue01\" when empty or equal to \"default\", then RunScript."
 
@@ -215,6 +221,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: creature. Script slot: ScriptUserDefine. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:12095-12103 case 0xb: GetInteger(0) -> object.field65_0x150 (what GetUserDefinedEventNumber reads); RunScript(script_resrefs+0xb). Nothing follows."
 
@@ -232,6 +240,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 27
 doc = "Object type: creature. Script slot: ScriptDisturbed. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:12104-12117 case 0x1b: caller -> field70_0x164 and SetLastHostileActor; GetInteger(0) -> field75_0x178; GetObjectID(0) -> field74_0x174; RunScript(script_resrefs+5). Producer nwsitem.cpp:243-250 sets int 1 and object = item id; nwsitem.cpp:272-279 sets int 0 and object = item id."
 
@@ -247,6 +257,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 31
 doc = "Object type: creature. Script slot: ScriptOnBlocked. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:12120-12132 case 0x1f: skipped entirely if the creature is a client-controlled player (GetClientObjectByObjectId non-null); otherwise caller -> field13_0x33c and RunScript(script_resrefs+0xc). Producers nwscreatureai.cpp:2259, 2614, 3361, 9269, 10711, 11841 build the event with no parameters set."
 
@@ -262,6 +274,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 15
 doc = "Object type: creature. Script slot: ScriptAttacked. Return false to stop the game's own script running."
 evidence = "nwscreature.cpp:11673-11762, outer id 0xF = EVENT_ON_MELEE_ATTACKED (serveraimaster.cpp:353). pEventData is a CSWSCombatAttackData, not a CScriptEvent. caller -> object.field68_0x15c and SetLastHostileActor; BroadcastCombatStateToParty and RemoveCombatInvisibilityEffects run first; RunScript(script_resrefs+3) at :11759 is the last statement, gated on the creature being alive (:11753-11758)."
 
@@ -360,6 +373,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 1
 doc = "Object type: creature."
 evidence = "outer id 1 = EVENT_TIMED_EVENT (serveraimaster.cpp:299). nwscreature.cpp:11580-11588 calls CVirtualMachine::RunScriptSituation. serveraimaster.cpp:847-849 confirms the payload type by destroying it with DeleteScriptSituation."
 
@@ -374,6 +388,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 5
 doc = "Object type: creature."
 evidence = "outer id 5 = EVENT_APPLY_EFFECT (serveraimaster.cpp:311). nwscreature.cpp:11513-11530: if the effect's object_type word is 0x28 a guard flag object.field63_0x148 is raised, then CSWSObject::ApplyEffect, then the flag is lowered."
 
@@ -389,6 +404,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 14
 doc = "Object type: creature."
 evidence = "outer id 0xE = EVENT_REMOVE_EFFECT (serveraimaster.cpp:338). nwscreature.cpp:11531-11546 packs bytes out of the argument and calls CSWSObject::RemoveEffectById."
 
@@ -404,6 +420,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 4
 doc = "Object type: creature."
 evidence = "outer id 4 = EVENT_REMOVE_FROM_AREA (serveraimaster.cpp:308). nwscreature.cpp:11547-11555 calls RemoveFromArea(this, (int)param_3). CServerAIEventNode::SaveNode serializes id 4's payload as a single BYTE 'Value' (serveraimaster.cpp:559), which corroborates that arg3 is an immediate, not a pointer."
 
@@ -419,6 +436,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 9
 doc = "Object type: creature."
 evidence = "outer id 9 = EVENT_PLAY_ANIMATION (serveraimaster.cpp:323). nwscreature.cpp:11556-11579: returns early if the creature is dead or GetDeadTemp is set, otherwise calls vtable slot field31_0x7c with the argument. nwseffectlist.cpp:6364-6370 queues id 9 with animation constants 0x2726 / 0x275c."
 
@@ -433,6 +451,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 11
 doc = "Object type: creature."
 evidence = "outer id 0xB = EVENT_DESTROY_OBJECT (serveraimaster.cpp:329). nwscreature.cpp:11808-11915: spawns a body bag, reads appearance.2da column FadeDelayOnDeath, removes the creature from every trigger/door/placeable occupant list in the area, decrements the owning encounter's active count, then invokes the object destructor."
 
@@ -448,6 +467,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 8
 doc = "Object type: creature. Script slot: spell impact script, carried in the event payload. Return false to stop the game's own script running."
 evidence = "outer id 8 = EVENT_SPELL_IMPACT (serveraimaster.cpp:320); payload type confirmed by serveraimaster.cpp:850-854 destroying it as CSWSSpellScriptData. nwscreature.cpp:11764-11807: the branch runs only when the payload's embedded id equals the caller id, sets spell target position, then RunScript with a CExoString taken from inside the payload."
 
@@ -463,6 +483,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 19
 doc = "Object type: creature. Return false to stop the game's own script running."
 evidence = "outer id 0x13 = EVENT_ITEM_ON_HIT_SPELL_IMPACT (serveraimaster.cpp:353). Shares the branch with id 8 at nwscreature.cpp:11764; the only differences are at :11793-11797 (sets field349_0x964, copies a level value, calls CalculateLastSpellProjectileTime) and the matching teardown at :11803-11806."
 
@@ -477,6 +498,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 18
 doc = "Object type: creature."
 evidence = "outer id 0x12 = EVENT_FORCED_ACTION (serveraimaster.cpp:350). nwscreature.cpp:11916-11923: CancelAction at :11917, then ForceMoveToPoint when the payload discriminator is 1."
 
@@ -489,6 +511,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 20
 doc = "Object type: creature. Return false to stop the game's own script running."
 evidence = "outer id 0x14 = EVENT_BROADCAST_AOO (serveraimaster.cpp:356). nwscreature.cpp:11590-11593: the entire branch is a return. The constant survives from NWN's attack-of-opportunity system, which K1 does not use."
 
@@ -504,6 +527,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 21
 doc = "Object type: creature."
 evidence = "outer id 0x15 = EVENT_BROADCAST_SAFE_PROJECTILE (serveraimaster.cpp:377); payload type confirmed by serveraimaster.cpp:859-862. nwscreature.cpp:11594-11614 resolves attacker and target creatures, looks up the weapon's base item for its ammunition type, calls BroadcastSafeProjectile, then destroys the payload."
 
@@ -521,6 +545,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 22
 doc = "Object type: creature."
 evidence = "outer id 0x16 = EVENT_FEEDBACK_MESSAGE (serveraimaster.cpp:362); payload destroyed as CSWCCMessageData at serveraimaster.cpp:863-866. nwscreature.cpp:11615-11672 dispatches on the first byte of the payload."
 
@@ -535,6 +560,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 27
 doc = "Object type: creature. Return false to stop the game's own script running."
 evidence = "outer id 0x1B = EVENT_CONTROLLER_RUMBLE (serveraimaster.cpp:377). nwscreature.cpp:11924-11931: reached only via the `param_1 != 10` / `param_1 != 0x1b` fall-through; the whole branch is CClientExoApp::PlayRumblePattern at :11929."
 
@@ -550,6 +576,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 0
 doc = "Object type: module. Script slot: Mod_OnHeartbeat. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1156-1161 case 0: arg 4 -> field26_0x128 and arg 5 -> field27_0x12c, then RunScript(scripts+0)."
 
@@ -564,6 +592,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: module. Script slot: Mod_OnUsrDefined. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1169-1174 case 0xb: GetInteger(0) -> field32_0x148, RunScript(scripts+1)."
 
@@ -576,6 +606,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 17
 doc = "Object type: module. Script slot: Mod_OnModLoad. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1191-1194 case 0x11 (ON_MODULE_LOAD, serveraimaster.cpp:435) -> RunScript(scripts+2). No parameters read."
 
@@ -588,6 +620,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 16
 doc = "Object type: module. Script slot: Mod_OnModStart. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1187-1190 case 0x10 (ON_MODULE_START, serveraimaster.cpp:432) -> RunScript(scripts+3)."
 
@@ -602,6 +636,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 14
 doc = "Object type: module. Script slot: Mod_OnClientEntr. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1175-1180 case 0xe: GetObjectID(0) -> field33_0x14c, RunScript(scripts+4)."
 
@@ -616,6 +652,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 15
 doc = "Object type: module. Script slot: Mod_OnClientLeav. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1181-1186 case 0xf: GetObjectID(0) -> field34_0x150, RunScript(scripts+5)."
 
@@ -636,6 +674,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 10
+event_type = 18
 doc = "Object type: module. Script slot: Mod_OnActvtItem. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1195-1213 case 0x12: GetObjectID(0..3) -> field44_0x178, field45_0x17c, field46_0x180, field47_0x184; GetFloat(0),(1),(2) -> field48_0x188, field49_0x18c, field50_0x190; RunScript(scripts+6)."
 
@@ -651,6 +691,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 19
 doc = "Object type: module. Script slot: Mod_OnAcquirItem. Return false to stop the game's own script running."
 evidence = "producer nwsitem.cpp:67-77 sets event_type 0x13, SetObjectID(0, the item's own id), SetObjectID(1, param_1 = the previous holder). Consumer nwsmodule.cpp:1214-1221 reads GetObjectID(1) -> field36_0x158 and GetObjectID(0) -> field35_0x154, then RunScript(scripts+7)."
 
@@ -666,6 +708,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 20
 doc = "Object type: module. Script slot: Mod_OnUnAqreItem. Return false to stop the game's own script running."
 evidence = "producer nwsitem.cpp:148-158 sets event_type 0x14 and SetObjectID(0, the item id). Consumer nwsmodule.cpp:1222-1228: GetObjectID(0) -> field37_0x15c, caller -> field38_0x160, RunScript(scripts+8)."
 
@@ -680,6 +724,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 10
 doc = "Object type: module. Script slot: Mod_OnPlrDeath. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1164-1168 case 10 (ON_DEATH): caller -> field41_0x16c, RunScript(scripts+9). Producers nwseffectlist.cpp:7090 and :7294 set event_type 10."
 
@@ -694,6 +740,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 32
 doc = "Object type: module. Script slot: Mod_OnPlrDying. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1229-1233 case 0x20 (ON_PLAYER_DYING, serveraimaster.cpp:480): caller -> field42_0x170, RunScript(scripts+10). Producers nwseffectlist.cpp:1027 and :6724 set event_type 0x20."
 
@@ -708,6 +756,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 33
 doc = "Object type: module. Script slot: Mod_OnSpawnBtnDn. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1234-1238 case 0x21 (ON_RESPAWN_BUTTON_PRESSED, serveraimaster.cpp:483): caller -> field43_0x174, RunScript(scripts+0xb)."
 
@@ -723,6 +773,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 35
 doc = "Object type: module. Script slot: Mod_OnPlrRest. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1239-1245 case 0x23 (ON_PLAYER_REST, serveraimaster.cpp:489): caller -> field39_0x164, GetInteger(0) stored as a single char into field40_0x168, RunScript(scripts+0xc)."
 
@@ -737,6 +789,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 37
 doc = "Object type: module. Script slot: Mod_OnPlrLvlUp. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1257-1261 case 0x25 (ON_PLAYER_LEVEL_UP, serveraimaster.cpp:495): caller -> field51_0x194, RunScript(scripts+0xd)."
 
@@ -751,6 +805,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 38
 doc = "Object type: module. Script slot: Mod_OnEquipItem. Return false to stop the game's own script running."
 evidence = "nwsmodule.cpp:1262-1267 case 0x26 (ON_EQUIP_ITEM, serveraimaster.cpp:498): GetObjectID(0) -> field53_0x19c, RunScript(scripts+0xe)."
 
@@ -765,6 +821,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 36
 doc = "Object type: module."
 evidence = "nwsmodule.cpp:1246-1256 case 0x24 (ON_DESTROYPLAYERCREATURE, serveraimaster.cpp:492): looks the object up, calls a vtable predicate at +0x30, and on success CGameObjectArray::Delete. NO RunScript -- it jumps straight to the teardown label."
 
@@ -777,6 +835,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 1
 doc = "Object type: module."
 evidence = "nwsmodule.cpp:1145-1151: outer id 1 -> RunScriptSituation on the module object id."
 
@@ -793,6 +852,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 0
 doc = "Object type: area. Script slot: OnHeartbeat. Return false to stop the game's own script running."
 evidence = "nwsarea.cpp:5626-5632: arg4 -> field8_0x13c, arg5 -> field9_0x140, RunScript(&script_on_heart_beat). Field name binding at nwsarea.cpp:3233-3236."
 
@@ -808,6 +869,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: area. Script slot: OnUserDefined. Return false to stop the game's own script running."
 evidence = "nwsarea.cpp:5633-5639: GetInteger(0) -> field41_0x1dc, RunScript(&script_on_user_defined). Field binding nwsarea.cpp:3240-3243."
 
@@ -824,6 +887,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 12
 doc = "Object type: area. Script slot: OnEnter."
 evidence = "nwsarea.cpp:5640-5649: caller -> field39_0x1d4; the previous GetLoadFromSaveGame value is saved, replaced with GetInteger(0), the script runs, and the old value is RESTORED afterwards. Producer nwsarea.cpp:6043-6053 sets event_type 0xc and SetInteger(0, GetLoadFromSaveGame())."
 
@@ -839,6 +904,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 13
 doc = "Object type: area. Script slot: OnExit. Return false to stop the game's own script running."
 evidence = "nwsarea.cpp:5652-5657: caller -> field40_0x1d8, RunScript(&script_on_exit). Producer nwsarea.cpp:5832-5840 sets event_type 0xd with no parameters."
 
@@ -854,6 +921,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "medium"
+outer_event_id = 17
 doc = "Object type: area."
 evidence = "outer id 0x11 = EVENT_SPAWN_BODY_BAG (serveraimaster.cpp:362). nwsarea.cpp:5566-5601 reads an object id from the payload, adds the placeable to the area at the payload's vector, and if it is a corpse budges nearby creatures out of its bounding box. No script."
 
@@ -870,6 +938,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 0
 doc = "Object type: door. Script slot: OnHeartbeat. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1741-1748 case 0: arg4/arg5 -> field42_0x30c/field43_0x310, scripts+5."
 
@@ -887,6 +957,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 2
 doc = "Object type: door. Script slot: OnSpellCastAt. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1751-1771 case 2: GetObjectID(0), GetInteger(0), GetInteger(1); when harmful, SetLastHostileActor plus combat-state broadcast, all BEFORE scripts+8 runs."
 
@@ -903,6 +975,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 10
+event_type = 4
 doc = "Object type: door. Script slot: OnDamaged. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1772-1778 case 4: caller -> object.field69_0x160 and SetLastHostileActor, then scripts+2. Producer nwseffectlist.cpp:6386-6402 builds event_type 4 with SetInteger(0, damage amount) and caller = the effect's creator_id."
 
@@ -921,6 +995,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 7
 doc = "Object type: door. Script slot: OnDialog. Default script: k_hen_dialogue01."
 evidence = "nwsdoor.cpp:1779-1820 case 7 -- structurally identical to the creature case at nwscreature.cpp:12050; slot 0xd selected at :1814 and the \"k_hen_dialogue01\" substitution at :1815-1818."
 
@@ -936,6 +1012,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 10
 doc = "Object type: door. Script slot: OnDeath. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1821-1826 case 10: caller -> object.field66_0x154, scripts+3."
 
@@ -951,6 +1029,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: door. Script slot: OnUserDefined. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1827-1833 case 0xb: GetInteger(0) -> object.field65_0x150, scripts+0xb."
 
@@ -966,6 +1046,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 24
 doc = "Object type: door. Script slot: OnDisarm. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1834-1851 case 0x18 (ON_DISARM, serveraimaster.cpp:456): only if trap_flag is set; clears trap_flag, caller -> field49_0x328, scripts+4; then frees the trap's tracking list."
 
@@ -982,6 +1064,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 26
 doc = "Object type: door. Script slot: OnTrapTriggered. Default script: traps.2da column MineScript for this door's TrapType. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1852-1894 case 0x1a (ON_MINE_TRIGGERED, serveraimaster.cpp:462): GetInteger(0) gates the reputation < 90 and faction-mismatch tests; also skipped when the triggerer has effect immunity 5. On success caller -> field48_0x324, scripts+9 at :1869, then one-shot removal. Self-producer at nwsdoor.cpp:1651-1658 (posted from the melee-attacked branch). Default from traps.2da at nwsdoor.cpp:1293-1310."
 
@@ -997,6 +1081,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 28
 doc = "Object type: door. Script slot: OnLock. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1895-1900 case 0x1c (ON_LOCKED, serveraimaster.cpp:468): caller -> field44_0x314, scripts+6."
 
@@ -1012,6 +1098,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 29
 doc = "Object type: door. Script slot: OnUnlock. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1901-1906 case 0x1d (ON_UNLOCKED, serveraimaster.cpp:471): caller -> field45_0x318, scripts+10."
 
@@ -1028,6 +1116,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 30
 doc = "Object type: door. Script slot: OnClick. Default script: NW_G0_Transition."
 evidence = "nwsdoor.cpp:1907-2021 case 0x1e (ON_CLICKED, serveraimaster.cpp:474). Two distinct behaviours. If the door is LINKED to another module it never runs a script: it starts a global fade, marks the area transition pending, and re-posts itself as another event_type 0x1e with a 500 ms delay carrying SetObjectID(0, clicker) and SetInteger(0, the pending id) (nwsdoor.cpp:1946-1964; event_type written at :1953, queued at :1964); the second pass compares int_params[0] against the area's current pending id and, if they match, calls SetMoveToModulePending at :1985. If the door is NOT linked, scripts+0xc runs, with \"NW_G0_Transition\" substituted at :2000-2005 when empty or \"default\"."
 
@@ -1043,6 +1133,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 34
 doc = "Object type: door. Script slot: OnFailToOpen. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:2022-2053 case 0x22 (ON_FAIL_TO_OPEN, serveraimaster.cpp:486): caller -> field48_0x324, scripts+0xe runs FIRST, then if the door is locked a 'door is locked' feedback message is sent."
 
@@ -1058,6 +1150,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 7
 doc = "Object type: door. Script slot: OnOpen. Return false to stop the game's own script running."
 evidence = "outer id 7 = EVENT_OPEN_OBJECT (serveraimaster.cpp:323). nwsdoor.cpp:1672-1677 calls OpenDoor(this, caller); the OnOpen script itself is run at nwsdoor.cpp:711 inside OpenDoor."
 
@@ -1073,6 +1166,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 6
 doc = "Object type: door. Script slot: OnClosed. Return false to stop the game's own script running."
 evidence = "outer id 6 = EVENT_CLOSE_OBJECT (serveraimaster.cpp:311). nwsdoor.cpp:1678-1692: caller -> field47_0x320, SetOpenState(0), the linked door is closed too, THEN scripts+1 runs last."
 
@@ -1088,6 +1182,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 15
 doc = "Object type: door. Script slot: OnMeleeAttacked. Return false to stop the game's own script running."
 evidence = "nwsdoor.cpp:1561-1661, outer id 0xF: caller -> object.field68_0x15c and SetLastHostileActor, combat broadcast, then scripts+7 at :1626. After the script, if the door is a live trap and the attacker is within 4 units, a self-directed event_type 0x1a is posted (:1644-1659; type set at :1651, queued at :1658)."
 
@@ -1102,6 +1197,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 11
 doc = "Object type: door."
 evidence = "nwsdoor.cpp:1702-1723 (outer id 0xB): unlinked doors are removed from the area and destructed; linked doors instead have their static bounding box removed and are set to open-state 3. No script."
 
@@ -1118,6 +1214,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 0
 doc = "Object type: placeable. Script slot: OnHeartbeat. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2149-2160 case 0."
 
@@ -1135,6 +1233,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 2
 doc = "Object type: placeable. Script slot: OnSpellCastAt. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2161-2184 case 2, identical in shape to the door case."
 
@@ -1151,6 +1251,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "medium"
+outer_event_id = 10
+event_type = 4
 doc = "Object type: placeable. Script slot: OnDamaged. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2185-2191 case 4: caller -> object.field69_0x160, SetLastHostileActor, scripts+1. Amount from the producer at nwseffectlist.cpp:6393-6396."
 
@@ -1169,6 +1271,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 7
 doc = "Object type: placeable. Script slot: OnDialog. Default script: k_hen_dialogue01."
 evidence = "nwsplaceable.cpp:2192-2237 case 7, with the \"k_hen_dialogue01\" substitution at :2228-2234 (slot 0xe selected at :2227)."
 
@@ -1184,6 +1288,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 10
 doc = "Object type: placeable. Script slot: OnDeath. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2238-2247 case 10: plays animation 0x2758 via the vtable, caller -> object.field66_0x154, scripts+2."
 
@@ -1199,6 +1305,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: placeable. Script slot: OnUserDefined. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2248-2254 case 0xb."
 
@@ -1214,6 +1322,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 22
 doc = "Object type: placeable. Script slot: OnOpen. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2255-2260 case 0x16 (ON_OPEN, serveraimaster.cpp:450): caller -> field42_0x350, scripts+8."
 
@@ -1229,6 +1339,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 23
 doc = "Object type: placeable. Script slot: OnClosed. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2261-2269 case 0x17 (ON_CLOSE, serveraimaster.cpp:453): caller -> field43_0x354, scripts+0."
 
@@ -1244,6 +1356,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 24
 doc = "Object type: placeable. Script slot: OnDisarm. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2270-2289 case 0x18 (scripts+3 at :2277): gated on trap_flag; clears it, caller -> field46_0x360, scripts+3, then frees the trap tracking list."
 
@@ -1259,6 +1373,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 25
 doc = "Object type: placeable. Script slot: OnUsed. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2290-2299 case 0x19 (ON_USED, serveraimaster.cpp:459): runs only when the placeable's `usable` flag is set; caller -> field44_0x358, scripts+0xc."
 
@@ -1275,6 +1391,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 26
 doc = "Object type: placeable. Script slot: OnTrapTriggered. Default script: traps.2da column MineScript for this placeable's TrapType. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2300-2344 case 0x1a (scripts+10 at :2317), structurally identical to the door case. Default from traps.2da at nwsplaceable.cpp:907-919."
 
@@ -1292,6 +1410,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 27
 doc = "Object type: placeable. Script slot: OnInvDisturbed. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2345-2357 case 0x1b -- same field writes as the creature case. Producer nwsitem.cpp:243-252 and :272-281."
 
@@ -1307,6 +1427,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 28
 doc = "Object type: placeable. Script slot: OnLock. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2358-2367 case 0x1c."
 
@@ -1322,6 +1444,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 29
 doc = "Object type: placeable. Script slot: OnUnlock. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:2368-2376 case 0x1d."
 
@@ -1337,6 +1461,7 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 15
 doc = "Object type: placeable. Script slot: OnMeleeAttacked. Return false to stop the game's own script running."
 evidence = "nwsplaceable.cpp:1927-2030, outer id 0xF; scripts+7 at :1992; a self-directed event_type 0x1a is posted afterwards for live traps (queued at :2026)."
 
@@ -1366,6 +1491,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 25
 doc = "Object type: placeable."
 evidence = "outer id 0x19 = EVENT_ACQUIRE_ITEM (serveraimaster.cpp:371). nwsplaceable.cpp:2031-2041 (outer id 0x19): resolves the caller as an item and calls AcquireItem. No script."
 
@@ -1382,6 +1508,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 12
 doc = "Object type: trigger. Script slot: ScriptOnEnter."
 evidence = "nwstrigger.cpp:1595 is the `sVar1 != 0xc` guard; the 0xc path is the fall-through beginning at :1643. Three mutually exclusive paths: a mine trigger calls OnEnterMine at :1652 (which runs scripts+4 and scripts+1 at :666-667); a module-linked trigger runs the same fade/re-post area transition machine as the door, re-posting event_type 0xc (type written at :1697, queued at :1710) with SetObjectID(0, entering) and the pending id; an ordinary trigger runs scripts+1 at :1656."
 
@@ -1397,6 +1525,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 13
 doc = "Object type: trigger. Script slot: ScriptOnExit. Return false to stop the game's own script running."
 evidence = "nwstrigger.cpp:1596-1602: GetObjectID(0) -> field14_0x2a0, scripts+2."
 
@@ -1412,6 +1542,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: trigger. Script slot: ScriptUserDefine. Return false to stop the game's own script running."
 evidence = "nwstrigger.cpp:1603-1609: GetInteger(0) -> field39_0x2f8, scripts+3, and the RunScript object id is `param_2` (the CALLER), not the trigger."
 
@@ -1427,6 +1559,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 24
 doc = "Object type: trigger. Script slot: OnDisarm. Return false to stop the game's own script running."
 evidence = "nwstrigger.cpp:1610-1615: caller -> field15_0x2a4, scripts+5."
 
@@ -1442,6 +1576,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 30
 doc = "Object type: trigger. Script slot: OnClick. Default script: NW_G0_Transition. Return false to stop the game's own script running."
 evidence = "nwstrigger.cpp:1616-1639 case 0x1e: GetObjectID(0) -> field13_0x29c; \"NW_G0_Transition\" substituted at :1626 when the slot is empty or \"default\" AND the trigger is module-linked; the clicker's area-transition loading screen is set; scripts+6 runs."
 
@@ -1484,6 +1620,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 11
 doc = "Object type: trigger."
 evidence = "nwstrigger.cpp:1581-1590: gated on is_destroyable, then RemoveFromArea and the destructor."
 
@@ -1498,6 +1635,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 0
 doc = "Object type: encounter. Script slot: OnHeartbeat. Return false to stop the game's own script running."
 evidence = "nwsencounter.cpp:2603-2606. Producer nwsencounter.cpp:2541 sets event_type 0."
 
@@ -1513,6 +1652,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 12
 doc = "Object type: encounter. Script slot: OnEntered."
 evidence = "nwsencounter.cpp:2587-2595: GetObjectID(0) -> last_entered, then SpawnIfAppropriate(entering, -1.0) runs BEFORE the script."
 
@@ -1528,6 +1669,8 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 10
+event_type = 13
 doc = "Object type: encounter. Script slot: OnExit."
 evidence = "nwsencounter.cpp:2596-2602: GetObjectID(0) -> last_left, UpdateActivateAreaList, then the script."
 
@@ -1542,6 +1685,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 21
 doc = "Object type: encounter. Script slot: OnExhausted. Return false to stop the game's own script running."
 evidence = "nwsencounter.cpp:2607-2610 case 0x15 (ON_ENCOUNTER_EXHAUSTED, serveraimaster.cpp:447). Producer nwsencounter.cpp:2683 in RemoveFromActiveCreatureCount."
 
@@ -1557,6 +1702,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 11
 doc = "Object type: encounter. Script slot: OnUserDefined. Return false to stop the game's own script running."
 evidence = "nwsencounter.cpp:2611-2617: GetInteger(0) -> custom_script_id, then the script."
 
@@ -1572,6 +1719,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 12
 doc = "Object type: aoe. Script slot: OnEnter (named member script_on_enter). Return false to stop the game's own script running."
 evidence = "nwsspellimpact.cpp:1183-1189: GetObjectID(0) -> last_entered, then RunScript. Producers nwsspellimpact.cpp:752, :779 set event_type 0xc."
 
@@ -1587,6 +1736,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 13
 doc = "Object type: aoe. Script slot: OnExit (named member script_on_exit). Return false to stop the game's own script running."
 evidence = "nwsspellimpact.cpp:1190-1196. Producers nwsspellimpact.cpp:806, :906 set event_type 0xd."
 
@@ -1602,6 +1753,8 @@ fallback = "none"
 blocking = true
 engine_return = "ReportSuccess"
 confidence = "high"
+outer_event_id = 10
+event_type = 22
 doc = "Object type: store. Script slot: OnOpenStore. Return false to stop the game's own script running."
 evidence = "nwsstore.cpp:187-194: only event_type 0x16 (ON_OPEN) is handled; caller -> field4_0x23c, RunScript(&on_open_store). GFF field name from SaveStore nwsstore.cpp:112."
 
@@ -1616,6 +1769,7 @@ fallback = "none"
 blocking = false
 engine_return = "Passthrough"
 confidence = "high"
+outer_event_id = 11
 doc = "Object type: waypoint."
 evidence = "nwswaypoint.cpp:49-57: the entire body is `if (eventId == 0xb && is_destroyable) destructor()`. Waypoints run no scripts and receive no other event."
 

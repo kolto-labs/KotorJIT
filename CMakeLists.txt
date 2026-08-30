@@ -7,7 +7,7 @@
 #   cmake -S . -B build && cmake --build build      native tools, g++ -m32
 #   cmake --build build --target image_win32        Windows cross-compile check
 cmake_minimum_required(VERSION 3.20)
-project(KotorPhasor CXX)
+project(KotorPhasor VERSION 0.1.0 LANGUAGES CXX)
 
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's
