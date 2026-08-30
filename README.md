@@ -1,74 +1,63 @@
 # KotorPhasor
 
-A Lua scripting runtime for Star Wars: Knights of the Old Republic.
+Lua scripts for Star Wars: Knights of the Old Republic.
 
-KotorPhasor loads into the running game, embeds LuaJIT, and hands the engine's own script
-events to Lua. Scripts define only the callbacks they care about. They can watch an event,
-change what it does, or stop it happening. They reload without restarting the game.
+The runtime loads with the game, embeds LuaJIT, and hands the engine's own script events to your `.lua` files. You can watch an event, change it, or stop it. Files reload without restarting the game.
 
-> Early development. Nothing here is ready to use yet.
-
-## What it does
-
-The game runs everything through NWScript — every heartbeat, every death, every conversation
-line. Modding that today means editing script source, compiling bytecode, and shipping
-override files. You cannot watch an event, and you cannot stop one.
-
-KotorPhasor puts Lua in that path:
+**0.1.0** supports KOTOR 1 on Steam (Windows). See [docs/user/](docs/user/) for install, scripting, and what is live.
 
 ```lua
--- scripts/no_ambush.lua
 priority = 10
 
-function OnScriptEvent(script, object)
-    if script == "k_ambush_spawn" then
-        return false        -- the ambush does not happen
+function OnRunScript(script_name, object_id, has_object, relevant)
+    if script_name == "k_ambush_spawn" then
+        return false
     end
 end
 ```
 
-Every one of the game's 772 engine routines is callable from Lua, so a script can do anything
-NWScript can.
-
-## How several scripts share an event
-
-Every loaded script that defines the callback is called, in priority order. The first one to
-return a usable value decides the outcome; the rest still run, and are told their answer will
-not be used. A script that returns nothing is abstaining, not voting.
-
-Priority is a number a script declares. Scripts that do not declare one are ordered by
-filename, so the outcome never depends on load order by accident.
+769 of the game's 772 engine routines are `kotor.GetFirstPC()`, `kotor.AdjustAlignment(...)`, and so on. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` are not bound. Use `kp.as` and `kotor.registertimer` instead.
 
 ## Supported games
 
-| game | build | status |
+| Game | Build | 0.1.0 |
 |---|---|---|
-| KOTOR 1 | Steam, Windows | primary target |
-| KOTOR 2 | Steam, native Linux | in progress |
+| KOTOR 1 | Steam, Windows | Supported |
+| KOTOR 2 | Steam, native Linux | Not yet |
 
-Addresses live in `data/addresses/`, generated per build and keyed by executable hash.
-KotorPhasor identifies the build at load time and refuses to run against one it does not
-recognise, rather than patching the wrong bytes.
+The runtime identifies the executable by hash. An unknown build is left unpatched. The Steam KOTOR 1 image is encrypted on disk; KotorPhasor waits for it to decipher, then checks it. Details: [docs/steam-gog-equivalence.md](docs/steam-gog-equivalence.md).
 
-The Steam KOTOR 1 executable is encrypted on disk. KotorPhasor waits for it to decipher in
-memory, re-reads the image, and checks it before touching anything — see
-[docs/steam-gog-equivalence.md](docs/steam-gog-equivalence.md).
+## Install
 
-## Building
-
-You need a 32-bit Windows cross-compiler and LuaJIT built for the same target.
+Build (32-bit Windows cross-compiler and LuaJIT):
 
 ```sh
 sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686
 
 git clone --branch v2.1 https://github.com/LuaJIT/LuaJIT third_party/luajit
 make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows
+
+cmake -S . -B build && cmake --build build
+./scripts/install_to_game.sh install /path/to/swkotor
 ```
+
+Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
+
+Full steps: [docs/user/install.md](docs/user/install.md).
+
+## What works
+
+These callbacks fire in a running 0.1.0 game: `OnScriptLoad`, `OnTick`, `OnRunScript`, `OnConsoleCommand`, `OnSave`, `OnLoad`, `OnModuleLoad`, `OnModulePlayerEnter`, `OnAreaEnter`, `OnCreatureAttacked`. Other EventHandler names (doors, placeables, triggers, …) are installed and fire when the engine raises that id.
+
+Do not use `OnCreatureHeartbeat` or `OnDialogConditional` as function names. They never run. Filter `OnRunScript` by `script_name` instead.
+
+The full list, with a status on each name: [docs/user/api-status.md](docs/user/api-status.md). How to write a script: [docs/user/scripts.md](docs/user/scripts.md).
+
+Argument catalogs (generated, not status): [docs/lua-api.md](docs/lua-api.md), [docs/nwscript-api.md](docs/nwscript-api.md).
 
 ## Testing without a screen
 
-`scripts/harness/` runs the game under Xvfb and Wine and drives it with a virtual keyboard
-and mouse, so changes can be checked on a machine with no display:
+`scripts/harness/` runs the game under Xvfb and Wine:
 
 ```sh
 ./scripts/harness/spike_headless_k1.sh
@@ -76,10 +65,9 @@ and mouse, so changes can be checked on a machine with no display:
 
 ## Credits
 
-Built on other people's work — see [ATTRIBUTION.md](ATTRIBUTION.md).
+Built on other people's work. See [ATTRIBUTION.md](ATTRIBUTION.md).
 
-Not affiliated with BioWare, Obsidian, LucasArts, Aspyr, or Disney. Ships no game content.
-Bring your own copy of the game.
+Not affiliated with BioWare, Obsidian, LucasArts, Aspyr, or Disney. Ships no game content. Bring your own copy of the game.
 
 ## Licence
 

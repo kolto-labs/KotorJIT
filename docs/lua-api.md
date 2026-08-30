@@ -40,10 +40,10 @@ whole answer is discarded and you have abstained.
 
 Called once after the script loads. `build` is the identified game build, e.g. k1_steam_103.
 
-| argument | type |
-|---|---|
-| `game` | string |
-| `build` | string |
+| argument | type | source |
+|---|---|---|
+| `game` | string |  |
+| `build` | string |  |
 
 Returns: nothing. 
 
@@ -57,9 +57,9 @@ Returns: nothing.
 
 Called for every line typed into the cheat console, including lines the game does not recognise. Return false to consume the line so the game never sees it, which is how a script adds its own commands. The console hook receives one keystroke at a time and buffers to a line, so this fires on Enter.
 
-| argument | type |
-|---|---|
-| `line` | string |
+| argument | type | source |
+|---|---|---|
+| `line` | string |  |
 
 Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
 
@@ -67,11 +67,11 @@ Returns: bool. If no script answers, the result is `true`. Returning false stops
 
 Called after an NWScript finishes. `ran` is the engine's own return value: true when the script loaded and ran with a balanced stack.
 
-| argument | type |
-|---|---|
-| `script_name` | string |
-| `object_id` | object |
-| `ran` | bool |
+| argument | type | source |
+|---|---|---|
+| `script_name` | string |  |
+| `object_id` | object |  |
+| `ran` | bool |  |
 
 Returns: nothing. 
 
@@ -79,9 +79,9 @@ Returns: nothing.
 
 Called once per server frame. The highest-frequency callback: a script that does not define it pays nothing, one that does should keep the body short.
 
-| argument | type |
-|---|---|
-| `tick` | int |
+| argument | type | source |
+|---|---|---|
+| `tick` | int |  |
 
 Returns: nothing. 
 
@@ -89,11 +89,11 @@ Returns: nothing.
 
 Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `script_name` | string |
-| `object_id` | object |
-| `has_object` | int |
+| argument | type | source |
+|---|---|---|
+| `script_name` | string | arg1 CExoString* |
+| `object_id` | object | arg2 ulong |
+| `has_object` | int | arg3 int |
 
 Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
 
@@ -101,10 +101,10 @@ Returns: bool. If no script answers, the result is `true`. Returning false stops
 
 Script slot: dialog node Active/StartingConditional resref. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `script_name` | string |
-| `speaker` | object |
+| argument | type | source |
+|---|---|---|
+| `script_name` | string | arg1 CExoString* |
+| `speaker` | object | arg2 ulong |
 
 Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
 
@@ -112,11 +112,11 @@ Returns: bool. If no script answers, the result is `true`. Returning false stops
 
 Object type: creature. Script slot: ScriptOnNotice. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `perceived` | object |
-| `how` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `perceived` | object | object_params[0] |
+| `how` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -124,12 +124,12 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptSpellAt. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `caster` | object |
-| `spell_id` | int |
-| `harmful` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `caster` | object | object_params[0] |
+| `spell_id` | int | int_params[0] |
+| `harmful` | int | int_params[1] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -137,15 +137,15 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptDialogue. Default script: k_hen_dialogue01.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `speaker` | object |
-| `listen_pattern` | int |
-| `conversation` | string |
-| `action_conv_flag` | int |
-| `ignore_range` | int |
-| `match_count` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `speaker` | object | caller |
+| `listen_pattern` | int | int_params[1] |
+| `conversation` | string | string_params[0] |
+| `action_conv_flag` | int | int_params[2] |
+| `ignore_range` | int | int_params[3] |
+| `match_count` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -153,10 +153,10 @@ Returns: nothing.
 
 Object type: creature. Script slot: ScriptUserDefine. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -164,12 +164,12 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptDisturbed. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `disturber` | object |
-| `disturb_type` | int |
-| `item` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `disturber` | object | caller |
+| `disturb_type` | int | int_params[0] |
+| `item` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -177,10 +177,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptOnBlocked. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `blocker` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `blocker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -188,10 +188,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptAttacked. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `attacker` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `attacker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -199,9 +199,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -209,9 +209,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptSpawn. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -219,9 +219,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptDeath. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -229,9 +229,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptEndRound. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -239,9 +239,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: ScriptEndDialogue. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -249,9 +249,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: nothing. 
 
@@ -259,9 +259,9 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: nothing. 
 
@@ -269,9 +269,9 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: nothing. 
 
@@ -285,9 +285,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `pattern` | int |
+| argument | type | source |
+|---|---|---|
+| `pattern` | int | arg3 (immediate) |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -295,10 +295,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `calendar_day` | int |
-| `time_of_day` | int |
+| argument | type | source |
+|---|---|---|
+| `calendar_day` | int | calendar_day |
+| `time_of_day` | int | time_of_day |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -306,9 +306,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnUsrDefined. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -328,9 +328,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnClientEntr. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -338,9 +338,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnClientLeav. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -348,10 +348,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnAcquirItem. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `item` | object |
-| `previous_possessor` | object |
+| argument | type | source |
+|---|---|---|
+| `item` | object | object_params[0] |
+| `previous_possessor` | object | object_params[1] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -359,10 +359,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnUnAqreItem. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `item` | object |
-| `loser` | object |
+| argument | type | source |
+|---|---|---|
+| `item` | object | object_params[0] |
+| `loser` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -370,9 +370,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnPlrDeath. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -380,9 +380,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnPlrDying. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -390,9 +390,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnSpawnBtnDn. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -400,10 +400,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnPlrRest. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
-| `rest_phase` | int |
+| argument | type | source |
+|---|---|---|
+| `player` | object | caller |
+| `rest_phase` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -411,9 +411,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnPlrLvlUp. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `player` | object |
+| argument | type | source |
+|---|---|---|
+| `player` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -421,9 +421,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module. Script slot: Mod_OnEquipItem. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `item` | object |
+| argument | type | source |
+|---|---|---|
+| `item` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -431,9 +431,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: module.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | caller |
 
 Returns: nothing. 
 
@@ -447,11 +447,11 @@ Returns: nothing.
 
 Object type: area. Script slot: OnHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `area` | object |
-| `calendar_day` | int |
-| `time_of_day` | int |
+| argument | type | source |
+|---|---|---|
+| `area` | object | this |
+| `calendar_day` | int | calendar_day |
+| `time_of_day` | int | time_of_day |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -459,10 +459,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: area. Script slot: OnUserDefined. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `area` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `area` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -470,11 +470,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: area. Script slot: OnEnter.
 
-| argument | type |
-|---|---|
-| `area` | object |
-| `entering` | object |
-| `from_save_game` | int |
+| argument | type | source |
+|---|---|---|
+| `area` | object | this |
+| `entering` | object | caller |
+| `from_save_game` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -482,10 +482,10 @@ Returns: nothing.
 
 Object type: area. Script slot: OnExit. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `area` | object |
-| `leaving` | object |
+| argument | type | source |
+|---|---|---|
+| `area` | object | this |
+| `leaving` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -493,11 +493,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `calendar_day` | int |
-| `time_of_day` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `calendar_day` | int | calendar_day |
+| `time_of_day` | int | time_of_day |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -505,12 +505,12 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnSpellCastAt. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `caster` | object |
-| `spell_id` | int |
-| `harmful` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `caster` | object | object_params[0] |
+| `spell_id` | int | int_params[0] |
+| `harmful` | int | int_params[1] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -518,13 +518,13 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnDialog. Default script: k_hen_dialogue01.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `speaker` | object |
-| `listen_pattern` | int |
-| `conversation` | string |
-| `match_count` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `speaker` | object | caller |
+| `listen_pattern` | int | int_params[1] |
+| `conversation` | string | string_params[0] |
+| `match_count` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -532,10 +532,10 @@ Returns: nothing.
 
 Object type: door. Script slot: OnDeath. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `killer` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `killer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -543,10 +543,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnUserDefined. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -554,10 +554,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnDisarm. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `disarmer` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `disarmer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -565,11 +565,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnTrapTriggered. Default script: traps.2da column MineScript for this door's TrapType. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `triggerer` | object |
-| `force` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `triggerer` | object | caller |
+| `force` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -577,10 +577,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnLock. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `locker` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `locker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -588,10 +588,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnUnlock. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `unlocker` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `unlocker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -599,11 +599,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnClick. Default script: NW_G0_Transition.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `clicker` | object |
-| `pending_id` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `clicker` | object | object_params[0] |
+| `pending_id` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -611,10 +611,10 @@ Returns: nothing.
 
 Object type: door. Script slot: OnFailToOpen. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `opener` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `opener` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -622,10 +622,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnClosed. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `closer` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `closer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -633,10 +633,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnMeleeAttacked. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `attacker` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `attacker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -644,9 +644,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door.
 
-| argument | type |
-|---|---|
-| `door` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
 
 Returns: nothing. 
 
@@ -654,11 +654,11 @@ Returns: nothing.
 
 Object type: placeable. Script slot: OnHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `calendar_day` | int |
-| `time_of_day` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `calendar_day` | int | calendar_day |
+| `time_of_day` | int | time_of_day |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -666,12 +666,12 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnSpellCastAt. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `caster` | object |
-| `spell_id` | int |
-| `harmful` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `caster` | object | object_params[0] |
+| `spell_id` | int | int_params[0] |
+| `harmful` | int | int_params[1] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -679,13 +679,13 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnDialog. Default script: k_hen_dialogue01.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `speaker` | object |
-| `listen_pattern` | int |
-| `conversation` | string |
-| `match_count` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `speaker` | object | caller |
+| `listen_pattern` | int | int_params[1] |
+| `conversation` | string | string_params[0] |
+| `match_count` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -693,10 +693,10 @@ Returns: nothing.
 
 Object type: placeable. Script slot: OnDeath. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `killer` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `killer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -704,10 +704,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnUserDefined. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -715,10 +715,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnOpen. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `opener` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `opener` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -726,10 +726,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnClosed. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `closer` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `closer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -737,10 +737,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnDisarm. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `disarmer` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `disarmer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -748,10 +748,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnUsed. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `user` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `user` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -759,11 +759,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnTrapTriggered. Default script: traps.2da column MineScript for this placeable's TrapType. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `triggerer` | object |
-| `force` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `triggerer` | object | caller |
+| `force` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -771,12 +771,12 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnInvDisturbed. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `disturber` | object |
-| `disturb_type` | int |
-| `item` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `disturber` | object | caller |
+| `disturb_type` | int | int_params[0] |
+| `item` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -784,10 +784,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnLock. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `locker` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `locker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -795,10 +795,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnUnlock. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `unlocker` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `unlocker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -806,10 +806,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnMeleeAttacked. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `attacker` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `attacker` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -817,10 +817,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `item` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `item` | object | caller |
 
 Returns: nothing. 
 
@@ -828,11 +828,11 @@ Returns: nothing.
 
 Object type: trigger. Script slot: ScriptOnEnter.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
-| `entering` | object |
-| `int0` | int |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
+| `entering` | object | object_params[0] |
+| `int0` | int | int_params[0] |
 
 Returns: nothing. 
 
@@ -840,10 +840,10 @@ Returns: nothing.
 
 Object type: trigger. Script slot: ScriptOnExit. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
-| `leaving` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
+| `leaving` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -851,10 +851,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger. Script slot: ScriptUserDefine. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -862,10 +862,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger. Script slot: OnDisarm. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
-| `disarmer` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
+| `disarmer` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -873,10 +873,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger. Script slot: OnClick. Default script: NW_G0_Transition. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
-| `clicker` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
+| `clicker` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -884,9 +884,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
 
 Returns: nothing. 
 
@@ -894,9 +894,9 @@ Returns: nothing.
 
 Object type: encounter. Script slot: OnHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `encounter` | object |
+| argument | type | source |
+|---|---|---|
+| `encounter` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -904,10 +904,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: encounter. Script slot: OnEntered.
 
-| argument | type |
-|---|---|
-| `encounter` | object |
-| `entering` | object |
+| argument | type | source |
+|---|---|---|
+| `encounter` | object | this |
+| `entering` | object | object_params[0] |
 
 Returns: nothing. 
 
@@ -915,10 +915,10 @@ Returns: nothing.
 
 Object type: encounter. Script slot: OnExit.
 
-| argument | type |
-|---|---|
-| `encounter` | object |
-| `leaving` | object |
+| argument | type | source |
+|---|---|---|
+| `encounter` | object | this |
+| `leaving` | object | object_params[0] |
 
 Returns: nothing. 
 
@@ -926,9 +926,9 @@ Returns: nothing.
 
 Object type: encounter. Script slot: OnExhausted. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `encounter` | object |
+| argument | type | source |
+|---|---|---|
+| `encounter` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -936,10 +936,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: encounter. Script slot: OnUserDefined. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `encounter` | object |
-| `event_number` | int |
+| argument | type | source |
+|---|---|---|
+| `encounter` | object | this |
+| `event_number` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -947,10 +947,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: aoe. Script slot: OnEnter (named member script_on_enter). Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `aoe` | object |
-| `entering` | object |
+| argument | type | source |
+|---|---|---|
+| `aoe` | object | this |
+| `entering` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -958,10 +958,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: aoe. Script slot: OnExit (named member script_on_exit). Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `aoe` | object |
-| `leaving` | object |
+| argument | type | source |
+|---|---|---|
+| `aoe` | object | this |
+| `leaving` | object | object_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -969,10 +969,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: store. Script slot: OnOpenStore. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `store` | object |
-| `opener` | object |
+| argument | type | source |
+|---|---|---|
+| `store` | object | this |
+| `opener` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -980,9 +980,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: waypoint.
 
-| argument | type |
-|---|---|
-| `waypoint` | object |
+| argument | type | source |
+|---|---|---|
+| `waypoint` | object | this |
 
 Returns: nothing. 
 
@@ -990,9 +990,9 @@ Returns: nothing.
 
 Script slot: hardcoded. Default script: k_trg_transfail. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | the creature that tried to transition |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1000,9 +1000,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Script slot: hardcoded. Default script: itemuse. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `object` | object |
+| argument | type | source |
+|---|---|---|
+| `object` | object | object id read from the client message |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1010,10 +1010,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: arbitrary, supplied by the client message. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `script_name` | string |
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `script_name` | string | CExoString read from the message, max 0x20 |
+| `creature` | object | the sending player's creature |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1031,9 +1031,9 @@ Returns: string.
 
 Receives whatever OnSave returned when this save was written.
 
-| argument | type |
-|---|---|
-| `state` | string |
+| argument | type | source |
+|---|---|---|
+| `state` | string |  |
 
 Returns: nothing. 
 
@@ -1041,9 +1041,9 @@ Returns: nothing.
 
 Object type: creature. Script slot: ScriptDamaged. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1051,10 +1051,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `effect_id` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `effect_id` | int | arg3, reinterpreted as the effect's 64-bit id |
 
 Returns: nothing. 
 
@@ -1062,10 +1062,10 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `flag` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `flag` | int | arg3 (used as an int, not a pointer) |
 
 Returns: nothing. 
 
@@ -1073,10 +1073,10 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `animation` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `animation` | int | arg3 (used as an immediate) |
 
 Returns: nothing. 
 
@@ -1084,10 +1084,10 @@ Returns: nothing.
 
 Object type: creature. Script slot: spell impact script, carried in the event payload. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `caster` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `caster` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1095,10 +1095,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `caster` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `caster` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1106,9 +1106,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
 
 Returns: nothing. 
 
@@ -1116,10 +1116,10 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `attacker` | object |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `attacker` | object | caller |
 
 Returns: nothing. 
 
@@ -1127,12 +1127,12 @@ Returns: nothing.
 
 Object type: creature.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `other` | object |
-| `message_kind` | int |
-| `message_id` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `other` | object | caller |
+| `message_kind` | int | first byte of arg3 |
+| `message_id` | int | message_data int_params[0] |
 
 Returns: nothing. 
 
@@ -1140,15 +1140,15 @@ Returns: nothing.
 
 Object type: module. Script slot: Mod_OnActvtItem. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `item` | object |
-| `activator` | object |
-| `target` | object |
-| `obj_param_3` | object |
-| `target_x` | float |
-| `target_y` | float |
-| `target_z` | float |
+| argument | type | source |
+|---|---|---|
+| `item` | object | object_params[0] |
+| `activator` | object | object_params[1] |
+| `target` | object | object_params[2] |
+| `obj_param_3` | object | object_params[3] |
+| `target_x` | float | float_params[0] |
+| `target_y` | float | float_params[1] |
+| `target_z` | float | float_params[2] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1156,10 +1156,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: area.
 
-| argument | type |
-|---|---|
-| `area` | object |
-| `bag_id` | object |
+| argument | type | source |
+|---|---|---|
+| `area` | object | this |
+| `bag_id` | object | arg3 first dword |
 
 Returns: nothing. 
 
@@ -1167,11 +1167,11 @@ Returns: nothing.
 
 Object type: door. Script slot: OnDamaged. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `damager` | object |
-| `amount` | int |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `damager` | object | caller |
+| `amount` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1179,10 +1179,10 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: door. Script slot: OnOpen. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `door` | object |
-| `opener` | object |
+| argument | type | source |
+|---|---|---|
+| `door` | object | this |
+| `opener` | object | caller |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1190,11 +1190,11 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnDamaged. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
-| `damager` | object |
-| `amount` | int |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
+| `damager` | object | caller |
+| `amount` | int | int_params[0] |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1202,9 +1202,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: placeable. Script slot: OnEndDialogue. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `placeable` | object |
+| argument | type | source |
+|---|---|---|
+| `placeable` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1212,9 +1212,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger. Script slot: OnTrapTriggered. Default script: traps.2da column MineScript. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1222,9 +1222,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: trigger. Script slot: ScriptHeartbeat. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `trigger` | object |
+| argument | type | source |
+|---|---|---|
+| `trigger` | object | this |
 
 Returns: bool. Returning false stops the game's own handler.
 
@@ -1232,9 +1232,9 @@ Returns: bool. Returning false stops the game's own handler.
 
 Object type: creature. Script slot: statescripts.2da column SCRIPTNAME. Return false to stop the game's own script running.
 
-| argument | type |
-|---|---|
-| `creature` | object |
-| `state` | int |
+| argument | type | source |
+|---|---|---|
+| `creature` | object | this |
+| `state` | int | creature field_0x8ed |
 
 Returns: bool. Returning false stops the game's own handler.

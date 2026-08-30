@@ -17,7 +17,9 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <functional>
+#include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -74,9 +76,8 @@ public:
     // Bind a Lua function to an event at RUNTIME, taking ownership of a registry
     // reference to it.
     //
-    // The load-time probe cannot see these. One of the two API dialects this
-    // runtime supports registers handlers by calling a function from inside
-    // another callback -- typically the load callback -- so the handler simply
+    // The load-time probe cannot see these. A script can register a handler
+    // from inside another callback -- typically OnScriptLoad -- so the handler
     // does not exist as a global when the probe runs. Without this, every such
     // script loads cleanly and then receives nothing.
     //
@@ -147,7 +148,15 @@ public:
     void     unload_all();
 
     // Reload scripts whose file changed. Safe to call from the tick hook.
-    unsigned reload_changed();
+    // Failed reloads are appended to `errors` when it is not null.
+    unsigned reload_changed(std::vector<std::string>* errors = nullptr);
+
+    // Raise OnScriptLoad / OnScriptUnload on the single script that needs them.
+    // Boot enables this after the first Load so register_callback bindings
+    // survive a hot reload. Pointers may be null; then the raises are no-ops.
+    void set_lifecycle(const events::EventContract* load,
+                       const events::EventContract* unload,
+                       std::string game, std::string build);
 
     // The dispatch rule lives here. See events/contract.hpp for the statement
     // of it; this is the implementation, and the two must not drift.
@@ -168,10 +177,21 @@ public:
 
 private:
     void sort_scripts();
+    void raise_load(Script&);
+    void raise_unload(Script&);
+    void dispatch_one(Script&, const events::EventContract&,
+                      const std::vector<class Value>& args);
+    std::vector<std::string> list_script_paths() const;
 
     HostConfig cfg_;
     std::vector<std::unique_ptr<Script>> scripts_;
+    std::map<std::string, std::filesystem::file_time_type> stamps_;
     std::uint64_t tick_ = 0;
+    const events::EventContract* load_event_ = nullptr;
+    const events::EventContract* unload_event_ = nullptr;
+    std::string game_;
+    std::string build_;
+    bool lifecycle_ = false;
 };
 
 }  // namespace kp::lua
