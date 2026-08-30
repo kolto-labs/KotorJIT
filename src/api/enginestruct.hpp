@@ -47,6 +47,9 @@
 #include <cstdint>
 #include <string>
 
+#include <cstddef>
+#include <cstdint>
+
 #include "api/routines.hpp"
 #include "hooks/thiscall.hpp"
 
@@ -158,6 +161,30 @@ struct VmSites {
 };
 
 bool bind_sites(const VmSites&, std::string& error);
+
+// The dispatcher bound. Stock K1 is `cmp edx, 0x304`. KPM patches that immediate
+// to 1000 when it grows the table. Reading the live prologue is what keeps us
+// from assuming 772 and missing the extra slots, or walking off a stock table.
+std::uint32_t discover_command_count(const VmSites&);
+
+// `81 FA imm32` = cmp edx, imm32. Stock K1 is 0x304; KPM writes 1000.
+inline bool decode_execute_command_bound(const std::uint8_t* code, std::size_t len,
+                                         std::uint32_t& out) {
+    if (code == nullptr) return false;
+    for (std::size_t i = 0; i + 6 <= len; ++i) {
+        if (code[i] == 0x81 && code[i + 1] == 0xFA) {
+            std::uint32_t imm = static_cast<std::uint32_t>(code[i + 2]) |
+                                (static_cast<std::uint32_t>(code[i + 3]) << 8) |
+                                (static_cast<std::uint32_t>(code[i + 4]) << 16) |
+                                (static_cast<std::uint32_t>(code[i + 5]) << 24);
+            if (imm > 0 && imm <= 2048) {
+                out = imm;
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 // ------------------------------------------------------- engine structures --
 //
