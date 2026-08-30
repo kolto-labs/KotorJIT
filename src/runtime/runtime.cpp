@@ -4,6 +4,7 @@
 // as it was found. There is no partial success anywhere in this file: the hook
 // set installs atomically, and the phases before it write nothing at all.
 #include "runtime/runtime.hpp"
+#include "version.hpp"
 
 #include <atomic>
 #include <cctype>
@@ -12,9 +13,11 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "events/contract.hpp"
+#include "events/table.hpp"
 #include "hooks/registry.hpp"
 #include "image/image.hpp"
 #include "image/sha256.hpp"
@@ -25,6 +28,7 @@
 #include "api/entity.hpp"
 #include "api/structs.hpp"
 #include "api/memory.hpp"
+#include "api/timers.hpp"
 #include "lua/host.hpp"
 #include "lua/value.hpp"
 #include "platform/platform.hpp"
@@ -149,19 +153,11 @@ std::string self_module_path() {
 }
 
 const std::vector<events::EventContract>& event_table() {
-    using events::ValueType;
-    using events::Fallback;
-    using events::EngineReturn;
-    static const std::vector<events::EventContract> kEvents = {
-#include "generated/events.inc"
-    };
-    return kEvents;
+    return events::table();
 }
 
 const events::EventContract* find_contract(std::string_view lua_name) {
-    for (const auto& ev : event_table())
-        if (ev.lua_name == lua_name) return &ev;
-    return nullptr;
+    return events::find(lua_name);
 }
 
 // ---------------------------------------------------------------- Config ----
@@ -349,7 +345,34 @@ bool Runtime::install() {
     auto set = std::make_unique<hooks::HookSet>();
     set->add({"vm.run_script", run_script_detour(), {}});
     set->add({"app.server_main_loop", main_loop_detour(), {}});
-    set->add({"console.do_console", do_console_detour(), {}});
+
+    // Optional caves. HookSet::install refuses an unresolved requested site, so
+    // only add the ones this build actually bound. Console is required on K1
+    // and unresolved on k2_steam_linux -- skip it there rather than failing
+    // every other cave. Named vm.run_script events stay off this list.
+    const struct {
+        const char* site;
+        void*       detour;
+    } optional[] = {
+        {"console.do_console", do_console_detour()},
+        {"event.creature", creature_event_detour()},
+        {"event.door", door_event_detour()},
+        {"event.placeable", placeable_event_detour()},
+        {"event.trigger", trigger_event_detour()},
+        {"event.module", module_event_detour()},
+        {"event.area", area_event_detour()},
+        {"event.encounter", encounter_event_detour()},
+        {"event.aoe", aoe_event_detour()},
+        {"event.store", store_event_detour()},
+        {"event.waypoint", waypoint_event_detour()},
+        {"vm.save_script_situation", save_situation_detour()},
+        {"vm.load_script_situation", load_situation_detour()},
+    };
+    for (const auto& o : optional) {
+        const hooks::Site* s = table_->find(o.site);
+        if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
+            set->add({o.site, o.detour, {}});
+    }
 
     std::string error;
     if (!set->install(*table_, runtime_base_, error)) {
@@ -403,6 +426,8 @@ bool Runtime::boot_scripts(const Config& cfg) {
     hc.script_dir = cfg.script_dir;
     hc.error_budget = cfg.error_budget;
     hc.hot_reload = cfg.hot_reload;
+    api::timers::set_error_budget(cfg.error_budget);
+    set_situation_path(join(join(cfg.game_dir, "kotorphasor"), "lua_situation.dat"));
 
     // Everything a script can call is registered here, on each fresh state.
     // The Lua host takes this as a hook precisely so it does not have to know
@@ -416,10 +441,10 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::structs::register_all(L);    // named typed field access
         api::entity::register_all(L);     // objects, party, resolution
         api::register_support(L);         // output, timers and strings together
+        register_director(L);             // kp.speed — MainLoop tick scale
 
         // Last, because an alias can only point at a function that already
-        // exists. This is what makes both API dialects work without a script
-        // having to require anything.
+        // exists. Underscored spellings and the cb table land here.
         api::compat::install_print(L);    // print -> the runtime log, flushed
         api::compat::install(L);          // aliases, cb table, register_callback
     };
@@ -449,6 +474,10 @@ bool Runtime::boot_scripts(const Config& cfg) {
         };
         host_->dispatch(*ev, args);
     }
+    host_->set_lifecycle(find_contract("OnScriptLoad"),
+                         find_contract("OnScriptUnload"),
+                         table_ ? table_->game() : std::string(),
+                         build_);
     return true;
 }
 
@@ -457,7 +486,7 @@ bool Runtime::start(const Config& cfg) {
     set_fault_log_path(log_path_.c_str());
     platform::set_log_sink(&runtime_log_sink, nullptr);
 
-    log("KotorPhasor starting");
+    log("KotorPhasor %s starting", KP_VERSION);
 
     // Before anything can fault: the guard has to be in place before the first
     // hook body can run, and installing it is free when nothing faults.
@@ -503,11 +532,8 @@ void Runtime::stop() {
     // unmaps the trampolines, so a body still holding one would fault.
     set_live(false);
 
-    if (host_) {
-        if (const events::EventContract* ev = find_contract("OnScriptUnload"); ev != nullptr)
-            host_->dispatch(*ev, {});
-    }
-
+    // Host::unload_all raises OnScriptUnload per script. Do not also
+    // broadcast here -- that would fire the callback twice on shutdown.
     set_active_host(nullptr);
     clear_originals();
 
@@ -576,7 +602,7 @@ void capture_vm(void* internal) {
     }
     g_vm_bound.store(true, std::memory_order_release);
     Runtime::instance().log("vm: routine bridge bound (implementer %p, %u commands)",
-                            implementer, g_sites.commands_count);
+                            implementer, api::engine_access().command_count);
 }
 
 }  // namespace kp::runtime

@@ -237,6 +237,10 @@ def main() -> int:
         out.append(f"blocking = {'true' if blocking else 'false'}")
         out.append(f"engine_return = {q(engine_return)}")
         out.append(f"confidence = {q(e.get('confidence') or 'medium')}")
+        if e.get("outer_event_id") is not None:
+            out.append(f"outer_event_id = {int(e['outer_event_id'])}")
+        if e.get("event_type") is not None:
+            out.append(f"event_type = {int(e['event_type'])}")
         out.append(f"doc = {q(doc)}")
         if e.get("evidence"):
             out.append(f"evidence = {q(e['evidence'])}")

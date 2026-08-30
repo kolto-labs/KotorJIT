@@ -86,9 +86,14 @@ def gen_events(events: list[dict]) -> str:
     out = [BANNER, "// clang-format off"]
     for e in events:
         args = ", ".join(
-            f'{{"{a["name"]}", ValueType::{TYPE_ENUM[a["type"]]}}}'
+            '{{"{}", ValueType::{}, "{}"}}'.format(
+                a["name"], TYPE_ENUM[a["type"]], a.get("source", ""))
             for a in e.get("args", []))
         rets = ", ".join(f"ValueType::{TYPE_ENUM[r]}" for r in e["returns"])
+        outer = e.get("outer_event_id")
+        etype = e.get("event_type")
+        outer_s = str(int(outer)) if outer is not None else "-1"
+        etype_s = str(int(etype)) if etype is not None else "-1"
         out.append("{")
         out.append(f'  "{e["lua_name"]}", "{e["hook_site"]}",')
         out.append(f'  {{{args}}},')
@@ -96,6 +101,7 @@ def gen_events(events: list[dict]) -> str:
         out.append(f'  Fallback::{FALLBACK_ENUM[e["fallback"]]},')
         out.append(f'  {"true" if e["blocking"] else "false"},')
         out.append(f'  EngineReturn::{e["engine_return"]},')
+        out.append(f'  {outer_s}, {etype_s},')
         out.append("},")
     out.append("// clang-format on")
     return "\n".join(out) + "\n"
@@ -158,10 +164,11 @@ def gen_docs(events: list[dict]) -> str:
                 L.append(" ".join(e["doc"].split()))
                 L.append("")
             if e.get("args"):
-                L.append("| argument | type |")
-                L.append("|---|---|")
+                L.append("| argument | type | source |")
+                L.append("|---|---|---|")
                 for a in e["args"]:
-                    L.append(f'| `{a["name"]}` | {a["type"]} |')
+                    src = a.get("source") or ""
+                    L.append(f'| `{a["name"]}` | {a["type"]} | {src} |')
                 L.append("")
             ret = ", ".join(e["returns"]) if e["returns"] else "nothing"
             L.append(f"Returns: {ret}. "

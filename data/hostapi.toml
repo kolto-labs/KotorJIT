@@ -6,7 +6,7 @@
 #
 #   tools/gen_hostapi_glue.py turns this into:
 #     src/generated/hostapi.inc      the name -> C function registration table,
-#                                    the Phasor alias list, and the doc strings
+#                                    the underscored-name alias list, and the doc strings
 #                                    the runtime reports in error messages
 #     docs/lua-api-host.md           the reference script authors read
 #
@@ -59,8 +59,8 @@
 #  5. Object liveness. A typed view holds an object id, not a pointer. It
 #     re-resolves on first use in a new tick, so a view of a destroyed object
 #     raises rather than reading freed memory. This is the single largest
-#     safety difference from the Phasor idiom, where a script keeps a bare
-#     address across frames and finds out the hard way.
+#     safety difference from keeping a bare address across frames and finding
+#     out the hard way.
 #  6. Field names. Typed access is checked against the generated layout at
 #     access time. `view.positon` raises and names the struct; it does not read
 #     offset zero and it does not quietly return nil.
@@ -116,8 +116,8 @@
 # `on_failure` says what the nil means, or what the message reads like. A
 # function whose failure is `nil` never also raises for the same condition, and
 # one whose failure is `error` never returns a sentinel. Mixing the two is how
-# Phasor ended up with getplayer returning nil and getname raising for the same
-# bad id.
+# a lookup ends up returning nil in one place and raising in another for the
+# same bad id.
 #
 # `requires` says what must already be true for the call to work:
 #   none          always available, including before the game is identified
@@ -127,9 +127,9 @@
 #                 the app.server_main_loop detour. Returns its documented
 #                 failure value before the first tick of a loaded game.
 #
-# `phasor_alias` installs a bare global of that name for a Phasor author's
-# muscle memory. The kp.* name is canonical and the alias is a second binding to
-# the same C function, never a second implementation.
+# `alias` (still spelled `phasor_alias` in the rows until the generator exists)
+# installs a second spelling of the same C function. Names follow the Ghidra
+# / NWScript surface (GetFirstPC, SendMessageToPC), not Halo getplayer/say.
 
 [meta]
 version = 1
@@ -141,11 +141,9 @@ struct_source = "data/structs/<game>.json"
 # memory -- raw typed access at an address
 # =============================================================================
 # The numeric readers take (address) or (address, offset), so readbyte(a, 3) and
-# readbyte(a + 3) are the same call. That is Phasor's shape and the reference
-# scripts are full of both forms.
+# readbyte(a + 3) are the same call. Scripts use both forms.
 #
-# All ten raise on an unmapped span rather than returning nil, and the message
-# is Phasor's, verbatim, because the corpus greps for it.
+# All ten raise on an unmapped span rather than returning nil.
 
 [[function]]
 lua_name = "kp.mem.readbyte"
@@ -849,15 +847,13 @@ confidence = "high"
 [[function]]
 lua_name = "kp.obj.address"
 module = "object"
-phasor_alias = "getobject"
 params = [{ name = "object_id", type = "object" }]
 returns = "address"
 failure = "nil"
 on_failure = "nil for an unknown id, and nil before the first tick"
 requires = "server_tick"
 mechanism = "CServerExoAppInternal::GetGameObject, receiver from the app.server_main_loop detour"
-doc = """Address of an object's struct. The counterpart of Phasor's getobject and
-the same sanctioned validity probe: it returns nil rather than raising, so it is
+doc = """Address of an object's struct. Returns nil rather than raising, so it is
 the thing you test. Prefer kp.struct.view unless you need the number."""
 confidence = "high"
 evidence = "capability mapping resolves CServerExoAppInternal::GetGameObject at 0x004B1700 for binary_id=8, whose MainLoop address matches k1_steam_103's app.server_main_loop at 0x004BABB0"
@@ -930,10 +926,8 @@ failure = "nil"
 on_failure = "nil when no game is loaded"
 requires = "vm"
 mechanism = "routine GetFirstPC (k1 id 548)"
-doc = """The player character. Phasor's getplayer with the 16-slot indirection
-gone -- and deliberately NOT aliased to that name, because getplayer returned a
-struct address and this returns an object id. Two kinds of number under one name
-is worse than no alias."""
+doc = """The player character. Returns an object id, the same kind of number
+GetFirstPC returns -- not a struct address."""
 confidence = "high"
 
 [[function]]
@@ -945,14 +939,12 @@ failure = "empty"
 on_failure = "empty table when no game is loaded"
 requires = "vm"
 mechanism = "routine GetPartyMemberCount (k1 id 126) walked with GetPartyMemberByIndex (k1 id 577)"
-doc = """Every party member's object id, in slot order, index 1 being the leader.
-Phasor's resolveplayer over a fixed 16 slots collapses to this."""
+doc = """Every party member's object id, in slot order, index 1 being the leader."""
 confidence = "high"
 
 [[function]]
 lua_name = "kp.obj.party_slot"
 module = "object"
-phasor_alias = "rresolveplayer"
 params = [{ name = "object_id", type = "object" }]
 returns = "int"
 failure = "nil"
@@ -997,13 +989,12 @@ failure = "nil"
 on_failure = "nil for an unknown id"
 requires = "vm"
 mechanism = "routine GetTag (k1 id 168); the struct path is CSWSObject.tag +0x18, a CExoString"
-doc = "An object's tag. Phasor needed gettagid to turn a name into a number; KOTOR uses the string directly."
+doc = "An object's tag. KOTOR uses the string directly; there is no numeric tag id."
 confidence = "high"
 
 [[function]]
 lua_name = "kp.obj.name"
 module = "object"
-phasor_alias = "getname"
 params = [{ name = "object_id", type = "object" }]
 returns = "string"
 failure = "nil"
@@ -1068,23 +1059,21 @@ confidence = "medium"
 [[function]]
 lua_name = "kp.obj.position"
 module = "object"
-phasor_alias = "getobjectcoords"
 params = [{ name = "object_id", type = "object" }]
 returns = "table"
 failure = "nil"
 on_failure = "nil for an unknown id, and nil when the vector marshallers did not resolve on this build"
 requires = "vm"
 mechanism = "routine GetPosition (k1 id 27); read path CSWSObject.position +0x90"
-doc = """Where an object is, as { x =, y =, z = }. Unlike Phasor's three return
-values this is one table, because that is what the routine bridge already uses
-for a vector and having two shapes for one concept is how mistakes happen."""
+doc = """Where an object is, as { x =, y =, z = }. One table, because that is
+what the routine bridge already uses for a vector and having two shapes for
+one concept is how mistakes happen."""
 confidence = "high"
 evidence = "ExecuteCommandGetPosition 0x0053cae0 reads +0x90/+0x94/+0x98 and pushes a vector"
 
 [[function]]
 lua_name = "kp.obj.move"
 module = "object"
-phasor_alias = "movobjectcoords"
 params = [
   { name = "object_id", type = "object" },
   { name = "position", type = "vector" },
@@ -1103,7 +1092,6 @@ confidence = "high"
 [[function]]
 lua_name = "kp.obj.create"
 module = "object"
-phasor_alias = "createobject"
 params = [
   { name = "object_type", type = "int" },
   { name = "template", type = "string" },
@@ -1116,16 +1104,12 @@ failure = "nil"
 on_failure = "nil when the engine refuses, e.g. an unknown template resref"
 requires = "vm"
 mechanism = "routines Location (k1 id 215) then CreateObject (k1 id 243)"
-doc = """Spawns an object from a template resref. Phasor needed a numeric tag id
-from gettagid first; KOTOR takes the resref, so that step is gone. Returns nil on
-failure rather than Phasor's zero return values, which read as nil in an
-assignment and as nothing in an argument list."""
+doc = """Spawns an object from a template resref. Returns nil on failure."""
 confidence = "high"
 
 [[function]]
 lua_name = "kp.obj.destroy"
 module = "object"
-phasor_alias = "destroyobject"
 params = [
   { name = "object_id", type = "object" },
   { name = "delay", type = "float", optional = true, default = "0.0" },
@@ -1154,15 +1138,12 @@ confidence = "high"
 # =============================================================================
 # output -- saying something, to a screen or to a log
 # =============================================================================
-# Phasor's output functions all assume a server with connected players. KOTOR is
-# one player at one screen, so 'broadcast', 'private message' and 'rcon console'
-# collapse into a much shorter list. What survives is: tell the player, put text
+# KOTOR is one player at one screen. What exists: tell the player, put text
 # on the screen, write to our log, and answer a console line.
 
 [[function]]
 lua_name = "kp.print"
 module = "output"
-phasor_alias = "hprintf"
 params = [{ name = "text", type = "string" }]
 returns = "nothing"
 failure = "never"
@@ -1192,7 +1173,6 @@ confidence = "high"
 [[function]]
 lua_name = "kp.echo"
 module = "output"
-phasor_alias = "respond"
 params = [{ name = "text", type = "string" }]
 returns = "bool"
 failure = "false"
@@ -1207,7 +1187,6 @@ confidence = "medium"
 [[function]]
 lua_name = "kp.tell"
 module = "output"
-phasor_alias = "privatesay"
 params = [
   { name = "object_id", type = "object" },
   { name = "text", type = "string" },
@@ -1217,13 +1196,12 @@ failure = "false"
 on_failure = "false when the object does not resolve"
 requires = "vm"
 mechanism = "routine SendMessageToPC (k1 id 374)"
-doc = "Sends a message to the player. The closest true equivalent of any Phasor messaging call."
+doc = "Sends a message to the player via SendMessageToPC."
 confidence = "high"
 
 [[function]]
 lua_name = "kp.say"
 module = "output"
-phasor_alias = "say"
 params = [
   { name = "text", type = "string" },
   { name = "x", type = "int", optional = true, default = "0" },
@@ -1235,9 +1213,8 @@ failure = "false"
 on_failure = "false when no game is loaded"
 requires = "vm"
 mechanism = "routine AurPostString (k1 id 582)"
-doc = """Puts a line on the screen at a position for a number of seconds. Named
-after Phasor's say for the muscle memory, but it reaches one screen rather than
-every connected player -- the recipient concept does not survive the port."""
+doc = """Puts a line on the screen at a position for a number of seconds
+(AurPostString). One screen, the player's."""
 confidence = "medium"
 
 [[function]]
@@ -1276,7 +1253,6 @@ confidence = "medium"
 [[function]]
 lua_name = "kp.console"
 module = "output"
-phasor_alias = "svcmd"
 params = [{ name = "line", type = "string" }]
 returns = "bool"
 failure = "false"

@@ -5,6 +5,7 @@
 
 #include "lua/host.hpp"
 #include "platform/platform.hpp"
+#include "version.hpp"
 
 extern "C" {
 #include "lua.h"
@@ -16,7 +17,7 @@ namespace kp::api::compat {
 namespace {
 
 struct Alias  { const char* alias; const char* canonical; const char* dialect; };
-struct EventC { const char* sapp; const char* lua_name; int value; const char* note; };
+struct EventC { const char* name; const char* lua_name; int value; const char* note; };
 
 const Alias kAliases[] = {
 #include "generated/compat_aliases.inc"
@@ -60,16 +61,15 @@ int lua_print_to_log(lua_State* L) {
 
 // register_callback(event, "handler_name" | function)
 //
-// Both spellings are accepted because the two dialects differ: one passes a name
-// so the handler can be replaced later, the other would rather pass the function.
 // A name is resolved now, not at dispatch, so a typo is an error at the call
-// site instead of an event that silently never fires.
+// site instead of an event that silently never fires. A function value is
+// accepted too, for scripts that would rather pass the handler directly.
 int l_register_callback(lua_State* L) {
     const int constant = int(luaL_checkinteger(L, 1));
     const char* event = event_for_constant(constant);
     if (event == nullptr)
         return luaL_error(L, "register_callback: %d is not an event constant; "
-                             "use one of the cb.EVENT_* values", constant);
+                             "use one of the cb.On* values", constant);
 
     lua::Script* owner = lua::Script::owner(L);
     if (owner == nullptr)
@@ -85,7 +85,7 @@ int l_register_callback(lua_State* L) {
                       "[%s] registered for an event this game does not have (%s)%s%s",
                       owner->name().c_str(),
                       [&] { for (unsigned i = 0; i < kEventCount; ++i)
-                                if (kEvents[i].value == constant) return kEvents[i].sapp;
+                                if (kEvents[i].value == constant) return kEvents[i].name;
                             return "?"; }(),
                       *why ? ": " : "", why);
         lua_pushboolean(L, 0);
@@ -135,7 +135,7 @@ bool alias_global(lua_State* L, const char* from, const char* to) {
 // table to spell out each group would make it track internal layout, and it
 // silently installed 11 of 57 aliases before this did.
 //
-// Both dialects expect these unqualified, so the bare global is the point; the
+// Scripts write these unqualified, so the bare global is the point; the
 // kotor.<to> copy is for scripts that prefer to be explicit.
 bool alias_in_table(lua_State* L, const char* from, const char* to) {
     lua_getglobal(L, "kotor");
@@ -172,9 +172,8 @@ bool alias_in_table(lua_State* L, const char* from, const char* to) {
     return false;
 }
 
-// Both dialects also expect the CANONICAL names unqualified, not only the
-// aliases. A script written for this runtime says readbyte(), not
-// kotor.mem.readbyte().
+// Canonical names are also unqualified, not only the aliases. A script can
+// write readbyte(), not only kotor.mem.readbyte().
 void promote_canonical(lua_State* L, const char* name) {
     lua_getglobal(L, name);
     const bool have = !lua_isnil(L, -1);
@@ -190,10 +189,10 @@ const char* event_for_constant(int constant) {
     return nullptr;
 }
 
-const char* event_for_name(const char* sapp_name) {
-    if (sapp_name == nullptr) return nullptr;
+const char* event_for_name(const char* name) {
+    if (name == nullptr) return nullptr;
     for (unsigned i = 0; i < kEventCount; ++i)
-        if (std::strcmp(kEvents[i].sapp, sapp_name) == 0) return kEvents[i].lua_name;
+        if (std::strcmp(kEvents[i].name, name) == 0) return kEvents[i].lua_name;
     return nullptr;
 }
 
@@ -210,11 +209,11 @@ void install(lua_State* L) {
     lua_createtable(L, 0, int(kEventCount));
     for (unsigned i = 0; i < kEventCount; ++i) {
         lua_pushinteger(L, kEvents[i].value);
-        lua_setfield(L, -2, kEvents[i].sapp);
+        lua_setfield(L, -2, kEvents[i].name);
     }
     lua_pushvalue(L, -1);
     lua_setglobal(L, "cb");
-    // One dialect spells the same table `events`; both names, one table.
+    // Same table as `cb`, for scripts that prefer the word events.
     lua_setglobal(L, "events");
 
     lua_pushcfunction(L, l_register_callback);
@@ -238,12 +237,24 @@ void install(lua_State* L) {
         }
     }
 
-    // 3. Version and identity globals the two dialects read to decide what they
-    //    are running under. We answer honestly rather than impersonating either:
-    //    a script that branches on this should take the branch written for us.
+    // 3. Host identity. A script that branches on these should take the
+    //    branch written for this runtime.
+    lua_pushstring(L, "KotorPhasor");   lua_setglobal(L, "_HOST");
     lua_pushstring(L, "KotorPhasor");   lua_setglobal(L, "_SERVERAPP");
     lua_pushstring(L, "KOTOR");         lua_setglobal(L, "_GAME");
     lua_pushinteger(L, 1);              lua_setglobal(L, "api_version");
+    lua_pushstring(L, KP_VERSION);      lua_setglobal(L, "_KP_VERSION");
+
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_newtable(L);
+        lua_pushvalue(L, -1);
+        lua_setglobal(L, "kp");
+    }
+    lua_pushstring(L, KP_VERSION);
+    lua_setfield(L, -2, "version");
+    lua_pop(L, 1);
 
     // 4. Lua version shims. LuaJIT is 5.1 with parts of 5.2, so most of what the
     //    shims patch is already here -- `bit` is built in, `loadstring` and
@@ -252,7 +263,7 @@ void install(lua_State* L) {
     if (lua_istable(L, -1)) lua_setglobal(L, "bit32"); else lua_pop(L, 1);
 
     platform::log(platform::LogLevel::Info,
-                  "api: both dialects installed -- %u/%u aliases, %u event "
+                  "api: host names installed -- %u/%u aliases, %u event "
                   "constants%s",
                   installed, kAliasCount, kEventCount,
                   missing ? " (some canonical names not registered yet)" : "");
