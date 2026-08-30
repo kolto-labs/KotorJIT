@@ -8,6 +8,11 @@ local strikes = 0
 -- asked for separately.
 local ATTACKED = "k_def_attacked01"
 
+local function norm_script(name)
+  if type(name) ~= "string" then return "" end
+  return name:gsub("%z+$", "")
+end
+
 -- Every engine call goes through here: the API is absent until the runtime binds
 -- the VM, and a routine can be missing on a build this script was not written
 -- for. Asking by name rather than taking kotor.Whatever as an argument matters --
@@ -28,6 +33,7 @@ local function on_manaan()
 end
 
 function OnRunScript(script_name, object_id, has_object, relevant)
+    script_name = norm_script(script_name)
     if script_name ~= ATTACKED then return end
     if not on_manaan() then return end
 

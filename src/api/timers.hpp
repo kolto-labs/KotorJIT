@@ -1,13 +1,11 @@
 // Deferred work: registertimer / removetimer, driven from the OnTick hook.
 //
-// This module exists twice over. It is Phasor's timer API, which 49 call sites
-// in the reference corpus depend on. It is also the replacement for
-// DelayCommand, and that is not a convenience -- routine 7 DelayCommand takes
-// an `action`, which the NWScript compiler emits as STORE_STATE bytecode
-// capturing a closure. There is no value a Lua script can push that the VM will
-// accept there. DelayCommand, AssignCommand (6) and ActionDoCommand (294) are
-// the three K1 routines the bridge cannot marshal, and this is what a script
-// uses instead.
+// This is the replacement for DelayCommand, and that is not a convenience --
+// routine 7 DelayCommand takes an `action`, which the NWScript compiler emits
+// as STORE_STATE bytecode capturing a closure. There is no value a Lua script
+// can push that the VM will accept there. DelayCommand, AssignCommand (6) and
+// ActionDoCommand (294) are the three K1 routines the bridge cannot marshal,
+// and this is what a script uses instead.
 //
 //   local id = kotor.registertimer(1500, "on_bang", { n = 3 })
 //   function on_bang(id, count, data)
@@ -16,10 +14,10 @@
 //   end
 //   kotor.removetimer(id)
 //
-// The callback is named by a STRING, not passed as a function value. That is
-// Phasor's shape and it is kept, because the name is resolved at fire time
-// against the script's globals: a reloaded script re-registers its functions
-// and a stale function value would keep the old chunk's upvalues alive.
+// The callback is named by a STRING, not passed as a function value. The name
+// is resolved at fire time against the script's globals: a reloaded script
+// re-registers its functions and a stale function value would keep the old
+// chunk's upvalues alive.
 //
 // SCHEDULING. Timers fire from pump(), which the OnTick hook body calls once
 // per frame with a millisecond clock. Everything due at that instant is
@@ -32,8 +30,8 @@
 //
 // OWNERSHIP AND RELOAD. A timer belongs to one lua_State. Ids are unique across
 // the whole process, but removetimer only matches ids belonging to the calling
-// state, so one script cannot cancel another's timer -- the same guarantee
-// Phasor gets by storing the id in the script's own registry.
+// state, so one script cannot cancel another's timer. Ids live with the
+// lua_State that registered them.
 //
 // A reload drops that script's timers, and the script re-registers whatever it
 // wants when its chunk runs again. This is the sensible answer rather than the
@@ -51,10 +49,9 @@
 //
 // TWO DIVERGENCES FROM data/hostapi.toml, which declares this surface as
 // kp.timer.* and has no generator yet. That file makes cancelling the running
-// timer a no-op; here it raises, because phasor_inventory.json records
-// "attempt to remove timer within its callback" as a luaL_error and Phasor
-// parity is what this module was asked for. It also treats a throwing callback
-// as fatal to that timer: the error is charged to the script's budget AND the
+// timer a no-op; here it raises, because removing a timer from inside its own
+// callback is a bug a script should see at the call site. A throwing callback
+// is fatal to that timer: the error is charged to the script's budget AND the
 // timer is cancelled, so quarantine is reached across several timers rather
 // than by one repeater failing over and over. Cancelling is what actually
 // stops the forever-traceback; the budget is what stops the script.

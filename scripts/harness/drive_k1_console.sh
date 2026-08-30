@@ -19,6 +19,9 @@ OUT="${OUT:-$ROOT/tmp/drive-k1}"
 PREFIX="${WINEPREFIX:-$ROOT/tmp/wineprefix-k1}"
 DISPLAY_NUM="${DISPLAY_NUM:-78}"
 BOOT_WAIT="${BOOT_WAIT:-180}"
+LOAD_WAIT="${LOAD_WAIT:-180}"
+POST_LOAD_WAIT="${POST_LOAD_WAIT:-2}"
+SPLASH_WAIT="${SPLASH_WAIT:-120}"
 CONSOLE_KEY="${CONSOLE_KEY:-grave}"
 
 COMMANDS=("$@")
@@ -71,6 +74,7 @@ export LIBGL_ALWAYS_SOFTWARE=1 DISPLAY=":$DISPLAY_NUM"
 isolate_desktop_env
 
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/drive.log"; }
+source "$ROOT/scripts/harness/ui_wait.sh"
 
 # RECORD=1 captures the session to mp4. Unset, these are no-ops, so a normal run
 # is byte-for-byte the run it was before recording existed.
@@ -104,11 +108,8 @@ xdpyinfo >/dev/null 2>&1 || { log "Xvfb failed"; exit 1; }
 ROOT_WID=$(( $(xwininfo -root 2>/dev/null | sed -n 's/.*Window id: \([0-9a-vx]*\).*/\1/p' | head -1) ))
 log "Xvfb up, root $ROOT_WID"
 
-rec_start "$DISPLAY_NUM" "$OUT/session"
-
 wineboot -i >"$OUT/wineboot.log" 2>&1; wineserver -w
 log "launching"
-rec_mark "game launched"
 ( cd "$GAME_DIR" && exec wine swkotor.exe ) >"$OUT/wine.log" 2>&1 &
 
 # Wait for a real game window, not the prefix dialog and not the desktop.
@@ -131,7 +132,6 @@ for i in $(seq 1 "$BOOT_WAIT"); do
 done
 [[ -n "$WID" ]] || { log "no rendered game window in ${BOOT_WAIT}s"; exit 2; }
 log "game window $WID ('$(xdotool getwindowname "$WID")')"
-rec_mark "main menu"
 import -window "$WID" "$OUT/00_menu.png" 2>/dev/null
 
 xdotool windowactivate --sync "$WID" 2>/dev/null || xdotool windowfocus "$WID" 2>/dev/null
@@ -189,14 +189,12 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   click_at 0.374 0.333        # first save in the list
   click_until_changed 0.500 0.740 4 "LOAD" || { log "LOAD never took"; exit 5; }
 
-  # Waiting on the picture does not work. A fixed sleep either wastes time or
-  # gives up mid-load; "wait for colour" fires instantly because the menu is
-  # still up when LOAD is clicked; and "wait for dark then colour" fires on
-  # KOTOR's own loading screen, which has art on it.
-  #
-  # So ask the game instead of looking at it. k_def_heartbt01 is the stock
-  # creature heartbeat: it cannot run until the module is up and creatures
-  # exist, so seeing it is proof of gameplay rather than a proxy for it.
+  # Two oracles, because they answer different questions. The heartbeat says
+  # the module is up -- scripts run under the LOADING splash, so it fires
+  # while the bar is still filling. The splash wait says the HUD exists --
+  # that is when the cheat console will accept keystrokes. A fixed sleep
+  # after the heartbeat was too short on llvmpipe (typed into the bar) and
+  # would be wasteful when the splash clears early.
   #
   # The runtime does NOT log the scripts the engine runs -- a probe script does,
   # by defining OnRunScript and printing what it gets. So this oracle only works
@@ -211,7 +209,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
     # shows up minutes late -- which reads as "gameplay never happened" when it
     # happened five minutes ago. The runtime log is flushed per line.
     if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
-      LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; rec_mark "gameplay reached"; break
+      LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; break
     fi
     if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
     sleep 1
@@ -222,7 +220,14 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
     log "gameplay, so stopping rather than typing into the menu"
     exit 4
   fi
-  sleep 3   # let a few more heartbeats run before typing
+  wait_until_gameplay_visible "${SPLASH_WAIT}" || true
+  sleep "${POST_LOAD_WAIT}"
+  xdotool windowactivate --sync "$WID" 2>/dev/null || true
+  for i in $(seq 1 90); do
+    grep -qE '\[running\] running: build|\[running\] vm: routine bridge' \
+      "$GAME_DIR/kotorphasor.log" 2>/dev/null && { log "  runtime ready at t+${i}s"; break; }
+    sleep 1
+  done
 else
   log "no saves present: the console needs gameplay, so stopping at the menu"
   log "put a save in $GAME_DIR/Saves to drive the console"
@@ -230,18 +235,45 @@ else
 fi
 
 rec_mark "opening console"
-log "opening console ($CONSOLE_KEY)"
-xdotool key --clearmodifiers "$CONSOLE_KEY"; sleep 1
-import -window "$WID" "$OUT/02_console.png" 2>/dev/null
+if ! open_console_smoke 2; then
+  log "console never accepted input -- check EnableCheats, focus, and $CONSOLE_KEY"
+  exit 7
+fi
+
+if [[ "${RECORD:-0}" == "1" ]]; then
+  rec_start "$DISPLAY_NUM" "$OUT/session"
+  rec_mark "console ready"
+fi
 
 n=3
 for cmd in "${COMMANDS[@]}"; do
+  case "$cmd" in
+  "#sleep "*)
+    log "sleep ${cmd#\#sleep }"
+    sleep "${cmd#\#sleep }"
+    continue ;;
+  "#click "*)
+    read -r fx fy <<< "${cmd#\#click }"
+    log "click $fx $fy"
+    click_at "$fx" "$fy"
+    sleep 1
+    continue ;;
+  "#key "*)
+    log "key ${cmd#\#key }"
+    xdotool key --clearmodifiers "${cmd#\#key }"
+    sleep 0.5
+    continue ;;
+  "#console")
+    log "toggle console"
+    xdotool key --clearmodifiers "$CONSOLE_KEY"
+    sleep 1
+    continue ;;
+  esac
   rec_mark "cmd: $cmd"
   log "typing: $cmd"
   xdotool type --clearmodifiers --delay 60 "$cmd"
   sleep 0.5
   xdotool key --clearmodifiers Return
-  # A warp is a whole module load, so it needs far longer than a status query.
   case "$cmd" in
     warp*) log "  warping, waiting for the module"; sleep "${WARP_WAIT:-45}" ;;
     *)     sleep 3 ;;

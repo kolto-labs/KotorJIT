@@ -2,6 +2,47 @@
 
 Two shapes live here, and the difference is what each is actually checking.
 
+**Before `--live`:** if live tests fail instantly with `Xvfb failed`, run
+`quota -s` and check `/tmp` — Xvfb writes `/tmp/.tX<n>-lock` and a full tmpfs
+user quota looks exactly like a harness bug.
+
+**Console timing:** heartbeats fire while the LOADING splash is still up.
+`live_session.sh` and `drive_k1_console.sh` wait until the menu chrome pixel
+at (40,46) is no longer `#292E36` (gameplay HUD / minimap) before opening the
+console. `POST_LOAD_WAIT` is only a short pad after that (default 2s).
+`SPLASH_WAIT` (default 120s) is the ceiling for the splash poll. Typing
+before the splash clears lands on the loading bar and never reaches
+`kotorphasor.log`.
+
+**Console input:** KOTOR reads keyboard through DirectInput. Harness typing must
+use focused **XTEST** events (`xdotool type` after `windowactivate`), not
+`xdotool --window` (XSendEvent), which the game ignores.
+
+**Recording:** `ffmpeg` x11grab competes for the same display and can swallow
+console keystrokes if started before the console smoke test passes.
+`live_session.sh` starts recording only after `lua status` succeeds.
+
+**Research game data offline:** `./scripts/harness/kq.sh grep '\.Tag =' -t utc -m manm26ad`
+indexes the install (tags, scripts, modules) so warp targets and object tags in
+tests match real blueprints. Requires `cleanhouse/kq-cli` built or `KQ_BIN` set.
+
+**Gameplay demo recordings (scripts in action, ~1 min each):**
+
+Discover sequences first (inline queue commands, no batch driver) — see
+`docs/showcase-demos/`. Only record after a single demo passes:
+
+```bash
+./scripts/harness/pick_save.sh dantooine_party   # when party required
+./scripts/harness/demo_play.sh 30_battle_meditation
+./scripts/harness/demo_play.sh all            # 30/40/50 only
+# ./scripts/harness/demo_play.sh all-wip       # 10/20/60 — not release-ready
+```
+
+`demo_play.sh` drives real movement (`#click` / `#key w`), combat (`Tab` +
+attack clicks), and log oracles after each warp. Output: `tmp/demos/<name>.mp4` +
+`.gif`. Do not treat flawed prior recordings as canonical — re-run after playbook
+changes.
+
 ## Fast: the Lua host without the game
 
 `test_arbitration.sh` and `test_quarantine.sh` link `kp_luatest`, which loads a

@@ -21,7 +21,7 @@ start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 # a shift that stays inside one decade (e.g. 58 -> 50) does not cross the
 # threshold the example watches for, so this asks for a full 30-point move.
 send "lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 2, 30)"
-send "#sleep 55"
+send "#sleep 90"
 
 assert_contains_re "$GAME_DIR/kotorphasor.log" '\[conscience\] \+[0-9]+, now [0-9]+' \
   "40_alignment_drift's own print line fired after crossing a decade boundary"

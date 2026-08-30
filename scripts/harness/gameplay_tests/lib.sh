@@ -31,6 +31,19 @@ summary_and_exit() {
   [[ "$FAIL" -eq 0 ]]
 }
 
+# test_capture <command...>
+#
+# Some environments block or truncate shell redirects into /tmp (mktemp's
+# default). Keep harness scratch under $ROOT/tmp so kp_luatest output is
+# actually captured for assert_contains*.
+test_capture() {
+  mkdir -p "$ROOT/tmp"
+  local out
+  out=$(mktemp "$ROOT/tmp/gameplay-test.XXXXXX")
+  "$@" > "$out" 2>&1
+  echo "$out"
+}
+
 # deploy_scripts <game-dir> <script-file>...
 #
 # Every live-game test needs 00_probe.lua deployed alongside whatever it is
@@ -74,7 +87,8 @@ start_live_session() {
   # by re-reading the script.
   LIVE_OUT="$out"
   GAME_DIR="$game_dir" OUT="$out" DISPLAY_NUM="$display" \
-    BOOT_WAIT=300 LOAD_WAIT=600 \
+    BOOT_WAIT=300 LOAD_WAIT=600 POST_LOAD_WAIT="${POST_LOAD_WAIT:-2}" \
+    SPLASH_WAIT="${SPLASH_WAIT:-120}" \
     "$ROOT/scripts/harness/live_session.sh" > "$out.nohup.log" 2>&1 &
   SESSION_PID=$!
   cleanup() { touch "$LIVE_OUT/stop" 2>/dev/null; wait "$SESSION_PID" 2>/dev/null; }
@@ -86,7 +100,11 @@ start_live_session() {
     summary_and_exit; exit $?
   fi
 
-  Q="$out/queue"; D="$out/done"
+  rm -f "$out/done"
+  echo "0" > "$out/done"
+
+  Q="$(cd "$out" && pwd)/queue"
+  D="$(cd "$out" && pwd)/done"
 }
 
 # send <console-line-or-control-line>
@@ -96,7 +114,15 @@ start_live_session() {
 # #sleep genuinely takes a while, and a slow queue is a different, far more
 # common failure than a truly hung one.
 send() {
-  echo "$1" >> "$Q"
-  local n; n=$(wc -l < "$Q")
-  for _ in $(seq 1 180); do [[ "$(cat "$D" 2>/dev/null)" == "$n" ]] && break; sleep 0.5; done
+  [[ -n "${Q:-}" ]] || { echo "send: Q not set (call start_live_session first)" >&2; return 1; }
+  local prev target
+  prev=$(cat "$D" 2>/dev/null || echo 0)
+  printf '%s\n' "$1" >> "$Q"
+  target=$((prev + 1))
+  for _ in $(seq 1 240); do
+    [[ "$(cat "$D" 2>/dev/null || echo 0)" -ge "$target" ]] && return 0
+    sleep 0.5
+  done
+  echo "send: timed out waiting for queue line $target (done=$(cat "$D" 2>/dev/null || echo missing))" >&2
+  return 1
 }

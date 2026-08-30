@@ -4,6 +4,11 @@ priority = 20
 local ATTACKED = "k_def_attacked01"
 local COMBAT_END = "k_def_combend01"
 
+local function norm_script(name)
+  if type(name) ~= "string" then return "" end
+  return name:gsub("%z+$", "")
+end
+
 local active = false
 local rounds = 0
 
@@ -35,6 +40,8 @@ local function party()
 end
 
 local function bastila_conscious()
+    local by_tag = q("GetObjectByTag", "bastila", 0)
+    if by_tag and not yes(q("GetIsDead", by_tag)) then return by_tag end
     for _, m in ipairs(party()) do
         -- The tag is stored lowercase on the party blueprint ("bastila"), and
         -- comparing against the spelling everyone writes never matches.
@@ -48,6 +55,7 @@ local function bastila_conscious()
 end
 
 function OnRunScript(script_name, object_id, has_object, relevant)
+    script_name = norm_script(script_name)
     if script_name == COMBAT_END then active = false; return end
     if script_name ~= ATTACKED or active then return end
 

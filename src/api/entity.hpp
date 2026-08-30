@@ -1,17 +1,14 @@
 // Objects and the party: turning an id into something a script can hold.
 //
-// This is where Phasor's resolveplayer / getplayer / getplayerobject /
-// getteamsize / getname / getobjectcoords land, reshaped for KOTOR. Two shape
-// changes do most of the work:
+// The local server (CServerExoApp) hardcodes one client. That creature is
+// CServerExoApp::GetFirstPCObject / GetPlayerCreatureId (NWScript GetFirstPC).
+// CServerExoApp::GetGameObject / CServerExoAppInternal::GetGameObject turns an
+// id into a CGameObject*. Party members come from CSWPartyTable /
+// GetPartyMemberByIndex, not a Halo 0..15 player-memory slot.
 //
-//   * A party of up to three, not sixteen network players. Phasor's constant
-//     index<->id indirection over 16 fixed slots collapses to a short walk of
-//     GetPartyMemberCount and GetPartyMemberByIndex.
-//   * The engine already answers these questions. GetPosition, GetTag, GetName,
-//     GetFirstPC, GetArea and GetObjectByTag are engine routines, so almost
-//     nothing here is new engine work -- it is a named layer over the routine
-//     bridge in api/routines.hpp. Where a Phasor function has a routine behind
-//     it, we call the routine and the engine does its own bookkeeping.
+// GetFirstPC, GetPartyMemberCount, GetPartyMemberByIndex, GetPosition, GetTag,
+// GetName, GetArea and GetObjectByTag are engine routines, so almost nothing
+// here is new engine work -- it is a named layer over the routine bridge.
 //
 // The one thing this module adds that the routine bridge does not have is a
 // typed handle. A bare object id is a number that says nothing about what it
@@ -69,8 +66,8 @@ void register_all(lua_State*);
 // push_handle pushes a fresh handle userdata. to_handle returns the handle at
 // `index`, or nullptr when the value there is not one -- it does not raise, so
 // it is usable as a test. object_arg accepts either a handle or a plain numeric
-// id, because Phasor scripts pass ids around as numbers and that habit should
-// keep working; it returns false for anything else without raising.
+// id, because NWScript and the routine bridge pass ids as numbers and that
+// should keep working; it returns false for anything else without raising.
 void  push_handle(lua_State*, const Handle&);
 Handle* to_handle(lua_State*, int index);
 bool  object_arg(lua_State*, int index, std::uint32_t& id);

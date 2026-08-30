@@ -198,9 +198,9 @@ int push_tag(lua_State* L, std::uint32_t id) {
     return 1;
 }
 
-// One table, not Phasor's three return values. The routine bridge already
-// marshals a vector as a table, and two shapes for one concept is how a script
-// ends up unpacking the wrong number of values.
+// One table. The routine bridge already marshals a vector as {x=,y=,z=}, and
+// two shapes for one concept is how a script ends up unpacking the wrong
+// number of values.
 int push_position(lua_State* L, std::uint32_t id) {
     push_object_id(L, id);
     if (!call_one(L, kGetPosition, 1)) { lua_pushnil(L); }
@@ -246,9 +246,9 @@ int push_is_party_member(lua_State* L, std::uint32_t id) {
     return 1;
 }
 
-// Phasor's rresolveplayer. No engine routine reverses GetPartyMemberByIndex, so
-// this is a scan -- over at most three slots, which is why the absence of a
-// reverse routine costs nothing here and cost Phasor a lookup table over 16.
+// No engine routine reverses GetPartyMemberByIndex, so this is a scan -- over
+// at most three party slots, which is why the absence of a reverse routine
+// costs nothing.
 int push_party_slot(lua_State* L, std::uint32_t id) {
     int count = 0;
     if (!call_int(L, kPartyCount, 0, count)) { lua_pushnil(L); return 1; }
@@ -328,15 +328,15 @@ int l_pc(lua_State* L) {
 
 int l_party(lua_State* L) { return push_party(L); }
 
-// Phasor's getteamsize, for the party-sized answer. Counting a faction is a
-// different question and belongs with the faction routines.
+// Party size. Counting a faction is a different question and belongs with
+// the faction routines.
 int l_party_size(lua_State* L) {
     int count = 0;
     lua_pushinteger(L, call_int(L, kPartyCount, 0, count) ? count : 0);
     return 1;
 }
 
-// Phasor's resolveplayer. The index is the engine's: 0 is the party leader.
+// Party member by engine slot. 0 is the party leader.
 int l_party_member(lua_State* L) {
     const int index = static_cast<int>(luaL_checkinteger(L, 1));
     if (index < 0) luaL_argerror(L, 1, "party slot cannot be negative");
