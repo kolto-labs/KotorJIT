@@ -34,6 +34,15 @@ std::string directory_of(const std::string& path);
 const std::vector<events::EventContract>& event_table();
 const events::EventContract* find_contract(std::string_view lua_name);
 
+// Sidecar written by the save cave and read by the load cave. Set once the
+// game directory is known; empty means in-memory only for this process.
+void set_situation_path(std::string path);
+
+// Extra MainLoop orig() calls per hook. 1 = realtime. Capped at 16.
+void set_tick_scale(unsigned n);
+unsigned tick_scale();
+void register_director(lua_State* L);
+
 // True once the Lua host is fully built and its scripts are loaded.
 //
 // Hooks install before the host exists, per the phase order in runtime.hpp, so
@@ -77,6 +86,18 @@ void clear_originals();
 void* run_script_detour();
 void* main_loop_detour();
 void* do_console_detour();
+void* creature_event_detour();
+void* door_event_detour();
+void* placeable_event_detour();
+void* trigger_event_detour();
+void* module_event_detour();
+void* area_event_detour();
+void* encounter_event_detour();
+void* aoe_event_detour();
+void* store_event_detour();
+void* waypoint_event_detour();
+void* save_situation_detour();
+void* load_situation_detour();
 
 // ------------------------------------------------------------ fault guard ---
 

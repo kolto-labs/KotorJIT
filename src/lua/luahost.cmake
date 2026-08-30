@@ -37,6 +37,28 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
     # runtime.cmake owns the LuaJIT build; this only waits for it.
     add_dependencies(kp_luatest kphasor)
     target_link_libraries(kp_luatest PRIVATE "${KP_LUATEST_LUAJIT}" m dl)
+
+    # Host-side proof that EventHandler identity, CScriptEvent reads, and the
+    # thiscall cleanup for five stack arguments are correct -- without launching
+    # the game. Address tables are loaded as data; nothing is patched in swkotor.
+    add_executable(kp_eventtest
+        "${CMAKE_SOURCE_DIR}/tools/kp_eventtest.cpp"
+        "${CMAKE_SOURCE_DIR}/src/events/table.cpp"
+        "${CMAKE_SOURCE_DIR}/src/events/payload.cpp"
+        "${CMAKE_SOURCE_DIR}/src/events/situation.cpp"
+        "${CMAKE_SOURCE_DIR}/src/events/dispatch.cpp"
+        "${CMAKE_SOURCE_DIR}/src/lua/host.cpp"
+        "${CMAKE_SOURCE_DIR}/src/lua/value.cpp"
+    )
+    target_include_directories(kp_eventtest PRIVATE
+        "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/luajit32/src")
+    target_compile_options(kp_eventtest PRIVATE -m32 -Wall -Wextra -fcf-protection=none)
+    target_link_options(kp_eventtest PRIVATE -m32)
+    target_compile_definitions(kp_eventtest PRIVATE KP_REPO="${CMAKE_SOURCE_DIR}")
+    set_source_files_properties("${CMAKE_SOURCE_DIR}/src/events/table.cpp"
+        PROPERTIES OBJECT_DEPENDS "${KP_LUATEST_GENERATED}")
+    add_dependencies(kp_eventtest kphasor)
+    target_link_libraries(kp_eventtest PRIVATE kp_hooks "${KP_LUATEST_LUAJIT}" m dl)
 elseif(UNIX AND NOT WIN32)
     message(STATUS "kp_luatest needs the native LuaJIT that the kphasor target "
                    "builds; include src/runtime/runtime.cmake first")

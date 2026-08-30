@@ -1,4 +1,4 @@
-// The three hook bodies.
+// The hook bodies: RunScript, MainLoop, DoConsole, ten EventHandlers, save/load.
 //
 // Signatures come from the recovered C for these specific functions, one per
 // site, and they are the thing in this file that must not be edited casually:
@@ -22,10 +22,15 @@
 #include <atomic>
 #include <cstdint>
 #include <cstring>
+#include <fstream>
 #include <string>
 #include <vector>
 
+#include "api/timers.hpp"
 #include "events/contract.hpp"
+#include "events/payload.hpp"
+#include "events/situation.hpp"
+#include "events/table.hpp"
 #include "hooks/registry.hpp"
 #include "hooks/thiscall.hpp"
 #include "lua/host.hpp"
@@ -33,6 +38,7 @@
 #include "platform/platform.hpp"
 #include "runtime/internal.hpp"
 #include "runtime/runtime.hpp"
+#include "version.hpp"
 
 extern "C" {
 #include "lauxlib.h"
@@ -84,10 +90,29 @@ std::string read_exostring(const CExoString* s) {
 std::atomic<void*> g_orig_run_script{nullptr};
 std::atomic<void*> g_orig_main_loop{nullptr};
 std::atomic<void*> g_orig_do_console{nullptr};
+std::atomic<void*> g_orig_creature{nullptr};
+std::atomic<void*> g_orig_door{nullptr};
+std::atomic<void*> g_orig_placeable{nullptr};
+std::atomic<void*> g_orig_trigger{nullptr};
+std::atomic<void*> g_orig_module{nullptr};
+std::atomic<void*> g_orig_area{nullptr};
+std::atomic<void*> g_orig_encounter{nullptr};
+std::atomic<void*> g_orig_aoe{nullptr};
+std::atomic<void*> g_orig_store{nullptr};
+std::atomic<void*> g_orig_waypoint{nullptr};
+std::atomic<void*> g_orig_save{nullptr};
+std::atomic<void*> g_orig_load{nullptr};
 
 std::atomic<bool> g_poison_run_script{false};
 std::atomic<bool> g_poison_main_loop{false};
 std::atomic<bool> g_poison_do_console{false};
+std::atomic<bool> g_poison_event{false};
+std::atomic<bool> g_poison_save{false};
+std::atomic<bool> g_poison_load{false};
+std::atomic<unsigned> g_tick_scale{1};
+
+std::string g_situation_path;
+std::string g_situation_blob;
 
 using RunScriptFn = int (KP_THISCALL*)(void*, CExoString*, std::uint32_t, int);
 using MainLoopFn  = void* (KP_THISCALL*)(void*);
@@ -116,6 +141,22 @@ std::vector<lua::Value> shape_args(const events::EventContract& ev,
     return out;
 }
 
+void dispatch_run_script_done(lua::Host& host, const std::string& script_name,
+                              std::uint32_t object_id, int has_object, bool ran,
+                              bool blocked, const events::Outcome& outcome) {
+    const events::EventContract* done = find_contract("OnRunScriptDone");
+    if (done == nullptr) return;
+    const std::vector<NamedArg> have = {
+        {"script_name", lua::Value::str(script_name)},
+        {"object_id", lua::Value::object(object_id)},
+        {"has_object", lua::Value::integer(has_object)},
+        {"ran", lua::Value::boolean(ran)},
+        {"blocked", lua::Value::boolean(blocked)},
+        {"claimed_by", lua::Value::str(outcome.claimed_by)},
+    };
+    host.dispatch(*done, shape_args(*done, have));
+}
+
 // ------------------------------------------------------------- RunScript ----
 
 // The blocking decision, separated so the guarded region has one job.
@@ -125,20 +166,8 @@ struct ScriptVerdict {
 };
 
 ScriptVerdict decide(const events::EventContract& ev, const events::Outcome& outcome) {
-    ScriptVerdict v;
-    if (!outcome.claimed || outcome.bool_result) return v;   // nobody blocked
-
-    v.block = true;
-    // What the engine is told is a property of the event, not of this call.
-    // RunScript returns 1 for "ran" and 0 for "did not", and 0 propagates into
-    // the caller's failure path -- so suppressing the handler and reporting
-    // failure are two different decisions and the contract holds which one.
-    switch (ev.engine_return) {
-    case events::EngineReturn::ReportSuccess: v.engine_result = 1; break;
-    case events::EngineReturn::ReportFailure: v.engine_result = 0; break;
-    case events::EngineReturn::Passthrough:   v.block = false;     break;
-    }
-    return v;
+    const events::BlockVerdict b = events::blocking_verdict(ev, outcome);
+    return {b.skip_original, b.engine_result};
 }
 
 // `self` is the CVirtualMachineInternal, which is the only place the two live
@@ -156,6 +185,9 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
     lua::Host* const host = active_host();
 
     ScriptVerdict verdict;
+    events::Outcome outcome;
+    std::string script_name;
+    bool saw_run_script = false;
     if (live() && host != nullptr && !g_poison_run_script.load(std::memory_order_acquire)) {
         // `verdict` is written inside the guarded region, so its value after a
         // fault is indeterminate and the fallback re-states it. The default is
@@ -165,30 +197,18 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
 
         const events::EventContract* ev = find_contract("OnRunScript");
         if (ev != nullptr) {
-            const std::string script_name = read_exostring(name);
+            script_name = read_exostring(name);
+            saw_run_script = true;
             const std::vector<lua::Value> args = {
                 lua::Value::str(script_name),
                 lua::Value::object(object_id),
                 lua::Value::integer(has_object),
             };
-            const events::Outcome outcome = host->dispatch(*ev, args);
+            outcome = host->dispatch(*ev, args);
             verdict = decide(*ev, outcome);
-
-            // Absent from the generated table today. Dispatching only when the
-            // contract exists means the day it is added this works, and until
-            // then nothing here pretends to raise an event nobody can receive.
-            if (const events::EventContract* done = find_contract("OnRunScriptDone");
-                done != nullptr) {
-                const std::vector<NamedArg> have = {
-                    {"script_name", lua::Value::str(script_name)},
-                    {"object_id", lua::Value::object(object_id)},
-                    {"has_object", lua::Value::integer(has_object)},
-                    {"ran", lua::Value::boolean(!verdict.block)},
-                    {"blocked", lua::Value::boolean(verdict.block)},
-                    {"claimed_by", lua::Value::str(outcome.claimed_by)},
-                };
-                host->dispatch(*done, shape_args(*done, have));
-            }
+            if (verdict.block)
+                dispatch_run_script_done(*host, script_name, object_id, has_object,
+                                         false, true, outcome);
         }
 
         KP_HOOK_GUARD_END
@@ -196,7 +216,18 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
 
     if (verdict.block) return verdict.engine_result;
     if (orig == nullptr) return 0;   // unpatched: we have nothing to forward to
-    return orig(self, name, object_id, has_object);
+    const int rc = orig(self, name, object_id, has_object);
+
+    // After the engine script, with the engine's own 0/1. A Lua fault here
+    // must not rewrite the return the game already produced.
+    if (saw_run_script && live() && host != nullptr &&
+        !g_poison_run_script.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, {})
+        dispatch_run_script_done(*host, script_name, object_id, has_object,
+                                 rc == 1, false, outcome);
+        KP_HOOK_GUARD_END
+    }
+    return rc;
 }
 
 // -------------------------------------------------------------- MainLoop ----
@@ -223,10 +254,14 @@ void* KP_THISCALL main_loop_body(void* self) {
             };
             h.dispatch(*ev, args);
         }
+        kp::api::timers::pump(kp::api::timers::now_ms(), tick);
         h.advance_tick();
 
         if (tick % kReloadEvery == 0) {
-            const unsigned n = h.reload_changed();
+            std::vector<std::string> errors;
+            const unsigned n = h.reload_changed(&errors);
+            for (const std::string& e : errors)
+                Runtime::instance().log("hot reload: %s", e.c_str());
             if (n != 0) Runtime::instance().log("hot reload: %u script(s)", n);
         }
 
@@ -234,7 +269,12 @@ void* KP_THISCALL main_loop_body(void* self) {
     }
 
     if (orig == nullptr) return nullptr;
-    return orig(self);
+    void* result = orig(self);
+    unsigned scale = g_tick_scale.load(std::memory_order_acquire);
+    if (scale < 1) scale = 1;
+    if (scale > 16) scale = 16;
+    for (unsigned i = 1; i < scale; ++i) orig(self);
+    return result;
 }
 
 // ------------------------------------------------------------- DoConsole ----
@@ -328,6 +368,7 @@ void console_exec(const std::string& code) {
 
 void console_status() {
     Runtime& rt = Runtime::instance();
+    rt.log("status: KotorPhasor %s", KP_VERSION);
     rt.log("status: phase=%s build=%s live=%s", to_string(rt.phase()),
            rt.build().empty() ? "(none)" : rt.build().c_str(), live() ? "yes" : "no");
     if (!rt.failure().empty()) rt.log("status: failure=%s", rt.failure().c_str());
@@ -478,18 +519,223 @@ void __attribute__((cdecl)) do_console_body(char c) {
     if (!consumed) replay(orig, g_line, len, c);
 }
 
+// ---------------------------------------------------------- EventHandler ----
+//
+// All ten object types share this signature. Five stack arguments after `this`,
+// callee-cleans: the compiler must emit `ret $0x14`. A shorter parameter list
+// skews ESP on that thread permanently.
+//
+// pEventData is NOT always a CScriptEvent. Lookup keys on (site, outer id)
+// and, when outer id is SIGNAL_EVENT, the script event type. Named slots that
+// only ever reach RunScript are not looked up here.
+
+using EventHandlerFn = void (KP_THISCALL*)(void*, unsigned long, unsigned long,
+                                           void*, unsigned long, unsigned long);
+
+void persist_situation(const std::string& blob) {
+    g_situation_blob = blob;
+    events::write_situation_blob(g_situation_path, blob);
+}
+
+std::string load_situation() {
+    if (!g_situation_path.empty()) {
+        const std::string blob = events::read_situation_blob(g_situation_path);
+        if (!blob.empty() || g_situation_blob.empty())
+            g_situation_blob = blob;
+    }
+    return g_situation_blob;
+}
+
+void event_handler_common(void* self, unsigned long n_event_id,
+                          unsigned long n_caller, void* payload,
+                          unsigned long day, unsigned long time,
+                          const char* site, std::atomic<void*>& orig_slot) {
+    auto orig = reinterpret_cast<EventHandlerFn>(
+        orig_slot.load(std::memory_order_acquire));
+
+    lua::Host* const host = active_host();
+    bool skip = false;
+    if (live() && host != nullptr && !g_poison_event.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN(site, g_poison_event, skip = false)
+
+        int script_type = -1;
+        if (events::payload_is_script_event(static_cast<int>(n_event_id))) {
+            events::ScriptEventView view{payload};
+            script_type = events::script_event_type(view);
+        }
+        const events::EventContract* ev = events::find_by_site(
+            site, static_cast<int>(n_event_id), script_type);
+        if (ev != nullptr) {
+            events::HandlerFrame frame;
+            frame.self = self;
+            frame.caller = static_cast<std::uint32_t>(n_caller);
+            frame.payload = payload;
+            frame.calendar_day = static_cast<std::uint32_t>(day);
+            frame.time_of_day = static_cast<std::uint32_t>(time);
+            frame.hook_site = site;
+            frame.outer_event_id = static_cast<int>(n_event_id);
+            const events::Outcome outcome =
+                host->dispatch(*ev, events::shape_handler_args(*ev, frame));
+            if (ev->blocking)
+                skip = events::blocking_verdict(*ev, outcome).skip_original;
+        }
+
+        KP_HOOK_GUARD_END
+    }
+
+    if (skip) return;
+    if (orig == nullptr) return;
+    orig(self, n_event_id, n_caller, payload, day, time);
+}
+
+void KP_THISCALL creature_event_body(void* self, unsigned long id, unsigned long caller,
+                                     void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.creature", g_orig_creature);
+}
+void KP_THISCALL door_event_body(void* self, unsigned long id, unsigned long caller,
+                                 void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.door", g_orig_door);
+}
+void KP_THISCALL placeable_event_body(void* self, unsigned long id, unsigned long caller,
+                                      void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.placeable", g_orig_placeable);
+}
+void KP_THISCALL trigger_event_body(void* self, unsigned long id, unsigned long caller,
+                                    void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.trigger", g_orig_trigger);
+}
+void KP_THISCALL module_event_body(void* self, unsigned long id, unsigned long caller,
+                                   void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.module", g_orig_module);
+}
+void KP_THISCALL area_event_body(void* self, unsigned long id, unsigned long caller,
+                                 void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.area", g_orig_area);
+}
+void KP_THISCALL encounter_event_body(void* self, unsigned long id, unsigned long caller,
+                                      void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.encounter", g_orig_encounter);
+}
+void KP_THISCALL aoe_event_body(void* self, unsigned long id, unsigned long caller,
+                                void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.aoe", g_orig_aoe);
+}
+void KP_THISCALL store_event_body(void* self, unsigned long id, unsigned long caller,
+                                  void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.store", g_orig_store);
+}
+void KP_THISCALL waypoint_event_body(void* self, unsigned long id, unsigned long caller,
+                                     void* data, unsigned long day, unsigned long time) {
+    event_handler_common(self, id, caller, data, day, time, "event.waypoint", g_orig_waypoint);
+}
+
+// Save takes one stack argument. Load takes three: both K1 callers of the
+// CVirtualMachine thunk push three, and Internal reads them at [esp+0x38],
+// [esp+0x3c], [esp+0x44] after its SEH prologue. A one-arg load body
+// forwarded garbage for the last two and popped 4 bytes instead of 12 --
+// Wine faulted at 0x41168A (cmp eax, [edx+0xC]) on every save load.
+using SaveSituationFn = int (KP_THISCALL*)(void*, void*);
+using LoadSituationFn = int (KP_THISCALL*)(void*, void*, void*, void*);
+
+int KP_THISCALL save_situation_body(void* self, void* situation) {
+    auto orig = reinterpret_cast<SaveSituationFn>(g_orig_save.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    if (live() && host != nullptr && !g_poison_save.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("vm.save_script_situation", g_poison_save, {})
+        if (const events::EventContract* ev = find_contract("OnSave")) {
+            const events::Outcome outcome = host->dispatch(*ev, {});
+            if (outcome.claimed) persist_situation(outcome.string_result);
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (orig == nullptr) return 0;
+    return orig(self, situation);
+}
+
+int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
+    auto orig = reinterpret_cast<LoadSituationFn>(g_orig_load.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    if (live() && host != nullptr && !g_poison_load.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("vm.load_script_situation", g_poison_load, {})
+        if (const events::EventContract* ev = find_contract("OnLoad")) {
+            const std::vector<lua::Value> args = {
+                lua::Value::str(load_situation()),
+            };
+            host->dispatch(*ev, args);
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (orig == nullptr) return 0;
+    return orig(self, a, b, c);
+}
+
 }  // namespace
 
 // ------------------------------------------------------------- wiring in ----
 
+void set_situation_path(std::string path) { g_situation_path = std::move(path); }
+
+void set_tick_scale(unsigned n) {
+    if (n < 1) n = 1;
+    if (n > 16) n = 16;
+    g_tick_scale.store(n, std::memory_order_release);
+}
+
+unsigned tick_scale() { return g_tick_scale.load(std::memory_order_acquire); }
+
+namespace {
+int l_speed(lua_State* L) {
+    if (lua_gettop(L) >= 1) set_tick_scale(static_cast<unsigned>(luaL_checkinteger(L, 1)));
+    lua_pushinteger(L, static_cast<lua_Integer>(tick_scale()));
+    return 1;
+}
+}  // namespace
+
+void register_director(lua_State* L) {
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_newtable(L);
+        lua_pushvalue(L, -1);
+        lua_setglobal(L, "kp");
+    }
+    lua_pushcfunction(L, l_speed);
+    lua_setfield(L, -2, "speed");
+    lua_pop(L, 1);
+}
+
 void* run_script_detour() { return reinterpret_cast<void*>(&run_script_body); }
 void* main_loop_detour()  { return reinterpret_cast<void*>(&main_loop_body); }
 void* do_console_detour() { return reinterpret_cast<void*>(&do_console_body); }
+void* creature_event_detour()  { return reinterpret_cast<void*>(&creature_event_body); }
+void* door_event_detour()      { return reinterpret_cast<void*>(&door_event_body); }
+void* placeable_event_detour() { return reinterpret_cast<void*>(&placeable_event_body); }
+void* trigger_event_detour()   { return reinterpret_cast<void*>(&trigger_event_body); }
+void* module_event_detour()    { return reinterpret_cast<void*>(&module_event_body); }
+void* area_event_detour()      { return reinterpret_cast<void*>(&area_event_body); }
+void* encounter_event_detour() { return reinterpret_cast<void*>(&encounter_event_body); }
+void* aoe_event_detour()       { return reinterpret_cast<void*>(&aoe_event_body); }
+void* store_event_detour()     { return reinterpret_cast<void*>(&store_event_body); }
+void* waypoint_event_detour()  { return reinterpret_cast<void*>(&waypoint_event_body); }
+void* save_situation_detour()  { return reinterpret_cast<void*>(&save_situation_body); }
+void* load_situation_detour()  { return reinterpret_cast<void*>(&load_situation_body); }
 
 void bind_originals(hooks::HookSet& set) {
     g_orig_run_script.store(set.original("vm.run_script"), std::memory_order_release);
     g_orig_main_loop.store(set.original("app.server_main_loop"), std::memory_order_release);
     g_orig_do_console.store(set.original("console.do_console"), std::memory_order_release);
+    g_orig_creature.store(set.original("event.creature"), std::memory_order_release);
+    g_orig_door.store(set.original("event.door"), std::memory_order_release);
+    g_orig_placeable.store(set.original("event.placeable"), std::memory_order_release);
+    g_orig_trigger.store(set.original("event.trigger"), std::memory_order_release);
+    g_orig_module.store(set.original("event.module"), std::memory_order_release);
+    g_orig_area.store(set.original("event.area"), std::memory_order_release);
+    g_orig_encounter.store(set.original("event.encounter"), std::memory_order_release);
+    g_orig_aoe.store(set.original("event.aoe"), std::memory_order_release);
+    g_orig_store.store(set.original("event.store"), std::memory_order_release);
+    g_orig_waypoint.store(set.original("event.waypoint"), std::memory_order_release);
+    g_orig_save.store(set.original("vm.save_script_situation"), std::memory_order_release);
+    g_orig_load.store(set.original("vm.load_script_situation"), std::memory_order_release);
 }
 
 void clear_originals() {
@@ -499,6 +745,18 @@ void clear_originals() {
     g_orig_run_script.store(nullptr, std::memory_order_release);
     g_orig_main_loop.store(nullptr, std::memory_order_release);
     g_orig_do_console.store(nullptr, std::memory_order_release);
+    g_orig_creature.store(nullptr, std::memory_order_release);
+    g_orig_door.store(nullptr, std::memory_order_release);
+    g_orig_placeable.store(nullptr, std::memory_order_release);
+    g_orig_trigger.store(nullptr, std::memory_order_release);
+    g_orig_module.store(nullptr, std::memory_order_release);
+    g_orig_area.store(nullptr, std::memory_order_release);
+    g_orig_encounter.store(nullptr, std::memory_order_release);
+    g_orig_aoe.store(nullptr, std::memory_order_release);
+    g_orig_store.store(nullptr, std::memory_order_release);
+    g_orig_waypoint.store(nullptr, std::memory_order_release);
+    g_orig_save.store(nullptr, std::memory_order_release);
+    g_orig_load.store(nullptr, std::memory_order_release);
 
     if (g_console_L != nullptr) { lua_close(g_console_L); g_console_L = nullptr; }
 }

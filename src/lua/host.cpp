@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <map>
+#include <unordered_set>
 
 #include "lua/value.hpp"
 
@@ -202,13 +203,67 @@ void Host::sort_scripts() {
                      });
 }
 
+void Host::set_lifecycle(const events::EventContract* load,
+                         const events::EventContract* unload,
+                         std::string game, std::string build) {
+    load_event_ = load;
+    unload_event_ = unload;
+    game_ = std::move(game);
+    build_ = std::move(build);
+    lifecycle_ = true;
+}
+
+void Host::raise_load(Script& s) {
+    if (!lifecycle_ || load_event_ == nullptr || s.state() != ScriptState::Loaded) return;
+    const std::vector<Value> args = {
+        Value::str(game_),
+        Value::str(build_),
+    };
+    dispatch_one(s, *load_event_, args);
+}
+
+void Host::raise_unload(Script& s) {
+    if (!lifecycle_ || unload_event_ == nullptr || !s.L()) return;
+    dispatch_one(s, *unload_event_, {});
+}
+
+void Host::dispatch_one(Script& s, const events::EventContract& ev,
+                        const std::vector<Value>& args) {
+    if (!s.L() || !s.defines(ev.lua_name)) return;
+
+    lua_State* L = s.L();
+    const int base = lua_gettop(L);
+    lua_pushcfunction(L, traceback_handler);
+    if (!s.push_handler(ev.lua_name)) { lua_settop(L, base); return; }
+    for (const auto& a : args) a.push(L);
+    lua_pushboolean(L, true);
+    if (lua_pcall(L, int(args.size()) + 1, int(ev.results.size()), base + 1) != 0) {
+        const char* msg = lua_tostring(L, -1);
+        s.record_error(ev.lua_name, msg ? msg : "(no message)", tick_, cfg_.error_budget);
+    }
+    lua_settop(L, base);
+    if (s.state() == ScriptState::Quarantined && s.L()) s.release_state();
+}
+
+std::vector<std::string> Host::list_script_paths() const {
+    std::vector<std::string> paths;
+    if (cfg_.script_dir.empty() || !fs::is_directory(cfg_.script_dir)) return paths;
+    for (const auto& e : fs::directory_iterator(cfg_.script_dir))
+        if (e.is_regular_file() && e.path().extension() == ".lua")
+            paths.push_back(e.path().string());
+    std::sort(paths.begin(), paths.end());
+    return paths;
+}
+
 bool Host::load_one(const std::string& path, std::string& error) {
     auto s = std::make_unique<Script>(fs::path(path).stem().string(), path,
                                      &cfg_.on_state_created);
-    if (!s->load(error)) return false;
+    const bool ok = s->load(error);
+    Script* raw = s.get();
     scripts_.push_back(std::move(s));
     sort_scripts();
-    return true;
+    if (ok) raise_load(*raw);
+    return ok;
 }
 
 unsigned Host::load_all(std::vector<std::string>& errors) {
@@ -221,11 +276,7 @@ unsigned Host::load_all(std::vector<std::string>& errors) {
     // Collect and sort paths first. Directory iteration order is not defined,
     // and load order affects nothing else only because we sort afterwards --
     // doing it here as well keeps error reporting stable between runs.
-    std::vector<std::string> paths;
-    for (const auto& e : fs::directory_iterator(cfg_.script_dir))
-        if (e.is_regular_file() && e.path().extension() == ".lua")
-            paths.push_back(e.path().string());
-    std::sort(paths.begin(), paths.end());
+    const std::vector<std::string> paths = list_script_paths();
 
     unsigned loaded = 0;
     for (const auto& p : paths) {
@@ -236,7 +287,11 @@ unsigned Host::load_all(std::vector<std::string>& errors) {
     return loaded;
 }
 
-void Host::unload_all() { scripts_.clear(); }
+void Host::unload_all() {
+    for (auto& sp : scripts_) raise_unload(*sp);
+    scripts_.clear();
+    stamps_.clear();
+}
 
 events::Outcome Host::dispatch(const events::EventContract& ev,
                                const std::vector<Value>& args) {
@@ -309,8 +364,10 @@ events::Outcome Host::dispatch(const events::EventContract& ev,
     // budget during this dispatch. Deferring to here is what makes it safe to
     // quarantine a script from inside its own failing call.
     for (auto& sp : scripts_)
-        if (sp->state() == ScriptState::Quarantined && sp->L())
+        if (sp->state() == ScriptState::Quarantined && sp->L()) {
+            raise_unload(*sp);
             sp->release_state();
+        }
 
     // Nobody answered, so the event falls back to its declared default.
     if (!out.claimed) {
@@ -324,24 +381,39 @@ events::Outcome Host::dispatch(const events::EventContract& ev,
     return out;
 }
 
-unsigned Host::reload_changed() {
+unsigned Host::reload_changed(std::vector<std::string>* errors) {
     if (!cfg_.hot_reload) return 0;
-    static std::map<std::string, fs::file_time_type> stamps;
 
     unsigned reloaded = 0;
+    std::unordered_set<std::string> held;
+    for (const auto& sp : scripts_) held.insert(sp->path());
+
+    for (const auto& path : list_script_paths()) {
+        if (held.count(path)) continue;
+        std::string err;
+        if (load_one(path, err)) ++reloaded;
+        else if (errors) errors->push_back(fs::path(path).filename().string() + ": " + err);
+    }
+
     for (auto& sp : scripts_) {
         std::error_code ec;
         const auto t = fs::last_write_time(sp->path(), ec);
         if (ec) continue;
-        auto it = stamps.find(sp->path());
-        if (it == stamps.end()) { stamps[sp->path()] = t; continue; }
+        auto it = stamps_.find(sp->path());
+        if (it == stamps_.end()) { stamps_[sp->path()] = t; continue; }
         if (it->second == t) continue;
         it->second = t;
 
         // Reloading clears the error history too, so fixing a script is enough
         // to bring it out of quarantine without restarting the game.
+        raise_unload(*sp);
         std::string err;
-        if (sp->load(err)) ++reloaded;
+        if (sp->load(err)) {
+            ++reloaded;
+            raise_load(*sp);
+        } else if (errors) {
+            errors->push_back(sp->name() + ": " + err);
+        }
     }
     if (reloaded) sort_scripts();   // priority may have changed
     return reloaded;
