@@ -22,6 +22,18 @@
 //      no range limit to reason about at all. That is 3 bytes more than
 //      x86's kJmpRel32Size, which is why kPatchSize is 8, not 5.
 //
+//      One hazard this idiom carries that a plain branch would not: LDR
+//      (literal)'s pseudocode computes its base as `Align(PC, 4)`, an
+//      explicit round-DOWN to the nearest word boundary, not a no-op. If the
+//      LDR.W itself lands at an address that is 2-mod-4 instead of 0-mod-4,
+//      the processor reads the target word two bytes early -- the tail of
+//      the LDR.W's own encoding stitched to the front half of the intended
+//      target address -- and jumps to whatever garbage that produces. Every
+//      site that writes this 8-byte pair (both the trampoline, at an offset
+//      chosen by this file, and the target patch, at an address chosen by
+//      the caller) has to either guarantee 4-byte alignment by construction
+//      or refuse. See install()'s comments for how each site handles it.
+//
 //   2. INTERWORKING. x86 has no such thing -- code is code. Thumb and ARM
 //      are two different instruction encodings for the same CPU, and
 //      `LDR PC, [...]` uses bit 0 of the loaded value to choose which one
@@ -99,6 +111,9 @@ enum class HookStatus {
                         // form -- decode.hpp's Insn::refusal names which)
     AllocFailed,
     ProtectFailed,
+    Unaligned,          // target is not 4-byte aligned: writing the
+                        // LDR.W PC,[PC,#0]+.word patch there would hit the
+                        // Align(PC,4) hazard documented above the class
 };
 
 const char* to_string(HookStatus);
