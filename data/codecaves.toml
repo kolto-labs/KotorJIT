@@ -1,0 +1,158 @@
+# KotorPhasor codecave manifest.
+#
+# A codecave is a span of genuinely unused bytes inside an executable
+# section -- compiler alignment padding between two real functions (a run of
+# 0xCC int3 fill after MSVC, sometimes 0x90 NOP), or unused space at the end
+# of a section before the next one begins. A script finds one at runtime with
+# kotor.mem.findsig(pattern) -- see docs/user/codecaves.md -- and writes into
+# it with kotor.mem.write*, which this codebase leaves deliberately
+# unrestricted for executable sections (src/api/memory.hpp).
+#
+# ADDRESSES NEVER APPEAR HERE AS THE LOOKUP MECHANISM. Each entry's `sig` is
+# what a script actually calls findsig with. The `addr` fields under
+# `[[cave.verified]]` are NOT read by anything -- they document the exact VA
+# that sig resolved to on the specific binary it was verified against, for a
+# human reading this file. This is the opposite convention from
+# data/hooksites.toml (logical name -> per-build resolved address table):
+# a codecave's whole value is that one signature can work unmodified across
+# every build where the surrounding bytes happen to match, which a resolved-
+# per-build address table would defeat.
+#
+# Every entry below was verified two ways before being written down:
+#   1. sig, scanned with this project's own findsig semantics (hex string,
+#      '?' is a per-NIBBLE wildcard, not a per-byte one) against the real
+#      binary's executable section(s), matches EXACTLY ONCE.
+#   2. The `size` bytes starting at sig_match_address + len(sig)/2 are a
+#      single uniform repeated byte (0xCC or 0x90), confirmed by reading the
+#      real file, not inferred from the RE corpus's function-size field alone
+#      -- that field undercounted a function's real end by a few bytes often
+#      enough that trusting it produced false gaps that were actually still
+#      inside the previous function's own tail instructions.
+#
+# Only KOTOR builds this runtime can currently install hooks on were
+# searched (see tools/gen_address_tables.py's BUILDS, "installable": true):
+# k1_gog_103, k2_gog_aspyr, k2_steam_aspyr. k2_steam_linux (the ELF build)
+# was searched too and is a documented dead end below, not an oversight.
+
+[meta]
+version = 1
+
+# --- KOTOR 1 GOG/Steam Windows -----------------------------------------------
+#
+# k1_steam_103 and k1_steam_103_unpacked's .text is byte-identical to
+# k1_gog_103's once deciphered (see tools/gen_address_tables.py's own note,
+# "828/828 pages" -- docs/steam-gog-equivalence.md), so both signatures below
+# apply unmodified to all three K1 builds. Verified directly only against
+# k1_gog_103's raw .exe; the other two were not independently re-verified,
+# since the identical-.text claim is this project's own established fact,
+# not a new one from this pass.
+
+[[cave]]
+name    = "k1.after_static_dispose_requested_model_list"
+purpose = "Large cave: the unused tail of .text before .rdata begins."
+size    = 3632
+fill    = 0x00
+sig     = "568bf1740ee8eed8eaff56e8c8e1fbff83c4045ec3909090"
+note    = """The last 24 bytes of staticDisposeRequestedModelList (K1's Resource
+Manager cleanup path) plus its 3-byte NOP alignment tail. The cave itself is
+zero-filled, not 0xCC -- MSVC used 0x00 for this particular section-boundary
+pad rather than its usual 0xCC per-function pad. findsig(sig) returns the
+start of this 24-byte sequence; the cave begins at that address + 24 (0x18)
+bytes, i.e. right after the trailing 0x909090."""
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x0073C1D0"   # findsig(sig) + 0x18
+sig_match_addr = "0x0073C1B8"
+
+[[cave]]
+name    = "k1.after_add_resource_directory"
+purpose = "Small cave, near CResRepository::AddResourceDirectory (resource path registration)."
+size    = 15
+fill    = 0x90
+sig     = "4424046a006a0250e812e6ffffc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00408811"
+sig_match_addr = "0x00408801"
+
+[[cave]]
+name    = "k1.after_set_extent"
+purpose = "Small cave, near a font/UI SetExtent accessor."
+size    = 15
+fill    = 0x90
+sig     = "24108b1150ff52045f5e83c410c20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x0040A5F1"
+sig_match_addr = "0x0040A5E1"
+
+# --- KOTOR 2 GOG Aspyr Windows ------------------------------------------------
+
+[[cave]]
+name    = "k2.after_get_pazaak_results"
+purpose = "Small cave, right after CSWSModule::GetPazaakResults (minigame result query)."
+size    = 15
+fill    = 0xCC
+sig     = "550c8b45fc8b487c890a8be55dc20800"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x0040DC21"
+sig_match_addr = "0x0040DC11"
+
+[[cave]]
+name    = "k2.after_reattach_creature_to_scene"
+purpose = "Small cave, right after CSWSCreature::ReattachCreatureToScene."
+size    = 15
+fill    = 0xCC
+sig     = "c03b918c0200000f95c08be55dc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x0040D6F1"
+sig_match_addr = "0x0040D6E1"
+
+# --- KOTOR 2 Steam Aspyr Windows ----------------------------------------------
+#
+# This build is only 57% natively named (see PR history on
+# tools/gen_address_tables.py), and almost none of that is game-engine code --
+# it is mostly MSVC/MFC/ATL runtime library symbols. GetMargins below is one
+# of those library functions, not KOTOR-specific code; it is still a real,
+# individually verified cave, just not a thematically meaningful one the way
+# the K1/K2-GOG entries above are.
+
+[[cave]]
+name    = "k2_steam.after_get_margins"
+purpose = "Small cave, after an MFC CWnd::GetMargins accessor (library code, not engine-specific)."
+size    = 15
+fill    = 0xCC
+sig     = "fc05b00000008b4d088b1089118b50048951048b50088951088b400c89410c8b45088be55dc20400"
+note    = """The short (16-byte) form of this signature matched 4 different trivial
+getter functions in this binary -- ret-pattern collision, not a real ambiguity
+in the cave itself. Extended to 40 bytes of leading context to reach a unique
+match; findsig(sig) + 40 (0x28) bytes = cave start."""
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x00459771"
+sig_match_addr = "0x00459749"
+
+# --- KOTOR 2 Linux ELF: no viable cave found ----------------------------------
+#
+# Checked and rejected, not overlooked. This build's .text has essentially no
+# compiler alignment padding to exploit: a full byte-run scan across .text
+# (plus the two Bink codec sections) found exactly one run of a single
+# repeated byte at 12+ bytes (13 bytes of 0x90 at the very end of .text,
+# immediately before the next section begins) and nothing else -- GCC on this
+# build does not leave per-function padding the way MSVC does on the Windows
+# builds above, and this binary is also more heavily stripped (1826/14743
+# functions named) than any of the Windows targets, which limits how
+# confidently a candidate could be anchored even if one existed. No entry is
+# written for this build rather than forcing a low-confidence one.

@@ -20,6 +20,7 @@ flowchart TD
 1. [Install the runtime](install.md)
 2. [Write a script](scripts.md)
 3. [See what is live](api-status.md)
+4. [Find a codecave](codecaves.md) if you need somewhere to put injected bytes
 
 Generated argument lists live in [../lua-api.md](../lua-api.md) (events) and [../nwscript-api.md](../nwscript-api.md) (engine routines). Those files list every name in the contract. They do not say which names fire today. Use [api-status.md](api-status.md) for that.
 
