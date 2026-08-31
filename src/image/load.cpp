@@ -240,10 +240,20 @@ bool dump_elf(const LoadedImage& img, const std::string& out_path, std::string& 
     const std::uint16_t phnum     = static_cast<std::uint16_t>(ehdr[44] | (ehdr[45] << 8));
 
     std::vector<std::uint8_t> head;
-    // phentsize/phnum promote to (signed) int and can overflow before the
-    // size_t addition; cast phentsize first, matching parse.cpp's read_elf_headers.
-    if (!img.read_vector(img.base(), static_cast<std::size_t>(phoff) +
-                          static_cast<std::size_t>(phentsize) * phnum, head)) {
+    // uint64_t, not just a cast on the multiplication: this build's size_t is
+    // 32-bit, so phoff (already near UINT32_MAX from a crafted file) plus
+    // phentsize*phnum can still wrap the *addition* even once the
+    // multiplication alone is overflow-safe. Compute the whole span in a
+    // width the values can't overflow, then sanity-cap before ever touching
+    // size_t.
+    const std::uint64_t span = static_cast<std::uint64_t>(phoff) +
+                               static_cast<std::uint64_t>(phentsize) * phnum;
+    constexpr std::uint64_t kMaxElfHeaderSpan = 16ull * 1024 * 1024;
+    if (span == 0 || span > kMaxElfHeaderSpan) {
+        error = "ELF program header table span is invalid or unreasonable";
+        return false;
+    }
+    if (!img.read_vector(img.base(), static_cast<std::size_t>(span), head)) {
         error = "cannot read ELF program headers from the image";
         return false;
     }
@@ -253,19 +263,28 @@ bool dump_elf(const LoadedImage& img, const std::string& out_path, std::string& 
         return false;
     }
 
-    std::size_t total = head.size();
+    // uint64_t for the same reason as the header span above: s.offset is a
+    // crafted uint32_t, and offset+filesz in 32-bit size_t can wrap to a
+    // small "total" while the memcpy below still writes at the real,
+    // unwrapped offset -- the same heap-overflow shape dump_pe had.
+    std::uint64_t total = head.size();
     for (const elf::Segment& s : h.loads) {
-        total = std::max<std::size_t>(total, static_cast<std::size_t>(s.offset) + s.filesz);
+        total = std::max<std::uint64_t>(total, static_cast<std::uint64_t>(s.offset) + s.filesz);
+    }
+    constexpr std::uint64_t kMaxDumpSize = 256ull * 1024 * 1024;
+    if (total > kMaxDumpSize) {
+        error = "ELF image would dump to an unreasonable size (" + std::to_string(total) + " bytes)";
+        return false;
     }
 
-    std::vector<std::uint8_t> file(total, 0);
+    std::vector<std::uint8_t> file(static_cast<std::size_t>(total), 0);
     std::memcpy(file.data(), head.data(), std::min(head.size(), file.size()));
 
     std::vector<std::uint8_t> body;
     for (const elf::Segment& s : h.loads) {
         if (s.filesz == 0) continue;
         if (!img.read_vector(s.vaddr, s.filesz, body)) continue;
-        if (static_cast<std::size_t>(s.offset) + body.size() > file.size()) continue;
+        if (static_cast<std::uint64_t>(s.offset) + body.size() > file.size()) continue;
         std::memcpy(file.data() + s.offset, body.data(), body.size());
     }
 
