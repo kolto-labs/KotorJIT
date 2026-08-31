@@ -33,6 +33,17 @@
 # searched (see tools/gen_address_tables.py's BUILDS, "installable": true):
 # k1_gog_103, k2_gog_aspyr, k2_steam_aspyr. k2_steam_linux (the ELF build)
 # was searched too and is a documented dead end below, not an oversight.
+#
+# 39 caves total, in two passes. The first pass found a handful by hand; the
+# second was exhaustive -- every 12+ byte run of 0xCC or 0x90 across each
+# binary's whole .text was enumerated directly from the raw file (not
+# inferred from the corpus's function-size field, for the reason in point 2
+# above), then narrowed to the subset anchored on a real, namespace-qualified
+# function name. Each build's section below states exactly how many
+# candidates that exhaustive scan found and how many were real-name-anchored;
+# what appears here is a curated, individually re-verified sample of that
+# set, not the whole thing -- a script picking by theme has real choices
+# without this file becoming a database dump.
 
 [meta]
 version = 1
@@ -91,6 +102,238 @@ build = "k1_gog_103"
 addr  = "0x0040A5F1"
 sig_match_addr = "0x0040A5E1"
 
+# The two entries above were this manifest's first pass. Below is a second,
+# exhaustive pass: every 0xCC/0x90 filler run of 12+ bytes across the whole of
+# .text was enumerated (2,912 candidates), cross-referenced against the
+# corpus's own function table for one whose declared end lines up exactly with
+# the run's start (a strong signal the corpus's boundary is trustworthy here,
+# unlike the cases noted above where it wasn't), and narrowed to the 1,678
+# anchored on a real (non-"FUN_") namespace-qualified name. What follows is a
+# curated, individually re-verified sample spread across that set -- not all
+# 1,678, which would be more entries than any script needs, but enough that a
+# script picking by theme (combat, GUI, AI, resource loading) has real choices.
+
+[[cave]]
+name    = "k1.after_app_manager_ctor"
+purpose = "Small cave, near CAppManager (app-manager constructor)."
+size    = 14
+fill    = 0x90
+sig     = "065f8bc65e64890d0000000083c410c3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00401272"
+sig_match_addr = "0x00401262"
+
+[[cave]]
+name    = "k1.after_get_control"
+purpose = "Small cave, near GetControl (panel control accessor)."
+size    = 15
+fill    = 0x90
+sig     = "899c0200008b0481c2040033c0c20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x0041A5C1"
+sig_match_addr = "0x0041A5B1"
+
+[[cave]]
+name    = "k1.after_get_room"
+purpose = "Small cave, near GetRoom (area room accessor)."
+size    = 15
+fill    = 0x90
+sig     = "89c80000008b0481c2040033c0c20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00452C81"
+sig_match_addr = "0x00452C71"
+
+[[cave]]
+name    = "k1.after_world_timer_ctor"
+purpose = "Small cave, near CWorldTimer (world timer constructor)."
+size    = 13
+fill    = 0x90
+sig     = "248946345f8956308bc65e5b83c408c3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x004AE563"
+sig_match_addr = "0x004AE553"
+
+[[cave]]
+name    = "k1.after_read_cexostring"
+purpose = "Small cave, near ReadCExoString (CExoString stream reader)."
+size    = 14
+fill    = 0x90
+sig     = "4c24145f8bc65e64890d0000000083c418c20800"
+note    = "findsig(sig) + 20 (0x14) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x004D6892"
+sig_match_addr = "0x004D687E"
+
+[[cave]]
+name    = "k1.after_equip_most_damaging_ranged_weapon"
+purpose = "Small cave, near EquipMostDamagingRangedWeapon (AI weapon-equip heuristic)."
+size    = 12
+fill    = 0x90
+sig     = "83c414c204005e33c05d83c414c20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00501494"
+sig_match_addr = "0x00501484"
+
+[[cave]]
+name    = "k1.after_execute_command_get_pc"
+purpose = "Small cave, near ExecuteCommandGetPC (GetPC routine implementation)."
+size    = 13
+fill    = 0x90
+sig     = "0050e86e470900f7d81bc025d00700000530f8ffffc20800"
+note    = "findsig(sig) + 24 (0x18) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x0053C973"
+sig_match_addr = "0x0053C95B"
+
+[[cave]]
+name    = "k1.after_send_server_to_player_message"
+purpose = "Small cave, near SendServerToPlayerMessage (server->client messaging)."
+size    = 15
+fill    = 0x90
+sig     = "bb24190083c4048bc75f5e5d5bc21400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00567EE1"
+sig_match_addr = "0x00567ED1"
+
+[[cave]]
+name    = "k1.after_get_class_level"
+purpose = "Small cave, near GetClassLevel (GetLevelByClass routine implementation)."
+size    = 15
+fill    = 0x90
+sig     = "a90000002bd10f98c0fec823c2c20800"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x005A50D1"
+sig_match_addr = "0x005A50C1"
+
+[[cave]]
+name    = "k1.after_get_max_player"
+purpose = "Small cave, near GetMaxPlayer (party-size accessor; the signature's leading bytes are a neighbouring pad, not code)."
+size    = 12
+fill    = 0x90
+sig     = "c390909090909090909090908a4104c3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x005D6694"
+sig_match_addr = "0x005D6684"
+
+[[cave]]
+name    = "k1.after_set_player_character_name"
+purpose = "Small cave, near SetPlayerCharacterName (PC name setter)."
+size    = 15
+fill    = 0x90
+sig     = "ffffc78690020000010000005ec20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x005F2B21"
+sig_match_addr = "0x005F2B11"
+
+[[cave]]
+name    = "k1.after_hide_mouse"
+purpose = "Small cave, near HideMouse (cursor visibility toggle)."
+size    = 15
+fill    = 0x90
+sig     = "02000085c97405e873a8deff5ec20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x0061F9F1"
+sig_match_addr = "0x0061F9E1"
+
+[[cave]]
+name    = "k1.after_spawn_room"
+purpose = "Small cave, near SpawnRoom (area room spawn)."
+size    = 12
+fill    = 0x90
+sig     = "24145f5b8bc65e64890d0000000083c414c20400"
+note    = "findsig(sig) + 20 (0x14) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00646174"
+sig_match_addr = "0x00646160"
+
+[[cave]]
+name    = "k1.after_get_up_down"
+purpose = "Small cave, near GetUpDown (scrollbar/slider accessor)."
+size    = 12
+fill    = 0x90
+sig     = "894110c20400909090909090d94110c3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00679714"
+sig_match_addr = "0x00679704"
+
+[[cave]]
+name    = "k1.after_set_head_item"
+purpose = "Small cave, near SetHeadItem (creature headgear equip)."
+size    = 15
+fill    = 0x90
+sig     = "41f88b50088b44240489440a40c20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x00699CF1"
+sig_match_addr = "0x00699CE1"
+
+[[cave]]
+name    = "k1.after_draw"
+purpose = "Small cave, near Draw (a GUI element's Draw method (class not identified by name alone))."
+size    = 14
+fill    = 0x90
+sig     = "2410528bcbe87493d4ff5f5e5bc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x006C23F2"
+sig_match_addr = "0x006C23E2"
+
+[[cave]]
+name    = "k1.after_handle_input_event"
+purpose = "Small cave, near HandleInputEvent (GUI input dispatch)."
+size    = 13
+fill    = 0x90
+sig     = "c2080050518bcee8f1d8d1ff5ec20800"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k1_gog_103"
+addr  = "0x006EC573"
+sig_match_addr = "0x006EC563"
+
 # --- KOTOR 2 GOG Aspyr Windows ------------------------------------------------
 
 [[cave]]
@@ -119,6 +362,141 @@ build = "k2_gog_aspyr"
 addr  = "0x0040D6F1"
 sig_match_addr = "0x0040D6E1"
 
+# Second-pass entries, same exhaustive-scan-then-curate method as the K1
+# section above: 3,501 filler runs found, 2,127 anchored on a real
+# namespace-qualified name, this manifest carries a curated, individually
+# re-verified sample.
+
+[[cave]]
+name    = "k2.after_app_manager_ctor"
+purpose = "Small cave, near CAppManager (app-manager constructor)."
+size    = 15
+fill    = 0xCC
+sig     = "00008b45d08b4df464890d00000000598be55dc3"
+note    = "findsig(sig) + 20 (0x14) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x00401871"
+sig_match_addr = "0x0040185D"
+
+[[cave]]
+name    = "k2.after_clear_party"
+purpose = "Small cave, near ClearParty (party-roster reset)."
+size    = 13
+fill    = 0xCC
+sig     = "7febd78b4df4c701000000008be55dc3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x00479903"
+sig_match_addr = "0x004798F3"
+
+[[cave]]
+name    = "k2.after_combat_information_node_ctor"
+purpose = "Small cave, near CCombatInformationNode (combat-log node constructor)."
+size    = 13
+fill    = 0xCC
+sig     = "8b45f88a4dff8848048b45f88be55dc3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x00509013"
+sig_match_addr = "0x00509003"
+
+[[cave]]
+name    = "k2.after_on_force_speed"
+purpose = "Small cave, near OnForceSpeed (Force Speed power handler)."
+size    = 12
+fill    = 0xCC
+sig     = "c7814c210000010000008be55dc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x0056B654"
+sig_match_addr = "0x0056B644"
+
+[[cave]]
+name    = "k2.after_gui_main_chargen_ctor"
+purpose = "Small cave, near CSWGuiMainCharGen (character-generation GUI constructor)."
+size    = 12
+fill    = 0xCC
+sig     = "ff8b853cfeffff8b4df464890d00000000598be55dc20c00"
+note    = "findsig(sig) + 24 (0x18) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x005ED334"
+sig_match_addr = "0x005ED31C"
+
+[[cave]]
+name    = "k2.after_play_3d_one_shot_sound"
+purpose = "Small cave, near Play3DOneShotSound (positional one-shot sound playback)."
+size    = 14
+fill    = 0xCC
+sig     = "09e808caffffeb0233c08be55dc22800"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x0063AA92"
+sig_match_addr = "0x0063AA82"
+
+[[cave]]
+name    = "k2.after_get_visible_list_element"
+purpose = "Small cave, near GetVisibleListElement (GUI list-view accessor)."
+size    = 12
+fill    = 0xCC
+sig     = "fc8b0482eb04ebb233c08be55dc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x006DC3E4"
+sig_match_addr = "0x006DC3D4"
+
+[[cave]]
+name    = "k2.after_get_linked_object"
+purpose = "Small cave, near GetLinkedObject (door/trigger link accessor)."
+size    = 13
+fill    = 0xCC
+sig     = "f88b4210ffd08945fc8b45fc8be55dc3"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x00768B13"
+sig_match_addr = "0x00768B03"
+
+[[cave]]
+name    = "k2.after_create_cube_texture"
+purpose = "Small cave, near CreateCubeTexture (D3D cube-texture creation)."
+size    = 13
+fill    = 0xCC
+sig     = "8b55b05268012800006813850000ff15905398008be55dc3"
+note    = "findsig(sig) + 24 (0x18) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x00825A23"
+sig_match_addr = "0x00825A0B"
+
+[[cave]]
+name    = "k2.after_get_global_point_wind"
+purpose = "Small cave, near GetGlobalPointWind (environmental wind-at-point query)."
+size    = 12
+fill    = 0xCC
+sig     = "4dfce8150000008b45088be55dc20c00"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_gog_aspyr"
+addr  = "0x008FEFD4"
+sig_match_addr = "0x008FEFC4"
+
 # --- KOTOR 2 Steam Aspyr Windows ----------------------------------------------
 #
 # This build is only 57% natively named (see PR history on
@@ -143,6 +521,92 @@ match; findsig(sig) + 40 (0x28) bytes = cave start."""
 build = "k2_steam_aspyr"
 addr  = "0x00459771"
 sig_match_addr = "0x00459749"
+
+# Second-pass entries. This build's own low namespace-qualified naming rate
+# (57% overall, mostly library symbols per the note above) means the
+# exhaustive filler-run scan (3,509 runs found) turned up far fewer
+# real-name-anchored candidates than the K1/K2-GOG builds -- only 35 total,
+# against their 1,678 and 2,127. All 35 were checked; the ones below are the
+# individually re-verified subset, and every one is still library code
+# (MSVC STL/MFC), not engine-specific, same caveat as GetMargins above.
+
+[[cave]]
+name    = "k2_steam.after_getfacet"
+purpose = "Small cave, near _Getfacet (MSVC STL locale facet lookup; library code, not engine-specific)."
+size    = 12
+fill    = 0xCC
+sig     = "c745ec000000008b45ec8be55dc20400"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x00405C24"
+sig_match_addr = "0x00405C14"
+
+[[cave]]
+name    = "k2_steam.after_statistics_1"
+purpose = "Small cave, near Statistics (MFC diagnostic Statistics() overload #1; library code)."
+size    = 12
+fill    = 0xCC
+sig     = "45fc8b4804e832d301008be55dc20c00"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x0051CB04"
+sig_match_addr = "0x0051CAF4"
+
+[[cave]]
+name    = "k2_steam.after_status_bar_ctor"
+purpose = "Small cave, near CStatusBar (MFC status-bar constructor; library code)."
+size    = 15
+fill    = 0xCC
+sig     = "2c000000008b4dfcc74134000000008b55fcc74238000000008b45fc8be55dc3"
+note    = "findsig(sig) + 32 (0x20) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x00722941"
+sig_match_addr = "0x00722921"
+
+[[cave]]
+name    = "k2_steam.after_statistics_2"
+purpose = "Small cave, near Statistics (MFC diagnostic Statistics() overload #2; library code)."
+size    = 12
+fill    = 0xCC
+sig     = "45fc8b4804e8a2efffff8be55dc20c00"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x0072FDD4"
+sig_match_addr = "0x0072FDC4"
+
+[[cave]]
+name    = "k2_steam.after_statistics_3"
+purpose = "Small cave, near Statistics (MFC diagnostic Statistics() overload #3; library code)."
+size    = 12
+fill    = 0xCC
+sig     = "45fc8b4804e8125f04008be55dc20c00"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x0073F714"
+sig_match_addr = "0x0073F704"
+
+[[cave]]
+name    = "k2_steam.after_statistics_4"
+purpose = "Small cave, near Statistics (MFC diagnostic Statistics() overload #4; library code)."
+size    = 12
+fill    = 0xCC
+sig     = "45fc8b4804e852c105008be55dc20c00"
+note    = "findsig(sig) + 16 (0x10) bytes = cave start."
+
+[[cave.verified]]
+build = "k2_steam_aspyr"
+addr  = "0x00740464"
+sig_match_addr = "0x00740454"
 
 # --- KOTOR 2 Linux ELF: no viable cave found ----------------------------------
 #
