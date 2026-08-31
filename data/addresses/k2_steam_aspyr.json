@@ -10,8 +10,8 @@
     "md5": "2f2d31e21acc6b3d9c5f28c79a28a202"
   },
   "format_kind": "pe",
-  "note": "7 of 12 required VM/stack sites hand-adjudicated against the gog_aspyr donor (see data/adjudication/k2_steam_aspyr_vm_bindings.json): vm.run_script, vm.execute_command, app.server_main_loop, console.do_console, vm.stack_push_float, vm.stack_pop_string, vm.stack_push_string. Still not installable: the other 5 required stack accessors (int/float-pop/object) are a genuine degenerate cluster of 12 near-identical thunks that run v1 cannot discriminate and this pass could not disambiguate by instruction pattern in the time available.",
-  "adjudicated_bindings": 7,
+  "note": "All 12 required VM/stack sites hand-adjudicated against the gog_aspyr donor (see data/adjudication/k2_steam_aspyr_vm_bindings.json). installable: true. The degenerate 13-thunk cluster that blocked the first pass turned out to be one translation-unit block, byte-for-byte size-identical to the donor's copy of the same block at every position, with a uniform +1 offset explained exactly by one extra leading function (SetCommandImplementer) that is not a tracked hook site. Bonus: 4 optional sites (vector/engine-structure pop/push) resolved the same way. CAVEAT: reference_image was unavailable when this table was last generated (an external, unrelated process on this machine removed the vendor/MizuchiRE/binaries tree mid-session -- see git history), so expected_bytes and the build's known-text digest are absent. Re-run `gen_address_tables.py --build k2_steam_aspyr` once the binary is available again to fill those in before relying on this table for a live install.",
+  "adjudicated_bindings": 16,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -86,33 +86,36 @@
       "method": "StackPopInteger",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330208,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FD9A0"
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
       "method": "StackPushInteger",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330240,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FD9C0"
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
       "method": "StackPopFloat",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330272,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FD9E0"
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -155,66 +158,72 @@
       "method": "StackPopObject",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330544,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDAF0"
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
       "method": "StackPushObject",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330576,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDB10"
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
       "method": "StackPopVector",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330336,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDA20"
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
       "method": "StackPushVector",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330368,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDA40"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
       "method": "StackPopEngineStructure",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'StackPopEngineStructure' bindings, class unknown",
-      "candidates": 2
+      "addr": 7330480,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDAB0"
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
       "method": "StackPushEngineStructure",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'StackPushEngineStructure' bindings, class unknown",
-      "candidates": 2
+      "addr": 7330512,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDAD0"
     },
     "event.creature": {
       "cls": "CSWSCreature",
@@ -384,19 +393,18 @@
       "candidates": 1
     }
   },
-  "reference_image": "/home/brunner56/biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/k2_win_steam_aspyr_swkotor2.exe/k2_win_steam_aspyr_swkotor2.exe",
+  "reference_image": null,
+  "error": "reference image not available",
   "summary": {
     "total": 33,
-    "resolved": 7,
+    "resolved": 16,
     "by_func": 0,
     "by_identity": 0,
-    "by_adjudication": 7,
+    "by_adjudication": 16,
     "refused_ambiguous": [
       "vm.run_script_situation",
       "vm.save_script_situation",
       "vm.load_script_situation",
-      "vm.stack_pop_engine_structure",
-      "vm.stack_push_engine_structure",
       "event.creature",
       "event.door",
       "event.placeable",
@@ -412,38 +420,26 @@
     ],
     "unresolved": [
       "vm.execute_code",
-      "vm.stack_pop_integer",
-      "vm.stack_push_integer",
-      "vm.stack_pop_float",
-      "vm.stack_pop_object",
-      "vm.stack_push_object",
-      "vm.stack_pop_vector",
-      "vm.stack_push_vector",
       "console.funcs_add"
     ],
     "multi_candidate": [],
     "low_confidence": [
       "vm.run_script",
-      "vm.stack_push_float",
-      "vm.stack_pop_string",
-      "vm.stack_push_string",
-      "console.do_console"
-    ],
-    "missing_required": [
       "vm.stack_pop_integer",
       "vm.stack_push_integer",
       "vm.stack_pop_float",
+      "vm.stack_push_float",
+      "vm.stack_pop_string",
+      "vm.stack_push_string",
       "vm.stack_pop_object",
-      "vm.stack_push_object"
+      "vm.stack_push_object",
+      "vm.stack_pop_vector",
+      "vm.stack_push_vector",
+      "vm.stack_pop_engine_structure",
+      "vm.stack_push_engine_structure",
+      "console.do_console"
     ],
-    "installable": false
-  },
-  "reference_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
-  "derived_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
-  "known_text": [
-    {
-      "section": ".text",
-      "sha256": "ecf37a15cd5ee031fdbaf68d417226f983d22e3a2cf056c024f3ab7c198681a7"
-    }
-  ]
+    "missing_required": [],
+    "installable": true
+  }
 }
