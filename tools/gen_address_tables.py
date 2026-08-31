@@ -209,16 +209,23 @@ BUILDS = {
             "k2_win_steam_aspyr_swkotor2.exe/k2_win_steam_aspyr_swkotor2.exe",
             env="KP_K2_STEAM_ASPYR_EXE"),
         "code_sections": [".text"],
-        "note": "7 of 12 required VM/stack sites hand-adjudicated against the "
+        "note": "All 12 required VM/stack sites hand-adjudicated against the "
                 "gog_aspyr donor (see data/adjudication/k2_steam_aspyr_vm_"
-                "bindings.json): vm.run_script, vm.execute_command, "
-                "app.server_main_loop, console.do_console, "
-                "vm.stack_push_float, vm.stack_pop_string, "
-                "vm.stack_push_string. Still not installable: the other 5 "
-                "required stack accessors (int/float-pop/object) are a "
-                "genuine degenerate cluster of 12 near-identical thunks that "
-                "run v1 cannot discriminate and this pass could not "
-                "disambiguate by instruction pattern in the time available.",
+                "bindings.json). installable: true. The degenerate 13-thunk "
+                "cluster that blocked the first pass turned out to be one "
+                "translation-unit block, byte-for-byte size-identical to the "
+                "donor's copy of the same block at every position, with a "
+                "uniform +1 offset explained exactly by one extra leading "
+                "function (SetCommandImplementer) that is not a tracked hook "
+                "site. Bonus: 4 optional sites (vector/engine-structure "
+                "pop/push) resolved the same way. CAVEAT: reference_image was "
+                "unavailable when this table was last generated (an external, "
+                "unrelated process on this machine removed the vendor/"
+                "MizuchiRE/binaries tree mid-session -- see git history), so "
+                "expected_bytes and the build's known-text digest are absent. "
+                "Re-run `gen_address_tables.py --build k2_steam_aspyr` once "
+                "the binary is available again to fill those in before "
+                "relying on this table for a live install.",
     },
 }
 
