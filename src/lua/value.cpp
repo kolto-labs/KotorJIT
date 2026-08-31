@@ -1,6 +1,7 @@
 #include "lua/value.hpp"
 
 #include <cerrno>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
@@ -87,6 +88,13 @@ ConvertResult convert(lua_State* L, int index, events::ValueType want, Value& ou
     case events::ValueType::Int: {
         double n = 0.0;
         if (!slot_as_number(L, index, n)) return ConvertResult::WrongType;
+        // NaN/Inf/out-of-range casts to int64_t are undefined behaviour. -2^63
+        // and 2^63 are both exactly representable in a double, so this range
+        // check is exact, not an approximation.
+        constexpr double kInt64Min = -9223372036854775808.0;
+        constexpr double kInt64MaxExclusive = 9223372036854775808.0;
+        if (!std::isfinite(n) || n < kInt64Min || n >= kInt64MaxExclusive)
+            return ConvertResult::WrongType;
         out = Value::integer(static_cast<std::int64_t>(n));
         return ConvertResult::Ok;
     }
@@ -101,7 +109,11 @@ ConvertResult convert(lua_State* L, int index, events::ValueType want, Value& ou
     case events::ValueType::Object: {
         double n = 0.0;
         if (!slot_as_number(L, index, n)) return ConvertResult::WrongType;
-        if (n < 0.0) return ConvertResult::WrongType;
+        // NaN compares false against everything, including `n < 0.0`, so it
+        // slipped past the old guard; !isfinite catches NaN and +-Inf both.
+        // Upper bound is UINT32_MAX, matching api/entity.cpp's object_id_at.
+        if (!std::isfinite(n) || n < 0.0 || n > 4294967295.0)
+            return ConvertResult::WrongType;
         out = Value::object(static_cast<std::uint32_t>(n));
         return ConvertResult::Ok;
     }

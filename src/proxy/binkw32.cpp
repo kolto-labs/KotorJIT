@@ -13,8 +13,9 @@
 // place.
 //
 // This does NOT install hooks. At DllMain time the game's code section may still
-// be ciphertext, and the loader lock is held. All the real work happens on a
-// worker thread the runtime starts for itself.
+// be ciphertext, and the loader lock is held -- so even loading kphasor.dll is
+// deferred to a worker thread here; the real work happens on a further worker
+// thread the runtime starts for itself once it is in.
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -52,6 +53,11 @@ void load_runtime() {
     // game, just without scripting -- which beats refusing to start.
 }
 
+DWORD WINAPI worker(LPVOID) {
+    load_runtime();
+    return 0;
+}
+
 }  // namespace
 
 BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
@@ -60,7 +66,17 @@ BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
         // notifications off keeps us out of the loader lock on every thread the
         // game creates.
         DisableThreadLibraryCalls(self);
-        load_runtime();
+
+        // LoadLibraryA deadlocks against the loader lock DllMain already holds
+        // -- the same rule runtime/dllmain.cpp documents for kphasor.dll's own
+        // entry point. This proxy happened to be safe only because kphasor.dll's
+        // DllMain defers its own work to a worker thread and returns quickly;
+        // that safety was incidental to this file, not guaranteed by it. Defer
+        // here too, the same way: CreateThread is documented as safe under the
+        // loader lock, and the thread does not start running until the lock is
+        // released.
+        HANDLE t = CreateThread(nullptr, 0, &worker, nullptr, 0, nullptr);
+        if (t != nullptr) CloseHandle(t);
     }
     return TRUE;
 }
