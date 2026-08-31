@@ -7,6 +7,15 @@
 #include "platform/platform.hpp"
 #include "version.hpp"
 
+#if defined(_WIN32)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#else
+#include <ctime>
+#endif
+
 extern "C" {
 #include "lua.h"
 #include "lauxlib.h"
@@ -181,6 +190,38 @@ void promote_canonical(lua_State* L, const char* name) {
     if (!have) alias_in_table(L, name, name);
 }
 
+// ------------------------------------------------------------- kp.gamedir ---
+
+// The one upvalue is the directory string itself, computed once by runtime.cpp
+// (which already has it from Config) rather than recomputed here. See
+// data/hostapi.toml's kp.gamedir entry: "the OS rather than reconstructed" --
+// GetModuleName/GetModuleFileName answer a different question, the module
+// resref, not a filesystem path.
+int l_kp_gamedir(lua_State* L) {
+    lua_pushvalue(L, lua_upvalueindex(1));
+    return 1;
+}
+
+// ---------------------------------------------------------------- kp.time ---
+
+// Wall-clock milliseconds, monotonic, and running while the game is paused --
+// unlike kp.timer.clock, which is the server tick and stops with it. See
+// data/hostapi.toml's kp.time entry.
+int l_kp_time(lua_State* L) {
+#if defined(_WIN32)
+    // GetTickCount64, not GetTickCount: the 32-bit form wraps every 49.7 days,
+    // which is a real uptime for a game left running, and the 64-bit form has
+    // been available since Vista at no extra linkage cost.
+    lua_pushnumber(L, static_cast<lua_Number>(GetTickCount64()));
+#else
+    struct timespec ts {};
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    lua_pushnumber(L, static_cast<lua_Number>(ts.tv_sec) * 1000.0 +
+                       static_cast<lua_Number>(ts.tv_nsec) / 1.0e6);
+#endif
+    return 1;
+}
+
 }  // namespace
 
 const char* event_for_constant(int constant) {
@@ -204,7 +245,7 @@ void install_print(lua_State* L) {
     lua_setglobal(L, "print");
 }
 
-void install(lua_State* L) {
+void install(lua_State* L, const std::string& game_dir) {
     // 1. The cb table of event constants.
     lua_createtable(L, 0, int(kEventCount));
     for (unsigned i = 0; i < kEventCount; ++i) {
@@ -254,6 +295,14 @@ void install(lua_State* L) {
     }
     lua_pushstring(L, KP_VERSION);
     lua_setfield(L, -2, "version");
+
+    lua_pushstring(L, game_dir.c_str());
+    lua_pushcclosure(L, l_kp_gamedir, 1);
+    lua_setfield(L, -2, "gamedir");
+
+    lua_pushcfunction(L, l_kp_time);
+    lua_setfield(L, -2, "time");
+
     lua_pop(L, 1);
 
     // 4. Lua version shims. LuaJIT is 5.1 with parts of 5.2, so most of what the
