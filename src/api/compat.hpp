@@ -14,6 +14,8 @@
 // because a script that has to ask for compatibility has not got it.
 #pragma once
 
+#include <string>
+
 struct lua_State;
 
 namespace kp::lua { class Script; }
@@ -23,7 +25,13 @@ namespace kp::api::compat {
 // Aliases, the cb table, register_callback, and the host identity globals.
 // Call after every other module has registered, since an alias can only point
 // at a function that already exists.
-void install(lua_State*);
+//
+// `game_dir` becomes kp.gamedir()'s return value, captured once as a Lua
+// upvalue rather than recomputed per call: the directory the executable lives
+// in cannot change during a process's lifetime, and runtime.cpp already knows
+// it from Config, which is where every other module's install() also gets its
+// state.
+void install(lua_State*, const std::string& game_dir);
 
 // Route Lua's print through the runtime log.
 //
