@@ -10,7 +10,7 @@ You need a 32-bit Windows cross-compiler and LuaJIT built for that target.
 sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686
 
 git clone --branch v2.1 https://github.com/LuaJIT/LuaJIT third_party/luajit
-make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows
+make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows BUILDMODE=static
 
 cmake -S . -B build
 cmake --build build

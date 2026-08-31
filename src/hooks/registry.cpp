@@ -33,14 +33,41 @@ struct JValue {
     std::vector<JValue> array;
     std::vector<std::pair<std::string, JValue>> object;
 
-    const JValue* member(std::string_view key) const {
-        if (type != JType::Object) return nullptr;
-        for (const auto& [k, v] : object) {
-            if (k == key) return &v;
-        }
-        return nullptr;
-    }
+    // JValue is self-referential through std::vector<std::pair<std::string,
+    // JValue>>. std::vector alone tolerates an incomplete element type, but
+    // std::pair's constructors are SFINAE-conditioned on
+    // is_implicitly_default_constructible<JValue>, which needs JValue
+    // complete to answer -- and an implicitly-generated destructor is
+    // synthesized (needing that answer) at the point the class finishes, not
+    // lazily. GCC's libstdc++ tolerates the ordering here; Clang does not.
+    // Declaring these five out-of-line (defaulted after the closing brace,
+    // where JValue is unambiguously complete) defers their generation to
+    // that point instead. member() had the same problem for the same
+    // reason and gets the same fix.
+    JValue();
+    JValue(const JValue&);
+    JValue(JValue&&) noexcept;
+    JValue& operator=(const JValue&);
+    JValue& operator=(JValue&&) noexcept;
+    ~JValue();
+
+    const JValue* member(std::string_view key) const;
 };
+
+JValue::JValue() = default;
+JValue::JValue(const JValue&) = default;
+JValue::JValue(JValue&&) noexcept = default;
+JValue& JValue::operator=(const JValue&) = default;
+JValue& JValue::operator=(JValue&&) noexcept = default;
+JValue::~JValue() = default;
+
+const JValue* JValue::member(std::string_view key) const {
+    if (type != JType::Object) return nullptr;
+    for (const auto& kv : object) {
+        if (kv.first == key) return &kv.second;
+    }
+    return nullptr;
+}
 
 class JParser {
 public:

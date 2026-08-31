@@ -45,9 +45,18 @@ target_link_options(kp_support PUBLIC -m32)
 # The dependency is taken from the kphasor target, not from the archive path: a
 # custom-command OUTPUT belongs to the fragment that declared it, and claiming
 # the same output twice is a generator error rather than a shared rule.
+#
+# Not gated on `TARGET kphasor` here, despite the reasoning above: that check
+# is always false at this point in the script, since runtime.cmake (where
+# kphasor is defined) is included AFTER this fragment in CMakeLists.txt. That
+# silently skipped this whole target on every from-scratch configure -- the
+# STATUS message below used to fire unconditionally, never the executable.
+# add_dependencies still resolves the target correctly: CMake matches
+# dependency names at generate time, once every include() in this directory
+# has run, not eagerly at the line where add_dependencies is called.
 set(KP_SUPPORT_LUAJIT "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a")
 
-if(UNIX AND NOT WIN32 AND TARGET kphasor)
+if(UNIX AND NOT WIN32)
     add_executable(kp_supporttest
         "${KP_API_TOOLS}/kp_supporttest.cpp"
         ${KP_SUPPORT_SOURCES}
@@ -65,9 +74,6 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
     target_link_options(kp_supporttest PRIVATE -m32)
     add_dependencies(kp_supporttest kphasor)
     target_link_libraries(kp_supporttest PRIVATE "${KP_SUPPORT_LUAJIT}" m dl)
-elseif(UNIX AND NOT WIN32)
-    message(STATUS "kp_supporttest needs the native LuaJIT that the kphasor "
-                   "target builds; include src/runtime/runtime.cmake first")
 endif()
 
 # --- the Windows half --------------------------------------------------------
