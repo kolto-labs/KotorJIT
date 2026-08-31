@@ -127,7 +127,18 @@ bool read_headers(const std::uint8_t* p, std::size_t n, Headers& out) {
 
     out.loads.clear();
     for (std::uint16_t i = 0; i < out.phnum; ++i) {
-        const std::size_t o = out.phoff + static_cast<std::size_t>(out.phentsize) * i;
+        // phoff is attacker-controlled and this build's size_t is 32-bit, so
+        // "phoff + phentsize*i" can wrap to a small in-bounds-looking value --
+        // the same shape of bug as pe::looks_like above, but here it's the
+        // shared parser every caller (loaded_image.cpp, parse.cpp, and
+        // load.cpp's own dump_elf) reaches, not just one re-parse of it.
+        // Validate the widest field this entry reads (flags, at o+24, 4
+        // bytes) in uint64_t before ever forming a size_t offset, so u32_at's
+        // own (also 32-bit) internal bounds check can't be fooled by a wrap.
+        const std::uint64_t o64 = static_cast<std::uint64_t>(out.phoff) +
+                                  static_cast<std::uint64_t>(out.phentsize) * i;
+        if (o64 + 28 > n) return false;
+        const std::size_t o = static_cast<std::size_t>(o64);
         Segment s;
         if (!u32_at(p, n, o + 0, s.type)) return false;
         if (s.type != kPtLoad) continue;
