@@ -155,7 +155,12 @@ BUILDS = {
                 "30101, named_count 14211) -- far short of k2_gog_aspyr's 95% "
                 "-- so almost every site needs the identity/adjudication layer "
                 "this build has none of yet, same as k2_steam_linux's original "
-                "55-binding pass. Not installable until that work is done.",
+                "55-binding pass. Checked: the run v1 match from the "
+                "k1_gog_103 donor has ZERO candidates at all for vm.run_script "
+                "on this binary, unlike k2_steam_aspyr where the same "
+                "technique found real evidence -- this build needs its own "
+                "from-scratch RE pass, not a donor-matching shortcut. Not "
+                "installable until that work is done.",
     },
     "k2_win_cd_10": {
         "symbol_source": "TSL__k2_win_CD_1.0_swkotor2.exe",
@@ -170,8 +175,14 @@ BUILDS = {
         "note": "Pre-Aspyr retail CD release, before the 1.0b patch. Registered "
                 "for build identification only -- 61% named (func_count 22502, "
                 "named_count 13740), so this needs the identity/adjudication "
-                "layer, same as k2_steam_linux's original pass. Not "
-                "installable until that work is done.",
+                "layer, same as k2_steam_linux's original pass. Checked: the "
+                "run v1 match from the k2_gog_aspyr donor has ZERO candidates "
+                "for vm.run_script on this binary -- this build's own 15 "
+                "natively-named functions are all Windows DLL import-table "
+                "entries (GetTickCount, DirectInput8Create, ...), none of them "
+                "engine classes, so there is no local ground truth to "
+                "calibrate a matcher against here at all. Not installable "
+                "until that work is done.",
     },
     "k2_win_cd_10b": {
         "symbol_source": "TSL__k2_win_CD_1.0b_swkotor2.exe",
@@ -198,11 +209,16 @@ BUILDS = {
             "k2_win_steam_aspyr_swkotor2.exe/k2_win_steam_aspyr_swkotor2.exe",
             env="KP_K2_STEAM_ASPYR_EXE"),
         "code_sections": [".text"],
-        "note": "Registered for build identification only. 57% named "
-                "(func_count 26965, named_count 15311) -- unlike its GOG "
-                "sibling, this Steam build needs the identity/adjudication "
-                "layer before it resolves. Not installable until that work "
-                "is done.",
+        "note": "7 of 12 required VM/stack sites hand-adjudicated against the "
+                "gog_aspyr donor (see data/adjudication/k2_steam_aspyr_vm_"
+                "bindings.json): vm.run_script, vm.execute_command, "
+                "app.server_main_loop, console.do_console, "
+                "vm.stack_push_float, vm.stack_pop_string, "
+                "vm.stack_push_string. Still not installable: the other 5 "
+                "required stack accessors (int/float-pop/object) are a "
+                "genuine degenerate cluster of 12 near-identical thunks that "
+                "run v1 cannot discriminate and this pass could not "
+                "disambiguate by instruction pattern in the time available.",
     },
 }
 
