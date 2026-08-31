@@ -113,16 +113,27 @@ void push_argument(lua_State* L, const Routine& r, std::uint8_t param, int index
     switch (p.type) {
     case Type::Int:
     case Type::Object: {
-        int v;
         if (index == 0) {
-            v = def->i;
-        } else if (p.type == Type::Object) {
-            v = int(luaL_checkinteger(L, index));
-        } else {
-            v = int(luaL_checkinteger(L, index));
+            const int v = def->i;
+            if (p.type == Type::Object) vm.push_object(self, std::uint32_t(v));
+            else                        vm.push_int(self, v);
+            return;
         }
-        if (p.type == Type::Object) vm.push_object(self, std::uint32_t(v));
-        else                        vm.push_int(self, v);
+        if (p.type == Type::Object) {
+            // Object ids travel as Lua numbers, never lua_Integer: bit 31
+            // selects one of the engine's two id spaces, so a character id
+            // has the high bit set and would not survive a 32-bit signed
+            // round-trip. Same convention as api/entity.cpp's
+            // push_object_id/object_id_at.
+            const lua_Number n = luaL_checknumber(L, index);
+            if (n < 0.0 || n > 4294967295.0) {
+                luaL_error(L, "%s: argument %d (%s %s) is not a valid object id",
+                           r.name, int(param) + 1, type_name(p.type), p.name);
+            }
+            vm.push_object(self, std::uint32_t(n));
+        } else {
+            vm.push_int(self, int(luaL_checkinteger(L, index)));
+        }
         return;
     }
     case Type::Float: {
@@ -191,7 +202,9 @@ int push_result(lua_State* L, const Routine& r) {
     case Type::Object: {
         std::uint32_t v = 0;
         if (!vm.pop_object(self, &v)) return 0;
-        lua_pushinteger(L, lua_Integer(v));
+        // See push_argument: object ids must travel as Lua numbers, not
+        // lua_Integer, or a high-bit id round-trips through Lua as negative.
+        lua_pushnumber(L, static_cast<lua_Number>(v));
         return 1;
     }
     case Type::Float: {

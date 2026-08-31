@@ -374,19 +374,15 @@ bool Runtime::install() {
             set->add({o.site, o.detour, {}});
     }
 
-    std::string error;
-    if (!set->install(*table_, runtime_base_, error)) {
-        failure_ = "hook install: " + error;
-        return false;
-    }
-
-    hooks_ = std::move(set);
-    bind_originals(*hooks_);
-    log("installed %zu hooks", hooks_->installed_count());
-
     // The routine bridge's addresses come straight from the table we just
-    // resolved. Doing it here means a missing site is reported while someone is
-    // reading the install log, not on the first script the game happens to run.
+    // resolved, so this needs no installed hook -- and it must run BEFORE
+    // set->install() below. The hooked vm.run_script can start firing on the
+    // game's own thread the moment install() patches it in, and its body
+    // (capture_vm) reads g_sites unconditionally with no "not ready yet"
+    // gate. Publishing g_sites afterward left a window where a heartbeat
+    // script bound the VM against a zeroed VmSites, failed, and latched
+    // g_vm_bound permanently -- killing every kotor.* routine call for the
+    // rest of the process with no retry.
     {
         api::VmSites sites;
         auto at = [&](const char* name) -> std::uintptr_t {
@@ -418,6 +414,16 @@ bool Runtime::install() {
             (sites.stack_push_engine_structure ? 1 : 0) +
             (sites.stack_pop_engine_structure ? 1 : 0));
     }
+
+    std::string error;
+    if (!set->install(*table_, runtime_base_, error)) {
+        failure_ = "hook install: " + error;
+        return false;
+    }
+
+    hooks_ = std::move(set);
+    bind_originals(*hooks_);
+    log("installed %zu hooks", hooks_->installed_count());
     return true;
 }
 
