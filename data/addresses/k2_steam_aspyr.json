@@ -10,19 +10,20 @@
     "md5": "2f2d31e21acc6b3d9c5f28c79a28a202"
   },
   "format_kind": "pe",
-  "note": "Registered for build identification only. 57% named (func_count 26965, named_count 15311) -- unlike its GOG sibling, this Steam build needs the identity/adjudication layer before it resolves. Not installable until that work is done.",
-  "adjudicated_bindings": 0,
+  "note": "7 of 12 required VM/stack sites hand-adjudicated against the gog_aspyr donor (see data/adjudication/k2_steam_aspyr_vm_bindings.json): vm.run_script, vm.execute_command, app.server_main_loop, console.do_console, vm.stack_push_float, vm.stack_pop_string, vm.stack_push_string. Still not installable: the other 5 required stack accessors (int/float-pop/object) are a genuine degenerate cluster of 12 near-identical thunks that run v1 cannot discriminate and this pass could not disambiguate by instruction pattern in the time available.",
+  "adjudicated_bindings": 7,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
       "method": "RunScript",
       "kind": "detour",
       "required": true,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'RunScript' bindings, class unknown",
-      "candidates": 2
+      "addr": 7348896,
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x007022A0"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -51,11 +52,12 @@
       "method": "ExecuteCommand",
       "kind": "reference",
       "required": true,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'ExecuteCommand' bindings, class unknown",
-      "candidates": 1
+      "addr": 6721488,
+      "source": "adjudicated",
+      "confidence": 0.9,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x00668FD0"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -117,33 +119,36 @@
       "method": "StackPushFloat",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7330304,
+      "source": "adjudicated",
+      "confidence": 0.8,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDA00"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
       "method": "StackPopString",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'StackPopString' bindings, class unknown",
-      "candidates": 2
+      "addr": 7330416,
+      "source": "adjudicated",
+      "confidence": 0.6,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDA70"
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
       "method": "StackPushString",
       "kind": "call",
       "required": true,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'StackPushString' bindings, class unknown",
-      "candidates": 2
+      "addr": 7330448,
+      "source": "adjudicated",
+      "confidence": 0.6,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006FDA90"
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -326,11 +331,12 @@
       "method": "MainLoop",
       "kind": "detour",
       "required": true,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "4 bare 'MainLoop' bindings, class unknown",
-      "candidates": 4
+      "addr": 5453872,
+      "source": "adjudicated",
+      "confidence": 0.9,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x00533830"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -349,12 +355,11 @@
       "kind": "detour",
       "required": true,
       "addr": 4230880,
-      "source": "identity",
-      "confidence": 0.6386,
-      "method_detail": "match:v1:verify",
+      "source": "adjudicated",
+      "confidence": 0.85,
+      "method_detail": "hand-adjudicated",
       "candidates": 1,
-      "addr_hex": "0x00408EE0",
-      "expected_bytes": "558bec6aff680880940064a100000000"
+      "addr_hex": "0x00408EE0"
     },
     "console.funcs_add": {
       "cls": "",
@@ -380,28 +385,16 @@
     }
   },
   "reference_image": "/home/brunner56/biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/k2_win_steam_aspyr_swkotor2.exe/k2_win_steam_aspyr_swkotor2.exe",
-  "reference_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
-  "derived_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
-  "known_text": [
-    {
-      "section": ".text",
-      "sha256": "ecf37a15cd5ee031fdbaf68d417226f983d22e3a2cf056c024f3ab7c198681a7"
-    }
-  ],
   "summary": {
     "total": 33,
-    "resolved": 1,
+    "resolved": 7,
     "by_func": 0,
-    "by_identity": 1,
-    "by_adjudication": 0,
+    "by_identity": 0,
+    "by_adjudication": 7,
     "refused_ambiguous": [
-      "vm.run_script",
       "vm.run_script_situation",
-      "vm.execute_command",
       "vm.save_script_situation",
       "vm.load_script_situation",
-      "vm.stack_pop_string",
-      "vm.stack_push_string",
       "vm.stack_pop_engine_structure",
       "vm.stack_push_engine_structure",
       "event.creature",
@@ -414,7 +407,6 @@
       "event.aoe",
       "event.store",
       "event.waypoint",
-      "app.server_main_loop",
       "app.client_main_loop",
       "module.load_start"
     ],
@@ -423,7 +415,6 @@
       "vm.stack_pop_integer",
       "vm.stack_push_integer",
       "vm.stack_pop_float",
-      "vm.stack_push_float",
       "vm.stack_pop_object",
       "vm.stack_push_object",
       "vm.stack_pop_vector",
@@ -432,21 +423,27 @@
     ],
     "multi_candidate": [],
     "low_confidence": [
-      "console.do_console"
-    ],
-    "missing_required": [
       "vm.run_script",
-      "vm.execute_command",
-      "vm.stack_pop_integer",
-      "vm.stack_push_integer",
-      "vm.stack_pop_float",
       "vm.stack_push_float",
       "vm.stack_pop_string",
       "vm.stack_push_string",
+      "console.do_console"
+    ],
+    "missing_required": [
+      "vm.stack_pop_integer",
+      "vm.stack_push_integer",
+      "vm.stack_pop_float",
       "vm.stack_pop_object",
-      "vm.stack_push_object",
-      "app.server_main_loop"
+      "vm.stack_push_object"
     ],
     "installable": false
-  }
+  },
+  "reference_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
+  "derived_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
+  "known_text": [
+    {
+      "section": ".text",
+      "sha256": "ecf37a15cd5ee031fdbaf68d417226f983d22e3a2cf056c024f3ab7c198681a7"
+    }
+  ]
 }
