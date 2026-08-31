@@ -24,7 +24,12 @@
 namespace kp::image {
 namespace {
 
-std::uint32_t align_up(std::uint32_t v, std::uint32_t a) {
+// uint64_t on purpose: a crafted SectionAlignment/VirtualSize near UINT32_MAX
+// wraps this in 32-bit arithmetic, which previously undersized dump_pe's
+// output buffer while the section-body memcpy still used the real (unwrapped)
+// size -- a heap buffer overflow. Callers truncate back to uint32_t only after
+// dump_pe's own size cap has already rejected anything that wouldn't fit.
+std::uint64_t align_up(std::uint64_t v, std::uint64_t a) {
     if (a == 0) return v;
     return (v + a - 1) / a * a;
 }
@@ -174,14 +179,21 @@ bool dump_pe(const LoadedImage& img, const std::string& out_path, std::string& e
     // disassembler reads it directly. Imports are left as the loader resolved
     // them -- the IAT holds live pointers, not thunks -- which is correct for
     // analysis and would need rebuilding before the file could be run.
-    std::size_t total = h.size_of_headers;
+    std::uint64_t total = h.size_of_headers;
     for (const pe::SectionHeader& s : h.sections) {
-        const std::uint32_t raw = align_up(s.virtual_size != 0 ? s.virtual_size : s.size_of_raw_data,
-                                           h.section_alignment);
-        total = std::max<std::size_t>(total, static_cast<std::size_t>(s.virtual_address) + raw);
+        const std::uint32_t vsize = s.virtual_size != 0 ? s.virtual_size : s.size_of_raw_data;
+        const std::uint64_t raw = align_up(vsize, h.section_alignment);
+        total = std::max<std::uint64_t>(total, static_cast<std::uint64_t>(s.virtual_address) + raw);
+    }
+    // A legitimate KOTOR-era PE image is a few MB. Refuse anything absurd
+    // rather than let a crafted header drive a multi-gigabyte allocation.
+    constexpr std::uint64_t kMaxDumpSize = 256ull * 1024 * 1024;
+    if (total > kMaxDumpSize) {
+        error = "PE image would dump to an unreasonable size (" + std::to_string(total) + " bytes)";
+        return false;
     }
 
-    std::vector<std::uint8_t> file(total, 0);
+    std::vector<std::uint8_t> file(static_cast<std::size_t>(total), 0);
     std::vector<std::uint8_t> headers;
     if (!img.read_vector(img.base(), h.size_of_headers, headers)) {
         error = "cannot read the PE header block from the image";
@@ -190,14 +202,17 @@ bool dump_pe(const LoadedImage& img, const std::string& out_path, std::string& e
     std::memcpy(file.data(), headers.data(), std::min(headers.size(), file.size()));
 
     const std::size_t sec_table = h.pe_offset + 4 + 20 + h.optional_header_size;
+    const std::size_t falign_off = h.pe_offset + 4 + 20 + 36;
     std::uint32_t falign = h.section_alignment;
-    std::memcpy(file.data() + h.pe_offset + 4 + 20 + 36, &falign, 4);
+    if (falign_off + 4 <= file.size()) {
+        std::memcpy(file.data() + falign_off, &falign, 4);
+    }
 
     std::vector<std::uint8_t> body;
     for (std::size_t i = 0; i < h.sections.size(); ++i) {
         const pe::SectionHeader& s = h.sections[i];
         const std::uint32_t vsize = s.virtual_size != 0 ? s.virtual_size : s.size_of_raw_data;
-        const std::uint32_t raw = align_up(vsize, h.section_alignment);
+        const std::uint32_t raw = static_cast<std::uint32_t>(align_up(vsize, h.section_alignment));
         const std::size_t o = sec_table + 40u * i;
         if (o + 40 > file.size()) break;
         std::memcpy(file.data() + o + 16, &raw, 4);                    // SizeOfRawData
@@ -205,6 +220,7 @@ bool dump_pe(const LoadedImage& img, const std::string& out_path, std::string& e
 
         if (vsize == 0) continue;
         if (!img.read_vector(img.base() + s.virtual_address, vsize, body)) continue;  // leave zero fill
+        if (static_cast<std::uint64_t>(s.virtual_address) + body.size() > file.size()) continue;
         std::memcpy(file.data() + s.virtual_address, body.data(), body.size());
     }
     return write_all(out_path, file, error);
@@ -224,7 +240,10 @@ bool dump_elf(const LoadedImage& img, const std::string& out_path, std::string& 
     const std::uint16_t phnum     = static_cast<std::uint16_t>(ehdr[44] | (ehdr[45] << 8));
 
     std::vector<std::uint8_t> head;
-    if (!img.read_vector(img.base(), static_cast<std::size_t>(phoff) + phentsize * phnum, head)) {
+    // phentsize/phnum promote to (signed) int and can overflow before the
+    // size_t addition; cast phentsize first, matching parse.cpp's read_elf_headers.
+    if (!img.read_vector(img.base(), static_cast<std::size_t>(phoff) +
+                          static_cast<std::size_t>(phentsize) * phnum, head)) {
         error = "cannot read ELF program headers from the image";
         return false;
     }

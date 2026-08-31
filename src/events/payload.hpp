@@ -19,7 +19,10 @@ struct ScriptEventView {
     void* data = nullptr;
 };
 
-std::uint16_t script_event_type(const ScriptEventView&);
+// -1 when the payload is unreadable -- distinct from a genuine type 0
+// (several site kinds define a Heartbeat contract at type 0), so an
+// unreadable SIGNAL_EVENT payload does not get treated as a heartbeat.
+int script_event_type(const ScriptEventView&);
 int           script_event_int(const ScriptEventView&, int index);
 float         script_event_float(const ScriptEventView&, int index);
 std::uint32_t script_event_object(const ScriptEventView&, int index);
