@@ -78,6 +78,17 @@ local function i32(n) return u32(n) end
 -- IEEE-754 single precision, by hand: math.frexp/math.floor are the only
 -- primitives every Lua 5.1/LuaJIT build has that this needs.
 local function f32bits(x)
+    -- Without this, NaN/Inf falls through into math.frexp and the bit math
+    -- below, which produces a non-integer/out-of-range byte value -- u32()
+    -- then hands string.char a NaN and errors out of the whole script. This
+    -- can't reach the network today (drain_incoming rejects non-finite
+    -- coordinates before packing anything back out), but f32/f32bits is
+    -- also what broadcast() uses to send our OWN position, so a defensive
+    -- guard here is what stands between a freak non-finite engine read and
+    -- a crashed script rather than one skipped broadcast.
+    if x ~= x then return 0x7FC00000 end       -- canonical quiet NaN
+    if x == math.huge then return 0x7F800000 end
+    if x == -math.huge then return 0xFF800000 end
     if x == 0 then return (1 / x < 0) and 0x80000000 or 0 end
     local sign = 0
     if x < 0 then sign = 1; x = -x end
@@ -281,12 +292,25 @@ local function build_ghost_utc()
     }, "UTC ", "V3.2")
 end
 
+-- kp.gamedir is spec-only on this build (docs/user/api-status.md lists it
+-- under "Spec only (nil)"), so calling it returns nil rather than a path.
+-- Fall back to "." -- relative to the process's own working directory,
+-- which is the game install directory on every normal launch (Windows sets
+-- cwd to the exe's own folder, and so does Steam) -- so Override/ still
+-- resolves without a bound path API. Tries the real API first so this keeps
+-- working automatically if a future build binds it.
+local function game_dir()
+    if kp and kp.gamedir then
+        local ok, v = pcall(kp.gamedir)
+        if ok and type(v) == "string" and v ~= "" then return v end
+    end
+    return "."
+end
+
 -- Writes the template once. Returns "ready", "installed" (needs a restart to
 -- take effect), or "error". Idempotent: checks file presence before writing.
 local function ensure_ghost_template()
-    local dir = kp and kp.gamedir and kp.gamedir()
-    if not dir or dir == "" then return "error" end
-    local path = dir .. "/Override/" .. GHOST_TEMPLATE_RESREF .. ".utc"
+    local path = game_dir() .. "/Override/" .. GHOST_TEMPLATE_RESREF .. ".utc"
 
     local existing = io.open(path, "rb")
     if existing then existing:close(); return "ready" end
@@ -301,8 +325,13 @@ local function ensure_ghost_template()
         print("[mp] cannot write " .. path .. ": " .. tostring(err))
         return "error"
     end
-    f:write(bytes)
+    local ok_write = f:write(bytes)
     f:close()
+    if not ok_write then
+        os.remove(path)
+        print("[mp] short write to " .. path .. "; removed the partial file")
+        return "error"
+    end
     return "installed"
 end
 
@@ -338,6 +367,7 @@ if ffi_ok then
         int __stdcall ioctlsocket(SOCKET s, int32_t cmd, uint32_t *argp);
         uint16_t __stdcall htons(uint16_t hostshort);
         uint32_t __stdcall inet_addr(const char *cp);
+        char* __stdcall inet_ntoa(uint32_t in);
         int __stdcall WSAGetLastError(void);
         ]]
         ws2 = ffi.load("ws2_32")
@@ -363,16 +393,16 @@ local function udp_open(port)
     if ws2.WSAStartup(0x0202, wsadata) ~= 0 then return nil end
 
     local s = ws2.socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
-    if s == INVALID_SOCKET then return nil end
+    if s == INVALID_SOCKET then ws2.WSACleanup(); return nil end
 
     nb_mode = ffi.new("uint32_t[1]", 1)
     if ws2.ioctlsocket(s, FIONBIO, nb_mode) ~= 0 then
-        ws2.closesocket(s); return nil
+        ws2.closesocket(s); ws2.WSACleanup(); return nil
     end
 
     local a = make_sockaddr("0.0.0.0", port)
     if ws2.bind(s, a, ffi.sizeof(a)) ~= 0 then
-        ws2.closesocket(s); return nil
+        ws2.closesocket(s); ws2.WSACleanup(); return nil
     end
 
     recv_buf = ffi.new("char[?]", 2048)
@@ -389,14 +419,21 @@ local function udp_send(s, host, port, data)
     return ok
 end
 
--- Drains at most one datagram. Returns bytes, host_display or nil.
+-- Drains at most one datagram. Returns bytes, sender_host, sender_port, or
+-- nothing when there was nothing to read. The sender address matters: see
+-- drain_incoming, which refuses anything not from a configured peer.
 local function udp_recv(s)
     if not s then return nil end
     addr_len_arg[0] = ffi.sizeof(addr_in)
     local ok, n = pcall(ws2.recvfrom, s, recv_buf, recv_len_arg, 0, addr_in, addr_len_arg)
     if not ok or n == nil or n < 0 then return nil end
     if n == 0 then return nil end
-    return ffi.string(recv_buf, n)
+    local data = ffi.string(recv_buf, n)
+    local host_ok, host_ptr = pcall(ws2.inet_ntoa, addr_in.sin_addr)
+    local host = (host_ok and host_ptr ~= nil) and ffi.string(host_ptr) or nil
+    -- htons is its own inverse (a 16-bit byte swap), so it also decodes.
+    local port_ok, port = pcall(ws2.htons, addr_in.sin_port)
+    return data, host, port_ok and port or nil
 end
 
 -- =============================================================================
@@ -453,8 +490,18 @@ local peers = {}  -- client_id -> { host, port, seq, x,y,z,facing, area_tag, nam
 local ghost_status = "pending"
 local tick_count = 0
 
+-- kp.time is spec-only (nil) on this build, same as kp.gamedir above -- a
+-- bare `(kp and kp.time and kp.time()) or 0` would return 0 forever, which
+-- makes every peer-timeout comparison `0 - 0 > PEER_TIMEOUT_MS` false: peers
+-- would never expire. os.time() (whole seconds, always available) is coarser
+-- than a real millisecond clock but is enough for an 8-second timeout.
+-- Tries kp.time first so this upgrades automatically if it gets bound later.
 local function now_ms()
-    return (kp and kp.time and kp.time()) or 0
+    if kp and kp.time then
+        local ok, v = pcall(kp.time)
+        if ok and type(v) == "number" and v > 0 then return v end
+    end
+    return ((os.time and os.time()) or 0) * 1000
 end
 
 local function local_area_tag()
@@ -547,30 +594,65 @@ local function broadcast(my_area)
     end
 end
 
+-- host+port must exactly match a configured PEERS entry. This design is
+-- direct symmetric UDP with no rendezvous server, so for two players to
+-- reach each other at all, each side's LISTEN_PORT must already be reachable
+-- (a manual port-forward or the same LAN) -- there is no NAT-remapped-port
+-- case to tolerate here the way there would be for an outbound-only client.
+local function peer_allowed(host, port)
+    if not host then return false end
+    for _, peer in ipairs(PEERS) do
+        if peer.host == host and peer.port == port then return true end
+    end
+    return false
+end
+
+-- Position/facing must be finite and inside a sane world-coordinate range
+-- before they ever reach CreateObject/CutsceneMove/SetFacing. rf32 decodes
+-- IEEE-754 exponent-255 bit patterns (Inf/NaN) as ordinary large numbers
+-- rather than rejecting them, so a malformed or adversarial packet could
+-- otherwise hand the engine a coordinate like 2^128.
+local MAX_COORD = 100000.0
+local function finite_state(p)
+    if type(p.x) ~= "number" or type(p.y) ~= "number" or type(p.z) ~= "number"
+       or type(p.facing) ~= "number" then
+        return false
+    end
+    if p.x ~= p.x or p.y ~= p.y or p.z ~= p.z or p.facing ~= p.facing then
+        return false  -- NaN is the only Lua value that isn't equal to itself
+    end
+    if math.abs(p.x) > MAX_COORD or math.abs(p.y) > MAX_COORD or math.abs(p.z) > MAX_COORD then
+        return false
+    end
+    return true
+end
+
 local function drain_incoming()
     if not sock then return end
     for _ = 1, 32 do  -- bounded: never let a packet flood stall the tick
-        local data = udp_recv(sock)
+        local data, src_host, src_port = udp_recv(sock)
         if not data then break end
-        local p = unpack_packet(data)
-        if p and p.client_id ~= local_client_id then
-            local existing = peers[p.client_id]
-            if not existing or p.seq > existing.seq or (existing.seq - p.seq) > 1000 then
-                if p.msgtype == MSG_BYE then
-                    if existing then despawn_peer(existing) end
-                    peers[p.client_id] = nil
-                else
-                    peers[p.client_id] = {
-                        host = existing and existing.host, port = existing and existing.port,
-                        seq = p.seq, x = p.x, y = p.y, z = p.z, facing = p.facing,
-                        area_tag = p.area_tag, name = p.name,
-                        last_seen_ms = now_ms(),
-                        ghost_id = existing and existing.ghost_id,
-                        applied_x = existing and existing.applied_x,
-                        applied_y = existing and existing.applied_y,
-                        applied_z = existing and existing.applied_z,
-                        applied_facing = existing and existing.applied_facing,
-                    }
+        if peer_allowed(src_host, src_port) then
+            local p = unpack_packet(data)
+            if p and p.client_id ~= local_client_id and finite_state(p) then
+                local existing = peers[p.client_id]
+                if not existing or p.seq > existing.seq or (existing.seq - p.seq) > 1000 then
+                    if p.msgtype == MSG_BYE then
+                        if existing then despawn_peer(existing) end
+                        peers[p.client_id] = nil
+                    else
+                        peers[p.client_id] = {
+                            host = src_host, port = src_port,
+                            seq = p.seq, x = p.x, y = p.y, z = p.z, facing = p.facing,
+                            area_tag = p.area_tag, name = p.name,
+                            last_seen_ms = now_ms(),
+                            ghost_id = existing and existing.ghost_id,
+                            applied_x = existing and existing.applied_x,
+                            applied_y = existing and existing.applied_y,
+                            applied_z = existing and existing.applied_z,
+                            applied_facing = existing and existing.applied_facing,
+                        }
+                    end
                 end
             end
         end
@@ -582,7 +664,15 @@ end
 -- =============================================================================
 
 function OnScriptLoad(game, build)
-    math.randomseed(((os.time and os.time()) or 0) * 1000 + (now_ms() % 1000))
+    -- now_ms() alone is only whole-seconds on this build (kp.time is
+    -- unbound), so two instances launched in the same second would seed
+    -- identically and draw the same client_id, silently disabling their own
+    -- sync (each would then discard the other's packets as "self"). Mix in
+    -- os.clock() (sub-second, since Lua-state start) and a fresh table's
+    -- address (unique per process) as cheap extra entropy that doesn't
+    -- depend on any kp.* binding.
+    local addr_bits = tonumber(tostring({}):match("0x?(%x+)") or "0", 16) or 0
+    math.randomseed(now_ms() + math.floor(((os.clock and os.clock()) or 0) * 1e6) + addr_bits)
     local_client_id = math.random(1, 0x7FFFFFFE)
 
     ghost_status = ensure_ghost_template()
@@ -622,7 +712,11 @@ end
 
 function OnTick(tick, relevant)
     tick_count = tick + 1
-    if not sock then return end
+    -- No peers configured: drain/reconcile would only spin over an
+    -- always-empty peers table (peer_allowed() rejects everything when
+    -- PEERS is empty), so skip the native VM queries entirely -- mirrors
+    -- broadcast()'s own #PEERS == 0 guard.
+    if not sock or #PEERS == 0 then return end
 
     drain_incoming()
 
