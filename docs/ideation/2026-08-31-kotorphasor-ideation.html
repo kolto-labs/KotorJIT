@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideation: KotorPhasor</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f6f7f9;
+    --text: #1c1f24;
+    --text-muted: #565d68;
+    --border: #dfe3e8;
+    --accent: #2f5fd0;
+    --accent-soft: #eaf0ff;
+    --accent-text: #1e44a8;
+    --warn-soft: #fff4e5;
+    --warn-text: #8a5a00;
+    --ok-soft: #e9f7ee;
+    --ok-text: #157347;
+    --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  .page {
+    max-width: 900px;
+    margin-inline: auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  header.doc-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  header.doc-header h1 { margin: 0 0 0.5rem; font-size: 1.9rem; }
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .meta-strip strong { color: var(--text); font-weight: 600; }
+  section { margin-bottom: 2.5rem; }
+  section > h2 {
+    font-size: 1.3rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  p { max-width: 72ch; }
+  .grounding p, .grounding li { max-width: 72ch; }
+  code {
+    font-family: var(--mono);
+    background: var(--bg-soft);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .axis-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.6rem;
+  }
+  .axis-list li {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.92rem;
+  }
+  .axis-list .axis-num {
+    display: inline-block;
+    color: var(--accent-text);
+    font-weight: 700;
+    margin-right: 0.4em;
+  }
+  .jumplist {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+  .jumplist p { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+  .jumplist ol { margin: 0; padding-left: 1.2rem; }
+  .jumplist a { color: var(--accent-text); text-decoration: none; }
+  .jumplist a:hover { text-decoration: underline; }
+
+  article.idea {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.4rem;
+    scroll-margin-top: 1rem;
+  }
+  article.idea .idea-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+  }
+  article.idea .idea-num {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    padding: 0.15rem 0.5rem;
+  }
+  article.idea h3 { margin: 0; font-size: 1.2rem; flex: 1 1 auto; }
+  .axis-chip {
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    white-space: nowrap;
+  }
+  dl.idea-fields {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.35rem 1rem;
+    margin: 0.9rem 0;
+    font-size: 0.95rem;
+  }
+  dl.idea-fields dt {
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    align-self: start;
+    padding-top: 0.15rem;
+  }
+  dl.idea-fields dd { margin: 0; max-width: 62ch; }
+  .basis-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent-text);
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+    margin-right: 0.4rem;
+  }
+  .stats-row {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 0.9rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--border);
+    font-size: 0.85rem;
+  }
+  .stats-row .stat strong { display: block; font-size: 1rem; }
+  .complexity-Low { color: var(--ok-text); }
+  .complexity-Medium { color: var(--warn-text); }
+  .complexity-High { color: #b3261e; }
+
+  table.rejection {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  table.rejection th, table.rejection td {
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.rejection th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); }
+
+  footer.composition-signal {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .callout {
+    background: var(--warn-soft);
+    border: 1px solid #f0d9ab;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    color: var(--warn-text);
+    margin-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="doc-header">
+    <h1>Ideation: KotorPhasor</h1>
+    <div class="meta-strip">
+      <span><strong>Date:</strong> 2026-08-31</span>
+      <span><strong>Topic:</strong> kotorphasor</span>
+      <span><strong>Focus:</strong> open-ended (whole codebase)</span>
+      <span><strong>Mode:</strong> repo-grounded</span>
+    </div>
+  </header>
+
+  <section class="grounding">
+    <h2>Codebase Context</h2>
+    <p>KotorPhasor is a LuaJIT host DLL-injected into the KOTOR (Knights of the Old Republic) game engine via a <code>binkw32.dll</code> proxy trick and x86 inline detours, exposing ~769-772 engine routines plus a custom <code>kp.*</code> host API to embedded Lua scripts through an EventHandler surface. Targets KOTOR 1 Steam/Windows primarily; KOTOR 2 native Linux support is in progress. v0.1.0 just shipped out of a previously-private repository. An open PR just landed fixing an object-id corruption bug, a hook-install race, a new self-contained multiplayer avatar-sync example (raw UDP via LuaJIT FFI, no external dependencies), and a batch of memory-safety bugs (heap overflows, integer overflows, undefined behavior) found by two independent rounds of code review &mdash; not by any test suite.</p>
+    <p>The C++ core is organized by concern (<code>src/api</code>, <code>src/events</code>, <code>src/hooks</code>, <code>src/image</code>, <code>src/lua</code>, <code>src/runtime</code>, <code>src/proxy</code>, <code>src/platform</code>), with a heavily data-driven surface: routine, struct, and event tables are generated from <code>data/*.toml</code> via <code>tools/gen_*.py</code>. No <code>docs/solutions/</code> or <code>docs/CONCEPTS.md</code> learnings corpus exists yet. No <code>STRATEGY.md</code>/<code>PRODUCT.md</code> exists.</p>
+    <p>External research found the closest prior art is <strong>K1SE</strong> (a narrower, SKSE-style function-extension mod for KOTOR 1) and <strong>NWNX</strong> (NWN's plugin-per-capability extender). There is real, current (2026) community demand for KOTOR multiplayer &mdash; validating the direction of the new avatar-sync example. <strong>Deadlystream</strong>, not Nexus Mods, is the dominant KOTOR modding hub, and KotorPhasor has no presence there yet. KotorPhasor's per-script fault-isolation/quarantine system is a genuine, currently-unadvertised differentiator versus every named prior-art tool.</p>
+  </section>
+
+  <section class="axes">
+    <h2>Topic Axes</h2>
+    <ol class="axis-list">
+      <li><span class="axis-num">1</span>Engine routine &amp; host API coverage</li>
+      <li><span class="axis-num">2</span>Fault isolation and test coverage</li>
+      <li><span class="axis-num">3</span>Multiplayer networking</li>
+      <li><span class="axis-num">4</span>KOTOR 2 / Linux platform support</li>
+      <li><span class="axis-num">5</span>Modding-community distribution and docs</li>
+    </ol>
+  </section>
+
+  <section class="ranked-ideas">
+    <h2>Ranked Ideas</h2>
+
+    <div class="jumplist">
+      <p>Jump to</p>
+      <ol>
+        <li><a href="#idea-1">Per-routine fault isolation for the routine bridge</a></li>
+        <li><a href="#idea-2">Fault-injection harness for FaultFrame/setjmp recovery</a></li>
+        <li><a href="#idea-3">CI-built prebuilt release binaries</a></li>
+        <li><a href="#idea-4">Close the kp.* gap, prioritized by the flagship example</a></li>
+        <li><a href="#idea-5">Stand up a learnings corpus, seeded from a bug that recurred</a></li>
+        <li><a href="#idea-6">Reuse the K2 Linux adjudication pipeline for K2 Windows GOG</a></li>
+        <li><a href="#idea-7">Live-engine verification for the GFF ghost-template</a></li>
+      </ol>
+    </div>
+
+    <article class="idea" id="idea-1">
+      <div class="idea-head">
+        <span class="idea-num">1</span>
+        <h3>Per-routine fault isolation for the routine bridge — refuted on follow-up</h3>
+        <span class="axis-chip">Fault isolation and test coverage</span>
+      </div>
+      <div class="callout"><strong>Amended 2026-08-31, after this idea was picked as the top survivor and someone went to implement it.</strong> Reading <code>src/runtime/fault_guard.cpp</code> end to end shows the premise is a misreading of the poison-flag pattern, the same way idea 15 misread <code>hostapi.toml</code>. <code>FaultFrame::note_fault()</code> already does two things on <em>every</em> guarded fault, not one: it poisons the specific site, <em>and</em> it calls <code>set_live(false)</code>, which takes all Lua scripting out of service runtime-wide until <code>lua reload</code>. The per-site flags exist so a reload doesn't re-arm a known-bad site; they were never a mechanism for letting other sites keep running while one is down &mdash; a fault anywhere already stops everything, by design, because a <code>lua_State</code> unwound mid-<code>pcall</code> by a longjmp is left inconsistent and cannot safely be trusted again. Five ideation frames converged on this because they read the same file and drew the same wrong inference, not because five independent lines of evidence confirmed it.</div>
+      <p><strong>Description (as originally proposed, now corrected):</strong> The original card asked to apply the per-site poison pattern to the 769-routine call bridge so "one bad call quarantines only that routine." That specific mechanism does not exist even for the ten event sites it was modeled on — a fault at any guarded site already stops the whole runtime. Separately, <code>docs/user/api-status.md:274</code>'s "stack imbalance" case is not a hardware fault at all: it is a silent argument/return-count mismatch against the engine's own native VM stack, which never trips <code>FaultFrame</code> and which <code>VmBinding</code> (<code>src/api/routines.hpp</code>) has no accessor to detect. Building per-routine isolation for it would require new native reverse-engineering to expose a stack-depth check, not a copy of the existing pattern.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> <code>src/runtime/fault_guard.cpp:411-433</code> (<code>FaultFrame::note_fault()</code>), which the original card's evidence gathering read but did not follow to its actual behavior.</dd>
+        <dt>Rationale</dt>
+        <dd>What survives from this idea: the doc line it was based on was itself imprecise. Fixed instead, in <code>docs/user/api-status.md</code>: a routine call that hard-faults is caught and takes all scripting down until reload (matching the real mechanism); a silent stack imbalance has no detection or recovery at all today and needs a restart. That is the honest, shippable version of what this card was reaching for.</dd>
+        <dt>Downsides</dt>
+        <dd>Real per-routine isolation, if wanted later, is a materially larger project than this card estimated: it needs either a way to detect a native VM stack imbalance without a hardware fault (new RE work against an undocumented internal counter), or a redesign of the fault-recovery contract to permit resuming a <code>lua_State</code> after a longjmp mid-<code>pcall</code>, which <code>fault_guard.cpp</code> explicitly documents as unsafe today.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>15%</strong>confidence</span>
+        <span class="stat complexity-High"><strong>High</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-2">
+      <div class="idea-head">
+        <span class="idea-num">2</span>
+        <h3>Fault-injection harness for FaultFrame/setjmp recovery</h3>
+        <span class="axis-chip">Fault isolation and test coverage</span>
+      </div>
+      <div class="callout" style="background:var(--ok-soft);border-color:#9fd8b6;color:var(--ok-text);"><strong>Built 2026-08-31.</strong> <code>tools/kp_faulttest.cpp</code> links the real, unmodified <code>src/runtime/fault_guard.cpp</code>, triggers a genuine SIGSEGV inside a real <code>KP_HOOK_GUARD_BEGIN</code> region, and passes 12/12 assertions: the fallback runs, that site's poison flag is set, <code>set_live(false)</code> fires runtime-wide (not per-routine &mdash; see idea 1's amendment), poison survives a simulated <code>lua reload</code>, an unrelated second site stays clean, and &mdash; the negative case flagged as most likely to regress silently &mdash; a fault with no <code>FaultFrame</code> armed is correctly left unclaimed and kills the process, verified via a real forked child and its exit signal. Build: <code>g++ -m32 -std=c++20 -O0 -g -Isrc tools/kp_faulttest.cpp src/runtime/fault_guard.cpp -o build/kp_faulttest</code>.</div>
+      <p><strong>Description:</strong> <code>src/runtime/fault_guard.cpp</code> implements a real <code>setjmp</code>/<code>longjmp</code> per-site fault-recovery mechanism (<code>FaultFrame</code>) &mdash; but nothing in the repository ever triggers an actual hardware fault through it. A repo-wide search for any test referencing <code>FaultFrame</code>, <code>fault_guard</code>, or <code>setjmp</code> outside the implementation file itself returns nothing. Script-level Lua error quarantine has a real test (<code>scripts/harness/gameplay_tests/test_quarantine.sh</code>); the native recovery path underneath it does not. The three most recent memory-safety bugs (heap overflow, two undefined-behavior integer casts) were all found by human code review, not by any test. Build a harness that deliberately forces a real fault &mdash; a bad pointer dereference, a corrupted stack &mdash; inside a hook body, and asserts the poison flag fires correctly and the process survives.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified via repo-wide search: zero tests reference <code>FaultFrame</code>/<code>fault_guard</code>/<code>setjmp</code>. Verified: <code>test_quarantine.sh</code> exists and tests only Lua-level errors, confirming the claimed gap is real and precisely as described. Independently proposed by five separate ideation frames.</dd>
+        <dt>Rationale</dt>
+        <dd>The project's advertised (if currently unadvertised in its own marketing) safety pitch versus SKSE/K1SE/NWNX is per-script crash containment &mdash; but the mechanism backing that pitch has never once been exercised by an actual crash in CI. Pairs naturally with Idea 1: this harness is the natural way to prove the per-routine isolation actually works once it's built.</dd>
+        <dt>Downsides</dt>
+        <dd>Deliberately forcing hardware faults (bad pointer derefs, stack corruption) inside a live process is inherently fragile test infrastructure to build and keep passing across platforms; likely needs its own dedicated CI lane rather than folding into the existing native test binaries.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>85%</strong>confidence</span>
+        <span class="stat complexity-High"><strong>High</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-3">
+      <div class="idea-head">
+        <span class="idea-num">3</span>
+        <h3>CI-built prebuilt release binaries</h3>
+        <span class="axis-chip">Modding-community distribution and docs</span>
+      </div>
+      <p><strong>Description:</strong> Building KotorPhasor from source today requires a 32-bit mingw cross-compiler toolchain (<code>mingw32-gcc-c++</code>, <code>i686-w64-mingw32-*</code>) and a from-source LuaJIT build &mdash; a real barrier for an audience of KOTOR modders, not C++ developers. No GitHub Actions release workflow exists, and no prebuilt binary is attached to any release. The exact build recipe is already fully documented in <code>docs/user/install.md</code>; wire it into CI and publish <code>kphasor.dll</code> + the proxy <code>binkw32.dll</code> as release artifacts on every tag, so installing becomes "download and drop in the game folder."</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified: <code>docs/user/install.md</code> requires the mingw32 toolchain; no <code>.github/workflows</code> release/artifact step exists in this repo. <span class="basis-tag">external</span> Deadlystream is confirmed the dominant KOTOR modding hub by community consensus, and that audience installs prebuilt files, not source. Independently proposed by five separate ideation frames.</dd>
+        <dt>Rationale</dt>
+        <dd>v0.1.0 just released out of a repo that was private for its entire development cycle, with zero presence on any KOTOR distribution channel. Requiring every prospective modder to stand up a cross-compile toolchain before they can even try the thing is a self-inflicted adoption cliff that has nothing to do with the product's actual value &mdash; and the highest value-to-effort item in this whole ideation set, since the recipe is already written.</dd>
+        <dt>Downsides</dt>
+        <dd>Shipping prebuilt binaries for a DLL-injection tool raises a trust/provenance question (should releases be signed?) that the project hasn't had to answer yet; low cost to defer, but worth deciding deliberately rather than by default.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>90%</strong>confidence</span>
+        <span class="stat complexity-Low"><strong>Low</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-4">
+      <div class="idea-head">
+        <span class="idea-num">4</span>
+        <h3>Close the kp.* gap, prioritized by the flagship example</h3>
+        <span class="axis-chip">Engine routine &amp; host API coverage</span>
+      </div>
+      <div class="callout" style="background:var(--ok-soft);border-color:#9fd8b6;color:var(--ok-text);"><strong>Partially built 2026-08-31: exactly the two the example needed, not the full ~40-50.</strong> <code>kp.gamedir</code> and <code>kp.time</code> are now bound in <code>src/api/compat.cpp</code> (registered from <code>runtime.cpp</code>'s <code>boot_scripts</code>, which already had the game directory in <code>Config</code>) and verified with dual-platform syntax checks (native <code>-m32</code> Linux and the <code>i686-w64-mingw32-g++</code> cross-compiler) against the real header layout. The avatar-sync script's fallback comments were corrected to say so; the fallback code itself was kept, since the script also has to run against older builds. The other ~38-48 names in the Downside below are untouched &mdash; this was scoped deliberately narrow, to the dogfooding evidence, not treated as a green light to sweep the whole backlog.</div>
+      <p><strong>Description:</strong> Roughly 40-50 <code>kp.*</code> host functions &mdash; including basics like <code>kp.print</code>, <code>kp.log</code>, <code>kp.time</code>, and the whole <code>kp.timer.*</code>/<code>kp.str.*</code> families &mdash; are declared in <code>data/hostapi.toml</code> but return <code>nil</code> at runtime ("Spec only") today. The project's own new multiplayer example script had to hand-write fallback code around exactly this: its comments explain, verbatim, that <code>kp.gamedir</code> and <code>kp.time</code> are "spec-only (nil) on this build." Reprioritize the unbound-function backlog by what the project's own reference example actually needed, not by declaration order in the TOML.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified: <code>scripts/examples/multiplayer/10_avatar_sync.lua</code> lines ~303 and ~503-511 contain explicit hand-written fallback comments for exactly these two unbound functions. Independently proposed by four separate ideation frames.</dd>
+        <dt>Rationale</dt>
+        <dd>This is a dogfooding signal, not a hypothetical gap &mdash; the project's own showcase script needed workarounds for basics like time and directory access. If the flagship example needs defensive fallbacks for primitives that basic, every third-party scripter hits the same wall on day one.</dd>
+        <dt>Downsides</dt>
+        <dd>Some of the ~40-50 unbound names likely have real implementation cost hidden behind a simple-looking TOML declaration (memory-safety-sensitive ones especially); "prioritize by what the example needed" should not be read as "the rest are trivial."</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>85%</strong>confidence</span>
+        <span class="stat complexity-Medium"><strong>Medium</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-5">
+      <div class="idea-head">
+        <span class="idea-num">5</span>
+        <h3>Stand up a learnings corpus, seeded from a bug that recurred</h3>
+        <span class="axis-chip">Modding-community distribution and docs</span>
+      </div>
+      <p><strong>Description:</strong> Neither <code>docs/CONCEPTS.md</code> nor a <code>docs/solutions/</code> directory exists anywhere in this repository &mdash; there is currently no durable place institutional knowledge survives a single session. The strongest evidence for why that matters, found during verification: the exact same bug &mdash; a missing <code>!isfinite</code> guard before a relational comparison that gates an unsafe numeric cast &mdash; was fixed in <code>src/lua/value.cpp</code>, and then, in a <em>later commit the same day</em>, found still present in <code>src/api/routines.cpp</code>'s parallel object-id validation path. The second fix's own inline comment says "Same fix as lua/value.cpp's Object case for the same bridge." Nothing recorded the pattern after the first fix, so it had to be rediscovered. Create the corpus and seed it with this exact bug class as the first entry.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified via <code>git blame</code>: the guard in <code>src/lua/value.cpp:96/113/115</code> landed in commit <code>b28c129</code> (2026-08-30 20:48); the parallel guard in <code>src/api/routines.cpp:134</code> landed over an hour later in <code>de76e9b</code> (21:55), citing the first fix by name. Confirmed no learnings corpus exists anywhere in the repo. The same gap showed up on three separate passes over the tree.</dd>
+        <dt>Rationale</dt>
+        <dd>A second pass called this the strongest direct-evidence claim of the fifteen candidates. It is near-zero cost (create two files, write one entry) against a documented, same-day recurrence of the identical bug class &mdash; the cheapest, highest-leverage item in this entire set.</dd>
+        <dt>Downsides</dt>
+        <dd>A learnings corpus only compounds if it's actually maintained going forward; standing it up is the easy part, keeping entries current as the codebase changes is the real, ongoing cost.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>95%</strong>confidence</span>
+        <span class="stat complexity-Low"><strong>Low</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-6">
+      <div class="idea-head">
+        <span class="idea-num">6</span>
+        <h3>Reuse the K2 Linux adjudication pipeline for K2 Windows GOG</h3>
+        <span class="axis-chip">KOTOR 2 / Linux platform support</span>
+      </div>
+      <div class="callout" style="background:var(--ok-soft);border-color:#9fd8b6;color:var(--ok-text);"><strong>Unblocked and built, 2026-08-31.</strong> The binary turned out to exist on this machine after all, under a separate ongoing decompilation project. The real bug wasn't a missing adjudication methodology &mdash; <code>gen_address_tables.py</code>'s <code>k2_gog_aspyr</code> entry was simply never given a <code>reference_image</code> path, so the generator had nothing to read. Fixing that one line and re-running the real generator resolved 32/33 sites at confidence 1.0 (this build is 95% natively symbol-named, so the heuristic adjudication pipeline this card described wasn't even needed) &mdash; <code>installable: true</code>, verified end to end with <code>kp_imagetool identify</code> against the real binary. Four more Windows builds (<code>k1_amazongames</code>, <code>k2_win_cd_10</code>, <code>k2_win_cd_10b</code>, <code>k2_steam_aspyr</code>) were registered the same way but are NOT installable yet: they're 47-61% named, so they genuinely do need the heuristic adjudication methodology this card originally proposed &mdash; that work is still open.</div>
+      <p><strong>Description:</strong> K2 Linux (the Aspyr build) has 55 formally adjudicated VM bindings, produced by a documented accept/reject/insufficient-evidence method in <code>data/adjudication/</code>. K2 Windows GOG has zero bindings today &mdash; but the data file for it already carries the note "Binary not on this machine; table emitted to prove the generator generalises." The hard part of K2 support was never writing more hooks; it was building an adjudication methodology that proves a binding correct without full disassembly coverage. That methodology is proven once and explicitly built to generalize. Point it at the K2 Windows GOG binary next instead of starting the whole investigation from scratch.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified verbatim: <code>data/addresses/k2_gog_aspyr.json</code> contains "Binary not on this machine; table emitted to prove the generator generalises," with <code>adjudicated_bindings: 0</code>. <code>data/adjudication/k2_linux_vm_bindings.json</code> confirms 55 accepted bindings via the same pipeline. Independently proposed by four separate ideation frames.</dd>
+        <dt>Rationale</dt>
+        <dd>This reframes "add K2 Windows support" from a from-scratch reverse-engineering effort into "apply an existing, validated pipeline to a new binary" &mdash; a materially different cost estimate for the roadmap, and the thinnest-covered axis in this ideation run otherwise.</dd>
+        <dt>Downsides</dt>
+        <dd>Still gated on physically obtaining the GOG binary; the pipeline reduces the adjudication cost, not the acquisition cost, and some fraction of bindings may still need the same heuristic (non-disassembly) resolution K2 Linux needed for 8 of its 55.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>80%</strong>confidence</span>
+        <span class="stat complexity-Medium"><strong>Medium</strong>complexity</span>
+      </div>
+    </article>
+
+    <article class="idea" id="idea-7">
+      <div class="idea-head">
+        <span class="idea-num">7</span>
+        <h3>Live-engine verification for the GFF ghost-template</h3>
+        <span class="axis-chip">Multiplayer networking</span>
+      </div>
+      <div class="callout"><strong>Checked 2026-08-31, blocked: no speculative work done.</strong> Re-confirmed there is no KOTOR install anywhere in this environment: <code>tmp/k1_harness</code> (the directory <code>scripts/harness/live_session.sh</code> boots against) does not exist, and no <code>swkotor.exe</code> is present anywhere in the tree. A test that cannot run here was not written and reported as passing &mdash; that would be the same failure this whole idea exists to close. Unblocks as soon as a real game install is available to the harness.</div>
+      <p><strong>Description:</strong> The new multiplayer avatar-sync example generates a GFF/UTC "ghost" creature template by hand, entirely in Lua. Its own header comment is explicit about the gap: verified only for internal byte consistency via a standalone Lua interpreter, "never loaded by the real engine, since there is no live KOTOR process in the environment this was written in." The project already has a working live-session test harness (<code>scripts/harness/live_session.sh</code>, recently centralized) capable of booting a real headless KOTOR session and driving it programmatically. Extend that harness to load the generated ghost template and assert it resolves to a valid, non-crashing object &mdash; closing the one verification gap the flagship new feature currently ships with.</p>
+      <dl class="idea-fields">
+        <dt>Basis</dt>
+        <dd><span class="basis-tag">direct</span> Verified verbatim: <code>scripts/examples/multiplayer/10_avatar_sync.lua</code> states "never loaded by the real engine, since there is no live KOTOR process in the environment this was written in." Confirmed the live-session harness exists and is a real, reusable primitive.</dd>
+        <dt>Rationale</dt>
+        <dd>This PR is landing a brand-new multiplayer example built on an explicitly unverified code path. A broken ghost template is the very first thing a second player hits &mdash; converting "hope it works" into "proven it works" matters more here than on any other axis, and the reusable harness makes this cheap relative to the risk it closes.</dd>
+        <dt>Downsides</dt>
+        <dd>Requires an actual licensed copy of KOTOR available in the CI/test environment to boot against, which may not be feasible in every CI context this project runs in; may need to stay a local/manual verification step rather than a CI gate.</dd>
+      </dl>
+      <div class="stats-row">
+        <span class="stat"><strong>75%</strong>confidence</span>
+        <span class="stat complexity-Medium"><strong>Medium</strong>complexity</span>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="rejection">
+    <h2>Rejection Summary</h2>
+    <table class="rejection">
+      <thead><tr><th>#</th><th>Idea</th><th>Reason rejected</th></tr></thead>
+      <tbody>
+        <tr><td>8</td><td>API stability tiers (stable/experimental <code>kp.*</code>)</td><td>Sound but smaller in scope than the survivors &mdash; a UX nicety layered on top of Idea 4, better sequenced as a follow-on once the unbound-function gap itself is closed rather than run in parallel.</td></tr>
+        <tr><td>9</td><td>Reconcile "second network client" doc language vs. the shipped avatar-sync PR</td><td>A close read found the claimed contradiction overstated: the avatar-sync example is symmetric peer-to-peer between two full game instances, not the external-client-attaching-to-one-server shape the design doc's non-goal actually describes. A real but minor doc-tension, worth a one-line clarification, not a standalone discussion-worthy idea.</td></tr>
+        <tr><td>10</td><td>AGPL network-clause compliance guide</td><td>Sound and cheap, but legally low-stakes for a hobby modding tool; folds naturally into whatever documentation pass addresses Idea 9's doc tension rather than standing alone.</td></tr>
+        <tr><td>11</td><td>Runtime self-check for heuristic-only K2 Linux bindings before arming hooks</td><td>Substance verified sound (8 of 55 accepted K2 Linux bindings were resolved via heuristics rather than disassembly proof &mdash; the original claim of 9 was off by one), and the safety concern is real, but cut in the stricter pass to keep the survivor set at seven with reasonable axis balance; Idea 6 already carries the K2/Linux platform axis.</td></tr>
+        <tr><td>12</td><td>NAT traversal / relay fallback + interest management beyond 2-4 players</td><td>Sound description of a real limitation, but the multiplayer axis was over-represented in the raw candidate set (everyone looked at the newest file); full relay infrastructure is also a large lift to propose right after a v0.1.0 ships. Idea 7 was kept instead as the right-sized, cheaper multiplayer-axis survivor.</td></tr>
+        <tr><td>13</td><td>Generation-counter ("self vs. non-self") tagging for the object-id space</td><td>A reasoned architectural idea ("the more durable fix" for the object-id corruption bug class), but reasoned-only with no direct evidence, and a larger, more speculative architectural bet than the seven survivors. Worth revisiting if another object-id bug surfaces.</td></tr>
+        <tr><td>14</td><td>CI gate blocking release on the three flaky onboarding demos</td><td>This cuts against a documented, deliberate existing decision: <code>docs/showcase-demos/README.md</code> already explains only three demos are release-gated by design, with the other three intentionally left non-blocking pending a real-boot fix. Not an oversight to correct.</td></tr>
+        <tr><td>15</td><td>Namespace unification of <code>kp.*</code> and <code>kotor.*</code> dialects</td><td>Refuted on verification. <code>docs/api-dialects.md</code> does not describe an accidental namespace split; <code>data/hostapi.toml</code> documents four deliberate, differently-protected API layers by design ("the lower layers are not deprecated, they are just less protected"). The premise doesn't survive contact with the docs.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer class="composition-signal">
+    Notes from 2026-08-31 against this repo and the public writeups.
+  </footer>
+
+</div>
+</body>
+</html>
