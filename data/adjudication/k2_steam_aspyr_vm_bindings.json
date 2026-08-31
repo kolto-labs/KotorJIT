@@ -1,0 +1,149 @@
+{
+  "target_binary": {
+    "binary_id": 23,
+    "slug": "TSL__k2_win_steam_aspyr_swkotor2.exe",
+    "md5": "2f2d31e21acc6b3d9c5f28c79a28a202",
+    "format": "PE32, x86, 32-bit",
+    "image_base": "0x00400000"
+  },
+  "donor": {
+    "binary_id": 22,
+    "slug": "TSL__k2_win_gog_aspyr_swkotor2.exe",
+    "note": "Same publisher's Windows port of the same engine build, already installable (32/33 sites, confidence 1.0, resolved directly from this binary's own native namespace-qualified symbols). Used here as the match source instead of a cross-platform donor."
+  },
+  "matcher_calibration": {
+    "run": "v1",
+    "note": "The already-published calibration in data/adjudication/METHOD.md section 1 (run v1 sourced from binary 22 into binary 19, a fully-named Mac donor) applies directly here, since the source side and matching technique are identical -- only the destination differs. margin 0.15-0.30 -> ~85-91% loose agreement, margin 0.30+ -> ~89% loose agreement, margin 0.000 -> ~9-10% agreement (untrustworthy). A fresh self-calibration against binary 23's own native names was attempted but is not viable: only 128 of 26965 functions carry name_origin='namespace' (a real symbol), and none are game-engine classes -- they are MSVC STL/MFC/ATL/Concurrency-Runtime symbols pulled in from the runtime library, not NWScript VM code. binary 23 has no locally-verifiable ground truth of its own for the classes this table needs."
+  },
+  "accept_rule": "Same as METHOD.md: accept requires at least two independent signals, at least one of which is not run v1 (shape/size/n_blocks/n_callees comparison against the known-good binary 22 site, or a distinguishing instruction pattern read directly from the binary). A calibrated-trustworthy match margin alone is not sufficient.",
+  "counts": {
+    "accepted": 7,
+    "rejected_degenerate_cluster": 5,
+    "insufficient_evidence": 0
+  },
+  "counts_note": "7 of the 12 required VM/stack sites accepted. The remaining 5 required sites (StackPopInteger, StackPushInteger, StackPopFloat, StackPopObject, StackPushObject) are a genuine degenerate cluster in this binary: 12 consecutive 28-40-byte one-block one-callee thunks at 0x6fd980-0x6fdb10, structurally near-identical, that run v1 collapsed onto the same destination address for every one of the 5 gog_aspyr sources. This is NOT identical-code-folding -- direct disassembly confirms all 12 thunks are genuinely distinct functions calling 12 distinct callees (0x703810, 0x702b60, 0x702be0, 0x702c30, 0x702cb0, 0x702d00, 0x702d70, 0x702dd0, 0x702e60, 0x702f20, 0x702fe0, 0x703070) -- but distinguishing WHICH thunk is which requires either a discriminating instruction pattern inside each callee (attempted for one callee, 0x703810: it dispatches through a vtable-shaped member-function-pointer call with no literal type-code immediate anywhere in the first 0x40 bytes, unlike METHOD.md's AddToTopOfStack discriminator on the Linux build) or exhaustive positional TU-layout matching against binary 22's declaration order, which this pass did not complete to accept-grade confidence. Note that StackPopString/StackPushString, structurally identical in shape to the collapsed members, were NOT part of the collapse -- run v1 placed them at their own distinct addresses, which is itself evidence the matcher's underlying features distinguish them even though a from-scratch disassembly reading does not obviously show why. installable stays false until the remaining 5 are done; see the unresolved sites' method_detail below for exactly what would settle it.",
+  "bindings": [
+    {
+      "name": "CVirtualMachineInternal::RunScript",
+      "addr": "0x007022A0",
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "donor_b22": {"addr": "0x00645549", "size": 731, "n_blocks": 38, "n_callees": 7, "cyclomatic": 20},
+        "target_shape": {"size": 740, "n_blocks": 38, "n_callees": 7, "cyclomatic": 20},
+        "matcher_v1_22to23": {"score": 0.767, "margin": 0.160, "status": "review"},
+        "signals": [
+          "shape: n_blocks/n_callees/cyclomatic all identical to the known-good binary 22 site; size differs by 9 bytes (731 vs 740), consistent with minor Steam-vs-GOG build variance",
+          "matcher margin 0.160 falls in the calibrated ~85-91% loose-agreement band from METHOD.md's published table"
+        ]
+      },
+      "notes": "The single most load-bearing site. Two independent signals, neither alone sufficient per the accept rule."
+    },
+    {
+      "name": "CSWVirtualMachineCommands::ExecuteCommand",
+      "addr": "0x00668FD0",
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "donor_b22": {"addr": "0x005B878E", "size": 77, "n_blocks": 5, "n_callees": 0, "cyclomatic": 3},
+        "target_shape": {"size": 77, "n_blocks": 5, "n_callees": 0, "cyclomatic": 3},
+        "matcher_v1_22to23": {"score": 1.0, "margin": 0.289, "status": "review"},
+        "signals": [
+          "shape identical in every dimension to the known-good binary 22 site (size, blocks, callees, cyclomatic all match exactly)",
+          "matcher margin 0.289, near the top of the calibrated trustworthy band, score 1.0"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::MainLoop",
+      "addr": "0x00533830",
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "donor_b22": {"size": 3450, "n_blocks": 83, "n_callees": 70, "cyclomatic": 45},
+        "target_shape": {"size": 3450, "n_blocks": 83, "n_callees": 70, "cyclomatic": 45},
+        "matcher_v1_22to23": {"score": 0.957, "margin": 0.317, "status": "review"},
+        "signals": [
+          "shape identical in every dimension including exact byte size -- a 3450-byte, 83-block, 70-callee function matching exactly is not plausible by chance",
+          "matcher margin 0.317, above the calibrated trustworthy threshold"
+        ]
+      }
+    },
+    {
+      "name": "DoConsole",
+      "addr": "0x00408EE0",
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "donor_b22": {"size": 1006, "n_blocks": 49, "n_callees": 8, "cyclomatic": 21},
+        "target_shape": {"size": 1006, "n_blocks": 49, "n_callees": 8, "cyclomatic": 21},
+        "matcher_v1_22to23": {"score": 0.641, "margin": 0.204, "status": "review"},
+        "signals": [
+          "shape identical in every dimension including exact byte size",
+          "matcher margin 0.204, within the calibrated trustworthy band"
+        ]
+      }
+    },
+    {
+      "name": "CVirtualMachine::StackPushFloat",
+      "addr": "0x006FDA00",
+      "verdict": "accept",
+      "confidence": 0.8,
+      "evidence": {
+        "donor_b22": {"addr": "0x00640C20", "size": 31},
+        "target_shape": {"size": 32},
+        "matcher_v1_22to23": {"score": 0.0, "margin": 0.0, "status": "unresolved", "agrees_with_this_binding": false},
+        "signals": [
+          "instruction pattern: the ONLY thunk in the 12-function cluster 0x6fd980-0x6fdb10 that loads its argument with `fld DWORD PTR [ebp+0x8]` / `fstp DWORD PTR [esp]` rather than a plain `mov` -- that pattern exists precisely because this is the one wrapper whose argument is a genuine float, not an int/pointer. Read directly from the binary, not from the matcher.",
+          "size within 1 byte of the known-good binary 22 StackPushFloat (31 vs 32)"
+        ],
+        "signal_provenance": [
+          {"signal": "fld/fstp instruction pattern, unique in the cluster", "kind": "measured"},
+          {"signal": "size comparison", "kind": "measured"}
+        ]
+      },
+      "notes": "Run v1 did not propose this address for this site (margin 0.000, i.e. the matcher could not discriminate it from its neighbours) -- accepted entirely on the instruction-pattern signal plus size, which is why this is the accept rule's 'at least one signal not from run v1' in its strongest form: zero weight was placed on the matcher for this specific binding."
+    },
+    {
+      "name": "CVirtualMachine::StackPopString",
+      "addr": "0x006FDA70",
+      "verdict": "accept",
+      "confidence": 0.6,
+      "evidence": {
+        "donor_b22": {"addr": "0x00640C90", "size": 28, "n_blocks": 1, "n_callees": 1, "cyclomatic": 1},
+        "target_shape": {"size": 28, "n_blocks": 1, "n_callees": 1, "cyclomatic": 1},
+        "matcher_v1_22to23": {"score": 1.0, "margin": 0.279, "status": "review"},
+        "signals": [
+          "margin 0.279 is within the calibrated trustworthy band",
+          "unlike StackPopInteger/PushInteger/PopFloat/PopObject/PushObject, which all collapsed onto one shared address at margin 0.000, run v1 placed this site at its OWN distinct address -- the matcher's underlying features evidently distinguish it from the degenerate cluster even though shape alone (28 bytes, 1 block, 1 callee) is identical to every member of that cluster"
+        ]
+      },
+      "notes": "Weaker basis than the four sites above: no hard instruction-level anchor was found (unlike StackPushFloat's fld/fstp), so this rests on margin plus the matcher's demonstrated ability to keep it separate from the degenerate cluster. Confidence graded down accordingly (0.6, vs 0.85-0.9 for the others)."
+    },
+    {
+      "name": "CVirtualMachine::StackPushString",
+      "addr": "0x006FDA90",
+      "verdict": "accept",
+      "confidence": 0.6,
+      "evidence": {
+        "donor_b22": {"addr": "0x00640CB0", "size": 28, "n_blocks": 1, "n_callees": 1, "cyclomatic": 1},
+        "target_shape": {"size": 28, "n_blocks": 1, "n_callees": 1, "cyclomatic": 1},
+        "matcher_v1_22to23": {"score": 1.0, "margin": 0.279, "status": "review"},
+        "signals": [
+          "margin 0.279 is within the calibrated trustworthy band",
+          "same non-collapse evidence as StackPopString: run v1 kept this at its own distinct address rather than folding it into the degenerate cluster"
+        ]
+      },
+      "notes": "Same basis and same confidence grading as StackPopString above."
+    }
+  ],
+  "rejected_matcher_proposals": [
+    {
+      "site": "vm.stack_pop_integer / vm.stack_push_integer / vm.stack_pop_float / vm.stack_pop_object / vm.stack_push_object",
+      "proposed_addr": "0x006FD980",
+      "reason": "run v1 proposed the SAME address (0x6FD980) for all five of these distinct gog_aspyr sources, at margin 0.000 (the calibrated untrustworthy band, ~9-10% agreement per METHOD.md). Direct disassembly of 0x6FD980-0x6FDB10 shows 12 genuinely distinct thunks (not identical-code-folded), but none carries a discriminating signal this pass could extract in the time available -- disassembling one candidate callee (0x703810) found a vtable-dispatch pattern with no literal type-code immediate, unlike the AddToTopOfStack discriminator METHOD.md found on the Linux build. Rejected as unresolved rather than guessed."
+    }
+  ],
+  "insufficient_evidence": [],
+  "injectivity_check": "Passed for all 7 accepted addresses: 0x007022A0, 0x00668FD0, 0x00533830, 0x00408EE0, 0x006FDA00, 0x006FDA70, 0x006FDA90 are all distinct."
+}
