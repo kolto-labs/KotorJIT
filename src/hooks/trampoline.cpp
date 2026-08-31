@@ -623,7 +623,15 @@ HookStatus Detour::uninstall() {
         return HookStatus::ProtectFailed;
     }
     std::memcpy(patch, original_, stolen_len_);
-    platform::set_protection(patch, stolen_len_, platform::Protect::ReadExec);
+    if (!platform::set_protection(patch, stolen_len_, platform::Protect::ReadExec)) {
+        // The original bytes are restored; only the protection restore failed.
+        // Same call as install()'s symmetric case -- warn rather than treat it
+        // as a hard failure, so a later fault executing this address has a
+        // log line pointing at the real cause instead of none at all.
+        platform::log(platform::LogLevel::Warn,
+                      "detour at %p uninstalled, but the page could not be returned to R+X",
+                      patch);
+    }
     platform::flush_instruction_cache(patch, stolen_len_);
 
     installed_ = false;

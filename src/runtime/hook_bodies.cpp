@@ -106,7 +106,19 @@ std::atomic<void*> g_orig_load{nullptr};
 std::atomic<bool> g_poison_run_script{false};
 std::atomic<bool> g_poison_main_loop{false};
 std::atomic<bool> g_poison_do_console{false};
-std::atomic<bool> g_poison_event{false};
+// One flag per event site, not one shared flag: a fault in the door handler
+// used to poison creature/placeable/trigger/... too, taking all ten dark for
+// one site's bug.
+std::atomic<bool> g_poison_event_creature{false};
+std::atomic<bool> g_poison_event_door{false};
+std::atomic<bool> g_poison_event_placeable{false};
+std::atomic<bool> g_poison_event_trigger{false};
+std::atomic<bool> g_poison_event_module{false};
+std::atomic<bool> g_poison_event_area{false};
+std::atomic<bool> g_poison_event_encounter{false};
+std::atomic<bool> g_poison_event_aoe{false};
+std::atomic<bool> g_poison_event_store{false};
+std::atomic<bool> g_poison_event_waypoint{false};
 std::atomic<bool> g_poison_save{false};
 std::atomic<bool> g_poison_load{false};
 std::atomic<unsigned> g_tick_scale{1};
@@ -366,6 +378,40 @@ void console_exec(const std::string& code) {
     lua_settop(L, base);
 }
 
+struct PoisonSite { const char* name; std::atomic<bool>* flag; };
+
+// Every poisonable site, for `lua status` / `lua reload` to report against.
+// Event/save/load used to be invisible here -- an operator could not tell
+// those sites had gone dark, only that run_script/main_loop/do_console
+// hadn't.
+const PoisonSite kPoisonSites[] = {
+    {"run_script", &g_poison_run_script},
+    {"main_loop", &g_poison_main_loop},
+    {"do_console", &g_poison_do_console},
+    {"event.creature", &g_poison_event_creature},
+    {"event.door", &g_poison_event_door},
+    {"event.placeable", &g_poison_event_placeable},
+    {"event.trigger", &g_poison_event_trigger},
+    {"event.module", &g_poison_event_module},
+    {"event.area", &g_poison_event_area},
+    {"event.encounter", &g_poison_event_encounter},
+    {"event.aoe", &g_poison_event_aoe},
+    {"event.store", &g_poison_event_store},
+    {"event.waypoint", &g_poison_event_waypoint},
+    {"save", &g_poison_save},
+    {"load", &g_poison_load},
+};
+
+std::string poisoned_site_list() {
+    std::string list;
+    for (const PoisonSite& p : kPoisonSites) {
+        if (!p.flag->load(std::memory_order_acquire)) continue;
+        if (!list.empty()) list += ", ";
+        list += p.name;
+    }
+    return list;
+}
+
 void console_status() {
     Runtime& rt = Runtime::instance();
     rt.log("status: KotorPhasor %s", KP_VERSION);
@@ -376,10 +422,9 @@ void console_status() {
     if (hooks::HookSet* hs = rt.hooks(); hs != nullptr)
         rt.log("status: %zu hook(s) installed", hs->installed_count());
 
-    rt.log("status: poisoned run_script=%s main_loop=%s do_console=%s",
-           g_poison_run_script.load() ? "yes" : "no",
-           g_poison_main_loop.load() ? "yes" : "no",
-           g_poison_do_console.load() ? "yes" : "no");
+    const std::string poisoned = poisoned_site_list();
+    if (poisoned.empty()) rt.log("status: no site poisoned");
+    else                  rt.log("status: poisoned: %s", poisoned.c_str());
 
     // Point at the way out, rather than leaving the player to read "live=no"
     // and conclude the mod is broken.
@@ -427,12 +472,10 @@ void console_reload() {
     // fresh set of Lua states does not make running it again safe. Said out
     // loud, because "reloaded but this event still will not fire" is exactly
     // the kind of half-recovery that wastes an evening.
-    if (g_poison_run_script.load() || g_poison_main_loop.load() || g_poison_do_console.load()) {
-        Runtime::instance().log("lua reload: still poisoned (run_script=%s main_loop=%s "
-                                "do_console=%s); those events stay silent until the game restarts",
-                                g_poison_run_script.load() ? "yes" : "no",
-                                g_poison_main_loop.load() ? "yes" : "no",
-                                g_poison_do_console.load() ? "yes" : "no");
+    const std::string poisoned = poisoned_site_list();
+    if (!poisoned.empty()) {
+        Runtime::instance().log("lua reload: still poisoned (%s); those events stay silent "
+                                "until the game restarts", poisoned.c_str());
     }
 }
 
@@ -549,14 +592,15 @@ std::string load_situation() {
 void event_handler_common(void* self, unsigned long n_event_id,
                           unsigned long n_caller, void* payload,
                           unsigned long day, unsigned long time,
-                          const char* site, std::atomic<void*>& orig_slot) {
+                          const char* site, std::atomic<void*>& orig_slot,
+                          std::atomic<bool>& poison) {
     auto orig = reinterpret_cast<EventHandlerFn>(
         orig_slot.load(std::memory_order_acquire));
 
     lua::Host* const host = active_host();
     bool skip = false;
-    if (live() && host != nullptr && !g_poison_event.load(std::memory_order_acquire)) {
-        KP_HOOK_GUARD_BEGIN(site, g_poison_event, skip = false)
+    if (live() && host != nullptr && !poison.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN(site, poison, skip = false)
 
         int script_type = -1;
         if (events::payload_is_script_event(static_cast<int>(n_event_id))) {
@@ -590,43 +634,53 @@ void event_handler_common(void* self, unsigned long n_event_id,
 
 void KP_THISCALL creature_event_body(void* self, unsigned long id, unsigned long caller,
                                      void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.creature", g_orig_creature);
+    event_handler_common(self, id, caller, data, day, time, "event.creature", g_orig_creature,
+                         g_poison_event_creature);
 }
 void KP_THISCALL door_event_body(void* self, unsigned long id, unsigned long caller,
                                  void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.door", g_orig_door);
+    event_handler_common(self, id, caller, data, day, time, "event.door", g_orig_door,
+                         g_poison_event_door);
 }
 void KP_THISCALL placeable_event_body(void* self, unsigned long id, unsigned long caller,
                                       void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.placeable", g_orig_placeable);
+    event_handler_common(self, id, caller, data, day, time, "event.placeable", g_orig_placeable,
+                         g_poison_event_placeable);
 }
 void KP_THISCALL trigger_event_body(void* self, unsigned long id, unsigned long caller,
                                     void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.trigger", g_orig_trigger);
+    event_handler_common(self, id, caller, data, day, time, "event.trigger", g_orig_trigger,
+                         g_poison_event_trigger);
 }
 void KP_THISCALL module_event_body(void* self, unsigned long id, unsigned long caller,
                                    void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.module", g_orig_module);
+    event_handler_common(self, id, caller, data, day, time, "event.module", g_orig_module,
+                         g_poison_event_module);
 }
 void KP_THISCALL area_event_body(void* self, unsigned long id, unsigned long caller,
                                  void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.area", g_orig_area);
+    event_handler_common(self, id, caller, data, day, time, "event.area", g_orig_area,
+                         g_poison_event_area);
 }
 void KP_THISCALL encounter_event_body(void* self, unsigned long id, unsigned long caller,
                                       void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.encounter", g_orig_encounter);
+    event_handler_common(self, id, caller, data, day, time, "event.encounter", g_orig_encounter,
+                         g_poison_event_encounter);
 }
 void KP_THISCALL aoe_event_body(void* self, unsigned long id, unsigned long caller,
                                 void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.aoe", g_orig_aoe);
+    event_handler_common(self, id, caller, data, day, time, "event.aoe", g_orig_aoe,
+                         g_poison_event_aoe);
 }
 void KP_THISCALL store_event_body(void* self, unsigned long id, unsigned long caller,
                                   void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.store", g_orig_store);
+    event_handler_common(self, id, caller, data, day, time, "event.store", g_orig_store,
+                         g_poison_event_store);
 }
 void KP_THISCALL waypoint_event_body(void* self, unsigned long id, unsigned long caller,
                                      void* data, unsigned long day, unsigned long time) {
-    event_handler_common(self, id, caller, data, day, time, "event.waypoint", g_orig_waypoint);
+    event_handler_common(self, id, caller, data, day, time, "event.waypoint", g_orig_waypoint,
+                         g_poison_event_waypoint);
 }
 
 // Save takes one stack argument. Load takes three: both K1 callers of the

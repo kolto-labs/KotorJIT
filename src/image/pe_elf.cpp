@@ -37,7 +37,11 @@ bool looks_like(const std::uint8_t* p, std::size_t n) {
     if (n < 0x40 || p[0] != 'M' || p[1] != 'Z') return false;
     std::uint32_t lfanew = 0;
     if (!u32_at(p, n, 0x3c, lfanew)) return false;
-    if (lfanew + 4 > n) return false;
+    // Subtraction, not addition: this build's size_t is 32-bit (see
+    // CMakeLists' -m32), so "lfanew + 4 > n" wraps for lfanew near
+    // UINT32_MAX and lets the bounds check pass, then memcmp reads far out
+    // of bounds. n >= 4 is already implied by the n < 0x40 check above.
+    if (lfanew > n - 4) return false;
     return std::memcmp(p + lfanew, "PE\0\0", 4) == 0;
 }
 
