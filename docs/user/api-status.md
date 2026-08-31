@@ -230,6 +230,7 @@ Heartbeat, spawn, damage, death, end-of-round, and end-of-dialogue never reach `
 | `kp.as` | Bound |
 | `kp.speed` | Bound |
 | `kp.version` | Bound |
+| `kp.gamedir`, `kp.time` | Bound |
 
 `kotor.obj` and `kp.obj` are the same table. Same for `struct`. Memory is **`kotor.mem` only**.
 
@@ -248,7 +249,7 @@ Compat aliases (Bound, 28/28):
 
 `kp.str.split`, `cmdsplit`, `cexo`, `strref`
 
-`kp.random`, `kp.build`, `kp.game`, `kp.gamedir`, `kp.scriptdir`, `kp.scriptname`, `kp.time`, `kp.gametime`, `kp.vec`, `kp.routine`, `kp.routines`, `kp.engine_type`, `kp.vm_ready`
+`kp.random`, `kp.build`, `kp.game`, `kp.scriptdir`, `kp.scriptname`, `kp.gametime`, `kp.vec`, `kp.routine`, `kp.routines`, `kp.engine_type`, `kp.vm_ready`
 
 ### Struct layouts (Bound)
 
@@ -271,7 +272,10 @@ Effect, event, location, and talent userdata (`kp.effect`, `kp.event`, `kp.locat
 | 7 | `DelayCommand` | Omitted — use `kotor.registertimer` |
 | 294 | `ActionDoCommand` | Omitted |
 
-Vector and engine-struct routines are callable on this build (all marshallers resolved). A stack imbalance disables the whole bridge for the rest of the session.
+Vector and engine-struct routines are callable on this build (all marshallers resolved). Two distinct failure modes, not one:
+
+* A routine call that **hard-faults** (bad pointer, access violation) is caught by the same guard as every other hook body: the fault is logged, and `set_live(false)` takes *all* Lua scripting out of service — not just the bridge — until `lua reload` rebuilds the Lua states. See `src/runtime/fault_guard.cpp`.
+* A **stack imbalance** — a routine's handler consuming a different argument count than the bridge pushed, without ever hard-faulting — is silent. It corrupts the engine's own VM argument stack for every subsequent call, with no crash to catch and no accounting the bridge currently exposes to detect it (`VmBinding` in `src/api/routines.hpp` has no stack-depth query). There is no mechanism to recover from this today; it requires restarting the game.
 
 ### Proven in a running game (Live)
 

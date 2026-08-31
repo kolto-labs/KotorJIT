@@ -438,7 +438,7 @@ bool Runtime::boot_scripts(const Config& cfg) {
     // Everything a script can call is registered here, on each fresh state.
     // The Lua host takes this as a hook precisely so it does not have to know
     // what a KOTOR routine is -- see the note on HostConfig.
-    hc.on_state_created = [](lua_State* L) {
+    hc.on_state_created = [game_dir = cfg.game_dir](lua_State* L) {
         // Order matters in one place only: the engine-structure metatables must
         // exist before anything can hand a script one of those handles.
         api::open_engine_structs(L);      // effect/event/location/talent handles
@@ -452,7 +452,8 @@ bool Runtime::boot_scripts(const Config& cfg) {
         // Last, because an alias can only point at a function that already
         // exists. Underscored spellings and the cb table land here.
         api::compat::install_print(L);    // print -> the runtime log, flushed
-        api::compat::install(L);          // aliases, cb table, register_callback
+        // aliases, cb table, register_callback, kp.gamedir, kp.time
+        api::compat::install(L, game_dir);
     };
 
     // The console builds a state of its own and needs the same API on it.

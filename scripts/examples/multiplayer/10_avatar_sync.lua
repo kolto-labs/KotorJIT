@@ -300,13 +300,12 @@ local function build_ghost_utc()
     }, "UTC ", "V3.2")
 end
 
--- kp.gamedir is spec-only on this build (docs/user/api-status.md lists it
--- under "Spec only (nil)"), so calling it returns nil rather than a path.
--- Fall back to "." -- relative to the process's own working directory,
--- which is the game install directory on every normal launch (Windows sets
--- cwd to the exe's own folder, and so does Steam) -- so Override/ still
--- resolves without a bound path API. Tries the real API first so this keeps
--- working automatically if a future build binds it.
+-- kp.gamedir is bound as of this build (docs/user/api-status.md). The
+-- fallback below stays anyway: this script also has to run against older
+-- KotorPhasor builds where it was spec-only, and "." -- relative to the
+-- process's own working directory, which is the game install directory on
+-- every normal launch (Windows sets cwd to the exe's own folder, and so
+-- does Steam) -- resolves Override/ correctly without a bound path API.
 local function game_dir()
     if kp and kp.gamedir then
         local ok, v = pcall(kp.gamedir)
@@ -500,12 +499,13 @@ local peers = {}  -- client_id -> { host, port, seq, x,y,z,facing, area_tag, nam
 local ghost_status = "pending"
 local tick_count = 0
 
--- kp.time is spec-only (nil) on this build, same as kp.gamedir above -- a
--- bare `(kp and kp.time and kp.time()) or 0` would return 0 forever, which
--- makes every peer-timeout comparison `0 - 0 > PEER_TIMEOUT_MS` false: peers
--- would never expire. os.time() (whole seconds, always available) is coarser
--- than a real millisecond clock but is enough for an 8-second timeout.
--- Tries kp.time first so this upgrades automatically if it gets bound later.
+-- kp.time is bound as of this build (docs/user/api-status.md), same as
+-- kp.gamedir above. The fallback stays for older builds where it was
+-- spec-only: a bare `(kp and kp.time and kp.time()) or 0` would return 0
+-- forever there, which makes every peer-timeout comparison
+-- `0 - 0 > PEER_TIMEOUT_MS` false and peers would never expire. os.time()
+-- (whole seconds, always available) is coarser than a real millisecond
+-- clock but is enough for an 8-second timeout.
 local function now_ms()
     if kp and kp.time then
         local ok, v = pcall(kp.time)
