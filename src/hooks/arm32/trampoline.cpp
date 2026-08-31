@@ -33,6 +33,7 @@ const char* to_string(HookStatus s) {
         case HookStatus::DecodeFailed:     return "could not decode/relocate displaced instructions";
         case HookStatus::AllocFailed:      return "executable allocation failed";
         case HookStatus::ProtectFailed:    return "page protection change failed";
+        case HookStatus::Unaligned:        return "target is not 4-byte aligned";
     }
     return "?";
 }
@@ -85,6 +86,14 @@ void write_ldr_pc_pc0(uint8_t* p) {
     p[0] = 0xDF; p[1] = 0xF8; p[2] = 0x00; p[3] = 0xF0;
 }
 
+// bf00 = a plain 16-bit NOP. Used only as alignment padding immediately
+// before a written LDR.W PC,[PC,#0] pair, and only when that padding is
+// itself on the trampoline's live execution path (see the comment in
+// install() on why that makes it correct, not decoration).
+void write_nop(uint8_t* p) {
+    p[0] = 0x00; p[1] = 0xBF;
+}
+
 }  // namespace
 
 HookStatus Detour::install(void* target, void* detour,
@@ -110,6 +119,21 @@ HookStatus Detour::install(void* target, void* detour,
     const auto target_addr =
         reinterpret_cast<uintptr_t>(target) & ~uintptr_t(1);
     const auto* code = reinterpret_cast<const uint8_t*>(target_addr);
+
+    // The target patch (below) writes LDR.W PC,[PC,#0] + .word directly at
+    // `target_addr` -- the function's real entry point, which this engine
+    // does not get to choose or pad. Compilers align function entries to at
+    // least 4 bytes by convention, but nothing in the architecture requires
+    // it; Thumb code is only ever required to be 2-byte aligned. Refusing an
+    // unaligned target is the only option here (unlike the trampoline
+    // below, there is no earlier byte this engine may safely write a
+    // padding NOP into -- that memory belongs to whatever precedes this
+    // function, not to the hook).
+    if ((target_addr & 0x3) != 0) {
+        explain("target is not 4-byte aligned: writing the LDR.W PC,[PC,#0] "
+                "patch here would land on Align(PC,4) reading the wrong word");
+        return HookStatus::Unaligned;
+    }
 
     if (!platform::is_readable(code, kMaxStolen)) {
         explain("target address is not mapped");
@@ -140,8 +164,22 @@ HookStatus Detour::install(void* target, void* detour,
     }
 
     // --- trampoline: stolen bytes, verbatim, then jump back -------------
-
-    const size_t tramp_size = stolen + kPatchSize;
+    //
+    // alloc_exec hands back page-aligned (hence 4-byte-aligned) memory, but
+    // `stolen` itself is not guaranteed to be a multiple of 4: it accumulates
+    // 2- and 4-byte instruction lengths from the loop above, and stopping as
+    // soon as the running total reaches or passes kPatchSize (8) means the
+    // only two possible terminal values are 8 (aligned) and 10 (2 mod 4 --
+    // e.g. a 2-byte instruction followed by two 4-byte ones). Writing the
+    // LDR.W PC,[PC,#0]+.word pair straight at `tramp + stolen` in the 10
+    // case would hit the exact Align(PC,4) hazard documented above the
+    // Detour class. `pad` absorbs that: a single 16-bit NOP when needed,
+    // placed after the copied stolen bytes and before the LDR.W. That NOP
+    // sits squarely on the trampoline's normal fall-through execution path
+    // (control reaches tramp+stolen the instant the last stolen instruction
+    // finishes), so it is a real, executed instruction, not inert padding.
+    const size_t pad = (stolen % 4 == 0) ? 0 : 2;
+    const size_t tramp_size = stolen + pad + kPatchSize;
     auto* tramp = static_cast<uint8_t*>(platform::alloc_exec(tramp_size));
     if (!tramp) {
         explain("could not allocate executable memory for the trampoline");
@@ -149,8 +187,9 @@ HookStatus Detour::install(void* target, void* detour,
     }
 
     memcpy(tramp, code, stolen);
-    write_ldr_pc_pc0(tramp + stolen);
-    write_u32le(tramp + stolen + 4,
+    if (pad) write_nop(tramp + stolen);
+    write_ldr_pc_pc0(tramp + stolen + pad);
+    write_u32le(tramp + stolen + pad + 4,
                static_cast<uint32_t>((target_addr + stolen) | 1u));
 
     if (!platform::commit_exec(tramp, tramp_size)) {
@@ -178,7 +217,12 @@ HookStatus Detour::install(void* target, void* detour,
     // Nothing pads the remainder the way x86's NOP fill does: kPatchSize
     // (8) is a whole-instruction boundary by construction (the loop above
     // only stops once `stolen` has consumed complete instructions), so
-    // there is no partial-instruction tail left dangling here at all.
+    // there is no partial-instruction tail left dangling here at all. And
+    // unlike the trampoline above, this LDR.W never needs its own alignment
+    // pad -- the Unaligned check earlier in this function already refused
+    // any target that is not a multiple of 4, so `patch` (== `code` ==
+    // `target_addr`) is guaranteed 4-byte aligned by the time control
+    // reaches here.
 
     if (!platform::set_protection(patch, stolen, platform::Protect::ReadExec)) {
         platform::log(platform::LogLevel::Warn,
