@@ -557,10 +557,102 @@ void phase2_selftest() {
     check(fn() == 12, "restored: unhooked call returns 12 again");
 }
 
+// ---------------------------------------------------------------------------
+// Phase 3: the same live-detour shape as phase 2, but with a prologue whose
+// instruction lengths are deliberately chosen to force install()'s stolen-
+// byte accumulator to land on 10, not 8.
+//
+// The loop in Detour::install() only stops once the running total is >=
+// kPatchSize (8); every step adds a 2- or 4-byte instruction length, so the
+// only two reachable terminal values are 8 (a multiple of 4) and 10 (2 mod
+// 4). trampoline.cpp originally wrote the LDR.W PC,[PC,#0]+.word pair
+// straight at `tramp + stolen` with no alignment handling -- correct when
+// stolen lands on 8, silently wrong when it lands on 10, because LDR
+// (literal)'s architectural pseudocode is `base = Align(PC, 4)`, an
+// explicit round-down. At a 2-mod-4 address that rounds down INTO the
+// LDR.W's own encoding, so the processor reads two bytes of the
+// instruction itself spliced with the front two bytes of the real target
+// word, then jumps to that garbage.
+//
+// Phase 2's stub can never hit this: four 2-byte instructions (2+2+2+2)
+// always lands exactly on 8. This stub is built from a 2-byte instruction
+// followed by two 4-byte instructions (push=2, movw=4, movt=4 -> partial
+// sums 2, 6, 10) specifically to reach the 10 case and exercise the fix
+// (trampoline.cpp now pads with a single 16-bit NOP -- itself on the
+// trampoline's real execution path, not decoration -- whenever `stolen`
+// is not a multiple of 4).
+// ---------------------------------------------------------------------------
+
+void phase3_misaligned_trampoline_selftest() {
+    out("\n== phase 3: forcing the stolen==10 misaligned-trampoline path ==\n");
+
+    // push {r4, lr} ; movw r0,#7 ; movt r0,#0 ; adds r0,#5 ; pop {r4, pc}
+    // Same 7+5=12 / hooked-1012 shape as phase 2's stub, but movw+movt (two
+    // real, compiler-common 32-bit Thumb-2 instructions, both on decode.
+    // hpp's allowlist) replace the earlier bl-to-a-far-helper idiom, and
+    // land the accumulated stolen-byte count on 10 instead of 8.
+    uint8_t code[kStubMaxLen] = {
+        0x10, 0xb5,             // +0   push {r4, lr}
+        0x40, 0xf2, 0x07, 0x00, // +2   movw r0, #7
+        0xc0, 0xf2, 0x00, 0x00, // +6   movt r0, #0
+        0x05, 0x30,             // +10  adds r0, #5
+        0x10, 0xbd,             // +12  pop {r4, pc}
+    };
+    const size_t code_len = 14;
+
+    uint8_t* stub = make_stub(code, code_len);
+    if (!stub) { check(false, "stub allocation"); return; }
+
+    auto fn = reinterpret_cast<StubFn>(reinterpret_cast<uintptr_t>(stub) | 1);
+
+    out("  stub at ");
+    out_hex(static_cast<unsigned>(reinterpret_cast<uintptr_t>(stub)));
+    out("\n");
+
+    check(fn() == 12, "returns 12 before hooking");
+
+    Detour d;
+    const char* detail = nullptr;
+    const HookStatus st = d.install(stub, reinterpret_cast<void*>(
+                                       reinterpret_cast<uintptr_t>(&stub_hook_impl)),
+                                   code, 8, &detail);
+    out("  install -> ");
+    out(st == HookStatus::Ok ? "ok" : "FAILED");
+    if (detail) { out(" ("); out(detail); out(")"); }
+    out("\n");
+    check(st == HookStatus::Ok, "install");
+    if (st != HookStatus::Ok) return;
+
+    out("  displaced ");
+    out_dec(static_cast<long>(d.stolen_bytes()));
+    out(" bytes\n");
+    check(d.stolen_bytes() == 10,
+          "this test is only meaningful if it actually forced the 10-byte "
+          "(2-mod-4, misaligned) case -- a different stolen count means it "
+          "is not exercising the bug this test exists to catch");
+
+    g_orig = reinterpret_cast<StubFn>(
+        reinterpret_cast<uintptr_t>(d.original()) | 1);
+    g_hook_calls = 0;
+    const int r = fn();
+    out("  hooked call returned ");
+    out_dec(r);
+    out(", hook ran ");
+    out_dec(g_hook_calls);
+    out(" time(s)\n");
+    check(g_hook_calls == 1, "hook body ran exactly once");
+    check(r == 1012, "the trampoline's NOP-padded LDR.W read the correct "
+                     "target word and reached the real original code");
+
+    d.uninstall();
+    check(fn() == 12, "restored: unhooked call returns 12 again");
+}
+
 extern "C" int arm_main() {
     out("kp_hooktool_arm32 selftest -- under qemu-arm\n");
     phase1_lendis();
     phase2_selftest();
+    phase3_misaligned_trampoline_selftest();
     out("\n");
     out_dec(g_checks);
     out(" check(s), ");
