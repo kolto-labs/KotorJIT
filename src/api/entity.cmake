@@ -32,6 +32,18 @@ target_include_directories(kp_entity PUBLIC "${KP_API_SRC_ROOT}"
                                             "${KP_LUAJIT_NATIVE_DIR}")
 target_compile_options(kp_entity PUBLIC -m32 -Wall -Wextra)
 target_link_options(kp_entity PUBLIC -m32)
+# Headers only, no link -- but the headers live in the build tree, written by
+# runtime.cmake's custom command, and CMake only infers that ordering from a
+# real dependency edge. kp_entitytest already tries to declare this, guarded
+# by `if(TARGET kphasor)` -- which is always false at this point in the
+# script, since runtime.cmake (where kphasor is defined) is included AFTER
+# this fragment in CMakeLists.txt, despite its comment claiming the API
+# fragments are order-independent. Unguarded works: add_dependencies resolves
+# target names at generate time, once every include() has run, not eagerly --
+# proven against a two-target CMake project before relying on it here. kphasor
+# itself is unconditional on any UNIX host, which is the only host this
+# top-level CMakeLists.txt is ever configured on.
+add_dependencies(kp_entity kphasor)
 
 # --- kp_entitytest -----------------------------------------------------------
 #
@@ -39,22 +51,19 @@ target_link_options(kp_entity PUBLIC -m32)
 # It deliberately links kp_entity and its own fake dispatcher and nothing else.
 # Adding a real routines target here would give the linker two definitions of
 # kp::api::call and break both modules at once.
+# Gated on UNIX alone, not on the LuaJIT archive existing yet or on
+# `TARGET kphasor`: both were checked at configure time, when the archive is
+# always absent (it is a build-time output) and the target guard has the same
+# always-false ordering problem kp_entity's own dependency had above. That
+# silently skipped this whole target on every from-scratch configure.
 if(UNIX AND NOT WIN32)
     set(KP_LUAJIT_NATIVE_LIB "${KP_LUAJIT_NATIVE_DIR}/libluajit.a")
-    if(EXISTS "${KP_LUAJIT_NATIVE_LIB}" OR TARGET kphasor)
-        add_executable(kp_entitytest "${KP_API_TOOLS}/kp_entitytest.cpp")
-        target_include_directories(kp_entitytest PRIVATE "${KP_API_SRC_ROOT}"
-                                                         "${KP_LUAJIT_NATIVE_DIR}")
-        target_link_libraries(kp_entitytest PRIVATE kp_entity
-                              "${KP_LUAJIT_NATIVE_LIB}" m dl)
-        # runtime.cmake owns the LuaJIT build; this only waits for it.
-        if(TARGET kphasor)
-            add_dependencies(kp_entitytest kphasor)
-        endif()
-    else()
-        message(WARNING "native 32-bit LuaJIT not built yet: kp_entitytest is "
-                        "not being built. Configure runtime.cmake first.")
-    endif()
+    add_executable(kp_entitytest "${KP_API_TOOLS}/kp_entitytest.cpp")
+    target_include_directories(kp_entitytest PRIVATE "${KP_API_SRC_ROOT}"
+                                                     "${KP_LUAJIT_NATIVE_DIR}")
+    target_link_libraries(kp_entitytest PRIVATE kp_entity
+                          "${KP_LUAJIT_NATIVE_LIB}" m dl)
+    add_dependencies(kp_entitytest kphasor)
 endif()
 
 # --- the Windows half --------------------------------------------------------
