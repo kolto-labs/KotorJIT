@@ -76,7 +76,15 @@ BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
         // loader lock, and the thread does not start running until the lock is
         // released.
         HANDLE t = CreateThread(nullptr, 0, &worker, nullptr, 0, nullptr);
-        if (t != nullptr) CloseHandle(t);
+        if (t != nullptr) {
+            CloseHandle(t);
+        } else {
+            // Every other failure path in this file logs through note();
+            // silently giving up here would be the one exception.
+            char msg[96];
+            wsprintfA(msg, "CreateThread failed (GetLastError=%lu); kphasor.dll will not load", GetLastError());
+            note(msg);
+        }
     }
     return TRUE;
 }
