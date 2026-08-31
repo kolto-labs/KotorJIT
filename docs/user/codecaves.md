@@ -36,11 +36,13 @@ A codecave's address moves every time the compiler's output shifts by even one b
 
 ## What's verified today
 
-5,409 caves total, across six builds.
+16,184 caves total, across nine builds -- six of them KOTOR builds this project cares about, three of them other engines/architectures documented for future reference only.
 
 **Installable now** -- a script can actually run against these: `k1_gog_103`/`k1_steam_103`/`k1_steam_103_unpacked`, `k2_gog_aspyr`, `k2_steam_aspyr` (3,593 caves). `k2_steam_linux` was checked and has nothing usable: its `.text` carries almost no compiler alignment padding at all, unlike the MSVC-built Windows binaries.
 
 **Registered, not installable yet** -- `k1_amazongames`, `k2_win_cd_10`, `k2_win_cd_10b` (1,816 caves). These three builds are known to KotorPhasor but can't run hooks yet: their donor binaries have no matchable engine code for the VM-site adjudication `tools/gen_address_tables.py`'s `BUILDS` notes describe. Codecave discovery doesn't depend on that -- it's static analysis of the binary's own bytes -- so the caves below are documented and ready, but a script pointed at one of these three builds cannot actually load and run until that separate adjudication work lands. `k2_win_cd_10` and `k2_win_cd_10b` share one entry set: their `.text` is byte-identical, the same shortcut KOTOR 1's Steam/GOG pair already uses.
+
+**Not usable by KotorPhasor at all today** -- `JadeEmpire`, `k2_android_x86`, `nwmain` (10,775 caves). These are not KOTOR/Odyssey builds this project's hook engine can install on, at all: `JadeEmpire.exe` runs a different BioWare engine, `k2_android_libkotor2.so_x86android` is Android (a different injection mechanism than dropping a DLL next to a Windows executable), and `nwmain.exe` (Neverwinter Nights, the Aurora engine Odyssey descends from) is a 64-bit binary the hook engine's hard `sizeof(void*) == 4` assumption rules out entirely. They're documented purely so this discovery work does not have to be repeated from scratch if this project, or a fork of it, ever targets one of them. `k1_android_ARMEABI` (ARM) was attempted and deliberately left out: ARM code embeds data (literal pools) directly in its executable section the way x86 never does, so a run of zero bytes there cannot be trusted as genuinely unused without disassembly-level checking this pass did not have budget for. `daorigins.exe`/`DragonAge2.exe` (no raw binary recoverable on this machine), the Xbox builds (no raw binary present at all), and the remaining Mach-O/64-bit-ELF targets (iOS, Mac, ARM64/x86-64 Android -- present but not reached this pass) are undone, not rejected.
 
 See `data/codecaves.toml` for the full list, sizes, and signatures.
 
