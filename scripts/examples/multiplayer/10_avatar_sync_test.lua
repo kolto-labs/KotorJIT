@@ -184,6 +184,18 @@ do
     check(unpack_packet("XXXX") == nil, "bad magic must not unpack")
     check(unpack_packet(pack_packet(MSG_STATE, 1, 1, 0, 0, 0, 0, "", ""):sub(1, 20)) == nil,
           "truncated packet must not unpack")
+
+    -- Zero and negative zero round-trip correctly through the hand-rolled
+    -- f32/rf32 codec (subnormal-magnitude values are out of scope: no real
+    -- world coordinate is anywhere near that small, and MAX_COORD/finite_state
+    -- already reject values far larger than where that would even matter).
+    local f32 = get_up(pack_packet, "f32")
+    local rf32 = get_up(unpack_packet, "rf32")
+    for _, v in ipairs({ 0.0, -0.0, 1.0, -1.0, 3.14159265, -123.456 }) do
+        local back = rf32(f32(v), 0)
+        check(math.abs(back - v) <= math.abs(v) * 1e-5 + 1e-9,
+              ("f32/rf32 round-trip mismatch for %g -> %g"):format(v, back))
+    end
 end
 
 -- ---- packet-injection plumbing for the behavioral tests below ---------------
@@ -340,8 +352,35 @@ do
     check(peers[322] == nil, "Infinite coordinates must not create peer state")
 end
 
+-- Infinity in facing specifically: Inf == Inf is true in Lua, so the NaN
+-- self-inequality check does not catch it -- only a magnitude check does.
+calls = {}
+inject(MSG_STATE, 323, 1, 0, 0, 0, inf, "area_a", "InfFacing")
+OnTick(15, true)
+do
+    local peers = get_up(drain_incoming, "peers")
+    check(peers[323] == nil, "Infinite facing must not create peer state")
+end
+
 -- =============================================================================
--- 11) OnScriptUnload runs cleanly
+-- 11) a stale/replayed packet is rejected even past seq 1000
+-- =============================================================================
+-- Regression test: an earlier "(existing.seq - p.seq) > 1000" wraparound
+-- heuristic treated any packet as "fresher" once the tracked seq climbed
+-- past 1000 -- real sessions reach that in a couple of minutes -- silently
+-- defeating stale/replay rejection. The fix is a plain monotonic check.
+inject(MSG_STATE, 777, 1500, 50, 50, 0, 0, "area_a", "HighSeq")
+OnTick(16, true)
+inject(MSG_STATE, 777, 5, 999, 999, 0, 0, "area_a", "HighSeq")  -- stale replay
+OnTick(17, true)
+do
+    local p777 = get_up(drain_incoming, "peers")[777]
+    check(p777 ~= nil and p777.seq == 1500 and p777.x == 50,
+          "a stale replay with seq far below the tracked seq must still be rejected")
+end
+
+-- =============================================================================
+-- 12) OnScriptUnload runs cleanly
 -- =============================================================================
 do
     local ok, err = pcall(OnScriptUnload)

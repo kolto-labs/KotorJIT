@@ -1,5 +1,6 @@
 #include "api/entity.hpp"
 
+#include <cmath>
 #include <cstdio>
 #include <string>
 
@@ -51,7 +52,11 @@ bool object_id_at(lua_State* L, int index, std::uint32_t& out) {
     if (Handle* h = to_handle(L, index)) { out = h->id; return true; }
     if (!lua_isnumber(L, index)) return false;
     const lua_Number n = lua_tonumber(L, index);
-    if (n < 0.0 || n > 4294967295.0) return false;
+    // NaN compares false against both relational operators, so a bare
+    // range check lets it through and the uint32_t cast below is UB on it --
+    // the same gap this convention's other two copies (api/routines.cpp,
+    // lua/value.cpp) had, now closed in all three.
+    if (!std::isfinite(n) || n < 0.0 || n > 4294967295.0) return false;
     out = static_cast<std::uint32_t>(n);
     return true;
 }
