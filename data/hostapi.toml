@@ -56,6 +56,17 @@
 #     are for, and they verify expected bytes first.
 #  4. Our own bytes. Writes into an installed trampoline or a patched prologue
 #     are refused regardless of the opt-in. The hook registry knows those spans.
+#
+#     Items 3 and 4 describe kp.mem.allow_code_writes below, which is spec
+#     only: src/api/memory.hpp's own header comment argues against building
+#     it -- "There is no null-page refusal, no code-section opt-in, no
+#     allow-list... A guard that refuses the write only moves the argument."
+#     -- and the write funnel in memory.cpp has no such gate today. That is
+#     the module's own considered stance, not an oversight, so this spec
+#     entry stays unbuilt rather than being implemented against it. Read
+#     this section as the intended surface, not current behavior, same as
+#     every other entry elsewhere in this file marked "Spec only" in
+#     docs/user/api-status.md.
 #  5. Object liveness. A typed view holds an object id, not a pointer. It
 #     re-resolves on first use in a new tick, so a view of a destroyed object
 #     raises rather than reading freed memory. This is the single largest
