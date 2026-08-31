@@ -25,6 +25,7 @@
 
 #include "api/routines.hpp"
 
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <string>
@@ -126,7 +127,11 @@ void push_argument(lua_State* L, const Routine& r, std::uint8_t param, int index
             // round-trip. Same convention as api/entity.cpp's
             // push_object_id/object_id_at.
             const lua_Number n = luaL_checknumber(L, index);
-            if (n < 0.0 || n > 4294967295.0) {
+            // !isfinite first: NaN compares false against every relational
+            // operator, so a bare `n < 0.0 || n > ...` guard lets NaN through
+            // and the uint32_t cast below is undefined behaviour on it. Same
+            // fix as lua/value.cpp's Object case for the same bridge.
+            if (!std::isfinite(n) || n < 0.0 || n > 4294967295.0) {
                 luaL_error(L, "%s: argument %d (%s %s) is not a valid object id",
                            r.name, int(param) + 1, type_name(p.type), p.name);
             }
