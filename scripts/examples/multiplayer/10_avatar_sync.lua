@@ -108,11 +108,19 @@ local function ru32(s, off)
 end
 local function rf32(s, off)
     local bits = ru32(s, off)
-    if bits == 0 then return 0.0 end
     local sign = (bits >= 0x80000000) and -1 or 1
     if sign < 0 then bits = bits - 0x80000000 end
     local biased = math.floor(bits / 0x800000)
     local mant = bits % 0x800000
+    if biased == 0 then
+        -- Zero and subnormals both have a zero biased exponent and carry no
+        -- implicit leading 1, unlike the normal-number path below. The old
+        -- `bits == 0` special case only caught +0.0; -0.0 (sign bit set,
+        -- everything else zero) and any real subnormal fell through into the
+        -- normal-number formula, which wrongly adds the implicit 1.
+        if mant == 0 then return sign * 0.0 end
+        return sign * (mant / 0x800000) * (2 ^ -126)
+    end
     return sign * (1 + mant / 0x800000) * (2 ^ (biased - 127))
 end
 
@@ -325,9 +333,11 @@ local function ensure_ghost_template()
         print("[mp] cannot write " .. path .. ": " .. tostring(err))
         return "error"
     end
+    -- Buffered I/O failures (disk full, quota) often only surface at
+    -- close(), not write(); checking write() alone missed them.
     local ok_write = f:write(bytes)
-    f:close()
-    if not ok_write then
+    local ok_close = f:close()
+    if not ok_write or not ok_close then
         os.remove(path)
         print("[mp] short write to " .. path .. "; removed the partial file")
         return "error"
@@ -621,7 +631,12 @@ local function finite_state(p)
     if p.x ~= p.x or p.y ~= p.y or p.z ~= p.z or p.facing ~= p.facing then
         return false  -- NaN is the only Lua value that isn't equal to itself
     end
-    if math.abs(p.x) > MAX_COORD or math.abs(p.y) > MAX_COORD or math.abs(p.z) > MAX_COORD then
+    -- Infinity passes the NaN check above (Inf == Inf), so it needs its own
+    -- test; this header comment says "position/facing" must be bounded, but
+    -- only x/y/z were actually range-checked here -- a peer packet encoding
+    -- facing as +Inf (0x7F800000) would otherwise reach SetFacing unchecked.
+    if math.abs(p.x) > MAX_COORD or math.abs(p.y) > MAX_COORD or math.abs(p.z) > MAX_COORD
+       or math.abs(p.facing) > MAX_COORD then
         return false
     end
     return true
@@ -635,8 +650,17 @@ local function drain_incoming()
         if peer_allowed(src_host, src_port) then
             local p = unpack_packet(data)
             if p and p.client_id ~= local_client_id and finite_state(p) then
+                -- Plain monotonic check, not a wraparound heuristic: seq is a
+                -- Lua number (double) that a real session will never come
+                -- close to overflowing (2^53 exact-integer packets), so
+                -- there is no wraparound to detect. An earlier "or (existing
+                -- seq - p.seq) > 1000" guess at handling wraparound instead
+                -- made every packet look fresh again once existing.seq
+                -- climbed past 1000 -- a couple of minutes at the default
+                -- broadcast rate -- silently defeating the stale/out-of-
+                -- order rejection this check exists for.
                 local existing = peers[p.client_id]
-                if not existing or p.seq > existing.seq or (existing.seq - p.seq) > 1000 then
+                if not existing or p.seq > existing.seq then
                     if p.msgtype == MSG_BYE then
                         if existing then despawn_peer(existing) end
                         peers[p.client_id] = nil
