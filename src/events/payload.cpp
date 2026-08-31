@@ -102,11 +102,11 @@ bool parse_indexed(std::string_view source, std::string_view prefix, int& index)
 
 }  // namespace
 
-std::uint16_t script_event_type(const ScriptEventView& ev) {
-    if (!event_ok(ev)) return 0;
+int script_event_type(const ScriptEventView& ev) {
+    if (!event_ok(ev)) return -1;
     std::uint16_t t = 0;
     std::memcpy(&t, bytes(ev) + kOffType, sizeof t);
-    return t;
+    return static_cast<int>(t);
 }
 
 int script_event_int(const ScriptEventView& ev, int index) {
