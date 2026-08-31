@@ -131,7 +131,78 @@ BUILDS = {
         "md5": "1ffa92993d8015c9bb93ceac96c508c0",
         "game": "K2", "platform": "win", "format": "pe", "image_base": 0x400000,
         "encrypted": False,
-        "note": "Binary not on this machine; table emitted to prove the generator generalises.",
+        "reference_image": _ref(
+            "biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/"
+            "k2_win_gog_aspyr_swkotor2.exe/k2_win_gog_aspyr_swkotor2.exe",
+            env="KP_K2_GOG_ASPYR_EXE"),
+        "code_sections": [".text"],
+        "note": "Native Aspyr PE. Sites resolved from the func table's own "
+                "namespace-qualified symbols (name_origin='namespace'), not "
+                "hand-adjudicated: this build was never stripped.",
+    },
+    "k1_amazongames": {
+        "symbol_source": "K1__k1_win_amazongames_swkotor.exe",
+        "md5": "a2620900440a958019a401a5ad2351cf",
+        "game": "K1", "platform": "win", "format": "pe", "image_base": 0x400000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/"
+            "k1_win_amazongames_swkotor.exe/k1_win_amazongames_swkotor.exe",
+            env="KP_K1_AMAZONGAMES_EXE"),
+        "code_sections": [".text"],
+        "note": "Registered for build identification only. Only 47% of this "
+                "binary's functions carry a native symbol (corpus func_count "
+                "30101, named_count 14211) -- far short of k2_gog_aspyr's 95% "
+                "-- so almost every site needs the identity/adjudication layer "
+                "this build has none of yet, same as k2_steam_linux's original "
+                "55-binding pass. Not installable until that work is done.",
+    },
+    "k2_win_cd_10": {
+        "symbol_source": "TSL__k2_win_CD_1.0_swkotor2.exe",
+        "md5": "4a318b515e0e35ba7f289b7764ac1aad",
+        "game": "K2", "platform": "win", "format": "pe", "image_base": 0x400000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/"
+            "k2_win_CD_1.0_swkotor2.exe/k2_win_CD_1.0_swkotor2.exe",
+            env="KP_K2_CD10_EXE"),
+        "code_sections": [".text"],
+        "note": "Pre-Aspyr retail CD release, before the 1.0b patch. Registered "
+                "for build identification only -- 61% named (func_count 22502, "
+                "named_count 13740), so this needs the identity/adjudication "
+                "layer, same as k2_steam_linux's original pass. Not "
+                "installable until that work is done.",
+    },
+    "k2_win_cd_10b": {
+        "symbol_source": "TSL__k2_win_CD_1.0b_swkotor2.exe",
+        "md5": "e0fdc77e3f248d621f24d538df687d92",
+        "game": "K2", "platform": "win", "format": "pe", "image_base": 0x400000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/"
+            "k2_win_CD_1.0b_swkotor2.exe/k2_win_CD_1.0b_swkotor2.exe",
+            env="KP_K2_CD10B_EXE"),
+        "code_sections": [".text"],
+        "note": "Pre-Aspyr retail CD release, the 1.0b patch. Same func/named "
+                "counts as 1.0 in the corpus -- a small patch, not a rebuild. "
+                "Registered for build identification only; not installable "
+                "until it has the same identity/adjudication work 1.0 needs.",
+    },
+    "k2_steam_aspyr": {
+        "symbol_source": "TSL__k2_win_steam_aspyr_swkotor2.exe",
+        "md5": "2f2d31e21acc6b3d9c5f28c79a28a202",
+        "game": "K2", "platform": "win", "format": "pe", "image_base": 0x400000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/agentdecompile/vendor/MizuchiRE/binaries/"
+            "k2_win_steam_aspyr_swkotor2.exe/k2_win_steam_aspyr_swkotor2.exe",
+            env="KP_K2_STEAM_ASPYR_EXE"),
+        "code_sections": [".text"],
+        "note": "Registered for build identification only. 57% named "
+                "(func_count 26965, named_count 15311) -- unlike its GOG "
+                "sibling, this Steam build needs the identity/adjudication "
+                "layer before it resolves. Not installable until that work "
+                "is done.",
     },
 }
 
