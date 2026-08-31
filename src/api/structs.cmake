@@ -58,6 +58,16 @@ target_link_options(kp_structs PUBLIC -m32)
 if(TARGET kp_structs_generated)
     add_dependencies(kp_structs kp_structs_generated)
 endif()
+# Headers only, no link -- but they live in the build tree, written by
+# runtime.cmake's custom command, and add_dependencies is what makes CMake
+# wait for it. Not guarded on `if(TARGET kphasor)`: that target is defined by
+# runtime.cmake, included AFTER this fragment, so the guard is always false
+# here regardless of whether kphasor ends up existing. Unguarded still
+# resolves correctly -- add_dependencies matches target names at generate
+# time, once every include() in this directory has run, not at the line
+# where it is called -- and kphasor itself is unconditional on any UNIX
+# host, the only host this top-level CMakeLists.txt is ever configured on.
+add_dependencies(kp_structs kphasor)
 
 # --- kp_structtest -----------------------------------------------------------
 #
@@ -65,23 +75,23 @@ endif()
 # -no-pie because it hands its own buffer addresses to Lua as 32-bit numbers and
 # then compares what came back; a PIE build would still work, but the addresses
 # printed in the output would move every run and stop being readable evidence.
+#
+# Gated on UNIX alone, not on the LuaJIT archive existing yet or on
+# `TARGET kphasor`: both were checked at configure time, when the archive is
+# always absent (runtime.cmake's custom command that builds it hasn't run --
+# it is a BUILD-time step) and the target guard has the same always-false
+# ordering problem as kp_structs above. That silently skipped this whole
+# target on every from-scratch configure. add_dependencies below is what
+# actually establishes the build-time wait.
 if(UNIX AND NOT WIN32)
     set(KP_LUAJIT_NATIVE_LIB "${KP_LUAJIT_NATIVE_DIR}/libluajit.a")
-    if(EXISTS "${KP_LUAJIT_NATIVE_LIB}" OR TARGET kphasor)
-        add_executable(kp_structtest "${KP_STRUCTS_TOOLS}/kp_structtest.cpp")
-        target_include_directories(kp_structtest PRIVATE "${KP_STRUCTS_SRC_ROOT}"
-                                                         "${KP_LUAJIT_NATIVE_DIR}")
-        target_link_libraries(kp_structtest PRIVATE kp_structs kp_hooks
-                              "${KP_LUAJIT_NATIVE_LIB}" m dl)
-        target_link_options(kp_structtest PRIVATE -no-pie)
-        # runtime.cmake owns the LuaJIT build; this only waits for it.
-        if(TARGET kphasor)
-            add_dependencies(kp_structtest kphasor)
-        endif()
-    else()
-        message(WARNING "native 32-bit LuaJIT not built yet: kp_structtest is "
-                        "not being built. Configure runtime.cmake first.")
-    endif()
+    add_executable(kp_structtest "${KP_STRUCTS_TOOLS}/kp_structtest.cpp")
+    target_include_directories(kp_structtest PRIVATE "${KP_STRUCTS_SRC_ROOT}"
+                                                     "${KP_LUAJIT_NATIVE_DIR}")
+    target_link_libraries(kp_structtest PRIVATE kp_structs kp_hooks
+                          "${KP_LUAJIT_NATIVE_LIB}" m dl)
+    target_link_options(kp_structtest PRIVATE -no-pie)
+    add_dependencies(kp_structtest kphasor)
 endif()
 
 # --- the Windows half --------------------------------------------------------
