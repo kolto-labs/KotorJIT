@@ -54,6 +54,10 @@ if(UNIX AND NOT WIN32)
     # test that asserts on decoded lengths is testing the decoder rather than
     # this month's codegen defaults.
     target_compile_options(kp_hooktool PRIVATE -fcf-protection=none)
+
+    # `selftest` exits on its own g_failures counter; `lendis` is a manual
+    # decode-and-print subcommand, not a test.
+    add_test(NAME kp_hooktool.selftest COMMAND kp_hooktool selftest)
 endif()
 
 # --- the Windows half --------------------------------------------------------

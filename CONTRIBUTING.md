@@ -82,9 +82,21 @@ A complete, self-contained example — no proxy DLL, no relay server, direct UDP
 
 If a script needs to inject raw bytes somewhere in the game's code — a small trampoline, a patch stub — `data/codecaves.toml` has thousands of pre-located, individually verified unused-byte spans across every supported build, addressed by `kotor.mem.findsig` signature rather than a hardcoded address so the same script works across builds where the surrounding bytes match. See [`docs/user/codecaves.md`](docs/user/codecaves.md).
 
-## Testing without a screen
+## Testing
 
-`scripts/harness/` runs the game under Xvfb and Wine, for K1 and K2:
+Two tiers. Neither needs Star Wars IP checked into this repo.
+
+**Tests** (default, offline, no game required): the Lua host, event
+arbitration, struct layout, entity API and hook engine each run against
+checked-in fixtures under `scripts/examples/` and `src/generated/`.
+
+```sh
+cmake -S . -B build && cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+**Real-game smoke test** (opt-in, needs your own Steam KOTOR 1 install and
+Wine): `scripts/harness/` runs the game itself under Xvfb, for K1 and K2:
 
 ```sh
 ./scripts/harness/spike_headless_k1.sh

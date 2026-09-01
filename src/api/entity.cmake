@@ -64,6 +64,10 @@ if(UNIX AND NOT WIN32)
     target_link_libraries(kp_entitytest PRIVATE kp_entity
                           "${KP_LUAJIT_NATIVE_LIB}" m dl)
     add_dependencies(kp_entitytest kphasor)
+
+    # Print-and-inspect, not assertion-based (it always exits 0): registered as
+    # a smoke test, so a crash or an uncaught Lua error still fails the suite.
+    add_test(NAME kp_entitytest COMMAND kp_entitytest)
 endif()
 
 # --- the Windows half --------------------------------------------------------
