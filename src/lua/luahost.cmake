@@ -38,6 +38,29 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
     add_dependencies(kp_luatest kphasor)
     target_link_libraries(kp_luatest PRIVATE "${KP_LUATEST_LUAJIT}" m dl)
 
+    # kp_luatest is a print-and-inspect tool (it always exits 0 on a valid
+    # dispatch), so these assert on its stdout narrative instead of its exit
+    # code. Each fixture dir under scripts/examples/ documents its own expected
+    # outcome in a header comment; the regex below is that comment made
+    # machine-checked.
+    add_test(NAME kp_luatest.arbitration
+             COMMAND kp_luatest scripts/examples/arbitration OnRunScript k_def_heartbt01 0 0
+             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set_tests_properties(kp_luatest.arbitration PROPERTIES
+        PASS_REGULAR_EXPRESSION "claimed by  : 25_claims_via_string")
+
+    add_test(NAME kp_luatest.fallback
+             COMMAND kp_luatest scripts/examples/edge_fallback OnRunScript k_def_heartbt01 0 0
+             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set_tests_properties(kp_luatest.fallback PROPERTIES
+        PASS_REGULAR_EXPRESSION "no \\(fallback applied\\)")
+
+    add_test(NAME kp_luatest.quarantine
+             COMMAND kp_luatest scripts/examples/edge_quarantine OnTick 0 --repeat 3
+             WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set_tests_properties(kp_luatest.quarantine PROPERTIES
+        PASS_REGULAR_EXPRESSION "quarantined after 3 errors")
+
     # Host-side proof that EventHandler identity, CScriptEvent reads, and the
     # thiscall cleanup for five stack arguments are correct -- without launching
     # the game. Address tables are loaded as data; nothing is patched in swkotor.
@@ -59,6 +82,9 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
         PROPERTIES OBJECT_DEPENDS "${KP_LUATEST_GENERATED}")
     add_dependencies(kp_eventtest kphasor)
     target_link_libraries(kp_eventtest PRIVATE kp_hooks "${KP_LUATEST_LUAJIT}" m dl)
+
+    # Self-contained: exits 0 on kp_eventtest's own g_failures == 0.
+    add_test(NAME kp_eventtest COMMAND kp_eventtest)
 elseif(UNIX AND NOT WIN32)
     message(STATUS "kp_luatest needs the native LuaJIT that the kphasor target "
                    "builds; include src/runtime/runtime.cmake first")

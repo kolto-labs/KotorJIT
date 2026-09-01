@@ -2,6 +2,7 @@
 
 - Prefer inline terminal commands over writing Python scripts or test files to the filesystem.
 - Do not run headless swkotor harness demos to verify Lua work; confirm codecaves and Lua host accuracy instead.
+- Use `ctest --test-dir build --output-on-failure` as the default, fast, offline check (no game, no Wine). `scripts/harness/` stays the separate opt-in real-game smoke test.
 - When asked for hands-off execution, complete build, implement, and debug without pausing for confirmation.
 - Replace Halo/Phasor-specific APIs with KOTOR-specific names; do not invent Halo-style helpers such as `getplayer` or `getobject`.
 - Keep client, server, and multiplayer functions and events; treat KOTOR as multiplayer with the singleton player on the local server.
