@@ -24,14 +24,11 @@ flowchart TD
 
 Generated argument lists live in [../lua-api.md](../lua-api.md) (events) and [../nwscript-api.md](../nwscript-api.md) (engine routines). Those files list every name in the contract. They do not say which names fire today. Use [api-status.md](api-status.md) for that.
 
-## What 0.1.0 supports
+## What's supported
 
-| Game | Build | Status |
-|---|---|---|
-| KOTOR 1 | Steam, Windows (`k1_steam_103_unpacked`) | Supported |
-| KOTOR 2 | Steam, native Linux | Not in this release |
+KOTOR 1 (GOG and Steam, Windows) and KOTOR 2 (native Linux, and GOG/Steam Aspyr on Windows) all install and run scripts today. The full list, with the one open caveat for K2 (typed struct access is unverified there), is in [../../USAGE.md](../../USAGE.md#supported-builds).
 
-The Steam executable is encrypted on disk. The runtime waits until the game deciphers itself, then checks the image hash before it patches anything. An unknown build is left alone.
+The Steam K1 executable is encrypted on disk. The runtime waits until the game deciphers itself, then checks the image hash before it patches anything. An unknown build is left alone.
 
 ## Read the log
 

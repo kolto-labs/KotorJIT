@@ -293,7 +293,7 @@ Vector and engine-struct routines are callable on this build (all marshallers re
 
 Every other name in [../nwscript-api.md](../nwscript-api.md) for K1. The generated table starts at `Random` (id 0) and ends at `YavinHackCloseDoor` (id 771), skipping ids 6, 7, and 294.
 
-K2 has a separate table (803 of 877). It is compiled in. This release does not support K2.
+K2 has a separate table (803 of 877). It is compiled in and callable: `k2_linux_swkotor2.elf`, `k2_win_gog_aspyr_swkotor2.exe`, and `k2_win_steam_aspyr_swkotor2.exe` all have every required hook site resolved and install cleanly (see `data/addresses/`). What is **not** verified for K2 yet: `kotor.struct`/`kp.struct`'s field offsets. `data/research/phasor_structs.json` was researched against K1's build only, so typed struct access on a K2 build is reading K1 offsets against a different binary and should not be trusted. Raw `kotor.mem.*` access, the routine bridge, and events are unaffected by this — they do not depend on struct field research.
 
 ---
 

@@ -1,71 +1,46 @@
 # KotorPhasor
 
-Lua scripts for Star Wars: Knights of the Old Republic.
+A Lua scripting engine for Star Wars: Knights of the Old Republic that replaces NWScript's event model instead of extending it.
 
-The runtime loads with the game, embeds LuaJIT, and hands the engine's own script events to your `.lua` files. You can watch an event, change it, or stop it. Files reload without restarting the game.
+## The problem with NWScript
 
-**0.1.0** supports KOTOR 1 on Steam (Windows). See [docs/user/](docs/user/) for install, scripting, and what is live.
+Every event in KOTOR — a heartbeat, a door opening, a module loading — resolves to exactly one script, named in a GFF field, picked by a resource-resolution order you hope goes your way. Two mods that both want to react to the same event have to fight over that one slot, patch each other's files, or give up. This is why script conflicts are the most common reason KOTOR mods break each other.
+
+## The alternative
+
+Drop a `.lua` file into a scripts folder. It runs once at startup and decides for itself which events it cares about — no GFF field, no resref, no slot to claim.
 
 ```lua
 priority = 10
 
 function OnRunScript(script_name, object_id, has_object, relevant)
     if script_name == "k_ambush_spawn" then
-        return false
+        return false  -- block this one ambush, leave everything else alone
     end
 end
 ```
 
-769 of the game's 772 engine routines are `kotor.GetFirstPC()`, `kotor.AdjustAlignment(...)`, and so on. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` are not bound. Use `kp.as` and `kotor.registertimer` instead.
+As many scripts as you want can watch the same event. Every one of them runs; the first decisive answer wins, and every later script is told so (`relevant = false`) rather than being skipped. Nobody has to know the others exist. See [`docs/user/scripts.md`](docs/user/scripts.md) for the exact rule.
 
-## Supported games
+This model isn't new — it's the same one [Phasor](https://github.com/urbanyoung/Phasor) used for Halo: Combat Evolved servers. KotorPhasor is that idea rebuilt for KOTOR's engine. See [`ATTRIBUTION.md`](ATTRIBUTION.md) for the specifics of what carried over.
 
-| Game | Build | 0.1.0 |
-|---|---|---|
-| KOTOR 1 | Steam, Windows | Supported |
-| KOTOR 2 | Steam, native Linux | Not yet |
+## What you get past the scripting model
 
-The runtime identifies the executable by hash. An unknown build is left unpatched. The Steam KOTOR 1 image is encrypted on disk; KotorPhasor waits for it to decipher, then checks it. Details: [docs/steam-gog-equivalence.md](docs/steam-gog-equivalence.md).
+- **The engine, not a subset of it.** 769 of KOTOR 1's 772 routines are callable directly as `kotor.GetFirstPC()`, `kotor.AdjustAlignment(...)`, and so on — no NWScript compiler, no `.nss` file. The three that aren't (`AssignCommand`, `DelayCommand`, `ActionDoCommand`) need a script closure NWScript can build and Lua can't; `kp.as` and `kotor.registertimer` cover the same ground.
+- **Raw memory, when the API doesn't reach far enough.** `kotor.mem.readbyte`/`writebyte`/`findsig` and friends read and write the game's own memory directly. A blaster that fires speeders instead of bolts, a minimap that pings a webserver on every player move — the API surface doesn't have to have a name for your idea already.
+- **Multiplayer as a first-class idea, not an afterthought.** KOTOR's engine already treats a single-player game as a server with one connected client; KotorPhasor's event model was built around that fact from the start. A real, working example — direct UDP sync between two game instances with no external server, no extra process, just a Lua script and the engine's own socket library — ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/).
 
-## Install
+## Try it
 
-Build (32-bit Windows cross-compiler and LuaJIT):
+Build, install, and scripting instructions, start to finish: **[USAGE.md](USAGE.md)**.
 
-```sh
-sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686
+## Status
 
-git clone --branch v2.1 https://github.com/LuaJIT/LuaJIT third_party/luajit
-make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows
-
-cmake -S . -B build && cmake --build build
-./scripts/install_to_game.sh install /path/to/swkotor
-```
-
-Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
-
-Full steps: [docs/user/install.md](docs/user/install.md).
-
-## What works
-
-These callbacks fire in a running 0.1.0 game: `OnScriptLoad`, `OnTick`, `OnRunScript`, `OnConsoleCommand`, `OnSave`, `OnLoad`, `OnModuleLoad`, `OnModulePlayerEnter`, `OnAreaEnter`, `OnCreatureAttacked`. Other EventHandler names (doors, placeables, triggers, …) are installed and fire when the engine raises that id.
-
-Do not use `OnCreatureHeartbeat` or `OnDialogConditional` as function names. They never run. Filter `OnRunScript` by `script_name` instead.
-
-The full list, with a status on each name: [docs/user/api-status.md](docs/user/api-status.md). How to write a script: [docs/user/scripts.md](docs/user/scripts.md).
-
-Argument catalogs (generated, not status): [docs/lua-api.md](docs/lua-api.md), [docs/nwscript-api.md](docs/nwscript-api.md).
-
-## Testing without a screen
-
-`scripts/harness/` runs the game under Xvfb and Wine:
-
-```sh
-./scripts/harness/spike_headless_k1.sh
-```
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (native Linux, and GOG/Steam Aspyr on Windows) install cleanly and run scripts today, including the full routine bridge and event dispatch. K2's typed struct access (`kotor.struct`) is the one piece not yet verified — see [USAGE.md](USAGE.md#supported-builds) for the exact list and [`docs/user/api-status.md`](docs/user/api-status.md) for what fires.
 
 ## Credits
 
-Built on other people's work. See [ATTRIBUTION.md](ATTRIBUTION.md).
+Built on other people's work — see [`ATTRIBUTION.md`](ATTRIBUTION.md).
 
 Not affiliated with BioWare, Obsidian, LucasArts, Aspyr, or Disney. Ships no game content. Bring your own copy of the game.
 
