@@ -189,7 +189,24 @@ struct Widget {
 
 // noinline+noclone so -O2 cannot fold this away; the whole test depends on there
 // being a real function at a real address with a real prologue.
-int KP_THISCALL __attribute__((noinline, noclone))
+//
+// aligned(4096) is load-bearing, not cosmetic. install() makes the target's
+// *page* writable (mprotect/VirtualProtect only work in page units), patches
+// it, then makes that page executable again -- and every one of those calls is
+// itself PIC code that has to reach a shared `__x86.get_pc_thunk.bx` to find its
+// GOT. On a real target that thunk lives in a different image entirely, so this
+// never matters. Here the "target" is a function in this very binary, so
+// nothing stops the linker from placing that thunk a few hundred bytes after
+// widget_sum -- on the same page. The first mprotect(..., RW) then strips exec
+// from the thunk along with the intended 5 bytes, and the *second* call
+// (restoring RX) faults trying to fetch the thunk it needs to make that very
+// call. Verified via nm against a GCC 13 -m32 Ubuntu build (the CI toolchain):
+// __x86.get_pc_thunk.bx at 0x4390, widget_sum at 0x4490, both inside page
+// [0x4000, 0x5000) -- and kp_hooktool.selftest segfaults right there. GCC 16
+// happened to lay the same TU out with more distance, so it never showed up
+// locally. Giving widget_sum its own page removes the coincidence instead of
+// hoping the next compiler keeps being lucky.
+int KP_THISCALL __attribute__((noinline, noclone, aligned(4096)))
 widget_sum(Widget* self, int a, int b) {
     volatile int base = self->base;
     return base + a + b;

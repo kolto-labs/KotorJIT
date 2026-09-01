@@ -24,6 +24,11 @@
 *.tlk
 *.bik
 
+# Ghidra decompile scratch: a project built directly from the game binary
+# (full disassembly/decompilation database). Never commit this -- it's a
+# working area for agentdecompile-cli, same category as /build/ and /tmp/.
+/agentdecompile_projects/
+
 __pycache__/
 *.pyc
 .venv/
