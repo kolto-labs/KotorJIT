@@ -1,24 +1,21 @@
 -- Direct-UDP avatar sync: see another KotorPhasor player walk around your game.
 --
--- Reverse-engineered from Project [redacted] (MIT-licensed, fan-made,
--- unaffiliated with any publisher; a spiritual continuation of the [redacted]
--- project) to understand the *mechanism*, not to be protocol-compatible with
--- it. [redacted] needed a MinHook proxy DLL, a
--- feat-routine side channel, named shared memory, and half a dozen satellite
--- .exe processes because a slim injected DLL has no other way to reach native
--- code from compiled NWScript. KotorPhasor doesn't have that problem -- Lua
--- already sits where their native hook did -- so this file replaces all of
--- that with: OnTick, the routine bridge, and LuaJIT's ffi calling ws2_32
--- directly. One script, nothing external, no dedicated server process.
+-- KOTOR's engine already treats a single-player game as a server with one
+-- connected client. A DLL-injection mod that wants multiplayer normally
+-- needs a proxy hook DLL, a side channel to reach native code from compiled
+-- NWScript, shared memory, and satellite processes, because a slim injected
+-- DLL has no other way in. KotorPhasor doesn't have that problem -- Lua
+-- already sits where a native hook would -- so this file is: OnTick, the
+-- routine bridge, and LuaJIT's ffi calling ws2_32 directly. One script,
+-- nothing external, no dedicated server process.
 --
--- Scope, on purpose ([redacted]' own README draws the same line and for the
--- same reason -- combat/quest/inventory state depends on far more than two
--- creatures agreeing on where they stand): this syncs a remote player's
+-- Scope, on purpose: combat/quest/inventory state depends on far more than
+-- two creatures agreeing on where they stand. This syncs a remote player's
 -- position, facing and name as a placeholder actor. It does not sync combat,
 -- dialogue, quests, items, or the world. Both players must be in the same
 -- area (compared by area tag) for a peer's actor to appear. Realistically
--- caps out around 2-4 players, same as the project this was reverse-engineered
--- from -- the sync loop is O(peers) per tick with no interest management.
+-- caps out around 2-4 players -- the sync loop is O(peers) per tick with no
+-- interest management.
 --
 -- SETUP: edit the CONFIG block below on every machine, then load the game.
 -- The first launch only writes the ghost actor's template into Override and
@@ -126,8 +123,7 @@ end
 
 -- =============================================================================
 -- ghost template -- a hand-built GFF/UTC blueprint, installed into Override on
--- first load. Field set is close to [redacted]' own [redacted]ghost.base.utc
--- (decoded by hand for this project): blank Script* fields so it never runs
+-- first load: blank Script* fields so it never runs
 -- its own AI, Plot/Min1HP/NoPermDeath/NotReorienting so nothing -- not combat,
 -- not death, not the engine's own reorientation -- ever touches it except us.
 --
