@@ -92,6 +92,9 @@ if(UNIX AND NOT WIN32)
                           "${KP_LUAJIT_NATIVE_LIB}" m dl)
     target_link_options(kp_structtest PRIVATE -no-pie)
     add_dependencies(kp_structtest kphasor)
+
+    # Self-contained: exits 0 on kp_structtest's own g_failures == 0.
+    add_test(NAME kp_structtest COMMAND kp_structtest)
 endif()
 
 # --- the Windows half --------------------------------------------------------

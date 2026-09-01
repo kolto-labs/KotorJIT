@@ -9,6 +9,13 @@
 cmake_minimum_required(VERSION 3.20)
 project(KotorPhasor VERSION 0.1.0 LANGUAGES CXX)
 
+# The offline tools under tools/ (kp_luatest, kp_eventtest, kp_structtest,
+# kp_entitytest, kp_supporttest, kp_hooktool) exercise the runtime against
+# checked-in fixtures, with no game install and no Wine. `ctest` is the one
+# fast, authoritative, idempotent command; scripts/harness/ stays a separate,
+# explicitly opt-in tier that needs a real KOTOR install.
+enable_testing()
+
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's
 # startup, so an optimised default is the honest one.
