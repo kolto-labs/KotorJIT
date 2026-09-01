@@ -1,6 +1,6 @@
 # Install KotorPhasor
 
-You need a legal copy of KOTOR 1 (Steam, Windows). Build the runtime first, or use the `kphasor.dll` and proxy `binkw32.dll` from a release.
+You need a legal copy of the game. See [USAGE.md](../../USAGE.md#supported-builds) in the repo root for which KOTOR 1 and KOTOR 2 builds are supported today. Build the runtime first, or use the `kphasor.dll` and proxy `binkw32.dll` from a release.
 
 ## Build
 
