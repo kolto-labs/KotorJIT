@@ -74,6 +74,10 @@ if(UNIX AND NOT WIN32)
     target_link_options(kp_supporttest PRIVATE -m32)
     add_dependencies(kp_supporttest kphasor)
     target_link_libraries(kp_supporttest PRIVATE "${KP_SUPPORT_LUAJIT}" m dl)
+
+    # Self-contained: writes its own scratch scripts to a temp dir (removed and
+    # recreated each run) and exits on api::timers::pending() == 0.
+    add_test(NAME kp_supporttest COMMAND kp_supporttest)
 endif()
 
 # --- the Windows half --------------------------------------------------------
