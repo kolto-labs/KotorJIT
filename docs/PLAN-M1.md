@@ -42,7 +42,7 @@ from-scratch RE project; it is an engineering project on top of finished RE.
 **Intended outcome for M1.** A runtime that loads into both games, runs Lua scripts, delivers
 real NWScript events with correct arguments, honours their return values to block or allow
 those events, exposes all 772 K1 engine routines back to Lua, and is demonstrated working in
-a live game under headless Wine — with no tests written yet, per the stated sequencing.
+a live game under headless Wine. Offline `ctest` now covers the host tools; the live-game harness stays opt-in.
 
 **Attribution stance.** `kotor-patch-manager` (Lane Dibello and contributors) is credited in
 a top-level `ATTRIBUTION.md` for its code caves, injection points, and RE findings, whether

@@ -87,8 +87,9 @@ If a script needs to inject raw bytes somewhere in the game's code — a small t
 Two tiers. Neither needs Star Wars IP checked into this repo.
 
 **Tests** (default, offline, no game required): the Lua host, event
-arbitration, struct layout, entity API and hook engine each run against
-checked-in fixtures under `scripts/examples/` and `src/generated/`.
+arbitration, struct layout, entity API, memory module and hook engine.
+Script fixtures live under `scripts/examples/`; generated tables under
+`src/generated/`; memory and hook tools probe this process.
 
 ```sh
 cmake -S . -B build && cmake --build build
@@ -103,6 +104,10 @@ Wine): `scripts/harness/` runs the game itself under Xvfb, for K1 and K2:
 ```
 
 See the rest of [`scripts/harness/`](scripts/harness/) for the full set — live sessions, gameplay regression tests, and demo scenes.
+
+`/agentdecompile_projects/` is local scratch for `agentdecompile-cli` (a Ghidra project built from your own game binary). It is gitignored, and that path was removed from `main`'s history. Do not commit it.
+
+Regenerating `data/addresses/*.json` or `src/generated/builds.inc` needs the local reverse-engineering corpus *and* the per-build reference images. Without the images, `tools/gen_address_tables.py` drops `expected_bytes` and can truncate `builds.inc`. Do not commit a regen that was run without those images.
 
 ## Uninstall
 
