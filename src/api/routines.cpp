@@ -330,7 +330,7 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 // ------------------------------------------------------------ register ------
 
 // CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08.
-// data/hostapi.toml `kp.as` — write, call body, restore (including on error).
+// data/hostapi.toml `kp.as`: write, call body, restore (including on error).
 int l_as(lua_State* L) {
     const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
     luaL_checktype(L, 2, LUA_TFUNCTION);
@@ -380,7 +380,7 @@ void register_all(lua_State* L) {
     }
     lua_pop(L, 1);
 
-    // kp.as — specified in data/hostapi.toml; the generator is not in-tree.
+    // kp.as: specified in data/hostapi.toml; the generator is not in-tree.
     lua_getglobal(L, "kp");
     if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
