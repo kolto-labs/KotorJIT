@@ -16,3 +16,6 @@
 - 769 of 772 engine routines are callable from Lua; `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need NWScript closures, so use OnTick timers instead of `DelayCommand`.
 - Milestone and living-plan docs live under `docs/` (including `docs/PLAN-M1.md`).
 - Git on this external drive is often slow or hangs; prefer Read and Grep for inspection.
+- `origin` may still say `arrenkaetris/KotorPhasor`; GitHub resolves that to `bodencrouch/KotorPhasor` (same repo).
+- `/agentdecompile_projects/` is local Ghidra scratch, gitignored, and purged from `main` history. Never commit it.
+- Do not regenerate `data/addresses/` or `src/generated/builds.inc` without local reference images; a corpus-only run drops `expected_bytes` and can truncate `builds.inc`.

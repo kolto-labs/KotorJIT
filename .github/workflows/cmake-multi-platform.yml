@@ -83,7 +83,4 @@ jobs:
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      # No CTest tests are registered yet (the native tools under tools/ are
-      # ad hoc binaries with their own build recipes, not CTest targets), so
-      # this currently reports "No tests were found" rather than failing.
-      run: ctest --build-config Release
+      run: ctest --build-config Release --output-on-failure

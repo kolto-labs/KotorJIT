@@ -10,10 +10,12 @@ cmake_minimum_required(VERSION 3.20)
 project(KotorPhasor VERSION 0.1.0 LANGUAGES CXX)
 
 # The offline tools under tools/ (kp_luatest, kp_eventtest, kp_structtest,
-# kp_entitytest, kp_supporttest, kp_hooktool) exercise the runtime against
-# checked-in fixtures, with no game install and no Wine. `ctest` is the one
-# fast, authoritative, idempotent command; scripts/harness/ stays a separate,
-# explicitly opt-in tier that needs a real KOTOR install.
+# kp_entitytest, kp_memtest, kp_supporttest, kp_hooktool) exercise the runtime
+# with no game install and no Wine: script fixtures under scripts/examples/,
+# generated tables under src/generated/, and self-process probes for memory
+# and hooks. `ctest` is the one fast, authoritative, idempotent command;
+# scripts/harness/ stays a separate, explicitly opt-in tier that needs a real
+# KOTOR install.
 enable_testing()
 
 # Classification reads every byte of every section, twice over for the marker
@@ -85,6 +87,9 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
+
+# After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
 # After runtime.cmake: it links the native LuaJIT that target builds.
