@@ -35,3 +35,9 @@ __pycache__/
 
 # Local Cursor/MCP session leftovers
 uninstalled-mcp-plugins.txt
+.claude/
+.cursor/
+.mission/
+.remember/
+AGENTS.md
+CLAUDE.md
