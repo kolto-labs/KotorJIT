@@ -127,7 +127,7 @@ The cave is installed. The Lua name fires when the engine raises that id.
 | `OnCreatureUserDefined` | Bound |
 | `OnCreatureInventoryDisturbed` | Bound |
 | `OnCreaturePathBlocked` | Bound |
-| `OnCreatureAttacked` | Live |
+| `OnCreatureAttacked` | Live (NPC victims only: it never dispatched for the player creature as `creature`, verified 2026-09-16; poll HP on `OnTick` for "the player got hit") |
 | `OnCreatureTimedEvent` | Bound |
 | `OnCreatureApplyEffect` | Bound |
 | `OnCreatureRemoveEffect` | Bound |
@@ -153,7 +153,7 @@ The cave is installed. The Lua name fires when the engine raises that id.
 | `OnModulePlayerEnter` | Live |
 | `OnModulePlayerExit` | Bound |
 | `OnModuleActivateItem` | Bound |
-| `OnModuleAcquireItem` | Bound |
+| `OnModuleAcquireItem` | Live (2026-09-16: fires for `CreateItemOnObject` on the PC; fires more than once per item, debounce by item id) |
 | `OnModuleLoseItem` | Bound |
 | `OnModulePlayerDeath` | Bound |
 | `OnModulePlayerDying` | Bound |
