@@ -1,10 +1,11 @@
 -- Rancor roulette: every enemy that notices you becomes something else.
 --
 -- The moment a hostile perceives the player it is redrawn as a random
--- somebody else (a Rakata, a Jawa, a Gamorrean, Malak, Bandon, HK-47,
--- Revan) with a whirlwind puff and a bark. Stats do not change: a Jawa
--- still hits like a Sith trooper, Malak still dies in three swings. That is
--- the joke. (The rancor is in the name and not in the wheel; see below.)
+-- one of your own companions -- Bastila, Canderous, Carth, Jolee, Juhani --
+-- or Darth Malak, with a whirlwind puff and a bark. Stats do not change: a
+-- Sith trooper wearing Bastila still hits like a trooper and dies in three
+-- swings. That is the joke. (The rancor is in the name, not the wheel: see
+-- below for why a fighting creature cannot safely wear a monster.)
 --
 -- Mechanism: the stock perception script (k_def_percept01) runs ON the
 -- perceiver, so OnRunScript gives us the sentry as object_id; heartbeat,
@@ -31,14 +32,22 @@ priority = 30
 -- those bodies the client stopped at exactly 400 frames and the channel
 -- died (2026-09-16, twice), while every humanoid-disguise demo survived the
 -- same host conditions. Big-monster disguises are for out-of-combat scenes.
+-- Only appearances with a complete humanoid combat animation set. Disguising
+-- a *fighting* creature into a non-humanoid (rancor 80, bantha 53, kath hound
+-- 75) or a unique-character or droid model (HK-47 3 is a droid with no humanoid set, Bandon 184) faults the engine when
+-- it asks the borrowed model for a combat animation it does not have: the
+-- client froze at 400 frames twice, then a null read at 0x6502ff crashed the
+-- game outright (2026-09-16, three runs). Malak-on-a-fighter (necromancer) and
+-- the PC's own model on a fighter (doppelganger) both survive, so this wheel
+-- is party humans (and Malak, the one unique model proven safe) only. Big-monster disguises belong in an out-of-combat
+-- scene (a cantina, a cutscene), not a brawl.
 local ROULETTE = {
-  { row = 36, name = "rakata" },
-  { row = 73, name = "jawa" },
-  { row = 68, name = "gamorrean" },
   { row = 21, name = "darth malak" },
-  { row = 184, name = "darth bandon" },
-  { row = 3, name = "hk-47" },
-  { row = 22, name = "revan" },
+  { row = 4,  name = "bastila" },
+  { row = 5,  name = "canderous" },
+  { row = 6,  name = "carth" },
+  { row = 7,  name = "jolee" },
+  { row = 8,  name = "juhani" },
 }
 local VFX_WHIRLWIND = 1018
 local DURATION_PERMANENT = 2
