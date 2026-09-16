@@ -20,7 +20,7 @@
 # virtual display, and the capture competes with the thing being captured for
 # CPU. 15 is smooth enough to read and cheap enough not to distort the timings
 # the harness is also measuring.
-KP_REC_FPS="${KP_REC_FPS:-15}"
+KP_REC_FPS="${KP_REC_FPS:-10}"
 KP_REC_CRF="${KP_REC_CRF:-23}"
 
 _harness_root_for_rec() {
@@ -68,8 +68,8 @@ rec_start() {
   # yuv420p + faststart are what make the file play in a browser rather than only
   # in mpv, which is the whole point if these end up on a page somewhere.
   ffmpeg -nostdin -loglevel error -y \
-    -f x11grab -framerate "$KP_REC_FPS" -video_size "$geom" -i ":$disp" \
-    -c:v libx264 -preset veryfast -crf "$KP_REC_CRF" -pix_fmt yuv420p \
+    -f x11grab -draw_mouse 0 -framerate "$KP_REC_FPS" -video_size "$geom" -i ":$disp" \
+    -c:v libx264 -preset "${KP_REC_PRESET:-ultrafast}" -crf "$KP_REC_CRF" -pix_fmt yuv420p \
     -movflags +faststart \
     "$base.mp4" >"$base.ffmpeg.log" 2>&1 &
   _kp_rec_pid=$!
@@ -98,7 +98,7 @@ rec_stop() {
   # outright it leaves a file no player will open, which is a miserable way to
   # discover a ten-minute run produced nothing.
   kill -INT "$_kp_rec_pid" 2>/dev/null
-  for _ in $(seq 1 50); do
+  for _ in $(seq 1 600); do   # up to 2 min: a loaded host flushes slowly
     kill -0 "$_kp_rec_pid" 2>/dev/null || break
     sleep 0.2
   done

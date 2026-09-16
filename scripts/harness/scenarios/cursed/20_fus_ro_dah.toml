@@ -1,0 +1,78 @@
+# Cursed demo: fus ro dah
+# Runs with scripts/examples/cursed/20_fus_ro_dah.lua deployed into the game's
+# kotorphasor/scripts directory (scripts/harness/record_cursed.sh does that,
+# records the display and collects the oracle lines). Arena: the Endar Spire
+# room3 checkpoint (its own fight is already over), then six Sith troopers
+# summoned in a ring around the player, at retail speed so the recording is
+# watchable. Every gate is engine state, never a sleep.
+name = "cursed: fus ro dah"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 240
+load_timeout = 600
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_room3"
+timeout = 600
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+
+[[step]]
+label = "counter plumbing round-trip: PC local numbers 6 and 7 are writable and readable from the harness state"
+do = "assert_lua"
+code = "local pc=kotor.GetFirstPC(); kotor.SetLocalNumber(pc,7,42); kotor.SetLocalNumber(pc,6,17); local a,b=kotor.GetLocalNumber(pc,7),kotor.GetLocalNumber(pc,6); kotor.SetLocalNumber(pc,7,0); kotor.SetLocalNumber(pc,6,0); return a==42 and b==17 and kotor.GetLocalNumber(pc,7)==0"
+equals = true
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+label = "finish Trask's tutorial bark left open by the checkpoint"
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "the curse is armed (PC local number 5 == 1, set by the script 200 ticks after the load)"
+do = "assert_lua"
+code = "local pc=kotor.GetFirstPC(); return kotor.GetLocalNumber(pc,5) == 1"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+label = "arena: summon six Sith troopers in a ring around the player (CreateObject + hostile faction)"
+do = "assert_lua"
+code = "local pc=kotor.GetFirstPC(); local p=kotor.GetPosition(pc); local n=0; for i=1,6 do local a=i/6*2*math.pi; local loc=kotor.Location({x=p.x+4.5*math.cos(a),y=p.y+4.5*math.sin(a),z=p.z},0); local c=kotor.CreateObject(1,'g_sithtroop01',loc,1); if kotor.GetIsObjectValid(c)==1 then kotor.ChangeToStandardFaction(c,1); n=n+1 end end; return n==6"
+equals = true
+timeout = 60
+
+[[step]]
+label = "the ring engaged: the player is in combat, or a live hostile stands within 25m"
+do = "assert_lua"
+code = "local pc=kotor.GetFirstPC(); if kotor.GetIsInCombat(pc)==1 then return true end; local area=kotor.GetArea(pc); local o=kotor.GetFirstObjectInArea(area,1); while kotor.GetIsObjectValid(o)==1 do if kotor.GetIsEnemy(o,pc)==1 and kotor.GetIsDead(o)~=1 and kotor.GetDistanceBetween(pc,o)<=25 then return true end; o=kotor.GetNextObjectInArea(area,1) end; return false"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+label = "fight the room while the curse fires"
+do = "clear_room"
+radius = 40
+grace = 10
+timeout = 300
+
+[[step]]
+label = "at least five hits became Force shouts"
+do = "assert_lua"
+code = "local pc=kotor.GetFirstPC(); return kotor.GetLocalNumber(pc,7) >= 5"
+equals = true
+poll = true
+timeout = 120
