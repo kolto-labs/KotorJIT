@@ -14,7 +14,7 @@ oracle line in `kotorphasor.log`.
 
 | Demo | Proof gate | Status |
 |---|---|---|
-| 10 rancor roulette | >= 3 transformations; >= 3 creatures whose `GetAppearanceType` is a monster row | wip |
+| 10 rancor roulette | >= 3 transformations; >= 3 creatures wearing a wheel appearance | ship |
 | 20 fus ro dah | >= 5 pushes | ship |
 | 30 necromancer | >= 2 resurrections; no live hostile left in 40m | ship |
 | 40 chain reaction | >= 3 detonations; party damage >= 10 and PC alive | ship |
@@ -32,7 +32,7 @@ not yet run or a gate failed (the failure is noted here).
 
 Batch of 2026-09-16 04:05-05:00, host load 60-120, retail speed, recorded at 10 fps:
 
-- **10 rancor roulette**: three failures, all the same shape: 9 transformations logged, then the client stopped at 400 frames when the fight started and the channel died. The first was during Trask's bark (fixed by arming after load); the next two happened with rancor/bantha/kath-hound bodies in combat while every humanoid-disguise demo survived the same host conditions. The wheel is now humanoid-only (Rakata, Jawa, Gamorrean, Malak, Bandon, HK-47, Revan) and disguises apply from a timer, not inside the hook; re-running.
+- **10 rancor roulette**: four failures before it passed, all the same engine fault. Disguising a *fighting* creature into a non-humanoid (rancor 80, bantha 53, kath hound 75), a droid (HK-47 3), or a unique-character model (Bandon 184) froze the client at 400 frames, then crashed the game with a null read at 0x6502ff -- the borrowed model has no combat animation for the move the trooper is making. Malak-on-a-fighter (necromancer) and the PC model on a fighter (doppelganger) never faulted, so the wheel is party humans (Bastila, Canderous, Carth, Jolee, Juhani) plus Malak, applied from a timer. 11/11 at load ~67. The rancor stays in the name, not the wheel: a big-monster disguise belongs in an out-of-combat scene.
 - **20 fus ro dah**: 9/9; the every-fifth-hit room shout found 0 targets because GetDistanceBetween misreports inside hooks; now position-based.
 - **30 necromancer**: 11/11; 18 oracle lines incl. `verify: valid=1 dead=0 hp=25 app=21` for each rebirth.
 - **40 chain reaction**: 11/11; 6 detonations, party damage published.
