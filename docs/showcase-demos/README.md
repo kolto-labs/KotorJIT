@@ -23,3 +23,21 @@ Workflow:
 5. When stable, record: `./scripts/harness/demo_play.sh <basename>`
 
 If the oracle shows up in `kotorphasor.log`, that demo is ship (`30` / `40` / `50`, `demo_play.sh all`). If it does not, it stays wip (`10` / `20` / `60`, `demo_play.sh all-wip`).
+
+## Cursed pack
+
+A second, wilder set lives under `scripts/examples/cursed/` — ten
+event-driven curses (rancor roulette, fus ro dah, necromancer, chain
+reaction, chaos roulette, rave, doppelganger, loot piñata, bullet time, item
+airstrike). Unlike these showcase scripts (deployed with `deploy_showcase.sh`
+and driven by `live_session.sh`), each cursed script has a matching
+state-gated route in `scripts/harness/scenarios/cursed/` and is run and
+recorded in one step:
+
+```
+./scripts/harness/record_cursed.sh <name>      # e.g. 30_necromancer
+./scripts/harness/record_cursed.sh all
+```
+
+All ten ship. See [cursed.md](cursed.md) for the status table, the proof
+gates, and the engine facts they turned up.
