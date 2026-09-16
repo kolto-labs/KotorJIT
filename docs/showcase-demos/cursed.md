@@ -32,7 +32,7 @@ not yet run or a gate failed (the failure is noted here).
 
 Batch of 2026-09-16 04:05-05:00, host load 60-120, retail speed, recorded at 10 fps:
 
-- **10 rancor roulette**: first batch: the client hung when disguises applied during Trask's bark on load; scripts now arm 200 ticks after a load and never in conversation; re-running.
+- **10 rancor roulette**: three failures, all the same shape: 9 transformations logged, then the client stopped at 400 frames when the fight started and the channel died. The first was during Trask's bark (fixed by arming after load); the next two happened with rancor/bantha/kath-hound bodies in combat while every humanoid-disguise demo survived the same host conditions. The wheel is now humanoid-only (Rakata, Jawa, Gamorrean, Malak, Bandon, HK-47, Revan) and disguises apply from a timer, not inside the hook; re-running.
 - **20 fus ro dah**: 9/9; the every-fifth-hit room shout found 0 targets because GetDistanceBetween misreports inside hooks; now position-based.
 - **30 necromancer**: 11/11; 18 oracle lines incl. `verify: valid=1 dead=0 hp=25 app=21` for each rebirth.
 - **40 chain reaction**: 11/11; 6 detonations, party damage published.
