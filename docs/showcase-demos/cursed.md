@@ -23,7 +23,7 @@ oracle line in `kotorphasor.log`.
 | 70 doppelganger | >= 3 copies; `GetAppearanceType(pc) == 21` | ship |
 | 80 loot pinata | >= 3 bursts; >= 5 unowned items in the area | ship |
 | 90 bullet time | >= 1 entry; read-back speed in [0.20, 0.30]; speed restored | ship |
-| 100 item airstrike | strike fired after `CreateItemOnObject`; room dead | wip |
+| 100 item airstrike | armed flag; strike after `CreateItemOnObject` hit >= 3 of the ring; room dead | ship |
 
 "ship" means the route passed every gate and the mp4 shows it; "wip" means
 not yet run or a gate failed (the failure is noted here).
@@ -41,7 +41,7 @@ Batch of 2026-09-16 04:05-05:00, host load 60-120, retail speed, recorded at 10 
 - **70 doppelganger**: 11/11; `GetAppearanceType(pc) == 21` held.
 - **80 loot pinata**: 11/11; credit piles enumerated as unowned items in the area.
 - **90 bullet time**: 12/12; read-back `kp.game_speed()` 0.25 during, 1.0 after.
-- **100 item airstrike**: first batch passed 12/12 but weakly: the acquire event replays 11 inventory items on load and the medpac strike hit 1 of 6; now armed after load, position-based radius, gate on >= 3 targets; re-running.
+- **100 item airstrike**: first batch passed 12/12 but weakly: the acquire event replays 11 inventory items on load and the medpac strike hit 1 of 6; now armed after load, position-based radius, gate on >= 3 targets; re-run 13/13 at load ~60.
 
 Things every route needed before anything passed (all in
 `docs/harness-research/engine-facts-k1.md` section 9): the `endar_room3`
