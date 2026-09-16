@@ -427,3 +427,12 @@ questions between events).
 - **`GetFirstObjectInArea` answers the whole area**, including cutscene
   actors in other rooms (Carth, Darth Bandon on the bridge of end_m01aa);
   demos that touch "everyone" want a distance cap.
+- **A disguise on a *fighting* creature must be a humanoid model with a
+  full combat animation set.** `EffectDisguise` into a non-humanoid
+  (rancor 80, bantha 53, kath hound 75), a droid (HK-47 3), or a unique
+  boss model (Darth Bandon 184) froze the client at 400 frames and then
+  crashed the game with a null read at 0x6502ff when the disguised creature
+  next played a combat animation the borrowed model does not have (four
+  runs, 2026-09-16). Party-human appearances (Bastila 4, Canderous 5,
+  Carth 6, Jolee 7, Juhani 8) and Darth Malak (21) all survive combat, as
+  does the PC's own appearance. Out of combat, any appearance is fine.
