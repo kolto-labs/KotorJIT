@@ -80,7 +80,7 @@ timeout = 120
 [[step]]
 label = "the redraws are visible engine state (appearance rows changed)"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); local area=kotor.GetArea(pc); local rows={[80]=1,[69]=1,[53]=1,[75]=1,[73]=1,[68]=1,[36]=1}; local n=0; local o=kotor.GetFirstObjectInArea(area,1); while kotor.GetIsObjectValid(o)==1 do if rows[kotor.GetAppearanceType(o)] then n=n+1 end; o=kotor.GetNextObjectInArea(area,1) end; return n >= 3"
+code = "local pc=kotor.GetFirstPC(); local area=kotor.GetArea(pc); local rows={[36]=1,[73]=1,[68]=1,[21]=1,[184]=1,[3]=1,[22]=1}; local n=0; local o=kotor.GetFirstObjectInArea(area,1); while kotor.GetIsObjectValid(o)==1 do if rows[kotor.GetAppearanceType(o)] then n=n+1 end; o=kotor.GetNextObjectInArea(area,1) end; return n >= 3"
 equals = true
 poll = true
 timeout = 30

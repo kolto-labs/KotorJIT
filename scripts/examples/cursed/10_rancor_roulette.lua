@@ -1,9 +1,10 @@
 -- Rancor roulette: every enemy that notices you becomes something else.
 --
 -- The moment a hostile perceives the player it is redrawn as a random
--- monster (rancor, krayt dragon, hutt, gizka, ...) with a whirlwind puff and
--- a bark. Stats do not change: a gizka still hits like a Sith trooper, a
--- rancor still dies in three swings. That is the joke.
+-- somebody else (a Rakata, a Jawa, a Gamorrean, Malak, Bandon, HK-47,
+-- Revan) with a whirlwind puff and a bark. Stats do not change: a Jawa
+-- still hits like a Sith trooper, Malak still dies in three swings. That is
+-- the joke. (The rancor is in the name and not in the wheel; see below.)
 --
 -- Mechanism: the stock perception script (k_def_percept01) runs ON the
 -- perceiver, so OnRunScript gives us the sentry as object_id; heartbeat,
@@ -24,14 +25,20 @@ priority = 30
 -- while the death script runs. Hooks therefore treat "not a party member"
 -- as hostile and never gate on GetIsDead for the creature the hook is about.
 
+-- Only rows with a full humanoid combat animation set. Rancor (80), bantha
+-- (53), kath hound (75), gizka (69), krayt dragon (77) and hutt (70) were
+-- in the wheel first: both times the fight started with troopers wearing
+-- those bodies the client stopped at exactly 400 frames and the channel
+-- died (2026-09-16, twice), while every humanoid-disguise demo survived the
+-- same host conditions. Big-monster disguises are for out-of-combat scenes.
 local ROULETTE = {
-  { row = 80, name = "rancor" },
-  { row = 69, name = "gizka" },
-  { row = 53, name = "bantha" },
-  { row = 75, name = "kath hound" },
+  { row = 36, name = "rakata" },
   { row = 73, name = "jawa" },
   { row = 68, name = "gamorrean" },
-  { row = 36, name = "rakata" },
+  { row = 21, name = "darth malak" },
+  { row = 184, name = "darth bandon" },
+  { row = 3, name = "hk-47" },
+  { row = 22, name = "revan" },
 }
 local VFX_WHIRLWIND = 1018
 local DURATION_PERMANENT = 2
