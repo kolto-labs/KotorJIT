@@ -31,3 +31,21 @@ flowchart TD
   D --> F[demo_play.sh all]
   E --> G[demo_play.sh all-wip]
 ```
+
+## Cursed pack
+
+A second, wilder set lives under `scripts/examples/cursed/` — ten
+event-driven curses (rancor roulette, fus ro dah, necromancer, chain
+reaction, chaos roulette, rave, doppelganger, loot piñata, bullet time, item
+airstrike). Unlike these showcase scripts (deployed with `deploy_showcase.sh`
+and driven by `live_session.sh`), each cursed script has a matching
+state-gated route in `scripts/harness/scenarios/cursed/` and is run and
+recorded in one step:
+
+```
+./scripts/harness/record_cursed.sh <name>      # e.g. 30_necromancer
+./scripts/harness/record_cursed.sh all
+```
+
+All ten ship. See [cursed.md](cursed.md) for the status table, the proof
+gates, and the engine facts they turned up.
