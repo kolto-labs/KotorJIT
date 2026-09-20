@@ -1,7 +1,7 @@
 -- Drive the engine by routine, not by keystroke.
 --
 -- The cheat console still *delivers* these lines (DirectInput), but the
--- commands themselves call kotor.* — warp, globals, conversation, fade.
+-- commands themselves call nwscript.call — warp, globals, conversation, fade.
 -- Typing WASD or clicking LOAD GAME is what this exists to stop.
 --
 --   cover help
@@ -15,33 +15,31 @@
 priority = 50
 
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then
-        print("[cover] missing routine " .. name)
+    if not nwscript or type(nwscript.call) ~= "function" then
+        kp.print("[cover] nwscript.call is not available")
         return nil
     end
-    local ok, a, b = pcall(fn, ...)
+    local ok, a, b = pcall(nwscript.call, name, ...)
     if not ok then
-        print("[cover] " .. name .. " failed: " .. tostring(a))
+        kp.print("[cover] " .. name .. " failed: " .. tostring(a))
         return nil
     end
     return a, b
 end
 
 local function help()
-    print("[cover] setb <name> 0|1     SetGlobalBoolean")
-    print("[cover] setn <name> <int>   SetGlobalNumber")
-    print("[cover] getb <name>         GetGlobalBoolean")
-    print("[cover] getn <name>         GetGlobalNumber")
-    print("[cover] talk <tag> [dlg]    ActionStartConversation")
-    print("[cover] jump <tag>          JumpToObject")
-    print("[cover] fade0               SetGlobalFadeIn 0")
-    print("[cover] module <resref>     StartNewModule")
-    print("[cover] autosave            DoSinglePlayerAutoSave")
-    print("[cover] convo               GetIsConversationActive")
-    print("[cover] haste [n]           kp.speed — extra MainLoop ticks (1-16)")
-    print("[cover] pick <n>            queue reply index (1-based visible option)")
+    kp.print("[cover] setb <name> 0|1     SetGlobalBoolean")
+    kp.print("[cover] setn <name> <int>   SetGlobalNumber")
+    kp.print("[cover] getb <name>         GetGlobalBoolean")
+    kp.print("[cover] getn <name>         GetGlobalNumber")
+    kp.print("[cover] talk <tag> [dlg]    ActionStartConversation")
+    kp.print("[cover] jump <tag>          JumpToObject")
+    kp.print("[cover] fade0               SetGlobalFadeIn 0")
+    kp.print("[cover] module <resref>     StartNewModule")
+    kp.print("[cover] autosave            DoSinglePlayerAutoSave")
+    kp.print("[cover] convo               GetIsConversationActive")
+    kp.print("[cover] haste [n]           kp.speed — extra MainLoop ticks (1-16)")
+    kp.print("[cover] pick <n>            queue reply index (1-based visible option)")
 end
 
 local function words(line)
@@ -59,58 +57,58 @@ function OnConsoleCommand(line, relevant)
         help()
     elseif cmd == "setb" and w[3] then
         q("SetGlobalBoolean", w[3], tonumber(w[4] or "1") ~= 0 and 1 or 0)
-        print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalBoolean", w[3])))
+        kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalBoolean", w[3])))
     elseif cmd == "setn" and w[3] then
         q("SetGlobalNumber", w[3], tonumber(w[4] or "0") or 0)
-        print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
+        kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
     elseif cmd == "getb" and w[3] then
-        print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalBoolean", w[3])))
+        kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalBoolean", w[3])))
     elseif cmd == "getn" and w[3] then
-        print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
+        kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
     elseif cmd == "talk" and w[3] then
         local npc = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
         if not npc or not pc then
-            print("[cover] no object " .. w[3])
+            kp.print("[cover] no object " .. w[3])
         elseif not kp or not kp.as then
-            print("[cover] kp.as missing — rebuild kphasor.dll")
+            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
         else
             local dlg = w[4] or ""
             kp.as(pc, function()
                 q("ActionStartConversation", npc, dlg)
             end)
-            print("[cover] talk " .. w[3] .. " dlg=" .. (dlg ~= "" and dlg or "(default)"))
+            kp.print("[cover] talk " .. w[3] .. " dlg=" .. (dlg ~= "" and dlg or "(default)"))
         end
     elseif cmd == "jump" and w[3] then
         local dest = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
         if not dest or not pc then
-            print("[cover] no object " .. w[3])
+            kp.print("[cover] no object " .. w[3])
         elseif not kp or not kp.as then
-            print("[cover] kp.as missing — rebuild kphasor.dll")
+            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
         else
             kp.as(pc, function()
                 q("JumpToObject", dest, 1)
             end)
-            print("[cover] jump " .. w[3])
+            kp.print("[cover] jump " .. w[3])
         end
     elseif cmd == "fade0" then
         q("SetGlobalFadeIn", 0.0, 0.0, 0.0, 0.0, 0.0)
-        print("[cover] fade in 0")
+        kp.print("[cover] fade in 0")
     elseif cmd == "module" and w[3] then
         q("StartNewModule", w[3])
-        print("[cover] module " .. w[3])
+        kp.print("[cover] module " .. w[3])
     elseif cmd == "autosave" then
         q("DoSinglePlayerAutoSave")
-        print("[cover] autosave")
+        kp.print("[cover] autosave")
     elseif cmd == "convo" then
-        print("[cover] active=" .. tostring(q("GetIsConversationActive")))
+        kp.print("[cover] active=" .. tostring(q("GetIsConversationActive")))
     elseif cmd == "haste" then
         if not kp or not kp.speed then
-            print("[cover] kp.speed missing — rebuild kphasor.dll")
+            kp.print("[cover] kp.speed missing — rebuild kphasor.dll")
         else
             local n = tonumber(w[3] or "4") or 4
-            print("[cover] speed=" .. tostring(kp.speed(n)))
+            kp.print("[cover] speed=" .. tostring(kp.speed(n)))
         end
     elseif cmd == "pick" and w[3] then
         -- Visible-option index. No ChooseReply routine exists; this records
@@ -118,7 +116,7 @@ function OnConsoleCommand(line, relevant)
         -- harness may type the digit. The conversation-manager cave writes
         -- the index directly when it lands.
         local n = tonumber(w[3]) or 1
-        print("[cover] pick=" .. tostring(n))
+        kp.print("[cover] pick=" .. tostring(n))
     else
         help()
     end

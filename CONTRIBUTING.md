@@ -18,7 +18,7 @@ cmake --build build
 
 That produces `build/kphasor.dll` and the proxy `build/binkw32.dll`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `kphasor.dll` needs to link against.
 
-On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, and `binutils-mingw-w64-i686`; see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact CI recipe, including the native Linux build for KOTOR 2.
+On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, and `binutils-mingw-w64-i686`; see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
 
 Full build, install, and first-run steps: [`docs/user/install.md`](docs/user/install.md).
 
@@ -36,13 +36,13 @@ Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`.
 |---|---|---|
 | KOTOR 1 | GOG, Windows | Supported |
 | KOTOR 1 | Steam, Windows | Supported (identical `.text` to GOG once deciphered) |
-| KOTOR 1 | Amazon Games, Windows | Registered, not yet installable — no matchable engine symbols found in this build to bind hook sites against |
-| KOTOR 2 | Native Linux (Aspyr) | Supported — routines and events; typed struct access (`kotor.struct`) is unverified on this build, see below |
+| KOTOR 1 | Amazon Games, Windows | Unbound — target-native recovery required |
 | KOTOR 2 | GOG Aspyr, Windows | Supported |
 | KOTOR 2 | Steam Aspyr, Windows | Supported |
-| KOTOR 2 | Retail CD 1.0 / 1.0b, Windows | Registered, not yet installable — same reason as K1 Amazon Games |
+| KOTOR 2 | Native Linux (Aspyr) | Unbound — prior cross-placed bindings were withdrawn |
+| KOTOR 2 | Retail CD 1.0 / 1.0b, Windows | Unbound — target-native recovery required |
 
-"Supported" means every required hook site resolves and the runtime installs cleanly: the routine bridge (`kotor.<Name>`) and event dispatch both work. It does **not** yet mean every corner is verified — K2's struct field layouts (`kotor.struct` / `kp.struct`) were researched against the K1 build only, so typed field access on a K2 build is unverified and may read the wrong offset. Raw `kotor.mem.*` reads and writes are unaffected; they don't depend on struct research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
+"Supported" means every required hook site resolves and the runtime installs cleanly: the `nwscript.call(name, ...)` routine bridge and event dispatch both work. It does **not** yet mean every corner is verified — K2's struct field layouts (`kp.struct`) were researched against the K1 build only, so typed field access on a K2 build is unverified and may read the wrong offset. Raw `kp.mem.*` reads and writes are unaffected; they don't depend on struct research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
 
 The runtime identifies a build by hashing its code section, never by filename or file size. An executable it doesn't recognize is left completely unpatched — the game runs as if KotorPhasor weren't installed.
 
@@ -52,7 +52,7 @@ These callbacks run in a live game: `OnScriptLoad`, `OnScriptUnload`, `OnTick`, 
 
 Two names look like they should work and don't: `OnCreatureHeartbeat` and `OnDialogConditional` never run, because the engine doesn't route those cases through a name a Lua callback could bind to. Filter `OnRunScript` by `script_name` instead — see [`docs/user/scripts.md`](docs/user/scripts.md) for exactly how.
 
-769 of KOTOR 1's 772 engine routines, and 803 of KOTOR 2's 877, are callable as `kotor.<Name>`. The full status of every name — bound, spec-only, or proven live in a running game — is in [`docs/user/api-status.md`](docs/user/api-status.md). Argument lists (generated from the engine's own signatures, not a status report) are in [`docs/lua-api.md`](docs/lua-api.md) and [`docs/nwscript-api.md`](docs/nwscript-api.md).
+769 of KOTOR 1's 772 engine routines, and 803 of KOTOR 2's 877, are callable through `nwscript.call(name, ...)`. The full status of every name — bound, spec-only, or proven live in a running game — is in [`docs/user/api-status.md`](docs/user/api-status.md). Argument lists (generated from the engine's own signatures, not a status report) are in [`docs/lua-api.md`](docs/lua-api.md) and [`docs/nwscript-api.md`](docs/nwscript-api.md).
 
 ## Write a script
 
@@ -72,7 +72,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
 end
 ```
 
-`AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a script closure NWScript can build and Lua can't. Use `kp.as(object_id, function() ... end)` and `kotor.registertimer(ms, "callback_name", data)` instead.
+`AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a script closure NWScript can build and Lua can't. Use `kp.as(object_id, function() ... end)` and `kp.registertimer(ms, "callback_name", data)` instead.
 
 ## Multiplayer
 
@@ -80,7 +80,7 @@ A complete, self-contained example — no proxy DLL, no relay server, direct UDP
 
 ## Finding a codecave
 
-If a script needs to inject raw bytes somewhere in the game's code — a small trampoline, a patch stub — `data/codecaves.toml` has thousands of pre-located, individually verified unused-byte spans across every supported build, addressed by `kotor.mem.findsig` signature rather than a hardcoded address so the same script works across builds where the surrounding bytes match. See [`docs/user/codecaves.md`](docs/user/codecaves.md).
+If a script needs to inject raw bytes somewhere in the game's code — a small trampoline, a patch stub — `data/codecaves.toml` has thousands of pre-located, individually verified unused-byte spans across every supported build, addressed by `kp.mem.findsig` rather than a hardcoded address so the same script works across builds where the surrounding bytes match. See [`docs/user/codecaves.md`](docs/user/codecaves.md).
 
 ## Testing
 

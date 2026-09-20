@@ -3,7 +3,7 @@
 //
 // The typed struct layer will always lag what somebody needs today -- a field
 // that is not in the generated layouts, or an offset found in the binary this
-// afternoon. So the raw surface stays: kotor.mem.readbyte / readfloat /
+// afternoon. So the raw surface stays: kp.mem.readbyte / readfloat /
 // writeword, with an optional offset so readbyte(a, 3) and readbyte(a + 3)
 // are the same call.
 //
@@ -13,8 +13,8 @@
 // nil when the answer is no. Pointer chasing is the normal case here, not the
 // exceptional one, and a raise would cost a pcall per hop:
 //
-//     local p = kotor.mem.readdword(base + 0x10)
-//     local hp = p and kotor.mem.readfloat(p + 0x1C)
+//     local p = kp.mem.readdword(base + 0x10)
+//     local hp = p and kp.mem.readfloat(p + 0x1C)
 //
 // With a raise, that idiom costs a pcall per hop. A read that yields nil is not
 // ambiguous with a read that yields zero -- these functions return numbers, and
@@ -87,6 +87,9 @@ const std::vector<ScanRegion>& scan_regions();
 // Base the current regions were bound against. 0 when nothing is bound yet.
 std::uintptr_t scan_base();
 
+// Unique exact hit in bound executable regions. 0 if none or not unique.
+std::uintptr_t find_unique(const std::uint8_t* bytes, std::size_t n);
+
 // Every write, after it happened. This is the reporting half of "sharp writes":
 // the default sink is the platform log, and the runtime can add a journal on
 // top without this module knowing what a journal is.
@@ -105,9 +108,9 @@ void set_write_observer(WriteObserver, void* user);
 // command to say "12 writes since load" without holding the records.
 unsigned long long writes_performed();
 
-// Register the 23 functions into one script's state as kotor.mem.*.
+// Register the 23 functions into one script's state as kp.mem.*.
 //
-// The `kotor` table is shared with the routine bridge and every other module, so
+// The `kp` table is shared with the routine bridge and every other module, so
 // this looks for an existing one and reuses it rather than replacing it. Same
 // for the `mem` sub-table: registering twice into one state is idempotent.
 void register_all(lua_State*);

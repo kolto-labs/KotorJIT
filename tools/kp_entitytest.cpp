@@ -331,59 +331,59 @@ int main(int argc, char** argv) {
 
     heading("registration reuses tables that already exist");
     // Stand in for another module that registered first.
-    run(L, "kotor = { GetModule = function() return 42 end }\n"
-           "kp = { mem = { readbyte = function() return 0 end } }\n");
+    run(L, "kp = { marker = function() return 42 end, "
+           "mem = { readbyte = function() return 0 end } }\n");
     kp::api::entity::register_all(L);
     kp::api::entity::register_all(L);   // twice on purpose
-    run(L, "print('  kotor.GetModule survived   :', kotor.GetModule() == 42)\n"
+    run(L, "print('  kp.marker survived      :', kp.marker() == 42)\n"
            "print('  kp.mem.readbyte survived   :', kp.mem.readbyte ~= nil)\n"
-           "print('  kotor.obj installed        :', type(kotor.obj))\n"
-           "print('  kp.obj is the SAME table   :', kp.obj == kotor.obj)\n"
-           "print('  kotor.obj.INVALID          :', string.format('0x%08X', kotor.obj.INVALID))\n");
+           "print('  kp.obj installed        :', type(kp.obj))\n"
+           "assert(kotor == nil, 'native registration must not create kotor')\n"
+           "print('  kp.obj.INVALID          :', string.format('0x%08X', kp.obj.INVALID))\n");
 
     heading("before the VM binding exists");
-    run(L, "print('  ready()                    :', kotor.obj.ready())\n"
-           "print('  valid(pc id)               :', kotor.obj.valid(0x80000000))\n"
-           "print('  pc()                       :', kotor.obj.pc())\n"
-           "print('  party() entries            :', #kotor.obj.party())\n"
-           "local h, why = kotor.obj.get(0x80000000)\n"
+    run(L, "print('  ready()                    :', kp.obj.ready())\n"
+           "print('  valid(pc id)               :', kp.obj.valid(0x80000000))\n"
+           "print('  pc()                       :', kp.obj.pc())\n"
+           "print('  party() entries            :', #kp.obj.party())\n"
+           "local h, why = kp.obj.get(0x80000000)\n"
            "print('  get()                      :', h, why)\n");
     show_calls();
 
     kp::api::bind(usable_binding());
     heading("handle creation and type tagging");
-    run(L, "pc = kotor.obj.pc()\n"
+    run(L, "pc = kp.obj.pc()\n"
            "print('  pc()                       :', tostring(pc))\n"
            "print('  pc:id()                    :', string.format('0x%08X', pc:id()))\n"
            "print('  pc:type()                  :', pc:type())\n"
            "print('  pc:name()                  :', pc:name())\n"
            "print('  pc:valid()                 :', pc:valid())\n"
            "print('  pc:is_pc()                 :', pc:is_pc())\n"
-           "locker = kotor.obj.get(0x00000012)\n"
+           "locker = kp.obj.get(0x00000012)\n"
            "print('  a placeable                :', tostring(locker), locker:name())\n"
-           "print('  handles compare by id      :', kotor.obj.get(pc:id()) == pc)\n"
+           "print('  handles compare by id      :', kp.obj.get(pc:id()) == pc)\n"
            "print('  a creature is not a locker :', locker == pc)\n");
     show_calls();
 
     heading("the call-through path");
-    run(L, "local p = kotor.obj.position(pc)\n"
+    run(L, "local p = kp.obj.position(pc)\n"
            "print('  position(pc)               :', p.x, p.y, p.z)\n"
-           "print('  tag(pc), name by id        :', kotor.obj.tag(pc), kotor.obj.name(0x80000001))\n"
-           "print('  area(pc)                   :', tostring(kotor.obj.area(pc)), kotor.obj.area(pc):name())\n"
-           "print('  faction(pc)                :', kotor.obj.faction(pc))\n"
-           "print('  type by routine            :', kotor.obj.type(locker))\n");
+           "print('  tag(pc), name by id        :', kp.obj.tag(pc), kp.obj.name(0x80000001))\n"
+           "print('  area(pc)                   :', tostring(kp.obj.area(pc)), kp.obj.area(pc):name())\n"
+           "print('  faction(pc)                :', kp.obj.faction(pc))\n"
+           "print('  type by routine            :', kp.obj.type(locker))\n");
     show_calls();
 
     heading("the party, and the argument order that is easy to reverse");
-    run(L, "print('  party_size()               :', kotor.obj.party_size())\n"
-           "for i, m in ipairs(kotor.obj.party()) do\n"
+    run(L, "print('  party_size()               :', kp.obj.party_size())\n"
+           "for i, m in ipairs(kp.obj.party()) do\n"
            "  print(string.format('  party()[%d]                 : %s  slot=%d  %s',\n"
            "        i, m:name(), m:party_slot(), tostring(m)))\n"
            "end\n"
-           "print('  party_member(1)            :', kotor.obj.party_member(1):name())\n"
-           "print('  is_party_member(locker)    :', kotor.obj.is_party_member(locker))\n"
-           "print('  find(\"door01\")             :', kotor.obj.find('door01'):name())\n"
-           "print('  find(\"footlocker01\", 1)    :', kotor.obj.find('footlocker01', 1))\n");
+           "print('  party_member(1)            :', kp.obj.party_member(1):name())\n"
+           "print('  is_party_member(locker)    :', kp.obj.is_party_member(locker))\n"
+           "print('  find(\"door01\")             :', kp.obj.find('door01'):name())\n"
+           "print('  find(\"footlocker01\", 1)    :', kp.obj.find('footlocker01', 1))\n");
     std::printf("  the two-argument call, as the bridge saw it:\n");
     show_calls();
 
@@ -391,8 +391,8 @@ int main(int argc, char** argv) {
     for (auto& o : g_world) if (o.id == 0x00000012u) o.alive = false;
     std::printf("  (the fake world just destroyed 0x00000012)\n");
     run(L, "print('  locker:valid()             :', locker:valid())\n"
-           "print('  kotor.obj.valid(id)        :', kotor.obj.valid(0x00000012))\n"
-           "local h, why = kotor.obj.get(0x00000012)\n"
+           "print('  kp.obj.valid(id)        :', kp.obj.valid(0x00000012))\n"
+           "local h, why = kp.obj.get(0x00000012)\n"
            "print('  get()                      :', h, why)\n"
            "local ok, err = pcall(function() return locker:name() end)\n"
            "print('  locker:name()              :', ok, err)\n");
@@ -402,8 +402,8 @@ int main(int argc, char** argv) {
     g_world.push_back({0x00000012u, 10, "Security Door", "sec01",
                        30.f, 30.f, 0.f, 0x00000001u, false, 0, true});
     std::printf("  (the fake world handed 0x00000012 to a new door)\n");
-    run(L, "print('  the id resolves again      :', kotor.obj.valid(0x00000012))\n"
-           "print('  a fresh handle is fine     :', kotor.obj.get(0x00000012):name())\n"
+    run(L, "print('  the id resolves again      :', kp.obj.valid(0x00000012))\n"
+           "print('  a fresh handle is fine     :', kp.obj.get(0x00000012):name())\n"
            "print('  the OLD handle:valid()     :', locker:valid())\n"
            "local ok, err = pcall(function() return locker:tag() end)\n"
            "print('  the OLD handle:tag()       :', ok, err)\n");
@@ -411,9 +411,9 @@ int main(int argc, char** argv) {
 
     heading("unbinding the VM mid-session");
     kp::api::bind(kp::api::VmBinding{});
-    run(L, "print('  ready()                    :', kotor.obj.ready())\n"
-           "print('  party_size()               :', kotor.obj.party_size())\n"
-           "print('  name(pc id)                :', kotor.obj.name(0x80000000))\n"
+    run(L, "print('  ready()                    :', kp.obj.ready())\n"
+           "print('  party_size()               :', kp.obj.party_size())\n"
+           "print('  name(pc id)                :', kp.obj.name(0x80000000))\n"
            "local ok, err = pcall(function() return pc:name() end)\n"
            "print('  a handle says why          :', ok, err)\n");
     show_calls();

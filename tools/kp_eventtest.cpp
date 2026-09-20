@@ -241,7 +241,7 @@ void shape_and_host_cases() {
              "end\n";
     }
 
-    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false, {}});
     std::vector<std::string> errors;
     const unsigned loaded = host.load_all(errors);
     for (const auto& e : errors) std::printf("  load error: %s\n", e.c_str());
@@ -302,11 +302,8 @@ void address_table_cases() {
         "data/addresses/k1_steam_103.json",
         "data/addresses/k1_steam_103_unpacked.json",
         "data/addresses/k2_gog_aspyr.json",
-        "data/addresses/k2_steam_linux.json",
     };
-    // The caves this work installs. console.do_console is required on K1 and
-    // unresolved on k2_steam_linux -- that is existing table data, not a
-    // missing EventHandler identity.
+    // The caves this work installs on the supported, target-verified tables.
     const char* caves[] = {
         "event.creature", "event.door", "event.placeable", "event.trigger",
         "event.module", "event.area", "event.encounter", "event.aoe",

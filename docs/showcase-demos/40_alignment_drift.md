@@ -12,8 +12,8 @@
 
 ## Queue sequence
 
-1. Optional: `lua exec print(kotor.GetGoodEvilValue(kotor.GetFirstPC()))`
-2. `lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 2, 30)` — shift **toward light** by 30
+1. Optional: `lua exec print(nwscript.call('GetGoodEvilValue', nwscript.call('GetFirstPC')))`
+2. `lua exec nwscript.call('AdjustAlignment', nwscript.call('GetFirstPC'), 2, 30)`: shift **toward light** by 30
 3. `#sleep 90` (two tick samples)
 4. If no `[conscience]`: `AdjustAlignment(..., 1, 30)` toward dark + `#sleep 90`
 

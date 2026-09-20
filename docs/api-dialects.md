@@ -1,74 +1,138 @@
-# Odyssey names and callbacks
+# Native namespace and callback migration
 
-Generated from `data/api_aliases.toml` and `data/events.toml`. Do not edit by hand.
+Generated from `data/api_aliases.toml` and `data/events.toml`.
 
-KOTOR is `CServerExoApp` in-process with one hardcoded client. The player is `CServerExoApp::GetFirstPCObject` / NWScript `GetFirstPC`, not a Halo slot id. An object is `CServerExoAppInternal::GetGameObject` / `CSWSPlayer::GetGameObject`, not `getobject`. A message is `SendMessageToPC`.
+API version 2 has two public roots: `nwscript.call(name, ...)` for direct engine routines and `kp` for every native host facility.
 
-Host functions use the names the C modules registered (`readbyte`, `registertimer`, `feedback`). Scripts may also write the underscored form. Both spellings are the same C function.
+The former kotor root, bare host functions, underscored aliases, cb/events globals, host identity globals and host bit32 alias are removed. Use `kp.mem.readbyte`, `kp.registertimer` and `kp.log`. The engine logarithm is `nwscript.call('log', value)`.
 
-**28 aliases** over **28 functions**.
+Lua's standard `print` remains unchanged. `kp.print(...)` writes host diagnostics; console and harness states capture that native output.
 
-## Names
+Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, `kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.
 
-| this runtime calls it | also accepts |
-|---|---|
-| `findsig` | `find_sig` |
-| `log` | `log_msg` |
-| `readbit` | `read_bit` |
-| `readbyte` | `read_byte` |
-| `readchar` | `read_char` |
-| `readdouble` | `read_double` |
-| `readdword` | `read_dword` |
-| `readfloat` | `read_float` |
-| `readint` | `read_int` |
-| `readshort` | `read_short` |
-| `readstring` | `read_string` |
-| `readwidestring` | `read_wide_string` |
-| `readword` | `read_word` |
-| `registertimer` | `register_timer` |
-| `removetimer` | `remove_timer` |
-| `tokenizecmdstring` | `tokenize_cmd_string` |
-| `tokenizestring` | `tokenize_string` |
-| `writebit` | `write_bit` |
-| `writebyte` | `write_byte` |
-| `writechar` | `write_char` |
-| `writedouble` | `write_double` |
-| `writedword` | `write_dword` |
-| `writefloat` | `write_float` |
-| `writeint` | `write_int` |
-| `writeshort` | `write_short` |
-| `writestring` | `write_string` |
-| `writewidestring` | `write_wide_string` |
-| `writeword` | `write_word` |
-
-## Events
-
-Define a global and it is found at load:
+## Explicit event registration
 
 ```lua
-function OnTick(tick, relevant)
+kp.events.register(kp.events.OnTick, function(tick, relevant)
     -- ...
-end
+end)
+kp.events.unregister(kp.events.OnTick)
 ```
 
-Or register a handler by name at runtime:
+Registration accepts a function or a script-owned global function name. The dispatcher still discovers global On* callbacks for legacy compatibility. Explicit registration wins; unregister restores a discovered global handler. Script-owned `priority` remains loader metadata. Neither behavior exports a bare host facility.
 
-```lua
-function OnScriptLoad(game, build)
-    register_callback(cb.OnTick, "my_tick")
-    register_callback(cb.OnModulePlayerEnter, "on_enter")
-end
-```
+The 111 event constants below come from the event catalog.
 
-A runtime registration wins over a same-named global. `unregister_callback(cb.OnTick)` removes it.
-
-Every event in `data/events.toml` is a field on `cb` (and `events`) with the same name — **111** of them, taken from the decompiled dispatch. Common ones:
-
-| constant | raises |
+| constant | dispatched event |
 |---|---|
-| `cb.OnTick` | `OnTick` |
-| `cb.OnConsoleCommand` | `OnConsoleCommand` |
-| `cb.OnModuleLoad` | `OnModuleLoad` |
-| `cb.OnModulePlayerEnter` | `OnModulePlayerEnter` |
-| `cb.OnCreatureDeath` | `OnCreatureDeath` |
-| `cb.OnAreaEnter` | `OnAreaEnter` |
+| `kp.events.OnScriptLoad` | `OnScriptLoad` |
+| `kp.events.OnScriptUnload` | `OnScriptUnload` |
+| `kp.events.OnConsoleCommand` | `OnConsoleCommand` |
+| `kp.events.OnRunScriptDone` | `OnRunScriptDone` |
+| `kp.events.OnSave` | `OnSave` |
+| `kp.events.OnLoad` | `OnLoad` |
+| `kp.events.OnTick` | `OnTick` |
+| `kp.events.OnRunScript` | `OnRunScript` |
+| `kp.events.OnDialogConditional` | `OnDialogConditional` |
+| `kp.events.OnCreaturePerception` | `OnCreaturePerception` |
+| `kp.events.OnCreatureSpellCastAt` | `OnCreatureSpellCastAt` |
+| `kp.events.OnCreatureDialogue` | `OnCreatureDialogue` |
+| `kp.events.OnCreatureUserDefined` | `OnCreatureUserDefined` |
+| `kp.events.OnCreatureInventoryDisturbed` | `OnCreatureInventoryDisturbed` |
+| `kp.events.OnCreaturePathBlocked` | `OnCreaturePathBlocked` |
+| `kp.events.OnCreatureAttacked` | `OnCreatureAttacked` |
+| `kp.events.OnCreatureHeartbeat` | `OnCreatureHeartbeat` |
+| `kp.events.OnCreatureSpawn` | `OnCreatureSpawn` |
+| `kp.events.OnCreatureDamaged` | `OnCreatureDamaged` |
+| `kp.events.OnCreatureDeath` | `OnCreatureDeath` |
+| `kp.events.OnCreatureEndCombatRound` | `OnCreatureEndCombatRound` |
+| `kp.events.OnCreatureEndDialogue` | `OnCreatureEndDialogue` |
+| `kp.events.OnCreatureTimedEvent` | `OnCreatureTimedEvent` |
+| `kp.events.OnCreatureApplyEffect` | `OnCreatureApplyEffect` |
+| `kp.events.OnCreatureRemoveEffect` | `OnCreatureRemoveEffect` |
+| `kp.events.OnCreatureRemoveFromArea` | `OnCreatureRemoveFromArea` |
+| `kp.events.OnCreaturePlayAnimation` | `OnCreaturePlayAnimation` |
+| `kp.events.OnCreatureDestroy` | `OnCreatureDestroy` |
+| `kp.events.OnCreatureSpellImpact` | `OnCreatureSpellImpact` |
+| `kp.events.OnCreatureItemOnHitSpellImpact` | `OnCreatureItemOnHitSpellImpact` |
+| `kp.events.OnCreatureForcedAction` | `OnCreatureForcedAction` |
+| `kp.events.OnCreatureBroadcastAOO` | `OnCreatureBroadcastAOO` |
+| `kp.events.OnCreatureBroadcastSafeProjectile` | `OnCreatureBroadcastSafeProjectile` |
+| `kp.events.OnCreatureFeedbackMessage` | `OnCreatureFeedbackMessage` |
+| `kp.events.OnCreatureControllerRumble` | `OnCreatureControllerRumble` |
+| `kp.events.OnModuleHeartbeat` | `OnModuleHeartbeat` |
+| `kp.events.OnModuleUserDefined` | `OnModuleUserDefined` |
+| `kp.events.OnModuleLoad` | `OnModuleLoad` |
+| `kp.events.OnModuleStart` | `OnModuleStart` |
+| `kp.events.OnModulePlayerEnter` | `OnModulePlayerEnter` |
+| `kp.events.OnModulePlayerExit` | `OnModulePlayerExit` |
+| `kp.events.OnModuleActivateItem` | `OnModuleActivateItem` |
+| `kp.events.OnModuleAcquireItem` | `OnModuleAcquireItem` |
+| `kp.events.OnModuleLoseItem` | `OnModuleLoseItem` |
+| `kp.events.OnModulePlayerDeath` | `OnModulePlayerDeath` |
+| `kp.events.OnModulePlayerDying` | `OnModulePlayerDying` |
+| `kp.events.OnModuleRespawnButtonPressed` | `OnModuleRespawnButtonPressed` |
+| `kp.events.OnModulePlayerRest` | `OnModulePlayerRest` |
+| `kp.events.OnModulePlayerLevelUp` | `OnModulePlayerLevelUp` |
+| `kp.events.OnModuleEquipItem` | `OnModuleEquipItem` |
+| `kp.events.OnModuleDestroyPlayerCreature` | `OnModuleDestroyPlayerCreature` |
+| `kp.events.OnModuleTimedEvent` | `OnModuleTimedEvent` |
+| `kp.events.OnAreaHeartbeat` | `OnAreaHeartbeat` |
+| `kp.events.OnAreaUserDefined` | `OnAreaUserDefined` |
+| `kp.events.OnAreaEnter` | `OnAreaEnter` |
+| `kp.events.OnAreaExit` | `OnAreaExit` |
+| `kp.events.OnAreaSpawnBodyBag` | `OnAreaSpawnBodyBag` |
+| `kp.events.OnDoorHeartbeat` | `OnDoorHeartbeat` |
+| `kp.events.OnDoorSpellCastAt` | `OnDoorSpellCastAt` |
+| `kp.events.OnDoorDamaged` | `OnDoorDamaged` |
+| `kp.events.OnDoorDialogue` | `OnDoorDialogue` |
+| `kp.events.OnDoorDeath` | `OnDoorDeath` |
+| `kp.events.OnDoorUserDefined` | `OnDoorUserDefined` |
+| `kp.events.OnDoorDisarm` | `OnDoorDisarm` |
+| `kp.events.OnDoorTrapTriggered` | `OnDoorTrapTriggered` |
+| `kp.events.OnDoorLocked` | `OnDoorLocked` |
+| `kp.events.OnDoorUnlocked` | `OnDoorUnlocked` |
+| `kp.events.OnDoorClicked` | `OnDoorClicked` |
+| `kp.events.OnDoorFailToOpen` | `OnDoorFailToOpen` |
+| `kp.events.OnDoorOpen` | `OnDoorOpen` |
+| `kp.events.OnDoorClose` | `OnDoorClose` |
+| `kp.events.OnDoorAttacked` | `OnDoorAttacked` |
+| `kp.events.OnDoorDestroy` | `OnDoorDestroy` |
+| `kp.events.OnPlaceableHeartbeat` | `OnPlaceableHeartbeat` |
+| `kp.events.OnPlaceableSpellCastAt` | `OnPlaceableSpellCastAt` |
+| `kp.events.OnPlaceableDamaged` | `OnPlaceableDamaged` |
+| `kp.events.OnPlaceableDialogue` | `OnPlaceableDialogue` |
+| `kp.events.OnPlaceableDeath` | `OnPlaceableDeath` |
+| `kp.events.OnPlaceableUserDefined` | `OnPlaceableUserDefined` |
+| `kp.events.OnPlaceableOpen` | `OnPlaceableOpen` |
+| `kp.events.OnPlaceableClose` | `OnPlaceableClose` |
+| `kp.events.OnPlaceableDisarm` | `OnPlaceableDisarm` |
+| `kp.events.OnPlaceableUsed` | `OnPlaceableUsed` |
+| `kp.events.OnPlaceableTrapTriggered` | `OnPlaceableTrapTriggered` |
+| `kp.events.OnPlaceableInventoryDisturbed` | `OnPlaceableInventoryDisturbed` |
+| `kp.events.OnPlaceableLocked` | `OnPlaceableLocked` |
+| `kp.events.OnPlaceableUnlocked` | `OnPlaceableUnlocked` |
+| `kp.events.OnPlaceableAttacked` | `OnPlaceableAttacked` |
+| `kp.events.OnPlaceableEndDialogue` | `OnPlaceableEndDialogue` |
+| `kp.events.OnPlaceableAcquireItem` | `OnPlaceableAcquireItem` |
+| `kp.events.OnTriggerEnter` | `OnTriggerEnter` |
+| `kp.events.OnTriggerExit` | `OnTriggerExit` |
+| `kp.events.OnTriggerUserDefined` | `OnTriggerUserDefined` |
+| `kp.events.OnTriggerDisarm` | `OnTriggerDisarm` |
+| `kp.events.OnTriggerClicked` | `OnTriggerClicked` |
+| `kp.events.OnTriggerTrapTriggered` | `OnTriggerTrapTriggered` |
+| `kp.events.OnTriggerHeartbeat` | `OnTriggerHeartbeat` |
+| `kp.events.OnTriggerDestroy` | `OnTriggerDestroy` |
+| `kp.events.OnEncounterHeartbeat` | `OnEncounterHeartbeat` |
+| `kp.events.OnEncounterEnter` | `OnEncounterEnter` |
+| `kp.events.OnEncounterExit` | `OnEncounterExit` |
+| `kp.events.OnEncounterExhausted` | `OnEncounterExhausted` |
+| `kp.events.OnEncounterUserDefined` | `OnEncounterUserDefined` |
+| `kp.events.OnAoeEnter` | `OnAoeEnter` |
+| `kp.events.OnAoeExit` | `OnAoeExit` |
+| `kp.events.OnStoreOpen` | `OnStoreOpen` |
+| `kp.events.OnWaypointDestroy` | `OnWaypointDestroy` |
+| `kp.events.OnCreatureStateScript` | `OnCreatureStateScript` |
+| `kp.events.OnAreaTransitionFail` | `OnAreaTransitionFail` |
+| `kp.events.OnItemUse` | `OnItemUse` |
+| `kp.events.OnClientRequestedScript` | `OnClientRequestedScript` |

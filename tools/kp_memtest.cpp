@@ -142,7 +142,7 @@ std::uintptr_t synthetic_code_region(std::size_t& size_out) {
 }
 
 const char* kLua = R"LUA(
-local mem = kotor.mem
+local mem = kp.mem
 local fails, checks = 0, 0
 
 local function eq(name, got, want)

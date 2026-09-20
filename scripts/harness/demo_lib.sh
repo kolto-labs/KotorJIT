@@ -59,21 +59,21 @@ fight_clicks() {
 verify_module() {
   local expect="$1"
   open_console
-  send "lua exec kotor.GetModuleName()"
+  send "lua exec nwscript.call('GetModuleName')"
   close_console
   wait_log "lua exec: $expect" 30
 }
 
 pc_attack_nearest() {
   open_console
-  send "lua exec local pc=kotor.GetFirstPC(); local t=kotor.GetNearestCreature(3,1,pc,1,0,0,0,0); if t and t~=0 then kotor.ActionAttack(t,pc,0) end"
+  send "lua exec local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetNearestCreature',3,1,pc,1,0,0,0,0); if t and t~=0 then nwscript.call('ActionAttack',t,pc,0) end"
   close_console
   send "#sleep 6"
 }
 
 # Victim must be a party member; GetFirstPC() is one. Caller must have console open.
 meditation_on_bastila() {
-  send "lua exec kotor.ExecuteScript('k_def_attacked01', kotor.GetFirstPC(), 0)"
+  send "lua exec nwscript.call('ExecuteScript','k_def_attacked01', nwscript.call('GetFirstPC'), 0)"
   send "#sleep 3"
 }
 
@@ -83,7 +83,7 @@ warp_module() {
     send "warp $mod"
     send "#sleep 8"
     open_console
-    send "lua exec kotor.GetModuleName()"
+    send "lua exec nwscript.call('GetModuleName')"
     close_console
     grep -qE "lua exec: $mod" "$LOG" 2>/dev/null && return 0
     sleep 2
@@ -94,7 +94,7 @@ warp_module() {
 
 wound_companion_fallback() {
   open_console
-  send "lua exec local pc=kotor.GetFirstPC(); for i=0,kotor.GetPartyMemberCount()-1 do local m=kotor.GetPartyMemberByIndex(i); if m~=pc and kotor.IsObjectPartyMember(m)==1 then kotor.ApplyEffectToObject(1, kotor.EffectDamage(999,1,0), m, 0); kotor.ExecuteScript('k_def_damage01', m, 0); break end end"
+  send "lua exec local pc=nwscript.call('GetFirstPC'); for i=0,nwscript.call('GetPartyMemberCount')-1 do local m=nwscript.call('GetPartyMemberByIndex',i); if m~=pc and nwscript.call('IsObjectPartyMember',m)==1 then nwscript.call('ApplyEffectToObject',1, nwscript.call('EffectDamage',999,1,0), m, 0); nwscript.call('ExecuteScript','k_def_damage01', m, 0); break end end"
   close_console
   send "#sleep 4"
 }

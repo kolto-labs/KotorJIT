@@ -1,18 +1,8 @@
 #!/usr/bin/env python3
-"""Generate host-name aliases and the cb event table.
+"""Generate kp.events constants and namespace migration documentation.
 
-Canonical names are what the C modules and the Odyssey corpus register:
-kotor.mem.readbyte, kotor.GetFirstPC, kotor.SendMessageToPC. Scripts may also
-write the underscored form. Both spellings point at the same C function.
-
-Event constants come from data/events.toml lua_name values, which were derived
-from the decompiled dispatch (OnModulePlayerEnter, OnTick, OnCreatureDeath).
-There is no Halo getplayer(0..15) or EVENT_JOIN surface.
-
-Emits:
-    src/generated/compat_aliases.inc   alias -> canonical
-    src/generated/compat_events.inc    cb constant -> event name
-    docs/api-dialects.md               the reference for script authors
+The empty alias artifact is retained for generated-file compatibility only; no
+runtime code consumes it and API version 2 exports no compatibility aliases.
 """
 from __future__ import annotations
 
@@ -123,54 +113,32 @@ def gen_events(events: list[dict]) -> str:
 
 
 def gen_docs(doc: dict, events: list[dict]) -> str:
-    aliases = doc["alias"]
-
-    by_canon: dict[str, list[dict]] = {}
-    for a in aliases:
-        by_canon.setdefault(a["canonical"], []).append(a)
-
-    examples = [n for n in (
-        "OnTick", "OnConsoleCommand", "OnModuleLoad",
-        "OnModulePlayerEnter", "OnCreatureDeath", "OnAreaEnter",
-    ) if any(e["name"] == n for e in events)]
-
-    L = ["# Odyssey names and callbacks", "",
-         "Generated from `data/api_aliases.toml` and `data/events.toml`. "
-         "Do not edit by hand.", "",
-         "KOTOR is `CServerExoApp` in-process with one hardcoded client. "
-         "The player is `CServerExoApp::GetFirstPCObject` / NWScript "
-         "`GetFirstPC`, not a Halo slot id. An object is "
-         "`CServerExoAppInternal::GetGameObject` / `CSWSPlayer::GetGameObject`, "
-         "not `getobject`. A message is `SendMessageToPC`.", "",
-         "Host functions use the names the C modules registered "
-         "(`readbyte`, `registertimer`, `feedback`). Scripts may also write "
-         "the underscored form. Both spellings are the same C function.", "",
-         f"**{len(aliases)} aliases** over **{len(by_canon)} functions**.", "",
-         "## Names", "",
-         "| this runtime calls it | also accepts |",
-         "|---|---|"]
-    for canon in sorted(by_canon):
-        alts = ", ".join(f"`{a['alias']}`" for a in by_canon[canon])
-        L.append(f"| `{canon}` | {alts} |")
-
-    L += ["", "## Events", "",
-          "Define a global and it is found at load:", "",
-          "```lua", "function OnTick(tick, relevant)", "    -- ...", "end", "```", "",
-          "Or register a handler by name at runtime:", "",
-          "```lua", "function OnScriptLoad(game, build)",
-          '    register_callback(cb.OnTick, "my_tick")',
-          '    register_callback(cb.OnModulePlayerEnter, "on_enter")',
-          "end", "```", "",
-          "A runtime registration wins over a same-named global. "
-          "`unregister_callback(cb.OnTick)` removes it.", "",
-          f"Every event in `data/events.toml` is a field on `cb` (and `events`) "
-          f"with the same name — **{len(events)}** of them, taken from the "
-          "decompiled dispatch. Common ones:", "",
-          "| constant | raises |", "|---|---|"]
-    for name in examples:
-        L.append(f"| `cb.{name}` | `{name}` |")
-    L.append("")
-    return "\n".join(L)
+    lines = ["# Native namespace and callback migration", "",
+             "Generated from `data/api_aliases.toml` and `data/events.toml`.", "",
+             "API version 2 has two public roots: `nwscript.call(name, ...)` for direct "
+             "engine routines and `kp` for every native host facility.", "",
+             "The former kotor root, bare host functions, underscored aliases, "
+             "cb/events globals, host identity globals and host bit32 alias are removed. "
+             "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.log`. "
+             "The engine logarithm is `nwscript.call('log', value)`.", "",
+             "Lua's standard `print` remains unchanged. `kp.print(...)` writes host "
+             "diagnostics; console and harness states capture that native output.", "",
+             "Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, "
+             "`kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.", "",
+             "## Explicit event registration", "", "```lua",
+             "kp.events.register(kp.events.OnTick, function(tick, relevant)",
+             "    -- ...", "end)",
+             "kp.events.unregister(kp.events.OnTick)", "```", "",
+             "Registration accepts a function or a script-owned global function name. "
+             "The dispatcher still discovers global On* callbacks for legacy compatibility. "
+             "Explicit registration wins; unregister restores a discovered global handler. "
+             "Script-owned `priority` remains loader metadata. Neither behavior exports "
+             "a bare host facility.", "",
+             f"The {len(events)} event constants below come from the event catalog.", "",
+             "| constant | dispatched event |", "|---|---|"]
+    for e in events:
+        lines.append(f"| `kp.events.{e['name']}` | `{e['lua_name']}` |")
+    return "\n".join(lines) + "\n"
 
 
 def main() -> int:

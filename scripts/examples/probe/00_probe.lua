@@ -17,7 +17,7 @@ local function note(what)
     -- line per event buries everything else in the log.
     local n = seen[what]
     if n == 1 or n % 100 == 0 then
-        print(("[probe] %s x%d"):format(what, n))
+        kp.print(("[probe] %s x%d"):format(what, n))
     end
 end
 
@@ -53,5 +53,5 @@ function OnModuleHeartbeat(day, time)                      note("OnModuleHeartbe
 function OnConsoleCommand(line, relevant)                  note("console:" .. tostring(line)) end
 
 function OnScriptLoad(game, build)
-    print(("[probe] watching %s (%s)"):format(tostring(game), tostring(build)))
+    kp.print(("[probe] watching %s (%s)"):format(tostring(game), tostring(build)))
 end

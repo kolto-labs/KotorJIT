@@ -6,7 +6,7 @@
 -- creature, party included. The party does not dance: ClearAllActions on
 -- the player would cancel whatever the route told them to do.
 --
--- Mechanism: kotor.registertimer with a repeating callback (return true to
+-- Mechanism: kp.registertimer with a repeating callback (return true to
 -- re-arm). SetGlobalFadeOut/In with a colour is the strobe. Dancing is
 -- ActionPlayAnimation(ANIMATION_LOOPING_DANCE / DANCE1) queued through
 -- kp.as, which is how a script makes another creature act. Nothing starts
@@ -27,10 +27,8 @@ local COLOURS = {
 }
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -83,7 +81,7 @@ function cursed_beat(timer_id, fired, data)
   if beats % 4 == 0 then
     local e = q("EffectVisualEffect", VFX_PLASMA)
     if e then q("ApplyEffectToObject", 0, e, who, 0.0) end
-    print(("[cursed:rave] beat %d: plasma on %s"):format(beats, name))
+    kp.print(("[cursed:rave] beat %d: plasma on %s"):format(beats, name))
   elseif not yes(q("GetIsInCombat", who)) and not yes(q("IsObjectPartyMember", who))
          and kp and kp.as then
     local anim = DANCE[math.random(#DANCE)]
@@ -91,7 +89,7 @@ function cursed_beat(timer_id, fired, data)
       q("ClearAllActions")
       q("ActionPlayAnimation", anim, 1.0, 4.0)
     end)
-    print(("[cursed:rave] beat %d: %s dances"):format(beats, name))
+    kp.print(("[cursed:rave] beat %d: %s dances"):format(beats, name))
   end
   return true
 end
@@ -102,5 +100,5 @@ function OnTick(tick, relevant)
   if not pc or not yes(q("GetIsObjectValid", pc)) then return end
   armed = true
   q("registertimer", BEAT_MS, "cursed_beat", {})
-  print("[cursed:rave] the beat drops")
+  kp.print("[cursed:rave] the beat drops")
 end

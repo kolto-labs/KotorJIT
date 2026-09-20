@@ -45,6 +45,45 @@ namespace {
 
 VmBinding g_binding;
 
+// GetFacing is currently the one live routine whose result boundary needs
+// diagnosis.  Keep this per-thread and deliberately tiny: it records only the
+// bridge calls made by routine 28, never arbitrary VM stack contents.
+struct DispatchTrace {
+    bool active = false;
+    std::uint16_t routine = 0;
+    Type returns = Type::Void;
+    std::uintptr_t command_implementer = 0;
+    std::uintptr_t virtual_machine = 0;
+    int execute_status = 0;
+    bool execute_called = false;
+    bool push_result_entered = false;
+    int result_count = -1;
+    bool pop_attempted = false;
+    int pop_status = 0;
+    bool pop_bound = false;
+};
+
+thread_local DispatchTrace g_trace;
+
+bool trace_this(const Routine& r) {
+    return r.id == 28 && std::strcmp(r.name, "GetFacing") == 0;
+}
+
+void begin_trace(const Routine& r, const VmBinding& vm) {
+    if (!trace_this(r)) return;
+    g_trace = DispatchTrace{};
+    g_trace.active = true;
+    g_trace.routine = r.id;
+    g_trace.returns = r.returns;
+    g_trace.command_implementer = reinterpret_cast<std::uintptr_t>(vm.command_implementer);
+    g_trace.virtual_machine = reinterpret_cast<std::uintptr_t>(vm.virtual_machine);
+}
+
+int traced_result_count(int count) {
+    if (g_trace.active) g_trace.result_count = count;
+    return count;
+}
+
 // Both games' tables are compiled in; selected_game() latches the choice.
 namespace k1_table {
 using kp::api::Param;
@@ -195,32 +234,74 @@ int push_result(lua_State* L, const Routine& r) {
     const VmEngineAccess& ex = engine_access();
     void* self = vm.virtual_machine;
 
+    if (g_trace.active) g_trace.push_result_entered = true;
+
     switch (r.returns) {
     case Type::Void:
-        return 0;
+        return traced_result_count(0);
     case Type::Int: {
         int v = 0;
-        if (!vm.pop_int(self, &v)) return 0;
+        if (!vm.pop_int)
+            return luaL_error(L, "%s: expected %s return, VM pop_int failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = vm.pop_int(self, &v);
+        if (!status)
+            return luaL_error(L, "%s: expected %s return, VM pop_int failed "
+                              "(routine=%u, status=%d)",
+                              r.name, type_name(r.returns), unsigned(r.id), status);
         lua_pushinteger(L, v);
-        return 1;
+        return traced_result_count(1);
     }
     case Type::Object: {
         std::uint32_t v = 0;
-        if (!vm.pop_object(self, &v)) return 0;
+        if (!vm.pop_object)
+            return luaL_error(L, "%s: expected %s return, VM pop_object failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = vm.pop_object(self, &v);
+        if (!status)
+            return luaL_error(L, "%s: expected %s return, VM pop_object failed "
+                              "(routine=%u, status=%d)",
+                              r.name, type_name(r.returns), unsigned(r.id), status);
         // See push_argument: object ids must travel as Lua numbers, not
         // lua_Integer, or a high-bit id round-trips through Lua as negative.
         lua_pushnumber(L, static_cast<lua_Number>(v));
-        return 1;
+        return traced_result_count(1);
     }
     case Type::Float: {
         float v = 0.0f;
-        if (!vm.pop_float(self, &v)) return 0;
+        if (g_trace.active) g_trace.pop_bound = vm.pop_float != nullptr;
+        if (!vm.pop_float)
+            return luaL_error(L, "%s: expected %s return, VM pop_float failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = vm.pop_float(self, &v);
+        if (g_trace.active) {
+            g_trace.pop_attempted = true;
+            g_trace.pop_status = status;
+        }
+        if (!status)
+            // A missing scalar used to return zero Lua values.  Inside a table
+            // constructor that silently removed the field (GetFacing exposed
+            // this); status and routine id are bounded VM-side diagnostics.
+            return luaL_error(L, "%s: expected %s return, VM pop_float failed "
+                              "(routine=%u, status=%d)",
+                              r.name, type_name(r.returns), unsigned(r.id), status);
         lua_pushnumber(L, v);
-        return 1;
+        return traced_result_count(1);
     }
     case Type::String: {
         ExoString s{};
-        if (!vm.pop_string(self, &s)) return 0;
+        if (!vm.pop_string)
+            return luaL_error(L, "%s: expected %s return, VM pop_string failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = vm.pop_string(self, &s);
+        if (!status)
+            return luaL_error(L, "%s: expected %s return, VM pop_string failed "
+                              "(routine=%u, status=%d)",
+                              r.name, type_name(r.returns), unsigned(r.id), status);
         // A CExoString can carry a null pointer with a non-zero length after a
         // failed engine call; trusting the length would read from address zero.
         if (s.text == nullptr) lua_pushlstring(L, "", 0);
@@ -228,16 +309,24 @@ int push_result(lua_State* L, const Routine& r) {
         // Popping a string allocates; giving it back is optional only in the
         // sense that its absence leaks rather than crashes.
         if (ex.destroy_string) ex.destroy_string(&s);
-        return 1;
+        return traced_result_count(1);
     }
     case Type::Vector: {
         Vec3 v;
-        if (!ex.pop_vector(self, &v)) return 0;
+        if (!ex.pop_vector)
+            return luaL_error(L, "%s: expected %s return, VM pop_vector failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = ex.pop_vector(self, &v);
+        if (!status)
+            return luaL_error(L, "%s: expected %s return, VM pop_vector failed "
+                              "(routine=%u, status=%d)",
+                              r.name, type_name(r.returns), unsigned(r.id), status);
         lua_createtable(L, 0, 3);
         lua_pushnumber(L, v.x); lua_setfield(L, -2, "x");
         lua_pushnumber(L, v.y); lua_setfield(L, -2, "y");
         lua_pushnumber(L, v.z); lua_setfield(L, -2, "z");
-        return 1;
+        return traced_result_count(1);
     }
     default: break;
     }
@@ -245,22 +334,72 @@ int push_result(lua_State* L, const Routine& r) {
     EngineStruct kind;
     if (is_engine_struct(r.returns, kind)) {
         void* h = nullptr;
-        if (!ex.pop_engine_structure(self, std::uint32_t(kind), &h) || h == nullptr)
-            return 0;
+        if (!ex.pop_engine_structure)
+            return luaL_error(L, "%s: expected %s return, VM pop_engine_structure failed "
+                              "(routine=%u, status=unbound)",
+                              r.name, type_name(r.returns), unsigned(r.id));
+        const int status = ex.pop_engine_structure(self, std::uint32_t(kind), &h);
+        if (!status || h == nullptr)
+            return luaL_error(L, "%s: expected %s return, VM pop_engine_structure failed "
+                              "(routine=%u, status=%d, handle=%s)",
+                              r.name, type_name(r.returns), unsigned(r.id), status,
+                              h ? "set" : "null");
         // What we pop, we own. The handle carries its type so passing an effect
         // where a location is wanted is caught at the next call rather than
         // pushing a wrong type id the VM rejects.
         push_engine_struct(L, kind, h, /*owned=*/true);
-        return 1;
+        return traced_result_count(1);
     }
-    return 0;
+    return traced_result_count(0);
 }
 
 // ------------------------------------------------------------ dispatch ------
 
 int dispatch(lua_State* L) {
-    const auto* r = static_cast<const Routine*>(lua_touserdata(L, lua_upvalueindex(1)));
-    return call(L, *r, 1);
+    const char* name = luaL_checkstring(L, 1);
+    const Routine* r = find(name);
+    if (r == nullptr) {
+        const bool closure = std::strcmp(name, "AssignCommand") == 0
+                          || std::strcmp(name, "DelayCommand") == 0
+                          || std::strcmp(name, "ActionDoCommand") == 0;
+        if (closure)
+            return luaL_error(L, "nwscript.call: '%s' takes an NWScript action closure "
+                                 "and cannot be called directly from Lua", name);
+        return luaL_error(L, "nwscript.call: unknown routine '%s' for the selected game", name);
+    }
+    return call(L, *r, 2);
+}
+
+// Read the last opt-in GetFacing dispatch from the current game thread.  This
+// exposes bridge control-flow only; pointers are identities, never dereferenced
+// by this diagnostic path.
+int l_last_routine_trace(lua_State* L) {
+    if (!g_trace.active) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_createtable(L, 0, 12);
+    auto integer = [L](const char* name, lua_Number value) {
+        lua_pushnumber(L, value);
+        lua_setfield(L, -2, name);
+    };
+    auto boolean = [L](const char* name, bool value) {
+        lua_pushboolean(L, value ? 1 : 0);
+        lua_setfield(L, -2, name);
+    };
+    integer("routine", g_trace.routine);
+    lua_pushstring(L, type_name(g_trace.returns));
+    lua_setfield(L, -2, "returns");
+    integer("command_implementer", static_cast<lua_Number>(g_trace.command_implementer));
+    integer("virtual_machine", static_cast<lua_Number>(g_trace.virtual_machine));
+    boolean("execute_called", g_trace.execute_called);
+    integer("execute_status", g_trace.execute_status);
+    boolean("push_result_entered", g_trace.push_result_entered);
+    integer("result_count", g_trace.result_count);
+    boolean("pop_bound", g_trace.pop_bound);
+    boolean("pop_attempted", g_trace.pop_attempted);
+    integer("pop_status", g_trace.pop_status);
+    return 1;
 }
 
 }  // namespace
@@ -296,10 +435,10 @@ const VmBinding& binding() { return g_binding; }
 // ---------------------------------------------------------------- call ------
 
 int call(lua_State* L, const Routine& r, int first_arg) {
-    const VmBinding& vm = binding();
-    if (!vm.usable())
-        return luaL_error(L, "%s: the script VM is not bound yet, so no engine "
-                             "routine can be called", r.name);
+    const VmBinding vm = binding();
+    if (!vm_binding_live(r.id))
+        return luaL_error(L, "%s: live VM context or command slot is unavailable; "
+                             "waiting for a trusted script context", r.name);
 
     const int supplied = lua_gettop(L) - first_arg + 1;
     if (supplied < r.required_count)
@@ -309,6 +448,8 @@ int call(lua_State* L, const Routine& r, int first_arg) {
         return luaL_error(L, "%s takes at most %d argument(s), got %d",
                           r.name, int(r.param_count), supplied);
 
+    begin_trace(r, vm);
+
     // LAST declared parameter first. See the header note; reversing this is
     // invisible for symmetric signatures and silently wrong for the rest.
     for (int i = int(r.param_count) - 1; i >= 0; --i) {
@@ -316,9 +457,24 @@ int call(lua_State* L, const Routine& r, int first_arg) {
         push_argument(L, r, std::uint8_t(i), slot);
     }
 
+    if (!vm_binding_live(r.id) || binding().command_implementer != vm.command_implementer)
+        return luaL_error(L, "%s: VM context changed before dispatch", r.name);
     const int rc = vm.execute_command(vm.command_implementer, int(r.id),
                                       int(r.param_count));
-    if (rc != 0) {
+    if (g_trace.active) {
+        g_trace.execute_called = true;
+        g_trace.execute_status = rc;
+    }
+    // K1's ExecuteCommandGetLastConversation has a byte-verified inverted
+    // status convention: after it successfully pushes its CExoString it
+    // returns STACK_PUSH_ERROR (-2000).  Every other handler we bridge uses
+    // zero on success, so keep the exception confined to the one routine.
+    // Treating -2000 as globally successful would turn genuine stack failures
+    // from every other command into corrupt Lua results.
+    constexpr int kStackPushError = -2000;
+    const bool is_last_conversation = r.id == 711 && r.returns == Type::String;
+    const bool success = is_last_conversation ? rc == kStackPushError : rc == 0;
+    if (!success) {
         // The VM's own error codes. -2002 is COMMAND_NOT_FOUND, which on a
         // correct table means the build is not the one we think it is.
         return luaL_error(L, "%s (routine %d) failed: VM error %d",
@@ -335,8 +491,8 @@ int l_as(lua_State* L) {
     const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
     luaL_checktype(L, 2, LUA_TFUNCTION);
     const VmBinding& vm = binding();
-    if (vm.command_implementer == nullptr)
-        return luaL_error(L, "kp.as needs the VM binding");
+    if (!vm_binding_live())
+        return luaL_error(L, "kp.as needs a live VM context");
 
     struct Commands {
         void*         vtable;
@@ -354,6 +510,8 @@ int l_as(lua_State* L) {
     lua_pushvalue(L, 2);
     for (int i = 0; i < extras; ++i) lua_pushvalue(L, 3 + i);
     const int rc = lua_pcall(L, extras, LUA_MULTRET, 0);
+    if (!vm_binding_live() || binding().command_implementer != cmds)
+        return luaL_error(L, "kp.as: VM context changed before caller restoration");
     cmds->has_caller = old_has;
     cmds->caller_id = old_id;
     if (rc != 0) return lua_error(L);
@@ -361,23 +519,15 @@ int l_as(lua_State* L) {
 }
 
 void register_all(lua_State* L) {
-    // Share one `kotor` table with the other modules rather than replacing it.
-    lua_getglobal(L, "kotor");
+    lua_getglobal(L, "nwscript");
     if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
-        lua_createtable(L, 0, 1024);
+        lua_createtable(L, 0, 1);
         lua_pushvalue(L, -1);
-        lua_setglobal(L, "kotor");
+        lua_setglobal(L, "nwscript");
     }
-
-    const std::vector<Routine>& t = table();
-    for (const auto& r : t) {
-        // The Routine lives in a vector that outlives every state, so a light
-        // userdata upvalue is safe and costs nothing to push.
-        lua_pushlightuserdata(L, const_cast<Routine*>(&r));
-        lua_pushcclosure(L, dispatch, 1);
-        lua_setfield(L, -2, r.name);
-    }
+    lua_pushcfunction(L, dispatch);
+    lua_setfield(L, -2, "call");
     lua_pop(L, 1);
 
     // kp.as — specified in data/hostapi.toml; the generator is not in-tree.
@@ -390,10 +540,12 @@ void register_all(lua_State* L) {
     }
     lua_pushcfunction(L, l_as);
     lua_setfield(L, -2, "as");
+    lua_pushcfunction(L, l_last_routine_trace);
+    lua_setfield(L, -2, "last_routine_trace");
     lua_pop(L, 1);
 
     platform::log(platform::LogLevel::Info,
-                  "api: registered %zu engine routines as kotor.<Name>", t.size());
+                  "api: registered nwscript.call for %zu engine routines", table().size());
 }
 
 }  // namespace kp::api

@@ -38,6 +38,13 @@ enum class SiteKind {
     Detour,     // we patch it
     Reference,  // we only need the address
     Call,       // we call it; still never patched
+    // A struct member, not code: `offset` bytes into an object the caller
+    // already holds, `size` bytes wide. `addr` is the owning global when the
+    // field is anchored at one (g_pAppManager) and 0 when it is reached through
+    // a pointer chain. Never patched, never scanned for -- there are no bytes
+    // to verify, so the generator emits no expected_bytes and
+    // resolve_from_signatures leaves it alone.
+    Field,
     Unknown,
 };
 
@@ -51,19 +58,35 @@ struct Site {
     SiteKind       kind = SiteKind::Unknown;
     bool           required = false;
     bool           resolved = false;   // false when the generator could not bind it
+    bool           bound_from_scan = false; // true when unique bytes won over the hint
     std::uintptr_t addr = 0;           // absolute VA, as recorded against image_base
     double         confidence = 0.0;
     // Bytes the generator read at this address from a plaintext reference image.
     // The hook engine verifies against these before patching, so a stale table
     // or a mismatched build fails at the site instead of corrupting it.
     std::vector<std::uint8_t> expected;
+    // Field sites only: byte offset into the owning object and width in bytes.
+    // Zero on every other kind. A Field with size 0 is unresolved.
+    std::uint32_t  offset = 0;
+    std::uint32_t  size = 0;
 };
 
-// A parsed data/addresses/<build>.json.
+// A parsed data/addresses/<build>.json, or an AgentDecompile hook pack
+// (`agentdecompile.hookpack/v1`) flattened for one build slug.
 class AddressTable {
 public:
     static bool load_file(const std::string& path, AddressTable& out, std::string& error);
     static bool parse(std::string_view json, AddressTable& out, std::string& error);
+    static bool parse(std::string_view json, const std::string& build_slug,
+                      AddressTable& out, std::string& error);
+    // Flatten instances for `build_slug`. Overlay is the optional
+    // data/addresses/<build>.json — expected_bytes / kind / required only.
+    // Does not invent bytes.
+    static bool load_hookpack(const std::string& pack_path,
+                              const std::string& build_slug,
+                              const std::string& overlay_path,
+                              AddressTable& out,
+                              std::string& error);
 
     const Site* find(std::string_view name) const;
     const std::vector<Site>& sites() const { return sites_; }
@@ -79,6 +102,13 @@ public:
     std::uintptr_t image_base() const { return image_base_; }
 
     std::vector<std::string> unresolved_required() const;
+
+    // Recorded VA is a hint. Unique expected_bytes bind the site.
+    // `runtime_base` 0 means the table's image_base (no reloc).
+    // A hit is stored as an image VA so install() still applies delta once.
+    void resolve_from_signatures(std::uintptr_t runtime_base);
+
+    void merge_overlay(const AddressTable& overlay);
 
 private:
     std::string    build_;

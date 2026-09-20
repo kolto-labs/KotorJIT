@@ -27,10 +27,8 @@ local BIG_RADIUS = 10.0
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -66,7 +64,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -111,7 +109,7 @@ function OnCreatureAttacked(creature, attacker, relevant)
   local burst = q("EffectVisualEffect", VFX_FORCE_WAVE)
   if burst then q("ApplyEffectToObject", 0, burst, pc, 0.0) end
   flash(1.0, 1.0, 1.0)
-  print(("[cursed:shout] %s flung (#%d)"):format(norm(q("GetName", creature)), pushes))
+  kp.print(("[cursed:shout] %s flung (#%d)"):format(norm(q("GetName", creature)), pushes))
 
   if pushes % BIG_EVERY == 0 then
     local flung = 0
@@ -127,6 +125,6 @@ function OnCreatureAttacked(creature, attacker, relevant)
       kp.as(pc, function() q("SpeakString", "FUS RO DAH!", 1) end)
     end
     flash(0.6, 0.8, 1.0, 0.2)
-    print(("[cursed:shout] FUS RO DAH: %d flung"):format(flung))
+    kp.print(("[cursed:shout] FUS RO DAH: %d flung"):format(flung))
   end
 end

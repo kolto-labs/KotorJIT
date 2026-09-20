@@ -52,6 +52,22 @@ purpose  = """Engine-routine dispatch. NOT hooked - we write entries in the runt
 function-pointer table it indexes. Resolved so we can locate that table."""
 convention = "thiscall"
 
+[[site]]
+name     = "vm.wrapper_internal"
+class    = "CVirtualMachine"
+method   = "internal"
+kind     = "field"
+required = false
+purpose  = "CVirtualMachineInternal* consumed by the VM stack-accessor thunks."
+
+[[site]]
+name     = "vm.internal_command_implementer"
+class    = "CVirtualMachineInternal"
+method   = "command_implementer"
+kind     = "field"
+required = false
+purpose  = "CSWVirtualMachineCommands* captured from the active script VM."
+
 # --- Script state persistence -------------------------------------------------
 
 [[site]]
@@ -280,9 +296,17 @@ convention = "thiscall"
 name     = "app.client_main_loop"
 class    = "CClientExoAppInternal"
 method   = "MainLoop"
-kind     = "reference"
+kind     = "detour"
 required = false
-purpose  = "Client/render tick. Resolved for diagnostics; not hooked in M1."
+purpose  = """Client/render tick. WinMain calls it every iteration, server or no
+server, so it is the only per-frame site that runs on the main menu. The
+headless harness drains its command queue here, re-applies the world-timer
+scale after the engine's per-frame SetGameSpeed, and reads the frame for a
+screenshot after the original returns. Returning 1 is a clean quit: WinMain
+ORs the return into its exit flag."""
+# int __thiscall MainLoop(this) on the PE builds. On the native kotor2 ELF
+# `this` is the first stack argument (GCC cdecl); the body picks the shape from
+# the table's platform.
 convention = "thiscall"
 
 [[site]]
@@ -311,3 +335,1858 @@ kind     = "detour"
 required = false
 purpose  = "Module lifecycle boundary; script reload point. Spare sixth cave."
 convention = "thiscall"
+
+# --- Headless harness: engine calls ------------------------------------------
+#
+# Sites the harness adapter (src/harness/engine_*.cpp) calls or reads. None is
+# required: a build that lacks one makes the matching command reply
+# `unsupported` with the site named, and every other command keeps working.
+# Calling conventions below are what the K1 corpus records and are advisory;
+# the adapter hardcodes the shape per call and per platform (docs/harness-design.md,
+# reverse-engineering amendment 6).
+
+[[site]]
+name     = "client.set_game_speed"
+class    = "CClientExoAppInternal"
+method   = "SetGameSpeed"
+kind     = "detour"
+required = false
+purpose  = """SetSnapshotScale on the five game-speed timers (client world, pause,
+animation; server world, pause). The client loop calls it every non-loading
+frame with 1.0 or 0.25, which would clobber a harness scale; the detour lets the
+engine's call through and applies the harness scale after it."""
+# void __thiscall SetGameSpeed(this, float scale)
+convention = "thiscall"
+
+[[site]]
+name     = "client.play_movies"
+class    = "CClientExoAppInternal"
+method   = "PlayMoviesInExoArrayList"
+kind     = "detour"
+required = false
+purpose  = """Every movie (intro queue, module transitions, script PlayMovie) funnels
+through here and blocks the client loop inside WaitForMovie until it ends. With
+movies disabled the detour returns 0 without touching *outResult, which is the
+engine's own disable_movies path."""
+# int __thiscall PlayMoviesInExoArrayList(this, CExoArrayList<CExoString>*, int* outResult,
+#                                          int wait, int, CExoArrayList<int>*)  -- ret 0x14
+convention = "thiscall"
+
+[[site]]
+name     = "creature.ai_action_move_to_point"
+class    = "CSWSCreature"
+method   = "AIActionMoveToPoint"
+kind     = "detour"
+required = false
+purpose  = "K1 shared MoveToPoint action trace. Observes only mapped +0x1f8/+0xa8c suppression and +0x340 path-context fields before forwarding unchanged; it does not duplicate or classify engine predicates."
+convention = "thiscall"
+
+[[site]]
+name     = "creature.add_move_to_point_action"
+class    = "CSWSCreature"
+method   = "AddMoveToPointAction"
+kind     = "detour"
+required = false
+purpose  = "Split-client input seam: replicate the native MoveToPoint action arguments to the authoritative server, which replays the same engine action on the matching player creature."
+convention = "thiscall"
+
+[[site]]
+name     = "server_object.set_position"
+class    = "CSWSObject"
+method   = "SetPosition"
+kind     = "call"
+required = false
+purpose  = "Authoritative split-server position update; updates the object's area index without requiring the retail client-coupled pathfinding tick."
+convention = "thiscall"
+
+[[site]]
+name     = "app.create_server"
+class    = "CAppManager"
+method   = "CreateServer"
+kind     = "call"
+required = false
+purpose  = "New CServerExoApp plus StartServices/Initialize; replaces an existing server. First step of the load-save replay."
+convention = "thiscall"
+
+[[site]]
+name     = "net.start_connect_to_session"
+class    = "CNetLayer"
+method   = "StartConnectToSession"
+kind     = "detour"
+required = false
+purpose  = "Loopback connect: (net, 0, &clientName, &\"\", 10, 0x10). Flag 0x10 makes the local player sys-admin, which is what lets the automatic \"sModule.Run\" reach RunModule."
+# bool __thiscall StartConnectToSession(this, ulong, CExoString*, CExoString*, ulong, ulong)
+convention = "thiscall"
+
+# Multiplayer transport boundary. A build with its own verified ABI receipt
+# enables the detours only for an
+# explicitly named client/server executable with a configured loopback port;
+# other builds remain runtime-disabled until their own ABI receipts exist.
+[[site]]
+name     = "net.initialize"
+class    = "CNetLayer"
+method   = "Initialize"
+kind     = "reference"
+required = false
+purpose  = "Pairs the stock in-process CNetLayer endpoints; transport replacement must preserve lifecycle and ownership semantics."
+convention = "thiscall"
+
+[[site]]
+name     = "net.shutdown"
+class    = "CNetLayer"
+method   = "ShutDown"
+kind     = "reference"
+required = false
+purpose  = "Clears reciprocal endpoint linkage and connection state; remote transport must close the matching process connection without leaving a stale owner."
+convention = "thiscall"
+
+[[site]]
+name     = "net.send_message_to_player"
+class    = "CNetLayer"
+method   = "SendMessageToPlayer"
+kind     = "detour"
+required = false
+purpose  = "Serialized-message egress seam. Stock K1 copies into destination_net_layer; remote transport must validate player, pointer, and length before forwarding."
+convention = "thiscall"
+
+[[site]]
+name     = "net.process_received_frames"
+class    = "CNetLayer"
+method   = "ProcessReceivedFrames"
+kind     = "detour"
+required = false
+purpose  = "Frame-consumption seam used to deliver bounded remote input on the engine thread."
+convention = "thiscall"
+
+[[site]]
+name     = "net.non_window_messages"
+class    = "CNetLayer"
+method   = "NonWindowMessages"
+kind     = "reference"
+required = false
+purpose  = "Routes decoded BNCS/BNCR and game messages after transport framing."
+convention = "thiscall"
+
+[[site]]
+name     = "client.area_get_server_area"
+class    = "CSWCArea"
+method   = "GetServerArea"
+kind     = "detour"
+required = false
+purpose  = "Split-client compatibility: use the paused support server's active area when a remote object id has no local mapping."
+convention = "thiscall"
+
+[[site]]
+name     = "module.get_area"
+class    = "CSWSModule"
+method   = "GetArea"
+kind     = "call"
+required = false
+purpose  = "Return the support server module's active area for split-client object attachment."
+convention = "thiscall"
+
+[[site]]
+name     = "client_area.attach_from_server"
+class    = "CSWCArea"
+method   = "AttachmentFromServerArea"
+kind     = "call"
+required = false
+purpose  = "Cache the compatibility server area on the split client's area object."
+convention = "thiscall"
+
+[[site]]
+name     = "server_area.attach_from_client"
+class    = "CSWSArea"
+method   = "AttachmentFromClientArea"
+kind     = "call"
+required = false
+purpose  = "Complete the support-area attachment in the same two directions as stock GetServerArea."
+convention = "thiscall"
+
+[[site]]
+name     = "net.destination_net_layer"
+class    = "CNetLayer"
+method   = "destination_net_layer"
+kind     = "field"
+required = false
+purpose  = "Paired stock endpoint (+0x2000c on K1 GOG). Remote ingress uses the original SendMessageToPlayer trampoline on this peer so the engine's own bounded queue and ProcessReceivedFrames path remain authoritative."
+
+[[site]]
+name     = "net.start_server_mode"
+class    = "CNetLayer"
+method   = "StartServerMode"
+kind     = "detour"
+required = false
+purpose  = "Enables the engine's server-mode state; stock K1 does not create a socket listener here."
+convention = "thiscall"
+
+[[site]]
+name     = "msg.request_status"
+class    = "CSWCMessage"
+method   = "SendPlayerToServerStatus_RequestStatus"
+kind     = "call"
+required = false
+purpose  = "Asks the server for its status; the reply drives login and Module.Run without any GUI."
+convention = "thiscall"
+
+[[site]]
+name     = "client.set_player_character_name"
+class    = "CClientExoApp"
+method   = "SetPlayerCharacterName"
+kind     = "call"
+required = false
+purpose  = "Mandatory before a load: the client only logs a character in when a name is set. The menu path uses \"test\"."
+# void __thiscall SetPlayerCharacterName(this, CExoString*)
+convention = "thiscall"
+
+[[site]]
+name     = "client.set_input_class"
+class    = "CClientExoApp"
+method   = "SetInputClass"
+kind     = "call"
+required = false
+purpose  = "SetInputClass(0, 1) as the menu load path does. 0 gameplay, 1 minigame, 2 GUI, 3 dialog."
+convention = "thiscall"
+
+[[site]]
+name     = "client.disable_input"
+class    = "CClientExoApp"
+method   = "DisableInput"
+kind     = "call"
+required = false
+purpose  = "Sets input_disabled for the load; the engine re-enables it when the area is ready."
+convention = "thiscall"
+
+[[site]]
+name     = "app.set_load_from_savegame"
+class    = "CServerExoApp"
+method   = "SetLoadFromSaveGame"
+kind     = "call"
+required = false
+purpose  = "Marks the pending load as a save game so MovePlayerToArea restores the saved player."
+convention = "thiscall"
+
+[[site]]
+name     = "client.set_loading_savegame"
+class    = "CClientExoApp"
+method   = "SetLoadingSaveGame"
+kind     = "call"
+required = false
+purpose  = "Client-side twin of set_load_from_savegame; read by LoadModuleStart."
+convention = "thiscall"
+
+[[site]]
+name     = "client.send_load_game_request"
+class    = "CClientExoApp"
+method   = "SendLoadGameRequest"
+kind     = "call"
+required = false
+purpose  = "(this, slot, &saveDirName, &lastModule) -> server MODULE minor 5 -> LoadGame. Slot -1 uses the name verbatim as the directory."
+convention = "thiscall"
+
+[[site]]
+name     = "client.send_save_game_request"
+class    = "CClientExoApp"
+method   = "SendSaveGameRequest"
+kind     = "call"
+required = false
+purpose  = "(this, slot, &dirName, &displayName) -> server MODULE minor 4 -> SaveGame. The write happens in the next server tick."
+convention = "thiscall"
+
+[[site]]
+name     = "msg.attack"
+class    = "CSWCMessage"
+method   = "SendPlayerToServerInput_Attack"
+kind     = "call"
+required = false
+purpose  = "(this, uint32 clientTargetId, uint16 combatFeat) -> void. Feat zero sends a normal retail attack through category6/subtype2; dispatch is not combat completion."
+convention = "thiscall"
+
+[[site]]
+name     = "msg.change_door_state"
+class    = "CSWCMessage"
+method   = "SendPlayerToServerInput_ChangeDoorState"
+kind     = "call"
+required = false
+purpose  = "(this, uint32 door, int state) -> void. Retail state 0x2725 dispatches category 6/subtype 3 to queue normal door use; dispatch is not completion."
+convention = "thiscall"
+
+[[site]]
+name     = "door.move_to_next_open_state"
+class    = "CSWSDoor"
+method   = "MoveToNextOpenState"
+kind     = "call"
+required = false
+purpose  = "(this) -> void. Phase two of door opening: copies the pending also_open_state (+0x2cd) into the committed open_state (+0x2cc, what GetIsOpen and the walkmesh read) and updates the area walkmesh. Retail reaches it only from the client's model-animation-done callback (CSWCDoor::MoveNextDoorState), which the headless client never delivers for some doors; door_commit_open calls it once a door is stuck with +0xd4 opening and +0x2cc still 0."
+convention = "thiscall"
+
+[[site]]
+name   = "door.open_state"
+class  = "CSWSDoor"
+method = "open_state"
+kind   = "field"
+required = false
+purpose = "Committed door state byte (+0x2cc): 0 closed, 1 open1, 2 open2, 3 destroyed. GetIsOpen and the walkmesh read this one; SetOpenState writes it only when its pending flag is 0, otherwise MoveToNextOpenState commits it from also_open_state."
+
+[[site]]
+name   = "door.also_open_state"
+class  = "CSWSDoor"
+method = "also_open_state"
+kind   = "field"
+required = false
+purpose = "Pending door state byte (+0x2cd). SetOpenState writes it on every call; a door is mid-transition while it differs from open_state. Read with door.open_state to decide whether door_commit_open is due."
+
+[[site]]
+name   = "door.animation"
+class  = "CSWSDoor"
+method = "animation"
+kind   = "field"
+required = false
+purpose = "Engine animation id (+0xd4, inherited CSWSObject::animation) last set through the SetAnimation vtable slot. SetOpenState sets 0x2726 closed, 0x2742 open1, 0x2743 open2, 0x2758 destroyed; door_commit_open checks it against these before committing."
+
+[[site]]
+name     = "msg.area_loaded"
+class    = "CSWCMessage"
+method   = "SendPlayerToServerArea_AreaLoaded"
+kind     = "call"
+required = false
+purpose  = "PlayerToServer Area minor 3. The client sends it when the load's work counter reaches its total, which never happens headless, so the harness sends it once to release MovePlayerToArea. Takes no argument: 0x006778f0 ends in a bare `ret` and reaches the net layer through g_pAppManager, never through ecx."
+convention = "stdcall"
+
+[[site]]
+name     = "gui.unpack_game"
+class    = "CSWGuiSaveLoad"
+method   = "UnpackGame"
+kind     = "call"
+required = false
+purpose  = "Exports SAVEGAME.sav into GAMEINPROGRESS: before a load. `this` is unused by the body but forwarded once; pass a null-safe dummy only after a live check."
+convention = "thiscall"
+
+[[site]]
+name     = "app.start_new_module"
+class    = "CServerExoAppInternal"
+method   = "StartNewModule"
+kind     = "call"
+required = false
+purpose  = "Direct module move (this, CExoString*). Refuses while loading_module == 1. Prefer the set_move_to_module_* trio, which is the engine's own path."
+convention = "thiscall"
+
+[[site]]
+name     = "app.load_module"
+class    = "CServerExoAppInternal"
+method   = "LoadModule"
+kind     = "call"
+required = false
+purpose  = "(this, CExoString* module, CSWSPlayer*). Arms the reentrant stall; the load is stepped by later server ticks."
+convention = "thiscall"
+
+[[site]]
+name     = "app.set_move_to_module_pending"
+class    = "CServerExoApp"
+method   = "SetMoveToModulePending"
+kind     = "call"
+required = false
+purpose  = "The engine's own warp: pending=1 plus module string and waypoint; the server loop consumes it next tick."
+convention = "thiscall"
+
+[[site]]
+name     = "app.set_move_to_module_string"
+class    = "CServerExoApp"
+method   = "SetMoveToModuleString"
+kind     = "call"
+required = false
+purpose  = "(this, CExoString*). Assigns into the engine-owned string; never write that string raw."
+convention = "thiscall"
+
+[[site]]
+name     = "app.set_move_to_module_start_waypoint"
+class    = "CServerExoApp"
+method   = "SetMoveToModuleStartWaypoint"
+kind     = "call"
+required = false
+purpose  = "(this, CExoString*). Empty string for the module's default entry."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.set_dialog_selection"
+class    = "CGuiInGame"
+method   = "SetDialogSelection"
+kind     = "call"
+required = false
+purpose  = "(this, idx, count, isReply). Stores the pick; the per-frame UpdateDialog consumes it. Never pass -3: UpdateDialog indexes the reply arrays before it looks at the sentinel."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.update_dialog"
+class    = "CGuiInGame"
+method   = "UpdateDialog"
+kind     = "call"
+required = false
+purpose  = "Consumes a stored selection into CSWSObject::ReplyDialog. Called once per frame by the client loop, so calling it is optional."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.close_dialog"
+class    = "CGuiInGame"
+method   = "CloseDialog"
+kind     = "call"
+required = false
+purpose  = "Client-side end of a conversation: clears the dialog state and removes the panels."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.handle_dialog_selection"
+class    = "CGuiInGame"
+method   = "HandleDialogSelection"
+kind     = "call"
+required = false
+purpose  = "(this, idx, count). idx -2 aborts through CloseDialog before any array read; this is the abort path."
+convention = "thiscall"
+
+[[site]]
+name     = "dialog.select_reply"
+class    = "CSWGuiDialog"
+method   = "SelectReply"
+kind     = "call"
+required = false
+purpose  = """(this, visibleIdx). Refuses idx >= visible count. The panel's vtable slot at
++0x6c is the same method, and the cinematic and computer panels override it, so
+the adapter calls through the vtable and keeps this address as the fallback."""
+convention = "thiscall"
+
+[[site]]
+name     = "dialog.reply_dialog"
+class    = "CSWSObject"
+method   = "ReplyDialog"
+kind     = "reference"
+required = false
+purpose  = "Server-side reply consumer. Reference only: calling it directly skips the client reply-table refresh and the pending flag."
+convention = "thiscall"
+
+[[site]]
+name     = "dialog.handle_reply"
+class    = "CSWSDialog"
+method   = "HandleReply"
+kind     = "reference"
+required = false
+purpose  = "Reply gate and link walk. Reference only, for the same reason as dialog.reply_dialog."
+convention = "thiscall"
+
+[[site]]
+name     = "dialog.check_script"
+class    = "CSWSDialog"
+method   = "CheckScript"
+kind     = "call"
+required = false
+purpose  = "Active-conditional evaluator: (CSWSObject* owner, CResRef* script) -> int. Static; empty resref is true."
+# ulong __stdcall CheckScript(CSWSObject*, CResRef*)
+convention = "stdcall"
+
+[[site]]
+name     = "dialog.skip_past"
+class    = "CServerExoApp"
+method   = "SkipPastDialog"
+kind     = "call"
+required = false
+purpose  = "(this, ownerObjectId). Fast-forwards the current line when the DLG is Skippable; voice-over waits do not scale with time."
+convention = "thiscall"
+
+[[site]]
+name     = "object.stop_dialog"
+class    = "CSWSObject"
+method   = "StopDialog"
+kind     = "call"
+required = false
+purpose  = "Server-side abort: runs the end-conversation scripts, frees the dialog."
+convention = "thiscall"
+
+[[site]]
+name     = "timer.set_snapshot_scale"
+class    = "CWorldTimer"
+method   = "SetSnapshotScale"
+kind     = "call"
+required = false
+purpose  = "(this, float). Stores scale*100; applies in both the wall-clock and fixed-rate branches of SetSnapshotTime."
+convention = "thiscall"
+
+[[site]]
+name     = "timer.set_fixed_snapshot_rate"
+class    = "CWorldTimer"
+method   = "SetFixedSnapshotRate"
+kind     = "call"
+required = false
+purpose  = "(this, int on, int hz). Zeroes the snapshot clock, so bracket it with pause/unpause on every timer or world time rewinds."
+convention = "thiscall"
+
+[[site]]
+name     = "timer.pause_world_timer"
+class    = "CWorldTimer"
+method   = "PauseWorldTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "timer.unpause_world_timer"
+class    = "CWorldTimer"
+method   = "UnpauseWorldTimer"
+kind     = "call"
+required = false
+purpose  = "Recomputes the world-time base from the snapshot clock, which is what makes a fixed-rate switch safe."
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_world_timer"
+class    = "CClientExoApp"
+method   = "GetWorldTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_pause_timer"
+class    = "CClientExoApp"
+method   = "GetPauseTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_animation_timer"
+class    = "CClientExoApp"
+method   = "GetAnimationTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "server.get_world_timer"
+class    = "CServerExoApp"
+method   = "GetWorldTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "server.get_pause_timer"
+class    = "CServerExoApp"
+method   = "GetPauseTimer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_in_game_gui"
+class    = "CClientExoApp"
+method   = "GetInGameGui"
+kind     = "call"
+required = false
+purpose  = "CGuiInGame*, the owner of the dialog fields below."
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_client_name"
+class    = "CClientExoApp"
+method   = "GetClientName"
+kind     = "call"
+required = false
+purpose  = "(this, CExoString* out) -> out; the name StartConnectToSession wants."
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_net_layer"
+class    = "CClientExoApp"
+method   = "GetNetLayer"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_message_handler"
+class    = "CClientExoApp"
+method   = "GetSWCMessage"
+kind     = "call"
+required = false
+purpose  = "CSWCMessage*, the `this` for msg.request_status."
+convention = "thiscall"
+
+[[site]]
+name     = "client.is_movie_playing"
+class    = "CClientExoApp"
+method   = "IsMoviePlaying"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_game_over"
+class    = "CClientExoApp"
+method   = "GetGameOver"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "gui.remove_panel"
+class    = "CSWGuiManager"
+method   = "RemovePanel"
+kind     = "call"
+required = false
+purpose  = "(this, CSWGuiPanel*) -> int. Takes the panel out of the manager's list and modal stack and calls its OnPanelRemoved; it does not free the object. The menu-free load replay needs it for the main menu, which the GUI path retires from CSWGuiMainMenu::OnLoadSaveGame."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.panel_exists"
+class    = "CSWGuiManager"
+method   = "PanelExists"
+kind     = "call"
+required = false
+purpose  = "(this, CSWGuiPanel*) -> int. Pointer compare, so it is safe on a stale main_menu pointer; this is the menu predicate."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.tutorial_handle_input"
+class    = "CSWGuiTutorialBox"
+method   = "HandleInputEvent"
+kind     = "call"
+required = false
+purpose  = "(this, int event, int active) -> int. Feed event 0x1F6 one page at a time. Its final-page path pops the modal, unpauses through SetPausedByCombat, and restores input through OnPanelRemoved."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.tutorial_unpause"
+class    = "CSWGuiTutorialBox"
+method   = "MessageBoxUnpause"
+kind     = "call"
+required = false
+purpose  = "(this, void* callback_arg) -> void. Completion callback installed by SetTutorial for ordinary tutorial reasons; call only after verifying the hidden panel's callback/context/arg fields exactly."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.messagebox_handle_input"
+class    = "CSWGuiMessageBox"
+method   = "HandleInputEvent"
+kind     = "call"
+required = false
+purpose  = "(this, int event, int active) -> void. Event 0x1f6 accepts the top messagebox through its native modal lifecycle and callback. Guard vtable slot +0x3c against this handler; subclasses may inherit it."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.status_summary_handle_input"
+class    = "CSWGuiStatusSummary"
+method   = "HandleInputEvent"
+kind     = "call"
+required = false
+purpose  = "(this, int event, int active) -> int. Event 0x27 closes the top status-summary modal and restores gameplay input/pause through its own engine path."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.show_sw_in_game_gui"
+class    = "CGuiInGame"
+method   = "ShowSWInGameGui"
+kind     = "call"
+required = false
+purpose  = "(this, int panel) -> int. Panel 0 is equipment; the native lifecycle runs k_pend_screenchg."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.hide_sw_in_game_gui"
+class    = "CGuiInGame"
+method   = "HideSWInGameGui"
+kind     = "call"
+required = false
+purpose  = "(this, int restore) -> int. Closes the selected in-game GUI through the native lifecycle; the harness passes restore=0 only after proving the selected screen is equipment panel 0."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.container_handle_input"
+class    = "CSWGuiContainer"
+method   = "HandleInputEvent"
+kind     = "call"
+required = false
+purpose  = "(this, int event, int active) -> void. Event 0x28 is the engine's canonical close path: send GUI_CONTAINER Close, HideContainerGui, remove the modal, restore input, and clear panel pause. Validate the top modal's vtable slot before calling."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.party_selection_accept_party"
+class    = "CSWGuiPartySelection"
+method   = "AcceptParty"
+kind     = "call"
+required = false
+purpose  = "(this) -> void. Accepts the initialized top party-selection modal through the native wrapper, which retires the panel and restores gameplay input/pause."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.party_selection_vtable"
+class    = "CSWGuiPartySelection"
+method   = "vtable"
+kind     = "reference"
+required = false
+purpose  = "Exact class identity for the live top party-selection modal. Compared as a relocated pointer; no inferred handler signature is used."
+
+[[site]]
+name     = "gui.main_menu_new_game"
+class    = "CSWGuiMainMenu"
+method   = "OnNewGamePicked"
+kind     = "call"
+required = false
+purpose  = "(this, live newgame CSWGuiControl*) -> void. Starts the engine-owned class-selection path; the harness never fabricates a GUI panel."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.main_chargen_begin_play"
+class    = "CSWGuiMainCharGen"
+method   = "BeginPlayGame"
+kind     = "call"
+required = false
+purpose  = "(this) -> void. Removes the chargen panels and delegates to CSWGuiClassSelection::BeginPlayGame, which creates the server and starts END_M01AA through the engine-owned route."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.main_chargen_set_visible_panel"
+class    = "CSWGuiMainCharGen"
+method   = "SetVisiblePanel"
+kind     = "call"
+required = false
+purpose  = "(this, int panel) -> void. The normal quick-character route selects panel 2 after class OnSelect and before BeginPlayGame so class feats and remaining generated-character state are initialized."
+convention = "thiscall"
+
+[[site]]
+name     = "app.update_client_game_objects"
+class    = "CServerExoAppInternal"
+method   = "UpdateClientGameObjects"
+kind     = "call"
+required = false
+purpose  = "(this, int) -> void. Forces the normal GameObjUpdate and ControlObject send path after the headless AreaLoaded placement step."
+convention = "thiscall"
+
+[[site]]
+name     = "gui.class_selection_select_button"
+class    = "CSWGuiClassSelection"
+method   = "OnSelectButton"
+kind     = "call"
+required = false
+purpose  = "(this, live class CSWGuiControl*) -> void. Advances the engine-owned character-generation route."
+convention = "thiscall"
+
+[[site]]
+name     = "menu.newgame_button"
+class    = "CSWGuiMainMenu"
+method   = "newgame_button"
+kind     = "field"
+required = false
+purpose  = "Embedded CSWGuiControl used by OnNewGamePicked. Its address is derived from a live CSWGuiMainMenu object."
+
+[[site]]
+name     = "menu.ready"
+class    = "CSWGuiMainMenu"
+method   = "field_140c"
+kind     = "field"
+required = false
+purpose  = "OnNewGamePicked's nonzero menu-readiness guard. Read only, reported when a fresh-game request is refused."
+
+[[site]]
+name     = "gui.panel_bit_flags"
+class    = "CSWGuiPanel"
+method   = "bit_flags"
+kind     = "field"
+required = false
+purpose  = "Panel flags; OnNewGamePicked refuses when bits 9-10 already equal 1. Read only."
+
+[[site]]
+name     = "gui.control_active"
+class    = "CSWGuiControl"
+method   = "is_active"
+kind     = "field"
+required = false
+purpose  = "CSWGuiControl's nonzero active guard. Read only."
+
+[[site]]
+name     = "chargen.class_controls"
+class    = "CSWGuiClassSelection"
+method   = "class_controls"
+kind     = "field"
+required = false
+purpose  = "First embedded class CSWGuiControl. class[index] is panel + offset + index * chargen.class_control."
+
+[[site]]
+name     = "chargen.class_control"
+class    = "CSWGuiControl"
+method   = "sizeof"
+kind     = "field"
+required = false
+purpose  = "One embedded class control: offset 0, size is the class-control stride."
+
+[[site]]
+name     = "chargen.main_route_panel"
+class    = "CSWGuiMainCharGen"
+method   = "route_panel"
+kind     = "field"
+required = false
+purpose  = "The first child panel added by CSWGuiMainCharGen::OnPanelAdded. Used to prove the class-selection manager delta is the engine's (main, route) pair."
+
+[[site]]
+name     = "chargen.main_quick_panel"
+class    = "CSWGuiMainCharGen"
+method   = "quick_panel"
+kind     = "field"
+required = false
+purpose  = "The QuickPanel child selected by SetVisiblePanel(main, 2). Read from the live main panel before invoking the native quick-character route."
+
+[[site]]
+name     = "chargen.child_main_panel"
+class    = "CSWGuiCharGenPanel"
+method   = "main_panel"
+kind     = "field"
+required = false
+purpose  = "A chargen child panel's back-pointer to its owning CSWGuiMainCharGen. Used to validate both route and QuickPanel children."
+
+[[site]]
+name     = "chargen.main_visible_panel"
+class    = "CSWGuiMainCharGen"
+method   = "visible_panel"
+kind     = "field"
+required = false
+purpose  = "Current visible chargen panel index. Must equal 2 after the native quick-character SetVisiblePanel call."
+
+[[site]]
+name     = "gui.panels_data"
+class    = "CSWGuiManager"
+method   = "panels.data"
+kind     = "field"
+required = false
+purpose  = "CExoArrayList<CSWGuiPanel*>::data. Used only to compare the manager's panel list around an engine GUI callback."
+
+[[site]]
+name     = "gui.panels_size"
+class    = "CSWGuiManager"
+method   = "panels.size"
+kind     = "field"
+required = false
+purpose  = "CExoArrayList<CSWGuiPanel*>::size paired with gui.panels_data."
+
+[[site]]
+name     = "app.get_global_variable_table"
+class    = "CServerExoApp"
+method   = "GetGlobalVariableTable"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "app.get_party_table"
+class    = "CServerExoApp"
+method   = "GetPartyTable"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "app.get_module"
+class    = "CServerExoApp"
+method   = "GetModule"
+kind     = "call"
+required = false
+purpose  = "CSWSModule* or null. The wrapper; the K1 body is CServerExoAppInternal::GetModule."
+convention = "thiscall"
+
+[[site]]
+name     = "server.get_player_creature_id"
+class    = "CServerExoApp"
+method   = "GetPlayerCreatureId"
+kind     = "call"
+required = false
+purpose  = "CServerExoApp::GetPlayerCreatureId(this): the local player's server object id, or 0x7F000000 when there is none."
+convention = "thiscall"
+
+[[site]]
+name     = "server.client_to_server_object_id"
+class    = "CServerExoApp"
+method   = "ClientToServerObjectId"
+kind     = "call"
+required = false
+purpose  = "Client object id (as the dialog panel holds it) -> server object id."
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_sw_party"
+class    = "CClientExoApp"
+method   = "GetSWParty"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "party.get_player_character"
+class    = "CSWParty"
+method   = "GetPlayerCharacter"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "party.set_leader"
+class    = "CSWParty"
+method   = "SetLeader"
+kind     = "call"
+required = false
+purpose  = "void __thiscall(this, int selector). Positive selectors choose a current party-array member; zero is rejected. Call only from a deferred game-loop frame."
+convention = "thiscall"
+
+[[site]]
+name     = "client_creature.party_menu_use_item"
+class    = "CSWCCreature"
+method   = "PartyMenuUseItem"
+kind     = "call"
+required = false
+purpose  = "void __thiscall(this, uint32 item_id, CSWCCreature* target). Sends the ordinary client/server use-item message; call only from a deferred game-loop frame."
+convention = "thiscall"
+
+[[site]]
+name     = "client.get_creature_by_object_id"
+class    = "CClientExoApp"
+method   = "GetCreatureByGameObjectID"
+kind     = "call"
+required = false
+purpose  = "CSWCCreature* __thiscall(this, uint32_t client_object_id). Resolves the selected client-party slot before SetLeader."
+convention = "thiscall"
+
+[[site]]
+name     = "client_party.count"
+class    = "CSWParty"
+method   = "party_count"
+kind     = "field"
+required = false
+
+[[site]]
+name     = "client_party.member"
+class    = "CSWPartyMemberData"
+method   = "sizeof"
+kind     = "field"
+required = false
+purpose  = "Party member array begins at CSWParty+0x24; size is the row stride."
+
+[[site]]
+name     = "client_party.member_id"
+class    = "CSWPartyMemberData"
+method   = "client_object_id"
+kind     = "field"
+required = false
+
+[[site]]
+name     = "client_creature.get_server_creature"
+class    = "CSWCCreature"
+method   = "GetServerCreature"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "server.get_game_object"
+class    = "CServerExoApp"
+method   = "GetGameObject"
+kind     = "call"
+required = false
+purpose  = "Server object id -> CGameObject*; vtable AsSWSObject gives the CSWSObject."
+convention = "thiscall"
+
+[[site]]
+name     = "server.get_item_by_object_id"
+class    = "CServerExoApp"
+method   = "GetItemByGameObjectID"
+kind     = "call"
+required = false
+purpose  = "CSWSItem* __thiscall(this, uint32_t server_object_id). Typed identity check used before native equip."
+convention = "thiscall"
+
+[[site]]
+name     = "creature.run_equip"
+class    = "CSWSCreature"
+method   = "RunEquip"
+kind     = "call"
+required = false
+purpose  = "int __thiscall(this, uint32_t item_id, uint32_t requested_slot, int instant_equip). K1-only native equip path, called from a deferred game-loop frame."
+convention = "thiscall"
+
+[[site]]
+name     = "inventory.get_item_in_slot"
+class    = "CSWInventory"
+method   = "GetItemInSlot"
+kind     = "call"
+required = false
+purpose  = "CSWSItem* __thiscall(this, uint32_t slot_mask). Reads back the current item after RunEquip."
+convention = "thiscall"
+
+[[site]]
+name     = "creature.inventory"
+class    = "CSWSCreature"
+method   = "inventory"
+kind     = "field"
+required = false
+
+[[site]]
+name     = "item.id"
+class    = "CSWSItem"
+method   = "object_id"
+kind     = "field"
+required = false
+purpose  = "CGameObject id at CSWSItem+0x10 embedded CSWSObject +0x4."
+
+[[site]]
+name     = "item.possessor"
+class    = "CSWSItem"
+method   = "possessor_id"
+kind     = "field"
+required = false
+purpose  = "Owning creature/object id checked before RunEquip."
+
+[[site]]
+name     = "server.get_client_object_by_object_id"
+class    = "CServerExoApp"
+method   = "GetClientObjectByObjectId"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+[[site]]
+name     = "stats.auto_levelup"
+class    = "CSWSCreatureStats"
+method   = "AutoLevelup"
+kind     = "call"
+required = false
+purpose  = "void __thiscall(this, int package); headless PC level-up uses package 0."
+convention = "thiscall"
+
+[[site]]
+name     = "stats.get_level"
+class    = "CSWSCreatureStats"
+method   = "GetLevel"
+kind     = "call"
+required = false
+purpose  = "int __thiscall(this, int include_negative_levels); harness passes 0."
+convention = "thiscall"
+
+[[site]]
+name     = "stats.can_level_up"
+class    = "CSWSCreatureStats"
+method   = "CanLevelUp"
+kind     = "call"
+required = false
+convention = "thiscall"
+
+# --- Headless harness: fields -------------------------------------------------
+#
+# kind = "field" is a struct member, not code. `class` is the owning struct
+# (repeated in the comment) and `method` is the member name from the corpus
+# types.h. Each build's adjudication file supplies offset and size; the emitted
+# `addr` is the owning global for g.app_manager and 0 for everything reached
+# through a pointer. No expected_bytes, never patched, never required.
+
+[[site]]
+name   = "object.type"
+class  = "CGameObject"
+method = "object_type"
+kind   = "field"
+required = false
+purpose = "Internal one-byte object type; K1 uses 10 for doors, unlike NWScript's door mask 8."
+
+[[site]]
+name   = "object.id"
+class  = "CGameObject"
+method = "id"
+kind   = "field"
+required = false
+purpose = "Inherited server object id at CGameObject+4; 0x7F000000 is OBJECT_INVALID."
+
+[[site]]
+name   = "creature.stats"
+class  = "CSWSCreature"
+method = "stats"
+kind   = "field"
+required = false
+purpose = "CSWSCreatureStats* at CSWSCreature+0xA74 on K1."
+
+[[site]]
+name   = "stats.experience"
+class  = "CSWSCreatureStats"
+method = "experience"
+kind   = "field"
+required = false
+purpose = "Unsigned experience total; auto-level must preserve it."
+
+[[site]]
+name   = "g.app_manager"
+class  = ""
+method = "g_pAppManager"
+kind   = "field"
+required = false
+purpose = "The global CAppManager*. Root of every pointer chain below."
+
+# owner: CAppManager
+[[site]]
+name   = "appmgr.client"
+class  = "CAppManager"
+method = "client"
+kind   = "field"
+required = false
+purpose = "CClientExoApp*."
+
+[[site]]
+name   = "appmgr.server"
+class  = "CAppManager"
+method = "server"
+kind   = "field"
+required = false
+purpose = "CServerExoApp*, null until create_server."
+
+[[site]]
+name   = "appmgr.reentrant_server_stats"
+class  = "CAppManager"
+method = "reentrant_server_stats"
+kind   = "field"
+required = false
+purpose = "CSWReentrantServerStats*, the load/save stall machine."
+
+# owner: CClientExoApp / CServerExoApp -- both are {vtable, internal}
+[[site]]
+name   = "client.internal"
+class  = "CClientExoApp"
+method = "internal"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "server.internal"
+class  = "CServerExoApp"
+method = "internal"
+kind   = "field"
+required = false
+
+# owner: CServerExoAppInternal
+[[site]]
+name   = "server.server_mode"
+class  = "CServerExoAppInternal"
+method = "server_mode"
+kind   = "field"
+required = false
+purpose = "u16: 0 no module, 1 loaded not running, 2 running. Only 2 ticks AI and objects."
+
+[[site]]
+name   = "server.pause_state"
+class  = "CServerExoAppInternal"
+method = "pause_state"
+kind   = "field"
+required = false
+purpose = "u8: bit 1 player pause, bit 2 combat / time stop."
+
+[[site]]
+name   = "server.move_to_module_pending"
+class  = "CServerExoAppInternal"
+method = "move_to_module_pending"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "server.move_to_module_string"
+class  = "CServerExoAppInternal"
+method = "move_to_module_string"
+kind   = "field"
+required = false
+purpose = "CExoString the engine frees on assignment. Read only; write through app.set_move_to_module_string."
+
+[[site]]
+name   = "server.loading_module"
+class  = "CServerExoAppInternal"
+method = "loading_module"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "server.auto_save_pending"
+class  = "CServerExoAppInternal"
+method = "auto_save_pending"
+kind   = "field"
+required = false
+purpose = "Cleared even when the save is refused, so not a save-complete predicate on its own."
+
+[[site]]
+name   = "server.load_from_savegame"
+class  = "CServerExoAppInternal"
+method = "load_from_savegame"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "server.world_timer"
+class  = "CServerExoAppInternal"
+method = "world_timer"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "server.pause_timer"
+class  = "CServerExoAppInternal"
+method = "pause_timer"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gvt.table"
+class  = "CServerExoAppInternal"
+method = "global_vars"
+kind   = "field"
+required = false
+purpose = "CSWGlobalVariableTable embedded in the server; size is the whole table."
+
+[[site]]
+name   = "party.table"
+class  = "CServerExoAppInternal"
+method = "party_table"
+kind   = "field"
+required = false
+purpose = "CSWPartyTable embedded in the server."
+
+# owner: CClientExoAppInternal
+[[site]]
+name   = "client.net_layer"
+class  = "CClientExoAppInternal"
+method = "net_layer"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.world_timer"
+class  = "CClientExoAppInternal"
+method = "timer_1"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.gui_in_game"
+class  = "CClientExoAppInternal"
+method = "gui_in_game"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.input_class"
+class  = "CClientExoAppInternal"
+method = "input_class"
+kind   = "field"
+required = false
+purpose = "0 gameplay, 1 minigame, 2 GUI, 3 dialog."
+
+[[site]]
+name   = "client.movie_player"
+class  = "CClientExoAppInternal"
+method = "movie_player"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.message_handler"
+class  = "CClientExoAppInternal"
+method = "message_handler"
+kind   = "field"
+required = false
+purpose = "CSWCMessage*; differs between K1 and K2, so it is data."
+
+[[site]]
+name   = "client.disable_movies"
+class  = "CClientExoAppInternal"
+method = "disable_movies"
+kind   = "field"
+required = false
+purpose = "Set from ini [Game Options] Disable Movies at StartServices."
+
+[[site]]
+name   = "client.gui_manager"
+class  = "CClientExoAppInternal"
+method = "gui_manager"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.main_menu"
+class  = "CClientExoAppInternal"
+method = "main_menu"
+kind   = "field"
+required = false
+purpose = "CSWGuiMainMenu*. Stale after the menu closes; test it with gui.panel_exists, never by null."
+
+[[site]]
+name   = "client.area_not_ready_to_display"
+class  = "CClientExoAppInternal"
+method = "area_not_ready_to_display"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.player_creature_id"
+class  = "CClientExoAppInternal"
+method = "player_creature_id"
+kind   = "field"
+required = false
+purpose = "The client's control object. 0x7f000000 (invalid) until a CreatureUpdate ControlObject arrives, and gate 2 of the load-completion block reads it, so it is how the harness sees a load stuck with no PC."
+
+[[site]]
+name   = "client.input_disabled"
+class  = "CClientExoAppInternal"
+method = "input_disabled"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.game_over_state"
+class  = "CClientExoAppInternal"
+method = "game_over_state"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "client.loading_savegame"
+class  = "CClientExoAppInternal"
+method = "loading_savegame"
+kind   = "field"
+required = false
+
+# owner: CSWReentrantServerStats
+[[site]]
+name   = "stats.continue_message_processing"
+class  = "CSWReentrantServerStats"
+method = "continue_message_processing"
+kind   = "field"
+required = false
+purpose = "1 while a load or save stall is running."
+
+[[site]]
+name   = "stats.phase"
+class  = "CSWReentrantServerStats"
+method = "field_4"
+kind   = "field"
+required = false
+purpose = "1 load MOD/RIM, 2 save, 3 load SAV/RSV."
+
+[[site]]
+name   = "stats.finished"
+class  = "CSWReentrantServerStats"
+method = "field_14"
+kind   = "field"
+required = false
+purpose = "Set by the server when the stall completes; the client clears the stats on its next tick."
+
+[[site]]
+name   = "stats.load_game_error"
+class  = "CSWReentrantServerStats"
+method = "load_game_error"
+kind   = "field"
+required = false
+
+# owner: CGuiInGame
+[[site]]
+name   = "gui.sw_gui_status"
+class  = "CGuiInGame"
+method = "sw_gui_status"
+kind   = "field"
+required = false
+purpose = "1 main interface shown, 2 hidden, 3 hidden temporarily."
+
+[[site]]
+name   = "gui.in_game_screen_active"
+class  = "CGuiInGame"
+method = "field_30"
+kind   = "field"
+required = false
+purpose = "Nonzero exactly while ShowSWInGameGui's in-game screen lifecycle is active. Read before a harness show/hide so the command never repeats a side-effectful GUI transition."
+
+[[site]]
+name   = "gui.last_gui_panel"
+class  = "CGuiInGame"
+method = "last_gui_panel"
+kind   = "field"
+required = false
+purpose = "Current in-game screen selector. Panel 0 is equipment; HideSWInGameGui closes this selected screen, so a harness equipment close refuses another active panel."
+
+[[site]]
+name   = "gui.dialog_panel"
+class  = "CGuiInGame"
+method = "dialog_cinematic_copy"
+kind   = "field"
+required = false
+purpose = "CSWGuiDialog* of the panel on screen (cinematic or computer variant)."
+
+[[site]]
+name   = "gui.dialog_active"
+class  = "CGuiInGame"
+method = "field_b4"
+kind   = "field"
+required = false
+purpose = "Exactly what GetIsConversationActive returns."
+
+[[site]]
+name   = "gui.dialog_selection"
+class  = "CGuiInGame"
+method = "field_c8"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gui.dialog_selection_count"
+class  = "CGuiInGame"
+method = "field_cc"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gui.dialog_pending"
+class  = "CGuiInGame"
+method = "field_d0"
+kind   = "field"
+required = false
+purpose = "1 between SetDialogSelection and the UpdateDialog that consumes it."
+
+[[site]]
+name   = "gui.controller_pause"
+class  = "CGuiInGame"
+method = "field_dc"
+kind   = "field"
+required = false
+purpose = "Nonzero only for the controller-loss modal. The tutorial box has an independent pause path, so expose this to distinguish the two mechanisms."
+
+[[site]]
+name   = "gui.tutorial_box"
+class  = "CGuiInGame"
+method = "tutorial_box"
+kind   = "field"
+required = false
+purpose = "CSWGuiTutorialBox* at +0xA0. The live modal predicate is PanelExists(gui_manager, tutorial_box); a stale non-null pointer alone is insufficient."
+
+[[site]]
+name   = "gui.status_summary_panel"
+class  = "CGuiInGame"
+method = "status_summary"
+kind   = "field"
+required = false
+purpose = "CSWGuiStatusSummary* at +0xA8. It is long-lived but only actionable while PanelExists(gui_manager, status_summary_panel) is true; the panel owns XP/journal notifications and native OK."
+
+[[site]]
+name   = "gui.messagebox_callback"
+class  = "CSWGuiMessageBox"
+method = "callback"
+kind   = "field"
+required = false
+purpose = "Completion callback at +0x68. A tutorial page transition can temporarily unlist its panel while this remains armed."
+
+[[site]]
+name   = "gui.messagebox_callback_context"
+class  = "CSWGuiMessageBox"
+method = "callback_context"
+kind   = "field"
+required = false
+purpose = "Callback context at +0x6C. Require it to equal the tutorial object before advancing an unlisted intermediate page."
+
+[[site]]
+name   = "gui.messagebox_callback_arg"
+class  = "CSWGuiMessageBox"
+method = "callback_arg"
+kind   = "field"
+required = false
+purpose = "Callback argument at +0x70. Ordinary tutorial unpause requires zero."
+
+[[site]]
+name   = "gui.modal_data"
+class  = "CSWGuiManager"
+method = "modal_stack.data"
+kind   = "field"
+required = false
+purpose = "CExoArrayList<CSWGuiPanel*>::data for the manager's modal stack."
+
+[[site]]
+name   = "gui.modal_size"
+class  = "CSWGuiManager"
+method = "modal_stack.size"
+kind   = "field"
+required = false
+purpose = "Current modal-stack size; the active modal is data[size-1]."
+
+[[site]]
+name   = "gui.initialized"
+class  = "CGuiInGame"
+method = "initialized"
+kind   = "field"
+required = false
+purpose = "Nonzero only after the in-game GUI has completed initialization. Required before accepting a party-selection modal."
+
+[[site]]
+name   = "gui.party_selection_selected_count"
+class  = "CSWGuiPartySelection"
+method = "selected_count"
+kind   = "field"
+required = false
+purpose = "Number of selected party entries. The curator-validated acceptance state has exactly one selected entry."
+
+[[site]]
+name   = "gui.party_selection_mode"
+class  = "CSWGuiPartySelection"
+method = "selection_mode"
+kind   = "field"
+required = false
+purpose = "Party-selection operating mode. The curator-validated initialized acceptance state is mode 1."
+
+[[site]]
+name   = "gui.party_selection_entry0_flags"
+class  = "CSWGuiPartySelection"
+method = "entry0.flags"
+kind   = "field"
+required = false
+purpose = "Flags for entry zero. Bit 0x4 marks the curator-validated forced selected entry; no route-specific tag is assumed."
+
+[[site]]
+name   = "gui.reply_count"
+class  = "CGuiInGame"
+method = "field_114"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gui.reply_texts"
+class  = "CGuiInGame"
+method = "field_118"
+kind   = "field"
+required = false
+purpose = "CExoString[] (8 bytes each), TLK-parsed, without the \"%d. \" prefix."
+
+[[site]]
+name   = "gui.reply_links"
+class  = "CGuiInGame"
+method = "field_11c"
+kind   = "field"
+required = false
+purpose = "ulong[]: link index per visible row."
+
+# owner: CSWGuiDialog
+[[site]]
+name   = "dialog.panel_current_entry"
+class  = "CSWGuiDialog"
+method = "field_64"
+kind   = "field"
+required = false
+purpose = "Server entry index the panel is showing; UpdateDialog passes it as the expected entry."
+
+[[site]]
+name   = "dialog.panel_visible_count"
+class  = "CSWGuiDialog"
+method = "field_6c"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.panel_link_map"
+class  = "CSWGuiDialog"
+method = "field_1970"
+kind   = "field"
+required = false
+purpose = "ulong[20]: visible row -> link index."
+
+[[site]]
+name   = "gui.dialog_owner"
+class  = "CSWGuiDialog"
+method = "field_19c0"
+kind   = "field"
+required = false
+purpose = "Client object id of the conversation owner; server.client_to_server_object_id maps it."
+
+# owner: CSWSDialog (heap, reached from CSWSObject+dialog_ptr)
+[[site]]
+name   = "dialog.entries"
+class  = "CSWSDialog"
+method = "entries"
+kind   = "field"
+required = false
+purpose = "CSWSDialogEntry* array; stride is dialog.entry."
+
+[[site]]
+name   = "dialog.skippable"
+class  = "CSWSDialog"
+method = "field_3c"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.current_entry"
+class  = "CSWSDialog"
+method = "field_70"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.current_reply"
+class  = "CSWSDialog"
+method = "field_74"
+kind   = "field"
+required = false
+purpose = "-1 while waiting on the player; anything else drops a new pick."
+
+# owner: CSWSDialogEntry / CSWSDialogLinkEntry / CSWSDialogBase (array element layouts)
+[[site]]
+name   = "dialog.entry"
+class  = "CSWSDialogEntry"
+method = "sizeof"
+kind   = "field"
+required = false
+purpose = "One entry record: offset 0, size is the array stride."
+
+[[site]]
+name   = "dialog.entry_link_count"
+class  = "CSWSDialogEntry"
+method = "link_entry_count"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.entry_links"
+class  = "CSWSDialogEntry"
+method = "link_entries"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.link"
+class  = "CSWSDialogLinkEntry"
+method = "sizeof"
+kind   = "field"
+required = false
+purpose = "One link record: offset 0, size is the array stride."
+
+[[site]]
+name   = "dialog.link_index"
+class  = "CSWSDialogLinkEntry"
+method = "index"
+kind   = "field"
+required = false
+purpose = "Index into the dialog's replies array."
+
+[[site]]
+name   = "dialog.link_display_inactive"
+class  = "CSWSDialogLinkEntry"
+method = "display_inactive"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "dialog.node_strref"
+class  = "CSWSDialogBase"
+method = "text_strref"
+kind   = "field"
+required = false
+purpose = "int strref of a node's text; the node header is the first member of every entry and reply."
+
+# owner: CSWSObject
+[[site]]
+name   = "object.dialog_ptr"
+class  = "CSWSObject"
+method = "field_34"
+kind   = "field"
+required = false
+purpose = "CSWSDialog* while the object owns a conversation, else null."
+
+[[site]]
+name   = "object.dialog_send_pending"
+class  = "CSWSObject"
+method = "field_48"
+kind   = "field"
+required = false
+purpose = "Must be 0 for a pick to be accepted."
+
+[[site]]
+name   = "object.dialog_wait_flags"
+class  = "CSWSObject"
+method = "field_5c"
+kind   = "field"
+required = false
+purpose = "bit 1 camera, 2 sound, 4 animation, 8 fade: what the current line is waiting on."
+
+[[site]]
+name   = "object.dialog_skip_requested"
+class  = "CSWSObject"
+method = "field_1f4"
+kind   = "field"
+required = false
+
+# owner: CSWGlobalVariableTable
+[[site]]
+name   = "gvt.identifiers"
+class  = "CSWGlobalVariableTable"
+method = "identifiers"
+kind   = "field"
+required = false
+purpose = "Open-hash slots; a slot is empty when name[0] == 0."
+
+[[site]]
+name   = "gvt.identifier"
+class  = "GlobalIndentifier"
+method = "sizeof"
+kind   = "field"
+required = false
+purpose = "One slot: offset 0, size is the stride. Name is the first 0x16 bytes."
+
+[[site]]
+name   = "gvt.identifier_type_index"
+class  = "GlobalIndentifier"
+method = "type_and_index"
+kind   = "field"
+required = false
+purpose = "u16: type = >> 14 (0 bool, 1 number, 2 location, 3 string), index = & 0x3fff."
+
+[[site]]
+name   = "gvt.bools"
+class  = "CSWGlobalVariableTable"
+method = "booleans"
+kind   = "field"
+required = false
+purpose = "Bit-packed: bit = bytes[i >> 3] >> (7 - (i & 7)) & 1."
+
+[[site]]
+name   = "gvt.numbers"
+class  = "CSWGlobalVariableTable"
+method = "numbers"
+kind   = "field"
+required = false
+purpose = "One byte each."
+
+[[site]]
+name   = "gvt.locations"
+class  = "CSWGlobalVariableTable"
+method = "locations"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gvt.strings"
+class  = "CSWGlobalVariableTable"
+method = "strings"
+kind   = "field"
+required = false
+purpose = "CExoString[5]."
+
+[[site]]
+name   = "gvt.boolean_count"
+class  = "CSWGlobalVariableTable"
+method = "boolean_count"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gvt.number_count"
+class  = "CSWGlobalVariableTable"
+method = "number_count"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gvt.location_count"
+class  = "CSWGlobalVariableTable"
+method = "location_count"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "gvt.string_count"
+class  = "CSWGlobalVariableTable"
+method = "string_count"
+kind   = "field"
+required = false
+
+# owner: CSWPartyTable / CSWSJournal / SJournalEntry
+[[site]]
+name   = "journal.entries"
+class  = "CSWPartyTable"
+method = "party_journal"
+kind   = "field"
+required = false
+purpose = "CSWSJournal*, may be null."
+
+[[site]]
+name   = "journal.data"
+class  = "CSWSJournal"
+method = "data"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "journal.size"
+class  = "CSWSJournal"
+method = "size"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "journal.entry"
+class  = "SJournalEntry"
+method = "sizeof"
+kind   = "field"
+required = false
+purpose = "One entry: offset 0, size is the stride."
+
+[[site]]
+name   = "journal.entry_tag"
+class  = "SJournalEntry"
+method = "field_18"
+kind   = "field"
+required = false
+purpose = "CExoString quest tag."
+
+[[site]]
+name   = "journal.entry_state"
+class  = "SJournalEntry"
+method = "field_20"
+kind   = "field"
+required = false
+
+# owner: CSWSModule
+[[site]]
+name   = "module.name"
+class  = "CSWSModule"
+method = "field16_0x5c"
+kind   = "field"
+required = false
+purpose = "CExoString module name, read in place."
+
+# owner: CExoMoviePlayer / CExoMoviePlayerInternal
+[[site]]
+name   = "movie.internal"
+class  = "CExoMoviePlayer"
+method = "internal"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "movie.playing"
+class  = "CExoMoviePlayerInternal"
+method = "movie_playing"
+kind   = "field"
+required = false
+
+# owner: CWorldTimer
+[[site]]
+name   = "timer.fixed_rate"
+class  = "CWorldTimer"
+method = "fixed_snapshot_rate_1"
+kind   = "field"
+required = false
+purpose = "Non-zero: SetSnapshotTime steps by 1e6/rate instead of the wall clock."
+
+[[site]]
+name   = "timer.scale"
+class  = "CWorldTimer"
+method = "snapshot_scale"
+kind   = "field"
+required = false
+purpose = "int, percent."
+
+[[site]]
+name   = "timer.paused"
+class  = "CWorldTimer"
+method = "timer_paused"
+kind   = "field"
+required = false

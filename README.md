@@ -1,48 +1,51 @@
 # KotorPhasor
 
-A Lua scripting engine for Star Wars: Knights of the Old Republic that replaces NWScript's event model instead of extending it.
+Drop a `.lua` file in `<game>/kotorphasor/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
 
-## The problem with NWScript
+The complete callback, compatibility, and generated routine reference is in [`docs/lua-api-complete.md`](docs/lua-api-complete.md).
+The harness-specific Lua surface and startup-loading details are in [`docs/lua-harness-api.md`](docs/lua-harness-api.md).
 
-Every event in KOTOR — a heartbeat, a door opening, a module loading — resolves to exactly one script, named in a GFF field, picked by a resource-resolution order you hope goes your way. Two mods that both want to react to the same event have to fight over that one slot, patch each other's files, or give up. This is why script conflicts are the most common reason KOTOR mods break each other.
+Native facilities live only under `kp`; direct engine calls use `nwscript.call`.
+API version 2 removes the former host root and bare compatibility aliases. See
+the [migration reference](docs/api-dialects.md), including `kp.print` and explicit event registration.
 
-## The alternative
-
-Drop a `.lua` file into a scripts folder. It runs once at startup and decides for itself which events it cares about — no GFF field, no resref, no slot to claim.
+NWScript still resolves each event to one script. Two mods that both want that slot have to patch each other or give up. That fight is the usual way KOTOR mods break each other.
 
 ```lua
 priority = 10
 
 function OnRunScript(script_name, object_id, has_object, relevant)
     if script_name == "k_ambush_spawn" then
-        return false  -- block this one ambush, leave everything else alone
+        return false  -- stop the game's own script; later Lua still runs
     end
 end
 ```
 
-As many scripts as you want can watch the same event. Every one of them runs; the first decisive answer wins, and every later script is told so (`relevant = false`) rather than being skipped. Nobody has to know the others exist. See [`docs/user/scripts.md`](docs/user/scripts.md) for the exact rule.
+Every Lua file that registered for that event runs. The first usable return wins. Later scripts still run, with `relevant = false`. Returning `false` from `OnRunScript` also stops the engine's own script. The exact rule is in [`docs/user/scripts.md`](docs/user/scripts.md).
 
-This model isn't new — it's the same one [Phasor](https://github.com/urbanyoung/Phasor) used for Halo: Combat Evolved servers. KotorPhasor is that idea rebuilt for KOTOR's engine. See [`ATTRIBUTION.md`](ATTRIBUTION.md) for the specifics of what carried over.
+This is the [Phasor](https://github.com/urbanyoung/Phasor) model, rebuilt for KOTOR. What carried over is in [`ATTRIBUTION.md`](ATTRIBUTION.md).
 
-## What you get past the scripting model
+## What you can do
 
-- **The engine, not a subset of it.** 769 of KOTOR 1's 772 routines are callable directly as `kotor.GetFirstPC()`, `kotor.AdjustAlignment(...)`, and so on — no NWScript compiler, no `.nss` file. The three that aren't (`AssignCommand`, `DelayCommand`, `ActionDoCommand`) need a script closure NWScript can build and Lua can't; `kp.as` and `kotor.registertimer` cover the same ground.
-- **Raw memory, when the API doesn't reach far enough.** `kotor.mem.readbyte`/`writebyte`/`findsig` and friends read and write the game's own memory directly. A blaster that fires speeders instead of bolts, a minimap that pings a webserver on every player move — the API surface doesn't have to have a name for your idea already.
-- **Multiplayer as a first-class idea, not an afterthought.** KOTOR's engine already treats a single-player game as a server with one connected client; KotorPhasor's event model was built around that fact from the start. A real, working example — direct UDP sync between two game instances with no external server, no extra process, just a Lua script and the engine's own socket library — ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/).
+769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `kp.as` and `kp.registertimer`.
 
-## Try it
+When the named API does not reach, `kp.mem.readbyte` / `writebyte` / `findsig` talk to the process directly. Hook sites are logical names (`vm.run_script`). A recorded VA is a hint; unique `expected_bytes` bind the site if that hint is missing or stale.
 
-Build, install, and scripting instructions, start to finish: **[USAGE.md](USAGE.md)**.
+KOTOR already treats a single-player game as a server with one client. A working UDP sync between two game instances ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). No extra process.
+
+## Build and install
+
+Start to finish: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Status
 
-KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (native Linux, and GOG/Steam Aspyr on Windows) install cleanly and run scripts today, including the full routine bridge and event dispatch. K2's typed struct access (`kotor.struct`) is the one piece not yet verified — see [USAGE.md](USAGE.md#supported-builds) for the exact list and [`docs/user/api-status.md`](docs/user/api-status.md) for what fires.
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today. Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
 
 ## Credits
 
-Built on other people's work — see [`ATTRIBUTION.md`](ATTRIBUTION.md).
+Other people's work is listed in [`ATTRIBUTION.md`](ATTRIBUTION.md).
 
-Not affiliated with BioWare, Obsidian, LucasArts, Aspyr, or Disney. Ships no game content. Bring your own copy of the game.
+Not affiliated with BioWare, Obsidian, LucasArts, Aspyr, or Disney. Ships no game content. Bring your own copy.
 
 ## Licence
 

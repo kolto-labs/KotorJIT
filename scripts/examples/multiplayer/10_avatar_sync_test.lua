@@ -3,7 +3,7 @@
 -- directory, or point SCRIPT_PATH elsewhere.
 --
 -- This drives the REAL shipped script (loaded via loadfile, unmodified) with
--- a mocked kotor/kp engine surface, reaching into the loaded chunk's own
+-- mocked nwscript/kp surfaces, reaching into the loaded chunk's own
 -- closures via debug.getupvalue/setupvalue to inject test packets and stub
 -- the two things that genuinely need a live OS socket (udp_recv/udp_send) --
 -- everything else (GFF encoding, packet framing, peer/ghost lifecycle,
@@ -48,7 +48,7 @@ local function set_up(f, name, value)
     debug.setupvalue(f, i, value)
 end
 
--- ---- mocked kotor/kp surface, with call logging ----------------------------
+-- ---- mocked nwscript/kp surfaces, with call logging -------------------------
 local calls = {}
 local function log_call(name, ...) calls[#calls + 1] = { name, ... } end
 
@@ -60,7 +60,7 @@ local area_obj, other_area_obj = 999, 998
 local pc_area = area_obj
 local clock_ms = 1000
 
-kotor = {
+local engine_routines = {
     GetFirstPC = function() return 1 end,
     GetIsObjectValid = function(id) return (objects[id] and objects[id].valid) and 1 or 0 end,
     GetArea = function(pc) return pc_area end,
@@ -88,12 +88,19 @@ kotor = {
     end,
     SetFacing = function(f) log_call("SetFacing", f) end,
 }
+nwscript = {
+    call = function(name, ...)
+        local fn = engine_routines[name]
+        assert(fn, "unexpected NWScript routine " .. tostring(name))
+        return fn(...)
+    end,
+}
 kp = {
     gamedir = function() return FAKE_GAMEDIR end,
     time = function() return clock_ms end,
     as = function(id, fn) return fn() end,
 }
-print = function(...)
+kp.print = function(...)
     local parts = {}
     for i, v in ipairs({ ... }) do parts[i] = tostring(v) end
     io.stderr:write("[log] " .. table.concat(parts, "\t") .. "\n")

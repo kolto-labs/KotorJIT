@@ -8,7 +8,7 @@
 -- Mechanism: the engine never dispatches OnCreatureDeath (see
 -- docs/user/api-status.md, dead names), so the trigger is OnRunScript with
 -- the death script running ON the corpse (k_def_death01 and the module's
--- own *_dead / *death scripts). The delay is kotor.registertimer, the Lua
+-- own *_dead / *death scripts). The delay is kp.registertimer, the Lua
 -- stand-in for DelayCommand. The rise is a CreateObject on the corpse's
 -- location plus EffectDisguise(21); ChangeToStandardFaction makes it
 -- hostile because the template's own faction is not guaranteed to be.
@@ -35,10 +35,8 @@ local DURATION_TEMPORARY = 1
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -66,7 +64,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -91,7 +89,7 @@ function cursed_rise(timer_id, fired, data)
   local pc = q("GetFirstPC")
   local pos = q("GetPosition", id)
   if not pc or not yes(q("GetIsObjectValid", id)) or type(pos) ~= "table" then
-    print(("[cursed:necro] corpse %s was gone before it could rise"):format(tostring(id)))
+    kp.print(("[cursed:necro] corpse %s was gone before it could rise"):format(tostring(id)))
     return false
   end
   risen[id] = true
@@ -102,7 +100,7 @@ function cursed_rise(timer_id, fired, data)
   local loc = q("Location", { x = pos.x, y = pos.y, z = pos.z }, q("GetFacing", id) or 0.0)
   local reborn = loc and q("CreateObject", OBJECT_TYPE_CREATURE, TEMPLATE, loc, 1)
   if not reborn or not yes(q("GetIsObjectValid", reborn)) then
-    print("[cursed:necro] CreateObject failed; nothing rose")
+    kp.print("[cursed:necro] CreateObject failed; nothing rose")
     return false
   end
   risen[reborn] = true           -- a reborn body dies for good
@@ -124,7 +122,7 @@ function cursed_rise(timer_id, fired, data)
       q("ActionAttack", pc, 0)
     end)
   end
-  print(("[cursed:necro] %s rose as Malak (#%d): corpse %s -> %s"):format(
+  kp.print(("[cursed:necro] %s rose as Malak (#%d): corpse %s -> %s"):format(
     norm(q("GetName", id)), count, tostring(id), tostring(reborn)))
   q("registertimer", 2500, "cursed_verify", { id = reborn })
   return false
@@ -134,7 +132,7 @@ end
 -- the rise: is it standing, hostile, and wearing Malak (appearance row 21)?
 function cursed_verify(timer_id, fired, data)
   local id = data.id
-  print(("[cursed:necro] verify %s: valid=%s dead=%s hp=%s app=%s"):format(tostring(id),
+  kp.print(("[cursed:necro] verify %s: valid=%s dead=%s hp=%s app=%s"):format(tostring(id),
     tostring(q("GetIsObjectValid", id)), tostring(q("GetIsDead", id)),
     tostring(q("GetCurrentHitPoints", id)), tostring(q("GetAppearanceType", id))))
   return false
@@ -150,6 +148,6 @@ function OnRunScript(script_name, object_id, has_object, relevant)
   if not yes(q("GetIsObjectValid", object_id)) then return end
   if yes(q("IsObjectPartyMember", object_id)) then return end
   pending[object_id] = true
-  print(("[cursed:necro] %s fell (%s)"):format(norm(q("GetName", object_id)), s))
+  kp.print(("[cursed:necro] %s fell (%s)"):format(norm(q("GetName", object_id)), s))
   q("registertimer", RISE_AFTER_MS, "cursed_rise", { id = object_id })
 end

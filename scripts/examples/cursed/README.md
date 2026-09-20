@@ -24,10 +24,10 @@ Every script uses the same skeleton as `scripts/examples/showcase/`:
 
 - `priority = 30` so they answer after the probe scripts.
 - `q(name, ...)`: every engine call goes through a pcall by name. The
-  `kotor` table is absent until the VM binds and a routine can be missing on
+  engine bridge may be unbound, and a routine can be missing on
   another build; the guard makes the script inert instead of faulting.
 - `yes(v)`: NWScript TRUE arrives as `1` or `true` depending on the marshaller.
-- A `print("[cursed:<tag>] ...")` oracle line per firing, so
+- A `kp.print("[cursed:<tag>] ...")` oracle line per firing, so
   `kotorphasor.log` proves what happened without watching the video.
 - A counter in **local number 7 on the PC** (`SetLocalNumber(pc, 7, n)`), which
   is how the route's `assert_lua` gates read progress from a different Lua
@@ -41,7 +41,7 @@ Things the event layer forced (see `docs/user/api-status.md`):
   (`k_def_death01` / `*dead*` / `*death*` and `k_def_combend01`); the script
   runs on the corpse, so `object_id` is the creature.
 - `DelayCommand` and `AssignCommand` are not bound. Delays are
-  `kotor.registertimer(ms, "global_callback_name", data)` (return `true` to
+  `kp.registertimer(ms, "global_callback_name", data)` (return `true` to
   repeat); acting as another creature is `kp.as(obj, function() ... end)`.
 - Screen flashes are `SetGlobalFadeOut(0, 0.08, r, g, b)` then
   `SetGlobalFadeIn(hold, 0.35)`. There is no other full-screen tint routine.

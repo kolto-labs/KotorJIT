@@ -14,13 +14,11 @@ local rounds = 0
 
 -- Every engine call goes through here: the API is absent until the runtime binds
 -- the VM, and a routine can be missing on a build this script was not written
--- for. Asking by name rather than taking kotor.Whatever as an argument matters --
+-- for. Asking by name rather than taking a generated routine member as an argument matters --
 -- the argument form indexes the table before the guard ever runs.
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -70,5 +68,5 @@ function OnRunScript(script_name, object_id, has_object, relevant)
         local eff = q("EffectAttackIncrease", 1, 0)
         if eff and q("ApplyEffectToObject", 1, eff, m, 6.0) then n = n + 1 end
     end
-    print(("[meditation] round %d: steadied %d of the party"):format(rounds, n))
+    kp.print(("[meditation] round %d: steadied %d of the party"):format(rounds, n))
 end

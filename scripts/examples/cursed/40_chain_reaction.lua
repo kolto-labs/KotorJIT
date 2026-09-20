@@ -29,10 +29,8 @@ local DAMAGE_TYPE_FIRE = 256
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -68,7 +66,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -125,7 +123,7 @@ local function detonate(corpse)
   depth = depth - 1
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
-  print(("[cursed:boom] %s detonated: %d hit (#%d)")
+  kp.print(("[cursed:boom] %s detonated: %d hit (#%d)")
         :format(norm(q("GetName", corpse)), hit, count))
 end
 

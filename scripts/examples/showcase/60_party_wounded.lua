@@ -10,10 +10,8 @@ local function norm_script(name)
 end
 
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -46,6 +44,6 @@ function OnRunScript(script_name, object_id, has_object, relevant)
     warned[object_id] = true
     local tag = q("GetTag", object_id)
     local line = hurt_line(tag)
-    print(("[wounded] %s below 35%%"):format(tostring(tag)))
+    kp.print(("[wounded] %s below 35%%"):format(tostring(tag)))
     q("SpeakString", line, 0)
 end

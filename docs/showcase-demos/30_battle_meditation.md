@@ -26,7 +26,7 @@ Sith the victim, not the party.
 3. **Deterministic hook first** (console must stay open):
 
    ```text
-   lua exec kotor.ExecuteScript('k_def_attacked01', kotor.GetFirstPC(), 0)
+   lua exec nwscript.call('ExecuteScript', 'k_def_attacked01', nwscript.call('GetFirstPC'), 0)
    ```
 
    Wait for `[meditation]` in `kotorphasor.log` before warping.

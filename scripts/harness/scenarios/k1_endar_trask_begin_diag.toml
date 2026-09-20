@@ -1,0 +1,62 @@
+# Diagnostic only: isolate immediate StartDialog viability from the ordinary
+# action/event path.  BeginConversation runs with Trask as OBJECT_SELF, as
+# documented for an OnDialog-script invocation; it must never count as route
+# completion.
+name = "k1 Endar Trask immediate conversation diagnostic"
+target = "k1"
+schema_version = 1
+
+[resources.endar_walkmesh]
+kind = "walkmesh"
+source = "data/models.bif/m01aa_01a.wok"
+file = "harness-resources/m01aa_01a.wok"
+size = 26404
+sha256 = "afd30f4154e5761bcd41223bc000b21422650928c7a5e56691bc2dffad4c88ba"
+
+[execution]
+load_timeout = 300
+default_timeout = 45
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "door_transaction"
+module = "end_m01aa"
+type = 8
+tag = "end_door01"
+position = [21.1225, 20.7130, -1.3158]
+position_tolerance = 0.25
+resource = "endar_walkmesh"
+walkmesh_face = 13
+walkmesh_path = [12, 13]
+walkmesh_approach_face = 12
+walkmesh_approach_centroid = [19.914662679036457, 20.194860458374023, -1.274999976158142]
+walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+walkmesh_min_projection = 0.5
+destination = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+destination_tolerance = 0.75
+timeout = 45
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); local result=kp.as(t,function() return nwscript.call('BeginConversation','end_trask01',pc) end); return {before=before,result=result,after=state()}"
+
+[[step]]
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)}"
+
+[[step]]
+do = "quit"

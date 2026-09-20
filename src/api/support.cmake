@@ -78,6 +78,15 @@ if(UNIX AND NOT WIN32)
     # Self-contained: writes its own scratch scripts to a temp dir (removed and
     # recreated each run) and exits on api::timers::pending() == 0.
     add_test(NAME kp_supporttest COMMAND kp_supporttest)
+
+    add_executable(kp_namespacetest "${KP_API_TOOLS}/kp_namespacetest.cpp")
+    target_include_directories(kp_namespacetest PRIVATE
+        "${KP_API_SRC_ROOT}" "${KP_SUPPORT_LUA_INC}")
+    target_compile_options(kp_namespacetest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_namespacetest PRIVATE -m32)
+    target_link_libraries(kp_namespacetest PRIVATE kphasor "${KP_SUPPORT_LUAJIT}" m dl)
+    add_test(NAME kp_namespacetest.k1 COMMAND kp_namespacetest)
+    add_test(NAME kp_namespacetest.k2 COMMAND kp_namespacetest k2)
 endif()
 
 # --- the Windows half --------------------------------------------------------
@@ -97,7 +106,8 @@ if(KP_MINGW_CXX)
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_SUPPORT_WIN32_OBJDIR}
-            COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+            COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                    ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
                     -I${KP_API_SRC_ROOT} -I${KP_SUPPORT_LUA_INC}
                     -c ${src} -o ${obj}
             DEPENDS ${src}

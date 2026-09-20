@@ -1,0 +1,1128 @@
+{
+  "target_binary": {
+    "binary_id": 22,
+    "slug": "TSL__k2_win_gog_aspyr_swkotor2.exe",
+    "alias": "k2_gog_aspyr"
+  },
+  "purpose": "Headless-harness FIELDS for the Aspyr GOG PE. Functions are not listed: this build was never stripped and every harness function resolves from its own namespace-qualified func row. Fields the corpus does not settle (CSWReentrantServerStats, pause_state, the K2 global variable table arrays, g_pAppManager) are absent or carry size 0 and stay unbound.",
+  "naming": "Binding names are the logical keys from data/hooksites.toml, which use the K1 types.h member names (CGuiInGame::field_b4 is the dialog-active flag). On this build the same member sits at a different offset; the offset here is the K2 one and the K1 name is only the key.",
+  "corpus": "kotorxid readable tree TSL__k2_win_gog_aspyr_swkotor2.exe (binary_id 22) and TSL__k2_mac_swkotor2.app (binary_id 19)",
+  "accept_rule": "accept requires at least two independent signals, at least one of which is not run v1 (METHOD.md section 1). Functions: sqlite func row on the target binary plus a read of the decompiled body, plus the raw prologue where it settles a convention. Fields: the types.h declaration plus an accessor or consumer disassembled from the raw image whose immediate is the offset. A binding with one signal is accepted at confidence < 0.9 and its site stays optional.",
+  "not_bound": [
+    "g_pAppManager: SetGameSpeed 0x4489f0 reads ds:0xa11c04 and CAppManager::CreateServer 0x401b80 reads ds:0xa10260; the two disagree and neither was traced, so no address is claimed",
+    "CServerExoAppInternal::pause_state: no accessor disassembled",
+    "CSWReentrantServerStats::*: StallServerCode 0x430300 did not show the [eax+0x14] chain in the window read; layout assumed equal to K1 but unproven",
+    "CSWGlobalVariableTable arrays: K2 uses 0x93d identifier slots, array offsets after them unread"
+  ],
+  "counts": {
+    "fields": 55,
+    "accept": 53
+  },
+  "bindings": [
+    {
+      "name": "CClientExoApp::internal",
+      "kind": "field",
+      "owner": "CClientExoApp",
+      "addr": "0x00000000",
+      "offset": "0x4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "GetInGameGui 0x40cc10: 8b 48 04 then 8b 51 40"
+        ],
+        "disassembly": "same shape as K1",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoApp::internal",
+      "kind": "field",
+      "owner": "CServerExoApp",
+      "addr": "0x00000000",
+      "offset": "0x4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "GetServerMode 0x64bd40: 8b 48 04 then 66 8b 91 08 00 01 00"
+        ],
+        "disassembly": "same shape as K1",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::server_mode",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10008",
+      "size": 2,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoappinternal.cpp (MainLoop server_mode==2 gate)"
+        ],
+        "disassembly": "GetServerMode 0x64bd40: 66 8b 91 08 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::move_to_module_pending",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10080",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoappinternal.cpp:1154-1156,1204",
+          "TSL__k2_mac_swkotor2.app/src/serverexoappinternal.cpp:3122-3162"
+        ],
+        "disassembly": "SetMoveToModulePending 0x64b870: 89 82 80 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::move_to_module_string",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10084",
+      "size": 8,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/serverexoappinternal.cpp:3122-3162 (StartNewModule(this, this+0x10084))"
+        ],
+        "disassembly": "decompile only; SetMoveToModuleString 0x64b8c0 was not disassembled past its prologue",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::loading_module",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x100b4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoappinternal.cpp (LoadModule sets it)"
+        ],
+        "disassembly": "GetLoadingModule 0x64b920: 8b 91 b4 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::auto_save_pending",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x100b8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoappinternal.cpp (MainLoop autosave gate)"
+        ],
+        "disassembly": "GetAutoSavePending 0x64b9a0: 8b 91 b8 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::load_from_savegame",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x100c4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore swguisaveload.cpp LoadGame (SetLoadFromSaveGame(1))"
+        ],
+        "disassembly": "SetLoadFromSaveGame 0x64c820: 89 82 c4 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::world_timer",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10048",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoapp.cpp GetWorldTimer"
+        ],
+        "disassembly": "GetWorldTimer 0x64bd90: 8b 91 48 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::pause_timer",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10050",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoapp.cpp GetPauseTimer"
+        ],
+        "disassembly": "GetPauseTimer 0x64bdd0: 8b 91 50 00 01 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::global_vars",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x100fc",
+      "size": 0,
+      "verdict": "insufficient_evidence",
+      "confidence": 0.0,
+      "evidence": {
+        "corpus": [
+          "K2 LoadGame internal 0x7b2f00: add ecx,0x100fc"
+        ],
+        "disassembly": "offset known, size not: the K2 table has 0x93d slots and its array offsets after the identifiers are unread, so this stays unbound (size 0)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::party_table",
+      "kind": "field",
+      "owner": "CServerExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x1f0b4",
+      "size": 0,
+      "verdict": "insufficient_evidence",
+      "confidence": 0.0,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/serverexoappinternal.cpp LoadGame lines 51-52",
+          "K2 LoadGame internal 0x7b2f00: add ecx,0x1f0b4"
+        ],
+        "disassembly": "offset known, size not (K2 CSWPartyTable has 12 NPC slots and an unread sizecheck), so this stays unbound (size 0)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::timer_1",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x24",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetWorldTimer"
+        ],
+        "disassembly": "GetWorldTimer 0x40c870: 8b 51 24",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::gui_in_game",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x40",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetInGameGui"
+        ],
+        "disassembly": "GetInGameGui 0x40cc10: 8b 51 40",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::input_class",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x9c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetInputClass"
+        ],
+        "disassembly": "GetInputClass 0x40d3e0: 8b 91 9c 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::message_handler",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x150",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetSWCMessage"
+        ],
+        "disassembly": "GetSWCMessage 0x40ccd0: 8b 91 50 01 00 00 (K1 is +0x14c)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::disable_movies",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x1f8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore PlayMoviesInExoArrayList 0x44d5b0"
+        ],
+        "disassembly": "PlayMoviesInExoArrayList 0x44d5b0: 8b 88 f8 01 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::gui_manager",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x274",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetSWGuiManager"
+        ],
+        "disassembly": "GetSWGuiManager 0x40d380: 8b 91 74 02 00 00; DisplayMainMenu 0x42db10: 8b 88 74 02 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::main_menu",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x280",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore DisplayMainMenu 0x42db10"
+        ],
+        "disassembly": "DisplayMainMenu 0x42db10: 83 b8 80 02 00 00 00 / 8b 91 80 02 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::area_not_ready_to_display",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x288",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetAreaNotReadyToDisplay"
+        ],
+        "disassembly": "GetAreaNotReadyToDisplay 0x40d500: 8b 91 88 02 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::input_disabled",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x2bc",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore DisableInput 0x45ff80"
+        ],
+        "disassembly": "DisableInput 0x45ff80: c7 80 bc 02 00 00 01 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::game_over_state",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x2c0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp GetGameOver"
+        ],
+        "disassembly": "GetGameOver 0x40d8a0: 8b 91 c0 02 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::loading_savegame",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x33c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/clientexoapp.cpp SetLoadingSaveGame"
+        ],
+        "disassembly": "SetLoadingSaveGame 0x40e0c0: 89 82 3c 03 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::sw_gui_status",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0x34",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp SetSWGuiStatus"
+        ],
+        "disassembly": "SetSWGuiStatus 0x4da340: 83 78 34 03 / c7 41 34 01 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::dialog_cinematic_copy",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0x3c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:4436-4560 (UpdateDialog dialog ptr +0x3c)"
+        ],
+        "disassembly": "UpdateDialog 0x4dd7f0: 8b 4a 3c / 8b 42 3c",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_b4",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0xcc",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/guiingame.cpp:4610-4622",
+          "K2 nwvmachinecommands ExecuteCommandGetIsConversationActive (+0xcc)"
+        ],
+        "disassembly": "SetGlobalDialogState 0x4df280: 89 88 cc 00 00 00 (K1 +0xb4 is +0xcc here)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_c8",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0xe0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:2658-2660 (SetDialogSelection +0xe0/+0xe4/+0xec/+0xe8)"
+        ],
+        "disassembly": "SetDialogSelection 0x4ddbd0: 89 88 e0 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_cc",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0xe4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:2658-2660"
+        ],
+        "disassembly": "SetDialogSelection 0x4ddbd0: 89 82 e4 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_d0",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0xe8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:2658-2660,4436-4560"
+        ],
+        "disassembly": "UpdateDialog 0x4dd7f0: 83 b9 e8 00 00 00 00 (pending test)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_dc",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0xf4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/serverexoappinternal.cpp:1154-1156 (MainLoop gate on +0xf4)",
+          "K2 clientcore/guiingame.cpp UpdateControllerPauseState"
+        ],
+        "disassembly": "UpdateControllerPauseState 0x4e08b0: 83 b8 f4 00 00 00 00 / c7 82 f4 00 00 00 01 00 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_114",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0x134",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp InitializeRepliesData 0x4d0d80 (count +0x134, texts +0x138, links +0x13c)"
+        ],
+        "disassembly": "SetReplyData 0x4d1300: 3b 88 34 01 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_118",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0x138",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp InitializeRepliesData 0x4d0d80"
+        ],
+        "disassembly": "SetReplyData 0x4d1300: 8b 88 38 01 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CGuiInGame::field_11c",
+      "kind": "field",
+      "owner": "CGuiInGame",
+      "addr": "0x00000000",
+      "offset": "0x13c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp InitializeRepliesData 0x4d0d80"
+        ],
+        "disassembly": "SetReplyData 0x4d1300: 8b 88 3c 01 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWGuiDialog::field_64",
+      "kind": "field",
+      "owner": "CSWGuiDialog",
+      "addr": "0x00000000",
+      "offset": "0x68",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:2409-2411 (ShowDialogReplies writes *(dialog+0x68))"
+        ],
+        "disassembly": "decompile; UpdateDialog 0x4dd7f0 reads it as the expected entry",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWGuiDialog::field_6c",
+      "kind": "field",
+      "owner": "CSWGuiDialog",
+      "addr": "0x00000000",
+      "offset": "0x70",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/swguidialog.cpp:161-305 (count at +0x70)"
+        ],
+        "disassembly": "SelectReply 0x5aec70 and GetReplyIndex 0x5aee10: 3b 48 70",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWGuiDialog::field_1970",
+      "kind": "field",
+      "owner": "CSWGuiDialog",
+      "addr": "0x00000000",
+      "offset": "0x26e4",
+      "size": 80,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/swguidialog.cpp:161-305 (GetReplyIndex links at +0x26e4)"
+        ],
+        "disassembly": "decompile; the indexed load in GetReplyIndex 0x5aee10 was not captured past the bounds check",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWGuiDialog::field_19c0",
+      "kind": "field",
+      "owner": "CSWGuiDialog",
+      "addr": "0x00000000",
+      "offset": "0x275c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 clientcore/guiingame.cpp:4436-4560 (owner dialog+0x275c)"
+        ],
+        "disassembly": "UpdateDialog 0x4dd7f0: 8b 88 5c 27 00 00",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialog::field_70",
+      "kind": "field",
+      "owner": "CSWSDialog",
+      "addr": "0x00000000",
+      "offset": "0x74",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp:1654-1660 (HandleReply gate on +0x78 / +0x74)",
+          "TSL__k2_mac_swkotor2.app/src/nwsdialog.cpp:4977-5310"
+        ],
+        "disassembly": "HandleReply 0x757420: 3b 48 74",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialog::field_74",
+      "kind": "field",
+      "owner": "CSWSDialog",
+      "addr": "0x00000000",
+      "offset": "0x78",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp:1654-1660"
+        ],
+        "disassembly": "HandleReply 0x757420: 83 7a 78 ff",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialog::entries",
+      "kind": "field",
+      "owner": "CSWSDialog",
+      "addr": "0x00000000",
+      "offset": "0x8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp (entries +0x8 stride 0x10c)"
+        ],
+        "disassembly": "decompile only",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialogEntry::sizeof",
+      "kind": "field",
+      "owner": "CSWSDialogEntry",
+      "addr": "0x00000000",
+      "offset": "0x0",
+      "size": 268,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp (stride 0x10c)"
+        ],
+        "disassembly": "decompile only; the 0x104/0x108/0x10c/0x110 strides also appear in the K2 Linux HandleReply candidate's consts",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialogEntry::link_entry_count",
+      "kind": "field",
+      "owner": "CSWSDialogEntry",
+      "addr": "0x00000000",
+      "offset": "0x104",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp"
+        ],
+        "disassembly": "decompile only",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialogEntry::link_entries",
+      "kind": "field",
+      "owner": "CSWSDialogEntry",
+      "addr": "0x00000000",
+      "offset": "0x108",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp"
+        ],
+        "disassembly": "decompile only",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialogLinkEntry::sizeof",
+      "kind": "field",
+      "owner": "CSWSDialogLinkEntry",
+      "addr": "0x00000000",
+      "offset": "0x0",
+      "size": 104,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp (link stride 0x68, index +0x10)"
+        ],
+        "disassembly": "decompile only",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSDialogLinkEntry::index",
+      "kind": "field",
+      "owner": "CSWSDialogLinkEntry",
+      "addr": "0x00000000",
+      "offset": "0x10",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "UN/TSL__k2_win_gog_aspyr_swkotor2.exe_0075.cpp"
+        ],
+        "disassembly": "decompile only",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSObject::field_34",
+      "kind": "field",
+      "owner": "CSWSObject",
+      "addr": "0x00000000",
+      "offset": "0x34",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/nwsobject.cpp:1472-1506 (ReplyDialog dialog +0x34)"
+        ],
+        "disassembly": "ReplyDialog 0x6ad3f0: 83 78 34 00 / 8b 49 34",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSObject::field_48",
+      "kind": "field",
+      "owner": "CSWSObject",
+      "addr": "0x00000000",
+      "offset": "0x48",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.85,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/nwsobject.cpp:4773-4808 (ReplyDialog writes +0x48)"
+        ],
+        "disassembly": "mac decompile; not captured in the K2 win disassembly window",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWPartyTable::party_journal",
+      "kind": "field",
+      "owner": "CSWPartyTable",
+      "addr": "0x00000000",
+      "offset": "0x1b0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/partytables.cpp GetPartyJournal 0x6fd650"
+        ],
+        "disassembly": "GetPartyJournal 0x6fd650: 83 b8 b0 01 00 00 00 / 89 82 b0 01 00 00 (K1 +0x11c is +0x1b0 here)",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSJournal::data",
+      "kind": "field",
+      "owner": "CSWSJournal",
+      "addr": "0x00000000",
+      "offset": "0x0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/nwsjournal.cpp GetState 0x778bf0"
+        ],
+        "disassembly": "same {data,size,capacity} shape; GetState indexes with stride 0x38",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CSWSJournal::size",
+      "kind": "field",
+      "owner": "CSWSJournal",
+      "addr": "0x00000000",
+      "offset": "0x4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 servercore/nwsjournal.cpp GetState 0x778bf0"
+        ],
+        "disassembly": "loop bound",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "SJournalEntry::sizeof",
+      "kind": "field",
+      "owner": "SJournalEntry",
+      "addr": "0x00000000",
+      "offset": "0x0",
+      "size": 56,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/nwsjournal.cpp GetState constants 0x18/0x38"
+        ],
+        "disassembly": "stride 0x38 on K2",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "SJournalEntry::field_18",
+      "kind": "field",
+      "owner": "SJournalEntry",
+      "addr": "0x00000000",
+      "offset": "0x18",
+      "size": 8,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/nwsjournal.cpp GetState"
+        ],
+        "disassembly": "GetState 0x778bf0: 83 c1 18",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "SJournalEntry::field_20",
+      "kind": "field",
+      "owner": "SJournalEntry",
+      "addr": "0x00000000",
+      "offset": "0x20",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "TSL__k2_mac_swkotor2.app/src/nwsjournal.cpp GetState"
+        ],
+        "disassembly": "GetState 0x778bf0: 8b 44 08 20",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CWorldTimer::snapshot_scale",
+      "kind": "field",
+      "owner": "CWorldTimer",
+      "addr": "0x00000000",
+      "offset": "0x8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "corpus": [
+          "K2 libsource/worldtimer SetSnapshotScale 0x80b720"
+        ],
+        "disassembly": "SetSnapshotScale 0x80b720: 89 41 08",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    },
+    {
+      "name": "CWorldTimer::fixed_snapshot_rate_1",
+      "kind": "field",
+      "owner": "CWorldTimer",
+      "addr": "0x00000000",
+      "offset": "0x0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.9,
+      "evidence": {
+        "corpus": [
+          "K2 libsource/worldtimer SetFixedSnapshotRate 0x80b6e0"
+        ],
+        "disassembly": "SetFixedSnapshotRate 0x80b6e0 zeroes +0xc..+0x18 then stores the flag and rate at +0/+4",
+        "signals": [
+          "types.h declaration or decompiled consumer",
+          "accessor or consumer immediate in the raw image"
+        ]
+      }
+    }
+  ]
+}

@@ -5,10 +5,8 @@ local seen = {}
 local last_module = nil
 
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -29,7 +27,7 @@ function OnTick(tick, relevant)
     local key = m:lower():sub(1, 3)
     if seen[key] or not lines[key] then return end
     seen[key] = true
-    print(("[arrival] %s"):format(key))
+    kp.print(("[arrival] %s"):format(key))
     q("SpeakString", lines[key], 0)
 end
 

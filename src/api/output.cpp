@@ -54,17 +54,12 @@ std::vector<std::string> split_lines(const char* text) {
     return lines;
 }
 
-// Fetch kotor.<name> and leave it on the stack. False, with nothing left
-// behind, when the name is absent or is not callable.
-//
-// By name and at call time. The routines bridge registers into the same table
-// and the two modules have no registration order between them, so a cached
-// lookup would degrade to log-only in the real runtime while still passing
-// every test that registers output first.
-bool push_routine(lua_State* L, const char* name) {
-    lua_getglobal(L, "kotor");
+// Fetch nwscript.call and leave it on the stack. False, with nothing left
+// behind, when the bridge has not been registered on this state.
+bool push_nwscript_call(lua_State* L) {
+    lua_getglobal(L, "nwscript");
     if (!lua_istable(L, -1)) { lua_pop(L, 1); return false; }
-    lua_getfield(L, -1, name);
+    lua_getfield(L, -1, "call");
     lua_remove(L, -2);
     if (lua_isfunction(L, -1)) return true;
     lua_pop(L, 1);
@@ -74,8 +69,9 @@ bool push_routine(lua_State* L, const char* name) {
 // GetFirstPC (routine 548). SendMessageToPC needs a recipient and there is
 // exactly one, but the object id is the engine's to hand out.
 bool first_pc(lua_State* L, lua_Number& out) {
-    if (!push_routine(L, "GetFirstPC")) return false;
-    if (lua_pcall(L, 0, 1, 0) != 0) { lua_pop(L, 1); return false; }
+    if (!push_nwscript_call(L)) return false;
+    lua_pushliteral(L, "GetFirstPC");
+    if (lua_pcall(L, 1, 1, 0) != 0) { lua_pop(L, 1); return false; }
     if (!lua_isnumber(L, -1)) { lua_pop(L, 1); return false; }
     out = lua_tonumber(L, -1);
     lua_pop(L, 1);
@@ -86,24 +82,26 @@ bool first_pc(lua_State* L, lua_Number& out) {
 bool send_to_pc(lua_State* L, const std::string& line) {
     lua_Number pc = 0;
     if (!first_pc(L, pc)) return false;
-    if (!push_routine(L, "SendMessageToPC")) return false;
+    if (!push_nwscript_call(L)) return false;
+    lua_pushliteral(L, "SendMessageToPC");
     lua_pushnumber(L, pc);
     lua_pushlstring(L, line.c_str(), line.size());
     // pcall, not call: a routine that raises here would otherwise escape a
     // diagnostic function, and losing the message to the log is better than
     // turning a print into a script error.
-    if (lua_pcall(L, 2, 0, 0) != 0) { lua_pop(L, 1); return false; }
+    if (lua_pcall(L, 3, 0, 0) != 0) { lua_pop(L, 1); return false; }
     return true;
 }
 
 // Routine 582 AurPostString(string sString, int nX, int nY, float fLife).
 bool aur_post(lua_State* L, const std::string& line, int x, int y, double life) {
-    if (!push_routine(L, "AurPostString")) return false;
+    if (!push_nwscript_call(L)) return false;
+    lua_pushliteral(L, "AurPostString");
     lua_pushlstring(L, line.c_str(), line.size());
     lua_pushnumber(L, lua_Number(x));
     lua_pushnumber(L, lua_Number(y));
     lua_pushnumber(L, lua_Number(life));
-    if (lua_pcall(L, 4, 0, 0) != 0) { lua_pop(L, 1); return false; }
+    if (lua_pcall(L, 5, 0, 0) != 0) { lua_pop(L, 1); return false; }
     return true;
 }
 
@@ -118,13 +116,13 @@ platform::LogLevel level_from(lua_State* L, int index) {
     return platform::LogLevel::Info;   // not reached; luaL_argerror does not return
 }
 
-// kotor.log(text [, level]) -> nothing
+// kp.log(text [, level]) -> nothing
 //
 // Always available, including before hooks are installed and after they are
 // removed. This is the surface a script can rely on when nothing else works.
 int l_log(lua_State* L) {
     const char* text = luaL_checkstring(L, 1);
-    if (lua_gettop(L) > 2) return luaL_error(L, "kotor.log expects at most 2 arguments (got %d)",
+    if (lua_gettop(L) > 2) return luaL_error(L, "kp.log expects at most 2 arguments (got %d)",
                                              lua_gettop(L));
     const platform::LogLevel level = level_from(L, 2);
     for (const std::string& line : split_lines(text))
@@ -132,7 +130,7 @@ int l_log(lua_State* L) {
     return 0;
 }
 
-// kotor.console(text) -> boolean
+// kp.console(text) -> boolean
 //
 // True when the console surface took it, false when it went to the log
 // instead. Phasor's output functions return nothing; a script here can tell
@@ -140,14 +138,14 @@ int l_log(lua_State* L) {
 // on a runtime where the console is a detour that may not be installed yet.
 int l_console(lua_State* L) {
     const char* text = luaL_checkstring(L, 1);
-    if (lua_gettop(L) > 1) return luaL_error(L, "kotor.console expects at most 1 argument (got %d)",
+    if (lua_gettop(L) > 1) return luaL_error(L, "kp.console expects at most 1 argument (got %d)",
                                              lua_gettop(L));
     console_write(text);
     lua_pushboolean(L, console_bound() ? 1 : 0);
     return 1;
 }
 
-// kotor.feedback(text [, x, y, life]) -> boolean
+// kp.feedback(text [, x, y, life]) -> boolean
 //
 // Without a position this is routine 374 SendMessageToPC, which the mapping
 // rates high confidence and which is the closest true equivalent of any Phasor
@@ -157,7 +155,7 @@ int l_feedback(lua_State* L) {
     const char* text = luaL_checkstring(L, 1);
     const int   argc = lua_gettop(L);
     if (argc != 1 && argc != 3 && argc != 4)
-        return luaL_error(L, "kotor.feedback expects 1, 3 or 4 arguments (got %d)", argc);
+        return luaL_error(L, "kp.feedback expects 1, 3 or 4 arguments (got %d)", argc);
 
     const bool   positioned = argc >= 3;
     const int    x    = positioned ? int(luaL_checknumber(L, 2)) : kDefaultX;
@@ -189,13 +187,13 @@ int l_feedback(lua_State* L) {
 
 // ---------------------------------------------------------------- shared ----
 
-void push_kotor_table(lua_State* L) {
-    lua_getglobal(L, "kotor");
+void push_kp_table(lua_State* L) {
+    lua_getglobal(L, "kp");
     if (lua_istable(L, -1)) return;
     lua_pop(L, 1);
     lua_newtable(L);
     lua_pushvalue(L, -1);
-    lua_setglobal(L, "kotor");
+    lua_setglobal(L, "kp");
 }
 
 // ---------------------------------------------------------------- console ---
@@ -223,7 +221,7 @@ void console_write(const char* text) {
 // --------------------------------------------------------------- register ---
 
 void register_output(lua_State* L) {
-    push_kotor_table(L);
+    push_kp_table(L);
     lua_pushcfunction(L, l_log);      lua_setfield(L, -2, "log");
     lua_pushcfunction(L, l_console);  lua_setfield(L, -2, "console");
     lua_pushcfunction(L, l_feedback); lua_setfield(L, -2, "feedback");

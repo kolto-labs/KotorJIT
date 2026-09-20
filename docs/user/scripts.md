@@ -8,7 +8,7 @@ Define only the callbacks you need. A missing callback costs a lookup, not a Lua
 priority = 10
 
 function OnScriptLoad(game, build)
-    print("loaded on " .. tostring(game) .. " " .. tostring(build))
+    kp.print("loaded on " .. tostring(game) .. " " .. tostring(build))
 end
 
 function OnRunScript(script_name, object_id, has_object, relevant)
@@ -18,7 +18,14 @@ function OnRunScript(script_name, object_id, has_object, relevant)
 end
 ```
 
-`print` writes to `kotorphasor.log`.
+`kp.print` writes to `kotorphasor.log`.
+
+Native facilities are owned by `kp`; direct engine routines are available only
+through `nwscript.call(name, ...)`. Lua's standard `print` keeps its normal stdout
+behavior. API version 2 removes the former host root and bare compatibility names.
+The dispatcher still discovers global `On*` callbacks for legacy compatibility;
+new explicit bindings use `kp.events.register(kp.events.OnTick, function(...) ... end)`.
+The script's own `priority` global remains loader metadata.
 
 ## Priority
 
@@ -31,8 +38,6 @@ For a boolean result, the value is compared against `1`. Returning `2` is `false
 `return false` from `OnRunScript` stops the game's own script for that call.
 
 ## Events that fire today
-
-Use these names. They are the ones the runtime actually dispatches.
 
 | Callback | When |
 |---|---|
@@ -52,25 +57,27 @@ The full table is in [api-status.md](api-status.md). Argument lists are in [../l
 
 ## Call the game
 
-769 engine routines are `kotor.<Name>`. Arguments follow `nwscript.nss` order. You may omit trailing defaults.
+Call any of the 769 supported engine routines through `nwscript.call(name, ...)`.
+Arguments after the name follow `nwscript.nss` order. You may omit trailing defaults.
+Routine names are not installed as Lua globals or table members.
 
 ```lua
-local pc = kotor.GetFirstPC()
-kotor.SendMessageToPC(pc, "hello")
-kotor.AdjustAlignment(pc, 0, 5)
+local pc = nwscript.call("GetFirstPC")
+nwscript.call("SendMessageToPC", pc, "hello")
+nwscript.call("AdjustAlignment", pc, 0, 5)
 ```
 
 These three names are missing on purpose. They need an NWScript closure Lua cannot build:
 
-- `kotor.AssignCommand` — use `kp.as(object_id, function() ... end)`
-- `kotor.DelayCommand` — use `kotor.registertimer(ms, "callback_name", data)`
-- `kotor.ActionDoCommand` — same timer, or `kp.as`
+- `AssignCommand`: use `kp.as(object_id, function() ... end)`
+- `DelayCommand`: use `kp.registertimer(ms, "callback_name", data)`
+- `ActionDoCommand`: same timer, or `kp.as`
 
 ```lua
-local id = kotor.registertimer(1500, "on_bang", { n = 3 })
+local id = kp.registertimer(1500, "on_bang", { n = 3 })
 
 function on_bang(timer_id, count, data)
-    kotor.feedback("bang " .. count)
+    kp.feedback("bang " .. count)
     return count < data.n
 end
 ```
@@ -81,25 +88,44 @@ A vector is `{ x =, y =, z = }`. An effect, event, location, or talent is an opa
 
 `Action*` calls often do nothing while the cheat console has focus. Close the console if a queued action seems ignored.
 
+## Harness controls from Lua
+
+The headless harness controls are also available in the loaded game state under
+`kp.harness`. This is the same native adapter and event ring used by the
+socket driver, so Lua can inspect dialog replies and choose them, start loads
+and warps, control timing, read globals or journal entries, query runtime
+status, inspect events, and request a post-render screenshot without
+synthesizing memory state. Deferred actions return immediately; poll their
+matching `take_*_result()` function from a timer. See
+[the complete harness API](../lua-harness-api.md) for every operation and
+result shape, including safe queued reload and quit requests.
+
+```lua
+local dialog = kp.harness.dialog()
+if dialog.active and dialog.waiting_for_player then
+    kp.harness.reply(dialog.replies[1].index)
+end
+```
+
 ## Host names that exist
 
 | Name | What it does |
 |---|---|
-| `kotor.GetFirstPC` and the other 768 routines | Engine work |
+| `nwscript.call(name, ...)` | Direct engine routines; names are listed in [the generated catalog](../nwscript-api.md) |
 | `kp.as` | Run a Lua function as `OBJECT_SELF` |
 | `kp.speed([n])` | Read or set MainLoop tick scale |
-| `kp.version` / `_KP_VERSION` | `"0.1.0"` |
-| `kotor.obj` / `kp.obj` | Object handles, party, `find` |
-| `kotor.struct` / `kp.struct` | Named field views |
-| `kotor.mem` | Raw reads and writes (not `kp.mem`) |
-| `kotor.log`, `kotor.console`, `kotor.feedback` | Log, console text, on-screen message |
-| `kotor.registertimer`, `kotor.removetimer` | Delayed work |
-| `print` | Log line |
-| `register_callback` / `cb.On*` | Bind a handler after load |
+| `kp.version` | `"0.1.0"` |
+| `kp.obj` | Object handles, party, `find` |
+| `kp.struct` | Named field views |
+| `kp.mem` | Raw reads and writes |
+| `kp.log`, `kp.console`, `kp.feedback` | Log, console text, on-screen message |
+| `kp.registertimer`, `kp.removetimer` | Delayed work |
+| `kp.print` | Log line |
+| `kp.events.register` / `kp.events.On*` | Bind a handler after load |
 
-`kp.timer.after`, `kp.print`, `kp.obj.create`, and most other `kp.*` rows in `data/hostapi.toml` are **not** bound. Calling them is `nil`. See [api-status.md](api-status.md).
+`kp.timer.after`, `kp.obj.create`, and most other `kp.*` rows in `data/hostapi.toml` are **not** bound. Calling them is `nil`. See [api-status.md](api-status.md).
 
-Underscored aliases also work: `read_byte`, `register_timer`, and the rest listed in [../api-dialects.md](../api-dialects.md).
+Bare host names and underscored compatibility aliases have been removed. See the [API version 2 migration](../api-dialects.md).
 
 ## Cheat console
 

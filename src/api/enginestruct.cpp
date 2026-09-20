@@ -24,9 +24,8 @@ VmEngineAccess g_access;
 // whole of the conversion: each holds the real method pointer in a file-scope
 // variable and forwards.
 //
-// File-scope rather than per-binding because there is exactly one VM in the
-// process. The game creates CVirtualMachine once; a second one would need a
-// second set of shims, and nothing in the engine makes one.
+// Code addresses are process-wide. Object pointers can be refreshed from a
+// trusted RunScript context; publication happens on the same game thread.
 hooks::ThiscallFn<int, int, int>            g_execute_command = nullptr;
 hooks::ThiscallFn<int, int>                 g_push_int    = nullptr;
 hooks::ThiscallFn<int, float>               g_push_float  = nullptr;
@@ -104,6 +103,29 @@ int handle_tostring(lua_State* L) {
 void bind_engine_access(const VmEngineAccess& a) { g_access = a; }
 const VmEngineAccess& engine_access() { return g_access; }
 
+bool vm_binding_live(int routine) {
+    const auto& b = binding();
+    const auto& a = engine_access();
+    if (!b.usable() || b.command_implementer != a.command_implementer ||
+        b.virtual_machine != a.virtual_machine || !a.commands || !a.command_count ||
+        a.command_count > 65536 || a.commands_offset > 65536)
+        return false;
+    if (!platform::is_readable(static_cast<const char*>(b.virtual_machine) +
+                                   a.wrapper_internal_offset,
+                               sizeof(void*))) return false;
+    void* internal = *reinterpret_cast<void* const*>(
+        static_cast<const char*>(b.virtual_machine) + a.wrapper_internal_offset);
+    if (!internal || !platform::is_readable(internal, sizeof(void*))) return false;
+    if (!platform::is_readable(b.command_implementer, a.commands_offset + sizeof(void*)))
+        return false;
+    void* const* table = *reinterpret_cast<void* const* const*>(
+        static_cast<const char*>(b.command_implementer) + a.commands_offset);
+    if (table != a.commands || !platform::is_readable(table, sizeof(void*) * a.command_count))
+        return false;
+    return routine < 0 || (static_cast<unsigned>(routine) < a.command_count &&
+        table[routine] && platform::is_readable(table[routine], 1));
+}
+
 std::uint32_t discover_command_count(const VmSites& s) {
     std::uint32_t bound = s.commands_count ? s.commands_count : 0x304;
     if (s.execute_command != 0) {
@@ -144,6 +166,27 @@ bool bind_sites(const VmSites& s, std::string& error) {
         return false;
     }
 
+    // Validate before changing shims or either published binding. A null table
+    // faults inside ExecuteCommand; it cannot degrade to an ordinary VM error.
+    const std::uint32_t count = discover_command_count(s);
+    if (!count || count > 65536 || s.commands_offset > 65536 ||
+        !platform::is_readable(s.command_implementer, s.commands_offset + sizeof(void*)) ||
+        !platform::is_readable(static_cast<const char*>(s.virtual_machine) +
+                                   s.wrapper_internal_offset,
+                               sizeof(void*))) {
+        error = "VM context is not readable";
+        return false;
+    }
+    void* internal = *reinterpret_cast<void* const*>(
+        static_cast<const char*>(s.virtual_machine) + s.wrapper_internal_offset);
+    void* const* commands = *reinterpret_cast<void* const* const*>(
+        static_cast<const char*>(s.command_implementer) + s.commands_offset);
+    if (!internal || !platform::is_readable(internal, sizeof(void*)) || !commands ||
+        !platform::is_readable(commands, sizeof(void*) * count)) {
+        error = "VM internal or command table is not readable";
+        return false;
+    }
+
     // Casting an integer address to a function pointer is the whole job of this
     // function, and it happens here and nowhere else.
     auto fn = [](std::uintptr_t a) { return reinterpret_cast<void*>(a); };
@@ -170,7 +213,6 @@ bool bind_sites(const VmSites& s, std::string& error) {
     b.pop_float   = shim_pop_float;
     b.pop_string  = shim_pop_string;
     b.pop_object  = shim_pop_object;
-    bind(b);
 
     VmEngineAccess a;
     a.virtual_machine     = s.virtual_machine;
@@ -186,27 +228,14 @@ bool bind_sites(const VmSites& s, std::string& error) {
     a.destroy_string =
         reinterpret_cast<decltype(a.destroy_string)>(fn(s.exostring_dtor));
 
-    // The command array. Reading it is a dereference of an address that came
-    // out of a data file, so it is probed first: a wrong build must refuse the
-    // read rather than fault inside the refusal path.
-    const std::uint32_t count = discover_command_count(s);
-    const auto base = reinterpret_cast<std::uintptr_t>(s.command_implementer);
-    const void* slot = reinterpret_cast<const void*>(base + s.commands_offset);
-    if (platform::is_readable(slot, sizeof(void*))) {
-        void* const* table = *reinterpret_cast<void* const* const*>(slot);
-        if (table && platform::is_readable(table, sizeof(void*) * count)) {
-            a.commands = table;
-            a.command_count = count;
-        }
-    }
-    if (!a.commands) {
-        platform::log(platform::LogLevel::Warn,
-                      "the routine command array is not readable at +0x%x; "
-                      "unimplemented routines will report a VM error instead of "
-                      "a script error", s.commands_offset);
-    }
-
+    a.commands = commands;
+    a.command_count = count;
+    a.commands_offset = s.commands_offset;
+    a.wrapper_internal_offset = s.wrapper_internal_offset;
+    // No engine call or callback between these assignments: game-thread
+    // consumers observe one complete context, including all stack accessors.
     bind_engine_access(a);
+    bind(b);
     return true;
 }
 

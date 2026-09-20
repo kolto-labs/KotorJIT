@@ -27,6 +27,13 @@
 #include "hooks/thiscall.hpp"
 #include "hooks/trampoline.hpp"
 #include "platform/platform.hpp"
+#include "api/memory.hpp"
+
+#if defined(__clang__)
+#define KP_NOINLINE_NOCLONE __attribute__((noinline))
+#else
+#define KP_NOINLINE_NOCLONE __attribute__((noinline, noclone))
+#endif
 
 using namespace kp::hooks;
 
@@ -206,7 +213,7 @@ struct Widget {
 // happened to lay the same TU out with more distance, so it never showed up
 // locally. Giving widget_sum its own page removes the coincidence instead of
 // hoping the next compiler keeps being lucky.
-int KP_THISCALL __attribute__((noinline, noclone, aligned(4096)))
+int KP_THISCALL KP_NOINLINE_NOCLONE __attribute__((aligned(4096)))
 widget_sum(Widget* self, int a, int b) {
     volatile int base = self->base;
     return base + a + b;
@@ -328,7 +335,7 @@ void phase_detour() {
 
 // Internal linkage so its address is the function itself rather than a PLT
 // entry -- the relocated `call` must be seen to reach the real target.
-int __attribute__((noinline, noclone)) helper_seven() {
+int KP_NOINLINE_NOCLONE helper_seven() {
     return 7;
 }
 
@@ -586,6 +593,248 @@ void phase_table(const std::string& path) {
     check(set.installed_count() == 0, "nothing was installed");
 }
 
+void phase_hookpack() {
+    section("phase 5: agentdecompile.hookpack/v1");
+
+    const char* pack = R"JSON({
+      "format": "agentdecompile.hookpack/v1",
+      "binaries": [
+        {"slug": "k1-win-1.03", "game": "k1", "platform": "win32"},
+        {"slug": "k1-lin-1.03", "game": "k1", "platform": "linux"}
+      ],
+      "sites": {
+        "vm.run_script": {
+          "cls": "CVirtualMachineInternal",
+          "method": "RunScript",
+          "instances": [
+            {"binary": "k1-win-1.03", "addr": 6112720},
+            {"binary": "k1-lin-1.03", "addr": 134545408}
+          ]
+        }
+      }
+    })JSON";
+
+    AddressTable table;
+    std::string error;
+    check(AddressTable::parse(pack, "k1-win-1.03", table, error),
+          "parse hookpack for one build slug");
+    const Site* s = table.find("vm.run_script");
+    check(s != nullptr && s->addr == 6112720,
+          "instance addr for that slug is the site VA");
+    check(s != nullptr && s->cls == "CVirtualMachineInternal",
+          "cls comes from the site, not the VA");
+
+    AddressTable other;
+    check(AddressTable::parse(pack, "k1-lin-1.03", other, error),
+          "parse the same pack for another slug");
+    const Site* o = other.find("vm.run_script");
+    check(o != nullptr && o->addr == 134545408,
+          "the other slug picks the other instance");
+
+    const char* overlay = R"JSON({
+      "build": "k1-win-1.03",
+      "game": "k1",
+      "platform": "win32",
+      "sites": {
+        "vm.run_script": {
+          "kind": "detour",
+          "required": true,
+          "expected_bytes": "535556578B7C2414"
+        }
+      }
+    })JSON";
+
+    auto write = [](const char* path, const char* body) {
+        std::FILE* f = std::fopen(path, "wb");
+        if (f == nullptr) return false;
+        std::fwrite(body, 1, std::strlen(body), f);
+        std::fclose(f);
+        return true;
+    };
+    const char* pack_path = "/tmp/kp_selftest_hookpack.json";
+    const char* ov_path = "/tmp/kp_selftest_overlay.json";
+    check(write(pack_path, pack) && write(ov_path, overlay),
+          "write temp hookpack and overlay");
+
+    AddressTable merged;
+    check(AddressTable::load_hookpack(pack_path, "k1-win-1.03", ov_path, merged, error),
+          "load_hookpack merges overlay");
+    const Site* m = merged.find("vm.run_script");
+    check(m != nullptr && m->kind == SiteKind::Detour && m->required,
+          "overlay supplies kind and required");
+    check(m != nullptr && m->expected.size() == 8,
+          "overlay supplies expected_bytes; pack does not invent them");
+    check(m != nullptr && m->addr == 6112720,
+          "pack instance addr survives the overlay");
+
+    std::vector<std::uint8_t> hay(4096, 0x90);
+    const std::uint8_t pat[] = {0x53, 0x55, 0x56, 0x57, 0x8B, 0x7C, 0x24, 0x14};
+    std::memcpy(hay.data() + 0x100, pat, sizeof pat);
+    const std::uintptr_t live = reinterpret_cast<std::uintptr_t>(hay.data());
+    kp::api::memory::bind_scan_regions(live, {{live, hay.size(), "synthetic"}});
+
+    const char* miss = R"JSON({
+      "format": "agentdecompile.hookpack/v1",
+      "sites": {
+        "vm.run_script": {
+          "instances": [{"binary": "k1-win-1.03", "addr": 1}],
+          "expected_bytes": "535556578B7C2414"
+        }
+      }
+    })JSON";
+    AddressTable scan;
+    check(AddressTable::parse(miss, "k1-win-1.03", scan, error),
+          "parse hookpack with a stale hint VA");
+    scan.resolve_from_signatures(live);
+    const Site* hit = scan.find("vm.run_script");
+    check(hit != nullptr && hit->resolved && hit->addr == 0x100,
+          "stale hint plus unique bytes bind the image VA");
+    check(hit != nullptr && hit->bound_from_scan,
+          "scan-bound site is marked bound_from_scan");
+
+    const char* zero = R"JSON({
+      "format": "agentdecompile.hookpack/v1",
+      "sites": {
+        "vm.run_script": {
+          "instances": [{"binary": "k1-win-1.03", "addr": 0}],
+          "expected_bytes": "535556578B7C2414"
+        }
+      }
+    })JSON";
+    AddressTable zero_hint;
+    check(AddressTable::parse(zero, "k1-win-1.03", zero_hint, error),
+          "parse hookpack with addr 0");
+    zero_hint.resolve_from_signatures(live);
+    const Site* z = zero_hint.find("vm.run_script");
+    check(z != nullptr && z->resolved && z->addr == 0x100,
+          "addr 0 plus unique bytes becomes resolved");
+
+    std::vector<std::uint8_t> twice(4096, 0x90);
+    std::memcpy(twice.data() + 0x100, pat, sizeof pat);
+    std::memcpy(twice.data() + 0x200, pat, sizeof pat);
+    const std::uintptr_t live2 = reinterpret_cast<std::uintptr_t>(twice.data());
+    kp::api::memory::bind_scan_regions(live2, {{live2, twice.size(), "synthetic-dup"}});
+    AddressTable stale;
+    check(AddressTable::parse(miss, "k1-win-1.03", stale, error),
+          "parse hookpack with a stale hint and a non-unique window");
+    stale.resolve_from_signatures(live2);
+    const Site* miss_hit = stale.find("vm.run_script");
+    check(miss_hit != nullptr && !miss_hit->resolved,
+          "non-unique window drops a stale hint");
+}
+
+void phase_field() {
+    section("phase 6: field sites");
+
+    // A per-build table with one code site and two fields: one anchored at a
+    // global, one reached through a pointer chain (addr 0). Neither carries
+    // expected_bytes. The field with a size is resolved as parsed; the scan
+    // must leave both untouched.
+    const char* table = R"JSON({
+      "build": "k1-win-1.03",
+      "game": "K1",
+      "platform": "win",
+      "image_base": 4194304,
+      "sites": {
+        "vm.run_script": {
+          "kind": "detour", "required": true, "addr": 6112720,
+          "expected_bytes": "535556578B7C2414"
+        },
+        "g.app_manager": {
+          "cls": "", "method": "g_pAppManager", "kind": "field", "required": false,
+          "addr": 8010236, "offset": 0, "size": 4
+        },
+        "server.server_mode": {
+          "cls": "CServerExoAppInternal", "method": "server_mode", "kind": "field",
+          "required": false, "addr": 0, "offset": 65544, "size": 2
+        },
+        "server.unbound": {
+          "cls": "CServerExoAppInternal", "method": "nothing", "kind": "field",
+          "required": false, "addr": 0
+        }
+      }
+    })JSON";
+
+    AddressTable t;
+    std::string error;
+    check(AddressTable::parse(table, t, error), "parse a table with field sites");
+    check(site_kind_from_string("field") == SiteKind::Field &&
+          std::string(to_string(SiteKind::Field)) == "field",
+          "\"field\" round-trips through SiteKind");
+
+    const Site* g = t.find("g.app_manager");
+    check(g != nullptr && g->kind == SiteKind::Field, "field kind is parsed");
+    check(g != nullptr && g->resolved && g->addr == 8010236 && g->offset == 0 && g->size == 4,
+          "a global-anchored field keeps its addr and carries offset/size");
+
+    const Site* m = t.find("server.server_mode");
+    check(m != nullptr && m->resolved && m->addr == 0 && m->offset == 65544 && m->size == 2,
+          "a chain field with addr 0 is resolved by its size");
+    check(m != nullptr && m->expected.empty(), "a field has no expected bytes");
+
+    const Site* u = t.find("server.unbound");
+    check(u != nullptr && !u->resolved && u->size == 0,
+          "a field with no offset/size is unresolved");
+
+    // The scan binds the code site through its bytes and skips the fields.
+    std::vector<std::uint8_t> hay(4096, 0x90);
+    const std::uint8_t pat[] = {0x53, 0x55, 0x56, 0x57, 0x8B, 0x7C, 0x24, 0x14};
+    std::memcpy(hay.data() + 0x100, pat, sizeof pat);
+    const std::uintptr_t live = reinterpret_cast<std::uintptr_t>(hay.data());
+    kp::api::memory::bind_scan_regions(live, {{live, hay.size(), "synthetic-field"}});
+    t.resolve_from_signatures(live);
+    const Site* v = t.find("vm.run_script");
+    check(v != nullptr && v->resolved && v->bound_from_scan, "the code site still scans");
+    m = t.find("server.server_mode");
+    g = t.find("g.app_manager");
+    check(m != nullptr && m->resolved && m->addr == 0 && m->offset == 65544 && !m->bound_from_scan,
+          "resolve_from_signatures leaves a chain field alone");
+    check(g != nullptr && g->resolved && g->addr == 8010236 && !g->bound_from_scan,
+          "resolve_from_signatures leaves a global-anchored field alone");
+    check(t.unresolved_required().empty(), "an unresolved optional field is not a required miss");
+
+    // Installing a field is a caller bug, refused like any non-detour kind.
+    HookSet set;
+    set.add(HookRequest{"server.server_mode", reinterpret_cast<void*>(&phase_field), {}});
+    std::string err;
+    check(!set.install(t, 0, err) && err.find("kind=field") != std::string::npos,
+          "a HookRequest on a field is refused by kind");
+
+    // The hook-pack branch reads offset/size from the site and from the instance.
+    const char* pack = R"JSON({
+      "format": "agentdecompile.hookpack/v1",
+      "binaries": [{"slug": "k1-win-1.03", "game": "k1", "platform": "win32"}],
+      "sites": {
+        "server.server_mode": {
+          "cls": "CServerExoAppInternal", "method": "server_mode", "kind": "field",
+          "instances": [{"binary": "k1-win-1.03", "addr": 0, "offset": 65544, "size": 2}]
+        },
+        "g.app_manager": {
+          "method": "g_pAppManager", "kind": "field", "offset": 0, "size": 4,
+          "instances": [{"binary": "k1-win-1.03", "addr": 8010236}]
+        }
+      }
+    })JSON";
+    AddressTable hp;
+    check(AddressTable::parse(pack, "k1-win-1.03", hp, error), "parse a hookpack with field sites");
+    const Site* hm = hp.find("server.server_mode");
+    check(hm != nullptr && hm->resolved && hm->offset == 65544 && hm->size == 2,
+          "hookpack instance carries offset/size");
+    const Site* hg = hp.find("g.app_manager");
+    check(hg != nullptr && hg->resolved && hg->addr == 8010236 && hg->size == 4,
+          "hookpack site-level offset/size survives an instance that only has addr");
+
+    // An overlay supplies offset/size to a pack site that lacks them.
+    AddressTable base;
+    check(AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
+        "server.server_mode":{"kind":"field","instances":[{"binary":"k1-win-1.03","addr":0}]}}})JSON",
+        "k1-win-1.03", base, error), "parse a pack whose field has no extent");
+    base.merge_overlay(t);
+    const Site* om = base.find("server.server_mode");
+    check(om != nullptr && om->resolved && om->offset == 65544 && om->size == 2,
+          "merge_overlay supplies a field's offset/size");
+}
+
 // ---------------------------------------------------------------------------
 
 int cmd_selftest(const std::string& table_path) {
@@ -598,6 +847,8 @@ int cmd_selftest(const std::string& table_path) {
     phase_detour();
     phase_relocation();
     if (!table_path.empty()) phase_table(table_path);
+    phase_hookpack();
+    phase_field();
 
     std::printf("\n%s: %d failure(s)\n", g_failures ? "FAILED" : "OK", g_failures);
     return g_failures ? 1 : 0;

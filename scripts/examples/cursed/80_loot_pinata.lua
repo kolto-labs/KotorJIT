@@ -27,10 +27,8 @@ local GIZKA = "g_gizka01"
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -58,7 +56,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -94,7 +92,7 @@ local function pinata(corpse, pc)
   end
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
-  print(("[cursed:pinata] %s burst: %d piles"):format(norm(q("GetName", corpse)), placed))
+  kp.print(("[cursed:pinata] %s burst: %d piles"):format(norm(q("GetName", corpse)), placed))
 
   if count % 2 == 0 then
     local loc = q("Location", { x = pos.x, y = pos.y, z = pos.z }, 0.0)
@@ -103,7 +101,7 @@ local function pinata(corpse, pc)
       gizkas = gizkas + 1
       q("ChangeToStandardFaction", liz, STANDARD_FACTION_HOSTILE_1)
       if kp and kp.as then kp.as(liz, function() q("ActionAttack", pc, 0) end) end
-      print(("[cursed:pinata] gizka released (#%d)"):format(gizkas))
+      kp.print(("[cursed:pinata] gizka released (#%d)"):format(gizkas))
     end
   end
 end

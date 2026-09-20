@@ -28,6 +28,8 @@
 # (full disassembly/decompilation database). Never commit this -- it's a
 # working area for agentdecompile-cli, same category as /build/ and /tmp/.
 /agentdecompile_projects/
+/docs/agentdecompile_projects/
+/data/corpus.sqlite
 
 __pycache__/
 *.pyc
@@ -37,7 +39,15 @@ __pycache__/
 uninstalled-mcp-plugins.txt
 .claude/
 .cursor/
+.agents/
+.agentdecompile/
+.worktrees/
 .mission/
 .remember/
 AGENTS.md
 CLAUDE.md
+
+# Local runtime configuration and logs
+/swkotor.ini
+/kotorphasor.log
+/kotorphasor-proxy.log

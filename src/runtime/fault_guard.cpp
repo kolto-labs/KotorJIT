@@ -166,6 +166,38 @@ void report(const char* what, const char* site, std::uintptr_t addr,
     emit(line, at);
 }
 
+// The stack words around a fault, which is enough to name the return chain
+// when a call went somewhere it should not have. A few words BELOW the pointer
+// come first: an instruction that faulted after popping still has what it
+// popped sitting there, and that is usually where the return address is.
+// Reads are probed first -- the stack pointer at a fault is not always a stack
+// pointer.
+#if defined(_WIN32)
+constexpr int kStackWordsBelow = 12;
+constexpr int kStackWords = 10;
+int g_passthrough_reports = 0;
+constexpr int kMaxPassthroughReports = 8;
+
+void report_stack(std::uintptr_t sp) {
+    if (sp == 0) return;
+    char line[512];
+    std::size_t at = 0;
+    at = append_str(line, sizeof line, at, "[fault] stack sp=");
+    at = append_hex(line, sizeof line, at, sp);
+    for (int i = -kStackWordsBelow; i < kStackWords; ++i) {
+        const void* p = reinterpret_cast<const void*>(sp + static_cast<std::uintptr_t>(i * 4));
+        if (!platform::is_readable(p, 4)) continue;
+        if (i == 0) at = append_str(line, sizeof line, at, " |");
+        std::uint32_t w = 0;
+        std::memcpy(&w, p, sizeof w);
+        at = append_str(line, sizeof line, at, " ");
+        at = append_hex(line, sizeof line, at, w);
+    }
+    at = append_str(line, sizeof line, at, "\n");
+    emit(line, at);
+}
+#endif
+
 // --------------------------------------------------------------- claiming ---
 
 // Decide whether this fault is ours and record what the bail path will report.
@@ -257,7 +289,20 @@ LONG CALLBACK vectored_handler(EXCEPTION_POINTERS* ep) {
 
     const std::uintptr_t resume =
         claim(addr, static_cast<std::uintptr_t>(ep->ContextRecord->Eip), code);
-    if (resume == 0) return EXCEPTION_CONTINUE_SEARCH;   // the game's, not ours
+    if (resume == 0) {
+        // The fault is not ours to recover, but it is worth a line: under Wine
+        // an unhandled fault reaches the AeDebug dialog, which nobody can click
+        // headless, and the process then sits there forever looking like a
+        // hang. A few words of stack turn that into something readable. Capped
+        // so a fault storm cannot fill the disk.
+        if (g_passthrough_reports < kMaxPassthroughReports) {
+            ++g_passthrough_reports;
+            report("passed through", "(not a hook body)", addr,
+                   static_cast<std::uintptr_t>(ep->ContextRecord->Eip), code);
+            report_stack(static_cast<std::uintptr_t>(ep->ContextRecord->Esp));
+        }
+        return EXCEPTION_CONTINUE_SEARCH;   // the game's, not ours
+    }
 
     // Hand the thread back to the OS with a different program counter. Letting
     // NtContinue do the resume is the sanctioned path; longjmp-ing from inside

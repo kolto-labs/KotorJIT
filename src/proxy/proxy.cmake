@@ -27,7 +27,8 @@ if(KP_MINGW_CXX)
     # without the mod for reasons nothing reports.
     add_custom_command(
         OUTPUT ${KP_BINKW32}
-        COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -shared
+        COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -shared
                 -o ${KP_BINKW32}
                 "${KP_PROXY_DIR}/binkw32.cpp" "${KP_PROXY_DIR}/binkw32.def"
                 -static -static-libgcc -static-libstdc++

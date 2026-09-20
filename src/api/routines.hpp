@@ -14,7 +14,7 @@
 // per-routine hook, no new bytecode, and no patched nwscript.nss -- one generic
 // bridge covers 769 of 772 routines on KOTOR 1 and 803 documented ones on
 // KOTOR 2. AssignCommand, DelayCommand, and ActionDoCommand take a script
-// closure and are refused; kotor.registertimer replaces DelayCommand.
+// closure and are refused.
 //
 // Argument order matters and is easy to get wrong. The VM stack is a stack:
 // the routine pops its first declared parameter first, so we push the LAST
@@ -83,9 +83,9 @@ struct VmBinding {
 void bind(const VmBinding&);
 const VmBinding& binding();
 
-// Register `kotor.<RoutineName>` for every routine in the table onto a script's
-// state. Registration is by name, so a script calls kotor.GetModule() rather
-// than remembering that GetModule is id 242.
+// Register the single `nwscript.call(name, ...)` dispatcher onto a Lua state.
+// Routine names remain data in the generated catalog; none are exported as Lua
+// table members.
 void register_all(lua_State*);
 
 // Call one routine with arguments already on the Lua stack starting at

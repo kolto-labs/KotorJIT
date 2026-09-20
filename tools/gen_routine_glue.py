@@ -133,9 +133,11 @@ def emit(game: str) -> int:
 def docs(results: dict) -> str:
     L = ["# NWScript routines from Lua", "",
          "Generated from `data/routines/`. Do not edit by hand.", "",
-         "Every engine routine the game has is callable by name:", "",
-         "```lua", 'local m = kotor.GetModule()',
-         'kotor.SendMessageToPC(kotor.GetFirstPC(), "hello")', "```", "",
+         "`nwscript.call(name, ...)` is the only direct engine-routine entry point.",
+         "Routine names are catalog data, not Lua globals or table members:", "",
+         "```lua", 'local m = nwscript.call("GetModule")',
+         'local pc = nwscript.call("GetFirstPC")',
+         'nwscript.call("SendMessageToPC", pc, "hello")', "```", "",
          "Arguments follow the declaration order in the game's own `nwscript.nss`.",
          "Defaulted parameters may be omitted from the right.", ""]
     for game, (n_ok, unsupported, no_sig, all_r, kinds) in results.items():

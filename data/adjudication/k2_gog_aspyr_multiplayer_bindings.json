@@ -1,0 +1,98 @@
+{
+  "schema": "kotorphasor.adjudication.v1",
+  "build": "k2_gog_aspyr",
+  "bindings": [
+    {
+      "name": "CVirtualMachine::internal",
+      "kind": "field",
+      "owner": "CVirtualMachine",
+      "addr": "0x00000000",
+      "offset": "0x1c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 GOG StackPopInteger 0x00640bc0 loads the internal VM with mov ecx,[ecx+0x1c] before calling the internal pop routine; the adjacent push/pop wrappers use the same field."
+      }
+    },
+    {
+      "name": "CVirtualMachineInternal::command_implementer",
+      "kind": "field",
+      "owner": "CVirtualMachineInternal",
+      "addr": "0x00000000",
+      "offset": "0x3d4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 GOG RunScript at 0x0064560b reads this+0x3d4 while dispatching the active script, independently confirming the recovered command-implementer member used by the bridge."
+      }
+    },
+    {
+      "name": "CVirtualMachineInternal::RunScript",
+      "kind": "detour",
+      "owner": "CVirtualMachineInternal",
+      "addr": "0x00645540",
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "The corpus splits this one function into a 9-byte row at 0x00645540 and a 731-byte continuation at 0x00645549. Raw code proves 0x00645540 is the real entry (push ebp; mov ebp,esp; sub esp,0x10; save ecx), while 0x00645549 begins cmp [ebp+8],0 inside that frame. The function ends at 0x00645823 with ret 0x0c. Hooking the continuation reproduced an access violation at 0x0064555c because no prologue had established EBP; the exact entry preserves the verified thiscall ABI."
+      }
+    },
+    {
+      "name": "g_pAppManager",
+      "kind": "field",
+      "owner": "",
+      "addr": "0x00A11C04",
+      "offset": "0x0",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "CSWAppInternal::SetGameSpeed 0x004489f0 repeatedly loads [0x00A11C04]; at 0x00448a7c it loads that global and then reads server at +0x8. The VM command consumer at 0x0077e609 independently loads [0x00A11C04] and reads server at +0x8."
+      }
+    },
+    {
+      "name": "CAppManager::server",
+      "kind": "field",
+      "owner": "CAppManager",
+      "addr": "0x00000000",
+      "offset": "0x8",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "SetGameSpeed 0x00448a82 and the VM command consumer 0x0077e60e both load [g_pAppManager+0x8]; CAppManager::CreateServer 0x00401b80 stores its new server at this+0x8."
+      }
+    },
+    {
+      "name": "CNetLayer::destination_net_layer",
+      "kind": "field",
+      "owner": "CNetLayer",
+      "addr": "0x00000000",
+      "offset": "0x2000C",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "CNetLayer::Initialize 0x0063f9e0 pairs both endpoints through 0x006403c0; that setter stores its sole argument at this+0x2000c. The adjacent initialized/base-app fields are written at +0x20010 and +0x20008."
+      }
+    },
+    {
+      "name": "CGameObject::id",
+      "kind": "field",
+      "owner": "CGameObject",
+      "addr": "0x00000000",
+      "offset": "0x4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "corpus": [
+          "k2_win_gog_aspyr_swkotor2.exe/CGameObject_004692d0.c"
+        ],
+        "disassembly": "CGameObject::CGameObject 0x004692d0 stores the caller-supplied object id at this+0x4 (0x004692e6); object type follows at +0x8."
+      }
+    }
+  ]
+}

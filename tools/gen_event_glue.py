@@ -125,6 +125,10 @@ def gen_docs(events: list[dict]) -> str:
     L = ["# Lua API reference", "",
          "Generated from `data/events.toml`. Do not edit by hand.", "",
          "## How to write a script", "",
+         "Native registration uses `kp.events.register(kp.events.OnTick, handler)`. "
+         "The global On* definitions below remain supported as legacy dispatcher "
+         "discovery. Explicit bindings take precedence; `kp.events.unregister` "
+         "restores a discovered global handler. See [the namespace migration](api-dialects.md).", "",
          "Define only the callbacks you want. Anything you leave out costs nothing.",
          "", "```lua", "priority = 10   -- optional; higher runs first, ties break on filename",
          "", sample_sig,

@@ -6,6 +6,7 @@
 #include "runtime/runtime.hpp"
 #include "version.hpp"
 
+#include <array>
 #include <atomic>
 #include <cctype>
 #include <cstdarg>
@@ -29,6 +30,12 @@
 #include "api/structs.hpp"
 #include "api/memory.hpp"
 #include "api/timers.hpp"
+#include "harness/commands.hpp"
+#include "harness/engine.hpp"
+extern "C" {
+#include "lauxlib.h"
+#include "lua.h"
+}
 #include "lua/host.hpp"
 #include "lua/value.hpp"
 #include "platform/platform.hpp"
@@ -44,6 +51,33 @@
 #endif
 
 namespace kp::runtime {
+
+namespace {
+// kp.game_speed([scale]): read or set the engine's own game-speed scale, the
+// one the harness `speed` command uses. Unlike kp.speed (whole extra ticks
+// per frame, 1..16) this scales the five world/pause/animation timers, so it
+// goes below 1: kp.game_speed(0.25) is real slow motion. Returns the scale in
+// force; without a harness adapter it returns nil.
+int l_game_speed(lua_State* L) {
+    kp::harness::EngineAdapter* a = kp::harness::adapter();
+    if (a == nullptr) { lua_pushnil(L); return 1; }
+    if (lua_gettop(L) >= 1) {
+        const double scale = luaL_checknumber(L, 1);
+        const kp::harness::Result r = a->set_speed(static_cast<float>(scale));
+        if (!r.ok) return luaL_error(L, "game_speed: %s", r.error.c_str());
+    }
+    lua_pushnumber(L, static_cast<lua_Number>(a->speed()));
+    return 1;
+}
+
+void register_game_speed(lua_State* L) {
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) { lua_pop(L, 1); return; }
+    lua_pushcfunction(L, l_game_speed);
+    lua_setfield(L, -2, "game_speed");
+    lua_pop(L, 1);
+}
+}  // namespace
 namespace {
 
 // Not in Runtime's member list because runtime.hpp fixes that list, and this
@@ -56,6 +90,7 @@ std::atomic<bool> g_live{false};
 // Host, and a game thread already inside a hook body has no synchronisation
 // with the thread doing that.
 std::atomic<lua::Host*> g_host{nullptr};
+std::atomic<multiplayer::Transport*> g_multiplayer_transport{nullptr};
 
 // Log lines come from the worker thread and from game threads inside hook
 // bodies. A spin lock rather than a mutex keeps this usable from anywhere,
@@ -103,6 +138,22 @@ std::string resolve_against(const std::string& base, const std::string& value) {
     return join(base, value);
 }
 
+// KOTORPHASOR_HARNESS_PORT wins over the ini, and it has to win whether or
+// not the ini exists: it is how a build directory is driven without staging
+// a file next to the game. Applied on both exits from from_game_dir.
+void apply_harness_env(Config& c) {
+    const char* port = std::getenv("KOTORPHASOR_HARNESS_PORT");
+    if (port != nullptr && *port != '\0')
+        c.harness_port = static_cast<unsigned>(std::strtoul(port, nullptr, 10));
+}
+
+void apply_multiplayer_env(Config& c) {
+    if (const char* host = std::getenv("KOTORPHASOR_MULTIPLAYER_HOST"); host != nullptr && *host != '\0')
+        c.multiplayer_host = host;
+    if (const char* port = std::getenv("KOTORPHASOR_MULTIPLAYER_PORT"); port != nullptr && *port != '\0')
+        c.multiplayer_port = static_cast<unsigned>(std::strtoul(port, nullptr, 10));
+}
+
 }  // namespace
 
 // ------------------------------------------------------------------ misc ----
@@ -125,6 +176,13 @@ void set_live(bool v) { g_live.store(v, std::memory_order_release); }
 
 lua::Host* active_host() { return g_host.load(std::memory_order_acquire); }
 void set_active_host(lua::Host* h) { g_host.store(h, std::memory_order_release); }
+
+multiplayer::Transport* active_multiplayer_transport() {
+    return g_multiplayer_transport.load(std::memory_order_acquire);
+}
+void set_active_multiplayer_transport(multiplayer::Transport* transport) {
+    g_multiplayer_transport.store(transport, std::memory_order_release);
+}
 
 // Written once during boot, on the worker thread, before any hook body can run;
 // read afterwards from the console, which is a game thread. Not atomic: the
@@ -169,6 +227,8 @@ Config Config::from_game_dir(const std::string& game_dir) {
     c.log_path = join(game_dir, "kotorphasor.log");
 
     std::FILE* f = std::fopen(join(game_dir, "kotorphasor.ini").c_str(), "rb");
+    apply_harness_env(c);
+    apply_multiplayer_env(c);
     if (f == nullptr) return c;   // optional, and its absence is not a problem
 
     char line[1024];
@@ -190,8 +250,15 @@ Config Config::from_game_dir(const std::string& game_dir) {
         else if (key == "log_path")     c.log_path = resolve_against(game_dir, val);
         else if (key == "error_budget") c.error_budget = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
         else if (key == "hot_reload")   c.hot_reload = truthy(val);
+        // [harness] keys. Sections are ignored above, so these are global.
+        else if (key == "harness_port") c.harness_port = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
+        else if (key == "harness_bind") c.harness_bind = val;
+        else if (key == "multiplayer_host") c.multiplayer_host = val;
+        else if (key == "multiplayer_port") c.multiplayer_port = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
     }
     std::fclose(f);
+    apply_harness_env(c);
+    apply_multiplayer_env(c);
     return c;
 }
 
@@ -270,11 +337,13 @@ bool Runtime::await_and_verify(const Config& cfg) {
     }
 
     build_ = r.identity.build_alias;
+    image_sha256_ = r.identity.sha256;
     runtime_base_ = r.image_base;
 
     log("build: %s (image base 0x%08lx, waited %ums)", build_.c_str(),
         static_cast<unsigned long>(runtime_base_), r.waited_ms);
     log("code section verified: %s", r.text_sha256.c_str());
+    std::vector<api::memory::ScanRegion> regions;
     for (const image::Section& s : r.sections) {
         if (!s.executable) continue;
         log("  section %s va=0x%08lx size=%lu entropy=%.3f state=%s", s.name.c_str(),
@@ -282,7 +351,10 @@ bool Runtime::await_and_verify(const Config& cfg) {
             s.state == image::SectionState::Ciphertext  ? "ciphertext"
             : s.state == image::SectionState::Deciphered ? "deciphered"
                                                          : "plaintext");
+        if (s.state == image::SectionState::Ciphertext || s.size == 0) continue;
+        regions.push_back({s.va, s.size, s.name});
     }
+    api::memory::bind_scan_regions(runtime_base_, std::move(regions));
     return true;
 }
 
@@ -294,31 +366,58 @@ bool Runtime::resolve(const Config& cfg) {
         return false;
     }
 
-    // Where a player's install would carry it, then where a working tree does.
-    // The env var is last and exists for driving the runtime out of a build
-    // directory without staging files next to the game.
+    // Hook pack first (logical sites + per-build instance cache), then the
+    // optional per-build overlay for expected_bytes / kind / required.
+    // Address JSON alone still works when no pack is staged.
+    std::vector<std::string> pack_candidates;
+    pack_candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), "hookpack.json"));
+    if (const char* pack = std::getenv("KOTORPHASOR_HOOKPACK"); pack != nullptr && *pack != '\0')
+        pack_candidates.insert(pack_candidates.begin(), pack);
+    if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
+        pack_candidates.push_back(join(dir, "hookpack.json"));
+
     std::vector<std::string> candidates;
     candidates.push_back(join(join(join(cfg.game_dir, "kotorphasor"), "addresses"), build_ + ".json"));
     candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), build_ + ".json"));
     if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
         candidates.push_back(join(dir, build_ + ".json"));
 
+    std::string pack;
+    for (const std::string& p : pack_candidates) {
+        if (file_exists(p)) { pack = p; break; }
+    }
     std::string chosen;
     for (const std::string& p : candidates) {
         if (file_exists(p)) { chosen = p; break; }
     }
-    if (chosen.empty()) {
-        failure_ = "no address table for build \"" + build_ + "\"; looked in";
+    if (pack.empty() && chosen.empty()) {
+        failure_ = "no hook pack or address table for build \"" + build_ + "\"; looked in";
+        for (const std::string& p : pack_candidates) failure_ += " " + p;
         for (const std::string& p : candidates) failure_ += " " + p;
         return false;
     }
 
     auto table = std::make_unique<hooks::AddressTable>();
     std::string error;
-    if (!hooks::AddressTable::load_file(chosen, *table, error)) {
+    if (!pack.empty()) {
+        if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
+            failure_ = "hook pack " + pack + ": " + error;
+            return false;
+        }
+    } else if (!hooks::AddressTable::load_file(chosen, *table, error)) {
         failure_ = "address table " + chosen + ": " + error;
         return false;
     }
+
+    table->resolve_from_signatures(runtime_base_);
+    std::size_t bound = 0;
+    for (const hooks::Site& s : table->sites()) {
+        if (s.resolved) ++bound;
+        if (s.bound_from_scan) {
+            log("signature resolve: %s bound from scan (hint stale or missing)", s.name.c_str());
+        }
+    }
+    log("signature resolve: %zu/%zu sites bound (VA is a hint)", bound, table->sites().size());
 
     const std::vector<std::string> missing = table->unresolved_required();
     if (!missing.empty()) {
@@ -328,12 +427,59 @@ bool Runtime::resolve(const Config& cfg) {
     }
 
     table_ = std::move(table);
-    log("address table: %s (%zu sites, build %s, %s)", chosen.c_str(), table_->sites().size(),
+    const std::string& source = pack.empty() ? chosen : pack;
+    log("address table: %s (%zu sites, build %s, %s)", source.c_str(), table_->sites().size(),
         table_->build().c_str(), table_->platform_name().c_str());
     return true;
 }
 
-bool Runtime::install() {
+bool Runtime::start_multiplayer(const Config& cfg) {
+    if (role_ == multiplayer::Role::Embedded || cfg.multiplayer_port == 0) return true;
+    // A transport receipt is an ABI fact, not a marketing build label.  The
+    // Steam and GOG Aspyr binaries share the K2 wrapper and implementer
+    // layouts; both facts are resolved from the exact image's signed table.
+    const hooks::Site* wrapper_internal = table_->find("vm.wrapper_internal");
+    const hooks::Site* command_implementer =
+        table_->find("vm.internal_command_implementer");
+    const bool k1_receipt = build_ == "k1_gog_103" &&
+        wrapper_internal != nullptr && wrapper_internal->resolved &&
+        wrapper_internal->offset == 0 && command_implementer != nullptr &&
+        command_implementer->resolved && command_implementer->offset == 0x3d4;
+    const bool k2_receipt = (build_ == "k2_gog_aspyr" || build_ == "k2_steam_aspyr") &&
+        wrapper_internal != nullptr && wrapper_internal->resolved &&
+        wrapper_internal->offset == 0x1c && command_implementer != nullptr &&
+        command_implementer->resolved && command_implementer->offset == 0x3d4;
+    if (!k1_receipt && !k2_receipt) {
+        failure_ = "multiplayer transport has no ABI receipt for build " + build_;
+        return false;
+    }
+    if (cfg.multiplayer_port > 65535 || image_sha256_.empty()) {
+        failure_ = cfg.multiplayer_port > 65535
+            ? "multiplayer port must be 1..65535"
+            : "multiplayer transport requires an exact executable identity";
+        return false;
+    }
+
+    auto transport = std::make_unique<multiplayer::Transport>();
+    std::string error;
+    const auto port = static_cast<std::uint16_t>(cfg.multiplayer_port);
+    const bool started = role_ == multiplayer::Role::Server
+        ? transport->start_server(cfg.multiplayer_host, port, image_sha256_, error)
+        : transport->start_client(cfg.multiplayer_host, port, image_sha256_, error);
+    if (!started) {
+        failure_ = "multiplayer transport: " + error;
+        return false;
+    }
+    transport_ = std::move(transport);
+    set_active_multiplayer_transport(transport_.get());
+    log("multiplayer: %s on %s:%u for exact image %s",
+        role_ == multiplayer::Role::Server ? "listening" : "connected socket",
+        cfg.multiplayer_host.c_str(), static_cast<unsigned>(transport_->port()),
+        image_sha256_.c_str());
+    return true;
+}
+
+bool Runtime::install(bool multiplayer_enabled) {
     phase_ = Phase::Installing;
 
     if (!table_) { failure_ = "install called with no address table"; return false; }
@@ -347,9 +493,8 @@ bool Runtime::install() {
     set->add({"app.server_main_loop", main_loop_detour(), {}});
 
     // Optional caves. HookSet::install refuses an unresolved requested site, so
-    // only add the ones this build actually bound. Console is required on K1
-    // and unresolved on k2_steam_linux -- skip it there rather than failing
-    // every other cave. Named vm.run_script events stay off this list.
+    // only add the ones this build actually bound. Named vm.run_script events
+    // stay off this list.
     const struct {
         const char* site;
         void*       detour;
@@ -367,11 +512,68 @@ bool Runtime::install() {
         {"event.waypoint", waypoint_event_detour()},
         {"vm.save_script_situation", save_situation_detour()},
         {"vm.load_script_situation", load_situation_detour()},
+        // Harness caves. The client loop is where commands drain -- it is the
+        // one per-frame site that runs on the main menu. The other two keep
+        // the harness's time scale and movie switch from being undone by the
+        // engine's own per-frame calls. All three are kind=detour only in a
+        // build's generated JSON, so a table that still says `reference`
+        // leaves them uninstalled here rather than refused at install.
+        {"app.client_main_loop", client_main_loop_detour()},
+        {"app.client_frame_wrapper", client_frame_wrapper_detour()},
+        {"client.set_game_speed", kp::harness::client_set_game_speed_detour()},
+        {"client.play_movies", kp::harness::client_play_movies_detour()},
+        // K1 only. This observes mapped admission fields before the original
+        // action runs; builds without the site retain their normal route.
+        {"creature.ai_action_move_to_point", creature_move_to_point_detour()},
     };
     for (const auto& o : optional) {
+        // Save-situation forwarding is experimentally disableable for live
+        // crash isolation. The default remains unchanged; this switch is
+        // intentionally process-local and never affects address resolution.
+        if (std::getenv("KP_DISABLE_SAVE_HOOK") != nullptr &&
+            std::strcmp(o.site, "vm.save_script_situation") == 0)
+            continue;
         const hooks::Site* s = table_->find(o.site);
         if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
             set->add({o.site, o.detour, {}});
+    }
+
+    if (multiplayer_enabled) {
+        const struct { const char* site; void* detour; } network[] = {
+            {"net.start_connect_to_session", net_start_connect_detour()},
+            {"net.start_server_mode", net_start_server_mode_detour()},
+            {"net.send_message_to_player", net_send_message_detour()},
+            {"net.process_received_frames", net_process_frames_detour()},
+            {"client.area_get_server_area", client_area_get_server_area_detour()},
+            {"creature.add_move_to_point_action", add_move_to_point_detour()},
+        };
+        for (const auto& hook : network) {
+            const hooks::Site* site = table_->find(hook.site);
+            if (site == nullptr || !site->resolved || site->kind != hooks::SiteKind::Detour) {
+                failure_ = std::string("multiplayer hook unavailable: ") + hook.site;
+                return false;
+            }
+            set->add({hook.site, hook.detour, {}});
+        }
+        const hooks::Site* destination = table_->find("net.destination_net_layer");
+        if (destination == nullptr || !destination->resolved ||
+            destination->kind != hooks::SiteKind::Field || destination->size != 4 ||
+            destination->offset == 0) {
+            failure_ = "multiplayer field unavailable: net.destination_net_layer";
+            return false;
+        }
+        set_net_destination_offset(destination->offset);
+        for (const char* support_site : {"module.get_area", "client_area.attach_from_server",
+                                         "server_area.attach_from_client",
+                                         "server.get_player_creature_id",
+                                         "server.get_game_object", "server_object.set_position",
+                                         "object.id"}) {
+            const hooks::Site* site = table_->find(support_site);
+            if (site == nullptr || !site->resolved) {
+                failure_ = std::string("multiplayer support-area site unavailable: ") + support_site;
+                return false;
+            }
+        }
     }
 
     // The routine bridge's addresses come straight from the table we just
@@ -381,7 +583,7 @@ bool Runtime::install() {
     // (capture_vm) reads g_sites unconditionally with no "not ready yet"
     // gate. Publishing g_sites afterward left a window where a heartbeat
     // script bound the VM against a zeroed VmSites, failed, and latched
-    // g_vm_bound permanently -- killing every kotor.* routine call for the
+    // g_vm_bound permanently -- killing every nwscript.call routine call for the
     // rest of the process with no retry.
     {
         api::VmSites sites;
@@ -402,6 +604,20 @@ bool Runtime::install() {
         sites.stack_pop_vector   = at("vm.stack_pop_vector");
         sites.stack_push_engine_structure = at("vm.stack_push_engine_structure");
         sites.stack_pop_engine_structure  = at("vm.stack_pop_engine_structure");
+        const hooks::Site* wrapper_internal = table_->find("vm.wrapper_internal");
+        const hooks::Site* command_implementer =
+            table_->find("vm.internal_command_implementer");
+        sites.layout_resolved =
+            wrapper_internal != nullptr && wrapper_internal->resolved &&
+            wrapper_internal->kind == hooks::SiteKind::Field &&
+            wrapper_internal->size == sizeof(void*) &&
+            command_implementer != nullptr && command_implementer->resolved &&
+            command_implementer->kind == hooks::SiteKind::Field &&
+            command_implementer->size == sizeof(void*);
+        if (sites.layout_resolved) {
+            sites.wrapper_internal_offset = wrapper_internal->offset;
+            sites.command_implementer_offset = command_implementer->offset;
+        }
         set_vm_sites(sites);
         log("vm: %d of 13 stack sites resolved; the two VM objects are captured "
             "from the first script the game runs",
@@ -424,6 +640,20 @@ bool Runtime::install() {
     hooks_ = std::move(set);
     bind_originals(*hooks_);
     log("installed %zu hooks", hooks_->installed_count());
+
+    // The harness adapter binds every engine call and field it can from the
+    // same resolved table. Built whether or not a listener will open: it is
+    // cheap, and it logs its missing sites once, here, where the log is being
+    // read. A site that did not resolve makes the matching command answer
+    // `unsupported`; nothing is dereferenced that the table did not give.
+    kp::harness::set_adapter(kp::harness::make_adapter(*table_, runtime_base_));
+    if (kp::harness::EngineAdapter* a = kp::harness::adapter(); a != nullptr) {
+        const std::vector<std::string> missing = a->missing_sites();
+        std::string list;
+        for (const std::string& m : missing) list += (list.empty() ? "" : ", ") + m;
+        log("harness: adapter %s, %zu site(s) unbound%s%s", a->name(), missing.size(),
+            list.empty() ? "" : ": ", list.c_str());
+    }
     return true;
 }
 
@@ -442,22 +672,32 @@ bool Runtime::boot_scripts(const Config& cfg) {
         // Order matters in one place only: the engine-structure metatables must
         // exist before anything can hand a script one of those handles.
         api::open_engine_structs(L);      // effect/event/location/talent handles
-        api::register_all(L);             // kotor.<RoutineName>, all 769
+        api::register_all(L);             // nwscript.call(name, ...), all 769
         api::memory::register_all(L);     // raw read/write, the escape hatch
         api::structs::register_all(L);    // named typed field access
         api::entity::register_all(L);     // objects, party, resolution
         api::register_support(L);         // output, timers and strings together
         register_director(L);             // kp.speed — MainLoop tick scale
+        register_game_speed(L);           // kp.game_speed — engine SetGameSpeed scale, (0, 16]
 
-        // Last, because an alias can only point at a function that already
-        // exists. Underscored spellings and the cb table land here.
-        api::compat::install_print(L);    // print -> the runtime log, flushed
-        // aliases, cb table, register_callback, kp.gamedir, kp.time
+        // Native events, metadata, harness controls and flushed kp.print output.
         api::compat::install(L, game_dir);
     };
 
     // The console builds a state of its own and needs the same API on it.
     set_state_init(hc.on_state_created);
+
+    // Which routine table nwscript.call binds to. The choice latches the first time
+    // a state registers the API, which load_all is about to do, so it has to
+    // be made here from the table's own game field ("K1" / "K2"). Without
+    // this a K2 process silently got the K1 routine ids.
+    if (table_ != nullptr) {
+        const std::string& g = table_->game();
+        const api::Game game = (g == "K2" || g == "k2") ? api::Game::K2 : api::Game::K1;
+        if (!api::select_game(game))
+            log("api: could not select the %s routine table; it was already handed out",
+                game == api::Game::K2 ? "K2" : "K1");
+    }
 
     auto host = std::make_unique<lua::Host>(hc);
     std::vector<std::string> errors;
@@ -490,30 +730,36 @@ bool Runtime::boot_scripts(const Config& cfg) {
 
 bool Runtime::start(const Config& cfg) {
     log_path_ = cfg.log_path;
+    role_ = cfg.role;
     set_fault_log_path(log_path_.c_str());
     platform::set_log_sink(&runtime_log_sink, nullptr);
 
-    log("KotorPhasor %s starting", KP_VERSION);
+    log("KotorPhasor %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
 
     // Before anything can fault: the guard has to be in place before the first
     // hook body can run, and installing it is free when nothing faults.
     install_fault_guard();
 
-    const bool ok = identify(cfg) && await_and_verify(cfg) && resolve(cfg) && install() &&
+    const bool ok = identify(cfg) && await_and_verify(cfg) && resolve(cfg) &&
+                    start_multiplayer(cfg) && install(transport_ != nullptr) &&
                     boot_scripts(cfg);
 
     if (!ok) {
         phase_ = Phase::Failed;
         set_live(false);
         set_active_host(nullptr);
+        set_active_multiplayer_transport(nullptr);
+        if (transport_) transport_->stop();
         log("refusing to install: %s", failure_.c_str());
         log("the game is untouched and will run normally");
         // Anything installed before the failure was rolled back by HookSet, so
         // there is nothing here to undo. Dropping what we built keeps a failed
         // start from leaving a half-initialised runtime addressable.
+        if (hooks_) clear_originals();
         hooks_.reset();
         table_.reset();
         host_.reset();
+        transport_.reset();
         remove_fault_guard();
         return false;
     }
@@ -530,14 +776,36 @@ bool Runtime::start(const Config& cfg) {
 
     log("running: build %s, %zu hooks, %zu script(s)", build_.c_str(),
         hooks_->installed_count(), host_->scripts().size());
+
+    // The harness listener, last: everything a command can touch now exists.
+    // A refused or failed start is logged and the game runs without it --
+    // the harness is a test surface, never a reason to refuse the player.
+    if (cfg.harness_port != 0) {
+        kp::harness::HarnessOptions ho;
+        ho.bind = cfg.harness_bind;
+        ho.port = static_cast<unsigned short>(cfg.harness_port);
+        std::string error;
+        if (kp::harness::start(ho, error)) {
+            log("harness: listening on %s:%u", cfg.harness_bind.c_str(),
+                static_cast<unsigned>(kp::harness::listening_port()));
+        } else {
+            log("harness: not started: %s", error.c_str());
+        }
+    }
     return true;
 }
 
 void Runtime::stop() {
+    // The listener first: it was started last, and once it is gone no new
+    // request can reach a drain that is about to lose its host and hooks.
+    kp::harness::stop();
+
     // Order matters and is the reverse of start(). Stop dispatching first, drop
     // the cached trampoline pointers second, and only then unpatch -- uninstall
     // unmaps the trampolines, so a body still holding one would fault.
     set_live(false);
+    set_active_multiplayer_transport(nullptr);
+    if (transport_) transport_->stop();
 
     // Host::unload_all raises OnScriptUnload per script. Do not also
     // broadcast here -- that would fire the callback twice on shutdown.
@@ -552,6 +820,8 @@ void Runtime::stop() {
     host_.reset();
     hooks_.reset();
     table_.reset();
+    transport_.reset();
+    set_vm_sites({});
     remove_fault_guard();
 
     phase_ = Phase::Idle;
@@ -569,47 +839,59 @@ namespace {
 api::VmSites      g_sites;
 std::atomic<bool> g_vm_bound{false};
 
-// CVirtualMachineInternal is size-asserted at 0x3D8 and command_implementer is
-// its last member, so it sits at 0x3D4. Carried as a constant here rather than
-// in the address table because it is a struct layout, not an address -- a build
-// where it moves needs a different recovered layout, not a different table.
-constexpr std::uint32_t kCommandImplementerOffset = 0x3D4;
-
-// A CVirtualMachine is one pointer to its internal. The stack accessors are
-// thunks that do `mov ecx,[ecx]` and tail-jump into the internal version --
-// confirmed by disassembling K1's StackPopInteger at 0x5D1000. So rather than
-// hunting for the real singleton, we hold the internal in a variable and hand
-// out its address: dereferencing that gives exactly what the thunk wants.
-void* g_vm_wrapper = nullptr;
+// The live singleton is not needed: stack accessors only read the per-build
+// internal-pointer field from the CVirtualMachine wrapper.
+std::array<std::byte, 64> g_vm_wrapper{};
 
 }  // namespace
 
-void set_vm_sites(const api::VmSites& s) { g_sites = s; }
+void set_vm_sites(const api::VmSites& s) {
+    g_vm_bound.store(false, std::memory_order_release);
+    api::bind({});
+    api::bind_engine_access({});
+    g_vm_wrapper.fill(std::byte{});
+    g_sites = s;
+}
 bool vm_bound() { return g_vm_bound.load(std::memory_order_acquire); }
 
 void capture_vm(void* internal) {
-    if (g_vm_bound.load(std::memory_order_acquire) || internal == nullptr) return;
+    if (api::vm_binding_live()) return;
+    const void* old_internal = api::binding().virtual_machine == nullptr
+        ? nullptr
+        : *reinterpret_cast<void* const*>(g_vm_wrapper.data() +
+                                          g_sites.wrapper_internal_offset);
+    const void* old_implementer = api::binding().command_implementer;
+    const void* old_table = api::engine_access().commands;
+    g_vm_bound.store(false, std::memory_order_release);
+    api::bind({});
+    api::bind_engine_access({});
+    g_vm_wrapper.fill(std::byte{});
+    if (internal == nullptr) return;
 
-    if (!platform::is_readable(internal, kCommandImplementerOffset + sizeof(void*))) return;
+    if (!g_sites.layout_resolved ||
+        g_sites.wrapper_internal_offset > g_vm_wrapper.size() - sizeof(void*) ||
+        !platform::is_readable(internal,
+                               g_sites.command_implementer_offset + sizeof(void*))) return;
     void* implementer = *reinterpret_cast<void* const*>(
-        static_cast<const char*>(internal) + kCommandImplementerOffset);
+        static_cast<const char*>(internal) + g_sites.command_implementer_offset);
     if (implementer == nullptr) return;   // not wired up yet; try again next script
 
-    g_vm_wrapper = internal;
-    g_sites.virtual_machine     = &g_vm_wrapper;
+    std::memcpy(g_vm_wrapper.data() + g_sites.wrapper_internal_offset,
+                &internal, sizeof(internal));
+    g_sites.virtual_machine     = g_vm_wrapper.data();
     g_sites.command_implementer = implementer;
 
     std::string error;
     if (!api::bind_sites(g_sites, error)) {
-        Runtime::instance().log("vm: cannot bind the routine bridge: %s", error.c_str());
-        // Latch anyway. Retrying on every script would repeat this line forever,
-        // and the reason will not change between calls.
-        g_vm_bound.store(true, std::memory_order_release);
+        g_vm_wrapper.fill(std::byte{});
+        // Initialization and teardown can temporarily expose no command table.
+        // Leave the context unavailable so a later trusted script retries.
         return;
     }
     g_vm_bound.store(true, std::memory_order_release);
-    Runtime::instance().log("vm: routine bridge bound (implementer %p, %u commands)",
-                            implementer, api::engine_access().command_count);
+    Runtime::instance().log("vm: routine bridge refreshed (internal %p -> %p, implementer %p -> %p, table %p -> %p, %u commands)",
+        old_internal, internal, old_implementer, implementer,
+        old_table, api::engine_access().commands, api::engine_access().command_count);
 }
 
 }  // namespace kp::runtime
