@@ -1254,7 +1254,7 @@
     },
     {
       "path": "showcase/60_party_wounded.lua",
-      "sha256": "2cb796f6da3ff95e63d6a723982869f43a68de56a9c149cb38cb0d7a5dbb4cfc",
+      "sha256": "d6e7c59d7d2e79eb8a6a058aa2cde84caaf1f94c79bd3c49d71ca56cbd096df4",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"

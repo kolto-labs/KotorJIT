@@ -57,4 +57,13 @@ test('showcase/60_party_wounded.lua','threshold, party exclusion and duplicate s
  f.env.OnRunScript('k_def_damage01\0',2); assert(f:last('SpeakString').args[1]=='Bastila! Stay with us!')
  f.env.OnRunScript('k_def_damage01',2); assert(#f.prints==1)
 end)
+test('showcase/60_party_wounded.lua','padded engine tag preserves full native oracle',function(F,p)
+ local f=F.new(p,{GetTag=function() return "bastila\0\0" end}):load()
+ f.hp=35; f.env.OnRunScript('k_def_damage01',2)
+ -- Native log sinks terminate at NUL even though Lua strings retain it.
+ local native_line=(f.prints[1] or ''):match('^[^%z]*')
+ assert(native_line=='[wounded] bastila below 35%')
+ assert(f:last('SpeakString').args[1]=='Bastila! Stay with us!')
+end)
+
 end

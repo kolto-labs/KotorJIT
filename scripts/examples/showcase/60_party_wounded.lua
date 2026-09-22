@@ -44,6 +44,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
 
     warned[object_id] = true
     local tag = q("GetTag", object_id)
+    if type(tag) == "string" then tag = tag:gsub("%z+$", "") end
     local line = hurt_line(tag)
     kp.print(("[wounded] %s below 35%%"):format(tostring(tag)))
     q("SpeakString", line, 0)
