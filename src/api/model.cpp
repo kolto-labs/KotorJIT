@@ -14,7 +14,8 @@ void Operations::unbind() { backend_=nullptr; profile_=nullptr; loaded_base_=0; 
 Address Operations::site(unsigned i) const { return loaded_base_ + profile_->sites[i].va-profile_->preferred_base; }
 bool Operations::guards(std::string& error) const {
     if (!backend_ || !profile_) return fail(error,"unsupported: no verified native model binding");
-    for(unsigned i=0;i<4;++i) {
+    for(unsigned i=0;i<profile_->sites.size();++i) {
+        if(!profile_->sites[i].va)continue;
         unsigned char expected[16]{}, actual[16]{};
         const char* hex=profile_->sites[i].bytes;
         if (std::strlen(hex)!=32) return fail(error,"invalid model code guard");
@@ -48,7 +49,7 @@ bool Operations::pointer(Address address,Address& value) const {
     else if(!backend_->read(address,&value,8))return false;
     return value!=0;
 }
-bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error) {
+bool Operations::actor(std::uint32_t id,Capture& out,std::string& error) {
     error.clear();out={};
     if(!guards(error))return false;
     if(id==0x7f000000)return fail(error,"invalid server object ID");
@@ -66,6 +67,41 @@ bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error) {
     std::uint8_t type=0;
     if(!creature || !backend_->read(creature+profile_->type_offset,&type,1) || type!=5)
         return fail(error,"client creature missing or wrong type");
+    out={epoch_,id,cid,client,creature,0,0,0,{}};return true;
+}
+bool Operations::identify(std::uint32_t id,Identity& out,std::string& error) {
+    out={};error.clear();if(!guards(error))return false;
+    if(id==0x7f000000)return fail(error,"invalid server object ID");
+    if(!profile_->sites[4].va) {
+        Capture c;if(!actor(id,c,error))return false;
+        out={epoch_,id,c.client,c.creature};return true;
+    }
+    Address manager=0,server=0,internal=0,array=0;
+    if(!pointer(loaded_base_+profile_->manager_slot-profile_->preferred_base,manager) ||
+       !pointer(manager+profile_->manager_server,server) || !pointer(server+profile_->width,internal) ||
+       !pointer(internal+profile_->server_array,array))return fail(error,"server object array unavailable");
+    std::uint8_t probe=0;if(!backend_->read(array,&probe,1))return fail(error,"server array unreadable");
+    Address object=backend_->server_object(site(4),server,id);
+    std::uint32_t actual_id=0;std::uint8_t type=0;
+    if(!object || !backend_->read(object+profile_->width,&actual_id,4) || actual_id!=id ||
+       !backend_->read(object+profile_->type_offset,&type,1) || type!=5)
+        return fail(error,"server creature identity unavailable");
+    out={epoch_,id,server,object};return true;
+}
+bool Operations::matches(const Identity& original,std::string& error) {
+    Identity current;if(!identify(original.id,current,error))return false;
+    if(original.epoch!=current.epoch || original.owner!=current.owner || original.object!=current.object)
+        return fail(error,"stale actor ownership: identity changed");
+    return true;
+}
+bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error,const Identity* ownership) {
+    if(ownership && (ownership->id!=id || !matches(*ownership,error))) {
+        if(error.empty())error="ownership ID mismatch";
+        return false;
+    }
+    if(!actor(id,out,error))return false;
+    Address creature=out.creature;
+    std::uint8_t probe=0;
     // Validate the animation span the verified getter dereferences before call.
     Address animation=0;
     if(!pointer(creature+(profile_->width==8?0x80:0x68),animation) || !backend_->read(animation,&probe,1))
@@ -78,7 +114,9 @@ bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error) {
     if(!backend_->read(model+profile_->base_offset,&base,4) || !backend_->read(model+profile_->effective_offset,&effective,4) ||
        !scale_ok(base) || !std::isfinite(effective) || effective<=0)
         return fail(error,"model scale unreadable or outside checked range");
-    out={epoch_,id,cid,client,creature,model,base,effective};return true;
+    out.model=model;out.base=base;out.effective=effective;
+    if(ownership)out.ownership=*ownership;
+    return true;
 }
 bool Operations::same(const Capture& a,const Capture& b) const {
     return a.epoch==b.epoch && a.id==b.id && a.client_id==b.client_id && a.client==b.client && a.creature==b.creature && a.model==b.model;
@@ -86,7 +124,7 @@ bool Operations::same(const Capture& a,const Capture& b) const {
 bool Operations::resize(const Capture& original,float scale,Capture& after,std::string& error) {
     if(!scale_ok(scale))return fail(error,"scale must be finite and within [0.125,4]");
     Capture before;
-    if(!snapshot(original.id,before,error))return false;
+    if(!snapshot(original.id,before,error,original.ownership.epoch?&original.ownership:nullptr))return false;
     if(!same(original,before))return fail(error,"stale model capture: identity changed");
     float expected=before.effective/before.base*scale;
     if(!std::isfinite(expected) || expected<=0)return fail(error,"invalid effective scale ratio");
@@ -94,7 +132,7 @@ bool Operations::resize(const Capture& original,float scale,Capture& after,std::
     message<<"[model] id="<<original.id<<" creature=0x"<<std::hex<<before.creature<<" model=0x"<<before.model<<std::dec
            <<" base_before="<<before.base<<" effective_before="<<before.effective<<" requested="<<scale;
     bool invoked=backend_->set_scale(site(3),before.model,scale);
-    bool read=snapshot(original.id,after,error);
+    bool read=snapshot(original.id,after,error,original.ownership.epoch?&original.ownership:nullptr);
     bool ok=invoked && read && same(before,after) && close(after.base,scale) && close(after.effective,expected);
     message<<" setter="<<invoked<<" readback="<<read;
     if(read)message<<" base_after="<<after.base<<" effective_after="<<after.effective;

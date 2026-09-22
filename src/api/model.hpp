@@ -14,7 +14,8 @@ struct Profile {
     Address preferred_base, manager_slot;
     unsigned manager_client, client_internal, internal_array, type_offset;
     unsigned effective_offset, base_offset, guard_offset, scale_slot;
-    std::array<Site, 4> sites; // ID conversion, typed creature, model getter, Gob setter.
+    std::array<Site, 5> sites; // Conversion, creature, model, setter, optional server lookup.
+    unsigned manager_server = 0, server_array = 0;
 };
 const std::array<Profile, 4>& profiles();
 const Profile* profile_for(const std::string& sha);
@@ -29,14 +30,21 @@ struct Backend {
     virtual std::uint32_t convert(Address function, Address client, std::uint32_t id) = 0;
     virtual Address creature(Address function, Address client, std::uint32_t id) = 0;
     virtual Address model(Address function, Address creature) = 0;
+    virtual Address server_object(Address function, Address server, std::uint32_t id) = 0;
     virtual bool set_scale(Address function, Address model, float scale) = 0;
     virtual void log(const std::string&) = 0;
+};
+struct Identity {
+    std::uint64_t epoch = 0;
+    std::uint32_t id = 0;
+    Address owner = 0, object = 0;
 };
 struct Capture {
     std::uint64_t epoch = 0;
     std::uint32_t id = 0, client_id = 0;
     Address client = 0, creature = 0, model = 0;
     float base = 0, effective = 0;
+    Identity ownership;
 };
 class Operations {
 public:
@@ -44,11 +52,14 @@ public:
     void unbind();
     bool available() const { return backend_ != nullptr; }
     const Profile* profile() const { return profile_; }
-    bool snapshot(std::uint32_t id, Capture&, std::string& error);
+    bool identify(std::uint32_t id, Identity&, std::string& error);
+    bool matches(const Identity&, std::string& error);
+    bool snapshot(std::uint32_t id, Capture&, std::string& error, const Identity* ownership = nullptr);
     bool resize(const Capture&, float scale, Capture& after, std::string& error);
     bool restore(const Capture& captured, Capture& after, std::string& error);
 private:
     bool guards(std::string& error) const;
+    bool actor(std::uint32_t id, Capture&, std::string& error);
     bool pointer(Address address, Address& value) const;
     Address site(unsigned index) const;
     bool same(const Capture&, const Capture&) const;

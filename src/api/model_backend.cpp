@@ -33,6 +33,9 @@ public:
         using Call=void*(KP_MODEL_CALL *)(void*,std::uint32_t);
         return value(reinterpret_cast<Call>(static_cast<std::uintptr_t>(f))(ptr(client),id));
     }
+    Address server_object(Address f,Address server,std::uint32_t id)override {
+        return creature(f,server,id); // Same pointer-returning (this,uint32) ABI.
+    }
     Address model(Address f,Address creature)override {
         using Call=void*(KP_MODEL_CALL *)(void*,unsigned char,int);
         return value(reinterpret_cast<Call>(static_cast<std::uintptr_t>(f))(ptr(creature),0xff,0));

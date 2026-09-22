@@ -88,3 +88,33 @@ accepts this result and still passes it through typed lookup. An offline test
 executes the original bounded27-byte conversion leaf (no engine calls) before
 exercising snapshot, resize and restore with those IDs; this catches the earlier
 incorrect all-ones sentinel rejection without replacing conversion with a guess.
+
+### Ownership before model readiness
+
+`kp.model.identify(server_id)` returns an opaque native ownership token without
+requiring animation or model readiness. Capture this immediately when creating
+an actor; failure means ownership was not established and must not be adopted
+later. `kp.model.matches(token)` returns true for the same current identity, or
+`nil, reason` after a detected replacement, disappearance or binding change.
+
+`snapshot(server_id, token)` checks ownership before accepting a model and retains
+the token inside the resulting capture. Resize and restore then recheck ownership
+as well as client/model identity. The original one-argument snapshot remains
+available for already-established actors such as the player. Identity tokens use
+separate full-userdata allocation, magic and metatable checks.
+
+Windows ownership uses the existing verified server GetGameObject wrapper at
+0x4ae750, with a new sixteen-byte guard. Original bytes tailcall0x4b1700, which
+reads the server internal object's array pointer at+0x1005c. The manager's server
+pointer is at+8, the server wrapper internal pointer at+4, and returned object ID
+and creature type are checked at+4/+8. These agree with the existing harness's
+adjudicated Windows table and were checked against the original PE disassembly.
+This path is independent of delayed client/model creation.
+
+Mac profiles currently capture the already-verified client creature identity,
+without requesting its animation/model. If a new Mac client creature does not yet
+exist at creation, identify refuses immediately: no unverified server offset or
+late identity adoption is substituted. A future verified Mac server identity path
+can extend this seam. No Mac live or complete Darwin runtime claim is implied.
+Neither server nor client pointer identity supplies an engine generation counter;
+exact address reuse within the same binding remains a stated limitation.

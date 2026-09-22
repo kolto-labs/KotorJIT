@@ -7,7 +7,7 @@ local function call(name, ...) return nwscript.call(name, ...) end
 local function checked(value, error) assert(value, error or "native model operation failed"); return value end
 
 function M.new(config)
-  local self = {state="waiting", phase=0, elapsed=0, actors={}, captures={}, capture_by_id={}, originals={}, pc=nil, context=nil}
+  local self = {state="waiting", phase=0, elapsed=0, actors={}, captures={}, capture_by_id={}, ownership={}, originals={}, pc=nil, context=nil}
   local function log(text) kp.print("[model-scene:"..config.name.."] "..text) end
   local function context_matches()
     return self.context and call("GetModuleFileName")==self.context.module
@@ -19,7 +19,7 @@ function M.new(config)
   end
   local function valid(id) return id and yes(call("GetIsObjectValid", id)) end
   local function read(capture, base)
-    local current = checked(kp.model.snapshot(capture.id))
+    local current = checked(kp.model.snapshot(capture.id,self.ownership[capture.id]))
     assert(current.model == capture.model and current.creature == capture.creature, "scene actor identity changed")
     assert(close(current.base, base), "independent base readback mismatch")
     assert(close(current.effective, capture.effective/capture.base*base), "independent effective readback mismatch")
@@ -37,11 +37,15 @@ function M.new(config)
       if remove~=false and config.spawn and valid(id) then
         local ok, err = pcall(function()
           assert(call("GetArea",id)==self.context.area,"owned actor left scene area")
+          local owner=self.ownership[id]
+          assert(owner,"no initial actor ownership; refusing deletion")
+          checked(kp.model.matches(owner))
           local capture=self.capture_by_id[id]
-          assert(capture,"no retained native identity; refusing deletion")
-          local current=checked(kp.model.snapshot(id))
-          assert(current.model==capture.model and current.creature==capture.creature,
-            "owned actor identity changed; refusing deletion")
+          if capture then
+            local current=checked(kp.model.snapshot(id,owner))
+            assert(current.model==capture.model and current.creature==capture.creature,
+              "owned actor identity changed; refusing deletion")
+          end
           call("DestroyObject",id,0)
         end)
         if not ok then errors[#errors+1]=tostring(err) end
@@ -91,6 +95,7 @@ function M.new(config)
             local id=call("CreateObject",1,config.resref,loc,0)
             assert(valid(id),"owned humanoid spawn failed")
             self.actors[#self.actors+1]=id
+            self.ownership[id]=checked(kp.model.identify(id))
             call("SetCommandable",0,id)
             call("ChangeToStandardFaction",id,config.faction)
             assert(call("GetStandardFaction",id)==config.faction,"friendly faction readback failed")
@@ -109,6 +114,7 @@ function M.new(config)
         assert(exists or self.state=="cleanup","scene actor disappeared")
         if exists then
           assert(call("GetArea",id)==self.context.area,"scene actor left area")
+          if config.spawn then checked(kp.model.matches(assert(self.ownership[id],"missing initial ownership"))) end
           assert(not yes(call("GetIsInCombat",id)),"scene actor entered combat")
         end
       end
@@ -119,7 +125,7 @@ function M.new(config)
           local capture=self.capture_by_id[id]
           if capture then read(capture,capture.base)
           else
-            capture=kp.model.snapshot(id)
+            capture=kp.model.snapshot(id,self.ownership[id])
             if capture then
               self.capture_by_id[id]=capture
               self.captures[#self.captures+1]=capture

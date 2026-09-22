@@ -71,10 +71,13 @@ suppression, failed mutation/readback/restoration, unload, module transition and
 reused object-ID cleanup refusal. CTest also runs the native core/Lua boundary.
 Live video/readbacks are still required before these demos are marked validated.
 
-Cleanup requires a retained native identity for every actor it deletes. Partial
-model captures are retained during readiness; actors without any captured
-identity are retained with an explicit cleanup refusal on failure/unload. Known
-identities are never overwritten by later readiness samples. Every active tick
+Cleanup requires a retained native ownership identity for every actor it deletes.
+Ownership is captured immediately after creation, independently of model readiness.
+On Windows this uses the server creature, so delayed client/model creation is
+allowed for that same actor. If initial ownership cannot be captured, the scene
+fails and never adopts a later object at that ID. Partial model captures are
+retained too; both ownership and any existing model capture must still match
+before deletion. Known identities are never overwritten by readiness samples. Every active tick
 checks each actor's validity, area and combat state; this is a tick-level guarantee,
 not continuous observation between ticks. The compact six-metre-forward lineup is
 intended for an outdoor, cleared area with a stable camera; validate framing live.

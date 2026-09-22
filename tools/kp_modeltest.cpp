@@ -19,10 +19,11 @@ struct Fake:Backend {
  const Profile& p;std::map<Address,unsigned char> bytes;
  Address base,manager=0x1000000,client=0x1001000,internal=0x1002000,array=0x1003000,actor=0x1004000,anim=0x1005000,gob=0x1006000,vt=0x1007000;
  std::uint32_t server_id=42,client_id=73;OriginalConvert original_convert=nullptr;
+ Address server=0x1010000,server_internal=0x1011000,server_array=0x1012000,server_actor=0x1013000;
  unsigned setters=0,conversions=0,lookups=0;std::vector<std::string> logs;
  bool mutate=true,accept=true,replace_after=false;unsigned host_width;Abi host_abi;
  explicit Fake(const Profile& profile):p(profile),base(p.preferred_base+0x10000),host_width(p.width),host_abi(p.abi){
-  for(unsigned i=0;i<4;++i)for(unsigned j=0;j<16;++j) {
+  for(unsigned i=0;i<p.sites.size();++i)if(p.sites[i].va)for(unsigned j=0;j<16;++j) {
    auto digit=[](char c){return c<='9'?c-'0':c-'a'+10;};
    bytes[site(i)+j]=(digit(p.sites[i].bytes[j*2])<<4)|digit(p.sites[i].bytes[j*2+1]);
   }
@@ -30,6 +31,11 @@ struct Fake:Backend {
   ptr(client+p.client_internal,internal);ptr(internal+p.internal_array,array);put<std::uint8_t>(array,1);
   put<std::uint8_t>(actor+p.type_offset,5);ptr(actor+(p.width==8?0x80:0x68),anim);put<std::uint8_t>(anim,1);
   setup_model(gob,1,1.5f);
+  if(p.sites[4].va) {
+   ptr(manager+p.manager_server,server);ptr(server+p.width,server_internal);
+   ptr(server_internal+p.server_array,server_array);put<std::uint8_t>(server_array,1);
+   put(server_actor+p.width,server_id);put<std::uint8_t>(server_actor+p.type_offset,5);
+  }
  }
  void setup_model(Address address,float base_scale,float effective){
   ptr(address+p.guard_offset,0x1234);ptr(address,vt);ptr(vt+p.scale_slot,site(3));
@@ -43,6 +49,7 @@ struct Fake:Backend {
  bool read(Address a,void* out,std::size_t n)const override{auto* b=static_cast<unsigned char*>(out);for(std::size_t i=0;i<n;++i){auto it=bytes.find(a+i);if(it==bytes.end())return false;b[i]=it->second;}return true;}
  std::uint32_t convert(Address f,Address c,std::uint32_t id)override{CHECK(f==site(0)&&c==client&&id==server_id);++conversions;return original_convert?original_convert(id):client_id;}
  Address creature(Address f,Address c,std::uint32_t id)override{CHECK(f==site(1)&&c==client&&id==client_id);CHECK(conversions>lookups);++lookups;return actor;}
+ Address server_object(Address f,Address owner,std::uint32_t id)override{CHECK(f==site(4)&&owner==server&&id==server_id);return server_actor;}
  Address model(Address f,Address c)override{CHECK(f==site(2)&&c==actor);return gob;}
  bool set_scale(Address f,Address m,float scale)override{
   CHECK(f==site(3)&&m==gob);++setters;
@@ -83,6 +90,28 @@ void core_tests(const Profile& p) {
  CHECK(e.find("mismatch")!=std::string::npos);
 }
 
+void ownership_tests(const Profile& p) {
+ Fake f(p);Operations op;std::string error;Identity owner;Capture capture,after;
+ CHECK(op.bind(p.sha256,f.base,&f,error));
+ if(p.sites[4].va) {
+  auto byte=f.bytes[f.site(4)];f.bytes[f.site(4)]^=1;CHECK(!op.identify(42,owner,error));f.bytes[f.site(4)]=byte;
+  f.put(f.server_actor+p.width,99u);CHECK(!op.identify(42,owner,error));f.put(f.server_actor+p.width,42u);
+  f.put<std::uint8_t>(f.server_actor+p.type_offset,10);CHECK(!op.identify(42,owner,error));f.put<std::uint8_t>(f.server_actor+p.type_offset,5);
+ }
+ f.ptr(f.actor+(p.width==8?0x80:0x68),0); // Model not ready, actor identity still exists.
+ CHECK(op.identify(42,owner,error));CHECK(op.matches(owner,error));
+ CHECK(!op.snapshot(42,capture,error,&owner));
+ f.ptr(f.actor+(p.width==8?0x80:0x68),f.anim);
+ CHECK(op.snapshot(42,capture,error,&owner));CHECK(op.resize(capture,2,after,error));
+ const auto writes=f.setters;
+ if(p.sites[4].va) {
+  f.server_actor+=0x1000;f.put(f.server_actor+p.width,f.server_id);f.put<std::uint8_t>(f.server_actor+p.type_offset,5);
+ } else {
+  f.actor+=0x1000;f.put<std::uint8_t>(f.actor+p.type_offset,5);f.ptr(f.actor+(p.width==8?0x80:0x68),f.anim);
+ }
+ CHECK(!op.matches(owner,error));CHECK(!op.snapshot(42,after,error,&owner));
+ CHECK(!op.resize(capture,2,after,error));CHECK(!op.restore(capture,after,error));CHECK(f.setters==writes);
+}
 void original_conversion_test() {
  // Original Win K1 GOG SHA9c10e045..., VA0x5f2ac0..0x5f2ada.
  // This complete leaf function has no external reads/calls: one uint32 stack
@@ -116,7 +145,10 @@ void lua_tests() {
  assert(kp.GetFirstPC==nil and nwscript==nil)
  assert(kp.model.snapshot(1.5)==nil)
  assert(kp.model.snapshot('42')==nil)
- local c=assert(kp.model.snapshot(42));assert(c.base==1 and c.effective==1.5)
+ local ownership=assert(kp.model.identify(42));assert(kp.model.matches(ownership))
+ assert(not pcall(kp.model.matches,newproxy(true)))
+ assert(not pcall(kp.model.matches,fake_capture(ownership)))
+ local c=assert(kp.model.snapshot(42,ownership));assert(c.base==1 and c.effective==1.5)
  assert(not pcall(function()c.base=7 end))
  assert(not pcall(kp.model.resize,{},2))
  local forged=newproxy(true);debug.setmetatable(forged,debug.getmetatable(c))
@@ -131,4 +163,4 @@ void lua_tests() {
  if(luaL_dostring(L,program)!=0)throw std::runtime_error(lua_tostring(L,-1));
  lua_close(L);operations().unbind();
 }
-int main(){try{for(const auto& p:profiles())core_tests(p);original_conversion_test();lua_tests();std::cout<<"model profiles/core/Lua checks passed (4 layouts, controlled backend; no live ABI proof)\n";return 0;}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+int main(){try{for(const auto& p:profiles()){core_tests(p);ownership_tests(p);}original_conversion_test();lua_tests();std::cout<<"model profiles/core/Lua checks passed (4 layouts, controlled backend; no live ABI proof)\n";return 0;}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
