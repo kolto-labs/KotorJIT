@@ -1,22 +1,26 @@
 # Where reverse-engineering work lives
 
-KotorPhasor does **not** store the Odyssey corpus. The months of cross-build
-identity and byte-exact reconstruction live outside this repo.
+**Start:** [`~/agentdecompile-nvme/AIO/README.md`](/home/brunner56/agentdecompile-nvme/AIO/README.md)
 
-**Start here (NVMe AIO index):**
+## Canonical rule
 
-[`/home/brunner56/agentdecompile-nvme/AIO/AUTHORITY.md`](/home/brunner56/agentdecompile-nvme/AIO/AUTHORITY.md)
+**One program → one package folder** under `AIO/programs/<SLUG>/`, which is a
+symlink into the kotorxid binary collection:
 
-| Need | Go to |
+`/home/brunner56/biodecompwarehouse/kotorxid/output/binaries/<SLUG>/`
+
+That store holds **49** programs (**22** complete Odyssey assembler+verified_c
+packages — the set that used to feel like “~12 KotOR builds” plus siblings).
+
+| Need | Path |
 |---|---|
-| Single index of every store | `…/AIO/AUTHORITY.md` + `MANIFEST.json` |
-| Warehouse + kotorxid pipeline | `/home/brunner56/biodecompwarehouse/` |
-| Identity DB | `…/kotorxid/db/kotorxid.sqlite` |
-| Live expanded corpus DB | `…/agentdecompile-nvme/corpus-work/corpus.sqlite` |
-| Openable byte-exact CMake project | `…/kotorxid/output/kotor_reconstructed/` (with `src/` → asm) |
-| K1 GOG readable-C package | `…/AIO/packages/k1gog_byteaccurate_build/` |
-| AgentDecompile product | `/run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile` |
+| Browse by game | `AIO/programs/_by_game/K1` or `K2` |
+| Full program table | `AIO/catalogs/PROGRAMS.md` |
+| Openable CMake project | `AIO/reconstructed/` |
+| Identity DB | `AIO/databases/kotorxid.sqlite` |
+| Live corpus DB | `AIO/databases/corpus_live.sqlite` |
+| Experiments / zips | `AIO/sessions/` (not packages) |
+| Organization rules | `AIO/CANON.md` |
 
-`data/corpus.sqlite` in this repo is intentionally unused / empty — do not
-treat it as the corpus. Runtime binding for live games uses
-`data/addresses/` and `data/profiles/` only.
+`data/corpus.sqlite` in this repo is empty — not the corpus. Runtime binding
+uses `data/addresses/` and `data/profiles/` only.
