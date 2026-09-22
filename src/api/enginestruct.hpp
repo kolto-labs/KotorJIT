@@ -116,7 +116,7 @@ struct VmEngineAccess {
 
 void                  bind_engine_access(const VmEngineAccess&);
 const VmEngineAccess& engine_access();
-// routine < 0 checks context only (capture and kp.as); otherwise also checks
+// routine < 0 checks context only (capture and nwscript.with_caller); otherwise also checks
 // the selected live command slot. Never calls into the engine.
 bool vm_binding_live(int routine = -1);
 

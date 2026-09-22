@@ -212,10 +212,10 @@ Heartbeat, spawn, damage, death, end-of-round, and end-of-dialogue never reach `
 | `view.<field>` read and write | Bound |
 | `kp.obj`: `ready`, `valid`, `get`, `pc`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `INVALID` | Bound |
 | Handle methods: `id`, `type`, `valid`, `name`, `tag`, `position`, `area`, `faction`, `is_pc`, `is_party_member`, `party_slot` | Bound |
-| `kp.log`, `kp.console`, `kp.feedback` | Bound |
+| `kp.diagnostic`, `kp.console`, `kp.feedback` | Bound |
 | `kp.registertimer`, `kp.removetimer` | Bound |
 | `kp.tokenizestring`, `kp.tokenizecmdstring` | Bound |
-| `kp.as` | Bound |
+| `nwscript.with_caller` | Bound |
 | `kp.speed` | Bound |
 | `kp.version` | Bound |
 | `kp.gamedir`, `kp.time` | Bound |
@@ -254,7 +254,7 @@ Effect, event, location, and talent userdata (`kp.effect`, `kp.event`, `kp.locat
 
 | Id | Name | Status |
 |---|---|---|
-| 6 | `AssignCommand` | Omitted: use `kp.as` |
+| 6 | `AssignCommand` | Omitted: use `nwscript.with_caller` |
 | 7 | `DelayCommand` | Omitted: use `kp.registertimer` |
 | 294 | `ActionDoCommand` | Omitted |
 

@@ -33,9 +33,8 @@ bool run(lua_State* L, const char* code) {
     lua_pop(L, 1);
     return false;
 }
-void install(lua_State* L, bool reverse = false) {
+void install_native(lua_State* L, bool reverse = false) {
     kp::api::open_engine_structs(L);
-    kp::api::register_all(L);
     if (reverse) kp::api::compat::install(L, "/offline/game");
     kp::api::memory::register_all(L);
     kp::api::structs::register_all(L);
@@ -44,11 +43,28 @@ void install(lua_State* L, bool reverse = false) {
     kp::runtime::register_director(L);
     if (!reverse) kp::api::compat::install(L, "/offline/game");
 }
+void install(lua_State* L, bool reverse = false) {
+    kp::api::register_all(L);
+    install_native(L, reverse);
+}
+
 }
 
 int main(int argc, char**) {
     check(kp::api::select_game(argc > 1 ? kp::api::Game::K2 : kp::api::Game::K1),
           "select catalog before registration");
+    for (bool bridge : {false, true}) {
+        lua_State* isolated = luaL_newstate();
+        if (!isolated) return 1;
+        luaL_openlibs(isolated);
+        if (bridge) kp::api::register_all(isolated);
+        else install_native(isolated);
+        lua_getglobal(isolated, bridge ? "kp" : "nwscript");
+        check(lua_isnil(isolated, -1), "isolated registration creates only its owned root");
+        lua_pop(isolated, 1);
+        check(lua_gettop(isolated) == 0, "isolated registration balances stack");
+        lua_close(isolated);
+    }
     for (bool reverse : {false, true}) {
         lua_State* L = luaL_newstate();
         if (!L) return 1;
@@ -74,15 +90,18 @@ int main(int argc, char**) {
                 assert(kp.mem == mem and kp.obj == obj and kp.struct == struct)
                 assert(kp.events == events and kp.harness == harness)
                 for k,v in pairs(nwscript) do
-                    assert(k == 'call' and type(v) == 'function', 'engine export: ' .. k)
+                    assert((k == 'call' or k == 'with_caller' or k == 'last_trace')
+                           and type(v) == 'function', 'engine export: ' .. k)
                 end
                 assert(type(nwscript.call) == 'function')
+                assert(type(nwscript.with_caller) == 'function' and type(nwscript.last_trace) == 'function')
+                assert(kp['as'] == nil and kp['last_routine_trace'] == nil and kp['log'] == nil)
                 assert(kp.GetFirstPC == nil and kp.log_msg == nil and kp.read_byte == nil)
                 for _,path in ipairs({'mem.readbyte', 'obj.get', 'struct.at',
-                    'print', 'log', 'console', 'feedback', 'registertimer',
+                    'print', 'diagnostic', 'console', 'feedback', 'registertimer',
                     'removetimer', 'tokenizestring', 'tokenizecmdstring',
                     'harness.state', 'events.register', 'events.unregister',
-                    'as', 'last_routine_trace', 'speed', 'time'}) do
+                    'speed', 'time'}) do
                     local v = kp
                     for name in path:gmatch('[^.]+') do v = v[name] end
                     assert(type(v) == 'function', 'missing kp.' .. path)
@@ -93,7 +112,7 @@ int main(int argc, char**) {
                 assert(type(kp.version) == 'string' and kp.gamedir() == '/offline/game')
                 assert(kp.tokenizestring('a,b', ',')[2] == 'b')
                 assert(kp.struct.allow_unverified_writes() == false)
-                kp.print('namespace contract'); kp.log('host log is distinct from routine log')
+                kp.print('namespace contract'); kp.diagnostic('host log is distinct from routine log')
             end
         )lua");
         const int contract = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -104,9 +123,6 @@ int main(int argc, char**) {
             check(lua_isnil(L, -1), routine.name);
             lua_pop(L, 1);
             for (const char* root : {"nwscript", "kp"}) {
-                // kp.log is native output; routine 74 remains nwscript.call("log", x).
-                if (std::strcmp(root, "kp") == 0 && std::strcmp(routine.name, "log") == 0)
-                    continue;
                 lua_getglobal(L, root);
                 lua_getfield(L, -1, routine.name);
                 check(lua_isnil(L, -1), routine.name);

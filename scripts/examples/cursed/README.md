@@ -42,7 +42,7 @@ Things the event layer forced (see `docs/user/api-status.md`):
   runs on the corpse, so `object_id` is the creature.
 - `DelayCommand` and `AssignCommand` are not bound. Delays are
   `kp.registertimer(ms, "global_callback_name", data)` (return `true` to
-  repeat); acting as another creature is `kp.as(obj, function() ... end)`.
+  repeat); acting as another creature is `nwscript.with_caller(obj, function() ... end)`.
 - Screen flashes are `SetGlobalFadeOut(0, 0.08, r, g, b)` then
   `SetGlobalFadeIn(hold, 0.35)`. There is no other full-screen tint routine.
 - `EffectDisguise(row)` takes an `appearance.2da` row. Useful rows: 21 Malak,

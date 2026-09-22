@@ -69,9 +69,9 @@ nwscript.call("AdjustAlignment", pc, 0, 5)
 
 These three names are missing on purpose. They need an NWScript closure Lua cannot build:
 
-- `AssignCommand`: use `kp.as(object_id, function() ... end)`
+- `AssignCommand`: use `nwscript.with_caller(object_id, function() ... end)`
 - `DelayCommand`: use `kp.registertimer(ms, "callback_name", data)`
-- `ActionDoCommand`: same timer, or `kp.as`
+- `ActionDoCommand`: same timer, or `nwscript.with_caller`
 
 ```lua
 local id = kp.registertimer(1500, "on_bang", { n = 3 })
@@ -112,13 +112,13 @@ end
 | Name | What it does |
 |---|---|
 | `nwscript.call(name, ...)` | Direct engine routines; names are listed in [the generated catalog](../nwscript-api.md) |
-| `kp.as` | Run a Lua function as `OBJECT_SELF` |
+| `nwscript.with_caller` | Run a Lua function as `OBJECT_SELF` |
 | `kp.speed([n])` | Read or set MainLoop tick scale |
 | `kp.version` | `"0.1.0"` |
 | `kp.obj` | Object handles, party, `find` |
 | `kp.struct` | Named field views |
 | `kp.mem` | Raw reads and writes |
-| `kp.log`, `kp.console`, `kp.feedback` | Log, console text, on-screen message |
+| `kp.diagnostic`, `kp.console`, `kp.feedback` | Log, console text, on-screen message |
 | `kp.registertimer`, `kp.removetimer` | Delayed work |
 | `kp.print` | Log line |
 | `kp.events.register` / `kp.events.On*` | Bind a handler after load |

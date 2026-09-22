@@ -116,8 +116,8 @@ function cursed_rise(timer_id, fired, data)
   q("SetGlobalFadeIn", 0.15, 0.6, 0.0, 0.0, 0.0)
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
-  if kp and kp.as then
-    kp.as(reborn, function()
+  if nwscript and nwscript.with_caller then
+    nwscript.with_caller(reborn, function()
       q("SpeakString", "Death is only the beginning.", 1)
       q("ActionAttack", pc, 0)
     end)

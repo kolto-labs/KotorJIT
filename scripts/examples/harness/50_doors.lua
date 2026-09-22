@@ -34,7 +34,7 @@ local info = {
 }
 
 if OPEN and info.open == 0 then
-  kp.as(d, function() nwscript.call('ActionOpenDoor',d) end)
+  nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor',d) end)
   info.queued = true
 end
 return info

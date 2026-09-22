@@ -81,7 +81,7 @@ local function malak(pc)
   if aura then q("ApplyEffectToObject", DURATION_TEMPORARY, aura, pc, 6.0) end
   q("SetGlobalFadeOut", 0.0, 0.1, 0.4, 0.0, 0.0)
   q("SetGlobalFadeIn", 0.1, 0.5, 0.0, 0.0, 0.0)
-  if kp and kp.as then kp.as(pc, function() q("SpeakString", "I am the Dark Lord.", 1) end) end
+  if nwscript and nwscript.with_caller then nwscript.with_caller(pc, function() q("SpeakString", "I am the Dark Lord.", 1) end) end
   kp.print("[cursed:mirror] you are Malak now")
 end
 
@@ -98,7 +98,7 @@ local function copy(who, pc)
   if puff then q("ApplyEffectToObject", 0, puff, who, 0.0) end
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
-  if kp and kp.as then kp.as(who, function() q("SpeakString", "I am you.", 0) end) end
+  if nwscript and nwscript.with_caller then nwscript.with_caller(who, function() q("SpeakString", "I am you.", 0) end) end
   kp.print(("[cursed:mirror] %s wears your face (#%d)"):format(norm(q("GetName", who)), count))
 end
 

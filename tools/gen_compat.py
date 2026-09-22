@@ -119,8 +119,15 @@ def gen_docs(doc: dict, events: list[dict]) -> str:
              "engine routines and `kp` for every native host facility.", "",
              "The former kotor root, bare host functions, underscored aliases, "
              "cb/events globals, host identity globals and host bit32 alias are removed. "
-             "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.log`. "
+             "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.diagnostic`. "
              "The engine logarithm is `nwscript.call('log', value)`.", "",
+             "Bridge context is `nwscript.with_caller(object_id, fn, ...)`; "
+             "the last dispatch receipt is `nwscript.last_trace()`. The old native "
+             "log, as and last_routine_trace members have no compatibility aliases.", "",
+             "Native object conveniences such as `kp.obj.position` retain distinct "
+             "names. Their C++ implementation explicitly consumes `api::find` and "
+             "`api::call`; they require the VM backend for engine operations without "
+             "exporting engine routine names or creating the nwscript root.", "",
              "Lua's standard `print` remains unchanged. `kp.print(...)` writes host "
              "diagnostics; console and harness states capture that native output.", "",
              "Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, "

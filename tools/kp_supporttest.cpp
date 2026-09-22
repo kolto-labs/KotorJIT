@@ -205,8 +205,8 @@ function never_due() end
 {"50_output.lua", R"LUA(
 -- The three output surfaces, and the routine lookup feedback does by name.
 function start()
-    kp.log("log line, default level")
-    kp.log("two lines\nin one call", "warn")
+    kp.diagnostic("log line, default level")
+    kp.diagnostic("two lines\nin one call", "warn")
     print(("  [50_output] console reached the console surface: %s")
           :format(tostring(kp.console("console line"))))
     print(("  [50_output] feedback reached the engine: %s")
@@ -376,7 +376,7 @@ int main(int argc, char** argv) {
     // happens after, so each script exposes start() rather than registering at
     // its top level.
     for (const auto& s : host.scripts()) api::register_support(s->L());
-    std::printf("registered kp.log/console/feedback, registertimer/removetimer, "
+    std::printf("registered kp.diagnostic/console/feedback, registertimer/removetimer, "
                 "tokenizestring/tokenizecmdstring on %u state(s)\n", loaded);
 
     rule("output");

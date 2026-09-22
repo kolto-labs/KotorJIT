@@ -47,7 +47,7 @@ timeout = 45
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing after portal') end; kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing after portal') end; nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
 
 [[step]]
 do = "sleep"
@@ -56,7 +56,7 @@ seconds = 30
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; kp.as(pc,function() nwscript.call('ActionStartConversation',t,'') end); return {distance=d,pc=pc,trask=t}"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; nwscript.with_caller(pc,function() nwscript.call('ActionStartConversation',t,'') end); return {distance=d,pc=pc,trask=t}"
 
 [[step]]
 wait = "phase"

@@ -83,7 +83,8 @@ struct VmBinding {
 void bind(const VmBinding&);
 const VmBinding& binding();
 
-// Register the single `nwscript.call(name, ...)` dispatcher onto a Lua state.
+// Register nwscript.call, nwscript.with_caller and nwscript.last_trace.
+// This bridge owns only nwscript and never creates the native kp root.
 // Routine names remain data in the generated catalog; none are exported as Lua
 // table members.
 void register_all(lua_State*);

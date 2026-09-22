@@ -61,6 +61,8 @@ bool object_id_at(lua_State* L, int index, std::uint32_t& out) {
     return true;
 }
 
+// Explicit C++ bridge consumer: native object conveniences keep distinct Lua
+// names and use api::find/api::call without registering any bridge Lua root.
 // Call a routine whose `nargs` arguments are already on top of the stack, in
 // DECLARED order.
 //

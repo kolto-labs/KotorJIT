@@ -394,7 +394,7 @@ do = "warp"; module = "end_m01aa"
 [[step]]
 wait = "module"; equals = "end_m01aa"
 [[step]]
-do = "lua"; code = "kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation', nwscript.call('GetObjectByTag','end_trask',0), '') end)"
+do = "lua"; code = "nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation', nwscript.call('GetObjectByTag','end_trask',0), '') end)"
 [[step]]
 wait = "phase"; equals = "dialog"
 [[step]]

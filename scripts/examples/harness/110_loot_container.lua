@@ -33,7 +33,7 @@ while nwscript.call('GetIsObjectValid',it) == 1 do
   items[#items + 1] = it
   it = nwscript.call('GetNextItemInInventory',best)
 end
-kp.as(pc, function()
+nwscript.with_caller(pc, function()
   nwscript.call('ClearAllActions')
   for _, i in ipairs(items) do nwscript.call('ActionTakeItem',i, best) end
 end)

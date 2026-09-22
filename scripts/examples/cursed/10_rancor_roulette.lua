@@ -123,8 +123,8 @@ function cursed_apply(timer_id, fired, data)
   if puff then q("ApplyEffectToObject", 0, puff, id, 0.0) end
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
-  if kp and kp.as then
-    kp.as(id, function() q("SpeakString", "What have you done to me?!", 0) end)
+  if nwscript and nwscript.with_caller then
+    nwscript.with_caller(id, function() q("SpeakString", "What have you done to me?!", 0) end)
   end
   kp.print(("[cursed:roulette] %s -> %s (#%d)"):format(who, pick.name, count))
   return false

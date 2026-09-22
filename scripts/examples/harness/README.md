@@ -26,9 +26,9 @@ A chunk returns a value; tables come back as JSON under `values[0]`.
 - `nwscript.call(name, ...)` reaches NWScript routines with the same argument order as
   `nwscript.nss` (K1). Object ids are plain integers. Strings from the engine
   carry a trailing `\0`; strip it with `s:gsub("%z","")` before comparing.
-- `kp.as(obj, function() ... end)` is `AssignCommand`: the closure runs with
+- `nwscript.with_caller(obj, function() ... end)` is `AssignCommand`: the closure runs with
   `obj` as `OBJECT_SELF`, so `Action*` calls inside it queue on `obj`. Outside
-  `kp.as`, `OBJECT_SELF` is not the PC, and `Action*` calls go nowhere.
+  `nwscript.with_caller`, `OBJECT_SELF` is not the PC, and `Action*` calls go nowhere.
 - Nothing here writes engine memory. State changes go through the action
   queue or NWScript setters (`SetLocked`, `SetCommandable`, ...).
 
@@ -36,12 +36,12 @@ A chunk returns a value; tables come back as JSON under `values[0]`.
 
 | Call | What happens | Use instead |
 |---|---|---|
-| `nwscript.call('AssignCommand', ...)` | action-closure error | `kp.as(obj, fn)` |
+| `nwscript.call('AssignCommand', ...)` | action-closure error | `nwscript.with_caller(obj, fn)` |
 | `nwscript.call('Location', area, vec, f)` | "takes at most 2 arguments" | `nwscript.call('Location', vec, facing)` |
 | `nwscript.call('GetUserActionsPending', pc)` | "takes at most 0 arguments" | `nwscript.call('GetCurrentAction', pc)` |
 | `nwscript.call('GetLockKeyTag', d)` | string return unsupported | `nwscript.call('GetLockKeyRequired', d)` |
 | `GetUseableFlag`, `GetPartyLeader`, `IsInConversation`, `SetPauseState` | unknown routine | see the snippets |
-| `GetIsDoorActionPossible(d, 0) == 0` on a plot door | PC cannot open it | `kp.as(d, function() nwscript.call('ActionOpenDoor', d) end)` |
+| `GetIsDoorActionPossible(d, 0) == 0` on a plot door | PC cannot open it | `nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor', d) end)` |
 
 ## Action codes (`GetCurrentAction`)
 

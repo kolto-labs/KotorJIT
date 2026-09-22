@@ -31,7 +31,7 @@ if act == 3 or act == 39 then
   return { target = clean(nwscript.call('GetTag',best)), dist = best_d, reason = "already engaged", action = act }
 end
 
-kp.as(pc, function()
+nwscript.with_caller(pc, function()
   nwscript.call('ClearAllActions')
   nwscript.call('ActionAttack',best, 0)      -- 0 == no combat feat
 end)

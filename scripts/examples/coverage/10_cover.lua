@@ -70,11 +70,11 @@ function OnConsoleCommand(line, relevant)
         local pc = q("GetFirstPC")
         if not npc or not pc then
             kp.print("[cover] no object " .. w[3])
-        elseif not kp or not kp.as then
-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
+        elseif not nwscript or not nwscript.with_caller then
+            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
         else
             local dlg = w[4] or ""
-            kp.as(pc, function()
+            nwscript.with_caller(pc, function()
                 q("ActionStartConversation", npc, dlg)
             end)
             kp.print("[cover] talk " .. w[3] .. " dlg=" .. (dlg ~= "" and dlg or "(default)"))
@@ -84,10 +84,10 @@ function OnConsoleCommand(line, relevant)
         local pc = q("GetFirstPC")
         if not dest or not pc then
             kp.print("[cover] no object " .. w[3])
-        elseif not kp or not kp.as then
-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
+        elseif not nwscript or not nwscript.with_caller then
+            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
         else
-            kp.as(pc, function()
+            nwscript.with_caller(pc, function()
                 q("JumpToObject", dest, 1)
             end)
             kp.print("[cover] jump " .. w[3])

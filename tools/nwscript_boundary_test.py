@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reject known access paths through the removed ``kotor`` table.
+"""Reject removed-root paths and explicit duplicate routine calls.
 
 This is a bounded lexical receipt, not a Lua parser. It scans raw source so
 embedded Lua in C++, shell, Python, and TOML strings stays visible. It
@@ -17,6 +17,11 @@ Whitespace and newlines are accepted inside receivers and member access. This
 intentionally does not claim data-flow tracking for arbitrarily computed
 aliases, every possible multi-assignment layout, or a complete Lua grammar.
 
+For kp/nwscript, catalogued dotted and literal bracket calls plus literal
+rawget lookups are covered. Plain reads (including absence assertions), computed
+keys, aliases, and arbitrary Lua semantics are not proven by this check.
+Production registration tests enumerate the routine catalog without exceptions.
+
 Historical research is excluded because it records the API that existed when
 the evidence was gathered.  Active source, scripts, tests, metadata, and user
 documentation remain in scope.
@@ -24,6 +29,7 @@ documentation remain in scope.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -76,6 +82,25 @@ FORBIDDEN = (
 )
 
 
+# Literal, explicit module receivers only. Computed keys and alias data flow
+# require runtime registration tests; this check does not model Lua execution.
+def routine_patterns():
+    names = set()
+    for path in (ROOT / "data/routines").glob("*.json"):
+        catalog = json.loads(path.read_text())
+        names.update(routine["name"] for routine in catalog["routines"])
+    routine = "(?:" + "|".join(re.escape(n) for n in sorted(names)) + ")"
+    base = r"(?:\b(?:kp|nwscript)\b|\b_G\s*(?:\.\s*(?:kp|nwscript)\b|\[\s*['\"](?:kp|nwscript)['\"]\s*\]))"
+    receiver = rf"(?:{base}|(?:\(\s*)+{base}(?:\s*\))+)"
+    return (
+        ("direct routine member on public module", re.compile(rf"{receiver}\s*\.\s*{routine}\b\s*\(")),
+        ("literal routine call on public module", re.compile(rf"{receiver}\s*\[\s*['\"]{routine}['\"]\s*\]\s*\(")),
+        ("literal routine rawget on public module", re.compile(rf"\brawget\s*\(\s*{receiver}\s*,\s*['\"]{routine}['\"]\s*\)")),
+    )
+
+ROUTINE_PATTERNS = routine_patterns()
+
+
 def active_files() -> list[Path]:
     candidates = [ROOT / "README.md"]
     for root_name in ACTIVE_ROOTS:
@@ -97,7 +122,7 @@ def active_files() -> list[Path]:
 
 def violations(text: str) -> list[tuple[str, int, str]]:
     found: list[tuple[str, int, str]] = []
-    for label, pattern in FORBIDDEN:
+    for label, pattern in FORBIDDEN + ROUTINE_PATTERNS:
         for match in pattern.finditer(text):
             line_number = text.count("\n", 0, match.start()) + 1
             excerpt = " ".join(match.group(0).split())
@@ -107,6 +132,13 @@ def violations(text: str) -> list[tuple[str, int, str]]:
 
 def self_test() -> int:
     forbidden_examples = {
+        "duplicate native routine": "return kp.GetFirstPC()",
+        "duplicate bridge routine": "return nwscript.GetFirstPC()",
+        "duplicate logarithm": "return kp.log(10)",
+        "global dotted duplicate": "return _G.nwscript.GetFirstPC()",
+        "multiline duplicate": "return ((kp))\n . GetFirstPC()",
+        "literal duplicate": "return (_G['kp'])['GetFirstPC']()",
+        "raw duplicate": "return rawget(nwscript, 'log')",
         "dotted": "return kotor.GetFirstPC()",
         "native lowercase": "kotor.log('forbidden')",
         "native memory": "local mem = kotor.mem",
@@ -125,8 +157,12 @@ def self_test() -> int:
         "rawget with spaced nested parentheses": "return rawget(( ( kotor ) ), name)",
     }
     allowed_examples = {
+        "diagnostic": "kp.diagnostic('message')",
         "native helper": "kp.registertimer(100, 'tick')",
         "native namespace alias": "local mem = kp.mem",
+        "absence assertion": "assert(kp.GetFirstPC == nil)",
+        "standard math": "return math.log(10)",
+        "bridge context": "nwscript.with_caller(7, function() end)",
         "explicit routine bridge": "return nwscript.call('GetFirstPC')",
     }
     failures: list[str] = []
@@ -167,7 +203,7 @@ def main() -> int:
     print(
         f"NWScript bounded lexical receipt: checked {checked} active files; "
         "0 covered dotted, bracket, rawget, single-target alias, or "
-        "comma-assignment receiver paths on kotor/_G-kotor receivers"
+        "comma-assignment receiver paths on kotor/_G-kotor receivers, or literal routine calls/rawget on kp/nwscript"
     )
     return 0
 

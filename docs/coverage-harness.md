@@ -49,7 +49,7 @@ Movement and menus stay out of xdotool. The console is still how a
 headless session *injects* the line (DirectInput). The game is not
 being steered by arrow keys.
 
-`kp.as(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
+`nwscript.with_caller(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
 queue on the PC. `kp.speed(n)` extra-calls MainLoop's original (capped
 at 16). `tools/coverage_walk.py` turns a scan JSON into `cover …` lines.
 

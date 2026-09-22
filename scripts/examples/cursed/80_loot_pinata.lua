@@ -100,7 +100,7 @@ local function pinata(corpse, pc)
     if liz and yes(q("GetIsObjectValid", liz)) then
       gizkas = gizkas + 1
       q("ChangeToStandardFaction", liz, STANDARD_FACTION_HOSTILE_1)
-      if kp and kp.as then kp.as(liz, function() q("ActionAttack", pc, 0) end) end
+      if nwscript and nwscript.with_caller then nwscript.with_caller(liz, function() q("ActionAttack", pc, 0) end) end
       kp.print(("[cursed:pinata] gizka released (#%d)"):format(gizkas))
     end
   end

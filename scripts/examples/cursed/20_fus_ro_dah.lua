@@ -121,8 +121,8 @@ function OnCreatureAttacked(creature, attacker, relevant)
       end
       o = q("GetNextObjectInArea", area, 1)
     end
-    if kp and kp.as then
-      kp.as(pc, function() q("SpeakString", "FUS RO DAH!", 1) end)
+    if nwscript and nwscript.with_caller then
+      nwscript.with_caller(pc, function() q("SpeakString", "FUS RO DAH!", 1) end)
     end
     flash(0.6, 0.8, 1.0, 0.2)
     kp.print(("[cursed:shout] FUS RO DAH: %d flung"):format(flung))

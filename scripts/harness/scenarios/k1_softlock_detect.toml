@@ -37,7 +37,7 @@ code = """
 local pc = nwscript.call('GetFirstPC')
 local door = nwscript.call('GetNearestObject',8, pc, 1)
 nwscript.call('SetLocked',door, 1)
-kp.as(pc, function() nwscript.call('ActionMoveToObject',door, 0, 1.0) end)
+nwscript.with_caller(pc, function() nwscript.call('ActionMoveToObject',door, 0, 1.0) end)
 return nwscript.call('GetTag',door)
 """
 

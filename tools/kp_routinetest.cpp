@@ -208,11 +208,11 @@ int main() {
     g_pushed_float = 0.0f;
     kp::api::register_output(L);
     lua_getglobal(L, "kp");
-    lua_getfield(L, -1, "log");
+    lua_getfield(L, -1, "diagnostic");
     lua_remove(L, -2);
     lua_pushliteral(L, "native output must not dispatch an engine routine");
-    check(lua_pcall(L, 1, 0, 0) == 0, "kp.log is callable beside the engine bridge");
-    check(g_execute_id == -1, "kp.log does not dispatch routine 74");
+    check(lua_pcall(L, 1, 0, 0) == 0, "kp.diagnostic is callable beside the engine bridge");
+    check(g_execute_id == -1, "kp.diagnostic does not dispatch routine 74");
     lua_getglobal(L, "nwscript");
     lua_getfield(L, -1, "call");
     lua_remove(L, -2);
@@ -268,8 +268,8 @@ int main() {
     check(lua_pcall(L, 2, LUA_MULTRET, 0) != 0,
           "GetFacing keeps its normal Lua failure while tracing");
     lua_settop(L, 0);  // discard the normal error before querying diagnostics
-    lua_getglobal(L, "kp");
-    lua_getfield(L, -1, "last_routine_trace");
+    lua_getglobal(L, "nwscript");
+    lua_getfield(L, -1, "last_trace");
     check(lua_pcall(L, 0, 1, 0) == 0, "GetFacing trace can be read after the normal routine error");
     check(lua_istable(L, -1), "trace is a Lua table");
     if (lua_istable(L, -1)) {
@@ -324,6 +324,52 @@ int main() {
     check(lua_gettop(L) == 0, "void routine returns no Lua values");
     check(g_pop_calls == 0, "void routine does not pop a result");
 
+    // The public caller wrapper forwards arbitrary values and restores both
+    // caller fields after success, nesting, and a non-string Lua error.
+    lua_pushlightuserdata(L, &implementer);
+    lua_pushcclosure(L, [](lua_State* state) -> int {
+        auto* caller = static_cast<Commands*>(lua_touserdata(state, lua_upvalueindex(1)));
+        lua_pushinteger(state, caller->has_caller);
+        lua_pushnumber(state, caller->caller_id);
+        return 2;
+    }, 1);
+    lua_setglobal(L, "caller_probe");
+    implementer.has_caller = 0;
+    implementer.caller_id = 91;
+    const char* caller_test = R"lua(
+        local token = {}
+        local a, b, c = nwscript.with_caller(7, function(x, y, z)
+            local has, id = caller_probe()
+            if has ~= 1 or id ~= 7 then error('outer caller') end
+            nwscript.with_caller(8, function()
+                local has, id = caller_probe()
+                if has ~= 1 or id ~= 8 then error('nested caller') end
+            end)
+            local has, id = caller_probe()
+            if has ~= 1 or id ~= 7 then error('nested restoration') end
+            return x, y, z
+        end, token, nil, 42)
+        if a ~= token or b ~= nil or c ~= 42 then error('argument/result forwarding') end
+    )lua";
+    check(luaL_dostring(L, caller_test) == 0, "with_caller preserves nesting and variadic results");
+    check(implementer.has_caller == 0 && implementer.caller_id == 91,
+          "successful caller wrapper restores both fields");
+    lua_settop(L, 0);
+    lua_getglobal(L, "nwscript");
+    lua_getfield(L, -1, "with_caller");
+    lua_remove(L, -2);
+    lua_pushnumber(L, 9);
+    lua_pushcfunction(L, [](lua_State* state) -> int {
+        lua_pushlightuserdata(state, reinterpret_cast<void*>(123));
+        return lua_error(state);
+    });
+    check(lua_pcall(L, 2, 0, 0) != 0 && lua_touserdata(L, -1) == reinterpret_cast<void*>(123),
+          "with_caller propagates the original error object");
+    check(implementer.has_caller == 0 && implementer.caller_id == 91,
+          "failed caller wrapper restores both fields");
+    lua_settop(L, 0);
+    implementer.caller_id = 0;
+
     implementer.table = nullptr;
     g_push_calls = 0;
     lua_getglobal(L, "nwscript");
@@ -334,12 +380,12 @@ int main() {
     check(lua_pcall(L, 2, 1, 0) != 0 && g_push_calls == 0,
           "invalid context refuses before pushing the first routine argument");
     lua_settop(L, 0);
-    lua_getglobal(L, "kp");
-    lua_getfield(L, -1, "as");
+    lua_getglobal(L, "nwscript");
+    lua_getfield(L, -1, "with_caller");
     lua_pushnumber(L, 7);
     lua_pushcfunction(L, call_void);
     check(lua_pcall(L, 2, 0, 0) != 0 && implementer.has_caller == 0 && implementer.caller_id == 0,
-          "kp.as refuses invalid context without writing caller state");
+          "nwscript.with_caller refuses invalid context without writing caller state");
     lua_settop(L, 0);
     implementer.table = commands;
     check(invoke(L, call_void) == 0, "routine calls recover when the live table returns");

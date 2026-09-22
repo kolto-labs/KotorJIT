@@ -9,7 +9,7 @@
 -- Mechanism: kp.registertimer with a repeating callback (return true to
 -- re-arm). SetGlobalFadeOut/In with a colour is the strobe. Dancing is
 -- ActionPlayAnimation(ANIMATION_LOOPING_DANCE / DANCE1) queued through
--- kp.as, which is how a script makes another creature act. Nothing starts
+-- nwscript.with_caller, which is how a script makes another creature act. Nothing starts
 -- until the player exists and is alive, so the script is inert on the main
 -- menu and during loads.
 --
@@ -83,9 +83,9 @@ function cursed_beat(timer_id, fired, data)
     if e then q("ApplyEffectToObject", 0, e, who, 0.0) end
     kp.print(("[cursed:rave] beat %d: plasma on %s"):format(beats, name))
   elseif not yes(q("GetIsInCombat", who)) and not yes(q("IsObjectPartyMember", who))
-         and kp and kp.as then
+         and nwscript and nwscript.with_caller then
     local anim = DANCE[math.random(#DANCE)]
-    kp.as(who, function()
+    nwscript.with_caller(who, function()
       q("ClearAllActions")
       q("ActionPlayAnimation", anim, 1.0, 4.0)
     end)

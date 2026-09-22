@@ -31,9 +31,9 @@ Register callbacks with `kp.events.register(kp.events.OnTick, handler)` and remo
 them with `kp.events.unregister`. Global `On*` discovery remains a documented
 legacy behavior of the dispatcher; script-defined `priority` still orders handlers.
 
-- `kp.as(object_id, function)` temporarily supplies the engine caller (`OBJECT_SELF`) while the closure runs, then restores it even on error. Use it for action routines.
+- `nwscript.with_caller(object_id, function)` temporarily supplies the engine caller (`OBJECT_SELF`) while the closure runs, then restores it even on error. Use it for action routines.
 - `kp.registertimer(milliseconds, "callback_name"[, data])` schedules a Lua callback on the game thread.
-- `kp.log(text[, level])`, `kp.console(text)`, and `kp.feedback(text[, x, y[, life]])` write diagnostics.
+- `kp.diagnostic(text[, level])`, `kp.console(text)`, and `kp.feedback(text[, x, y[, life]])` write diagnostics.
 - `kp.mem.readbyte/readword/readdword/readfloat/readstring`, corresponding writes, and `kp.mem.findsig(pattern)` provide explicitly unsafe process-memory access; prefer named routines and validate addresses.
 - `kp.struct` exposes supported engine structures; K2 support remains build-dependent.
 

@@ -486,13 +486,13 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 // ------------------------------------------------------------ register ------
 
 // CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08.
-// data/hostapi.toml `kp.as`: write, call body, restore (including on error).
+// data/hostapi.toml `nwscript.with_caller`: write, call body, restore (including on error).
 int l_as(lua_State* L) {
     const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
     luaL_checktype(L, 2, LUA_TFUNCTION);
     const VmBinding& vm = binding();
     if (!vm_binding_live())
-        return luaL_error(L, "kp.as needs a live VM context");
+        return luaL_error(L, "nwscript.with_caller needs a live VM context");
 
     struct Commands {
         void*         vtable;
@@ -511,7 +511,7 @@ int l_as(lua_State* L) {
     for (int i = 0; i < extras; ++i) lua_pushvalue(L, 3 + i);
     const int rc = lua_pcall(L, extras, LUA_MULTRET, 0);
     if (!vm_binding_live() || binding().command_implementer != cmds)
-        return luaL_error(L, "kp.as: VM context changed before caller restoration");
+        return luaL_error(L, "nwscript.with_caller: VM context changed before caller restoration");
     cmds->has_caller = old_has;
     cmds->caller_id = old_id;
     if (rc != 0) return lua_error(L);
@@ -522,26 +522,16 @@ void register_all(lua_State* L) {
     lua_getglobal(L, "nwscript");
     if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
-        lua_createtable(L, 0, 1);
+        lua_createtable(L, 0, 3);
         lua_pushvalue(L, -1);
         lua_setglobal(L, "nwscript");
     }
     lua_pushcfunction(L, dispatch);
     lua_setfield(L, -2, "call");
-    lua_pop(L, 1);
-
-    // kp.as: specified in data/hostapi.toml; the generator is not in-tree.
-    lua_getglobal(L, "kp");
-    if (!lua_istable(L, -1)) {
-        lua_pop(L, 1);
-        lua_newtable(L);
-        lua_pushvalue(L, -1);
-        lua_setglobal(L, "kp");
-    }
     lua_pushcfunction(L, l_as);
-    lua_setfield(L, -2, "as");
+    lua_setfield(L, -2, "with_caller");
     lua_pushcfunction(L, l_last_routine_trace);
-    lua_setfield(L, -2, "last_routine_trace");
+    lua_setfield(L, -2, "last_trace");
     lua_pop(L, 1);
 
     platform::log(platform::LogLevel::Info,

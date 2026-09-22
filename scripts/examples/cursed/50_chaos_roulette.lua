@@ -113,9 +113,9 @@ local WHEEL = {
       apply(0, q("EffectVisualEffect", VFX_STUN), who)
     end },
   { name = "hot potato", run = function(who, pc)
-      if who ~= pc and kp and kp.as then
+      if who ~= pc and nwscript and nwscript.with_caller then
         local loc = q("GetLocation", pc)
-        if loc then kp.as(who, function() q("JumpToLocation", loc) end) end
+        if loc then nwscript.with_caller(who, function() q("JumpToLocation", loc) end) end
       end
     end },
 }
@@ -133,8 +133,8 @@ function OnRunScript(script_name, object_id, has_object, relevant)
   pick.run(object_id, pc)
   spins = spins + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, spins)
-  if kp and kp.as then
-    kp.as(object_id, function() q("SpeakString", pick.name, 0) end)
+  if nwscript and nwscript.with_caller then
+    nwscript.with_caller(object_id, function() q("SpeakString", pick.name, 0) end)
   end
   kp.print(("[cursed:wheel] %s: %s (#%d)"):format(norm(q("GetName", object_id)), pick.name, spins))
 end
