@@ -3,6 +3,9 @@
 KotorPhasor is a Lua host that loads with Knights of the Old Republic. It sees the game's own script events. You call most engine routines from Lua.
 
 This folder is for people writing scripts. Internal design notes stay in `docs/` next to this directory.
+Where months of KotOR reverse-engineering / byte-exact recovery live:
+[agentdecompile-authority.md](../agentdecompile-authority.md)
+(NVMe AIO: `~/agentdecompile-nvme/AIO/AUTHORITY.md`).
 
 Start the game, `binkw32.dll` loads `kphasor.dll`, the runtime identifies the executable, installs 15 hooks, and loads `.lua` files from `kotorphasor/scripts`. Your functions run from `OnScriptLoad`, then `OnTick` / `OnRunScript` / the `EventHandler` names.
 
