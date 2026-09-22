@@ -2484,6 +2484,7 @@ class TestStaging(unittest.TestCase):
         (inst / "steam_appid.txt").write_text("source-appid\n")
         (inst / "kotorphasor.log").write_text("source-runtime-log\n")
         (inst / "kotorphasor-proxy.log").write_text("source-proxy-log\n")
+        (inst / "kotorphasor.ini").write_text("error_budget = 3\n")
         (inst / "swkotor.ini").write_text("[Game Options]\nEnableCheats=0\n"
                                           "[Graphics Options]\nFullScreen=1\nFrame Buffer=1\n")
         build = self.tmp / "build"
@@ -2539,7 +2540,8 @@ class TestStaging(unittest.TestCase):
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
 
     def test_stage_preserves_runtime_written_source_files_and_repairs_legacy_links(self):
-        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.log", "kotorphasor-proxy.log")
+        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.ini",
+                 "kotorphasor.log", "kotorphasor-proxy.log", "swkotor.ini")
         before = {name: (self.inst / name).read_bytes() for name in names}
         staged = self.tmp / "legacy-links"
         staged.mkdir()
@@ -2548,6 +2550,7 @@ class TestStaging(unittest.TestCase):
 
         s = GameSession("k1", staged=str(staged), log=lambda _: None)
         s.stage()
+        write_runtime_ini(s.game_dir, 27015)
         s._session_log.close()
         for name in names:
             self.assertFalse((staged / name).is_symlink(), name)
@@ -2561,6 +2564,42 @@ class TestStaging(unittest.TestCase):
         s = GameSession("k1", staged=str(alias), log=lambda _: None)
         with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
             s.stage()
+
+    def test_default_stage_alias_is_rejected_before_lock_or_source_write(self):
+        fake_root = self.tmp / "checkout"
+        (fake_root / "tmp").mkdir(parents=True)
+        (fake_root / "tmp" / "k1_harness").symlink_to(self.inst)
+        before = {p.name: (p.read_bytes() if p.is_file() else None) for p in self.inst.iterdir()}
+        with mock.patch.object(D, "repo_root", return_value=fake_root):
+            s = GameSession("k1", reset_saves=True, log=lambda _: None)
+        self.assertEqual(s.staged, self.inst.resolve())
+        with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
+            s.acquire_stage_lock()
+        after = {p.name: (p.read_bytes() if p.is_file() else None) for p in self.inst.iterdir()}
+        self.assertEqual(after, before)
+        self.assertFalse((self.inst / ".kpharness-stage.lock").exists())
+
+    def test_lock_first_fresh_stage_initializes_overlay_and_private_ini(self):
+        staged = self.tmp / "fresh-boot-order"
+        source_ini = (self.inst / "swkotor.ini").read_bytes()
+        source_runtime_ini = (self.inst / "kotorphasor.ini").read_bytes()
+        s = GameSession("k1", staged=str(staged), reset_saves=True, log=lambda _: None)
+        s.acquire_stage_lock()
+        try:
+            self.assertEqual([p.name for p in staged.iterdir()], [".kpharness-stage.lock"])
+            s.stage()
+            s.port = 27015
+            write_runtime_ini(s.game_dir, s.port)
+            self.assertTrue((staged / "modules").is_symlink())
+            self.assertTrue((staged / "binkw32_real.dll").is_file())
+            self.assertFalse((staged / "swkotor.ini").is_symlink())
+            self.assertFalse((staged / "kotorphasor.ini").is_symlink())
+            self.assertEqual((self.inst / "swkotor.ini").read_bytes(), source_ini)
+            self.assertEqual((self.inst / "kotorphasor.ini").read_bytes(), source_runtime_ini)
+        finally:
+            if s._session_log is not None:
+                s._session_log.close()
+            s.release_stage_lock()
 
     def test_reset_saves_restores_k1_source_baseline(self):
         staged = self.tmp / "k1_reset_harness"

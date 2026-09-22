@@ -340,8 +340,8 @@ def proxy_is_ours(dll: Path) -> bool:
         return False
 
 
-RUNTIME_WRITTEN_FILES = {"kphasor.dll", "steam_appid.txt", "kotorphasor.log",
-                         "kotorphasor-proxy.log"}
+RUNTIME_WRITTEN_FILES = {"kphasor.dll", "steam_appid.txt", "kotorphasor.ini",
+                         "kotorphasor.log", "kotorphasor-proxy.log"}
 
 
 def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
@@ -436,7 +436,7 @@ class GameSession:
         self.persistent = persistent
         self._log_fn = log or print
 
-        self.staged: Path = Path(staged).resolve() if staged else self._stage_root()
+        self.staged: Path = (Path(staged).expanduser() if staged else self._stage_root()).resolve()
         self._wineprefix: Optional[Path] = (
             Path(wineprefix).expanduser().resolve() if wineprefix else self._wineprefix_root())
         self.run_dir: Path = self.staged / "runs" / time.strftime("%Y%m%d-%H%M%S")
@@ -512,14 +512,11 @@ class GameSession:
     def stage(self, resources: Optional[List[Resource]] = None) -> None:
         """Make tmp/<target>_harness/ usable: overlay, runtime, inis."""
         t = self.target
-        data = discover.data_dir(t)
+        data, install = self._validate_staged_path()
         self.data_dir = data
-        install = discover.install_root(t, data)
         staged = self.staged
-        if staged == install.resolve() or staged == data.resolve():
-            raise BootFailure("unsafe staged tree",
-                              f"staged tree must differ from source install: {staged}")
-        fresh = not staged.is_dir()
+        fresh = (not staged.is_dir()
+                 or not any(p.name != ".kpharness-stage.lock" for p in staged.iterdir()))
         staged.mkdir(parents=True, exist_ok=True)
         self.run_dir.mkdir(parents=True, exist_ok=True)
         self._session_log = open(self.run_dir / "session.log", "a")
@@ -564,7 +561,9 @@ class GameSession:
 
         # Older overlay versions linked every non-INI file. Materialize files
         # that the loader/runtime write before those writes can reach source.
-        for name in RUNTIME_WRITTEN_FILES:
+        private_names = set(RUNTIME_WRITTEN_FILES)
+        private_names.update(p.name for p in self.game_dir.glob("*.ini"))
+        for name in private_names:
             p = self.game_dir / name
             if p.is_symlink():
                 source = p.resolve()
@@ -942,6 +941,7 @@ class GameSession:
 
     def acquire_stage_lock(self) -> None:
         """Serialize a resettable scenario stage for this process lifetime."""
+        self._validate_staged_path()
         path = self.staged / ".kpharness-stage.lock"
         info = self._read_lock(path)
         if info is not None:
@@ -953,6 +953,17 @@ class GameSession:
         path.write_text(f"{os.getpid()}\n{pid_start(os.getpid())}\n{self.display}\n"
                         f"{self.target.process_name}\n")
         self.stage_lock_path = path
+
+    def _validate_staged_path(self) -> tuple[Path, Path]:
+        """Resolve source identity before any stage-owned path can be written."""
+        data = discover.data_dir(self.target)
+        install = discover.install_root(self.target, data)
+        staged = self.staged.resolve()
+        self.staged = staged
+        if staged == install.resolve() or staged == data.resolve():
+            raise BootFailure("unsafe staged tree",
+                              f"staged tree must differ from source install: {staged}")
+        return data, install
 
     def release_lock(self) -> None:
         if self.lock_path is None:
