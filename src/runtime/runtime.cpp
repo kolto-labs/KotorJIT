@@ -29,6 +29,8 @@
 #include "api/entity.hpp"
 #include "api/structs.hpp"
 #include "api/memory.hpp"
+#include "api/model.hpp"
+#include "image/loaded_image.hpp"
 #include "api/timers.hpp"
 #include "harness/commands.hpp"
 #include "harness/engine.hpp"
@@ -355,6 +357,15 @@ bool Runtime::await_and_verify(const Config& cfg) {
         regions.push_back({s.va, s.size, s.name});
     }
     api::memory::bind_scan_regions(runtime_base_, std::move(regions));
+    std::string model_error;
+    auto read_model = [](api::model::Address address, void* out, std::size_t size, void*) {
+        image::LiveImage live(0);
+        if(address > UINTPTR_MAX)return false;
+        return live.read(static_cast<std::uintptr_t>(address),out,size);
+    };
+    auto log_model = [](const std::string& message,void*) { Runtime::instance().log("%s",message.c_str()); };
+    if(!api::model::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
+        log("model: %s",model_error.c_str());
     return true;
 }
 
@@ -675,6 +686,7 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::register_all(L);             // nwscript.call(name, ...), all 769
         api::memory::register_all(L);     // raw read/write, the escape hatch
         api::structs::register_all(L);    // named typed field access
+        api::model::register_all(L);      // checked native actor scale
         api::entity::register_all(L);     // objects, party, resolution
         api::register_support(L);         // output, timers and strings together
         register_director(L);             // kp.speed — MainLoop tick scale
@@ -759,6 +771,7 @@ bool Runtime::start(const Config& cfg) {
         hooks_.reset();
         table_.reset();
         host_.reset();
+    api::model::operations().unbind();
         transport_.reset();
         remove_fault_guard();
         return false;
@@ -818,6 +831,7 @@ void Runtime::stop() {
     if (hooks_) hooks_->uninstall();
 
     host_.reset();
+    api::model::operations().unbind();
     hooks_.reset();
     table_.reset();
     transport_.reset();
