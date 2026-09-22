@@ -97,8 +97,9 @@ timeout = 120
 `mark_log` records the current native-log byte offset. `await_log` reads only
 subsequent lines, rejects truncation after the mark, and stores the matching
 lines. Minimum/maximum bounds apply to the observed snapshot; a zero minimum is
-not a timed proof of silence. `advance_ticks` waits for measured server ticks,
-not a wall-clock sleep, and fails on tick reset or watchdog verdict. Helper
+not a timed proof of silence. `advance_ticks` waits for measured server ticks by default. Set `clock = "client"`
+to require client tick progress instead; `"server"` is the only other accepted
+value. It fails on tick reset or watchdog verdict. Helper
 waits retain the existing watchdog and are bounded to600seconds.
 
 Before each action the creative runner takes **one** `status.events_seq`

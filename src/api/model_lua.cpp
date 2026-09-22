@@ -90,6 +90,7 @@ int capabilities(lua_State* L) {
     return 1;
 }
 }
+const Capture& checked_capture(lua_State* L,int index){return capture(L,index);}
 void register_all(lua_State* L) {
     luaL_newmetatable(L,identity_type);lua_pushliteral(L,"protected actor ownership");lua_setfield(L,-2,"__metatable");lua_pop(L,1);
     luaL_newmetatable(L,capture_type);lua_pushcfunction(L,index);lua_setfield(L,-2,"__index");

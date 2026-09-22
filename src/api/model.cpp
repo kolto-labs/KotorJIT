@@ -121,6 +121,10 @@ bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error,const
 bool Operations::same(const Capture& a,const Capture& b) const {
     return a.epoch==b.epoch && a.id==b.id && a.client_id==b.client_id && a.client==b.client && a.creature==b.creature && a.model==b.model;
 }
+bool Operations::refresh(const Capture& original,Capture& current,std::string& error) {
+    if(!snapshot(original.id,current,error,original.ownership.epoch?&original.ownership:nullptr))return false;
+    return same(original,current)||fail(error,"stale model capture: identity changed");
+}
 bool Operations::resize(const Capture& original,float scale,Capture& after,std::string& error) {
     if(!scale_ok(scale))return fail(error,"scale must be finite and within [0.125,4]");
     Capture before;

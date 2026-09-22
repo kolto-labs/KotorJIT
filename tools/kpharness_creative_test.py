@@ -193,6 +193,17 @@ class RouteHelperTests(TempCase):
         from kpharness.client import events_after
         self.assertEqual(events_after([{'seq':201}],runner.ch.cursor),[{'seq':201}])
 
+    def test_client_tick_gate_uses_client_progress_and_rejects_reset(self):
+        runner=self.runner()
+        step=types.SimpleNamespace(index=1,raw={'do':'advance_ticks','clock':'client','ticks':3})
+        runner.ch.state.side_effect=[{'server_tick':90,'client_tick':10},
+                                    {'server_tick':90,'client_tick':13}]
+        self.assertEqual(runner._do(step),'observed client ticks 10 -> 13')
+        runner.ch.state.side_effect=[{'client_tick':10},{'client_tick':9}]
+        with self.assertRaisesRegex(_StepFailure,'client tick reset'):runner._do(step)
+        step.raw['clock']='wall'
+        with self.assertRaisesRegex(_StepFailure,'clock must'):runner._do(step)
+
     def test_log_mark_excludes_prior_run_and_detects_new_lines(self):
         runner=self.runner(); runner.session.runtime_log.write_text('[meditation] old\n')
         step=lambda do,**kw:types.SimpleNamespace(index=1,raw={'do':do,**kw})

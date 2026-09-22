@@ -52,6 +52,8 @@ public:
     void unbind();
     bool available() const { return backend_ != nullptr; }
     const Profile* profile() const { return profile_; }
+    Address image_base() const { return loaded_base_; }
+    bool refresh(const Capture&, Capture&, std::string& error);
     bool identify(std::uint32_t id, Identity&, std::string& error);
     bool matches(const Identity&, std::string& error);
     bool snapshot(std::uint32_t id, Capture&, std::string& error, const Identity* ownership = nullptr);
@@ -76,4 +78,6 @@ using Logger = void (*)(const std::string&, void*);
 Backend* native_backend(Reader, Logger, void* context);
 bool bind_native(const std::string& verified_sha, Address loaded_base, Reader, Logger, void*, std::string&);
 void register_all(lua_State*);
+// Shared native consumers validate the same protected capture allocation.
+const Capture& checked_capture(lua_State*, int index);
 } // namespace kp::api::model

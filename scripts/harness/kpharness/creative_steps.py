@@ -37,7 +37,11 @@ class CreativeRunner(ScenarioRunner):
             ticks = raw.get('ticks')
             if type(ticks) is not int or not 1 <= ticks <= 100000:
                 raise _StepFailure('advance_ticks requires ticks in1..100000')
-            start = int(self.ch.state()['server_tick'])
+            clock = raw.get('clock', 'server')
+            if clock not in {'server', 'client'}:
+                raise _StepFailure('advance_ticks clock must be server or client')
+            tick_key = clock + '_tick'
+            start = int(self.ch.state()[tick_key])
             target = start + ticks
         else:
             pattern = re.compile(raw['pattern'])
@@ -47,11 +51,11 @@ class CreativeRunner(ScenarioRunner):
         while True:
             state = self.ch.state()
             if verb == 'advance_ticks':
-                tick = int(state['server_tick'])
+                tick = int(state[tick_key])
                 if tick < start:
-                    raise _StepFailure('server tick reset before requested interval', state=state)
+                    raise _StepFailure(f'{clock} tick reset before requested interval', state=state)
                 if tick >= target:
-                    return f'observed server ticks {start} -> {tick}'
+                    return f'observed {clock} ticks {start} -> {tick}'
             else:
                 if path.exists():
                     if path.stat().st_size < self.log_offset:

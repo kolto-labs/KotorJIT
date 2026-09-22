@@ -125,6 +125,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 # After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/model.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/animation.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
 # After runtime.cmake: it links the native LuaJIT that target builds.
