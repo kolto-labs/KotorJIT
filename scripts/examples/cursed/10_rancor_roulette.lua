@@ -82,7 +82,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -138,7 +138,7 @@ local function curse(id)
   if yes(q("IsObjectPartyMember", id)) then return end
   if dist(pc, id) > RANGE then return end   -- only what the camera can see
   queued[id] = true
-  q("registertimer", 50, "cursed_apply", { id = id })
+  kp.registertimer(50, "cursed_apply", { id = id })
 end
 
 -- Every hook lands here; the guard inside curse() keeps it idempotent.

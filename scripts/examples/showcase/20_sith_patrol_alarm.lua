@@ -1,4 +1,5 @@
--- A Sith trooper who spots you tells the others. They did not, before.
+-- A hostile sentry spotting the PC requests a cosmetic alarm bark.
+-- This does not change nearby AI, factions or combat state.
 priority = 25
 
 -- k_def_percept01 is the stock perception script, and it runs on whoever did the

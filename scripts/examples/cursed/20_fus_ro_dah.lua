@@ -54,7 +54,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -99,8 +99,8 @@ function OnCreatureAttacked(creature, attacker, relevant)
   if not pc or attacker ~= pc then return end
   -- one push per victim per game-second: the attacked event can fire more
   -- than once for a single flurry.
-  local now = q("GetTimeSecond") or 0
-  if last_tick_push[creature] == now then return end
+  local now = q("GetTimeSecond")
+  if now ~= nil and last_tick_push[creature] == now then return end
   last_tick_push[creature] = now
 
   if not fling(creature, pc) then return end

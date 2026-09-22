@@ -56,7 +56,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -88,9 +88,9 @@ end
 
 local function detonate(corpse)
   if exploded[corpse] then return end
-  exploded[corpse] = true
   local pc = q("GetFirstPC")
   if not pc then return end
+  exploded[corpse] = true
   local boom = q("EffectVisualEffect", depth > 0 and VFX_FRAG or VFX_THERMAL)
   if boom then q("ApplyEffectToObject", 0, boom, corpse, 0.0) end
   q("SetGlobalFadeOut", 0.0, 0.05, 1.0, 0.6, 0.1)

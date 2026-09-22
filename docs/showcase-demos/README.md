@@ -1,43 +1,27 @@
 # Showcase demo playbooks
 
-Six example scripts live under `scripts/examples/showcase/`. Only three are
-release-gated. `demo_play.sh all` and `record_showcase.sh all` run **30 / 40 /
-50**. The other three stay callable by name (or `demo_play.sh all-wip`) until
-their oracles pass on a real boot.
+All six scripts are shipped under `scripts/examples/showcase/`. Retained runs
+contain oracle lines and recordings for all six, but their receipts do not bind
+current source hashes. They are historical observations, not current release
+acceptance. Use the [per-example validation ledger](../example-validation.md)
+for exact current-byte host coverage and remaining live predicates.
 
-| Demo | Status | Oracle seen on a real run |
+| Demo | Script contract | Required live observation |
 |---|---|---|
-| `30_battle_meditation` | **ship** | `[meditation] round N: steadied` |
-| `40_alignment_drift` | **ship** | `[conscience] +N, now N` |
-| `50_enclave_arrival` | **ship** | `[arrival] dan` / `[arrival] man` |
-| `10_ahto_city_law` | wip | no: needs PC as attacker on `manm26ad`; boots also flake |
-| `20_sith_patrol_alarm` | wip | no: `GetLastPerceived == PC` is flaky under headless drive |
-| `60_party_wounded` | wip | lua-only yes; full `demo_play` recording not reliable |
+| `10_ahto_city_law` | PC attack on any `man*` module, including the Sith base | actual event/caller and audible cosmetic bark; no law enforcement mechanic |
+| `20_sith_patrol_alarm` | first hostile perception per sentry/module | perception/caller and audible callout; no AI alert propagation |
+| `30_battle_meditation` | conscious active-party Bastila, six-second buff requests, combat-end reset | inspect each party effect independently of the printed successful-call count |
+| `40_alignment_drift` | crossing a decade at 180-tick polls | engine alignment values and audible bark; no fixed wall-time promise |
+| `50_enclave_arrival` | once per supported module prefix, persisted sidecar | hook, saved prefixes and audible bark |
+| `60_party_wounded` | at or below 35% HP, once per object/Lua state | engine HP and warning; speaker identity is not selected by the script |
 
-Workflow:
+The playbooks describe live procedures, which require an isolated staged game
+and one serialized session. Record the deployed source hashes, checkpoint,
+runtime hash, clean session outcome, independent state predicates and video
+where required. A log line alone proves an oracle was emitted. It does not prove
+an effect, action, model, sound, or exact documented route succeeded.
 
-1. `./scripts/harness/pick_save.sh <label>`
-2. `./scripts/harness/deploy_showcase.sh <basename>`
-3. `RECORD=0 GAME_DIR=tmp/k1_harness OUT=tmp/discover/<id> ./scripts/harness/live_session.sh`
-4. Append commands to `$OUT/queue`; assert on `tmp/k1_harness/kotorphasor.log`
-5. When stable, record: `./scripts/harness/demo_play.sh <basename>`
-
-If the oracle shows up in `kotorphasor.log`, that demo is ship (`30` / `40` / `50`, `demo_play.sh all`). If it does not, it stays wip (`10` / `20` / `60`, `demo_play.sh all-wip`).
-
-## Cursed pack
-
-A second, wilder set lives under `scripts/examples/cursed/` — ten
-event-driven curses (rancor roulette, fus ro dah, necromancer, chain
-reaction, chaos roulette, rave, doppelganger, loot piñata, bullet time, item
-airstrike). Unlike these showcase scripts (deployed with `deploy_showcase.sh`
-and driven by `live_session.sh`), each cursed script has a matching
-state-gated route in `scripts/harness/scenarios/cursed/` and is run and
-recorded in one step:
-
-```
-./scripts/harness/record_cursed.sh <name>      # e.g. 30_necromancer
-./scripts/harness/record_cursed.sh all
-```
-
-All ten ship. See [cursed.md](cursed.md) for the status table, the proof
-gates, and the engine facts they turned up.
+The runner's `all` selection and any historical `ship` labels are scheduling
+choices, not validation status. Cursed routes have additional state predicates;
+their historical recordings also need current-source provenance before reuse.
+See [cursed.md](cursed.md) for the route descriptions and historical findings.

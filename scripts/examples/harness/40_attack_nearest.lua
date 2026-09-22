@@ -21,7 +21,7 @@ local c = nwscript.call('GetFirstObjectInArea',area, 1)
 while nwscript.call('GetIsObjectValid',c) == 1 do
   if nwscript.call('GetIsEnemy',c, pc) == 1 and nwscript.call('GetIsDead',c) == 0 then
     local d = nwscript.call('GetDistanceBetween',pc, c)
-    if d < best_d then best, best_d = c, d end
+    if d <= RADIUS and d < best_d then best, best_d = c, d end
   end
   c = nwscript.call('GetNextObjectInArea',area, 1)
 end

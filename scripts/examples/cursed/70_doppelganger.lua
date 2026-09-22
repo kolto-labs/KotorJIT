@@ -47,7 +47,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -74,10 +74,10 @@ local count = 0
 
 local function malak(pc)
   if pc_cursed then return end
-  pc_cursed = true
   local look = q("EffectDisguise", MALAK)
   local aura = q("EffectVisualEffect", VFX_DARK_LIGHTNING)
-  if look then q("ApplyEffectToObject", DURATION_PERMANENT, look, pc, 0.0) end
+  if not look or not pcall(nwscript.call, "ApplyEffectToObject", DURATION_PERMANENT, look, pc, 0.0) then return end
+  pc_cursed = true
   if aura then q("ApplyEffectToObject", DURATION_TEMPORARY, aura, pc, 6.0) end
   q("SetGlobalFadeOut", 0.0, 0.1, 0.4, 0.0, 0.0)
   q("SetGlobalFadeIn", 0.1, 0.5, 0.0, 0.0, 0.0)
@@ -91,10 +91,10 @@ local function copy(who, pc)
   if yes(q("IsObjectPartyMember", who)) then return end
   local row = q("GetAppearanceType", pc)
   if type(row) ~= "number" or row <= 0 then return end
-  copies[who] = true
   local look = q("EffectDisguise", row)
   local puff = q("EffectVisualEffect", VFX_WHIRLWIND)
-  if look then q("ApplyEffectToObject", DURATION_PERMANENT, look, who, 0.0) end
+  if not look or not pcall(nwscript.call, "ApplyEffectToObject", DURATION_PERMANENT, look, who, 0.0) then return end
+  copies[who] = true
   if puff then q("ApplyEffectToObject", 0, puff, who, 0.0) end
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)

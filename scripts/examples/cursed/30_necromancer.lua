@@ -54,7 +54,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -124,7 +124,7 @@ function cursed_rise(timer_id, fired, data)
   end
   kp.print(("[cursed:necro] %s rose as Malak (#%d): corpse %s -> %s"):format(
     norm(q("GetName", id)), count, tostring(id), tostring(reborn)))
-  q("registertimer", 2500, "cursed_verify", { id = reborn })
+  kp.registertimer(2500, "cursed_verify", { id = reborn })
   return false
 end
 
@@ -149,5 +149,5 @@ function OnRunScript(script_name, object_id, has_object, relevant)
   if yes(q("IsObjectPartyMember", object_id)) then return end
   pending[object_id] = true
   kp.print(("[cursed:necro] %s fell (%s)"):format(norm(q("GetName", object_id)), s))
-  q("registertimer", RISE_AFTER_MS, "cursed_rise", { id = object_id })
+  kp.registertimer(RISE_AFTER_MS, "cursed_rise", { id = object_id })
 end

@@ -107,9 +107,9 @@ function OnModuleAcquireItem(item, previous_possessor, relevant)
   local pc = q("GetFirstPC")
   if not pc then return end
   if seen[item] then return end
-  seen[item] = true
   local owner = q("GetItemPossessor", item)
   if owner ~= pc and not yes(q("IsObjectPartyMember", owner)) then return end
+  seen[item] = true
   strike(pc, norm(q("GetName", item)))
 end
 

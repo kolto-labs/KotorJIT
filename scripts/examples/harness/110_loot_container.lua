@@ -9,6 +9,7 @@
 -- Verified live on the Endar Spire corridor: metalbox (medpac, credits) and
 -- footlker (class-4 armor, long sword, two frag grenades).
 --
+-- The returned 'taken' count means requests queued, not items acquired.
 -- Poll the PC's inventory afterwards; the takes complete within a few ticks.
 
 local TAG = "metalbox"

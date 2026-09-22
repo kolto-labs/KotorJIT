@@ -1,5 +1,11 @@
 # Cursed demos
 
+The table and run notes below describe historical September 16 observations.
+Those receipts lack current Lua source hashes. Current live status is
+**unvalidated** until fresh evidence meets the [validation ledger](../example-validation.md).
+Counters and oracle lines measure script decisions; effects require independent
+engine predicates and recordings.
+
 Ten event-driven Lua scripts that break a KotOR fight on purpose, each run as
 a state-gated route and recorded. Scripts: `scripts/examples/cursed/`.
 Routes: `scripts/harness/scenarios/cursed/`. Runner:
@@ -12,7 +18,7 @@ counter (PC local number 7) and on visible engine state. The runner records
 the Xvfb display with x11grab and cuts a gif from the first `[cursed:*]`
 oracle line in `kotorphasor.log`.
 
-| Demo | Proof gate | Status |
+| Demo | Historical route gate | Historical status |
 |---|---|---|
 | 10 rancor roulette | >= 3 transformations; >= 3 creatures wearing a wheel appearance | ship |
 | 20 fus ro dah | >= 5 pushes | ship |
@@ -25,8 +31,9 @@ oracle line in `kotorphasor.log`.
 | 90 bullet time | >= 1 entry; read-back speed in [0.20, 0.30]; speed restored | ship |
 | 100 item airstrike | armed flag; strike after `CreateItemOnObject` hit >= 3 of the ring; room dead | ship |
 
-"ship" means the route passed every gate and the mp4 shows it; "wip" means
-not yet run or a gate failed (the failure is noted here).
+The historical "ship" label records a reported route pass. It does not
+certify current source bytes or prove effects for gates that only count
+requests, such as push/spin/beat totals.
 
 ## Notes from running them
 

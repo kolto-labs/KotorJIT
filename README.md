@@ -31,7 +31,7 @@ This is the [Phasor](https://github.com/urbanyoung/Phasor) model, rebuilt for KO
 
 When the named API does not reach, `kp.mem.readbyte` / `writebyte` / `findsig` talk to the process directly. Hook sites are logical names (`vm.run_script`). A recorded VA is a hint; unique `expected_bytes` bind the site if that hint is missing or stale.
 
-KOTOR already treats a single-player game as a server with one client. A working UDP sync between two game instances ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). No extra process.
+KOTOR already treats a single-player game as a server with one client. A UDP avatar synchronization example with offline mock coverage ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). Real two-game synchronization, generated UTC loading and WinSock behavior still require current live evidence; see the [validation ledger](docs/example-validation.md).
 
 ## Build and install
 

@@ -2,8 +2,9 @@
 
 Lua chunks you run against a booted headless game over the control channel.
 They read and drive the live world the same way the scenario runner and the
-`pioneer` CLI do. Every snippet here was verified live against K1 on the
-Endar Spire.
+`pioneer` CLI do. Historical K1 Endar Spire runs covered many snippets, but those receipts
+were not bound to current source hashes. The exact `end_m01ab/from_01a`
+transition remains unvalidated. See [example validation](../../../docs/example-validation.md).
 
 ## Run one
 
@@ -20,6 +21,10 @@ Or from a route file / `pioneer step`:
 ```
 
 A chunk returns a value; tables come back as JSON under `values[0]`.
+The loot snippet's `taken` field counts queued `ActionTakeItem` requests; poll
+inventory to verify acquisition. The PC status snippet inspects wearable slots
+0 through 11, not every engine slot. `GetIsInConversation` is the registered
+conversation query; `IsInConversation` is not a routine.
 
 ## How the API is shaped
 

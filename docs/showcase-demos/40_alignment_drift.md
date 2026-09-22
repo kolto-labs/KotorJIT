@@ -1,7 +1,7 @@
 # 40_alignment_drift
 
 **Script:** `scripts/examples/showcase/40_alignment_drift.lua`  
-**Hook:** `OnTick` (samples every **180** ticks ≈ 45s at ~4 ticks/s)  
+**Hook:** `OnTick` (samples every **180** ticks; wall time depends on runtime tick rate)
 **Save:** `pick_save.sh any`
 
 ## Success oracle

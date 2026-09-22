@@ -1,4 +1,5 @@
--- When a companion is badly hurt, someone says so out loud.
+-- Requests a warning at or below 35% HP, once per object in this Lua state.
+-- Healing does not reset the warning; no specific speaker is selected.
 priority = 15
 
 local DAMAGED = "k_def_damage01"

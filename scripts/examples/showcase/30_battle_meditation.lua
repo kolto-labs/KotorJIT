@@ -1,4 +1,5 @@
--- Bastila's battle meditation, always on, never asked for.
+-- Conscious party Bastila requests six-second buffs once per combat-end gate.
+-- The printed count measures successful calls; live effect inspection is separate.
 priority = 20
 
 local ATTACKED = "k_def_attacked01"
@@ -32,20 +33,22 @@ local function party()
     local out = {}
     for i = 0, n - 1 do
         local m = q("GetPartyMemberByIndex", i)
-        if m then out[#out + 1] = m end
+        if m and yes(q("GetIsObjectValid", m)) then out[#out + 1] = m end
     end
     return out
 end
 
 local function bastila_conscious()
     local by_tag = q("GetObjectByTag", "bastila", 0)
-    if by_tag and not yes(q("GetIsDead", by_tag)) then return by_tag end
+    if by_tag and yes(q("GetIsObjectValid", by_tag))
+       and yes(q("IsObjectPartyMember", by_tag))
+       and q("GetIsDead", by_tag) == 0 then return by_tag end
     for _, m in ipairs(party()) do
         -- The tag is stored lowercase on the party blueprint ("bastila"), and
         -- comparing against the spelling everyone writes never matches.
         local tag = q("GetTag", m)
         if type(tag) == "string" and tag:lower() == "bastila"
-           and not yes(q("GetIsDead", m)) then
+           and yes(q("IsObjectPartyMember", m)) and q("GetIsDead", m) == 0 then
             return m
         end
     end
@@ -66,7 +69,8 @@ function OnRunScript(script_name, object_id, has_object, relevant)
     local n = 0
     for _, m in ipairs(party()) do
         local eff = q("EffectAttackIncrease", 1, 0)
-        if eff and q("ApplyEffectToObject", 1, eff, m, 6.0) then n = n + 1 end
+        -- Void routines return no Lua values; count successful requests.
+        if eff and pcall(nwscript.call, "ApplyEffectToObject", 1, eff, m, 6.0) then n = n + 1 end
     end
     kp.print(("[meditation] round %d: steadied %d of the party"):format(rounds, n))
 end

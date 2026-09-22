@@ -129,5 +129,16 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
 # After runtime.cmake: it links the native LuaJIT that target builds.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/lua/luahost.cmake)
 
+# Exact inventory, Lua behavior, real-host arbitration and multiplayer mocks.
+if(TARGET kp_luatest)
+    find_program(KP_EXAMPLE_LUAJIT NAMES luajit REQUIRED)
+    add_test(NAME example_validation
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/example_validation.py
+            --luajit ${KP_EXAMPLE_LUAJIT} --host $<TARGET_FILE:kp_luatest>
+            --receipt ${CMAKE_BINARY_DIR}/example-validation.json)
+    set_tests_properties(example_validation PROPERTIES LABELS "offline;examples" TIMEOUT 180)
+endif()
+
+
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)

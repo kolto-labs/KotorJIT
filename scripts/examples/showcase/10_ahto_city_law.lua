@@ -1,4 +1,5 @@
--- Manaan is neutral ground. The Selkath do not care who you are.
+-- Cosmetic Manaan-wide strike commentary, including the Sith base.
+-- The bark uses the existing hook caller; no Selkath actor is selected.
 priority = 30
 
 local strikes = 0

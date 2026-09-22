@@ -97,8 +97,8 @@ end
 function OnTick(tick, relevant)
   if armed then return end
   local pc = q("GetFirstPC")
-  if not pc or not yes(q("GetIsObjectValid", pc)) then return end
+  if not pc or not yes(q("GetIsObjectValid", pc)) or yes(q("GetIsDead", pc)) then return end
   armed = true
-  q("registertimer", BEAT_MS, "cursed_beat", {})
+  kp.registertimer(BEAT_MS, "cursed_beat", {})
   kp.print("[cursed:rave] the beat drops")
 end

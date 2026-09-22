@@ -27,6 +27,11 @@ local function q(name, ...)
     return a, b
 end
 
+local function valid(id)
+    local v = id and q("GetIsObjectValid", id)
+    return v == 1 or v == true
+end
+
 local function help()
     kp.print("[cover] setb <name> 0|1     SetGlobalBoolean")
     kp.print("[cover] setn <name> <int>   SetGlobalNumber")
@@ -68,7 +73,7 @@ function OnConsoleCommand(line, relevant)
     elseif cmd == "talk" and w[3] then
         local npc = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
-        if not npc or not pc then
+        if not valid(npc) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
         elseif not nwscript or not nwscript.with_caller then
             kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
@@ -82,7 +87,7 @@ function OnConsoleCommand(line, relevant)
     elseif cmd == "jump" and w[3] then
         local dest = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
-        if not dest or not pc then
+        if not valid(dest) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
         elseif not nwscript or not nwscript.with_caller then
             kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
