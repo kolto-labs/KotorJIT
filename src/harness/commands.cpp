@@ -1,3 +1,4 @@
+#include "devtools/console.hpp"
 // The harness commands. See commands.hpp for the drain's rules.
 //
 // Every command takes the parsed request and fills an Outcome. Engine work
@@ -707,6 +708,19 @@ void cmd_unsubscribe(const Json&, Outcome& out) {
     out.result.set("subscribed", Json::boolean(false));
 }
 
+void cmd_devtools(const Json& req, Outcome& out) {
+    auto* operation=req.get("op");std::string op=operation?operation->as_string():"status";
+    auto& c=kp::devtools::console();Json result=Json::object();
+    if(op=="submit") {auto* code=req.get("code");if(!code || !code->is_string()){fail(out,"code must be a string");return;}auto id=c.submit(code->as_string());if(!id){fail(out,"console queue full or command too long");return;}result.set("request",Json::unsigned_(id));}
+    else if(op=="output") {Json lines=Json::array();for(auto& l:c.snapshot()){Json row=Json::object();row.set("request",Json::unsigned_(l.request));row.set("kind",Json::string(l.kind));row.set("text",Json::string(l.text));lines.push(std::move(row));}result.set("lines",std::move(lines));}
+    else if(op=="complete") {auto* p=req.get("prefix");Json names=Json::array();for(auto& n:c.complete(p?p->as_string():""))names.push(Json::string(n));result.set("names",std::move(names));}
+    else if(op=="cancel") c.cancel();
+    else if(op!="status"){fail(out,"unknown devtools operation");return;}
+    auto status=c.status();result.set("submitted",Json::unsigned_(status.submitted));result.set("completed",Json::unsigned_(status.completed));result.set("running",Json::boolean(status.running));result.set("queued",Json::unsigned_(status.queued));result.set("open",Json::boolean(kp::devtools::overlay_open()));
+    result.set("input_calls",Json::unsigned_(kp::devtools::overlay_input_calls()));
+    out.result=std::move(result);
+}
+
 void cmd_lua(const Json& req, Outcome& out) {
     const Json* code = req.get("code");
     if (code == nullptr || !code->is_string()) { fail(out, "lua: `code` (string) is required"); return; }
@@ -1172,6 +1186,7 @@ void dispatch(const std::string& cmd, const Json& req, Outcome& out, std::uint64
     else if (cmd == "events")       cmd_events(req, out);
     else if (cmd == "subscribe")    cmd_subscribe(req, out, client);
     else if (cmd == "unsubscribe")  cmd_unsubscribe(req, out);
+    else if (cmd == "devtools")     cmd_devtools(req, out);
     else if (cmd == "lua")          cmd_lua(req, out);
     else if (cmd == "reload")       cmd_reload(req, out);
     else if (cmd == "load_save")    cmd_load_save(req, out);

@@ -1,3 +1,4 @@
+#include "devtools/console.hpp"
 // The five phases, in the order runtime.hpp declares them.
 //
 // Every phase either advances or fails, and a failure leaves the game exactly
@@ -814,6 +815,7 @@ bool Runtime::start(const Config& cfg) {
 }
 
 void Runtime::stop() {
+    kp::devtools::overlay_shutdown();
     // The listener first: it was started last, and once it is gone no new
     // request can reach a drain that is about to lose its host and hooks.
     kp::harness::stop();

@@ -144,3 +144,13 @@ endif()
 
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
+
+if(UNIX AND NOT WIN32)
+    add_executable(kp_consoletest tools/kp_consoletest.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_consoletest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_consoletest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_consoletest PRIVATE -m32)
+    target_link_libraries(kp_consoletest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_consoletest COMMAND kp_consoletest)
+    set_tests_properties(kp_consoletest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
+endif()
