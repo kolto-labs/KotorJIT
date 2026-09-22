@@ -209,13 +209,11 @@ def cmd_pioneer_step(a: argparse.Namespace) -> int:
         raise SystemExit(f"no booted session for {a.target}; run `kpharness boot --target {a.target}`")
     try:
         with Channel("127.0.0.1", info.port, timeout=channel_timeout()) as ch:
-            result = P.run_one_step(out, ch, info, step_body, log=print)
-    except P.PioneerError as e:
+            result = P.execute_pending(out, ch, info, step_body, log=print)
+    except (P.PioneerError, OSError, ChannelError, S.ScenarioError) as e:
         print(f"pioneer step: {e}", file=sys.stderr)
         return 1
     _print(result.to_dict())
-    P.save_pending(out, P.Pending(target=a.target, step=step_body,
-                                   result=result.to_dict(), recorded_at=time.time()))
     if result.status == "ok":
         print(f"pending: `pioneer commit --out {a.out}` to append this step, "
               f"or `pioneer discard --out {a.out}` to drop it.")
@@ -227,39 +225,30 @@ def cmd_pioneer_step(a: argparse.Namespace) -> int:
 
 def cmd_pioneer_commit(a: argparse.Namespace) -> int:
     out = Path(a.out)
-    pending = P.load_pending(out)
-    if pending is None:
-        print(f"pioneer commit: no pending step for {out} (run `pioneer step` first)",
-              file=sys.stderr)
-        return 1
-    # run_step already distinguishes a declared-expected failure
-    # (status="expected_failure", from expect_error/expect_verdict) from a
-    # genuine one ("failed"); only a genuine failure needs --force. The whole
-    # point of pioneering is never baking in a step that was not actually
-    # verified to do what the route now claims it does.
-    status = pending.result.get("status")
-    if status == "failed" and not a.force:
-        print(f"pioneer commit: refusing to commit a step whose last run failed; "
-              "rerun `pioneer step` until it succeeds, or pass --force to commit it anyway",
-              file=sys.stderr)
-        return 1
     try:
-        P.append_step(out, pending.step)
-    except P.PioneerError as e:
+        pending = P.load_pending(out)
+        if pending is None:
+            raise P.PioneerError("no pending step")
+        info = _info(pending.target)
+        if info is None:
+            raise P.PioneerError("the recorded live session is no longer attached")
+        with Channel("127.0.0.1", info.port, timeout=channel_timeout()) as ch:
+            appended = P.commit_pending(out, ch, info, force=a.force)
+    except (P.PioneerError, OSError, ChannelError, S.ScenarioError, ValueError) as e:
         print(f"pioneer commit: {e}", file=sys.stderr)
         return 1
-    P.clear_pending(out)
-    print(f"{out}: appended {pending.step.get('do') or pending.step.get('wait') or 'step'}")
+    print(f"{out}: {'appended verified pending step' if appended else 'already committed; no duplicate append'}")
     return 0
 
 
 def cmd_pioneer_discard(a: argparse.Namespace) -> int:
     out = Path(a.out)
-    if P.load_pending(out) is None:
-        print(f"pioneer discard: no pending step for {out}")
-        return 0
-    P.clear_pending(out)
-    print(f"{out}: pending step discarded")
+    try:
+        P.discard_pending(out)
+    except (P.PioneerError, OSError) as e:
+        print(f"pioneer discard: {e}", file=sys.stderr)
+        return 1
+    print(f"{out}: pending metadata discarded; live game changes were NOT undone")
     return 0
 
 
@@ -376,7 +365,7 @@ def build_parser() -> argparse.ArgumentParser:
                    help="commit even though the pending step's last run failed")
     p.set_defaults(fn=cmd_pioneer_commit)
 
-    p = pio_sub.add_parser("discard", help="drop the pending step without writing it")
+    p = pio_sub.add_parser("discard", help="drop pending metadata only; does not undo live game changes")
     p.add_argument("--out", required=True)
     p.set_defaults(fn=cmd_pioneer_discard)
 

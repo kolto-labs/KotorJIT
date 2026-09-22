@@ -66,6 +66,7 @@ re-encoded per route.
 """
 from __future__ import annotations
 
+import contextlib
 import fnmatch
 import hashlib
 import json
@@ -523,11 +524,51 @@ class ScenarioRunner:
         return W.wait_until(self.ch, pred, timeout, what=what, watchdog=self.watchdog,
                             progress=progress, on_poll=self._on_poll)
 
-    def _configure_execution(self) -> None:
+    def _read_execution_speed(self) -> float:
+        result = self.ch.lua("return kp.game_speed()")
+        values = result.get("values") if isinstance(result, dict) else None
+        value = values[0] if isinstance(values, list) and len(values) == 1 else None
+        if type(value) not in (int, float) or not math.isfinite(value) or not 0 < value <= 16:
+            raise ScenarioError("cannot capture attached session game speed")
+        return float(value)
+
+    @contextlib.contextmanager
+    def attached_execution(self, validate_owner=None):
+        """Own only the temporary route speed, never the attached game process.
+
+        A step that deliberately changes speed keeps that change; otherwise
+        restore the captured scale even when dispatch/configuration fails.
+        """
+        if validate_owner is not None:
+            validate_owner()
+        previous = self._read_execution_speed()
+        requested = float(self.sc.settings["game_speed"])
+        ownership = {"retain": False}
+        try:
+            self._configure_execution(attached=True)
+            yield ownership
+        finally:
+            # Compare before restoring: do not overwrite an explicit speed
+            # action or another owner's changed setting. Read failure is not
+            # permission to blindly mutate an unknown session.
+            if validate_owner is not None:
+                validate_owner()
+            current = self._read_execution_speed()
+            if not ownership["retain"] and math.isclose(current, requested, rel_tol=0.0, abs_tol=1e-6):
+                result = self.ch.request("speed", scale=previous)
+                restored = result.get("scale") if isinstance(result, dict) else None
+                if type(restored) not in (int, float) or not math.isclose(
+                        restored, previous, rel_tol=0.0, abs_tol=1e-6):
+                    raise ScenarioError("attached execution speed restoration was not acknowledged")
+                self.report.execution["game_speed_restored"] = previous
+            else:
+                self.report.execution["game_speed_retained"] = current
+
+    def _configure_execution(self, *, attached: bool = False) -> None:
         """Apply scenario-wide execution policy before the first route step."""
         requested = float(self.sc.settings["game_speed"])
         self.report.execution["game_speed_requested"] = requested
-        if requested == 1.0:
+        if requested == 1.0 and not attached:
             # Every managed run starts a fresh process at retail speed.  The
             # explicit opt-out also works on builds without the speed binding.
             self.report.execution["game_speed_effective"] = 1.0
