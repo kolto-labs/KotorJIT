@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts/harness'))
 from kpharness import creative as C, creative_wine as W, recording as R
 from kpharness.creative_steps import CreativeRunner
+from kpharness.creative_checkpoints import CreativeCheckpoints, CheckpointError
 from kpharness.scenario import _StepFailure
 
 
@@ -56,15 +57,16 @@ class OwnershipTests(TempCase):
         self.assertEqual([pid for pid in (1,2,3) if W.owned_pid(pid, prefix, stage, proc)], [1])
 
     def test_teardown_stops_recorder_before_parent_even_on_error(self):
-        session = object.__new__(W.LinuxWineCreativeSession); session._closed = False
+        session = object.__new__(W.LinuxWineCreativeSession)
+        session._recorder_closed = False; session._session_closed = False; session._cleanup_errors = []
         calls = []
         def stop():
             calls.append('recorder'); raise RuntimeError('recorder failed')
         session.recorder = types.SimpleNamespace(stop=stop)
         with mock.patch.object(W.GameSession, 'teardown', side_effect=lambda **kw: calls.append('game/xvfb')):
             with self.assertRaises(RuntimeError): session.teardown()
-            session.teardown()
-        self.assertEqual(calls, ['recorder', 'game/xvfb'])
+            with self.assertRaises(RuntimeError): session.teardown()
+        self.assertEqual(calls, ['recorder', 'game/xvfb', 'recorder'])
 
     def test_staging_logs_are_current_run_only(self):
         source = self.root / 'source'; source.mkdir(); script = self.root / 'example.lua'; script.write_text('priority=1')
@@ -80,6 +82,24 @@ class OwnershipTests(TempCase):
         self.assertEqual((stage / 'kotorphasor.log').read_bytes(), b'')
         prior = json.loads((run / 'prior-log-identities.json').read_text())
         self.assertGreater(prior['kotorphasor.log']['bytes'], 0)
+
+
+class CheckpointTests(TempCase):
+    def test_actual_store_and_restore_reject_symlink_escape(self):
+        saves=self.root/'saves';(saves/'slot').mkdir(parents=True)
+        (saves/'slot/SAVEGAME.sav').write_text('save')
+        source=self.root/'source';source.mkdir();(source/'keep.utc').write_text('protected')
+        cp=CreativeCheckpoints(C.targets.get('k1'),saves,self.root/'checkpoints')
+        (cp.root/'escape').symlink_to(source)
+        with self.assertRaises(CheckpointError):cp.store('escape','slot')
+        cp.store('valid','slot')
+        (saves/'slot/SAVEGAME.sav').write_text('changed')
+        self.assertEqual(cp.restore('valid'),'slot')
+        self.assertEqual((saves/'slot/SAVEGAME.sav').read_text(),'save')
+        meta=cp.root/'valid/meta.json'
+        data=json.loads(meta.read_text());data['folder']='../../source';meta.write_text(json.dumps(data))
+        with self.assertRaises(CheckpointError):cp.restore('valid')
+        self.assertEqual((source/'keep.utc').read_text(),'protected')
 
 
 class RecordingTests(TempCase):
@@ -185,28 +205,44 @@ class DriverTests(TempCase):
 
 
 class DriverIntegrationTests(TempCase):
-    def exercise(self, *, route_ok=True, render_error=False, mutate_source=False):
+    def exercise(self, *, route_ok=True, render_error=False, mutate_source=False, checkpoint_alias=None, checkpoint_escape=False, boot_cleanup_failure=False):
         source=self.root/'source';source.mkdir()
         build=self.root/'build';build.mkdir()
         for name in ('kphasor.dll','binkw32.dll'):(build/name).write_bytes(name.encode())
         script=self.root/'demo.lua';script.write_text('priority=1')
         route=self.root/'route.toml';route.write_text('name="test"\ntarget="k1"\n[settings]\ngame_speed=1.0\n[[step]]\ndo="lua"\ncode="return true"\n')
         options=C.parser().parse_args(['--backend','linux-wine-k1','--script',str(script),'--route',str(route),'--output',str(self.root/'output')])
+        if checkpoint_alias:
+            options.checkpoint_root = str({'source':source,'stage':self.root/'output/stage-k1',
+                'prefix':self.root/'output/wineprefix-k1','build':build}[checkpoint_alias])
+            (source/'Override').mkdir(); (source/'Override/keep.utc').write_text('protected')
+        if checkpoint_escape:
+            checkpoints=self.root/'checkpoints';checkpoints.mkdir()
+            (checkpoints/'escape').symlink_to(source)
+            options.checkpoint_root=str(checkpoints)
+            route.write_text('name="test"\ntarget="k1"\n[settings]\ngame_speed=1.0\n[[step]]\ndo="save"\ncheckpoint="escape"\n')
         calls=[]
         class Recorder:
             def __init__(self,run_dir,**kwargs):
                 self.run_dir=run_dir;self.error=None;self.marker={'capture_seconds':1};self.started=0
                 self.process=mock.Mock();self.process.poll.return_value=None
             def stop(self):calls.append('recorder-stop')
-        class Session:
+        class Session(W.LinuxWineCreativeSession):
             def __init__(self,source,scripts,recorder,run_dir,**kwargs):
                 self.recorder=recorder;self.run_dir=run_dir;self.game_dir=Path(kwargs['staged'])
                 self.target=C.targets.get('k1');self.save_dir=self.game_dir/'Saves';self.build='verified-test-build';self.deployed=[]
             def boot(self,resources):
                 self.save_dir.mkdir();(self.run_dir/'continuous.mp4').write_bytes(b'failed or passed raw video')
                 for name in ('kphasor.dll','binkw32.dll'):(self.game_dir/name).write_bytes((build/name).read_bytes())
+                if boot_cleanup_failure:
+                    self._recorder_closed=False;self._session_closed=False;self._cleanup_errors=[]
+                    self.teardown()
+                    raise RuntimeError('boot failed')
                 return mock.Mock()
-            def teardown(self):self.recorder.stop();calls.append('game-stop')
+            def teardown(self):
+                if boot_cleanup_failure:
+                    return W.LinuxWineCreativeSession.teardown(self)
+                self.recorder.stop();calls.append('game-stop')
         class Runner:
             def __init__(self,scenario,session,channel,**kwargs):self.session=session
             def run(self):
@@ -218,11 +254,50 @@ class DriverIntegrationTests(TempCase):
         if render_error:renderer.side_effect=RuntimeError('encoder failed')
         adapter=lambda _: (Session,Recorder,W.claim_directory,W.disjoint,W.source_receipt)
         with mock.patch.object(C.discover,'repo_root',return_value=self.root), mock.patch.object(C.discover,'data_dir',return_value=source), mock.patch.object(C.discover,'build_dir',return_value=build), mock.patch.object(C,'shared_lock_path',return_value=self.root/'live.lock'), mock.patch('kpharness.session.pids_by_name',return_value=[]), mock.patch.object(C.shutil,'which',return_value='/usr/bin/fake'):
+            if checkpoint_escape:
+                with mock.patch.object(Session,'boot') as boot:
+                    with self.assertRaises(CheckpointError):
+                        C.run_creative(options,adapter_factory=adapter,runner_factory=Runner,renderer=renderer)
+                    boot.assert_not_called()
+                self.assertFalse((self.root/'output').exists())
+                return
+            if checkpoint_alias:
+                with mock.patch.object(Session,'boot') as boot, mock.patch.object(W,'claim_directory') as claim:
+                    with self.assertRaisesRegex(ValueError,'checkpoint root overlaps'):
+                        C.run_creative(options,adapter_factory=adapter,runner_factory=Runner,renderer=renderer)
+                    boot.assert_not_called(); claim.assert_not_called()
+                self.assertEqual((source/'Override/keep.utc').read_text(),'protected')
+                self.assertFalse((self.root/'output').exists())
+                return
+            if boot_cleanup_failure:
+                with mock.patch.object(W.GameSession,'teardown',side_effect=[RuntimeError('parent cleanup failed'),None]) as parent:
+                    receipt=C.run_creative(options,adapter_factory=adapter,runner_factory=Runner,renderer=renderer)
+                    self.assertEqual(parent.call_count,2)
+                self.assertEqual(calls,['recorder-stop'])
+                self.assertEqual(receipt['cleanup']['status'],'failed')
+                self.assertIn('parent cleanup failed',receipt['cleanup']['error'])
+                self.assertFalse(receipt['ok']);renderer.assert_not_called()
+                return receipt,renderer
             receipt=C.run_creative(options,adapter_factory=adapter,runner_factory=Runner,renderer=renderer)
         self.assertEqual(calls,['recorder-stop','game-stop'])
         self.assertTrue((Path(receipt['run_dir'])/'creative-run.json').is_file())
         self.assertEqual(receipt['runtime']['kphasor.dll']['sha256'],R.sha256(build/'kphasor.dll'))
         return receipt,renderer
+
+    def test_checkpoint_overlaps_rejected_before_claim_or_boot(self):
+        for alias in ('source','stage','prefix','build'):
+            with self.subTest(alias=alias):
+                case=DriverIntegrationTests();case.setUp()
+                try: case.exercise(checkpoint_alias=alias)
+                finally: case.doCleanups()
+
+    def test_checkpoint_symlink_escape_rejected_before_boot(self):
+        self.exercise(checkpoint_escape=True)
+
+    def test_boot_cleanup_failure_remains_failed_after_retry(self):
+        receipt,_=self.exercise(boot_cleanup_failure=True)
+        saved=json.loads((Path(receipt['run_dir'])/'creative-run.json').read_text())
+        self.assertEqual(saved['cleanup']['status'],'failed')
 
     def test_success_has_current_identity_and_separate_statuses(self):
         result,renderer=self.exercise()

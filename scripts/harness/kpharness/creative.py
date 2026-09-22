@@ -23,7 +23,7 @@ import uuid
 from pathlib import Path
 
 from . import discover, targets
-from .checkpoints import Checkpoints
+from .creative_checkpoints import CreativeCheckpoints, CheckpointError, child
 from .creative_steps import CreativeRunner
 from .recording import CREATIVE_MARKER, artifact, render, sha256
 from .scenario import Scenario, ScenarioError, find_scenario
@@ -105,6 +105,16 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
                                           (stage, prefix), (run_dir, stage), (run_dir, prefix),
                                           (build, stage), (build, prefix)]):
         raise ValueError('source/build/stage/prefix/run paths overlap unsafely')
+    checkpoint_root = (Path(options.checkpoint_root).expanduser() if options.checkpoint_root
+                       else root / 'tmp/checkpoints' / scenario.target).resolve()
+    if not all(disjoint(checkpoint_root, path) for path in (source, stage, prefix, build, run_dir)):
+        raise ValueError('checkpoint root overlaps source/stage/prefix/build/run paths')
+    # Validate every declared destination before claiming directories or booting.
+    for step in scenario.steps:
+        name = step.raw.get('checkpoint') if step.raw.get('do') == 'save' else (
+            step.raw.get('name') if step.raw.get('do') == 'load_checkpoint' else None)
+        if name is not None:
+            child(checkpoint_root, name)
     lock = shared_lock_path(root)
     with live_lock(lock):
         # Never use a name match to kill another game. Refuse a concurrent K1,
@@ -156,8 +166,7 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
             if recorder.process is None or recorder.process.poll() is not None:
                 raise RuntimeError('continuous recorder exited before the route')
             route_start = time.monotonic() - recorder.started
-            checkpoints = Checkpoints(session.target, session.save_dir,
-                root=Path(options.checkpoint_root).expanduser().resolve() if options.checkpoint_root else None)
+            checkpoints = CreativeCheckpoints(session.target, session.save_dir, root=checkpoint_root)
             receipt['checkpoint_root'] = str(checkpoints.root)
             receipt['checkpoint_sources'] = {}
             for step in scenario.steps:
@@ -242,7 +251,7 @@ def main(argv=None):
     signal.signal(signal.SIGTERM, terminated)
     try:
         receipt = run_creative(parser().parse_args(argv))
-    except (ValueError, OSError, RuntimeError, ScenarioError, re.error, subprocess.SubprocessError) as error:
+    except (ValueError, OSError, RuntimeError, ScenarioError, CheckpointError, re.error, subprocess.SubprocessError) as error:
         print(json.dumps({'ok': False, 'phase': 'preflight', 'error': str(error)}))
         return 2
     finally:

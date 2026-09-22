@@ -146,3 +146,15 @@ Host-only regression gate:
 /usr/bin/python3 tools/kpharness_creative_test.py
 ctest --test-dir /path/to/build -R kpharness_creative_test --output-on-failure
 ```
+
+The writable checkpoint root is resolved during preflight and must be disjoint
+from source, stage, Wine prefix, build and run directories. Declared checkpoint
+destinations are checked before ownership claims or boot. The creative checkpoint
+adapter rechecks destinations during store/restore, rejects escaping symlinks and
+save-folder traversal, and delegates valid copies to the existing checkpoint code.
+Use a separate checkpoint directory even for routes that currently only load saves.
+
+Cleanup tracks recorder and session completion separately. A boot-time cleanup
+failure remains a failed cleanup receipt even if a later retry releases the
+remaining owned resources; completed operations are not repeated. Retained raw
+video and the cleanup error remain available for diagnosis.

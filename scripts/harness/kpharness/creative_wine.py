@@ -87,7 +87,9 @@ class LinuxWineCreativeSession(GameSession):
         self.scripts = scripts
         self.recorder = recorder
         self.run_dir = run_dir.resolve()
-        self._closed = False
+        self._recorder_closed = False
+        self._session_closed = False
+        self._cleanup_errors = []
         self.deployed = []
 
     def _validate_staged_path(self):
@@ -157,11 +159,19 @@ class LinuxWineCreativeSession(GameSession):
         self.recorder.start(self.display, self.screen, self.runtime_log)
 
     def teardown(self, graceful=True):
-        if self._closed:
-            return
-        self._closed = True
-        try:
-            # Also runs on GameSession.boot's exception path, before Xvfb dies.
-            self.recorder.stop()
-        finally:
-            super().teardown(graceful=graceful)
+        # Boot also calls teardown on failure. Retry only unfinished operations,
+        # but retain the first failure so the driver cannot publish a clean exit.
+        if not self._recorder_closed:
+            try:
+                self.recorder.stop()
+                self._recorder_closed = True
+            except BaseException as error:
+                self._cleanup_errors.append(f'recorder: {type(error).__name__}: {error}')
+        if not self._session_closed:
+            try:
+                super().teardown(graceful=graceful)
+                self._session_closed = True
+            except BaseException as error:
+                self._cleanup_errors.append(f'session: {type(error).__name__}: {error}')
+        if self._cleanup_errors:
+            raise RuntimeError('cleanup failed: ' + '; '.join(self._cleanup_errors))
