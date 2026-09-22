@@ -30,7 +30,7 @@ enable_testing()
 
 # These are offline fake-server/parser gates; no game, Wine or display is launched.
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
-foreach(gate kpharness_offline_test kpharness_world_test)
+foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test)
     add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
     set_tests_properties(${gate} PROPERTIES LABELS "offline;harness" TIMEOUT 300)
 endforeach()
