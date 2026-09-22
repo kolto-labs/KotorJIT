@@ -6,11 +6,59 @@ extern "C" {
 #include <lualib.h>
 }
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <unordered_set>
 namespace kp::devtools {
 namespace {
 thread_local Console *running = nullptr;
+std::atomic<Session> next_session{1};
+constexpr std::size_t kOutcomeBytes = 262144;
+std::size_t outcome_bytes(const Outcome &o) {
+  std::size_t n = sizeof(Outcome) + o.error.code.size() + o.error.text.size();
+  for (auto &v : o.values)
+    n += sizeof(ReturnValue) + v.bytes.size() + v.opaque_type.size();
+  return n;
+}
+ReturnValue typed_value(lua_State *L, int i, std::size_t &remaining) {
+  ReturnValue v;
+  switch (lua_type(L, i)) {
+  case LUA_TNIL:
+    break;
+  case LUA_TBOOLEAN:
+    v.type = ValueType::Boolean;
+    v.boolean = lua_toboolean(L, i) != 0;
+    break;
+  case LUA_TNUMBER: {
+    v.type = ValueType::Number;
+    double n = lua_tonumber(L, i);
+    if (std::isnan(n))
+      v.number_kind = NumberKind::NaN;
+    else if (std::isinf(n))
+      v.number_kind =
+          n > 0 ? NumberKind::PositiveInfinity : NumberKind::NegativeInfinity;
+    else
+      v.number = n;
+    break;
+  }
+  case LUA_TSTRING: {
+    v.type = ValueType::String;
+    size_t n;
+    const char *p = lua_tolstring(L, i, &n);
+    v.original_bytes = n;
+    auto keep = std::min({n, size_t(8192), remaining});
+    v.bytes.assign(p, keep);
+    v.truncated = keep < n;
+    remaining -= keep;
+    break;
+  }
+  default:
+    v.type = ValueType::Opaque;
+    v.opaque_type = luaL_typename(L, i);
+    break;
+  }
+  return v;
+}
 std::string value(lua_State *L, int i) {
   switch (lua_type(L, i)) {
   case LUA_TNIL:
@@ -114,44 +162,162 @@ void replace(lua_State *L, int table, const char *key, lua_CFunction fn) {
   lua_setfield(L, table, key);
 }
 } // namespace
-Console::~Console() { reset(); }
+Console::Console() : session_(next_session.fetch_add(1)) {}
+Console::~Console() {
+  if (state_)
+    lua_close(state_);
+}
 Console &console() {
   static Console c;
   return c;
 }
-std::uint64_t Console::submit(std::string code) {
-  std::uint64_t id = 0;
-  {
-    std::lock_guard lock(mutex_);
-    if (queue_.size() < 16 && code.size() <= 16384) {
-      id = ++submitted_;
-      queue_.push_back({id, std::move(code)});
-    }
+Submission Console::submit_locked(Session session, std::string code) {
+  Submission result{session_, 0, Reject::None};
+  if (session != session_)
+    result.rejection = Reject::StaleSession;
+  else if (code.size() > 16384)
+    result.rejection = Reject::SourceLimit;
+  else if (queue_.size() >= 16)
+    result.rejection = Reject::QueueFull;
+  else {
+    result.request = ++submitted_;
+    queue_.push_back({result.request, std::move(code)});
+    Outcome pending;
+    pending.session = session_;
+    pending.request = result.request;
+    outcomes_.emplace(result.request, std::move(pending));
   }
-  if (!id)
-    output(
+  if (result.rejection != Reject::None)
+    output_locked(
         "error",
-        "Submission rejected: queue full (16) or command exceeds 16384 bytes.");
-  return id;
+        "Submission rejected: stale session, full queue or source limit.", 0);
+  return result;
+}
+Request Console::submit(std::string code) {
+  std::lock_guard lock(mutex_);
+  return submit_locked(session_, std::move(code)).request;
+}
+Submission Console::submit(Session session, std::string code) {
+  std::lock_guard lock(mutex_);
+  return submit_locked(session, std::move(code));
 }
 Status Console::status() {
   std::lock_guard lock(mutex_);
-  return {submitted_, completed_, active_.load() != 0, queue_.size()};
+  return {submitted_, completed_,     active_ != 0,  queue_.size(),
+          session_,   line_sequence_, dropped_lines_};
 }
-void Console::output(std::string kind, std::string text) {
+Lookup Console::lookup_locked(Session session, Request request) {
+  if (session != session_)
+    return Lookup::StaleSession;
+  if (outcomes_.count(request))
+    return Lookup::Found;
+  if (request >= epoch_first_ && request <= submitted_)
+    return Lookup::Expired;
+  return Lookup::Unavailable;
+}
+OutcomeLookup Console::outcome(Session session, Request request) {
+  std::lock_guard lock(mutex_);
+  OutcomeLookup result;
+  result.status = lookup_locked(session, request);
+  if (result.status == Lookup::Found)
+    result.outcome = outcomes_.at(request);
+  return result;
+}
+void Console::output_locked(std::string kind, std::string text,
+                            Request request) {
   if (text.size() > 8192)
     text = text.substr(0, 8192) + " [truncated]";
-  std::lock_guard lock(mutex_);
   bytes_ += text.size();
-  lines_.push_back({std::move(kind), std::move(text), active_.load()});
+  lines_.push_back(
+      {std::move(kind), std::move(text), request, session_, ++line_sequence_});
+  auto found = outcomes_.find(request);
+  if (found != outcomes_.end() &&
+      found->second.state == RequestState::Running) {
+    if (!found->second.first_line)
+      found->second.first_line = line_sequence_;
+    found->second.last_line = line_sequence_;
+  }
   while (lines_.size() > 512 || bytes_ > 262144) {
     bytes_ -= lines_.front().text.size();
+    dropped_through_ = lines_.front().sequence;
+    ++dropped_lines_;
     lines_.pop_front();
   }
+}
+void Console::output(std::string kind, std::string text) {
+  std::lock_guard lock(mutex_);
+  // Only output on the executing owner thread is attributed to its request.
+  // Concurrent UI, rejection and diagnostic output must not borrow that ID.
+  output_locked(std::move(kind), std::move(text),
+                running == this ? active_ : 0);
 }
 std::vector<Line> Console::snapshot() {
   std::lock_guard lock(mutex_);
   return {lines_.begin(), lines_.end()};
+}
+OutputSnapshot Console::snapshot(Session session, std::uint64_t after) {
+  std::lock_guard lock(mutex_);
+  OutputSnapshot result;
+  result.session = session_;
+  if (session != session_) {
+    result.status = Lookup::StaleSession;
+    return result;
+  }
+  result.last_sequence = line_sequence_;
+  result.dropped_lines = dropped_lines_;
+  result.dropped_through = dropped_through_;
+  for (auto &line : lines_)
+    if (line.sequence > after)
+      result.lines.push_back(line);
+  return result;
+}
+void Console::terminal_locked(Outcome result) {
+  auto &existing = outcomes_.at(result.request);
+  result.first_line = existing.first_line;
+  result.last_line = existing.last_line;
+  existing = std::move(result);
+  outcome_bytes_ += outcome_bytes(existing);
+  terminal_order_.push_back(existing.request);
+  completed_ = std::max(completed_, existing.request);
+  while (terminal_order_.size() > 128 || outcome_bytes_ > kOutcomeBytes) {
+    auto id = terminal_order_.front();
+    terminal_order_.pop_front();
+    outcome_bytes_ -= outcome_bytes(outcomes_.at(id));
+    outcomes_.erase(id);
+  }
+}
+Cancellation Console::cancel(Session session, Request request) {
+  std::lock_guard lock(mutex_);
+  switch (lookup_locked(session, request)) {
+  case Lookup::StaleSession:
+    return Cancellation::StaleSession;
+  case Lookup::Expired:
+    return Cancellation::Expired;
+  case Lookup::Unavailable:
+    return Cancellation::Unavailable;
+  case Lookup::Found:
+    break;
+  }
+  auto &result = outcomes_.at(request);
+  if (result.state == RequestState::Running) {
+    cancelled_ = true;
+    return Cancellation::Requested;
+  }
+  if (result.state != RequestState::Pending)
+    return Cancellation::AlreadyTerminal;
+  auto queued = std::find_if(queue_.begin(), queue_.end(),
+                             [&](auto &q) { return q.first == request; });
+  queue_.erase(queued);
+  Outcome terminal = result;
+  terminal.state = RequestState::Cancelled;
+  terminal.error = {"cancelled", "Cancelled before execution", false};
+  terminal_locked(std::move(terminal));
+  return Cancellation::Cancelled;
+}
+void Console::cancel() {
+  std::lock_guard lock(mutex_);
+  if (active_)
+    cancelled_ = true;
 }
 std::vector<std::string> Console::complete(const std::string &prefix) {
   std::lock_guard lock(mutex_);
@@ -163,17 +329,47 @@ std::vector<std::string> Console::complete(const std::string &prefix) {
 }
 bool Console::interrupted() {
   instructions_ += 1000;
-  return cancelled_.load() || instructions_ >= 1000000;
+  if (cancelled_.load()) {
+    cancellation_observed_ = true;
+    return true;
+  }
+  if (instructions_ >= 1000000) {
+    budget_exhausted_ = true;
+    return true;
+  }
+  return false;
 }
 void Console::reset() {
-  if (state_)
-    lua_close(state_);
+  // Caller guarantees engine ownership and no pump on the stack. Publish the
+  // new session and detach state before lua_close invokes finalizers.
+  lua_State *old = state_;
   state_ = nullptr;
+  io_ref_ = -1;
+  {
+    std::lock_guard lock(mutex_);
+    session_ = next_session.fetch_add(1);
+    epoch_first_ = submitted_ + 1;
+    completed_ = 0;
+    active_ = 0;
+    queue_.clear();
+    outcomes_.clear();
+    terminal_order_.clear();
+    outcome_bytes_ = 0;
+    names_.clear();
+    lines_.clear();
+    bytes_ = 0;
+    dropped_lines_ = 0;
+    dropped_through_ = 0;
+    cancelled_ = false;
+  }
+  if (old)
+    lua_close(old);
 }
 void Console::pump(const std::function<void(lua_State *)> &init) {
   static thread_local bool busy = false;
   if (busy)
     return;
+  busy = true;
   if (!state_) {
     state_ = luaL_newstate();
     if (state_) {
@@ -186,28 +382,50 @@ void Console::pump(const std::function<void(lua_State *)> &init) {
     }
   }
   std::string code;
+  Session session;
+  Request request;
   {
     std::lock_guard lock(mutex_);
-    if (queue_.empty())
+    if (queue_.empty()) {
+      busy = false;
       return;
-    active_ = queue_.front().first;
+    }
+    request = queue_.front().first;
     code = std::move(queue_.front().second);
     queue_.pop_front();
+    // Reset before publishing Running: cancel cannot be erased after observing
+    // the active request, and a finished request cannot poison its successor.
+    cancelled_ = false;
+    instructions_ = 0;
+    budget_exhausted_ = false;
+    cancellation_observed_ = false;
+    active_ = request;
+    session = session_;
+    outcomes_.at(request).state = RequestState::Running;
   }
-  busy = true;
+  running = this;
+  Outcome result;
   if (state_) {
-    execute(code);
+    result = execute(code);
     index();
-  } else
-    output("error", "Cannot allocate Lua state");
+  } else {
+    result.state = RequestState::Failed;
+    result.error = {"allocation", "Cannot allocate Lua state", false};
+    output("error", result.error.text);
+  }
+  running = nullptr;
   {
     std::lock_guard lock(mutex_);
-    completed_ = active_;
+    result.session = session;
+    result.request = request;
+    terminal_locked(std::move(result));
     active_ = 0;
+    cancelled_ = false;
   }
   busy = false;
 }
-void Console::execute(const std::string &code) {
+Outcome Console::execute(const std::string &code) {
+  Outcome result;
   auto *L = state_;
   const int base = lua_gettop(L);
   output("input", "> " + code);
@@ -239,9 +457,7 @@ void Console::execute(const std::string &code) {
     lua_pop(L, 1);
     rc = luaL_loadbuffer(L, code.data(), code.size(), "=devtools");
   }
-  cancelled_ = false;
-  instructions_ = 0;
-  running = this;
+  const bool syntax_error = rc != 0;
   // Disable JIT on the whole state and flush traces: compiled loops bypass
   // hooks.
   luaJIT_setmode(L, 0, LUAJIT_MODE_ENGINE | LUAJIT_MODE_OFF);
@@ -250,10 +466,31 @@ void Console::execute(const std::string &code) {
   if (!rc)
     rc = lua_pcall(L, 0, LUA_MULTRET, handler);
   lua_sethook(L, nullptr, 0, 0);
-  running = nullptr;
-  if (rc)
-    output("error", value(L, -1));
-  else {
+  if (rc) {
+    result.state =
+        cancellation_observed_ ? RequestState::Cancelled : RequestState::Failed;
+    result.error.code = syntax_error             ? "lua_syntax"
+                        : cancellation_observed_ ? "cancelled"
+                        : budget_exhausted_      ? "instruction_budget"
+                                                 : "lua_runtime";
+    result.error.text = value(L, -1);
+    if (lua_type(L, -1) == LUA_TSTRING) {
+      size_t length;
+      lua_tolstring(L, -1, &length);
+      result.error.truncated = length > 8192;
+    }
+    output("error", result.error.text);
+  } else {
+    result.state = RequestState::Succeeded;
+    result.return_count = lua_gettop(L) - handler;
+    result.returns_truncated = result.return_count > 64;
+    std::size_t remaining = 32768;
+    for (int i = handler + 1; i <= lua_gettop(L) && result.values.size() < 64;
+         ++i) {
+      auto typed = typed_value(L, i, remaining);
+      result.returns_truncated = result.returns_truncated || typed.truncated;
+      result.values.push_back(std::move(typed));
+    }
     int n = lua_gettop(L) - handler;
     if (!n)
       output("result", "ok (no return values)");
@@ -267,6 +504,7 @@ void Console::execute(const std::string &code) {
   lua_pushvalue(L, oldfilewrite);
   lua_setfield(L, filemeta, "write");
   lua_settop(L, base);
+  return result;
 }
 void Console::index() {
   std::vector<std::string> names;

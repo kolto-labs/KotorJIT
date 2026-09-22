@@ -32,3 +32,5 @@ For automation, the optional existing harness forwards to this same service:
 ```
 
 A submission returns `request`. Status returns `submitted`, `completed`, `running`, `queued`, `open`, and `input_calls`. Output returns bounded `lines` with `request`, `kind`, and `text`; request zero denotes unassociated system output. Poll `completed >= request`, then inspect that request's rows for results or errors. This adapter is a test surface: the actual F12 UI never calls the harness or its listener. Existing harness `lua` remains its independent test-state contract; legacy game-console `lua exec` now queues through the product console.
+
+The shared service now also exposes session-aware typed outcomes and targeted cancellation; see [the service contract](devtools-protocol.md). These are additive native APIs beneath F12. `completed` is a legacy high-water statistic, not proof of success or completion of every lower request. New clients should look up the exact session/request outcome. This slice adds no browser transport or alternate Lua runtime.
