@@ -37,10 +37,14 @@ Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`.
 | KOTOR 1 | GOG, Windows | Supported |
 | KOTOR 1 | Steam, Windows | Supported (identical `.text` to GOG once deciphered) |
 | KOTOR 1 | Amazon Games, Windows | Registered, not yet installable: no matchable engine symbols to bind hook sites |
+| KOTOR 1 | Mac (Aspyr) | Registered / static_only: corpus signatures exist; no Mach-O loader in the PE/ELF runtime yet |
 | KOTOR 2 | Native Linux (Aspyr) | Supported: routines and events. `kotor.struct` is unverified on this build (see below) |
 | KOTOR 2 | GOG Aspyr, Windows | Supported |
 | KOTOR 2 | Steam Aspyr, Windows | Supported |
+| KOTOR 2 | Mac (Aspyr) | Registered / static_only: same Mach-O loader gap as K1 Mac |
 | KOTOR 2 | Retail CD 1.0 / 1.0b, Windows | Registered, not yet installable: same reason as K1 Amazon Games |
+
+Machine-readable profile table: [`data/profiles/builds.toml`](data/profiles/builds.toml) (`python3 tools/list_profiles.py`). See [`docs/user/platform-profiles.md`](docs/user/platform-profiles.md).
 
 "Supported" means every required hook site resolves and the runtime installs. The routine bridge (`kotor.<Name>`) and event dispatch both work. It does not mean every corner is verified. K2's struct field layouts (`kotor.struct` / `kp.struct`) were researched against the K1 build only. Typed field access on a K2 build may read the wrong offset. Raw `kotor.mem.*` does not use that research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
 

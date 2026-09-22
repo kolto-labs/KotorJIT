@@ -18,6 +18,19 @@ cmake --build build
 
 That produces `build/kphasor.dll` and the proxy `build/binkw32.dll`.
 
+Or package those artifacts (plus address tables and the installer) into a zip:
+
+```sh
+./scripts/package_release.sh
+# -> dist/kotorphasor-0.1.0.zip  (sha256 printed; tools/check_release_zip.py validates members)
+```
+
+Unpack the zip and install from its directory as the build dir:
+
+```sh
+./install_to_game.sh install /path/to/swkotor .
+```
+
 ## Put it in the game folder
 
 ```sh
