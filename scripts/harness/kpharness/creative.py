@@ -81,6 +81,8 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
         raise ValueError('boot timeout must be finite and in (0,600] seconds')
     if any(n <= 0 or n > 4096 or n % 2 for n in (options.width, options.height)):
         raise ValueError('screen dimensions must be positive even values up to4096')
+    if not 1 <= options.capture_fps <= 120:
+        raise ValueError('capture FPS must be an integer in [1,120]')
     re.compile(options.marker)
     root = discover.repo_root()
     route = find_scenario(options.route).resolve()
@@ -140,7 +142,7 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
         if sha256(route_copy) != input_before[str(route)]:
             raise ValueError('route changed during input snapshot')
         scenario = Scenario.load(route_copy)
-        recorder = recorder_type(run_dir, ffmpeg=options.ffmpeg, marker_pattern=options.marker)
+        recorder = recorder_type(run_dir, ffmpeg=options.ffmpeg, fps=options.capture_fps, marker_pattern=options.marker)
         driver_log = (run_dir / 'driver.log').open('w')
         def log(message):
             print(message, flush=True); driver_log.write(message + '\n'); driver_log.flush()
@@ -234,6 +236,7 @@ def parser():
     result.add_argument('--route', required=True, help='existing ScenarioRunner TOML path or scenario name')
     for name in ('source', 'build-dir', 'staged', 'wineprefix', 'checkpoint-root', 'output'):
         result.add_argument('--' + name)
+    result.add_argument('--capture-fps', type=int, default=60, help='real X11 capture sampling rate, 1..120; no interpolation')
     result.add_argument('--width', type=int, default=1024)
     result.add_argument('--height', type=int, default=768)
     result.add_argument('--boot-timeout', type=float, default=120)

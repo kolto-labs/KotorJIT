@@ -112,10 +112,25 @@ class RecordingTests(TempCase):
             command = popen.call_args.args[0]
             self.assertEqual(command[command.index('-video_size')+1], '800x600')
             self.assertEqual(command[command.index('-i')+1], ':123.0')
+            self.assertEqual(command[command.index('-framerate')+1], '60')
+            self.assertFalse(recorder.capture['interpolation'])
             self.assertEqual(recorder.capture['initial_native_log_offset'], len(log.read_bytes()))
             recorder.stop(); recorder.stop()
         process.send_signal.assert_called_once_with(signal.SIGINT)
         process.kill.assert_not_called()
+
+    def test_configurable_capture_rate_and_invalid_values(self):
+        options=C.parser().parse_args(['--backend','linux-wine-k1','--script','demo.lua','--route','demo','--capture-fps','30'])
+        self.assertEqual(options.capture_fps,30)
+        recorder=R.X11Recorder(self.root,fps=options.capture_fps)
+        process=mock.Mock(returncode=0);process.poll.return_value=0
+        with mock.patch.object(R.subprocess,'Popen',return_value=process) as popen, mock.patch.object(R.threading,'Thread'):
+            recorder.start(123,(800,600),self.root/'absent.log')
+            command=popen.call_args.args[0]
+            self.assertEqual(command[command.index('-framerate')+1],'30')
+            recorder.stop()
+        for fps in (0,121,1.5,True):
+            with self.subTest(fps=fps),self.assertRaises(ValueError):R.X11Recorder(self.root,fps=fps)
 
     def test_stop_escalates_only_its_recorder(self):
         process=mock.Mock(returncode=-9); process.poll.return_value=None
@@ -224,6 +239,7 @@ class DriverIntegrationTests(TempCase):
         calls=[]
         class Recorder:
             def __init__(self,run_dir,**kwargs):
+                assert kwargs['fps'] == 60
                 self.run_dir=run_dir;self.error=None;self.marker={'capture_seconds':1};self.started=0
                 self.process=mock.Mock();self.process.poll.return_value=None
             def stop(self):calls.append('recorder-stop')

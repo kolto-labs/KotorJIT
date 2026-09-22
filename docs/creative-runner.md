@@ -158,3 +158,19 @@ Cleanup tracks recorder and session completion separately. A boot-time cleanup
 failure remains a failed cleanup receipt even if a later retry releases the
 remaining owned resources; completed operations are not repeated. Retained raw
 video and the cleanup error remain available for diagnosis.
+
+Capture defaults to `--capture-fps 60`; choose an integer from 1 through 120 to
+match host capacity. This sets X11 acquisition frequency, with no interpolation
+or synthetic motion smoothing. Capture and encoding remain limited to two
+ffmpeg threads. The representative MP4 preserves source cadence; the GIF is an
+8 FPS lightweight preview, not the smooth showcase deliverable.
+
+Requested capture FPS and encoded stream FPS are different from actual game
+render cadence. `capture.json` records sampling settings; media probes record
+encoded average/nominal frame rate and frame count. These can contain duplicate
+game frames. Actual smoothness requires checking distinct frames and their timing
+in the gameplay interval, ffmpeg capture/drop diagnostics, and visual review;
+this runner does not yet certify that cadence. A clip is not automatically a good
+advertisement because its route passed: review framing, immediate visible effect,
+phase readbacks and restoration before selecting footage for a short-form video.
+The complete recording remains the evidence source.

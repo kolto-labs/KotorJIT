@@ -30,19 +30,25 @@ def artifact(path: Path) -> dict:
 def probe_video(path: Path, ffprobe: str = 'ffprobe') -> dict:
     data = json.loads(subprocess.check_output(
         [ffprobe, '-v', 'error', '-select_streams', 'v:0', '-show_entries',
-         'stream=width,height,nb_frames:format=duration', '-of', 'json', str(path)],
+         'stream=width,height,nb_frames,avg_frame_rate,r_frame_rate:format=duration', '-of', 'json', str(path)],
         text=True, timeout=30))
     stream = data['streams'][0]
     duration = float(data['format']['duration'])
     if not math.isfinite(duration) or duration <= 0 or int(stream['width']) <= 0 or int(stream['height']) <= 0:
         raise ValueError('recording has no valid video dimensions/duration')
-    return {'duration_seconds': duration, 'width': int(stream['width']), 'height': int(stream['height'])}
+    return {'duration_seconds': duration, 'width': int(stream['width']), 'height': int(stream['height']),
+            'encoded_average_frame_rate': stream.get('avg_frame_rate'),
+            'encoded_nominal_frame_rate': stream.get('r_frame_rate'),
+            'encoded_frame_count': stream.get('nb_frames'),
+            'render_cadence': 'unvalidated; encoded frames may repeat the same game frame'}
 
 
 class X11Recorder:
     """Only signal the Popen recorder owned by this instance; stop is idempotent."""
-    def __init__(self, run_dir: Path, *, ffmpeg: str = 'ffmpeg', fps: int = 12,
+    def __init__(self, run_dir: Path, *, ffmpeg: str = 'ffmpeg', fps: int = 60,
                  marker_pattern: str = CREATIVE_MARKER):
+        if isinstance(fps, bool) or not isinstance(fps, int) or not 1 <= fps <= 120:
+            raise ValueError('capture FPS must be an integer in [1,120]')
         self.run_dir = Path(run_dir)
         self.ffmpeg, self.fps = ffmpeg, fps
         self.pattern = re.compile(marker_pattern)
@@ -72,6 +78,8 @@ class X11Recorder:
                    '-crf', '28', '-pix_fmt', 'yuv420p', '-threads', '2', str(self.run_dir / 'continuous.mp4')]
         self.started = time.monotonic()
         self.capture = {'display': display, 'screen': [width, height], 'fps': self.fps,
+                        'capture_sampling_fps': self.fps, 'interpolation': False,
+                        'render_cadence': 'unvalidated; requires distinct-frame analysis and gameplay observation',
                         'started_monotonic': self.started, 'initial_native_log_offset': self._offset, 'command': command}
         try:
             self.process = subprocess.Popen(command, stdout=self.log, stderr=subprocess.STDOUT)
