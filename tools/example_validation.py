@@ -9,6 +9,8 @@ import re
 import subprocess
 import tempfile
 
+from example_configuration import effective_source
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / 'tools/tests/examples/manifest.json'
 
@@ -33,6 +35,27 @@ def require(output, *patterns):
             raise AssertionError(f'Missing assertion {pattern!r}:\n{output}')
 
 
+def configuration_json(data):
+    def unique_keys(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError('duplicate configuration key: ' + key)
+            result[key] = value
+        return result
+    return json.loads(data, object_pairs_hook=unique_keys)
+
+
+def artifact_bytes(artifact):
+    path = Path(artifact['path'])
+    if not path.is_absolute() or not path.is_file():
+        raise ValueError('missing live artifact')
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != artifact['sha256']:
+        raise ValueError('stale live artifact')
+    return data
+
+
 def validate_live(evidence, entry):
     """All required predicates and artifact hashes must bind the current Lua bytes.
 
@@ -41,9 +64,24 @@ def validate_live(evidence, entry):
     """
     if evidence.get('schema') != 1 or evidence.get('path') != entry['path']:
         raise ValueError('wrong live schema or example')
-    for field in ('source_sha256', 'deployed_sha256'):
-        if evidence.get(field) != entry['sha256']:
-            raise ValueError(f'stale or missing {field}')
+    if evidence.get('source_sha256') != entry['sha256']:
+        raise ValueError('stale or missing stock source_sha256')
+    if 'configuration' in evidence:
+        config = evidence['configuration']
+        if not isinstance(config, dict) or set(config) != {'artifact', 'diff', 'effective_source', 'deployed_source'}:
+            raise ValueError('incomplete configured-source evidence')
+        declaration = configuration_json(artifact_bytes(config['artifact']))
+        stock = (ROOT / 'scripts/examples' / entry['path']).read_bytes()
+        expected, delta = effective_source(entry, stock, declaration)
+        if artifact_bytes(config['diff']) != delta:
+            raise ValueError('configuration diff differs from reviewed transformation')
+        if artifact_bytes(config['effective_source']) != expected or artifact_bytes(config['deployed_source']) != expected:
+            raise ValueError('effective/deployed source differs from reviewed transformation')
+        expected_hash = hashlib.sha256(expected).hexdigest()
+        if evidence.get('configured_sha256') != expected_hash or evidence.get('deployed_sha256') != expected_hash:
+            raise ValueError('wrong configured/deployed source hash')
+    elif evidence.get('deployed_sha256') != entry['sha256'] or 'configured_sha256' in evidence:
+        raise ValueError('stale deployment or undeclared configuration')
     for field in ('run_id', 'started_utc', 'completed_utc', 'checkpoint', 'runtime_sha256', 'git_commit', 'dirty_diff_sha256'):
         if not evidence.get(field):
             raise ValueError(f'missing {field}')
@@ -56,9 +94,7 @@ def validate_live(evidence, entry):
     if not artifacts:
         raise ValueError('no retained live artifacts')
     for artifact in artifacts:
-        path = Path(artifact['path'])
-        if not path.is_absolute() or not path.is_file() or digest(path) != artifact['sha256']:
-            raise ValueError('missing or stale live artifact')
+        artifact_bytes(artifact)
 
 
 def main():
@@ -71,6 +107,11 @@ def main():
     manifest = json.loads(MANIFEST.read_text())
     entries = manifest['examples']
     paths = [e['path'] for e in entries]
+    for entry in entries:
+        live = entry['live']
+        assert set(live['required_predicates']) == set(live['predicate_obligations']), 'live checklist mismatch'
+        assert all(live['predicate_obligations'].values()), 'empty live obligation'
+    assert sum(e['live']['status'] == 'not_applicable' for e in entries) == 10, 'host-only inventory drift'
     actual = sorted(str(p.relative_to(ROOT / 'scripts/examples')) for p in (ROOT / 'scripts/examples').rglob('*.lua'))
     assert len(entries) == 41 and len(set(paths)) == 41 and sorted(paths) == actual, 'example inventory drift'
     for entry in entries:
@@ -82,7 +123,7 @@ def main():
         source = (ROOT / 'scripts/examples' / entry['path']).read_text()
         for name in re.findall(r"(?:(?:q|nwscript\.call)\(|pcall\(\s*nwscript\.call,)\s*['\"](\w+)", source):
             assert '"' + name + '"' in catalog, f"Unknown K1 routine {name} in {entry['path']}"
-    validation_files = [MANIFEST, Path(__file__), *sorted((ROOT / 'tools/tests/examples').glob('*.lua')),
+    validation_files = [MANIFEST, Path(__file__), ROOT / 'tools/example_configuration.py', *sorted((ROOT / 'tools/tests/examples').glob('*.lua')),
                         ROOT / 'tools/tests/examples/evidence_test.py', ROOT / 'src/generated/routines_k1.inc']
     validation_hashes = {str(p.relative_to(ROOT)): digest(p) for p in validation_files}
     host_hash = digest(args.host.resolve())

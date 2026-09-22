@@ -8,11 +8,11 @@ for exact current-byte host coverage and remaining live predicates.
 
 | Demo | Script contract | Required live observation |
 |---|---|---|
-| `10_ahto_city_law` | PC attack on any `man*` module, including the Sith base | actual event/caller and audible cosmetic bark; no law enforcement mechanic |
-| `20_sith_patrol_alarm` | first hostile perception per sentry/module | perception/caller and audible callout; no AI alert propagation |
+| `10_ahto_city_law` | PC attack on any `man*` module, including the Sith base | actual event/caller and displayed custom text; no law enforcement mechanic |
+| `20_sith_patrol_alarm` | first hostile perception per sentry/module | perception/caller and displayed callout text; no AI alert propagation |
 | `30_battle_meditation` | conscious active-party Bastila, six-second buff requests, combat-end reset | inspect each party effect independently of the printed successful-call count |
-| `40_alignment_drift` | crossing a decade at 180-tick polls | engine alignment values and audible bark; no fixed wall-time promise |
-| `50_enclave_arrival` | once per supported module prefix, persisted sidecar | hook, saved prefixes and audible bark |
+| `40_alignment_drift` | crossing a decade at 180-tick polls | engine alignment values and displayed custom text; no fixed wall-time promise |
+| `50_enclave_arrival` | once per supported module prefix, persisted sidecar | hook, saved prefixes and displayed custom text |
 | `60_party_wounded` | at or below 35% HP, once per object/Lua state | engine HP and warning; speaker identity is not selected by the script |
 
 The playbooks describe live procedures, which require an isolated staged game

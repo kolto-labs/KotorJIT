@@ -53,8 +53,10 @@ value is exhaustively tested.
 
 ## Current live acceptance
 
-All 32 engine-dependent files begin **unvalidated**. Nine real-host-only files
-are `not_applicable` for the engine tier. September 16 recordings and oracle
+All **31 engine-dependent files** begin **unvalidated**. The nine real-host
+fixtures and the standalone multiplayer regression are **10 host-only files**
+whose live tier is `not_applicable`. The production multiplayer script retains
+its separate real two-game obligations. September 16 recordings and oracle
 logs lacked current-source hashes and cannot supply a current pass. In
 particular, the retained coverage attempt had no oracle lines; the documented
 `end_m01ab/from_01a` transition did not reach its target; meditation's historical
@@ -62,8 +64,11 @@ particular, the retained coverage attempt had no oracle lines; the documented
 only establishes that a game can boot into a measured state.
 
 To attach fresh evidence, create a JSON list and pass `--live-evidence FILE`.
-Each entry must have this shape (use each manifest entry's exact predicate
-strings as the `predicates` keys):
+Each entry must have this shape. Use each manifest entry's exact
+`live.required_predicates` IDs as the `predicates` keys; the corresponding
+`live.predicate_obligations` text defines the independently observed outcome.
+Every required ID must be true; a missing outcome prevents promotion. These
+checklists separately identify requests, engine results and guard behavior:
 
 ```json
 {
@@ -79,7 +84,7 @@ strings as the `predicates` keys):
   "git_commit": "source commit",
   "dirty_diff_sha256": "source changes hash",
   "clean_session": true,
-  "predicates": {"each exact required predicate": true},
+  "predicates": {"each exact required predicate ID": true},
   "artifacts": [{"path": "/absolute/report.json", "sha256": "artifact hash"}]
 }
 ```
@@ -89,10 +94,63 @@ predicates, unclean sessions and missing/changed artifacts. It checks evidence
 structure and provenance, not whether an observation was honestly measured.
 A reviewer must inspect the state predicates and recordings. Never infer a
 live pass from a request result, script counter, screenshot, or oracle alone.
-Record the exact configuration when changing `INSPECT`, `OPEN` or targets in
-harness snippets; a configured-source hash must be retained alongside the
-original-source hash and configuration change. The stock inspect-mode source
-hash alone does not prove the configured transition executed.
+For a configured snippet, retain the original manifest hash as `source_sha256`.
+Add `configured_sha256`, set `deployed_sha256` to that effective-source hash,
+and attach a `configuration` object with four `{path, sha256}` artifacts:
+`artifact` (configuration JSON), `diff` (exact generated unified diff),
+`effective_source` (generated Lua), and `deployed_source` (an independently
+captured copy of the actual deployed Lua). All artifact paths are absolute.
+The importer derives the effective bytes from the hash-checked stock source and
+reviewed configuration values, then compares the diff, effective artifact,
+deployment artifact and declared hashes. A rehashed unrelated edit still fails.
+
+Configuration JSON for the documented transition is:
+
+```json
+{
+  "schema": 1,
+  "path": "harness/100_module_transition.lua",
+  "values": {"INSPECT": false}
+}
+```
+
+Generate the reviewed effective source and diff with
+`tools.example_configuration.effective_source(entry, stock_bytes, configuration)`
+from the repository root. The return values are `(effective_bytes, diff_bytes)`.
+`entry` is the matching checked manifest entry. Store these bytes exactly and
+hash the retained files. Deploy the effective Lua in the isolated live session;
+after deployment capture its bytes independently. Original and effective
+hashes must not be substituted for each other.
+
+The finite transformation allowlist changes only documented local constants:
+
+| Example | Reviewed fields |
+|---|---|
+| world probe | `RADIUS` |
+| dialog state | `PARTNER_TAG` |
+| move | `TARGET_TAG` (tag or null), `RANGE`, `OFFSET` with exactly x/y/z |
+| attack | `RADIUS` |
+| doors | `TAG`, `OPEN` |
+| area dump | `OBJECT_TYPE`, `MAX` |
+| signal event | `TARGET`, `EVENT` |
+| run script | `SCRIPT`, `TARGET_TAG` (tag or null) |
+| transition | `DOOR_TAG`, `MODULE`, `WAYPOINT`, `INSPECT` |
+| loot | `TAG` |
+| production multiplayer | `LOCAL_NAME`, `LISTEN_PORT`, `PEERS` |
+
+Tags contain up to64 ASCII letters/digits/underscores; resrefs up to16. Radii
+are0..250, offset coordinates -1000..1000, dump limits1..1000, event IDs0..255,
+and object types are the documented1/2/4/8/32/64 values. Multiplayer accepts
+up to3 distinct IPv4 host/port peers, ports1..65535 and a bounded printable
+player name. Unknown fields, wrong types, injected Lua and source declaration
+drift fail closed. A value outside those reviewed bounds needs a separately
+reviewed allowlist change; an arbitrary patch is never an accepted configuration.
+
+For a controlled one-game peer, the reviewed production multiplayer values can
+be `{"LOCAL_NAME":"Validation Peer","LISTEN_PORT":39131,"PEERS":[{"host":"127.0.0.1","port":39132}]}`.
+That configuration does not relax its `two_game_clients` live obligation.
+Retain observed socket/template/actor results as partial evidence; do not mark
+the production script fully passed until all its required outcomes are met.
 
 ## Reproduced defects and intentional boundaries
 
@@ -111,3 +169,7 @@ valid gameplay PC exists; module cancellation/restart behavior needs real
 runtime evidence. Wounded warnings last for the Lua-state/object lifetime.
 Ambient barks do not select a named speaker. These limits remain explicit and
 are not silently changed into stronger gameplay promises.
+
+Custom showcase `SpeakString` lines are speech/text operations. Their live
+checklists require observed text delivery and caller identity, not invented
+voiced audio. Rave's explicit battle-music operation retains its audio outcome.
