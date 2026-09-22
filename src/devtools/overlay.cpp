@@ -43,6 +43,7 @@ struct Input {
   UINT msg;
   WPARAM w;
   LPARAM l;
+  bool ctrl, shift, alt, super;
 };
 std::mutex input_mutex;
 std::deque<Input> inputs;
@@ -195,7 +196,12 @@ void set_open(bool value) {
   opened = value;
   release_keyboard = true;
   focus = true;
-  reset_inputs = true;
+  if (context && owner == GetCurrentThreadId()) {
+    ImGui::GetIO().ClearInputKeys();
+    ImGui::GetIO().ClearInputMouse();
+    reset_inputs = false;
+  } else
+    reset_inputs = true;
 }
 void toggle() { set_open(!opened.load()); }
 LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM w, LPARAM l) {
@@ -213,10 +219,18 @@ LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM w, LPARAM l) {
     return 0;
   }
   if (opened) {
-    {
+    if (owner == GetCurrentThreadId()) {
+      // The backend samples GetKeyState; dispatch on this owning thread at
+      // message time so fast Ctrl+A/paste/history chords keep their modifiers.
+      ImGui_ImplWin32_WndProcHandler(h, msg, w, l);
+    } else {
       std::lock_guard lock(input_mutex);
       if (inputs.size() < 1024)
-        inputs.push_back({msg, w, l});
+        inputs.push_back({msg, w, l, (GetKeyState(VK_CONTROL) & 0x8000) != 0,
+                          (GetKeyState(VK_SHIFT) & 0x8000) != 0,
+                          (GetKeyState(VK_MENU) & 0x8000) != 0,
+                          (GetKeyState(VK_LWIN) & 0x8000) != 0 ||
+                              (GetKeyState(VK_RWIN) & 0x8000) != 0});
     }
     if ((msg >= WM_KEYFIRST && msg <= WM_KEYLAST) ||
         (msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST) || msg == WM_INPUT)
@@ -303,8 +317,13 @@ void draw() {
   io.MouseDrawCursor = opened;
   {
     std::lock_guard lock(input_mutex);
-    for (auto &e : inputs)
+    for (auto &e : inputs) {
       ImGui_ImplWin32_WndProcHandler(window, e.msg, e.w, e.l);
+      io.AddKeyEvent(ImGuiMod_Ctrl, e.ctrl);
+      io.AddKeyEvent(ImGuiMod_Shift, e.shift);
+      io.AddKeyEvent(ImGuiMod_Alt, e.alt);
+      io.AddKeyEvent(ImGuiMod_Super, e.super);
+    }
     inputs.clear();
   }
   ImGui_ImplOpenGL2_NewFrame();

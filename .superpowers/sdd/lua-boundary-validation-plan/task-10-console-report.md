@@ -17,3 +17,13 @@ Native32 and MinGW shipping targets built during implementation. `kp_consoletest
 ## Remaining proof / risks
 
 Controller owns real keyboard/video acceptance, runtime native scale/readback/restore demonstration and independent review. No runtime proof claimed here. DirectInput shared-vtable discovery must be observed on the actual target. Context recreation, alternate game windows and additional render backends remain platform hardening work. Budget protection is cooperative for Lua instructions and does not preempt native calls or intentionally bypassed hooks. Output capture is scoped and does not redirect process C streams or arbitrary background callbacks. Full editor panels, entity tree, property editing/gizmos, debugger stepping and other platforms remain the separate roadmap.
+
+## Frozen implementation candidate
+
+`/home/brunner56/kp-validation-20260922-build/kphasor-console-smoke3.dll`
+
+SHA256: `62c223ba14e8a823470fe7a617e420342dd713eb8c9192d67a4901aaf5718a62`.
+
+Native32 `kphasor`, MinGW `kphasor_dll` and actual LuaJIT `kp_consoletest` passed after the last behavioral change. Test assertions are request-scoped and success commands explicitly reject error rows. Added preservation checks for real standard-file handles and `io.output` redirection to an ordinary file. Build receipt: `/tmp/kp-console-smoke3-build.log`.
+
+The controller's first live test of smoke1 found a movement baseline contaminated by residual movement from a preceding closed-console input check. A settled repeat passed its 35 live checks, including actual F12 typing, native queries and model scale/readback/restore. Those are controller-reported observations, not an implementation-agent launch. Smoke2 exposed a real fast-Ctrl+A regression: deferring Win32 event handling sampled modifier state after Ctrl was released. Smoke3 dispatches immediately when WndProc and renderer have the same owner thread, queues only cross-thread events with modifier snapshots, and clears held ImGui input at the toggle boundary. Controller owns final smoke3 acceptance and independent review.
