@@ -23,3 +23,11 @@ Native32 `kphasor`, MinGW `kphasor_dll` and expanded focused `kp_consoletest` pa
 Frozen DLL: `/home/brunner56/kp-validation-20260922-build/kphasor-task12.dll`.
 
 SHA256: `42285b0c2d640472ebc8db61e2c0b881d74e3de545b6fb5d2aa693fcf56a0b62`.
+
+## Review fix round 1: legacy completion watermark
+
+Independent review `/tmp/kp-task12-review.md` passed the new service specification and requested repair of mixed legacy/new-client completion polling. `completed` now remains a contiguous terminal prefix within the current session. Its boundary derives from the bounded outstanding queue and active Running request, independently of terminal retention; cancelling a later request cannot leap an earlier unfinished one. Exact outcome lookup remains authoritative for success/failure/cancellation.
+
+Actual-Lua tests cover legacy pending A plus later targeted cancellation B, and a synchronized running A plus later cancellation B. Both cases evict 140 later cancelled outcomes while A remains unfinished, assert the watermark has not crossed A, then confirm A's real result/side effect and advancement across the cancelled/evicted suffix. The controller's separate rapid-history observation was not attributed to this service or changed in this fix; no overlay/history files were edited.
+
+Native32 `kphasor`, MinGW `kphasor_dll` and expanded focused `kp_consoletest` passed; CTest elapsed 0.04 seconds. Build receipt `/tmp/kp-task12-fixround1-build.log`. Frozen DLL `/home/brunner56/kp-validation-20260922-build/kphasor-task12-fixround1.dll`, SHA256 `761299138e89716d9435be32a2dff5dd905afd5970dc0746d420418e7d551a57`. Fresh live acceptance and scoped rereview remain controller-owned.

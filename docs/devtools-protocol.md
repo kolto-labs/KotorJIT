@@ -16,7 +16,7 @@ The current F12 overlay and legacy harness continue using their existing APIs. T
 
 Each Console instance and reset receives a fresh process-local session epoch. Request IDs are monotonically increasing for the lifetime of an instance, including across reset. Epochs distinguish independent instances in the same process; a future transport must additionally identify its runtime instance across process restarts. A matching request number never overrides a stale-session check. `Unavailable` means the ID was not accepted in this session; `Expired` means its terminal outcome was evicted. Accepted pending/running outcomes are retained independently of terminal eviction.
 
-`completed` is only a legacy high-water statistic. It does **not** establish success, prove every lower ID is finished, or replace `outcome()`. Cancelling a later queued request can advance it while an earlier request is still pending. Use the explicit state for the exact session/request.
+`completed` is the legacy contiguous terminal watermark within the current session. It advances only below the earliest pending/running request, so cancelling a later queued request cannot make an earlier request appear finished. The bounded queue and active request determine this watermark independently of terminal-outcome eviction. Zero means no terminal prefix in this epoch. It still does **not** establish success or replace `outcome()`; use the explicit state for the exact session/request.
 
 ## Request states and errors
 

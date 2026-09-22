@@ -278,7 +278,13 @@ void Console::terminal_locked(Outcome result) {
   existing = std::move(result);
   outcome_bytes_ += outcome_bytes(existing);
   terminal_order_.push_back(existing.request);
-  completed_ = std::max(completed_, existing.request);
+  // Legacy polling observes a contiguous terminal prefix, not the largest
+  // terminal ID. The bounded outstanding set survives outcome eviction.
+  Request earliest = queue_.empty() ? 0 : queue_.front().first;
+  if (active_ && outcomes_.at(active_).state == RequestState::Running)
+    earliest = earliest ? std::min(earliest, active_) : active_;
+  completed_ =
+      earliest ? (earliest == epoch_first_ ? 0 : earliest - 1) : submitted_;
   while (terminal_order_.size() > 128 || outcome_bytes_ > kOutcomeBytes) {
     auto id = terminal_order_.front();
     terminal_order_.pop_front();

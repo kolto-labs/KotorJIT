@@ -62,6 +62,93 @@ int gate(lua_State *) {
           "cancel test gate timeout");
   return 0;
 }
+void watermark_tests() {
+  Console pending;
+  const auto epoch = pending.status().session;
+  const auto first =
+      pending.submit("watermark_effect = 42; return watermark_effect");
+  auto later = pending.submit(epoch, "watermark_effect = 999");
+  require(pending.cancel(epoch, later.request) == Cancellation::Cancelled,
+          "later queued cancellation");
+  require(pending.status().completed < first &&
+              pending.outcome(epoch, first).outcome.state ==
+                  RequestState::Pending,
+          "cancel does not leap pending legacy request");
+  for (int i = 0; i < 140; ++i) {
+    auto r = pending.submit(epoch, "never_execute=true");
+    require(pending.cancel(epoch, r.request) == Cancellation::Cancelled,
+            "terminal eviction setup");
+  }
+  require(pending.outcome(epoch, later.request).status == Lookup::Expired,
+          "later cancellation outcome evicted");
+  require(pending.status().completed < first,
+          "eviction cannot leap pending watermark");
+  pending.pump();
+  auto result = pending.outcome(epoch, first).outcome;
+  require(result.state == RequestState::Succeeded &&
+              result.values[0].number == 42,
+          "earlier legacy side effect completes");
+  require(pending.status().completed == pending.status().submitted,
+          "watermark passes cancelled gaps after earlier completion");
+  auto side_effect = evaluate(pending, "watermark_effect,never_execute");
+  require(side_effect.values[0].number == 42 &&
+              side_effect.values[1].type == ValueType::Nil,
+          "cancelled later requests never execute");
+
+  {
+    std::lock_guard lock(gate_mutex);
+    gate_entered = false;
+    gate_released = false;
+  }
+  Console active;
+  active.pump([](lua_State *L) {
+    lua_pushcfunction(L, gate);
+    lua_setglobal(L, "gate");
+  });
+  const auto active_epoch = active.status().session;
+  const auto running = active.submit("gate(); return 42");
+  std::thread client([&] {
+    {
+      std::unique_lock lock(gate_mutex);
+      require(gate_condition.wait_for(lock, std::chrono::seconds(3),
+                                      [] { return gate_entered; }),
+              "watermark running gate");
+    }
+    auto cancelled = active.submit(active_epoch, "return 999");
+    require(active.cancel(active_epoch, cancelled.request) ==
+                Cancellation::Cancelled,
+            "later cancellation during running request");
+    require(active.status().completed < running &&
+                active.outcome(active_epoch, running).outcome.state ==
+                    RequestState::Running,
+            "cancel does not leap running legacy request");
+    for (int i = 0; i < 140; ++i) {
+      auto r = active.submit(active_epoch, "1");
+      require(active.cancel(active_epoch, r.request) == Cancellation::Cancelled,
+              "running terminal eviction setup");
+    }
+    require(active.outcome(active_epoch, cancelled.request).status ==
+                    Lookup::Expired &&
+                active.status().completed < running,
+            "eviction cannot leap running watermark");
+    {
+      std::lock_guard lock(gate_mutex);
+      gate_released = true;
+    }
+    gate_condition.notify_all();
+  });
+  active.pump();
+  client.join();
+  require(active.status().completed == active.status().submitted &&
+              active.outcome(active_epoch, running).outcome.values[0].number ==
+                  42,
+          "running completion advances across evicted terminals");
+  {
+    std::lock_guard lock(gate_mutex);
+    gate_entered = false;
+    gate_released = false;
+  }
+}
 void typed_tests() {
   Console c;
   auto epoch = c.status().session;
@@ -238,6 +325,7 @@ void typed_tests() {
       "cancel does not spill to following command");
 }
 int main() {
+  watermark_tests();
   typed_tests();
   Console c;
   c.pump();
