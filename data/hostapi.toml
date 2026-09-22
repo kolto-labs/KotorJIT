@@ -1676,11 +1676,15 @@ confidence = "medium"
 lua_name = "nwscript.last_trace"
 module = "routines"
 params = []
-returns = "table"
+returns = "table or nil"
 failure = "never"
 requires = "none"
-mechanism = "copies the most recent bridge dispatch trace into a Lua table"
-doc = "Read-only diagnostic receipt for the last engine routine dispatch, including failure stages. This does not execute an engine routine."
+mechanism = "copies the current game thread's limited GetFacing diagnostic trace, or returns nil before a trace exists"
+doc = """Read-only diagnostic initialized only by GetFacing (routine 28), after
+live VM/context and argument-count checks pass. Returns nil before a trace exists.
+Other routines and early context or argument-count failures do not initialize a
+new trace, so this is not a receipt for the latest arbitrary dispatch or failure.
+Reading it does not execute an engine routine."""
 confidence = "high"
 
 [[function]]
