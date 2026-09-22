@@ -1,4 +1,5 @@
 #include "devtools/console.hpp"
+#include "devtools/history.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -70,11 +71,32 @@ int main() {
   run(c, "print=nil; io=nil; debug=nil");
   run(c, "40+2");
   require(contains(c, "result", "number: 42"), "mutated globals do not panic");
+  kp::devtools::History history;
+  require(!history.navigate(true, "draft"), "empty history preserves edit");
+  history.submitted("first", true);
+  history.submitted("second", true);
+  const std::string draft = "local function unfinished()\n  return 42\nend";
+  require(history.navigate(true, draft) == "second", "history enters newest");
+  require(history.navigate(true, "second") == "first", "history moves older");
+  require(history.navigate(false, "first") == "second", "history moves newer");
+  require(history.navigate(false, "second") == draft,
+          "history restores multiline draft");
+  require(!history.navigate(false, draft),
+          "past draft leaves editor unchanged");
+  require(history.navigate(true, draft) == "second", "history reenters");
   Console queue;
   for (int i = 0; i < 16; ++i)
     require(queue.submit("1") != 0, "queue capacity");
   require(queue.submit("overflow") == 0, "queue rejects overflow");
   require(queue.submit(std::string(16385, 'x')) == 0, "command cap");
+  history.submitted("rejected", queue.submit("rejected") != 0);
+  require(history.navigate(false, "second") == draft,
+          "rejection retains original draft");
+  history.submitted("accepted", true);
+  require(history.navigate(true, "") == "accepted",
+          "successful submission enters history");
+  require(history.navigate(false, "accepted") == "",
+          "successful submission clears old draft");
   for (int i = 0; i < 600; ++i)
     queue.output("test", std::string(1000, 'x'));
   require(queue.snapshot().size() <= 262, "output byte bound");

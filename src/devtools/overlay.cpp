@@ -1,4 +1,5 @@
 #include "devtools/console.hpp"
+#include "devtools/history.hpp"
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define DIRECTINPUT_VERSION 0x0800
@@ -48,8 +49,7 @@ struct Input {
 std::mutex input_mutex;
 std::deque<Input> inputs;
 std::array<char, 16385> edit{};
-std::vector<std::string> history;
-int history_pos = -1;
+History history;
 std::atomic<bool> focus{true};
 std::atomic<bool> reset_inputs{false};
 using State = HRESULT(WINAPI *)(IDirectInputDevice8A *, DWORD, LPVOID);
@@ -196,7 +196,12 @@ void set_open(bool value) {
   opened = value;
   release_keyboard = true;
   focus = true;
+  {
+    std::lock_guard lock(input_mutex);
+    inputs.clear();
+  }
   if (context && owner == GetCurrentThreadId()) {
+    ImGui::GetIO().ClearEventsQueue();
     ImGui::GetIO().ClearInputKeys();
     ImGui::GetIO().ClearInputMouse();
     reset_inputs = false;
@@ -247,18 +252,12 @@ int edit_callback(ImGuiInputTextCallbackData *data) {
       ImGui::GetIO().KeyCtrl &&
       (ImGui::IsKeyPressed(ImGuiKey_UpArrow) ||
        ImGui::IsKeyPressed(ImGuiKey_DownArrow))) {
-    if (history.empty())
-      return 0;
-    if (ImGui::IsKeyPressed(ImGuiKey_UpArrow))
-      history_pos = history_pos < 0 ? int(history.size()) - 1
-                                    : std::max(0, history_pos - 1);
-    else if (history_pos >= 0)
-      history_pos++;
-    if (history_pos >= int(history.size()))
-      history_pos = -1;
-    data->DeleteChars(0, data->BufTextLen);
-    if (history_pos >= 0)
-      data->InsertChars(0, history[history_pos].c_str());
+    auto recalled = history.navigate(ImGui::IsKeyPressed(ImGuiKey_UpArrow),
+                                     std::string(data->Buf, data->BufTextLen));
+    if (recalled) {
+      data->DeleteChars(0, data->BufTextLen);
+      data->InsertChars(0, recalled->c_str());
+    }
   } else if (data->EventFlag == ImGuiInputTextFlags_CallbackCompletion) {
     int start = data->CursorPos;
     while (start > 0 &&
@@ -287,6 +286,18 @@ template <class Function> Function gl_proc(const char *name) {
   return result;
 }
 void draw() {
+  auto &io = ImGui::GetIO();
+  if (reset_inputs.exchange(false)) {
+    io.ClearEventsQueue();
+    io.ClearInputKeys();
+    io.ClearInputMouse();
+  }
+  if (!opened) {
+    // A cross-thread close may need this one owner-thread reset, but no
+    // backend frame, extension lookup, GL query or GL state mutation.
+    io.MouseDrawCursor = false;
+    return;
+  }
   // The upstream GL2 backend does not preserve client arrays or pixel-store
   // state. The game owns both, including VBO-backed array pointers.
   glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -308,11 +319,6 @@ void draw() {
   if (client_active) {
     glGetIntegerv(0x84E1, &previous_client_active);
     client_active(0x84C0);
-  }
-  auto &io = ImGui::GetIO();
-  if (reset_inputs.exchange(false)) {
-    io.ClearInputKeys();
-    io.ClearInputMouse();
   }
   io.MouseDrawCursor = opened;
   {
@@ -377,13 +383,10 @@ void draw() {
                                   edit_callback);
     if (submit && edit[0]) {
       std::string s = edit.data();
-      if (console().submit(s)) {
-        history.push_back(s);
-        if (history.size() > 100)
-          history.erase(history.begin());
+      const bool accepted = console().submit(s) != 0;
+      history.submitted(s, accepted);
+      if (accepted)
         edit[0] = 0;
-        history_pos = -1;
-      }
       focus = true;
     }
     ImGui::End();
@@ -422,7 +425,10 @@ void draw() {
 }
 BOOL WINAPI swap(HDC dc) {
   static thread_local bool inside = false;
-  if (!inside && wglGetCurrentContext()) {
+  // Once attached, closed frames chain directly to the game's presentation.
+  // Only an input-reset transition may reenter owner-thread bookkeeping.
+  if (!inside && (!context || opened || reset_inputs) &&
+      wglGetCurrentContext()) {
     inside = true;
     HWND h = WindowFromDC(dc);
     if (h && (!window || h == window)) {

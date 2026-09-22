@@ -1,6 +1,6 @@
 # In-game Lua console
 
-The initial renderer targets the Windows K1 OpenGL game, including Wine. Press **F12** to show the console over the game. **Escape** or F12 closes it. Type Lua and press **Enter** to queue execution on the engine loop. **Ctrl+Enter** inserts a newline. **Ctrl+Up/Down** recalls history. **Tab** completes a single match or prints bounded candidates. Scroll through output and use **Copy output** to copy the retained transcript.
+The initial renderer targets the Windows K1 OpenGL game, including Wine. Press **F12** to show the console over the game. **Escape** or F12 closes it. Type Lua and press **Enter** to queue execution on the engine loop. **Ctrl+Enter** inserts a newline. **Ctrl+Up/Down** recalls history. The unfinished edit buffer, including multiline text, is saved when entering history and restored when moving past the newest entry. Rejected submissions retain that draft; a successful submission clears it. **Tab** completes a single match or prints bounded candidates. Scroll through output and use **Copy output** to copy the retained transcript.
 
 Expressions need no `return`: `1+1`, `false`, or `nil, 42` display typed results. Statements also work, and globals persist across submissions:
 
@@ -17,6 +17,8 @@ Commands run only at the existing engine pump. The window/render callbacks enque
 The console disables/flushed LuaJIT traces before execution and installs a one-million-instruction budget hook. An ordinary accidental `while true do end` ends with an error and the next command remains usable. This is not a sandbox: intentionally replacing debug hooks, enabling JIT, catching hook errors repeatedly, blocking native functions, and callbacks outside the command cannot be forcibly preempted. The cancellation flag is cooperative; a UI on the same blocked game thread cannot deliver a click until execution yields or the budget fires. Do not treat this as a hard native-code deadline.
 
 Completion snapshots are built on the engine thread with raw table traversal, a visited-table set, depth two, 256 visited entries per table, 16384 visited entries total and a 4096-name cap. Completion never evaluates a text expression or invokes `__index`/getters. Up to 64 matches are shown. Very large/deep tables are intentionally not exhaustive.
+
+After initial window attachment, closed-console presentation calls the original SwapBuffers directly, without ImGui frames or OpenGL state work. An input-reset transition may perform one owner-thread input cleanup before returning to that fast path.
 
 The Windows adapter hooks the main executable's imported SwapBuffers, subclasses the rendering window, and intercepts shared DirectInput keyboard/mouse device state/buffer reads. While open, window keyboard/mouse messages are consumed, game DirectInput output is emptied and cursor warping is suppressed. The status exposes observed DirectInput calls so attachment can be tested against the actual game. This implementation needs live verification for every supported game image; source presence or a compiled DLL does not prove gameplay input isolation. Other renderer/platform adapters are not implemented.
 
