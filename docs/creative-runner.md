@@ -111,7 +111,7 @@ inherited event waits. Unsupported/malformed watermark responses fail explicitly
 
 Continuous `continuous.mp4` recording begins on the owned display before game
 launch and lasts through the route. Capture uses the session's configured
-screen,12fps and at most two ffmpeg encoding threads. A watcher records the first
+screen,60fps by default and at most two ffmpeg encoding threads. A watcher records the first
 fresh creative native-log marker and its monotonic time relative to recorder
 startup. Arming and "beat drops" announcements are excluded by default. The
 marker receipt records exact text and timing uncertainty:100ms log polling plus
