@@ -20,6 +20,14 @@ Holocron Toolset/PyKotor already understand KotOR resource formats and module au
 
 Dear ImGui separates platform/input backends from rendering backends. Follow that boundary. Its capture flags do not suppress a game's independent DirectInput polling: the platform adapter must explicitly handle all input paths. Its OpenGL2 renderer also requires care with modern shader/VBO state; drawing an overlay must restore the game's graphics state. [Backend guide](https://github.com/ocornut/imgui/blob/master/docs/BACKENDS.md), [input capture FAQ](https://github.com/ocornut/imgui/blob/master/docs/FAQ.md), [OpenGL2 backend](https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_opengl2.cpp).
 
+## Blender-style UI and scripting parity
+
+The user explicitly wants Lua to double as a comprehensive development environment. Adopt a shared operation model: selecting an object, editing a property, manipulating a gizmo, composing a camera or running a Lua command all operate on the same live objects and produce the same observable results. Every implemented editor operation should expose a scriptable equivalent and a **Copy as Lua** action. A reusable command history should let users turn a successful interactive experiment into a script.
+
+Blender exposes data access alongside context-sensitive operators and records operators for reuse in scripts. For KotOR, keep data queries separate from mutations, and make operation preconditions explicit rather than depending invisibly on the currently focused panel. Only operations with validated inverse behavior enter undo history. [Blender API quickstart](https://docs.blender.org/api/current/info_quickstart.html), [operator system](https://developer.blender.org/docs/features/interface/operators/), [Python console](https://docs.blender.org/manual/en/latest/editors/python_console.html).
+
+This is architectural parity, not a claim to have implemented Blender's breadth. Mesh/material authoring, rig editing, complete physics, arbitrary engine-memory rewind and offline resource baking require their own supported backends and remain separately gated. The immediate implementation stays the actual F12 Lua command loop.
+
 ## Ownership and architecture
 
 ```mermaid
@@ -117,3 +125,27 @@ Research should map familiar entities, hooks, timers and math patterns onto supp
 Playback needs a stronger state contract than a console transcript. A dialog checkpoint must identify the actual pre-choice game state, active module, resource/build identity and associated mod session. Returning to a choice may need restoration of quest variables, inventory, spawned/destroyed objects, party state, script state, timers and random state. A native save/load boundary can provide a coarse checkpoint where the game supports saving; it is not automatically a frame-accurate memory snapshot. Arbitrary Lua closure/FFI/native state cannot be promised serializable.
 
 Start with verified pause/resume and named checkpoint lifecycle through a runtime-owned service. Keep harness transport and TOML as clients, not dependencies of player-facing Lua. Add dialog-choice history with checkpoint associations and explicit availability. A history entry with no restorable checkpoint is a transcript entry, not a rewind button. Future fine-grained rollback needs a measured state inventory, restoration coverage and round-trip tests with quest/inventory/script side effects.
+
+
+## Shared browser and native developer-tools pipeline
+
+The browser/WASM implementation must reuse the F12 command service. The browser console, an embedded editor, native overlay and harness are clients; none creates a second gameplay Lua state or evaluates commands on a rendering callback. Browser transport belongs outside Lua, NWScript and harness configuration.
+
+The intended JavaScript surface is a small asynchronous client, for example `await kotor.lua.evaluate("kp.obj.pc()")`. This is a proposed interface until its adapter is implemented. It returns request-correlated results from the same runtime-owned execution queue. JavaScript remains JavaScript in Chrome's Console; the explicit Lua call selects the game scripting language. Do not replace browser globals, monkey-patch `console`, or translate NWScript names into JavaScript or Lua aliases.
+
+A versioned transport contract must carry session identity, request identity, submission acceptance, terminal outcome, bounded output, completion and capability information. Worker messages are transport adapters over this contract. Reloads invalidate old requests and object references; queue rejection, output loss, disconnects and unsupported operations must be visible. Completion and inspection do not execute arbitrary getters or Lua metamethods. Structured inspection requires typed values and session-bound references; parsing pretty-printed text is not an object protocol.
+
+Chrome DevTools should expose ordinary inspectable JavaScript results, useful error stacks, source-linked browser adapter code and WASM debugging information where supported. Native browser debugging and Lua source-level breakpoints are distinct capabilities. Lua stepping, paused-frame inspection and breakpoints require a runtime debugger adapter and remain explicitly unavailable until implemented and tested. A JavaScript pause must not be presented as a reversible game checkpoint.
+
+Acceptance includes a cross-client round trip: a value assigned through F12 is read and modified by a browser client, then observed through F12 in the same session; commands retain ordering, output attribution, cancellation semantics and error recovery. Browser worker tests and native service tests are preliminary evidence. Full browser-game acceptance still requires authentic game execution, graphics, input, audio and save/load for each supported corpus variant.
+
+
+### Playable browser delivery and locally supplied game data
+
+The browser objective is a playable K1/K2 game, comparable in purpose to [KotOR.js](https://github.com/KobaltBlu/KotOR.js), with the shared live developer tools connected to that game. A parser, console page, streamed desktop, CPU function trace or static scene is an intermediate result and cannot satisfy this objective. KotOR.js is a researched comparator; this document does not adopt its implementation or claim feature parity.
+
+Deploy only authored runtime/application code and permitted dependencies. Retail game executables, archives, textures, models, audio, movies, scripts, saves, extracted resources and corpus-derived proprietary source or instruction payloads must not enter GitHub, published bundles, source maps, CI artifacts or a site deployment. Build/deploy inputs must use an explicit allowlist, with synthetic fixtures in public tests and private local game inputs outside the publish root. Merely adding ignore patterns is insufficient: validate the actual output package. No publication is authorized by this implementation task.
+
+The player chooses an existing installation with a visible **Choose game folder** action. Read the granted folder locally and lazily through a game-data provider; do not upload files or copy the installation into a server dataset. Validate K1/K2 resource layout and variant capabilities before enabling Play. Show readable errors for denied access, missing files, unsupported variants and expired permissions. Keep game assets read-only and save/mod output in separate local browser storage with explicit import/export. Chrome requires user-granted file access in a secure context; other browser capabilities need feature detection and a clearly described local-file fallback. [Chrome File System Access documentation](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access).
+
+The platform keyboard adapter must respect browser shortcuts: native F12 opens the in-game overlay; browser F12 remains Chrome DevTools. The browser game exposes a visible developer-tools button and a separately documented non-conflicting shortcut. Both interfaces reach the same console service and session. A user can inspect the browser API in Chrome while the embedded game editor shows the corresponding results and live state.
