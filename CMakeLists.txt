@@ -154,3 +154,15 @@ if(UNIX AND NOT WIN32)
     add_test(NAME kp_consoletest COMMAND kp_consoletest)
     set_tests_properties(kp_consoletest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
 endif()
+
+if(UNIX AND NOT WIN32)
+    add_executable(kp_editorinputtest tools/kp_editorinputtest.cpp src/devtools/editor_input.cpp
+        third_party/imgui/imgui.cpp third_party/imgui/imgui_draw.cpp
+        third_party/imgui/imgui_tables.cpp third_party/imgui/imgui_widgets.cpp)
+    target_include_directories(kp_editorinputtest PRIVATE src third_party/imgui)
+    target_compile_options(kp_editorinputtest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_editorinputtest PRIVATE -m32)
+    target_link_libraries(kp_editorinputtest PRIVATE Threads::Threads)
+    add_test(NAME kp_editorinputtest COMMAND kp_editorinputtest)
+    set_tests_properties(kp_editorinputtest PROPERTIES TIMEOUT 20 LABELS "offline;devtools;imgui")
+endif()

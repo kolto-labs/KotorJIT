@@ -1,6 +1,6 @@
 #include "devtools/console.hpp"
-#include "devtools/history.hpp"
 #if defined(_WIN32)
+#include "devtools/editor_input.hpp"
 #define WIN32_LEAN_AND_MEAN
 #define DIRECTINPUT_VERSION 0x0800
 #include "backends/imgui_impl_opengl2.h"
@@ -48,8 +48,10 @@ struct Input {
 };
 std::mutex input_mutex;
 std::deque<Input> inputs;
-std::array<char, 16385> edit{};
-History history;
+EditorInput
+    editor([](const std::string &code) { return console().submit(code) != 0; },
+           [](const std::string &prefix) { return console().complete(prefix); },
+           [](const std::string &text) { console().output("editor", text); });
 std::atomic<bool> focus{true};
 std::atomic<bool> reset_inputs{false};
 using State = HRESULT(WINAPI *)(IDirectInputDevice8A *, DWORD, LPVOID);
@@ -194,6 +196,7 @@ void set_open(bool value) {
   if (opened.load() != value)
     ++input_epoch;
   opened = value;
+  editor.close();
   release_keyboard = true;
   focus = true;
   {
@@ -209,6 +212,67 @@ void set_open(bool value) {
     reset_inputs = true;
 }
 void toggle() { set_open(!opened.load()); }
+ImGuiKey editor_key(WPARAM w) {
+  switch (w) {
+  case VK_RETURN:
+    return ImGuiKey_Enter;
+  case VK_TAB:
+    return ImGuiKey_Tab;
+  case VK_LEFT:
+    return ImGuiKey_LeftArrow;
+  case VK_RIGHT:
+    return ImGuiKey_RightArrow;
+  case VK_UP:
+    return ImGuiKey_UpArrow;
+  case VK_DOWN:
+    return ImGuiKey_DownArrow;
+  case VK_HOME:
+    return ImGuiKey_Home;
+  case VK_END:
+    return ImGuiKey_End;
+  case VK_PRIOR:
+    return ImGuiKey_PageUp;
+  case VK_NEXT:
+    return ImGuiKey_PageDown;
+  case VK_BACK:
+    return ImGuiKey_Backspace;
+  case VK_DELETE:
+    return ImGuiKey_Delete;
+  case VK_INSERT:
+    return ImGuiKey_Insert;
+  case 'A':
+    return ImGuiKey_A;
+  case 'C':
+    return ImGuiKey_C;
+  case 'X':
+    return ImGuiKey_X;
+  case 'V':
+    return ImGuiKey_V;
+  case 'Z':
+    return ImGuiKey_Z;
+  case 'Y':
+    return ImGuiKey_Y;
+  default:
+    return ImGuiKey_None;
+  }
+}
+void character(HWND h, WPARAM w) {
+  if (w < 32 || w == 127)
+    return;
+  wchar_t wide[2]{};
+  int count = 1;
+  if (IsWindowUnicode(h))
+    wide[0] = wchar_t(w);
+  else {
+    char narrow[2] = {char(w & 0xff), char((w >> 8) & 0xff)};
+    count = MultiByteToWideChar(CP_ACP, 0, narrow, narrow[1] ? 2 : 1, wide, 2);
+  }
+  char utf8[8];
+  int n = WideCharToMultiByte(CP_UTF8, 0, wide, count, utf8, sizeof utf8,
+                              nullptr, nullptr);
+  if (n > 0)
+    editor.text(std::string(utf8, n));
+}
 LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM w, LPARAM l) {
   if (msg == WM_KILLFOCUS)
     set_open(false);
@@ -224,9 +288,28 @@ LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM w, LPARAM l) {
     return 0;
   }
   if (opened) {
+    // All keyboard meaning is captured now, never reconstructed from a later
+    // frame's modifiers. WM_CHAR for control keys is consumed separately.
+    if (msg == WM_CHAR) {
+      character(h, w);
+      return 0;
+    }
+    if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN) {
+      bool ctrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0,
+           shift = (GetKeyState(VK_SHIFT) & 0x8000) != 0,
+           alt = (GetKeyState(VK_MENU) & 0x8000) != 0;
+      ImGuiKey key = editor_key(w);
+      bool letter = w >= 'A' && w <= 'Z';
+      if (key != ImGuiKey_None && (!letter || ctrl))
+        editor.key(key, ctrl, shift, alt, (l & (1L << 30)) != 0);
+      return 0;
+    }
+    if (msg == WM_KEYUP || msg == WM_SYSKEYUP || msg == WM_SYSCHAR ||
+        msg == WM_DEADCHAR)
+      return 0;
     if (owner == GetCurrentThreadId()) {
-      // The backend samples GetKeyState; dispatch on this owning thread at
-      // message time so fast Ctrl+A/paste/history chords keep their modifiers.
+      // Non-keyboard window events stay on the owning ImGui thread. Keyboard
+      // events use the ordered editor queue above on both thread paths.
       ImGui_ImplWin32_WndProcHandler(h, msg, w, l);
     } else {
       std::lock_guard lock(input_mutex);
@@ -246,34 +329,6 @@ LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM w, LPARAM l) {
     }
   }
   return CallWindowProc(previous, h, msg, w, l);
-}
-int edit_callback(ImGuiInputTextCallbackData *data) {
-  if (data->EventFlag == ImGuiInputTextFlags_CallbackAlways &&
-      ImGui::GetIO().KeyCtrl &&
-      (ImGui::IsKeyPressed(ImGuiKey_UpArrow) ||
-       ImGui::IsKeyPressed(ImGuiKey_DownArrow))) {
-    auto recalled = history.navigate(ImGui::IsKeyPressed(ImGuiKey_UpArrow),
-                                     std::string(data->Buf, data->BufTextLen));
-    if (recalled) {
-      data->DeleteChars(0, data->BufTextLen);
-      data->InsertChars(0, recalled->c_str());
-    }
-  } else if (data->EventFlag == ImGuiInputTextFlags_CallbackCompletion) {
-    int start = data->CursorPos;
-    while (start > 0 &&
-           (std::isalnum(static_cast<unsigned char>(data->Buf[start - 1])) ||
-            data->Buf[start - 1] == '_' || data->Buf[start - 1] == '.'))
-      --start;
-    auto matches = console().complete(
-        std::string(data->Buf + start, data->CursorPos - start));
-    if (matches.size() == 1) {
-      data->DeleteChars(start, data->CursorPos - start);
-      data->InsertChars(start, matches[0].c_str());
-    } else
-      for (auto &s : matches)
-        console().output("completion", s);
-  }
-  return 0;
 }
 template <class Function> Function gl_proc(const char *name) {
   PROC address = wglGetProcAddress(name);
@@ -334,6 +389,7 @@ void draw() {
   }
   ImGui_ImplOpenGL2_NewFrame();
   ImGui_ImplWin32_NewFrame();
+  editor.prepare();
   ImGui::NewFrame();
   if (opened) {
     ImGui::SetNextWindowPos({20, 20}, ImGuiCond_FirstUseEver);
@@ -371,24 +427,7 @@ void draw() {
       ImGui::SetKeyboardFocusHere();
       focus = false;
     }
-    // Multiline EnterReturnsTrue uses Ctrl+Enter by default; invert via
-    // CtrlEnterForNewLine so plain Enter submits and modified Enter inserts.
-    io.ConfigInputTextEnterKeepActive = true;
-    bool submit =
-        ImGui::InputTextMultiline("##lua", edit.data(), edit.size(), {-1, 75},
-                                  ImGuiInputTextFlags_EnterReturnsTrue |
-                                      ImGuiInputTextFlags_CtrlEnterForNewLine |
-                                      ImGuiInputTextFlags_CallbackCompletion |
-                                      ImGuiInputTextFlags_CallbackAlways,
-                                  edit_callback);
-    if (submit && edit[0]) {
-      std::string s = edit.data();
-      const bool accepted = console().submit(s) != 0;
-      history.submitted(s, accepted);
-      if (accepted)
-        edit[0] = 0;
-      focus = true;
-    }
+    editor.draw("##lua", {-1, 75});
     ImGui::End();
   }
   ImGui::Render();

@@ -13,6 +13,7 @@ set(KP_RUNTIME_DIR "${CMAKE_CURRENT_LIST_DIR}")
 set(KP_SRC_ROOT    "${CMAKE_CURRENT_LIST_DIR}/..")
 
 set(KP_DEVTOOLS_WIN_SOURCES
+    "${KP_SRC_ROOT}/devtools/editor_input.cpp"
     "${KP_SRC_ROOT}/../third_party/imgui/imgui.cpp"
     "${KP_SRC_ROOT}/../third_party/imgui/imgui_draw.cpp"
     "${KP_SRC_ROOT}/../third_party/imgui/imgui_tables.cpp"
