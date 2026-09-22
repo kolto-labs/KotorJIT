@@ -1,6 +1,6 @@
-return function(test)
+return function(test, F)
 local function source(path,from,to)
- local h=assert(io.open('scripts/examples/'..path)); local s=h:read('*a'); h:close()
+ local h=assert(io.open(F.source(path))); local s=h:read('*a'); h:close()
  local n; s,n=s:gsub(from,to); assert(n==1); return s
 end
 test('harness/10_world_probe.lua','world shape, sorted living hostiles and party',function(F,p)

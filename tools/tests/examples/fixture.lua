@@ -1,5 +1,9 @@
 -- Controlled Lua boundary only: requests and decisions, never engine effects.
 local F = { INVALID = 2130706432, instances={} }
+function F.source(path)
+  local source = assert(F.sources and F.sources[path], 'unmapped example: '..path)
+  return source
+end
 function F.new(path, overrides)
   local f = {calls={}, prints={}, timers={}, locals={}, objects={
     [1]={tag='pc',party=1,x=0}, [2]={tag='bastila',party=1,x=1},
@@ -61,7 +65,7 @@ function F.new(path, overrides)
     return unpack(results,2)
   end}
   function f:load(source)
-    local chunk=source and assert(loadstring(source,path)) or assert(loadfile('scripts/examples/'..path))
+    local chunk=source and assert(loadstring(source,path)) or assert(loadfile(F.source(path)))
     setfenv(chunk,self.env); self.result=chunk(); return self
   end
   function f:count(name) local n=0 for _,c in ipairs(self.calls) do if c.name==name then n=n+1 end end return n end

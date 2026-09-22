@@ -1,27 +1,18 @@
-# Showcase demo playbooks
+# Retired showcase regression playbooks
 
-All six scripts are shipped under `scripts/examples/showcase/`. Retained runs
-contain oracle lines and recordings for all six, but their receipts do not bind
-current source hashes. They are historical observations, not current release
-acceptance. Use the [per-example validation ledger](../example-validation.md)
-for exact current-byte host coverage and remaining live predicates.
+The six former text/buff showcase examples were removed from the public tree
+on 2026-09-22. Their unchanged sources now live in
+[internal regression fixtures](../../tools/tests/examples/fixtures/legacy/showcase/).
+They preserve event, effect, threshold and persistence tests; they are not
+featured gameplay demonstrations.
 
-| Demo | Script contract | Required live observation |
-|---|---|---|
-| `10_ahto_city_law` | PC attack on any `man*` module, including the Sith base | actual event/caller and displayed custom text; no law enforcement mechanic |
-| `20_sith_patrol_alarm` | first hostile perception per sentry/module | perception/caller and displayed callout text; no AI alert propagation |
-| `30_battle_meditation` | conscious active-party Bastila, six-second buff requests, combat-end reset | inspect each party effect independently of the printed successful-call count |
-| `40_alignment_drift` | crossing a decade at 180-tick polls | engine alignment values and displayed custom text; no fixed wall-time promise |
-| `50_enclave_arrival` | once per supported module prefix, persisted sidecar | hook, saved prefixes and displayed custom text |
-| `60_party_wounded` | at or below 35% HP, once per object/Lua state | engine HP and warning; speaker identity is not selected by the script |
+The individual playbooks here describe historical procedures and unresolved
+live observations. Keep those records, including failures. Public retirement
+does not establish a live pass. Explicit internal gameplay regression tests
+resolve the relocated fixtures; `deploy_showcase.sh` and `record_showcase.sh`
+reject retired public selections before accessing a game.
 
-The playbooks describe live procedures, which require an isolated staged game
-and one serialized session. Record the deployed source hashes, checkpoint,
-runtime hash, clean session outcome, independent state predicates and video
-where required. A log line alone proves an oracle was emitted. It does not prove
-an effect, action, model, sound, or exact documented route succeeded.
-
-The runner's `all` selection and any historical `ship` labels are scheduling
-choices, not validation status. Cursed routes have additional state predicates;
-their historical recordings also need current-source provenance before reuse.
-See [cursed.md](cursed.md) for the route descriptions and historical findings.
+Use the [native scene catalog](../../scripts/demos/catalog.json) for current
+candidates and the [validation ledger](../example-validation.md) for original
+identity, source mapping and evidence requirements. Candidate status alone
+establishes neither current-byte live acceptance nor visual quality.

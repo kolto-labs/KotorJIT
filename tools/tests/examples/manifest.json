@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "inventory_count": 41,
   "examples": [
     {
@@ -20,7 +20,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/10_abstain_nil.lua",
+      "disposition": "retained"
     },
     {
       "path": "arbitration/20_abstain_badstring.lua",
@@ -40,7 +42,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/20_abstain_badstring.lua",
+      "disposition": "retained"
     },
     {
       "path": "arbitration/25_claims_via_string.lua",
@@ -60,7 +64,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/25_claims_via_string.lua",
+      "disposition": "retained"
     },
     {
       "path": "arbitration/30_claims_false.lua",
@@ -80,7 +86,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/30_claims_false.lua",
+      "disposition": "retained"
     },
     {
       "path": "arbitration/40_too_late.lua",
@@ -100,7 +108,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/40_too_late.lua",
+      "disposition": "retained"
     },
     {
       "path": "arbitration/50_number_two_is_false.lua",
@@ -120,7 +130,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/arbitration/50_number_two_is_false.lua",
+      "disposition": "retained"
     },
     {
       "path": "coverage/10_cover.lua",
@@ -158,7 +170,9 @@
           "coverage.10_cover.convo_haste_pick": "convo agrees with engine conversation state, haste reads back clamped tick multiplier, pick records requested index without claiming a nonexistent ChooseReply call.",
           "coverage.10_cover.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/coverage/10_cover.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/100_item_airstrike.lua",
@@ -194,7 +208,9 @@
           "cursed.100_item_airstrike.levelup": "Actual level-up produces temporary Revan appearance22 and knight-speed aura for15seconds; request oracle alone is insufficient.",
           "cursed.100_item_airstrike.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/100_item_airstrike.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/10_rancor_roulette.lua",
@@ -230,7 +246,9 @@
           "cursed.10_rancor_roulette.animation_safety": "Continuous fight recording and advancing engine ticks show transformed humanoids animate without freeze/crash.",
           "cursed.10_rancor_roulette.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/10_rancor_roulette.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/20_fus_ro_dah.lua",
@@ -266,7 +284,9 @@
           "cursed.20_fus_ro_dah.dedup": "Repeated same-victim same-second callback does not double-count; later-second attack can trigger.",
           "cursed.20_fus_ro_dah.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/20_fus_ro_dah.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/30_necromancer.lua",
@@ -304,7 +324,9 @@
           "cursed.30_necromancer.failed_spawn": "Invalid/missing corpse or failed creation does not report a successful resurrection count.",
           "cursed.30_necromancer.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/30_necromancer.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/40_chain_reaction.lua",
@@ -340,7 +362,9 @@
           "cursed.40_chain_reaction.cascade_cleanup": "Subsequent eligible death scripts detonate once each without unbounded repeat or freezing.",
           "cursed.40_chain_reaction.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/40_chain_reaction.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/50_chaos_roulette.lua",
@@ -376,6 +400,12 @@
           "cursed.50_chaos_roulette.request_text": "Wheel text/oracle agrees with selected branch and target; record which random branches were actually observed.",
           "cursed.50_chaos_roulette.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/cursed/50_chaos_roulette.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -414,6 +444,12 @@
           "cursed.60_rave.inactive_poll": "Absent/dead PC or empty module leaves polling inert; document actual module-load timer continuation/cancellation behavior.",
           "cursed.60_rave.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/cursed/60_rave.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -452,7 +488,9 @@
           "cursed.70_doppelganger.animation_safety": "PC and copied hostiles continue animating/fighting with advancing ticks and no freeze/crash.",
           "cursed.70_doppelganger.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/70_doppelganger.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/80_loot_pinata.lua",
@@ -488,7 +526,9 @@
           "cursed.80_loot_pinata.retry_position": "Transient unavailable corpse position does not consume the later eligible burst.",
           "cursed.80_loot_pinata.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/80_loot_pinata.lua",
+      "disposition": "retained"
     },
     {
       "path": "cursed/90_bullet_time.lua",
@@ -524,7 +564,9 @@
           "cursed.90_bullet_time.suppression_visual": "Active slowdown does not stack timers; observed tint/effect and release agree with the timer, with no stuck slowdown.",
           "cursed.90_bullet_time.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/cursed/90_bullet_time.lua",
+      "disposition": "retained"
     },
     {
       "path": "edge_fallback/all_abstain.lua",
@@ -544,7 +586,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/edge_fallback/all_abstain.lua",
+      "disposition": "retained"
     },
     {
       "path": "edge_number_two/50_number_two_is_false.lua",
@@ -564,7 +608,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/edge_number_two/50_number_two_is_false.lua",
+      "disposition": "retained"
     },
     {
       "path": "edge_quarantine/always_errors.lua",
@@ -584,7 +630,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/edge_quarantine/always_errors.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/100_module_transition.lua",
@@ -618,7 +666,9 @@
           "harness.100_module_transition.waypoint_arrival": "Independent destination position/entry behavior agrees with configured waypoint; retain before/after state and exact configured source.",
           "harness.100_module_transition.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/100_module_transition.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/10_world_probe.lua",
@@ -652,7 +702,9 @@
           "harness.10_world_probe.globals": "Returned Endar globals independently match the named engine globals.",
           "harness.10_world_probe.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/10_world_probe.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/110_loot_container.lua",
@@ -686,7 +738,9 @@
           "harness.110_loot_container.empty_noop": "No stocked same-tag container returns taken0 with no take actions.",
           "harness.110_loot_container.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/110_loot_container.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/20_dialog_state.lua",
@@ -718,7 +772,9 @@
           "harness.20_dialog_state.partner_guard": "Configured partner distance/action are valid when partner exists; absent partner omits partner fields without starting dialog.",
           "harness.20_dialog_state.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/20_dialog_state.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/30_move_to.lua",
@@ -752,7 +808,9 @@
           "harness.30_move_to.missing_tag": "For tagged mode, missing destination raises error and queues no movement; offset mode records its computed location.",
           "harness.30_move_to.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/30_move_to.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/40_attack_nearest.lua",
@@ -786,7 +844,9 @@
           "harness.40_attack_nearest.engaged_noop": "Already-engaged action3/39 does not restart attack; empty hostile set queues nothing.",
           "harness.40_attack_nearest.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/40_attack_nearest.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/50_doors.lua",
@@ -820,7 +880,9 @@
           "harness.50_doors.invalid_or_open": "Missing tagged door errors without action; already-open door is not requeued.",
           "harness.50_doors.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/50_doors.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/60_area_dump.lua",
@@ -852,7 +914,9 @@
           "harness.60_area_dump.sort_limit": "Rows sort nearest first, respect configured MAX and terminate correctly for empty enumeration.",
           "harness.60_area_dump.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/60_area_dump.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/70_pc_status.lua",
@@ -886,7 +950,9 @@
           "harness.70_pc_status.wearable_slots": "Reported occupied slots0..11 match PC wearable equipment; no all18-slot coverage is claimed.",
           "harness.70_pc_status.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/70_pc_status.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/80_signal_event.lua",
@@ -920,7 +986,9 @@
           "harness.80_signal_event.missing_target": "Missing configured tag errors and sends no event.",
           "harness.80_signal_event.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/80_signal_event.lua",
+      "disposition": "retained"
     },
     {
       "path": "harness/90_run_script.lua",
@@ -954,7 +1022,9 @@
           "harness.90_run_script.refusal_missing": "Unsatisfied authored preconditions do not falsely report effects; missing target errors without executing script.",
           "harness.90_run_script.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/harness/90_run_script.lua",
+      "disposition": "retained"
     },
     {
       "path": "multiplayer/10_avatar_sync.lua",
@@ -992,7 +1062,9 @@
           "multiplayer.10_avatar_sync.lifecycle": "Actual timeout/leave/unload destroys peer placeholder without stale actors; no combat/dialog/quest/item/world replication is inferred.",
           "multiplayer.10_avatar_sync.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/multiplayer/10_avatar_sync.lua",
+      "disposition": "retained"
     },
     {
       "path": "multiplayer/10_avatar_sync_test.lua",
@@ -1012,7 +1084,9 @@
         "required_predicates": [],
         "unmet_preconditions": [],
         "predicate_obligations": {}
-      }
+      },
+      "source_path": "scripts/examples/multiplayer/10_avatar_sync_test.lua",
+      "disposition": "retained"
     },
     {
       "path": "probe/00_probe.lua",
@@ -1046,7 +1120,9 @@
           "probe.00_probe.sidecar": "Actual situation save stores cave-witness and subsequent load delivers it.",
           "probe.00_probe.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/probe/00_probe.lua",
+      "disposition": "retained"
     },
     {
       "path": "probe/10_position_trace.lua",
@@ -1080,7 +1156,9 @@
           "probe.10_position_trace.invalid_pc": "Absent/invalid PC produces no trace rather than fabricated movement.",
           "probe.10_position_trace.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
-      }
+      },
+      "source_path": "scripts/examples/probe/10_position_trace.lua",
+      "disposition": "retained"
     },
     {
       "path": "showcase/10_ahto_city_law.lua",
@@ -1114,6 +1192,12 @@
           "showcase.10_ahto_city_law.persistent_count": "Strike count persists through actual save/load and next eligible attack advances it.",
           "showcase.10_ahto_city_law.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -1148,6 +1232,12 @@
           "showcase.20_sith_patrol_alarm.sentry_reset": "Sentry raises once per module; duplicate perception is suppressed and module change permits that sentry again.",
           "showcase.20_sith_patrol_alarm.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -1182,6 +1272,12 @@
           "showcase.30_battle_meditation.round_gate": "Repeated attacked callbacks suppress another round until actual combat-end callback; next eligible round applies again.",
           "showcase.30_battle_meditation.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -1216,6 +1312,12 @@
           "showcase.40_alignment_drift.text_delivery": "Chosen custom SpeakString text is displayed with actual caller recorded; no voiced audio requirement.",
           "showcase.40_alignment_drift.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -1250,6 +1352,12 @@
           "showcase.50_enclave_arrival.text_delivery": "Selected arrival SpeakString text is displayed with caller recorded; no voiced audio requirement.",
           "showcase.50_enclave_arrival.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     },
     {
@@ -1284,6 +1392,12 @@
           "showcase.60_party_wounded.once_per_state": "Repeated damage and healing do not rewarn same object within same Lua state; warning lifetime is not claimed across states.",
           "showcase.60_party_wounded.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
+      },
+      "source_path": "tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua",
+      "disposition": "retired_public",
+      "retirement": {
+        "date": "2026-09-22",
+        "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
     }
   ]

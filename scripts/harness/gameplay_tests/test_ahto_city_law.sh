@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/examples/showcase/10_ahto_city_law.lua, against a real running game.
+# tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua, against a real running game.
 # Needs a Manaan module with something hostile in it -- manm26ad (the Sith
 # base) has both, unlike Ahto City proper which is deliberately peaceful.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -10,7 +10,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-87}"
 
 "$ROOT/scripts/harness/pick_save.sh" any
 
-deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/10_ahto_city_law.lua" \
+deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
 

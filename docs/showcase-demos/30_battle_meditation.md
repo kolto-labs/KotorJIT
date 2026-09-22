@@ -1,6 +1,10 @@
 # 30_battle_meditation
 
-**Script:** `scripts/examples/showcase/30_battle_meditation.lua`  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua`
 **Hook:** `OnRunScript` / `k_def_attacked01`  
 **Save:** `pick_save.sh dantooine_party` (**Game37**. Bastila in party)  
 **Module:** `manm26ad` (combat after party verified)

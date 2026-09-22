@@ -61,15 +61,44 @@ def live_lock(path: Path):
         yield
 
 
+def retired_script_paths(root: Path) -> tuple[set[str], set[Path]]:
+    # Public curation follows the checked manifest, not a basename ban. This
+    # reads repository metadata only; never inspect a game to validate scripts.
+    manifest_path = Path(__file__).resolve().parents[3] / 'tools/tests/examples/manifest.json'
+    manifest = json.loads(manifest_path.read_text())
+    if manifest.get('schema') != 2:
+        raise ValueError('creative runner requires example manifest schema 2')
+    names, paths = set(), set()
+    for entry in manifest['examples']:
+        if entry['disposition'] != 'retired_public':
+            continue
+        identity, source = entry['path'], entry['source_path']
+        for name in (identity, 'scripts/examples/' + identity, source):
+            relative = Path(name)
+            if relative.is_absolute() or '..' in relative.parts:
+                raise ValueError('invalid retired example path in manifest')
+            names.add(relative.as_posix())
+        paths.add((root / 'scripts/examples' / identity).resolve())
+        paths.add((root / source).resolve())
+    return names, paths
+
+
 def script_inputs(names: list[str], root: Path) -> list[Path]:
+    retired_names, retired_paths = retired_script_paths(root)
     scripts = []
     for name in names:
         path = Path(name).expanduser()
+        if (path.as_posix() in retired_names or path.resolve() in retired_paths
+                or (not path.is_absolute() and (root / path).resolve() in retired_paths)):
+            raise ValueError('retired public example; use internal regression tests: ' + name)
         if not path.is_file():
             path = root / 'scripts/examples' / name
         if not path.is_file() or path.suffix != '.lua':
             raise ValueError('script must identify an existing Lua file: ' + name)
-        scripts.append(path.resolve())
+        resolved = path.resolve()
+        if resolved in retired_paths:
+            raise ValueError('retired public example; use internal regression tests: ' + name)
+        scripts.append(resolved)
     if not scripts or len({p.name.casefold() for p in scripts}) != len(scripts):
         raise ValueError('supply scripts with unique deployed basenames')
     return scripts
@@ -85,6 +114,7 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
         raise ValueError('capture FPS must be an integer in [1,120]')
     re.compile(options.marker)
     root = discover.repo_root()
+    originals = script_inputs(options.script, root)
     route = find_scenario(options.route).resolve()
     scenario = Scenario.load(route)
     if scenario.target != 'k1' or options.target not in (None, scenario.target):
@@ -93,7 +123,6 @@ def run_creative(options, *, adapter_factory=backend, runner_factory=CreativeRun
         raise ValueError('creative routes require explicit game_speed=1.0 for recorded behavior')
     source = discover.data_dir(targets.get(scenario.target), options.source)
     build = discover.build_dir(options.build_dir)
-    originals = script_inputs(options.script, root)
     for name in targets.get(scenario.target).runtime_files:
         if not (build / name).is_file():
             raise ValueError('runtime not built: ' + str(build / name))

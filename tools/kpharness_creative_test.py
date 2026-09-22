@@ -229,6 +229,57 @@ class DriverTests(TempCase):
         with self.assertRaises(ValueError):C.script_inputs([str(first/'same.lua'),str(second/'same.lua')],self.root)
         with self.assertRaises(ValueError):C.script_inputs(['absent.lua'],self.root)
 
+    def test_retired_scripts_rejected_before_discovery_or_staging(self):
+        manifest=json.loads((ROOT/'tools/tests/examples/manifest.json').read_text())
+        retired=[entry for entry in manifest['examples'] if entry['disposition']=='retired_public']
+        alias=self.root/'retired-alias.lua';alias.symlink_to(ROOT/retired[0]['source_path'])
+        names=[str(alias)]
+        for entry in retired:
+            names.extend([entry['path'], 'scripts/examples/'+entry['path'], entry['source_path'],
+                          str(ROOT/'scripts/examples'/entry['path']), str(ROOT/entry['source_path'])])
+        for name in names:
+            with self.subTest(name=name):
+                options=C.parser().parse_args(['--backend','linux-wine-k1','--script',name,'--route','unused'])
+                adapter=mock.Mock(return_value=(None,None,mock.Mock(),None,None))
+                with mock.patch.object(C.discover,'repo_root',return_value=ROOT), \
+                     mock.patch.object(C.discover,'data_dir') as game, \
+                     mock.patch.object(C.discover,'build_dir') as build, \
+                     mock.patch.object(C,'find_scenario') as route, \
+                     mock.patch.object(C,'live_lock') as lock, \
+                     mock.patch.object(C.Path,'mkdir') as mkdir:
+                    with self.assertRaisesRegex(ValueError,'retired public example'):
+                        C.run_creative(options,adapter_factory=adapter)
+                    game.assert_not_called();build.assert_not_called();route.assert_not_called()
+                    lock.assert_not_called();mkdir.assert_not_called();adapter.return_value[2].assert_not_called()
+
+    def test_examples_shorthand_symlink_rejected_before_game_access(self):
+        target=self.root/'tools/tests/examples/fixtures/legacy/cursed/60_rave.lua'
+        target.parent.mkdir(parents=True);target.write_text('-- synthetic retired fixture')
+        examples=self.root/'scripts/examples';examples.mkdir(parents=True)
+        (examples/'__kp_retired_alias_test.lua').symlink_to(target)
+        options=C.parser().parse_args(['--backend','linux-wine-k1','--script',
+                                      '__kp_retired_alias_test.lua','--route','unused'])
+        adapter=mock.Mock(return_value=(None,None,mock.Mock(),None,None))
+        with mock.patch.object(C.discover,'repo_root',return_value=self.root), \
+             mock.patch.object(C.discover,'data_dir') as game, \
+             mock.patch.object(C.discover,'build_dir') as build, \
+             mock.patch.object(C,'find_scenario') as route, \
+             mock.patch.object(C,'live_lock') as lock, \
+             mock.patch.object(C.Path,'mkdir') as mkdir:
+            with self.assertRaisesRegex(ValueError,'retired public example'):
+                C.run_creative(options,adapter_factory=adapter)
+            game.assert_not_called();build.assert_not_called();route.assert_not_called()
+            lock.assert_not_called();mkdir.assert_not_called();adapter.return_value[2].assert_not_called()
+
+    def test_retained_custom_and_other_internal_scripts_are_allowed(self):
+        custom=self.root/'60_rave.lua';custom.write_text('-- independently authored custom script')
+        internal=self.root/'tools/tests/examples/fixtures/other.lua'
+        internal.parent.mkdir(parents=True);internal.write_text('-- not a retired example')
+        retained=ROOT/'scripts/examples/cursed/30_necromancer.lua'
+        self.assertEqual(C.script_inputs([str(custom),str(retained),str(internal)],ROOT),
+                         [custom.resolve(),retained.resolve(),internal.resolve()])
+        self.assertEqual(C.script_inputs(['cursed/30_necromancer.lua'],ROOT),[retained.resolve()])
+
 
 class DriverIntegrationTests(TempCase):
     def exercise(self, *, route_ok=True, render_error=False, mutate_source=False, checkpoint_alias=None, checkpoint_escape=False, boot_cleanup_failure=False):

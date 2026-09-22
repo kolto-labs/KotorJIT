@@ -47,6 +47,76 @@ class LiveEvidenceTests(unittest.TestCase):
                 validation.validate_live(valid, entry)
 
 
+class CurationTests(unittest.TestCase):
+    def setUp(self):
+        self.manifest = json.loads(validation.MANIFEST.read_text())
+
+    def test_exact_retirement_and_regression_inventory(self):
+        from example_inventory import RETIRED
+        entries = validation.validate_inventory(self.manifest)
+        retired = [e for e in entries if e['disposition'] == 'retired_public']
+        self.assertEqual({e['path'] for e in retired}, RETIRED)
+        self.assertEqual(len(entries), 41)
+        self.assertEqual(len(retired), 8)
+        for entry in retired:
+            self.assertFalse((validation.ROOT / 'scripts/examples' / entry['path']).exists())
+            self.assertEqual(validation.digest(validation.source_for(entry)), entry['sha256'])
+            self.assertEqual(entry['live']['status'], 'unvalidated')
+            self.assertTrue(entry['live']['required_predicates'])
+        validation.validate_catalog(json.loads((validation.ROOT / 'scripts/demos/catalog.json').read_text()))
+
+    def test_schema_mapping_and_hash_rejections(self):
+        for field, value in [('schema', 1), ('inventory_count', 33)]:
+            bad = copy.deepcopy(self.manifest); bad[field] = value
+            with self.assertRaises(ValueError): validation.validate_inventory(bad)
+        entry = self.manifest['examples'][0]
+        for source in ('../outside.lua', '/tmp/outside.lua', 'scripts/examples/../outside.lua',
+                       'scripts/examples/wrong.lua', 'scripts/examples/evil\\name.lua'):
+            bad = dict(entry, source_path=source)
+            with self.subTest(source=source), self.assertRaises(ValueError): validation.source_for(bad)
+        bad = copy.deepcopy(self.manifest); bad['examples'][0]['sha256'] = 'stale'
+        with self.assertRaisesRegex(ValueError, 'hash drift'): validation.validate_inventory(bad)
+        bad = copy.deepcopy(self.manifest); bad['examples'][1]['source_path'] = bad['examples'][0]['source_path']
+        with self.assertRaisesRegex(ValueError, 'duplicate'): validation.validate_inventory(bad)
+
+    def test_symlink_and_unmapped_or_public_copy_rejected(self):
+        import shutil
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for entry in self.manifest['examples']:
+                target = root / entry['source_path']; target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(validation.source_for(entry), target)
+            validation.validate_inventory(self.manifest, root)
+            retired = next(e for e in self.manifest['examples'] if e['disposition'] == 'retired_public')
+            old = root / 'scripts/examples' / retired['path']; old.parent.mkdir(parents=True, exist_ok=True)
+            old.write_text('-- must not return to public tree')
+            with self.assertRaisesRegex(ValueError, 'public source'): validation.validate_inventory(self.manifest, root)
+            old.unlink()
+            extra = root / 'tools/tests/examples/fixtures/legacy/extra.lua'; extra.write_text('-- unmapped')
+            with self.assertRaisesRegex(ValueError, 'inventory'): validation.validate_inventory(self.manifest, root)
+            extra.unlink()
+            target = root / retired['source_path']; target.unlink(); target.symlink_to(validation.source_for(retired))
+            with self.assertRaisesRegex(ValueError, 'symlink'): validation.validate_inventory(self.manifest, root)
+
+    def test_retired_deploy_requests_fail_before_game_access(self):
+        for script, name in [('deploy_showcase.sh', '10_ahto_city_law'),
+                             ('record_showcase.sh', 'all'),
+                             ('record_cursed.sh', '60_rave'), ('record_cursed.sh', '50_chaos_roulette')]:
+            result = subprocess.run(['bash', str(validation.ROOT / 'scripts/harness' / script), name],
+                                    capture_output=True, text=True, timeout=5)
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertIn('retired', result.stderr)
+
+    def test_retired_identity_still_requires_live_predicates(self):
+        entry = next(e for e in self.manifest['examples'] if e['disposition'] == 'retired_public')
+        evidence = {'schema': 1, 'path': entry['path'], 'source_sha256': entry['sha256'],
+                    'deployed_sha256': entry['sha256'], 'clean_session': True, 'predicates': {}}
+        for field in ('run_id', 'started_utc', 'completed_utc', 'checkpoint', 'runtime_sha256', 'git_commit', 'dirty_diff_sha256'):
+            evidence[field] = 'recorded'
+        with self.assertRaisesRegex(ValueError, 'unmet live predicates'):
+            validation.validate_live(evidence, entry)
+
+
 class ConfiguredEvidenceTests(unittest.TestCase):
     def setUp(self):
         self.folder = tempfile.TemporaryDirectory()
@@ -62,7 +132,7 @@ class ConfiguredEvidenceTests(unittest.TestCase):
     def evidence(self, path, values):
         entry = next(e for e in self.manifest if e['path'] == path)
         config = {'schema': 1, 'path': path, 'values': values}
-        stock = (validation.ROOT / 'scripts/examples' / path).read_bytes()
+        stock = validation.source_for(entry).read_bytes()
         effective, delta = validation.effective_source(entry, stock, config)
         sha = hashlib.sha256(effective).hexdigest()
         receipt = {'schema': 1, 'path': path, 'source_sha256': entry['sha256'],

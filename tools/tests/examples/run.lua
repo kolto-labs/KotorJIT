@@ -1,4 +1,5 @@
 local F = dofile('tools/tests/examples/fixture.lua')
+F.sources = assert(dofile(assert(arg[1], 'validated source map argument required')))
 local passed=0
 local function test(path,name,fn)
   F.instances={}
@@ -10,6 +11,6 @@ local function test(path,name,fn)
   passed=passed+1; print('PASS\t'..path..'\t'..name)
 end
 for _,suite in ipairs({'showcase','probes_coverage','cursed','harness'}) do
-  dofile('tools/tests/examples/'..suite..'.lua')(test)
+  dofile('tools/tests/examples/'..suite..'.lua')(test, F)
 end
 print('CASES\t'..passed)

@@ -1,6 +1,6 @@
 # Cursed KotOR
 
-Ten Lua scripts that rewrite the rules of a fight from inside the engine, each
+Eight retained Lua scripts that rewrite the rules of a fight from inside the engine, each
 tied to an engine event. They are demos of what the event layer plus the full
 NWScript routine table can do, not gameplay mods. Every one is a single file
 with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
@@ -11,16 +11,20 @@ with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
 | `20_fus_ro_dah.lua` | you hit something (OnCreatureAttacked) | the target is Force-pushed with a force-wave burst and a white flash; every fifth hit requests a sweep within 10m |
 | `30_necromancer.lua` | an enemy's death script runs (OnRunScript) | 800ms later it rises as Darth Malak, full health, hostile, wreathed in lightning; once per corpse |
 | `40_chain_reaction.lua` | any death script (OnRunScript) | the corpse is a thermal detonator; everyone in 7m takes fire damage; deaths from the blast detonate too |
-| `50_chaos_roulette.lua` | any creature ends a combat round (`k_def_combend01`) | a random curse: whirlwind, choke, terror, sudden gizka, lightning tether, haste, burning shield, heal, stun, hot-potato teleport |
-| `60_rave.lua` | repeating timer, armed on the first tick with a live PC | colour strobe, battle music, a random bystander dances each beat, plasma burst every fourth beat |
 | `70_doppelganger.lua` | first time you are attacked / attack (OnCreatureAttacked) | you become Malak; every enemy that fights you wears your appearance |
 | `80_loot_pinata.lua` | enemy death script (OnRunScript) | a ring of credit piles around the corpse; every second corpse releases a hostile gizka |
 | `90_bullet_time.lua` | HP drops to at most 70% (OnTick, every fifth tick) | `kp.game_speed(0.25)` for 2.5s, blue tint, haste aura on you; a timer restores speed |
 | `100_item_airstrike.lua` | you acquire any item (OnModuleAcquireItem); level up (OnModulePlayerLevelUp) | space laser + 60 damage on every hostile in 20m; ascension as Revan on level-up |
 
+Chaos roulette and rave were removed from the public tree on 2026-09-22.
+Their unchanged regression sources are under
+`tools/tests/examples/fixtures/legacy/cursed/`. This retained collection is
+not a featured gallery or a blanket live/visual pass; the separate
+[native scene catalog](../../demos/catalog.json) records candidates explicitly.
+
 ## How they are built
 
-Every script uses the same skeleton as `scripts/examples/showcase/`:
+These retained scripts use an event-driven skeleton:
 
 - `priority = 30` so they answer before the negative-priority passive probes.
 - `q(name, ...)`: every engine call goes through a pcall by name. The
@@ -62,4 +66,4 @@ left). `scripts/harness/record_cursed.sh <name|all>` deploys the script,
 runs the route, records the Xvfb display with x11grab, cuts a gif from the
 first curse, and writes `tmp/demos/cursed/<name>.{mp4,gif,oracle.txt,report.json}`.
 
-Current-byte host and live statuses are tracked in [example validation](../../../docs/example-validation.md). Retained recordings without source hashes are historical evidence only. Death matching deliberately accepts `*dead*` and `*death*`, including broad substring matches. Rave keeps one polling timer alive across temporarily absent/dead PCs; the timer remains inert during those polls.
+Current-byte host and live statuses are tracked in [example validation](../../../docs/example-validation.md). Retained recordings without source hashes are historical evidence only. Death matching deliberately accepts `*dead*` and `*death*`, including broad substring matches. The retired rave fixture still tests a polling timer across temporarily absent/dead PCs.

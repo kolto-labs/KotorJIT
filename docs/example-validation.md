@@ -1,10 +1,14 @@
 # Lua example validation
 
-There are exactly **41 shipped Lua files**. The checked
-`tools/tests/examples/manifest.json` fixes their paths and SHA-256 hashes. Each
+The original **41 Lua sources remain regression obligations**; they are not a
+public showcase count. Eight retired public examples now live under
+`tools/tests/examples/fixtures/legacy/`; 33 sources remain in their original
+locations. The schema-2 `tools/tests/examples/manifest.json` preserves each
+original `path` identity and records its current repository-relative
+`source_path`, disposition and SHA-256 hash. Each
 entry records a host tier, a syntax requirement, an explicit live status,
-required live predicates and unmet preconditions. Editing, adding or removing a
-shipped Lua file requires reviewing that entry and updating its source hash.
+required live predicates and unmet preconditions. Moving, editing, adding or removing an
+inventoried Lua file requires reviewing that entry and updating its source hash.
 Do not automatically accept inventory changes or copy old pass flags.
 
 Run from the repository root after building the native tools:
@@ -18,13 +22,13 @@ ctest --test-dir /absolute/build -R example_validation --output-on-failure
 
 The gate compiles all 41 files using LuaJIT without executing their top-level
 code during syntax validation. It then executes the actual scripts in fresh
-Lua environments. Tests live outside `scripts/examples`, preserving the exact
-inventory. Unexpected NW routine names fail even if the script catches the
+Lua environments. Tests resolve stable example IDs through a validated source map. Retired
+fixtures execute the same source bytes and behavioral cases as before. Unexpected NW routine names fail even if the script catches the
 error; literal calls are also checked against the generated K1 catalog. Native
 functions such as `kp.registertimer` are not NW routines.
 
 The generated receipt contains explicit syntax/host/live results for every
-file, named behavioral cases, complete command output, source hashes, test and
+original identity and current source path, retirement counts, named behavioral cases, complete command output, source hashes, test and
 manifest hashes, the real host executable hash, Git HEAD and a dirty-diff hash.
 It is written atomically only when every assertion passes. An earlier receipt
 is stale whenever its source or test hashes differ from current bytes; a failed
@@ -50,6 +54,22 @@ showcase sidecar reload, probe abstention/throttling, coverage command parsing,
 and harness inspect/action configurations. This is bounded branch coverage;
 it is not an assertion that every possible routine failure or malformed engine
 value is exhaustively tested.
+
+## Public curation and historical evidence
+
+The six former text/buff showcase scripts and cursed rave/chaos are retired
+from the public tree and default recording/deployment. Their exact Lua bytes,
+host cases and open live obligations remain internal. Retirement never means
+live passed or not applicable. The [scene catalog](../scripts/demos/catalog.json)
+separates native candidates from regression sources; this migration promotes no
+candidate to featured. Historical evidence still uses original `path` IDs,
+including `showcase/...`, while readers use `source_path` for file access.
+
+Run the complete Python validator above; it supplies the validated source map
+to the Lua suites. Direct `tools/tests/examples/run.lua` invocation now requires
+that map argument. Inventory checks reject escaped/symlinked paths, unexpected
+Lua files, stale hashes and restored public copies of retired sources. Reports
+show original regression counts and public retirements separately.
 
 ## Current live acceptance
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hash-bound offline evidence for the exact shipped example inventory."""
+"""Hash-bound offline evidence for the original example regression inventory and public retirements."""
 import argparse
 import datetime
 import hashlib
@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 
 from example_configuration import effective_source
+from example_inventory import source_for, validate_inventory, lua_source_map, validate_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / 'tools/tests/examples/manifest.json'
@@ -71,7 +72,7 @@ def validate_live(evidence, entry):
         if not isinstance(config, dict) or set(config) != {'artifact', 'diff', 'effective_source', 'deployed_source'}:
             raise ValueError('incomplete configured-source evidence')
         declaration = configuration_json(artifact_bytes(config['artifact']))
-        stock = (ROOT / 'scripts/examples' / entry['path']).read_bytes()
+        stock = source_for(entry).read_bytes()
         expected, delta = effective_source(entry, stock, declaration)
         if artifact_bytes(config['diff']) != delta:
             raise ValueError('configuration diff differs from reviewed transformation')
@@ -105,36 +106,36 @@ def main():
     parser.add_argument('--live-evidence', type=Path, help='JSON list of reviewed, current-byte live receipts')
     args = parser.parse_args()
     manifest = json.loads(MANIFEST.read_text())
-    entries = manifest['examples']
+    entries = validate_inventory(manifest)
+    validate_catalog(json.loads((ROOT / "scripts/demos/catalog.json").read_text()))
     paths = [e['path'] for e in entries]
     for entry in entries:
         live = entry['live']
         assert set(live['required_predicates']) == set(live['predicate_obligations']), 'live checklist mismatch'
         assert all(live['predicate_obligations'].values()), 'empty live obligation'
     assert sum(e['live']['status'] == 'not_applicable' for e in entries) == 10, 'host-only inventory drift'
-    actual = sorted(str(p.relative_to(ROOT / 'scripts/examples')) for p in (ROOT / 'scripts/examples').rglob('*.lua'))
-    assert len(entries) == 41 and len(set(paths)) == 41 and sorted(paths) == actual, 'example inventory drift'
-    for entry in entries:
-        assert digest(ROOT / 'scripts/examples' / entry['path']) == entry['sha256'], f"source hash drift: {entry['path']}"
     # Source-level catalog guard complements runtime fixture assertions. It also
     # catches never-exercised branches using a native function as an NW routine.
     catalog = (ROOT / 'src/generated/routines_k1.inc').read_text()
     for entry in entries:
-        source = (ROOT / 'scripts/examples' / entry['path']).read_text()
+        source = source_for(entry).read_text()
         for name in re.findall(r"(?:(?:q|nwscript\.call)\(|pcall\(\s*nwscript\.call,)\s*['\"](\w+)", source):
             assert '"' + name + '"' in catalog, f"Unknown K1 routine {name} in {entry['path']}"
-    validation_files = [MANIFEST, Path(__file__), ROOT / 'tools/example_configuration.py', *sorted((ROOT / 'tools/tests/examples').glob('*.lua')),
+    validation_files = [MANIFEST, Path(__file__), ROOT / 'tools/example_configuration.py', ROOT / 'tools/example_inventory.py', ROOT / 'scripts/demos/catalog.json', *sorted((ROOT / 'tools/tests/examples').glob('*.lua')),
                         ROOT / 'tools/tests/examples/evidence_test.py', ROOT / 'src/generated/routines_k1.inc']
     validation_hashes = {str(p.relative_to(ROOT)): digest(p) for p in validation_files}
     host_hash = digest(args.host.resolve())
     records = []
     # Compile every file in an isolated process without running its top-level code.
     for entry in entries:
-        run([args.luajit, '-e', 'assert(loadfile(' + json.dumps('scripts/examples/' + entry['path']) + '))'], records)
+        run([args.luajit, '-e', 'assert(loadfile(' + json.dumps(entry['source_path']) + '))'], records)
     import sys
     run([sys.executable, 'tools/tests/examples/evidence_test.py'], records)
     run([args.luajit, '-v'], records)
-    logic = run([args.luajit, 'tools/tests/examples/run.lua'], records)
+    with tempfile.TemporaryDirectory(prefix='kp-example-map-') as folder:
+        source_map = Path(folder) / 'sources.lua'
+        source_map.write_text(lua_source_map(entries))
+        logic = run([args.luajit, 'tools/tests/examples/run.lua', source_map], records)
     cases = {}
     for line in logic.splitlines():
         if line.startswith('PASS\t'):
@@ -184,21 +185,25 @@ def main():
                         'live': {**entry['live'], **({'status': 'passed', 'evidence': live[path]} if path in live else {})}})
     # Refuse mixed snapshots if a developer changes sources during the run.
     for entry in entries:
-        assert digest(ROOT / 'scripts/examples' / entry['path']) == entry['sha256'], 'example changed during validation'
+        assert digest(source_for(entry)) == entry['sha256'], 'example changed during validation'
     assert {str(p.relative_to(ROOT)): digest(p) for p in validation_files} == validation_hashes, 'tests changed during validation'
     assert digest(host) == host_hash, 'host executable changed during validation'
-    receipt = {'schema': 1, 'generated_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    receipt = {'schema': 2, 'generated_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
                'git_commit': run(['git', 'rev-parse', 'HEAD'], records).strip(),
                'dirty_diff_sha256': hashlib.sha256(subprocess.check_output(['git', 'diff', 'HEAD', '--binary'], cwd=ROOT)).hexdigest(),
                'host_binary': {'path': str(host), 'sha256': digest(host)},
                'validation_sources': validation_hashes,
                'scope': 'offline Lua decisions and requests; no engine proof unless separately attached',
+               'inventory': {'original_entries': len(entries), 'retired_public': sum(e['disposition'] == 'retired_public' for e in entries),
+                             'remaining_source_files': sum(e['disposition'] == 'retained' for e in entries),
+                             'public_quality_passes_claimed': 0},
                'examples': outputs, 'commands': records}
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile('w', dir=args.receipt.parent, delete=False) as handle:
         json.dump(receipt, handle, indent=2); handle.write('\n'); temporary = Path(handle.name)
     temporary.replace(args.receipt)
-    print(f'PASS: 41 syntax, 41 host-covered files, {sum(map(len,cases.values()))} per-file cases; {len(live)} live receipts attached')
+    print(f'PASS: {len(entries)} original syntax/host regression sources, {sum(map(len,cases.values()))} per-file cases; '
+          f'8 retired from public catalog; {len(live)} live receipts attached; no public quality promotion')
     print(args.receipt)
 
 

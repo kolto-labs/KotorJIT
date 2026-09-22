@@ -1,6 +1,10 @@
 # 10_ahto_city_law
 
-**Script:** `scripts/examples/showcase/10_ahto_city_law.lua`  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua`
 **Hook:** `OnRunScript` / `k_def_attacked01`  
 **Save:** `pick_save.sh any`  
 **Module:** `manm26ad` (Manaan Sith base, not peaceful Ahto City)

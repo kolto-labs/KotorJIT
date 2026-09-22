@@ -1,5 +1,10 @@
 # Cursed demos
 
+Curation note (2026-09-22): chaos roulette and rave are retired public demos.
+Their exact sources remain in `tools/tests/examples/fixtures/legacy/cursed/`
+for regression coverage. The observations below are historical, not quality
+promotion or current live acceptance.
+
 The table and run notes below describe historical September 16 observations.
 Those receipts lack current Lua source hashes. Current live status is
 **unvalidated** until fresh evidence meets the [validation ledger](../example-validation.md).

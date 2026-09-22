@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/examples/showcase/40_alignment_drift.lua, against a real running
+# tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua, against a real running
 # game. This one needs no combat and no warp: AdjustAlignment is a plain
 # engine routine, callable straight from the console, and the tick loop
 # (app.server_main_loop) is already hooked and running. The only real
@@ -12,7 +12,7 @@ GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 OUT="${OUT:-$ROOT/tmp/gameplay-test-alignment-drift}"
 DISPLAY_NUM="${DISPLAY_NUM:-86}"
 
-deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/40_alignment_drift.lua"
+deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
 
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"

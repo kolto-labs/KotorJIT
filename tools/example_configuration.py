@@ -103,5 +103,5 @@ def effective_source(entry, stock, configuration):
     if effective == source:
         raise ValueError('configuration must change source; use stock evidence for defaults')
     delta = ''.join(difflib.unified_diff(source.splitlines(keepends=True), effective.splitlines(keepends=True),
-                                       fromfile='scripts/examples/' + entry['path'], tofile='configured/' + entry['path']))
+                                       fromfile=entry['source_path'], tofile='configured/' + entry['path']))
     return effective.encode('utf-8'), delta.encode('utf-8')

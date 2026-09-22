@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# scripts/examples/showcase/60_party_wounded.lua — k_def_damage01 on hurt companions.
+# tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua — k_def_damage01 on hurt companions.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
 GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 OUT="${OUT:-$ROOT/tmp/gameplay-test-party-wounded}"
 DISPLAY_NUM="${DISPLAY_NUM:-90}"
 
-deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/60_party_wounded.lua" \
+deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
 

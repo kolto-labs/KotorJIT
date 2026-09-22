@@ -1,6 +1,10 @@
 # 60_party_wounded
 
-**Script:** `scripts/examples/showcase/60_party_wounded.lua`  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua`
 **Hook:** `OnRunScript` / `k_def_damage01`  
 **Save:** `pick_save.sh endar` (Carth in party on Endar Spire)  
 **Module:** `end_m01aa`
