@@ -340,6 +340,10 @@ def proxy_is_ours(dll: Path) -> bool:
         return False
 
 
+RUNTIME_WRITTEN_FILES = {"kphasor.dll", "steam_appid.txt", "kotorphasor.log",
+                         "kotorphasor-proxy.log"}
+
+
 def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
                  depth: int = 0, log: Log = _quiet) -> None:
     """Symlink `src`'s entries into `dst`; real copies for `writable` dirs.
@@ -362,7 +366,8 @@ def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
             else:
                 target.symlink_to(entry)
         else:
-            if copy_files or entry.suffix.lower() == ".ini":
+            if (copy_files or entry.suffix.lower() == ".ini"
+                    or entry.name.lower() in RUNTIME_WRITTEN_FILES):
                 shutil.copy2(entry, target)
             else:
                 target.symlink_to(entry)
@@ -511,6 +516,9 @@ class GameSession:
         self.data_dir = data
         install = discover.install_root(t, data)
         staged = self.staged
+        if staged == install.resolve() or staged == data.resolve():
+            raise BootFailure("unsafe staged tree",
+                              f"staged tree must differ from source install: {staged}")
         fresh = not staged.is_dir()
         staged.mkdir(parents=True, exist_ok=True)
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -553,6 +561,16 @@ class GameSession:
                 p.unlink()
                 shutil.copytree(real, p, symlinks=True)
             p.mkdir(parents=True, exist_ok=True)
+
+        # Older overlay versions linked every non-INI file. Materialize files
+        # that the loader/runtime write before those writes can reach source.
+        for name in RUNTIME_WRITTEN_FILES:
+            p = self.game_dir / name
+            if p.is_symlink():
+                source = p.resolve()
+                p.unlink()
+                if source.is_file():
+                    shutil.copy2(source, p)
 
         exe = self._ensure_executable(install)
         self.log(f"executable {exe}")
@@ -774,7 +792,10 @@ class GameSession:
                 self.log("saved original binkw32.dll -> binkw32_real.dll")
             if proxy.is_symlink():
                 proxy.unlink()
-            shutil.copy2(self.build_dir / "kphasor.dll", gd / "kphasor.dll")
+            runtime_dll = gd / "kphasor.dll"
+            if runtime_dll.is_symlink():
+                runtime_dll.unlink()
+            shutil.copy2(self.build_dir / "kphasor.dll", runtime_dll)
             shutil.copy2(self.build_dir / "binkw32.dll", proxy)
         else:
             shutil.copy2(self.build_dir / "libkphasor.so", kp / "libkphasor.so")

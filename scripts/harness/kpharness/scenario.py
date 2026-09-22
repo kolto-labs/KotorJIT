@@ -470,11 +470,12 @@ class ScenarioRunner:
             load_tick_seconds=float(s["load_tick_seconds"]),
             stagnation_seconds=float(s["stagnation_seconds"]), log=self.log, shooter=self.shooter)
         self.checkpoints = checkpoints
+        effective_target = getattr(getattr(session, "target", None), "name", scenario.target)
         if self.checkpoints is None and getattr(session, "save_dir", None):
             from . import targets as T
-            self.checkpoints = Checkpoints(T.get(scenario.target), Path(session.save_dir))
+            self.checkpoints = Checkpoints(T.get(effective_target), Path(session.save_dir))
         self.mark_seq = 0
-        self.report = Report(scenario=scenario.name, target=scenario.target,
+        self.report = Report(scenario=scenario.name, target=effective_target,
                              build=str(getattr(session, "build", "")),
                              run_dir=str(self.run_dir), started=time.time())
 

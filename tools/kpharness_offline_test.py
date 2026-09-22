@@ -363,6 +363,7 @@ class FakeSession:
         self.game_dir = game.game_dir
         self.save_dir = save_dir
         self.build = game.build
+        self.target = T.get("k1")
         self.alive = True
         self.stderr = ""
         self.rtlog = ""
@@ -970,6 +971,14 @@ do = "sleep"; seconds = 0
         r = ScenarioRunner(sc, self.session, self.ch, log=logs.append, checkpoints=cps)
         r.watchdog.hang_seconds = 5.0
         return r, logs
+
+    def test_runner_uses_effective_session_target_for_report_and_fallback_checkpoints(self):
+        sc = Scenario.parse('target="k1"\n[[step]]\ndo="quit"\n')
+        self.session.target = T.get("k2-native")
+        runner = ScenarioRunner(sc, self.session, self.ch, log=lambda _: None)
+        self.assertEqual(sc.target, "k1")
+        self.assertEqual(runner.report.target, "k2-native")
+        self.assertEqual(runner.checkpoints.target.name, "k2-native")
 
     def test_runner_end_to_end_pass(self):
         text = '''
@@ -2471,6 +2480,10 @@ class TestStaging(unittest.TestCase):
         (inst / "chitin.key").write_bytes(b"KEY V1  ")
         (inst / "swkotor.exe").write_bytes(b"MZ")
         (inst / "binkw32.dll").write_bytes(b"\0" * 300000)     # the real codec, by size
+        (inst / "kphasor.dll").write_bytes(b"source-runtime")
+        (inst / "steam_appid.txt").write_text("source-appid\n")
+        (inst / "kotorphasor.log").write_text("source-runtime-log\n")
+        (inst / "kotorphasor-proxy.log").write_text("source-proxy-log\n")
         (inst / "swkotor.ini").write_text("[Game Options]\nEnableCheats=0\n"
                                           "[Graphics Options]\nFullScreen=1\nFrame Buffer=1\n")
         build = self.tmp / "build"
@@ -2524,6 +2537,30 @@ class TestStaging(unittest.TestCase):
         s2.stage()
         s2._session_log.close()
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
+
+    def test_stage_preserves_runtime_written_source_files_and_repairs_legacy_links(self):
+        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.log", "kotorphasor-proxy.log")
+        before = {name: (self.inst / name).read_bytes() for name in names}
+        staged = self.tmp / "legacy-links"
+        staged.mkdir()
+        for entry in self.inst.iterdir():
+            (staged / entry.name).symlink_to(entry)
+
+        s = GameSession("k1", staged=str(staged), log=lambda _: None)
+        s.stage()
+        s._session_log.close()
+        for name in names:
+            self.assertFalse((staged / name).is_symlink(), name)
+            self.assertEqual((self.inst / name).read_bytes(), before[name], name)
+        self.assertEqual((staged / "kphasor.dll").read_bytes(), b"dll")
+        self.assertEqual((staged / "steam_appid.txt").read_text(), "32370\n")
+
+    def test_stage_refuses_source_install_even_through_symlink(self):
+        alias = self.tmp / "install-alias"
+        alias.symlink_to(self.inst)
+        s = GameSession("k1", staged=str(alias), log=lambda _: None)
+        with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
+            s.stage()
 
     def test_reset_saves_restores_k1_source_baseline(self):
         staged = self.tmp / "k1_reset_harness"
@@ -2848,6 +2885,19 @@ class TestConfigurationContracts(unittest.TestCase):
                 path.write_text('target="k1"\n[execution]\ngame_speed=false\n[[step]]\ndo="quit"\n')
                 self.assertEqual(cli.main(["run", str(path)]), 3)
                 session.assert_not_called()
+
+    def test_cli_reports_malformed_workspace_configuration_as_invalid_input(self):
+        import contextlib
+        import io
+        from kpharness import cli
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            (base / "kotorphasor.toml").write_text("[broken")
+            stderr = io.StringIO()
+            with mock.patch.object(Path, "cwd", return_value=base), \
+                    contextlib.redirect_stderr(stderr):
+                self.assertEqual(cli.main(["status"]), 3)
+            self.assertIn("kotorphasor.toml", stderr.getvalue())
 
     def test_shared_header_validation_including_empty_pioneer_route(self):
         with tempfile.TemporaryDirectory() as directory:

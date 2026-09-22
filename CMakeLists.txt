@@ -34,6 +34,9 @@ foreach(gate kpharness_offline_test kpharness_world_test)
     add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
     set_tests_properties(${gate} PROPERTIES LABELS "offline;harness" TIMEOUT 300)
 endforeach()
+add_test(NAME gameplay_scheduler_test
+    COMMAND bash ${CMAKE_SOURCE_DIR}/tools/gameplay_scheduler_test.sh)
+set_tests_properties(gameplay_scheduler_test PROPERTIES LABELS "offline;harness" TIMEOUT 60)
 
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's

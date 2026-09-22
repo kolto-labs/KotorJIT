@@ -78,7 +78,9 @@ knobs, not a mechanism for adding target capabilities.
 `run NAME_OR_PATH` resolves the route (including `cursed/NAME`), parses and
 validates its header and declarations before creating the session, stages its
 typed resources, boots, executes steps, writes `report.json`, and tears down.
-`--target` overrides the route's session target when explicitly supplied.
+`--target` overrides the route's session target when explicitly supplied. The
+route remains immutable and keeps its authored target; the generated report and
+automatic checkpoint namespace record the effective session target.
 The stage has writable saves/runtime data and links to installation assets;
 scenario runs reset the staged saves from their source under the stage lock.
 The driver never rewrites a route during replay. Resource bytes come from the
@@ -108,7 +110,8 @@ integer on a constrained machine, or raise it when the checks are known to be
 CPU- and I/O-safe. Each test keeps its own log and exit status, and the summary
 is emitted in stable test-list order.
 
-Live game checks are never parallelized by this setting. They remain behind the
+Live game checks, including the `--live-all` work-in-progress group, are never
+parallelized by this setting. They remain behind the
 single `tmp/harness-locks/live-game.lock` slot because staging, saves, Xvfb,
 Wine, and the engine process are shared mutable state. Parallel live sessions
 require separate staged trees, prefixes, displays, and an explicit orchestration
