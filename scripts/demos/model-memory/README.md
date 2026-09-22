@@ -7,7 +7,7 @@ Mac live validation is implied by the recovered Mac profiles.
 - `player_scale.lua`: six visible phases,0.35 →2.4 →1.0 repeated twice, then
   restoration to the actual original base/effective scale.
 - `npc_wave.lua`: three newly spawned humanoids placed forward and to both sides
-  of the PC using its facing. Friendly faction2 is independently read back and
+  of the PC using its facing: six metres forward and side offsets−2/0/2metres. Friendly faction2 is independently read back and
   commandability disabled. Alternating0.4/2.0 sizes swap twice, with1.0 interludes,
   then original scales are restored and the scene-owned actors removed.
 - `model_scene.lua`: reusable finite state machine. Deploy it alongside exactly
@@ -70,3 +70,11 @@ both actual scripts in fresh environments, including phase counts, repeated-tick
 suppression, failed mutation/readback/restoration, unload, module transition and
 reused object-ID cleanup refusal. CTest also runs the native core/Lua boundary.
 Live video/readbacks are still required before these demos are marked validated.
+
+Cleanup requires a retained native identity for every actor it deletes. Partial
+model captures are retained during readiness; actors without any captured
+identity are retained with an explicit cleanup refusal on failure/unload. Known
+identities are never overwritten by later readiness samples. Every active tick
+checks each actor's validity, area and combat state; this is a tick-level guarantee,
+not continuous observation between ticks. The compact six-metre-forward lineup is
+intended for an outdoor, cleared area with a stable camera; validate framing live.

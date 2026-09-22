@@ -7,7 +7,7 @@ local function call(name, ...) return nwscript.call(name, ...) end
 local function checked(value, error) assert(value, error or "native model operation failed"); return value end
 
 function M.new(config)
-  local self = {state="waiting", phase=0, elapsed=0, actors={}, captures={}, originals={}, pc=nil, context=nil}
+  local self = {state="waiting", phase=0, elapsed=0, actors={}, captures={}, capture_by_id={}, originals={}, pc=nil, context=nil}
   local function log(text) kp.print("[model-scene:"..config.name.."] "..text) end
   local function context_matches()
     return self.context and call("GetModuleFileName")==self.context.module
@@ -37,13 +37,11 @@ function M.new(config)
       if remove~=false and config.spawn and valid(id) then
         local ok, err = pcall(function()
           assert(call("GetArea",id)==self.context.area,"owned actor left scene area")
-          for _,capture in ipairs(self.captures) do
-            if capture.id==id then
-              local current=checked(kp.model.snapshot(id))
-              assert(current.model==capture.model and current.creature==capture.creature,
-                "owned actor identity changed; refusing deletion")
-            end
-          end
+          local capture=self.capture_by_id[id]
+          assert(capture,"no retained native identity; refusing deletion")
+          local current=checked(kp.model.snapshot(id))
+          assert(current.model==capture.model and current.creature==capture.creature,
+            "owned actor identity changed; refusing deletion")
           call("DestroyObject",id,0)
         end)
         if not ok then errors[#errors+1]=tostring(err) end
@@ -88,8 +86,8 @@ function M.new(config)
           local angle=math.rad(facing)
           local fx,fy=math.cos(angle),math.sin(angle)
           for i=1,3 do
-            local side=({-3,3,5.5})[i]
-            local loc=call("Location",{x=p.x+3*fx-side*fy,y=p.y+3*fy+side*fx,z=p.z},(facing+180)%360)
+            local side=config.sides[i]
+            local loc=call("Location",{x=p.x+config.forward*fx-side*fy,y=p.y+config.forward*fy+side*fx,z=p.z},(facing+180)%360)
             local id=call("CreateObject",1,config.resref,loc,0)
             assert(valid(id),"owned humanoid spawn failed")
             self.actors[#self.actors+1]=id
@@ -106,15 +104,32 @@ function M.new(config)
       assert(context_matches(),"scene context changed")
       assert(valid(self.pc) and not yes(call("GetIsInCombat",self.pc))
         and not yes(call("GetIsInConversation",self.pc)),"gameplay actor lost, combat or conversation began")
+      for _,id in ipairs(self.actors) do
+        local exists=valid(id)
+        assert(exists or self.state=="cleanup","scene actor disappeared")
+        if exists then
+          assert(call("GetArea",id)==self.context.area,"scene actor left area")
+          assert(not yes(call("GetIsInCombat",id)),"scene actor entered combat")
+        end
+      end
       if self.state=="models" then
         self.elapsed=self.elapsed+1
-        local captures={}
+        local ready=true
         for _,id in ipairs(self.actors) do
-          local c=kp.model.snapshot(id)
-          if not c then assert(self.elapsed<180,"model readiness deadline");return end
-          captures[#captures+1]=c
+          local capture=self.capture_by_id[id]
+          if capture then read(capture,capture.base)
+          else
+            capture=kp.model.snapshot(id)
+            if capture then
+              self.capture_by_id[id]=capture
+              self.captures[#self.captures+1]=capture
+            else ready=false end
+          end
         end
-        self.captures=captures;self.state="running";phase();return
+        if not ready then assert(self.elapsed<180,"model readiness deadline");return end
+        -- Preserve authored actor order even when models became ready out of order.
+        for i,id in ipairs(self.actors) do self.captures[i]=self.capture_by_id[id] end
+        self.state="running";phase();return
       end
       self.elapsed=self.elapsed+1
       if self.state=="running" and self.elapsed>=config.hold_ticks then

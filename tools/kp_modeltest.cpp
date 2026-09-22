@@ -6,6 +6,7 @@
 #include <map>
 #include <stdexcept>
 #include <vector>
+#include <sys/mman.h>
 extern "C" {
 #include "lua.h"
 #include "lauxlib.h"
@@ -13,9 +14,11 @@ extern "C" {
 }
 using namespace kp::api::model;
 #define CHECK(x) do{if(!(x))throw std::runtime_error(std::string("line ")+std::to_string(__LINE__)+": "+#x);}while(0)
+using OriginalConvert=std::uint32_t(__attribute__((stdcall)) *)(std::uint32_t);
 struct Fake:Backend {
  const Profile& p;std::map<Address,unsigned char> bytes;
  Address base,manager=0x1000000,client=0x1001000,internal=0x1002000,array=0x1003000,actor=0x1004000,anim=0x1005000,gob=0x1006000,vt=0x1007000;
+ std::uint32_t server_id=42,client_id=73;OriginalConvert original_convert=nullptr;
  unsigned setters=0,conversions=0,lookups=0;std::vector<std::string> logs;
  bool mutate=true,accept=true,replace_after=false;unsigned host_width;Abi host_abi;
  explicit Fake(const Profile& profile):p(profile),base(p.preferred_base+0x10000),host_width(p.width),host_abi(p.abi){
@@ -38,8 +41,8 @@ struct Fake:Backend {
  template<class T>T get(Address address){T value{};CHECK(read(address,&value,sizeof(value)));return value;}
  Abi abi()const override{return host_abi;}unsigned width()const override{return host_width;}
  bool read(Address a,void* out,std::size_t n)const override{auto* b=static_cast<unsigned char*>(out);for(std::size_t i=0;i<n;++i){auto it=bytes.find(a+i);if(it==bytes.end())return false;b[i]=it->second;}return true;}
- std::uint32_t convert(Address f,Address c,std::uint32_t id)override{CHECK(f==site(0)&&c==client&&id==42);++conversions;return 73;}
- Address creature(Address f,Address c,std::uint32_t id)override{CHECK(f==site(1)&&c==client&&id==73);CHECK(conversions>lookups);++lookups;return actor;}
+ std::uint32_t convert(Address f,Address c,std::uint32_t id)override{CHECK(f==site(0)&&c==client&&id==server_id);++conversions;return original_convert?original_convert(id):client_id;}
+ Address creature(Address f,Address c,std::uint32_t id)override{CHECK(f==site(1)&&c==client&&id==client_id);CHECK(conversions>lookups);++lookups;return actor;}
  Address model(Address f,Address c)override{CHECK(f==site(2)&&c==actor);return gob;}
  bool set_scale(Address f,Address m,float scale)override{
   CHECK(f==site(3)&&m==gob);++setters;
@@ -80,6 +83,27 @@ void core_tests(const Profile& p) {
  CHECK(e.find("mismatch")!=std::string::npos);
 }
 
+void original_conversion_test() {
+ // Original Win K1 GOG SHA9c10e045..., VA0x5f2ac0..0x5f2ada.
+ // This complete leaf function has no external reads/calls: one uint32 stack
+ // input, OBJECT_INVALID comparison, high-bit OR, EAX result and ret4.
+ static const unsigned char code[]={0x8b,0x44,0x24,0x04,0x3d,0x00,0x00,0x00,0x7f,
+   0x74,0x08,0x0d,0x00,0x00,0x00,0x80,0xc2,0x04,0x00,0xb8,0x00,0x00,0x00,0x7f,0xc2,0x04,0x00};
+ void* memory=mmap(nullptr,4096,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+ CHECK(memory!=MAP_FAILED);std::memcpy(memory,code,sizeof(code));CHECK(mprotect(memory,4096,PROT_READ|PROT_EXEC)==0);
+ const auto convert=reinterpret_cast<OriginalConvert>(memory);
+ CHECK(convert(0x7f000000)==0x7f000000);CHECK(convert(42)==0x8000002a);
+ CHECK(convert(0x7fffffff)==0xffffffff);CHECK(convert(0xffffffff)==0xffffffff);
+ Fake f(profiles().back());f.original_convert=convert;Operations op;std::string error;Capture capture,after;
+ CHECK(op.bind(f.p.sha256,f.base,&f,error));
+ for(const auto id:{42u,0x7fffffffu,0xffffffffu}) {
+  f.server_id=id;f.client_id=convert(id);
+  CHECK(op.snapshot(id,capture,error));CHECK(capture.client_id==f.client_id);
+  CHECK(op.resize(capture,2,after,error));CHECK(op.restore(capture,after,error));
+ }
+ CHECK(munmap(memory,4096)==0);
+}
+
 int forged(lua_State* L) {
  auto size=lua_objlen(L,1);void* memory=lua_newuserdata(L,size);std::memset(memory,0,size);
  lua_getmetatable(L,1);lua_setmetatable(L,-2);return 1;
@@ -107,4 +131,4 @@ void lua_tests() {
  if(luaL_dostring(L,program)!=0)throw std::runtime_error(lua_tostring(L,-1));
  lua_close(L);operations().unbind();
 }
-int main(){try{for(const auto& p:profiles())core_tests(p);lua_tests();std::cout<<"model profiles/core/Lua checks passed (4 layouts, controlled backend; no live ABI proof)\n";return 0;}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+int main(){try{for(const auto& p:profiles())core_tests(p);original_conversion_test();lua_tests();std::cout<<"model profiles/core/Lua checks passed (4 layouts, controlled backend; no live ABI proof)\n";return 0;}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

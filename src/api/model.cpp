@@ -51,7 +51,7 @@ bool Operations::pointer(Address address,Address& value) const {
 bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error) {
     error.clear();out={};
     if(!guards(error))return false;
-    if(id==0x7f000000 || id==0xffffffff)return fail(error,"invalid server object ID");
+    if(id==0x7f000000)return fail(error,"invalid server object ID");
     Address manager=0,client=0,internal=0,array=0;
     if(!pointer(loaded_base_+profile_->manager_slot-profile_->preferred_base,manager) ||
        !pointer(manager+profile_->manager_client,client) || !pointer(client+profile_->client_internal,internal) ||
@@ -59,7 +59,9 @@ bool Operations::snapshot(std::uint32_t id,Capture& out,std::string& error) {
     std::uint8_t probe=0;
     if(!backend_->read(array,&probe,1))return fail(error,"client object array unreadable");
     std::uint32_t cid=backend_->convert(site(0),client,id);
-    if(cid==0x7f000000 || cid==0xffffffff)return fail(error,"server object has no client ID");
+    // The PC server ID 0x7fffffff converts to valid client ID 0xffffffff.
+    // Only the engine OBJECT_INVALID value is a sentinel.
+    if(cid==0x7f000000)return fail(error,"server object has no client ID");
     Address creature=backend_->creature(site(1),client,cid);
     std::uint8_t type=0;
     if(!creature || !backend_->read(creature+profile_->type_offset,&type,1) || type!=5)

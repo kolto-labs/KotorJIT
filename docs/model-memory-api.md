@@ -80,3 +80,11 @@ Position/orientation remain outside this API. Corpus evidence shows coupled
 server/client transforms and dirty/area-update behavior; a later motion slice
 needs a verified shared resolver/setter path and interaction at the destination.
 Raw XYZ writes are not a substitute.
+
+The verified Windows conversion leaf at0x5f2ac0 treats only0x7f000000 as
+OBJECT_INVALID. In the controller's real Endar gameplay receipt, the PC server ID
+was0x7fffffff, which the engine converts to valid client ID0xffffffff. The API
+accepts this result and still passes it through typed lookup. An offline test
+executes the original bounded27-byte conversion leaf (no engine calls) before
+exercising snapshot, resize and restore with those IDs; this catches the earlier
+incorrect all-ones sentinel rejection without replacing conversion with a guess.
