@@ -37,7 +37,9 @@ void run_startup() {
     using namespace kp::runtime;
     const std::string exe = self_module_path();
     const std::string game_dir = exe.empty() ? std::string(".") : directory_of(exe);
-    Runtime::instance().start(Config::from_game_dir(game_dir));
+    Config cfg = Config::from_game_dir(game_dir);
+    cfg.role = kp::multiplayer::role_from_executable(exe);
+    Runtime::instance().start(cfg);
 }
 
 }  // namespace

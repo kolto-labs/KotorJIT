@@ -205,9 +205,9 @@ bool fire_one(std::uint64_t id, std::uint64_t now, std::uint64_t game_tick) {
 int l_registertimer(lua_State* L) {
     const int argc = lua_gettop(L);
     if (argc < 2)
-        return luaL_error(L, "kotor.registertimer expects at least 2 arguments (got %d)", argc);
+        return luaL_error(L, "kp.registertimer expects at least 2 arguments (got %d)", argc);
     if (argc > 3)
-        return luaL_error(L, "kotor.registertimer expects at most 3 arguments (got %d)", argc);
+        return luaL_error(L, "kp.registertimer expects at most 3 arguments (got %d)", argc);
 
     const lua_Number delay = luaL_checknumber(L, 1);
     if (!(delay >= 0))   // also rejects NaN, which would never come due
@@ -247,7 +247,7 @@ int l_registertimer(lua_State* L) {
 int l_removetimer(lua_State* L) {
     const int argc = lua_gettop(L);
     if (argc > 1)
-        return luaL_error(L, "kotor.removetimer expects at most 1 argument (got %d)", argc);
+        return luaL_error(L, "kp.removetimer expects at most 1 argument (got %d)", argc);
 
     // Deliberately forgiving, matching Phasor: no argument, nil, a non-number,
     // an unknown id and another script's id are all ignored. Cancelling a timer
@@ -330,7 +330,7 @@ std::size_t pending(lua_State* L) {
 
 void register_timers(lua_State* L) {
     install_sentinel(L);
-    push_kotor_table(L);
+    push_kp_table(L);
     lua_pushcfunction(L, l_registertimer); lua_setfield(L, -2, "registertimer");
     lua_pushcfunction(L, l_removetimer);   lua_setfield(L, -2, "removetimer");
     lua_pop(L, 1);

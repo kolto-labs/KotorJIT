@@ -1,0 +1,79 @@
+# k1 softlock detect: prove the detector by inducing a softlock from the
+# source-install AUTOSAVE.  That fixture is currently a later-game save; it
+# is deliberately not an Endar-route proof.  The
+# nearest door to the PC is locked by engine call and the PC is sent to it;
+# the scenario then waits for the next area with a progress predicate. The
+# fingerprint (module, position, dialog node, globals, journal, party)
+# stops changing once the PC arrives at the shut door, so the wait must
+# fail with `softlock` inside the budget. Then the harness explicitly warps
+# to the target module and the same wait must succeed. Door transition
+# behavior is left to a separate scenario with a verified module link.
+#
+# The lock is by object rather than by the global the door script reads,
+# because the door's tag and global are module data the scenario should not
+# hard-code; a variant that sets that global belongs next to this one once
+# the coverage scanner names it.
+name = "k1: induced softlock recovery"
+target = "k1"
+
+[settings]
+load_timeout = 300
+stagnation_seconds = 60
+default_timeout = 180
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+label = "lock the nearest door and walk to it"
+do = "lua"
+code = """
+local pc = nwscript.call('GetFirstPC')
+local door = nwscript.call('GetNearestObject',8, pc, 1)
+nwscript.call('SetLocked',door, 1)
+kp.as(pc, function() nwscript.call('ActionMoveToObject',door, 0, 1.0) end)
+return nwscript.call('GetTag',door)
+"""
+
+[[step]]
+label = "the next area must not arrive: expect softlock"
+wait = "module"
+equals = "end_m01ab"
+timeout = 180
+progress = true
+expect_verdict = "softlock"
+
+[[step]]
+screenshot = true
+label = "softlocked"
+
+[[step]]
+label = "let any pending save callback drain"
+do = "sleep"
+seconds = 15
+
+[[step]]
+label = "recover with an explicit harness warp"
+do = "warp"
+module = "end_m01ab"
+
+[[step]]
+label = "the same wait must succeed"
+wait = "module"
+equals = "end_m01ab"
+timeout = 300
+progress = true
+
+[[step]]
+# The target module immediately starts an authored conversation on this
+# shipped save. A loaded END_M01AB with either free gameplay or that live
+# dialog is successful recovery; `unknown`/`loading` do not satisfy this.
+wait = "phase_any"
+equals = ["gameplay", "dialog"]
+timeout = 300

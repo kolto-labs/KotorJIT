@@ -61,7 +61,7 @@ run_demo() {
   case "$base" in
     10_ahto_city_law)
       send "warp manm26ad"; send "#sleep 45"; send "#console"
-      send "lua exec kotor.GetModuleName()"; send "#console"
+      send "lua exec nwscript.call('GetModuleName')"; send "#console"
       send "#key w"; send "#sleep 1.5"; send "#key w"; send "#sleep 1.5"
       send "#key w"; send "#sleep 1.5"; send "#key w"; send "#sleep 1.5"
       send "#key w"; send "#sleep 1.5"; send "#key w"; send "#sleep 5"; send "#console"
@@ -75,11 +75,11 @@ run_demo() {
       send "warp end_m01aa"; send "#sleep 5"; send "#console"
       send "#console"; send "#key w"; send "#sleep 1.5"; send "#key w"; send "#sleep 1.5"
       send "#key w"; send "#sleep 3"; send "#console"
-      send "lua exec kotor.ExecuteScript('k_def_attacked01', kotor.GetFirstPC(), 0)"
+      send "lua exec nwscript.call('ExecuteScript','k_def_attacked01', nwscript.call('GetFirstPC'), 0)"
       send "#sleep 2"
       ;;
     40_alignment_drift)
-      send "lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 2, 30)"
+      send "lua exec nwscript.call('AdjustAlignment',nwscript.call('GetFirstPC'), 2, 30)"
       send "#sleep 55"
       ;;
     50_enclave_arrival)

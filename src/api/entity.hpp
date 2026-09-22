@@ -50,15 +50,13 @@ struct Handle {
     bool          type_known = false;
 };
 
-// Register kotor.obj.* into one script's state. The runtime calls this once per
+// Register kp.obj.* into one script's state. The runtime calls this once per
 // script, next to the other modules' registrars.
 //
-// The `kotor` table is shared: this checks for it and reuses it rather than
+// The `kp` table is shared: this checks for it and reuses it rather than
 // installing a fresh one, and api::register_all must do the same, because the
 // order the two run in is not fixed and whichever ran first would otherwise
-// lose its functions. The same check applies to `kp`, where data/hostapi.toml
-// names these functions kp.obj.*; that name is bound to the same table object,
-// never to a second implementation.
+// lose its functions. The obj subtable is also reused on repeated registration.
 void register_all(lua_State*);
 
 // Handle plumbing, exposed for the struct layer.

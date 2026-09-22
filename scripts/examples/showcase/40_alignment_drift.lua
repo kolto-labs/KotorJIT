@@ -8,12 +8,12 @@ local last = nil
 -- The tick starts before the game has a player, so every reading is a question
 -- rather than an assumption.
 local function alignment()
-    if not kotor then return nil end
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
     local ok, v = pcall(function()
         -- GetGoodEvilValue is the 0..100 number. GetAlignmentGoodEvil returns
         -- the LIGHT/DARK/NEUTRAL constant, which reads as a plausible small
         -- integer and silently never crosses a threshold.
-        return kotor.GetGoodEvilValue(kotor.GetFirstPC())
+        return nwscript.call('GetGoodEvilValue',nwscript.call('GetFirstPC'))
     end)
     return (ok and type(v) == "number") and v or nil
 end
@@ -26,7 +26,7 @@ function OnTick(tick, relevant)
 
     if math.floor(value / 10) == math.floor(last / 10) then last = value; return end
     local pool = (value > last) and light or dark
-    print(("[conscience] %+d, now %d"):format(value - last, value))
+    kp.print(("[conscience] %+d, now %d"):format(value - last, value))
     last = value
-    pcall(kotor.SpeakString, pool[math.random(#pool)], 0)
+    pcall(nwscript.call, "SpeakString", pool[math.random(#pool)], 0)
 end

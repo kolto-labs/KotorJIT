@@ -2,6 +2,13 @@
 
 Drop a `.lua` file in `<game>/kotorphasor/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
 
+The complete callback, compatibility, and generated routine reference is in [`docs/lua-api-complete.md`](docs/lua-api-complete.md).
+The harness-specific Lua surface and startup-loading details are in [`docs/lua-harness-api.md`](docs/lua-harness-api.md).
+
+Native facilities live only under `kp`; direct engine calls use `nwscript.call`.
+API version 2 removes the former host root and bare compatibility aliases. See
+the [migration reference](docs/api-dialects.md), including `kp.print` and explicit event registration.
+
 NWScript still resolves each event to one script. Two mods that both want that slot have to patch each other or give up. That fight is the usual way KOTOR mods break each other.
 
 ```lua
@@ -20,9 +27,9 @@ This is the [Phasor](https://github.com/urbanyoung/Phasor) model, rebuilt for KO
 
 ## What you can do
 
-769 of KOTOR 1's 772 routines are callable as `kotor.GetFirstPC()`, `kotor.AdjustAlignment(...)`, and the rest. No NWScript compiler. No `.nss` file. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `kp.as` and `kotor.registertimer`.
+769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `kp.as` and `kp.registertimer`.
 
-When the named API does not reach, `kotor.mem.readbyte` / `writebyte` / `findsig` talk to the process directly.
+When the named API does not reach, `kp.mem.readbyte` / `writebyte` / `findsig` talk to the process directly. Hook sites are logical names (`vm.run_script`). A recorded VA is a hint; unique `expected_bytes` bind the site if that hint is missing or stale.
 
 KOTOR already treats a single-player game as a server with one client. A working UDP sync between two game instances ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). No extra process.
 
@@ -32,7 +39,7 @@ Start to finish: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Status
 
-KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (native Linux, GOG/Steam Aspyr on Windows) install and run scripts today. The routine bridge and event dispatch both work. `kotor.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (native Linux, GOG/Steam Aspyr on Windows) install and run scripts today. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
 
 ## Credits
 

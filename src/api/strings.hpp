@@ -54,7 +54,7 @@ std::vector<std::string> tokenize(std::string_view str, std::string_view delims)
 //     which is what a shell does and what a player will expect.
 std::vector<std::string> tokenize_command(std::string_view line);
 
-// Installs kotor.tokenizestring and kotor.tokenizecmdstring into this state.
+// Installs kp.tokenizestring and kp.tokenizecmdstring into this state.
 void register_strings(lua_State*);
 
 }  // namespace kp::api

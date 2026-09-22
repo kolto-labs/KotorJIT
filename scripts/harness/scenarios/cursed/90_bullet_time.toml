@@ -27,7 +27,7 @@ timeout = 600
 [[step]]
 label = "counter plumbing round-trip: PC local numbers 6 and 7 are writable and readable from the harness state"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); kotor.SetLocalNumber(pc,7,42); kotor.SetLocalNumber(pc,6,17); local a,b=kotor.GetLocalNumber(pc,7),kotor.GetLocalNumber(pc,6); kotor.SetLocalNumber(pc,7,0); kotor.SetLocalNumber(pc,6,0); return a==42 and b==17 and kotor.GetLocalNumber(pc,7)==0"
+code = "local pc=nwscript.call('GetFirstPC'); nwscript.call('SetLocalNumber',pc,7,42); nwscript.call('SetLocalNumber',pc,6,17); local a,b=nwscript.call('GetLocalNumber',pc,7),nwscript.call('GetLocalNumber',pc,6); nwscript.call('SetLocalNumber',pc,7,0); nwscript.call('SetLocalNumber',pc,6,0); return a==42 and b==17 and nwscript.call('GetLocalNumber',pc,7)==0"
 equals = true
 
 [[step]]
@@ -42,14 +42,14 @@ timeout = 120
 [[step]]
 label = "arena: summon six Sith troopers in a ring around the player (CreateObject + hostile faction)"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); local p=kotor.GetPosition(pc); local n=0; for i=1,6 do local a=i/6*2*math.pi; local loc=kotor.Location({x=p.x+4.5*math.cos(a),y=p.y+4.5*math.sin(a),z=p.z},0); local c=kotor.CreateObject(1,'g_sithtroop01',loc,1); if kotor.GetIsObjectValid(c)==1 then kotor.ChangeToStandardFaction(c,1); n=n+1 end end; return n==6"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetPosition',pc); local n=0; for i=1,6 do local a=i/6*2*math.pi; local loc=nwscript.call('Location',{x=p.x+4.5*math.cos(a),y=p.y+4.5*math.sin(a),z=p.z},0); local c=nwscript.call('CreateObject',1,'g_sithtroop01',loc,1); if nwscript.call('GetIsObjectValid',c)==1 then nwscript.call('ChangeToStandardFaction',c,1); n=n+1 end end; return n==6"
 equals = true
 timeout = 60
 
 [[step]]
 label = "the ring engaged: the player is in combat, or a live hostile stands within 25m"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); if kotor.GetIsInCombat(pc)==1 then return true end; local area=kotor.GetArea(pc); local o=kotor.GetFirstObjectInArea(area,1); while kotor.GetIsObjectValid(o)==1 do if kotor.GetIsEnemy(o,pc)==1 and kotor.GetIsDead(o)~=1 and kotor.GetDistanceBetween(pc,o)<=25 then return true end; o=kotor.GetNextObjectInArea(area,1) end; return false"
+code = "local pc=nwscript.call('GetFirstPC'); if nwscript.call('GetIsInCombat',pc)==1 then return true end; local area=nwscript.call('GetArea',pc); local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetIsEnemy',o,pc)==1 and nwscript.call('GetIsDead',o)~=1 and nwscript.call('GetDistanceBetween',pc,o)<=25 then return true end; o=nwscript.call('GetNextObjectInArea',area,1) end; return false"
 equals = true
 poll = true
 timeout = 60
@@ -57,7 +57,7 @@ timeout = 60
 [[step]]
 label = "soften the player up so the next hit trips the slow-motion threshold"
 do = "lua"
-code = "local pc=kotor.GetFirstPC(); local max=kotor.GetMaxHitPoints(pc); kotor.SetMinOneHP(pc,1); kotor.ApplyEffectToObject(0, kotor.EffectDamage(math.floor(max*0.45), 8, 0), pc, 0.0); return kotor.GetCurrentHitPoints(pc)"
+code = "local pc=nwscript.call('GetFirstPC'); local max=nwscript.call('GetMaxHitPoints',pc); nwscript.call('SetMinOneHP',pc,1); nwscript.call('ApplyEffectToObject',0, nwscript.call('EffectDamage',math.floor(max*0.45), 8, 0), pc, 0.0); return nwscript.call('GetCurrentHitPoints',pc)"
 
 [[step]]
 label = "fight the room while the curse fires"
@@ -69,7 +69,7 @@ timeout = 300
 [[step]]
 label = "slow motion engaged at least once"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); return kotor.GetLocalNumber(pc,7) >= 1"
+code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetLocalNumber',pc,7) >= 1"
 equals = true
 poll = true
 timeout = 120
@@ -77,7 +77,7 @@ timeout = 120
 [[step]]
 label = "the engine really ran slow: the script read back kp.speed() as 0.25 (x100 in local number 6)"
 do = "assert_lua"
-code = "local pc=kotor.GetFirstPC(); local v=kotor.GetLocalNumber(pc,6); return v >= 20 and v <= 30"
+code = "local pc=nwscript.call('GetFirstPC'); local v=nwscript.call('GetLocalNumber',pc,6); return v >= 20 and v <= 30"
 equals = true
 poll = true
 timeout = 30

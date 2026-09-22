@@ -74,22 +74,35 @@ def known_apps() -> list[str]:
     return sorted((_SIGS.get("app") or {}).keys())
 
 
-def _read_config() -> dict:
-    """kotorphasor.toml from the cwd upward, so a checkout can carry its own."""
-    if tomllib is None:
-        return {}
+def read_workspace_config() -> dict:
+    """Nearest cwd/ancestor config, then checkout root; never merge files.
+
+    Paths in the selected file are relative to that file. Malformed selected
+    files fail explicitly instead of silently discovering a different install.
+    """
     here = Path.cwd().resolve()
-    for d in [here, *here.parents]:
+    for d in dict.fromkeys([here, *here.parents, Path(__file__).resolve().parent.parent]):
         p = d / CONFIG_NAME
         if p.is_file():
+            if tomllib is None:
+                raise ValueError(f"{p}: Python 3.11+ is required")
             try:
-                return tomllib.loads(p.read_text())
-            except Exception:
-                return {}
+                config = tomllib.loads(p.read_text())
+                for section in ("paths", "harness"):
+                    table = config.get(section, {})
+                    if not isinstance(table, dict):
+                        raise ValueError(f"{section} must be a table")
+                    for key, value in table.items():
+                        if section == "harness" and key not in ("build_dir", "k2_exe", "libglu_dir"):
+                            raise ValueError(f"unknown harness setting {key!r}")
+                        if not isinstance(value, str) or not value.strip():
+                            raise ValueError(f"{section}.{key} must be a non-empty path string")
+                        path = Path(value).expanduser()
+                        table[key] = str(path if path.is_absolute() else (p.parent / path).resolve())
+                return config
+            except (OSError, ValueError) as e:
+                raise ValueError(f"{p}: {e}") from e
     return {}
-
-
-_CONFIG = _read_config()
 
 
 def _steam_roots() -> list[Path]:
@@ -226,7 +239,7 @@ def find_app(app: str, explicit: str | None = None) -> Path | None:
         if _looks_like(p, game):
             return p
 
-    cfg = (_CONFIG.get("paths") or {}).get(game)
+    cfg = read_workspace_config().get("paths", {}).get(game)
     if cfg:
         p = Path(cfg).expanduser()
         if _looks_like(p, game):
@@ -269,7 +282,7 @@ def find_corpus(explicit: str | None = None) -> Path | None:
     env = os.environ.get("KOTORXID_DB")
     if env and Path(env).expanduser().is_file():
         return Path(env).expanduser()
-    cfg = (_CONFIG.get("paths") or {}).get("corpus")
+    cfg = read_workspace_config().get("paths", {}).get("corpus")
     if cfg and Path(cfg).expanduser().is_file():
         return Path(cfg).expanduser()
 
@@ -339,7 +352,7 @@ def main() -> int:
 
     print(f"platform      : {platform.system()}")
     print(f"config        : {CONFIG_NAME} " +
-          ("found" if _CONFIG else "not found (optional)"))
+          ("found" if read_workspace_config() else "not found (optional)"))
     libs = _steam_libraries()
     print(f"steam libraries: {len(libs)}")
     for l in libs:

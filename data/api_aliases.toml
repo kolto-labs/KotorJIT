@@ -1,48 +1,5 @@
-# Alternate spellings for names this host actually registers.
-#
-# Canonical names come from the C modules and the NWScript bridge, which
-# follow the Ghidra / kotorxid names: kotor.mem.readbyte, kotor.GetFirstPC,
-# kotor.SendMessageToPC, kotor.registertimer. Scripts also write the
-# underscored form (read_byte, register_timer). Both point at the same C
-# function.
-#
-# Do not add Halo names here (getplayer, getobject, say_all, EVENT_JOIN).
-# The local client is GetFirstPC / CServerExoApp::GetPlayerCreatureId.
-# Client attach/leave are OnModulePlayerEnter (Mod_OnClientEntr) and
-# OnModulePlayerExit (Mod_OnClientLeav) in data/events.toml.
-#
-# Event constants are not listed here. tools/gen_compat.py reads
-# data/events.toml and installs cb.<LuaName> for every catalog event.
-
-version = 1
-
-alias = [
-  { canonical = "readbit", alias = "read_bit", dialect = "kotor" },
-  { canonical = "readbyte", alias = "read_byte", dialect = "kotor" },
-  { canonical = "readchar", alias = "read_char", dialect = "kotor" },
-  { canonical = "readword", alias = "read_word", dialect = "kotor" },
-  { canonical = "readshort", alias = "read_short", dialect = "kotor" },
-  { canonical = "readdword", alias = "read_dword", dialect = "kotor" },
-  { canonical = "readint", alias = "read_int", dialect = "kotor" },
-  { canonical = "readfloat", alias = "read_float", dialect = "kotor" },
-  { canonical = "readdouble", alias = "read_double", dialect = "kotor" },
-  { canonical = "readstring", alias = "read_string", dialect = "kotor" },
-  { canonical = "readwidestring", alias = "read_wide_string", dialect = "kotor" },
-  { canonical = "writebit", alias = "write_bit", dialect = "kotor" },
-  { canonical = "writebyte", alias = "write_byte", dialect = "kotor" },
-  { canonical = "writechar", alias = "write_char", dialect = "kotor" },
-  { canonical = "writeword", alias = "write_word", dialect = "kotor" },
-  { canonical = "writeshort", alias = "write_short", dialect = "kotor" },
-  { canonical = "writedword", alias = "write_dword", dialect = "kotor" },
-  { canonical = "writeint", alias = "write_int", dialect = "kotor" },
-  { canonical = "writefloat", alias = "write_float", dialect = "kotor" },
-  { canonical = "writedouble", alias = "write_double", dialect = "kotor" },
-  { canonical = "writestring", alias = "write_string", dialect = "kotor" },
-  { canonical = "writewidestring", alias = "write_wide_string", dialect = "kotor" },
-  { canonical = "findsig", alias = "find_sig", dialect = "kotor" },
-  { canonical = "log", alias = "log_msg", dialect = "kotor" },
-  { canonical = "registertimer", alias = "register_timer", dialect = "kotor" },
-  { canonical = "removetimer", alias = "remove_timer", dialect = "kotor" },
-  { canonical = "tokenizestring", alias = "tokenize_string", dialect = "kotor" },
-  { canonical = "tokenizecmdstring", alias = "tokenize_cmd_string", dialect = "kotor" },
-]
+# Compatibility spelling exports were removed in API version 2.
+# Native functions live only under kp; engine routines use nwscript.call.
+# tools/gen_compat.py reads data/events.toml for kp.events.<LuaName> constants.
+version = 2
+alias = []

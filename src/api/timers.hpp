@@ -7,12 +7,12 @@
 // ActionDoCommand (294) are the three K1 routines the bridge cannot marshal,
 // and this is what a script uses instead.
 //
-//   local id = kotor.registertimer(1500, "on_bang", { n = 3 })
+//   local id = kp.registertimer(1500, "on_bang", { n = 3 })
 //   function on_bang(id, count, data)
-//       kotor.feedback("bang " .. count)
+//       kp.feedback("bang " .. count)
 //       return count < data.n            -- true renews, anything else stops
 //   end
-//   kotor.removetimer(id)
+//   kp.removetimer(id)
 //
 // The callback is named by a STRING, not passed as a function value. The name
 // is resolved at fire time against the script's globals: a reloaded script
@@ -68,7 +68,7 @@ struct lua_State;
 
 namespace kp::api {
 
-// Installs kotor.registertimer and kotor.removetimer into this state, and the
+// Installs kp.registertimer and kp.removetimer into this state, and the
 // sentinel that drops this state's timers when it closes.
 void register_timers(lua_State*);
 

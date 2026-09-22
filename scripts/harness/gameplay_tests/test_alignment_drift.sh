@@ -20,7 +20,7 @@ start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 # nAlignment 2 = shift toward light, verified live (50 -> 80 on a +30 shift);
 # a shift that stays inside one decade (e.g. 58 -> 50) does not cross the
 # threshold the example watches for, so this asks for a full 30-point move.
-send "lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 2, 30)"
+send "lua exec nwscript.call('AdjustAlignment',nwscript.call('GetFirstPC'), 2, 30)"
 send "#sleep 90"
 
 assert_contains_re "$GAME_DIR/kotorphasor.log" '\[conscience\] \+[0-9]+, now [0-9]+' \

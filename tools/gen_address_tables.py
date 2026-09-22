@@ -83,6 +83,7 @@ BUILDS = {
         "encrypted": True,
         "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
                                 "agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                "agentdecompile-nvme/target/swkotor-unpack/swkotor.exe.unpacked.exe",
                                 env="KP_K1_UNPACKED"),
         "code_sections": [".text", ".textU"],
         "note": "Steam build. .text is ciphertext on disk; identical to GOG once deciphered.",
@@ -94,6 +95,7 @@ BUILDS = {
         "encrypted": False,
         "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
                                 "agentdecompile/target/swkotor-unpack/swkotor.exe.unpacked.exe",
+                                "agentdecompile-nvme/target/swkotor-unpack/swkotor.exe.unpacked.exe",
                                 env="KP_K1_UNPACKED"),
         "code_sections": [".textU", ".text"],
         "note": ("The deciphered Steam image. The headless harness runs this, because "
@@ -106,6 +108,8 @@ BUILDS = {
         "game": "K1", "platform": "win", "format": "pe", "image_base": 0x400000,
         "encrypted": False,
         "reference_image": _ref("biodecompwarehouse/agentdecompile/target/swkotor-gog/swkotor.exe.gog",
+                                "agentdecompile-nvme/agentdecompile_projects/extract/raw/K1__k1_win_gog_swkotor.exe",
+                                "biodecompwarehouse/kotorxid/extract/raw/K1__k1_win_gog_swkotor.exe",
                                 "agentdecompile/target/swkotor-gog/swkotor.exe.gog",
                                 env="KP_K1_GOG_EXE"),
         "code_sections": [".text"],
@@ -124,7 +128,99 @@ BUILDS = {
         # optional here: the runtime loses the in-game `lua` command on this
         # build and keeps everything else, rather than refusing to install.
         "optional_sites": ["console.do_console"],
+        "reject_cross_placed": True,
         "note": "Native Aspyr ELF, EXEC (not PIE). VM entry points hand-adjudicated.",
+    },
+    "k2_mac": {
+        "symbol_source": "TSL__k2_mac_swkotor2.app",
+        "md5": "57d86b1c4a035dee6fead18a8548cfe8",
+        "game": "K2", "platform": "mac", "format": "macho", "image_base": 0x1000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image",
+            env="KP_K2_MAC_EXE"),
+        "code_sections": ["__text"],
+        # The current injection/runtime image parser is PE/ELF only.  Keep the
+        # exact Mach-O table in the corpus report without emitting an unusable
+        # BuildRecord that a Linux/Windows runtime might accept.
+        "static_only": True,
+        "reject_cross_placed": True,
+        "note": "32-bit K2 Mac Mach-O: signature table only until a Mac loader exists.",
+    },
+    "k1_mac": {
+        "symbol_source": "K1__k1_mac_swkotor.app",
+        "md5": "df5f025bf1d40dd2cdc76ef5145ad876",
+        "game": "K1", "platform": "mac", "format": "macho", "image_base": 0x1000,
+        "encrypted": False,
+        "reference_image": _ref(
+            "biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image",
+            env="KP_K1_MAC_EXE"),
+        "code_sections": ["__text"], "static_only": True, "reject_cross_placed": True,
+        "note": "32-bit K1 Mac Mach-O: signature table only until a Mac loader exists.",
+    },
+    "k2_android_x86": {
+        "symbol_source": "TSL__k2_android_libkotor2.so_x86android",
+        "md5": "ca39b5c2e081d83efb0eaee576217611",
+        "game": "K2", "platform": "android", "format": "elf", "image_base": 0x10000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/TSL__k2_android_libkotor2.so_x86android/artifacts/raw_image", env="KP_K2_ANDROID_X86"),
+        "code_sections": [".text"], "static_only": True,
+        "reject_cross_placed": True,
+        "note": "32-bit K2 Android x86 ELF: signature table only until an Android loader exists.",
+    },
+    "k1_android_arm": {
+        "symbol_source": "K1__k1_android_ARMEABI", "md5": "7bc653d19ecdd0a7a53064d92ab783a0",
+        "game": "K1", "platform": "android", "format": "elf", "image_base": 0x10000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/K1__k1_android_ARMEABI/artifacts/raw_image", env="KP_K1_ANDROID_ARM"),
+        "code_sections": [".text"], "static_only": True,
+        "reject_cross_placed": True,
+        "note": "32-bit K1 Android ARM ELF: signature table only until an Android loader exists.",
+    },
+    "k1_android_arm64": {
+        "symbol_source": "K1__k1_android_ARM64", "md5": "f724a4ce4e3357784a3c1b7945bdefbf",
+        "game": "K1", "platform": "android", "format": "elf64", "image_base": 0x100000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/K1__k1_android_ARM64/artifacts/raw_image", env="KP_K1_ANDROID_ARM64"),
+        "code_sections": [".text"], "static_only": True,
+        "reject_cross_placed": True,
+        "note": "64-bit K1 Android ARM ELF: signature table only until an Android ARM64 loader exists.",
+    },
+    "k2_android_arm64": {
+        "symbol_source": "TSL__k2_android_libkotor2.so_arm64-v8aandroid",
+        "md5": "40a172e2eaf791570d5a38e7ff8ed17a",
+        "game": "K2", "platform": "android", "format": "elf64", "image_base": 0x100000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/TSL__k2_android_libkotor2.so_arm64-v8aandroid/artifacts/raw_image", env="KP_K2_ANDROID_ARM64"),
+        "code_sections": [".text"], "static_only": True,
+        "reject_cross_placed": True,
+        "note": "64-bit K2 Android ARM ELF: signature table only until an Android ARM64 loader exists.",
+    },
+    "k2_android_arm": {
+        "symbol_source": "TSL__k2_android_libkotor2.so_armeabi-v7aandroid",
+        "md5": "877d51dc33aa70d959504ccc9e0fc8ef",
+        "game": "K2", "platform": "android", "format": "elf", "image_base": 0x10000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/TSL__k2_android_libkotor2.so_armeabi-v7aandroid/artifacts/raw_image", env="KP_K2_ANDROID_ARM"),
+        "code_sections": [".text"], "static_only": True,
+        "reject_cross_placed": True,
+        "note": "32-bit K2 Android ARM ELF: signature table only until an Android loader exists.",
+    },
+    "k1_ios": {
+        "symbol_source": "K1__k1_iOS_KOTOR.ipa", "md5": "ded288ab1775cdf7be11965a95b82270",
+        "game": "K1", "platform": "ios", "format": "macho64", "image_base": 0x100000000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/K1__k1_iOS_KOTOR.ipa/artifacts/raw_image", env="KP_K1_IOS"),
+        "code_sections": ["__text"], "static_only": True,
+        "note": "64-bit K1 iOS Mach-O: signature table only until an iOS loader exists.",
+    },
+    "k2_ios": {
+        "symbol_source": "TSL__k2_ios_KOTOR_II.ipa", "md5": "650fb94f1fb647896e80b644290e9205",
+        "game": "K2", "platform": "ios", "format": "macho64", "image_base": 0x100000000,
+        "encrypted": False,
+        "reference_image": _ref("biodecompwarehouse/kotorxid/output/binaries/TSL__k2_ios_KOTOR_II.ipa/artifacts/raw_image", env="KP_K2_IOS"),
+        "code_sections": ["__text"], "static_only": True,
+        "note": "64-bit K2 iOS Mach-O: signature table only until an iOS loader exists.",
     },
     "k2_gog_aspyr": {
         "symbol_source": "TSL__k2_win_gog_aspyr_swkotor2.exe",
@@ -150,6 +246,7 @@ BUILDS = {
             "k1_win_amazongames_swkotor.exe/k1_win_amazongames_swkotor.exe",
             env="KP_K1_AMAZONGAMES_EXE"),
         "code_sections": [".text"],
+        "reject_cross_placed": True,
         "note": "Registered for build identification only. Only 47% of this "
                 "binary's functions carry a native symbol (corpus func_count "
                 "30101, named_count 14211) -- far short of k2_gog_aspyr's 95% "
@@ -172,6 +269,7 @@ BUILDS = {
             "k2_win_CD_1.0_swkotor2.exe/k2_win_CD_1.0_swkotor2.exe",
             env="KP_K2_CD10_EXE"),
         "code_sections": [".text"],
+        "reject_cross_placed": True,
         "note": "Pre-Aspyr retail CD release, before the 1.0b patch. Registered "
                 "for build identification only -- 61% named (func_count 22502, "
                 "named_count 13740), so this needs the identity/adjudication "
@@ -194,6 +292,7 @@ BUILDS = {
             "k2_win_CD_1.0b_swkotor2.exe/k2_win_CD_1.0b_swkotor2.exe",
             env="KP_K2_CD10B_EXE"),
         "code_sections": [".text"],
+        "reject_cross_placed": True,
         "note": "Pre-Aspyr retail CD release, the 1.0b patch. Same func/named "
                 "counts as 1.0 in the corpus -- a small patch, not a rebuild. "
                 "Registered for build identification only; not installable "
@@ -261,6 +360,21 @@ def read_image(path: Path):
             secs.append((nm, vs, base + va, rs, ro))
         return d, base, secs
     if d[:4] == b"\x7fELF":
+        if d[4] == 2:  # ELFCLASS64
+            shoff, = struct.unpack_from("<Q", d, 0x28)
+            shentsize, shnum, shstrndx = struct.unpack_from("<HHH", d, 0x3A)
+            so = shoff + shstrndx * shentsize
+            stroff, = struct.unpack_from("<Q", d, so + 0x18)
+            secs = []
+            for i in range(shnum):
+                o = shoff + i * shentsize
+                nameoff, = struct.unpack_from("<I", d, o)
+                addr, off, size = struct.unpack_from("<QQQ", d, o + 0x10)
+                end = d.index(b"\0", stroff + nameoff)
+                nm = d[stroff + nameoff:end].decode("latin-1")
+                secs.append((nm, size, addr, size, off))
+            base = min((s[2] for s in secs if s[2]), default=0)
+            return d, base, secs
         shoff, = struct.unpack_from("<I", d, 0x20)
         shentsize, shnum, shstrndx = struct.unpack_from("<HHH", d, 0x2E)
         so = shoff + shstrndx * shentsize
@@ -275,6 +389,57 @@ def read_image(path: Path):
             secs.append((nm, size, addr, size, off))
         base = min((s[2] for s in secs if s[2]), default=0)
         return d, base, secs
+    if len(d) >= 32 and struct.unpack_from("<I", d, 0)[0] == 0xFEEDFACF:
+        # 64-bit little-endian Mach-O. Keep exactly the same normalised section
+        # tuple as PE/ELF/Mach-O32 so all signature derivation stays format-agnostic.
+        ncmds, = struct.unpack_from("<I", d, 16)
+        off, secs = 32, []
+        for _ in range(ncmds):
+            if off + 8 > len(d): raise SystemExit(f"truncated Mach-O command: {path}")
+            cmd, cmdsize = struct.unpack_from("<II", d, off)
+            if cmdsize < 8 or off + cmdsize > len(d): raise SystemExit(f"invalid Mach-O command: {path}")
+            if cmd == 0x19 and cmdsize >= 72:  # LC_SEGMENT_64
+                vmaddr, vmsize, fileoff, filesize = struct.unpack_from("<QQQQ", d, off + 24)
+                nsects, = struct.unpack_from("<I", d, off + 64)
+                so = off + 72
+                if so + nsects * 80 > off + cmdsize: raise SystemExit(f"truncated Mach-O sections: {path}")
+                for i in range(nsects):
+                    sec = so + i * 80
+                    name = d[sec:sec + 16].rstrip(b"\0").decode("latin-1")
+                    addr, size = struct.unpack_from("<QQ", d, sec + 32)
+                    rawoff, = struct.unpack_from("<I", d, sec + 48)
+                    secs.append((name, size, addr, size, rawoff))
+                if nsects == 0 and vmsize:
+                    secs.append(("__segment", vmsize, vmaddr, filesize, fileoff))
+            off += cmdsize
+        if not secs: raise SystemExit(f"Mach-O has no loadable sections: {path}")
+        return d, min(s[2] for s in secs), secs
+    if len(d) >= 28 and struct.unpack_from("<I", d, 0)[0] == 0xFEEDFACE:
+        # 32-bit little-endian Mach-O.  Segment commands provide the same
+        # VA-to-file mapping we use for PE/ELF; retain section names so a
+        # generated `__text` digest has an exact, inspectable source.
+        ncmds, = struct.unpack_from("<I", d, 16)
+        off, secs = 28, []
+        for _ in range(ncmds):
+            if off + 8 > len(d): raise SystemExit(f"truncated Mach-O command: {path}")
+            cmd, cmdsize = struct.unpack_from("<II", d, off)
+            if cmdsize < 8 or off + cmdsize > len(d): raise SystemExit(f"invalid Mach-O command: {path}")
+            if cmd == 1 and cmdsize >= 56:  # LC_SEGMENT
+                _seg = d[off + 8:off + 24]
+                vmaddr, vmsize, fileoff, filesize, _maxp, _initp, nsects, _flags = \
+                    struct.unpack_from("<IIIIIIII", d, off + 24)
+                so = off + 56
+                if so + nsects * 68 > off + cmdsize: raise SystemExit(f"truncated Mach-O sections: {path}")
+                for i in range(nsects):
+                    sec = so + i * 68
+                    name = d[sec:sec + 16].rstrip(b"\0").decode("latin-1")
+                    addr, size, rawoff = struct.unpack_from("<III", d, sec + 32)
+                    secs.append((name, size, addr, size, rawoff))
+                if nsects == 0 and vmsize:
+                    secs.append(("__segment", vmsize, vmaddr, filesize, fileoff))
+            off += cmdsize
+        if not secs: raise SystemExit(f"Mach-O has no loadable sections: {path}")
+        return d, min(s[2] for s in secs), secs
     raise SystemExit(f"unrecognised image format: {path}")
 
 
@@ -288,6 +453,8 @@ def elf_exec_segments(path: Path):
     import struct
     d = path.read_bytes()
     if d[:4] != b"\x7fELF":
+        return []
+    if d[4] != 1:  # the runtime only supports ELF32; static ELF64 uses sections
         return []
     phoff, = struct.unpack_from("<I", d, 0x1C)
     phentsize, phnum = struct.unpack_from("<HH", d, 0x2A)
@@ -388,10 +555,15 @@ class Resolved:
     kind: str
     required: bool
     addr: int | None
-    source: str          # "func" | "identity" | "unresolved"
+    source: str          # "func" | "identity" | "adjudicated" | "unresolved"
     confidence: float | None
     method_detail: str | None
     candidates: int      # how many addresses matched; >1 means ambiguous
+    # kind == "field" only: byte offset into the owner, width, owner class.
+    # None on every other kind so those rows serialise exactly as before.
+    offset: int | None = None
+    size: int | None = None
+    owner: str | None = None
 
 
 def load_sites() -> list[dict]:
@@ -416,43 +588,102 @@ def load_overlay(alias: str) -> dict[str, dict]:
     answer is knowable put the matcher at 8.9% correct in the margin-0.000 bucket,
     so nothing here rests on similarity score alone.
     """
-    path = ROOT / "data" / "adjudication" / f"{alias.replace('k2_steam_linux', 'k2_linux')}_vm_bindings.json"
-    if not path.exists():
-        return {}
-    doc = json.loads(path.read_text())
-    out = {}
-    for b in doc.get("bindings", []):
-        if b.get("verdict") != "accept":
-            continue
-        addr = b.get("elf_addr") or b.get("addr")
-        if addr is None:
-            continue
-        out[b["name"]] = {
-            "addr": int(str(addr), 16) if isinstance(addr, str) else int(addr),
-            "confidence": b.get("confidence"),
-            "evidence": b.get("evidence") or b.get("rationale"),
-        }
+    # One file per concern, all read: `<alias>_vm_bindings.json` is the script
+    # VM, `<alias>_harness_bindings.json` the headless-harness sites and fields.
+    # A later file may not silently redefine an earlier one's name -- that
+    # would be two adjudications disagreeing, which is a bug to raise, not to
+    # resolve by directory order.
+    stem = alias.replace("k2_steam_linux", "k2_linux")
+    out: dict[str, dict] = {}
+    for path in sorted((ROOT / "data" / "adjudication").glob(f"{stem}_*_bindings.json")):
+        doc = json.loads(path.read_text())
+        for b in doc.get("bindings", []):
+            if b.get("verdict") != "accept":
+                continue
+            addr = b.get("elf_addr") or b.get("addr")
+            # A field reached through a pointer chain has addr 0; only a
+            # binding with no address at all is skipped.
+            if addr is None:
+                continue
+            row = {
+                "addr": int(str(addr), 16) if isinstance(addr, str) else int(addr),
+                "confidence": b.get("confidence"),
+                "evidence": b.get("evidence") or b.get("rationale"),
+                "file": path.name,
+            }
+            if b.get("kind") == "field":
+                row["kind"] = "field"
+                row["offset"] = _num(b.get("offset"))
+                row["size"] = _num(b.get("size"))
+                row["owner"] = b.get("owner")
+            if b["name"] in out and out[b["name"]]["addr"] != row["addr"]:
+                raise SystemExit(
+                    f"{path.name}: {b['name']} is already bound at "
+                    f"{out[b['name']]['addr']:#x} by {out[b['name']]['file']}; "
+                    f"this file says {row['addr']:#x}")
+            out[b["name"]] = row
     return out
+
+
+def _num(v) -> int | None:
+    """An integer written as a JSON number or as a "0x.." string."""
+    if v is None:
+        return None
+    return int(str(v), 16) if isinstance(v, str) else int(v)
 
 
 def resolve(db: sqlite3.Connection, bid: int, site: dict,
             overlay: dict[str, dict] | None = None) -> Resolved:
     cls, method = site.get("class", "") or "", site["method"]
     name, kind, req = site["name"], site["kind"], site.get("required", False)
+    key = f"{cls}::{method}" if cls else method
+
+    # A field is not code. Nothing in the corpus names a struct member at an
+    # address, so the only source is an adjudicated binding carrying offset and
+    # size; a build without one leaves the field unresolved and the adapter
+    # reports the command that needed it as unsupported. `addr` is the owning
+    # global when there is one and 0 when the field sits behind a pointer chain.
+    # The kind comes from the manifest, never from the binding.
+    if kind == "field":
+        hit = overlay.get(key) if overlay else None
+        if hit and hit.get("kind") == "field" and hit.get("size"):
+            return Resolved(name, cls, method, kind, req, hit["addr"], "adjudicated",
+                            hit.get("confidence"), "hand-adjudicated", 1,
+                            offset=hit.get("offset") or 0, size=hit["size"],
+                            owner=hit.get("owner") or cls)
+        return Resolved(name, cls, method, kind, req, None, "unresolved", None,
+                        "field has no adjudicated offset on this build", 0)
 
     # Layer 0: a hand-adjudicated binding, which outranks everything automatic.
     if overlay:
-        hit = overlay.get(f"{cls}::{method}" if cls else method)
+        hit = overlay.get(key)
         if hit:
+            # Say whether the corpus agrees. A binding that contradicts a
+            # recorded name is the case a reader most needs to see.
+            detail = "hand-adjudicated"
+            if cls:
+                rows = db.execute(
+                    "SELECT addr FROM func WHERE binary_id=? AND namespace=? AND name=?",
+                    (bid, cls, method)).fetchall()
+            else:
+                rows = db.execute(
+                    "SELECT addr FROM func WHERE binary_id=? AND COALESCE(namespace,'')='' "
+                    "AND name=?", (bid, method)).fetchall()
+            if rows:
+                if any(r[0] == hit["addr"] for r in rows):
+                    detail += "; func row agrees"
+                else:
+                    detail += ("; CONFLICTS with func row(s) "
+                               + ", ".join(f"{r[0]:#x}" for r in rows))
             return Resolved(name, cls, method, kind, req, hit["addr"], "adjudicated",
-                            hit.get("confidence"), "hand-adjudicated", 1)
+                            hit.get("confidence"), detail, 1)
 
     # Layer 1: a name recorded on this binary directly.
     #
     # Order by size DESC, not addr. Several VM entry points ship as a tiny stub
-    # immediately followed by the real body (K2 GOG has a 9-byte
-    # CVirtualMachineInternal::RunScript at 0x00645540 and the 731-byte one at
-    # 0x00645549). Taking the lowest address would hook the stub.
+    # immediately followed by the real body. A corpus function that was split
+    # incorrectly across an entry prologue and continuation must be repaired by
+    # a per-build adjudication overlay; K2 GOG RunScript is one such case.
     if cls:
         rows = db.execute(
             "SELECT addr, size FROM func WHERE binary_id=? AND namespace=? AND name=? "
@@ -540,7 +771,9 @@ def emit(db: sqlite3.Connection, alias: str, spec: dict, sites: list[dict]) -> d
     expect: dict[str, str] = {}
     if secs is not None and data is not None:
         for r in resolved:
-            if r.addr is None:
+            # A field has no prologue to verify; its addr, when non-zero, is a
+            # data global, and bytes read there would be state, not a signature.
+            if r.addr is None or r.kind == "field":
                 continue
             off = va_to_offset(secs, r.addr)
             if off is not None:
@@ -549,8 +782,15 @@ def emit(db: sqlite3.Connection, alias: str, spec: dict, sites: list[dict]) -> d
     for r in resolved:
         d = asdict(r)
         d.pop("name")
+        if r.kind != "field":
+            # Keep every non-field row byte-identical to what earlier versions
+            # of this script wrote.
+            for k in ("offset", "size", "owner"):
+                d.pop(k)
         if d["addr"] is not None:
             d["addr_hex"] = f"0x{d['addr']:08X}"
+        if r.kind == "field" and d.get("offset") is not None:
+            d["offset_hex"] = f"0x{d['offset']:X}"
         if r.name in expect:
             d["expected_bytes"] = expect[r.name]
         table["sites"][r.name] = d
@@ -563,6 +803,9 @@ def emit(db: sqlite3.Connection, alias: str, spec: dict, sites: list[dict]) -> d
         "by_func": sum(1 for r in ok if r.source == "func"),
         "by_identity": sum(1 for r in ok if r.source == "identity"),
         "by_adjudication": sum(1 for r in ok if r.source == "adjudicated"),
+        "by_field": sum(1 for r in ok if r.kind == "field"),
+        "overlay_conflicts": [r.name for r in ok
+                              if r.method_detail and "CONFLICTS" in r.method_detail],
         "refused_ambiguous": [r.name for r in resolved if r.source == "ambiguous"],
         "unresolved": [r.name for r in resolved if r.source == "unresolved"],
         # A resolved site with >1 candidate: we picked one on a stated rule
@@ -602,7 +845,7 @@ def emit_builds_inc(tables: dict[str, dict]) -> str:
         ident = t.get("identity") or {}
         sha = ident.get("sha256") or t.get("derived_sha256")
         known = t.get("known_text") or []
-        if not sha or not known:
+        if t.get("static_only") or not sha or not known:
             # Without a file hash we cannot recognise the build, and without a
             # digest we could not verify it if we did. Emitting a half record
             # would be a build we accept and cannot check.
@@ -634,6 +877,10 @@ def main() -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--build", action="append", help="build alias (repeatable)")
     ap.add_argument("--all", action="store_true")
+    ap.add_argument(
+        "--allow-missing-reference", action="store_true",
+        help="write a table even when its reference image is unavailable; this can drop byte-derived bindings",
+    )
     ap.add_argument("--list-builds", action="store_true")
     args = ap.parse_args()
 
@@ -664,9 +911,18 @@ def main() -> int:
     rc = 0
     emitted: dict[str, dict] = {}
     for alias in targets:
+        if BUILDS[alias].get("reject_cross_placed"):
+            print(f"{alias:22s} REFUSED: corpus rows are cross-placed candidates, not target-verified functions")
+            rc = 1
+            continue
         table = emit(db, alias, BUILDS[alias], sites)
         emitted[alias] = table
         out = OUTDIR / f"{alias}.json"
+        if table.get("error") and out.exists() and not args.allow_missing_reference:
+            print(f"{alias:22s} REFUSED: {table['error']}; keeping existing {out.name}")
+            print("  pass --allow-missing-reference only when the resulting table was reviewed")
+            rc = 1
+            continue
         out.write_text(json.dumps(table, indent=2) + "\n")
         s = table["summary"]
         flag = "ok" if s["installable"] else "NOT INSTALLABLE"
@@ -682,9 +938,12 @@ def main() -> int:
         if s["missing_required"]:
             print(f"  missing required : {', '.join(s['missing_required'])}")
             rc = 1
-        for label in ("refused_ambiguous", "multi_candidate", "low_confidence"):
+        for label in ("refused_ambiguous", "multi_candidate", "low_confidence",
+                      "overlay_conflicts"):
             if s[label]:
                 print(f"  {label:17s}: {', '.join(s[label])}")
+        if s["by_field"]:
+            print(f"  fields           : {s['by_field']} bound")
     db.close()
 
     # Only rewrite the C++ table when every build was regenerated; a partial run

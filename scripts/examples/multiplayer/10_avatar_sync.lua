@@ -53,10 +53,8 @@ local MOVE_RUN_THRESHOLD  = 2.0   -- meters/tick delta that plays a run anim
 -- =============================================================================
 
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -320,12 +318,12 @@ local function ensure_ghost_template()
 
     local ok, bytes = pcall(build_ghost_utc)
     if not ok then
-        print("[mp] failed to build ghost template: " .. tostring(bytes))
+        kp.print("[mp] failed to build ghost template: " .. tostring(bytes))
         return "error"
     end
     local f, err = io.open(path, "wb")
     if not f then
-        print("[mp] cannot write " .. path .. ": " .. tostring(err))
+        kp.print("[mp] cannot write " .. path .. ": " .. tostring(err))
         return "error"
     end
     -- Buffered I/O failures (disk full, quota) often only surface at
@@ -334,7 +332,7 @@ local function ensure_ghost_template()
     local ok_close = f:close()
     if not ok_write or not ok_close then
         os.remove(path)
-        print("[mp] short write to " .. path .. "; removed the partial file")
+        kp.print("[mp] short write to " .. path .. "; removed the partial file")
         return "error"
     end
     return "installed"
@@ -697,19 +695,19 @@ function OnScriptLoad(game, build)
 
     ghost_status = ensure_ghost_template()
     if ghost_status == "installed" then
-        print("[mp] ghost template written to Override -- restart KOTOR once for it to take effect.")
+        kp.print("[mp] ghost template written to Override -- restart KOTOR once for it to take effect.")
     elseif ghost_status == "error" then
-        print("[mp] could not install the ghost template; avatars will not spawn until fixed.")
+        kp.print("[mp] could not install the ghost template; avatars will not spawn until fixed.")
     end
 
     if not ffi_ok then
-        print("[mp] LuaJIT ffi unavailable -- networking disabled on this build.")
+        kp.print("[mp] LuaJIT ffi unavailable -- networking disabled on this build.")
     else
         sock = udp_open(LISTEN_PORT)
         if not sock then
-            print("[mp] failed to open UDP socket on port " .. LISTEN_PORT .. ".")
+            kp.print("[mp] failed to open UDP socket on port " .. LISTEN_PORT .. ".")
         else
-            print(("[mp] listening on UDP %d, client_id=%08X, %d configured peer(s)")
+            kp.print(("[mp] listening on UDP %d, client_id=%08X, %d configured peer(s)")
                   :format(LISTEN_PORT, local_client_id, #PEERS))
         end
     end

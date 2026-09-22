@@ -47,7 +47,7 @@ endif()
 #
 # structs.cpp alone. It depends on the platform layer for the readability probe
 # and the log, and on nothing else in the project -- no routine bridge, no
-# entity module. That is deliberate: kotor.struct.at(address, name) has to work
+# entity module. That is deliberate: kp.struct.at(address, name) has to work
 # before anything installs an object resolver, so this library links against a
 # game that has not started yet.
 add_library(kp_structs STATIC "${KP_STRUCTS_DIR}/structs.cpp")
@@ -113,7 +113,8 @@ if(KP_MINGW_CXX)
     add_custom_command(
         OUTPUT ${KP_STRUCTS_WIN32_OBJ}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_STRUCTS_WIN32_OBJDIR}
-        COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+        COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
                 -I${KP_STRUCTS_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
                 -c "${KP_STRUCTS_DIR}/structs.cpp" -o ${KP_STRUCTS_WIN32_OBJ}
         DEPENDS "${KP_STRUCTS_DIR}/structs.cpp"

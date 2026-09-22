@@ -2,11 +2,13 @@
 
 Generated from `data/routines/`. Do not edit by hand.
 
-Every engine routine the game has is callable by name:
+`nwscript.call(name, ...)` is the only direct engine-routine entry point.
+Routine names are catalog data, not Lua globals or table members:
 
 ```lua
-local m = kotor.GetModule()
-kotor.SendMessageToPC(kotor.GetFirstPC(), "hello")
+local m = nwscript.call("GetModule")
+local pc = nwscript.call("GetFirstPC")
+nwscript.call("SendMessageToPC", pc, "hello")
 ```
 
 Arguments follow the declaration order in the game's own `nwscript.nss`.

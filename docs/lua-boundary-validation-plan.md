@@ -1,0 +1,29 @@
+# Lua, NWScript and harness validation implementation
+
+## Spec
+The current user request: validate every one of 41 examples exactly as documented, keep Lua native facilities and NWScript completely separate with no equivalent exported routine names, allow explicit interoperation, and keep TOML configuration modular and separately documented as harness/test driver configuration.
+
+## Global Constraints
+- Work only in the isolated worktree. Preserve the canonical dirty checkout and all user-owned processes and saves.
+- Native Lua facilities are under kp; direct engine routines are available through nwscript.call(name, ...), with no exported routine aliases or same-name native exceptions.
+- NWScript caller context and VM trace diagnostics belong to the nwscript bridge.
+- Runtime INI, operator TOML, and scenario TOML have distinct documented owners; TOML is not a Lua or NWScript API.
+- Host checks may run concurrently; all real game checks are serialized and require independent behavior predicates. A mock, build, syntax pass or invocation is never live behavior proof.
+- No subagents from implementers. No pushes or PRs. Commit only assigned files in this isolated branch.
+
+### Task 1: Finish engine boundary enforcement
+Own src/api, related generators/data/docs/examples/harness consumers and namespace/support/routine tests only as required for the migration.
+Rename native kp.log to kp.diagnostic (no compatibility alias) throughout active consumers, metadata, generators and docs; preserve engine routine log through nwscript.call. Move kp.as to nwscript.with_caller and kp.last_routine_trace to nwscript.last_trace; preserve caller restoration/error behavior. Bridge registration must not create kp. Do not remove native object convenience operations: distinct names are permitted and their implementation can use an explicit C++ bridge API; document that dependency accurately.
+Strengthen production registration tests: enumerate routine catalog, no exceptions for native exports, no exported direct routine names, bridge-only registration does not create kp, native-only initialization does not fabricate nwscript. Retain shared script/console initializer. Update active examples and migration docs. Improve lexical boundary checker for explicit duplicate routine receivers where sound; clearly state scope instead of pretending lexical checks prove arbitrary Lua semantics.
+Research grounding: Lua 5.1 Reference Manual https://www.lua.org/manual/5.1/manual.html (environment tables and registration); use real tables and explicit module ownership.
+Run focused tests and boundary checker; report actual command/results. Do not run games.
+
+### Task 2: Harness safety and TOML contracts
+Own scripts/harness/gameplay_tests/run_all.sh, harness Python config/parser modules, their tests and harness TOML docs, plus CMake test registration as needed.
+Fix LIVE_WIP misclassification: only FAST may enter parallel host scheduler, both live groups must use serialized lock. Add regression using fake shell test fixtures without launching a game, covering default, --live, --live-all, invalid jobs and invalid mode. Fix ScenarioRunner report.target and fallback checkpoints to identify the effective session target when CLI --target overrides route metadata (preserve source route). Catch malformed workspace configuration ValueError at the CLI configuration boundary and return documented status 3, with offline regressions. Audit TOML scopes/parser behavior and fix evidenced defects from audit report; keep one reader and immutable scenario inputs. Document exact owner, precedence, validation and compatibility semantics separately from engines.
+Research grounding: TOML specification https://toml.io/en/v1.0.0 and Python tomllib documentation https://docs.python.org/3/library/tomllib.html.
+Run relevant Python/shell tests; no game launches.
+
+### Task 3: Executable per-example validation ledger
+Own new example behavior tests/manifest, corresponding CMake integration and docs/example-validation.md; update examples only for evidenced defects. Known confirmed defect: meditation increments count based on q(ApplyEffectToObject), but bridge Type::Void returns zero Lua values. Separate protected-call success from result value and test count plus rejection of absent/dead/nonparty Bastila; validate object sentinel explicitly.
+Use /tmp/kp-example-audit-20260922.md for exact inventory and documented assertions. Create deterministic host contract tests for examples that can be tested with actual Lua execution and controlled backend fixtures, with negative cases and documented branch checks. Keep host fixtures explicitly separate from real engine verification. Account for exactly 41 shipped Lua files with hashes and per-example syntax, host behavior and live behavior statuses, evidence and unmet preconditions. Never turn inherited old receipts into current verified results. Integrate reusable host checks. Record all runtime-dependent behaviors still requiring live state; controller owns actual serialized live validation after offline gates.

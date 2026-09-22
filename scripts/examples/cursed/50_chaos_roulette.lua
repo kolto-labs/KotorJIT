@@ -26,10 +26,8 @@ local VFX_PLASMA = 3010
 local GIZKA = 69
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -65,7 +63,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -138,5 +136,5 @@ function OnRunScript(script_name, object_id, has_object, relevant)
   if kp and kp.as then
     kp.as(object_id, function() q("SpeakString", pick.name, 0) end)
   end
-  print(("[cursed:wheel] %s: %s (#%d)"):format(norm(q("GetName", object_id)), pick.name, spins))
+  kp.print(("[cursed:wheel] %s: %s (#%d)"):format(norm(q("GetName", object_id)), pick.name, spins))
 end

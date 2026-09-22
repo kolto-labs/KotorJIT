@@ -108,7 +108,12 @@ xdpyinfo >/dev/null 2>&1 || { log "Xvfb failed"; exit 1; }
 ROOT_WID=$(( $(xwininfo -root 2>/dev/null | sed -n 's/.*Window id: \([0-9a-vx]*\).*/\1/p' | head -1) ))
 log "Xvfb up, root $ROOT_WID"
 
-wineboot -i >"$OUT/wineboot.log" 2>&1; wineserver -w
+if [[ -f "$PREFIX/system.reg" ]]; then
+  log "wine prefix already initialised, skipping wineboot ($PREFIX)"
+else
+  wineboot -i >"$OUT/wineboot.log" 2>&1 || log "wineboot failed; continuing"
+fi
+wineserver -w
 log "launching"
 ( cd "$GAME_DIR" && exec wine swkotor.exe ) >"$OUT/wine.log" 2>&1 &
 

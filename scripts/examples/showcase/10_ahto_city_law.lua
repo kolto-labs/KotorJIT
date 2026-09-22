@@ -15,13 +15,11 @@ end
 
 -- Every engine call goes through here: the API is absent until the runtime binds
 -- the VM, and a routine can be missing on a build this script was not written
--- for. Asking by name rather than taking kotor.Whatever as an argument matters --
+-- for. Asking by name rather than taking a generated routine member as an argument matters --
 -- the argument form indexes the table before the guard ever runs.
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -42,7 +40,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
     if attacker ~= pc then return end
 
     strikes = strikes + 1
-    print(("[ahto] strike %d witnessed on Manaan"):format(strikes))
+    kp.print(("[ahto] strike %d witnessed on Manaan"):format(strikes))
     if strikes == 1 then
         q("SpeakString", "Selkath Security: violence is not tolerated in Ahto City.", 0)
     elseif strikes == 3 then

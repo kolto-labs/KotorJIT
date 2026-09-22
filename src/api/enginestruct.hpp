@@ -106,16 +106,19 @@ struct VmEngineAccess {
     hooks::ThiscallFn<void, std::uint32_t, void*> destroy_engine_structure = nullptr;
     hooks::ThiscallFn<void>                       destroy_string = nullptr;
 
-    // The runtime array of command function pointers, read straight out of the
-    // implementer. Used only to answer "is this routine implemented in this
-    // build" before calling, so an unimplemented id is a script error instead of
-    // a VM error code. Null means we skip that check.
+    // Snapshot identity plus layout for validating the live dispatcher table
+    // before touching the VM stack. A changed table needs a trusted recapture.
     void* const* commands = nullptr;
     std::uint32_t command_count = 0;
+    std::uint32_t commands_offset = 0x0C;
+    std::uint32_t wrapper_internal_offset = 0;
 };
 
 void                  bind_engine_access(const VmEngineAccess&);
 const VmEngineAccess& engine_access();
+// routine < 0 checks context only (capture and kp.as); otherwise also checks
+// the selected live command slot. Never calls into the engine.
+bool vm_binding_live(int routine = -1);
 
 // Addresses straight out of data/addresses/<build>.json, by site name. The
 // runtime resolves the names; this turns them into everything the bridge needs
@@ -128,6 +131,12 @@ const VmEngineAccess& engine_access();
 struct VmSites {
     void* command_implementer = nullptr;   // CSWVirtualMachineCommands*
     void* virtual_machine     = nullptr;   // CVirtualMachine*
+
+    // Per-build object layout from field sites. Stack accessors receive the
+    // wrapper base and find CVirtualMachineInternal at this offset.
+    std::uint32_t wrapper_internal_offset = 0;
+    std::uint32_t command_implementer_offset = 0;
+    bool layout_resolved = false;
 
     std::uintptr_t execute_command    = 0;   // vm.execute_command
     std::uintptr_t stack_push_integer = 0;   // vm.stack_push_integer

@@ -694,6 +694,17 @@ std::uintptr_t scan_base() {
     return s.base;
 }
 
+std::uintptr_t find_unique(const std::uint8_t* bytes, std::size_t n) {
+    if (bytes == nullptr || n == 0) return 0;
+    Pattern pat;
+    pat.value.assign(bytes, bytes + n);
+    pat.mask.assign(n, 0xFF);
+    const std::uintptr_t first = scan_regions_for(pat, 0);
+    if (first == 0) return 0;
+    if (scan_regions_for(pat, 1) != 0) return 0;
+    return first;
+}
+
 void set_write_observer(WriteObserver obs, void* user) {
     g_observer = obs;
     g_observer_user = user;
@@ -704,15 +715,15 @@ unsigned long long writes_performed() { return g_writes; }
 void register_all(lua_State* L) {
     const int base = lua_gettop(L);
 
-    // The `kotor` table is shared with the routine bridge and every other
+    // The `kp` table is shared with the routine bridge and every other
     // module. Creating a fresh one here would silently drop whatever registered
     // first, and which module that is depends on runtime ordering.
-    lua_getglobal(L, "kotor");
+    lua_getglobal(L, "kp");
     if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
         lua_createtable(L, 0, 1);
         lua_pushvalue(L, -1);
-        lua_setglobal(L, "kotor");
+        lua_setglobal(L, "kp");
     }
 
     lua_getfield(L, -1, "mem");

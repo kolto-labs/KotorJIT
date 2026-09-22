@@ -55,10 +55,8 @@ local COUNTER_SLOT = 7
 local RANGE = 30.0
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -94,7 +92,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -128,7 +126,7 @@ function cursed_apply(timer_id, fired, data)
   if kp and kp.as then
     kp.as(id, function() q("SpeakString", "What have you done to me?!", 0) end)
   end
-  print(("[cursed:roulette] %s -> %s (#%d)"):format(who, pick.name, count))
+  kp.print(("[cursed:roulette] %s -> %s (#%d)"):format(who, pick.name, count))
   return false
 end
 

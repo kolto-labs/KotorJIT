@@ -11,21 +11,8 @@ static const KnownText kText_k1_steam_103_unpacked[] = {
 static const KnownText kText_k1_gog_103[] = {
     {".text", "7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3"},
 };
-static const KnownText kText_k2_steam_linux[] = {
-    {".text", "79df1007e09581fb9f487d71a36c9402627e86d41a37bf3859eedbbbb5d326ad"},
-    {"seg0", "223d2684747cae6bc1c116dcdee7a85cd2dc9ce2315fb36d37fa55efc7e1dd81"},
-};
 static const KnownText kText_k2_gog_aspyr[] = {
     {".text", "e2b3e9695b092ba062e33858b417dd22f131cd2862690f3a896e9f754848bace"},
-};
-static const KnownText kText_k1_amazongames[] = {
-    {".text", "d1b93c40a447d0bfc8c821e91bf5813f5625977e09db748ed29f220c036c5098"},
-};
-static const KnownText kText_k2_win_cd_10[] = {
-    {".text", "f6762851ad9d0f7448f0da7dee0be5d58c1511413213d202ae713af0cd4d11fb"},
-};
-static const KnownText kText_k2_win_cd_10b[] = {
-    {".text", "f6762851ad9d0f7448f0da7dee0be5d58c1511413213d202ae713af0cd4d11fb"},
 };
 static const KnownText kText_k2_steam_aspyr[] = {
     {".text", "ecf37a15cd5ee031fdbaf68d417226f983d22e3a2cf056c024f3ab7c198681a7"},
@@ -57,44 +44,12 @@ static const BuildRecord kBuilds[] = {
         "",
     },
     {
-        "k2_steam_linux",
-        "ed043d21a4578fd1c6f1557f0f72bde5589ba3572a5b6f1a687ed9feeab49ac3",
-        Format::Elf32, 0x08048000, false,
-        0, "", "",
-        kText_k2_steam_linux, sizeof kText_k2_steam_linux / sizeof kText_k2_steam_linux[0],
-        "Native Aspyr ELF, EXEC (not PIE). VM entry points hand-adjudicated.",
-    },
-    {
         "k2_gog_aspyr",
         "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
         Format::Pe32, 0x00400000, false,
         0, "", "",
         kText_k2_gog_aspyr, sizeof kText_k2_gog_aspyr / sizeof kText_k2_gog_aspyr[0],
         "Native Aspyr PE. Sites resolved from the func table's own namespace-qualified symbols (name_origin='namespace'), not hand-adjudicated: this build was never stripped.",
-    },
-    {
-        "k1_amazongames",
-        "0b6a2a7f8b4880a4986aecfe758a94b7b8fefec1cba4dac6fd06dda3ae0e7f3e",
-        Format::Pe32, 0x00400000, false,
-        0, "", "",
-        kText_k1_amazongames, sizeof kText_k1_amazongames / sizeof kText_k1_amazongames[0],
-        "Registered for build identification only. Only 47% of this binary's functions carry a native symbol (corpus func_count 30101, named_count 14211) -- far short of k2_gog_aspyr's 95% -- so almost every site needs the identity/adjudication layer this build has none of yet, same as k2_steam_linux's original 55-binding pass. Not installable until that work is done.",
-    },
-    {
-        "k2_win_cd_10",
-        "92d7800687a0119a1a81527db875673228c891a3ea241ee130f22567bf34a501",
-        Format::Pe32, 0x00400000, false,
-        0, "", "",
-        kText_k2_win_cd_10, sizeof kText_k2_win_cd_10 / sizeof kText_k2_win_cd_10[0],
-        "Pre-Aspyr retail CD release, before the 1.0b patch. Registered for build identification only -- 61% named (func_count 22502, named_count 13740), so this needs the identity/adjudication layer, same as k2_steam_linux's original pass. Not installable until that work is done.",
-    },
-    {
-        "k2_win_cd_10b",
-        "0912d1942de4ee849f06588cb738a0e78b6d5ffe92960b9567196d54b7e808d0",
-        Format::Pe32, 0x00400000, false,
-        0, "", "",
-        kText_k2_win_cd_10b, sizeof kText_k2_win_cd_10b / sizeof kText_k2_win_cd_10b[0],
-        "Pre-Aspyr retail CD release, the 1.0b patch. Same func/named counts as 1.0 in the corpus -- a small patch, not a rebuild. Registered for build identification only; not installable until it has the same identity/adjudication work 1.0 needs.",
     },
     {
         "k2_steam_aspyr",
