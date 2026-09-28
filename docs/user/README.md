@@ -3,6 +3,9 @@
 KotorPhasor is a Lua host that loads with Knights of the Old Republic. It sees the game's own script events and lets you call most engine routines from Lua.
 
 This folder is for people writing scripts. Internal design notes stay in `docs/` next to this directory.
+Where months of KotOR reverse-engineering / byte-exact recovery live:
+[agentdecompile-authority.md](../agentdecompile-authority.md)
+(NVMe AIO: `~/agentdecompile-nvme/AIO/AUTHORITY.md`).
 
 ```mermaid
 flowchart TD
@@ -22,6 +25,7 @@ flowchart TD
 3. [See what is live](api-status.md)
 4. [Find a codecave](codecaves.md) if you need somewhere to put injected bytes
 5. [Test the game without a screen](harness.md)
+6. [Platform profiles (Win/Mac identity)](platform-profiles.md)
 
 The same native harness controls are available to loaded Lua scripts under
 [`kp.harness`](../lua-harness-api.md).

@@ -19,7 +19,7 @@
 
 namespace kp::image {
 
-enum class Format { Pe32, Elf32 };
+enum class Format { Pe32, Elf32, MachO };
 
 enum class SectionState {
     Plaintext,   // real code or data; safe to read

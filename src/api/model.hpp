@@ -48,7 +48,8 @@ struct Capture {
 };
 class Operations {
 public:
-    bool bind(const std::string& verified_sha, Address loaded_base, Backend*, std::string& error);
+    bool bind(const std::string& verified_sha, Address loaded_base, Backend*,
+              const std::array<Address, 5>* generated_sites, std::string& error);
     void unbind();
     bool available() const { return backend_ != nullptr; }
     const Profile* profile() const { return profile_; }
@@ -66,6 +67,7 @@ private:
     Address site(unsigned index) const;
     bool same(const Capture&, const Capture&) const;
     const Profile* profile_ = nullptr;
+    std::array<Site, 5> sites_{};
     Backend* backend_ = nullptr;
     Address loaded_base_ = 0;
     std::uint64_t epoch_ = 0;
@@ -76,7 +78,8 @@ Operations& operations();
 using Reader = bool (*)(Address, void*, std::size_t, void*);
 using Logger = void (*)(const std::string&, void*);
 Backend* native_backend(Reader, Logger, void* context);
-bool bind_native(const std::string& verified_sha, Address loaded_base, Reader, Logger, void*, std::string&);
+bool bind_native(const std::string& verified_sha, Address loaded_base, Reader, Logger, void*,
+                 const std::array<Address, 5>* generated_sites, std::string&);
 void register_all(lua_State*);
 // Shared native consumers validate the same protected capture allocation.
 const Capture& checked_capture(lua_State*, int index);

@@ -53,6 +53,10 @@ const char* to_string(SiteKind);
 
 struct Site {
     std::string    name;      // logical key, e.g. "vm.run_script"
+    // Runtime adapter role emitted by AgentDecompile.  This is separate from
+    // a logical display name: generated consumers bind roles, not labels.
+    std::string    adapter_key;
+    std::vector<std::string> aliases;
     std::string    cls;       // "CVirtualMachineInternal"; empty for free functions
     std::string    method;    // "RunScript"
     SiteKind       kind = SiteKind::Unknown;
@@ -89,6 +93,12 @@ public:
                               std::string& error);
 
     const Site* find(std::string_view name) const;
+    // Exact adapter-key/alias lookup.  Returns null on an absent or ambiguous
+    // role so a generated operation can fail closed rather than choose a site.
+    const Site* find_adapter(std::string_view adapter_key) const;
+    // True only for an operation whose selected target, declared roles and
+    // byte-bound site entries all agreed while parsing this hook pack.
+    bool has_operation(std::string_view operation_id) const;
     const std::vector<Site>& sites() const { return sites_; }
 
     const std::string& build() const { return build_; }
@@ -117,6 +127,7 @@ private:
     std::string    sha256_;
     std::uintptr_t image_base_ = 0;
     std::vector<Site> sites_;
+    std::vector<std::string> operations_;
 };
 
 // One thing the caller wants done to one site.

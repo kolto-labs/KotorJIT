@@ -15,14 +15,23 @@ extern "C" {
 using namespace kp::api::model;
 #define CHECK(x) do{if(!(x))throw std::runtime_error(std::string("line ")+std::to_string(__LINE__)+": "+#x);}while(0)
 #include "tests/model_backend_fixture.hpp"
+// Operations::bind requires the caller (normally a hookpack-admitted generated
+// operation) to hand back which VA it resolved for each of the profile's five
+// sites. These controlled-backend tests have no hookpack: they exercise the
+// Profile's own compile-time sites as if they were the admitted roles.
+std::array<Address, 5> generated_from(const Profile& p) {
+ std::array<Address, 5> gen{};
+ for (unsigned i = 0; i < gen.size(); ++i) gen[i] = p.sites[i].va;
+ return gen;
+}
 void core_tests(const Profile& p) {
- Fake f(p);Operations op;std::string e;Capture original,after;
- CHECK(!op.bind("wrong",f.base,&f,e));CHECK(f.setters==0);
- f.host_width=p.width==4?8:4;CHECK(!op.bind(p.sha256,f.base,&f,e));f.host_width=p.width;
- f.host_abi=p.abi==Abi::Win32?Abi::Darwin32:Abi::Win32;CHECK(!op.bind(p.sha256,f.base,&f,e));f.host_abi=p.abi;
- CHECK(!op.bind(p.sha256,0,&f,e));
- auto saved=f.bytes[f.site(0)];f.bytes[f.site(0)]^=1;CHECK(!op.bind(p.sha256,f.base,&f,e));f.bytes[f.site(0)]=saved;
- CHECK(op.bind(p.sha256,f.base,&f,e));CHECK(op.snapshot(42,original,e));CHECK(original.client_id==73);
+ Fake f(p);Operations op;std::string e;Capture original,after;auto gen=generated_from(p);
+ CHECK(!op.bind("wrong",f.base,&f,&gen,e));CHECK(f.setters==0);
+ f.host_width=p.width==4?8:4;CHECK(!op.bind(p.sha256,f.base,&f,&gen,e));f.host_width=p.width;
+ f.host_abi=p.abi==Abi::Win32?Abi::Darwin32:Abi::Win32;CHECK(!op.bind(p.sha256,f.base,&f,&gen,e));f.host_abi=p.abi;
+ CHECK(!op.bind(p.sha256,0,&f,&gen,e));
+ auto saved=f.bytes[f.site(0)];f.bytes[f.site(0)]^=1;CHECK(!op.bind(p.sha256,f.base,&f,&gen,e));f.bytes[f.site(0)]=saved;
+ CHECK(op.bind(p.sha256,f.base,&f,&gen,e));CHECK(op.snapshot(42,original,e));CHECK(original.client_id==73);
  for(float n:{0.f,-1.f,4.1f,std::numeric_limits<float>::infinity(),std::numeric_limits<float>::quiet_NaN()})CHECK(!op.resize(original,n,after,e));
  CHECK(f.setters==0);CHECK(!op.snapshot(0x7f000000,after,e));
  CHECK(op.resize(original,2,after,e));CHECK(after.base==2&&after.effective==3&&f.setters==1);
@@ -40,15 +49,15 @@ void core_tests(const Profile& p) {
  f.ptr(f.internal+p.internal_array,0);CHECK(!op.snapshot(42,after,e));f.ptr(f.internal+p.internal_array,f.array);
  auto old_actor=f.actor;f.actor=0;CHECK(!op.snapshot(42,after,e));f.actor=old_actor;
  auto old_model=f.gob;f.gob=0;CHECK(!op.snapshot(42,after,e));f.gob=old_model;
- op.unbind();CHECK(!op.resize(original,2,after,e));CHECK(op.bind(p.sha256,f.base,&f,e));CHECK(!op.restore(original,after,e));
+ op.unbind();CHECK(!op.resize(original,2,after,e));CHECK(op.bind(p.sha256,f.base,&f,&gen,e));CHECK(!op.restore(original,after,e));
  CHECK(f.setters==count);
  CHECK(op.snapshot(42,original,e));f.replace_after=true;CHECK(!op.resize(original,2,after,e));
  CHECK(e.find("mismatch")!=std::string::npos);
 }
 
 void ownership_tests(const Profile& p) {
- Fake f(p);Operations op;std::string error;Identity owner;Capture capture,after;
- CHECK(op.bind(p.sha256,f.base,&f,error));
+ Fake f(p);Operations op;std::string error;Identity owner;Capture capture,after;auto gen=generated_from(p);
+ CHECK(op.bind(p.sha256,f.base,&f,&gen,error));
  if(p.sites[4].va) {
   auto byte=f.bytes[f.site(4)];f.bytes[f.site(4)]^=1;CHECK(!op.identify(42,owner,error));f.bytes[f.site(4)]=byte;
   f.put(f.server_actor+p.width,99u);CHECK(!op.identify(42,owner,error));f.put(f.server_actor+p.width,42u);
@@ -80,7 +89,8 @@ void original_conversion_test() {
  CHECK(convert(0x7f000000)==0x7f000000);CHECK(convert(42)==0x8000002a);
  CHECK(convert(0x7fffffff)==0xffffffff);CHECK(convert(0xffffffff)==0xffffffff);
  Fake f(profiles().back());f.original_convert=convert;Operations op;std::string error;Capture capture,after;
- CHECK(op.bind(f.p.sha256,f.base,&f,error));
+ auto gen=generated_from(f.p);
+ CHECK(op.bind(f.p.sha256,f.base,&f,&gen,error));
  for(const auto id:{42u,0x7fffffffu,0xffffffffu}) {
   f.server_id=id;f.client_id=convert(id);
   CHECK(op.snapshot(id,capture,error));CHECK(capture.client_id==f.client_id);
@@ -94,7 +104,7 @@ int forged(lua_State* L) {
  lua_getmetatable(L,1);lua_setmetatable(L,-2);return 1;
 }
 void lua_tests() {
- Fake f(profiles().back());std::string error;CHECK(operations().bind(f.p.sha256,f.base,&f,error));
+ Fake f(profiles().back());std::string error;auto gen=generated_from(f.p);CHECK(operations().bind(f.p.sha256,f.base,&f,&gen,error));
  lua_State* L=luaL_newstate();luaL_openlibs(L);register_all(L);lua_pushcfunction(L,forged);lua_setglobal(L,"fake_capture");
  const char* program=R"(
  assert(kp.model.capabilities().available)

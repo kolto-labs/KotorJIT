@@ -1,0 +1,66 @@
+# Logical build profiles for KotorPhasor.
+# Identified by code-section hash / portable signatures at runtime.
+# status: supported | registered | static_only
+
+[[profile]]
+id = "k1_gog_103"
+game = "K1"
+platform = "win"
+format = "pe"
+status = "supported"
+address_table = "data/addresses/k1_gog_103.json"
+note = "Primary Windows GOG KOTOR 1 PE. Code-section hash selects this build."
+
+[[profile]]
+id = "k1_steam_103"
+game = "K1"
+platform = "win"
+format = "pe"
+status = "supported"
+address_table = "data/addresses/k1_steam_103.json"
+note = "SteamStub-wrapped; identical .text to GOG once deciphered."
+
+[[profile]]
+id = "k1_steam_103_unpacked"
+game = "K1"
+platform = "win"
+format = "pe"
+status = "supported"
+address_table = "data/addresses/k1_steam_103_unpacked.json"
+note = "Deciphered Steam image used by the headless harness."
+
+[[profile]]
+id = "k2_gog_aspyr"
+game = "K2"
+platform = "win"
+format = "pe"
+status = "supported"
+address_table = "data/addresses/k2_gog_aspyr.json"
+note = "Windows GOG Aspyr KOTOR 2 PE."
+
+[[profile]]
+id = "k2_steam_aspyr"
+game = "K2"
+platform = "win"
+format = "pe"
+status = "supported"
+address_table = "data/addresses/k2_steam_aspyr.json"
+note = "Windows Steam Aspyr KOTOR 2 PE. Required sites hand-adjudicated against the GOG Aspyr donor."
+
+[[profile]]
+id = "k1_mac"
+game = "K1"
+platform = "mac"
+format = "macho"
+status = "static_only"
+address_table = ""
+note = "32-bit K1 Mac Mach-O in corpus (md5 df5f025bf1d40dd2cdc76ef5145ad876). Signature tables only until a Mach-O loader exists."
+
+[[profile]]
+id = "k2_mac"
+game = "K2"
+platform = "mac"
+format = "macho"
+status = "static_only"
+address_table = ""
+note = "32-bit K2 Mac Mach-O in corpus (md5 57d86b1c4a035dee6fead18a8548cfe8). Signature tables only until a Mach-O loader exists."

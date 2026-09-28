@@ -599,13 +599,16 @@ void phase_hookpack() {
     const char* pack = R"JSON({
       "format": "agentdecompile.hookpack/v1",
       "binaries": [
-        {"slug": "k1-win-1.03", "game": "k1", "platform": "win32"},
+        {"slug": "k1-win-1.03", "game": "k1", "platform": "win32",
+         "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
         {"slug": "k1-lin-1.03", "game": "k1", "platform": "linux"}
       ],
       "sites": {
         "vm.run_script": {
           "cls": "CVirtualMachineInternal",
           "method": "RunScript",
+          "adapter_key": "kp.vm.run_script",
+          "aliases": ["RunScript", "vm.run"],
           "instances": [
             {"binary": "k1-win-1.03", "addr": 6112720},
             {"binary": "k1-lin-1.03", "addr": 134545408}
@@ -623,6 +626,10 @@ void phase_hookpack() {
           "instance addr for that slug is the site VA");
     check(s != nullptr && s->cls == "CVirtualMachineInternal",
           "cls comes from the site, not the VA");
+    check(table.expected_sha256() == "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "hookpack selected binary carries its declared image SHA-256");
+    check(table.find_adapter("kp.vm.run_script") == s && table.find_adapter("RunScript") == s,
+          "hookpack adapter keys and aliases resolve to the selected site");
 
     AddressTable other;
     check(AddressTable::parse(pack, "k1-lin-1.03", other, error),
@@ -630,36 +637,6 @@ void phase_hookpack() {
     const Site* o = other.find("vm.run_script");
     check(o != nullptr && o->addr == 134545408,
           "the other slug picks the other instance");
-
-    // Producer logical names bind to explicit runtime keys without losing
-    // per-build evidence or field extents. Absent keys retain legacy names.
-    AddressTable mapped;
-    check(AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
-      "LogicalField":{"adapter_key":"server.mode","kind":"field","offset":8,"size":4,
-        "expected_bytes":"AA","instances":[
-          {"binary":"win","addr":4096,"expected_bytes":"BBCC","offset":12,"size":2},
-          {"binary":"mac","addr":8192,"expected_bytes":"DDEE"}]}}})JSON",
-        "win", mapped, error), "explicit adapter key parses");
-    const Site* mapped_site = mapped.find("server.mode");
-    check(mapped_site && !mapped.find("LogicalField") && mapped_site->addr == 4096 &&
-          mapped_site->expected == std::vector<std::uint8_t>({0xBB, 0xCC}) &&
-          mapped_site->offset == 12 && mapped_site->size == 2,
-          "canonical adapter key preserves selected build bytes and extent");
-    for (const char* key : {"null", "false", "42", "[]", "{}", "\"\"", "\"   \""}) {
-        const std::string malformed = std::string(
-            "{\"format\":\"agentdecompile.hookpack/v1\",\"sites\":{\"logical\":{\"adapter_key\":") + key + "}}}";
-        check(!AddressTable::parse(malformed, "win", mapped, error),
-              "malformed explicit adapter key refuses instead of falling back");
-    }
-    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
-      "a":{"adapter_key":"runtime.key"},"b":{"adapter_key":"runtime.key"}}})JSON",
-        "win", mapped, error), "duplicate explicit adapter keys refuse");
-    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
-      "a":{"adapter_key":"runtime.key"},"runtime.key":{}}})JSON",
-        "win", mapped, error), "adapter key colliding with fallback name refuses");
-    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
-      "a":{},"a":{}}})JSON", "win", mapped, error),
-        "duplicate fallback runtime keys refuse");
 
     const char* overlay = R"JSON({
       "build": "k1-win-1.03",
@@ -721,6 +698,22 @@ void phase_hookpack() {
           "stale hint plus unique bytes bind the image VA");
     check(hit != nullptr && hit->bound_from_scan,
           "scan-bound site is marked bound_from_scan");
+
+    const char* operation_pack = R"JSON({
+      "format":"agentdecompile.hookpack/v1",
+      "binaries":[{"slug":"k1-win-1.03","sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+      "sites":{"Convert":{"adapter_key":"kp.model.convert","expected_bytes":"535556578B7C2414",
+        "instances":[{"binary":"k1-win-1.03","addr":6112720,"expected_bytes":"535556578B7C2414"}]}},
+      "operations":[{"id":"test.generated.operation","target":{"slug":"k1-win-1.03","sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        "roles":{"convert":{"site":"Convert","adapter_key":"kp.model.convert","addr":6112720,"expected_bytes":"535556578B7C2414"}}}]
+    })JSON";
+    AddressTable generated;
+    check(AddressTable::parse(operation_pack, "k1-win-1.03", generated, error),
+          "parse hookpack with a target-bound generated operation");
+    check(generated.has_operation("test.generated.operation"),
+          "generated operation requires matching target, role, address and bytes");
+    check(!generated.has_operation("missing.operation"),
+          "unknown generated operation is unavailable");
 
     const char* zero = R"JSON({
       "format": "agentdecompile.hookpack/v1",

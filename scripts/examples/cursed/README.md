@@ -1,6 +1,6 @@
 # Cursed KotOR
 
-Eight retained Lua scripts that rewrite the rules of a fight from inside the engine, each
+Nine retained Lua scripts that rewrite the rules of a fight from inside the engine, each
 tied to an engine event. They are demos of what the event layer plus the full
 NWScript routine table can do, not gameplay mods. Every one is a single file
 with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
@@ -15,6 +15,7 @@ with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
 | `80_loot_pinata.lua` | enemy death script (OnRunScript) | a ring of credit piles around the corpse; every second corpse releases a hostile gizka |
 | `90_bullet_time.lua` | HP drops to at most 70% (OnTick, every fifth tick) | `kp.game_speed(0.25)` for 2.5s, blue tint, haste aura on you; a timer restores speed |
 | `100_item_airstrike.lua` | you acquire any item (OnModuleAcquireItem); level up (OnModulePlayerLevelUp, not yet seen firing live) | space laser + 60 damage on every living non-party creature in 20m that `GetIsEnemy` marks hostile to you; neutrals are spared. On level-up you ascend as Revan |
+| `110_footlocker_blaster.lua` | PC fires a ranged weapon (`OnCreatureBroadcastSafeProjectile`, falls back to `OnCreatureAttacked`) | each bolt becomes a flying footlocker crate along the PC→target line; on arrival the target is Force-pushed hard (twice) with whirlwind/force-wave VFX and tumbles. `footammo [<placeable>]` retargets the crate blueprint from the console |
 
 Chaos roulette and rave were removed from the public tree on 2026-09-22.
 Their unchanged regression sources are under

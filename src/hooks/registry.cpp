@@ -1,6 +1,7 @@
 #include "hooks/registry.hpp"
 
 #include <cerrno>
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -337,7 +338,10 @@ bool AddressTable::parse(std::string_view json, const std::string& build_slug,
     if (as_string(root.member("format")) == "agentdecompile.hookpack/v1") {
         out = AddressTable{};
         out.build_ = !build_slug.empty() ? build_slug : as_string(root.member("build"));
+        bool declared_binaries = false;
+        bool selected_binary = false;
         if (const JValue* bins = root.member("binaries"); bins && bins->type == JType::Array) {
+            declared_binaries = true;
             for (const auto& b : bins->array) {
                 if (b.type != JType::Object) continue;
                 const std::string slug = as_string(b.member("slug"));
@@ -347,31 +351,30 @@ bool AddressTable::parse(std::string_view json, const std::string& build_slug,
                 if (const JValue* ib = b.member("image_base"); ib && ib->type == JType::Number) {
                     out.image_base_ = static_cast<std::uintptr_t>(ib->number);
                 }
+                out.sha256_ = as_string(b.member("sha256"));
                 if (out.build_.empty()) out.build_ = slug;
+                selected_binary = true;
                 break;
             }
+        }
+        if (!build_slug.empty() && declared_binaries && !selected_binary) {
+            error = "hookpack has no binary entry for selected build " + build_slug;
+            return false;
         }
         const JValue* sites = root.member("sites");
         if (!sites || sites->type != JType::Object) {
             error = "hookpack has no \"sites\" object";
             return false;
         }
-        std::unordered_set<std::string> effective_keys;
         for (const auto& [name, entry] : sites->object) {
             if (entry.type != JType::Object) continue;
             Site s;
-            s.name = name;
-            if (const JValue* key = entry.member("adapter_key")) {
-                if (key->type != JType::String ||
-                    key->str.find_first_not_of(" \t\r\n\f\v") == std::string::npos) {
-                    error = "hookpack adapter_key must be a nonempty string: " + name;
-                    return false;
+            s.name     = name;
+            s.adapter_key = as_string(entry.member("adapter_key"));
+            if (const JValue* aliases = entry.member("aliases"); aliases && aliases->type == JType::Array) {
+                for (const JValue& alias : aliases->array) {
+                    if (alias.type == JType::String && !alias.str.empty()) s.aliases.push_back(alias.str);
                 }
-                s.name = key->str;
-            }
-            if (!effective_keys.insert(s.name).second) {
-                error = "duplicate hookpack runtime key: " + s.name;
-                return false;
             }
             s.cls      = as_string(entry.member("cls"));
             s.method   = as_string(entry.member("method"));
@@ -400,6 +403,42 @@ bool AddressTable::parse(std::string_view json, const std::string& build_slug,
                 s.confidence = c->number;
             }
             out.sites_.push_back(std::move(s));
+        }
+        if (const JValue* operations = root.member("operations"); operations && operations->type == JType::Array) {
+            for (const JValue& operation : operations->array) {
+                if (operation.type != JType::Object) continue;
+                const std::string id = as_string(operation.member("id"));
+                const JValue* target = operation.member("target");
+                const JValue* roles = operation.member("roles");
+                if (id.empty() || !target || target->type != JType::Object || !roles || roles->type != JType::Object)
+                    continue;
+                if (as_string(target->member("slug")) != out.build_ ||
+                    out.sha256_.empty() || as_string(target->member("sha256")) != out.sha256_)
+                    continue;
+                bool valid = !roles->object.empty();
+                for (const auto& [role, declaration] : roles->object) {
+                    (void)role;
+                    if (declaration.type != JType::Object) { valid = false; break; }
+                    const std::string site_name = as_string(declaration.member("site"));
+                    const std::string adapter_key = as_string(declaration.member("adapter_key"));
+                    const JValue* address = declaration.member("addr");
+                    const std::string expected = as_string(declaration.member("expected_bytes"));
+                    const Site* site = out.find_adapter(adapter_key);
+                    if (site == nullptr || site->name != site_name || !address || address->type != JType::Number ||
+                        site->addr != static_cast<std::uintptr_t>(address->number) || expected.empty()) {
+                        valid = false;
+                        break;
+                    }
+                    std::vector<std::uint8_t> bytes;
+                    if (!parse_hex_bytes(expected, bytes) || bytes.empty() || bytes != site->expected) {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid) out.operations_.push_back(id);
+            }
+            std::sort(out.operations_.begin(), out.operations_.end());
+            out.operations_.erase(std::unique(out.operations_.begin(), out.operations_.end()), out.operations_.end());
         }
         return true;
     }
@@ -512,6 +551,22 @@ const Site* AddressTable::find(std::string_view name) const {
         if (s.name == name) return &s;
     }
     return nullptr;
+}
+
+const Site* AddressTable::find_adapter(std::string_view adapter_key) const {
+    const Site* matched = nullptr;
+    for (const Site& s : sites_) {
+        const bool exact = s.adapter_key == adapter_key;
+        const bool alias = std::find(s.aliases.begin(), s.aliases.end(), adapter_key) != s.aliases.end();
+        if (!exact && !alias) continue;
+        if (matched != nullptr) return nullptr;
+        matched = &s;
+    }
+    return matched;
+}
+
+bool AddressTable::has_operation(std::string_view operation_id) const {
+    return std::binary_search(operations_.begin(), operations_.end(), std::string(operation_id));
 }
 
 void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {

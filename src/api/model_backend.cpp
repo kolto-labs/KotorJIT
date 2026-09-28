@@ -58,11 +58,12 @@ Backend* native_backend(Reader read,Logger log,void* context) {
     (void)read;(void)log;(void)context;return nullptr;
 #endif
 }
-bool bind_native(const std::string& sha,Address base,Reader read,Logger log,void* context,std::string& error) {
+bool bind_native(const std::string& sha,Address base,Reader read,Logger log,void* context,
+                 const std::array<Address, 5>* generated_sites,std::string& error) {
     operations().unbind();
     if(!read || !log){error="model binding requires fallible reader and mutation logger";return false;}
     Backend* native=native_backend(read,log,context);
     if(!native){error="unsupported: no native model adapter for host OS/architecture";return false;}
-    return operations().bind(sha,base,native,error);
+    return operations().bind(sha,base,native,generated_sites,error);
 }
 }

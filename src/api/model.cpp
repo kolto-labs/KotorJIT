@@ -10,14 +10,14 @@ bool close(float a,float b) { return std::isfinite(a) && std::fabs(a-b) <= .0001
 bool fail(std::string& error,const char* text) { error=text; return false; }
 }
 Operations& operations() { static Operations value;return value; }
-void Operations::unbind() { backend_=nullptr; profile_=nullptr; loaded_base_=0; ++epoch_; }
-Address Operations::site(unsigned i) const { return loaded_base_ + profile_->sites[i].va-profile_->preferred_base; }
+void Operations::unbind() { backend_=nullptr; profile_=nullptr; sites_={}; loaded_base_=0; ++epoch_; }
+Address Operations::site(unsigned i) const { return loaded_base_ + sites_[i].va-profile_->preferred_base; }
 bool Operations::guards(std::string& error) const {
     if (!backend_ || !profile_) return fail(error,"unsupported: no verified native model binding");
-    for(unsigned i=0;i<profile_->sites.size();++i) {
-        if(!profile_->sites[i].va)continue;
+    for(unsigned i=0;i<sites_.size();++i) {
+        if(!sites_[i].va)continue;
         unsigned char expected[16]{}, actual[16]{};
-        const char* hex=profile_->sites[i].bytes;
+        const char* hex=sites_[i].bytes;
         if (std::strlen(hex)!=32) return fail(error,"invalid model code guard");
         for(unsigned j=0;j<16;++j) {
             auto digit=[](char c){return c<='9'?c-'0':c-'a'+10;};
@@ -28,7 +28,8 @@ bool Operations::guards(std::string& error) const {
     }
     return true;
 }
-bool Operations::bind(const std::string& sha,Address base,Backend* backend,std::string& error) {
+bool Operations::bind(const std::string& sha,Address base,Backend* backend,
+                      const std::array<Address, 5>* generated_sites,std::string& error) {
     unbind();error.clear();
     const Profile* p=profile_for(sha);
     if (!p) return fail(error,"unsupported: unknown executable SHA256");
@@ -39,7 +40,12 @@ bool Operations::bind(const std::string& sha,Address base,Backend* backend,std::
     for(const auto& s:p->sites) if(s.va+16>top) top=s.va+16;
     if (!base || base>max || top-p->preferred_base>max-base)
         return fail(error,"unsupported: invalid loaded-image base/slide");
-    profile_=p;backend_=backend;loaded_base_=base;
+    profile_=p;sites_=p->sites;backend_=backend;loaded_base_=base;
+    if (!generated_sites) { unbind(); return fail(error,"unsupported: generated model operation binding required"); }
+    for (unsigned i=0;i<sites_.size();++i) {
+        if (!(*generated_sites)[i]) { unbind(); return fail(error,"unsupported: generated model operation role missing"); }
+        sites_[i].va=(*generated_sites)[i];
+    }
     if (!guards(error)) { unbind();return false; }
     return true;
 }
@@ -72,7 +78,7 @@ bool Operations::actor(std::uint32_t id,Capture& out,std::string& error) {
 bool Operations::identify(std::uint32_t id,Identity& out,std::string& error) {
     out={};error.clear();if(!guards(error))return false;
     if(id==0x7f000000)return fail(error,"invalid server object ID");
-    if(!profile_->sites[4].va) {
+    if(!sites_[4].va) {
         Capture c;if(!actor(id,c,error))return false;
         out={epoch_,id,c.client,c.creature};return true;
     }
