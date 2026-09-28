@@ -557,7 +557,7 @@ void function_timer_cases(const fs::path& scratch) {
     api::timers::set_clock(0);
     api::timers::set_error_budget(3);
 
-    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false, {}, {}});
     std::vector<std::string> errors;
     host.load_all(errors);
     for (const std::string& e : errors) std::printf("  load error: %s\n", e.c_str());
@@ -812,7 +812,7 @@ int main(int argc, char** argv) {
     api::timers::set_clock(0);
     api::timers::set_error_budget(3);
 
-    lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false});
+    lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false, {}, {}});
     std::vector<std::string> errors;
     const unsigned loaded = host.load_all(errors);
     for (const std::string& e : errors) std::printf("  load error: %s\n", e.c_str());

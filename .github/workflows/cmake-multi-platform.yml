@@ -18,6 +18,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# A newer push to the same PR (or to main) supersedes the run in flight.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
