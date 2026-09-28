@@ -1,3 +1,4 @@
+#include "devtools/console.hpp"
 // The hook bodies: RunScript, MainLoop, DoConsole, ten EventHandlers, save/load.
 //
 // Signatures come from the recovered C for these specific functions, one per
@@ -754,16 +755,32 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
 // Hot-reload stats every script file, so it cannot run on every server frame.
 // 64 frames is around a second at the rate the server loop actually turns,
 // which is fast enough that a player editing a script does not wait for it.
+void devtools_output(const char*, void*);
 constexpr std::uint64_t kReloadEvery = 64;
+std::atomic<bool> g_client_gate_mismatch_logged{false};
+
+void note_client_gate_mismatch() {
+    if (live() && kp::runtime::engine_thread_latched() &&
+        !kp::runtime::on_engine_thread() &&
+        !g_client_gate_mismatch_logged.exchange(true, std::memory_order_acq_rel))
+        Runtime::instance().log("engine gate: client frame callback is not the latched server MainLoop thread");
+}
 
 void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
     auto orig = reinterpret_cast<MainLoopFn>(g_orig_main_loop.load(std::memory_order_acquire));
+
+    // This is the actual server MainLoop owner seam.  It runs on the engine
+    // thread before console pumping, harness draining, or Lua dispatch.  The
+    // startup worker and client/render callbacks never latch ownership.
+    kp::runtime::latch_engine_thread();
 
     // The client loop stops turning while K1 loads a fresh module, even after
     // it has already run at the menu. The server loop still runs scripts in
     // that interval. Drain here as well: drain's TLS reentrancy guard makes a
     // nested server/client invocation a no-op, and this boundary was already
     // the fallback for builds with no detoured client loop.
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
     kp::harness::drain();
 
     lua::Host* const host = active_host();
@@ -823,73 +840,8 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
 char        g_line[512];
 std::size_t g_line_len = 0;
 
-lua_State* g_console_L = nullptr;
-
-int console_print(lua_State* L) {
-    std::string out;
-    const int n = lua_gettop(L);
-    for (int i = 1; i <= n; ++i) {
-        if (i > 1) out += "\t";
-        const char* s = lua_tostring(L, i);
-        out += (s != nullptr) ? s : luaL_typename(L, i);
-    }
-    Runtime::instance().log("lua: %s", out.c_str());
-    return 0;
-}
-
-// A state of our own, so `lua exec` works with no script loaded. Sharing a
-// script's state instead would let a console typo quarantine that script.
-lua_State* console_state() {
-    if (g_console_L != nullptr) return g_console_L;
-    g_console_L = luaL_newstate();
-    if (g_console_L == nullptr) return nullptr;
-    luaL_openlibs(g_console_L);
-    // The same API every script gets. Without this the console can evaluate Lua
-    // and not reach the game, so `lua exec nwscript.call('GetFirstPC')` -- the obvious
-    // first thing anyone types -- would answer "attempt to index a nil value".
-    init_lua_state(g_console_L);
-    // Tag native output from this console state. Lua's print stays unchanged.
-    api::push_kp_table(g_console_L);
-    lua_pushcfunction(g_console_L, console_print);
-    lua_setfield(g_console_L, -2, "print");
-    lua_pop(g_console_L, 1);
-    return g_console_L;
-}
-
-void console_exec(const std::string& code) {
-    lua_State* L = console_state();
-    if (L == nullptr) { Runtime::instance().log("lua exec: no lua state"); return; }
-
-    const int base = lua_gettop(L);
-    // Try the text as an expression first so `lua exec 1+1` answers 2 rather
-    // than failing to parse. Falling back to a statement keeps `lua exec x = 1`
-    // working too.
-    const std::string as_expr = "return " + code;
-    if (luaL_loadbuffer(L, as_expr.c_str(), as_expr.size(), "=console") != 0) {
-        lua_pop(L, 1);
-        if (luaL_loadbuffer(L, code.c_str(), code.size(), "=console") != 0) {
-            const char* msg = lua_tostring(L, -1);
-            Runtime::instance().log("lua exec: %s", msg != nullptr ? msg : "(parse failed)");
-            lua_settop(L, base);
-            return;
-        }
-    }
-
-    if (lua_pcall(L, 0, LUA_MULTRET, 0) != 0) {
-        const char* msg = lua_tostring(L, -1);
-        Runtime::instance().log("lua exec: %s", msg != nullptr ? msg : "(error)");
-        lua_settop(L, base);
-        return;
-    }
-
-    const int nres = lua_gettop(L) - base;
-    if (nres <= 0) { Runtime::instance().log("lua exec: ok"); return; }
-    for (int i = 1; i <= nres; ++i) {
-        const char* s = lua_tostring(L, base + i);
-        Runtime::instance().log("lua exec: %s", s != nullptr ? s : luaL_typename(L, base + i));
-    }
-    lua_settop(L, base);
-}
+void devtools_output(const char* text, void*) { kp::devtools::console().output("stdout", text ? text : ""); }
+void console_exec(const std::string& code) { kp::devtools::console().submit(code); }
 
 struct PoisonSite { const char* name; std::atomic<bool>* flag; };
 
@@ -1316,7 +1268,7 @@ int KP_THISCALL creature_move_to_point_body(void* creature, void* action_node) {
 // WinMain calls this every idle iteration, with or without a server, so it
 // is the one per-frame site that runs on the main menu. That makes it the
 // harness's drain point: requests are taken off the channel and executed
-// here, on the main thread, before the engine's frame.
+// here, on the main thread, after the engine's frame has returned.
 //
 // No guard is armed in this body. The drain arms its own around parse and
 // serialise, and runs engine calls unarmed on purpose (see harness/
@@ -1336,6 +1288,9 @@ int KP_CLIENT_LOOP_CC client_main_loop_body(void* self) {
     if ((frame % 100) == 0)
         Runtime::instance().log("client loop cave: %llu frames", static_cast<unsigned long long>(frame));
     kp::harness::note_client_frame();
+    note_client_gate_mismatch();
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
     kp::harness::drain();
 
     kp::harness::after_frame();
@@ -1359,12 +1314,19 @@ int __attribute__((cdecl)) client_frame_wrapper_body(void* self) {
         Runtime::instance().log("client frame wrapper: %u entries", entered);
     const int result = orig != nullptr ? orig(self) : 0;
     kp::harness::note_client_frame();
+    note_client_gate_mismatch();
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
     kp::harness::drain();
     kp::harness::after_frame();
     return result;
 }
 
 }  // namespace
+
+void reset_client_gate_mismatch_log() {
+    g_client_gate_mismatch_logged.store(false, std::memory_order_release);
+}
 
 // ------------------------------------------------------------- wiring in ----
 
@@ -1503,7 +1465,7 @@ void clear_originals() {
     g_client_net.store(nullptr, std::memory_order_release);
     g_client_support_server_net.store(nullptr, std::memory_order_release);
 
-    if (g_console_L != nullptr) { lua_close(g_console_L); g_console_L = nullptr; }
+    kp::devtools::console().reset();
 }
 
 }  // namespace kp::runtime

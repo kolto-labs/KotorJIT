@@ -8,6 +8,7 @@
 #include <functional>
 #include <string>
 #include <string_view>
+#include <thread>
 
 #include "api/enginestruct.hpp"
 #include "events/contract.hpp"
@@ -54,6 +55,16 @@ void register_director(lua_State* L);
 // body, and clearing it is also how a fault takes every body out of service.
 bool live();
 void set_live(bool);
+
+// The server MainLoop is the sole owner of Lua engine access.  The latch is
+// armed at the top of that hook, before console pumping or script dispatch;
+// lifecycle code resets it only at a worker/quiescent transition.
+void reset_engine_thread();
+void latch_engine_thread();
+bool on_engine_thread();
+bool engine_thread_latched();
+bool engine_gate_probe(void*);
+void reset_client_gate_mismatch_log();
 
 // How a fresh lua_State gets the host API installed on it.
 //

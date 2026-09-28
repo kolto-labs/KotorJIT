@@ -27,6 +27,11 @@ local function q(name, ...)
     return a, b
 end
 
+local function valid(id)
+    local v = id and q("GetIsObjectValid", id)
+    return v == 1 or v == true
+end
+
 local function help()
     kp.print("[cover] setb <name> 0|1     SetGlobalBoolean")
     kp.print("[cover] setn <name> <int>   SetGlobalNumber")
@@ -39,7 +44,7 @@ local function help()
     kp.print("[cover] autosave            DoSinglePlayerAutoSave")
     kp.print("[cover] convo               GetIsConversationActive")
     kp.print("[cover] haste [n]           kp.speed — extra MainLoop ticks (1-16)")
-    kp.print("[cover] pick <n>            queue reply index (1-based visible option)")
+    kp.print("[cover] pick <n>            prints the index only; no reply is chosen")
 end
 
 local function words(line)
@@ -68,13 +73,13 @@ function OnConsoleCommand(line, relevant)
     elseif cmd == "talk" and w[3] then
         local npc = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
-        if not npc or not pc then
+        if not valid(npc) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
-        elseif not kp or not kp.as then
-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
+        elseif not nwscript or not nwscript.with_caller then
+            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
         else
             local dlg = w[4] or ""
-            kp.as(pc, function()
+            nwscript.with_caller(pc, function()
                 q("ActionStartConversation", npc, dlg)
             end)
             kp.print("[cover] talk " .. w[3] .. " dlg=" .. (dlg ~= "" and dlg or "(default)"))
@@ -82,12 +87,12 @@ function OnConsoleCommand(line, relevant)
     elseif cmd == "jump" and w[3] then
         local dest = q("GetObjectByTag", w[3], 0)
         local pc = q("GetFirstPC")
-        if not dest or not pc then
+        if not valid(dest) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
-        elseif not kp or not kp.as then
-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
+        elseif not nwscript or not nwscript.with_caller then
+            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
         else
-            kp.as(pc, function()
+            nwscript.with_caller(pc, function()
                 q("JumpToObject", dest, 1)
             end)
             kp.print("[cover] jump " .. w[3])
@@ -111,10 +116,9 @@ function OnConsoleCommand(line, relevant)
             kp.print("[cover] speed=" .. tostring(kp.speed(n)))
         end
     elseif cmd == "pick" and w[3] then
-        -- Visible-option index. No ChooseReply routine exists; this records
-        -- the choice for the walker and, when a conversation is up, the
-        -- harness may type the digit. The conversation-manager cave writes
-        -- the index directly when it lands.
+        -- Visible-option index. No ChooseReply routine exists, so this only
+        -- prints the number for the walker's log. Nothing here selects a
+        -- reply; any digit keystroke comes from the harness, not this script.
         local n = tonumber(w[3]) or 1
         kp.print("[cover] pick=" .. tostring(n))
     else

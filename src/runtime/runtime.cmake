@@ -12,8 +12,20 @@
 set(KP_RUNTIME_DIR "${CMAKE_CURRENT_LIST_DIR}")
 set(KP_SRC_ROOT    "${CMAKE_CURRENT_LIST_DIR}/..")
 
+set(KP_DEVTOOLS_WIN_SOURCES
+    "${KP_SRC_ROOT}/api/projectiles_entry.cpp"
+    "${KP_SRC_ROOT}/devtools/editor_input.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_draw.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_tables.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_widgets.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/backends/imgui_impl_win32.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/backends/imgui_impl_opengl2.cpp"
+)
 set(KP_RUNTIME_SOURCES
     "${KP_RUNTIME_DIR}/runtime.cpp"
+    "${KP_SRC_ROOT}/devtools/console.cpp"
+    "${KP_SRC_ROOT}/devtools/overlay.cpp"
     "${KP_RUNTIME_DIR}/dllmain.cpp"
     "${KP_RUNTIME_DIR}/fault_guard.cpp"
     "${KP_RUNTIME_DIR}/hook_bodies.cpp"
@@ -42,10 +54,33 @@ set(KP_API_SOURCES
     "${KP_SRC_ROOT}/api/structs.cpp"
     "${KP_SRC_ROOT}/api/entity.cpp"
     "${KP_SRC_ROOT}/api/memory.cpp"
+    "${KP_SRC_ROOT}/api/projectiles.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_profile.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_native.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_lua.cpp"
+    "${KP_SRC_ROOT}/api/model.cpp"
+    "${KP_SRC_ROOT}/api/model_profiles.cpp"
+    "${KP_SRC_ROOT}/api/model_backend.cpp"
+    "${KP_SRC_ROOT}/api/model_lua.cpp"
+    "${KP_SRC_ROOT}/api/camera.cpp"
+    "${KP_SRC_ROOT}/api/camera_profiles.cpp"
+    "${KP_SRC_ROOT}/api/camera_backend.cpp"
+    "${KP_SRC_ROOT}/api/camera_lua.cpp"
+    "${KP_SRC_ROOT}/api/vector.cpp"
+    "${KP_SRC_ROOT}/api/motion.cpp"
+    "${KP_SRC_ROOT}/api/motion_profiles.cpp"
+    "${KP_SRC_ROOT}/api/motion_backend.cpp"
+    "${KP_SRC_ROOT}/api/motion_lua.cpp"
+    "${KP_SRC_ROOT}/api/engine_gate.cpp"
+    "${KP_SRC_ROOT}/api/animation.cpp"
+    "${KP_SRC_ROOT}/api/animation_profiles.cpp"
+    "${KP_SRC_ROOT}/api/animation_backend.cpp"
+    "${KP_SRC_ROOT}/api/animation_lua.cpp"
     "${KP_SRC_ROOT}/api/output.cpp"
     "${KP_SRC_ROOT}/api/timers.cpp"
     "${KP_SRC_ROOT}/api/strings.cpp"
     "${KP_SRC_ROOT}/api/compat.cpp"
+    "${KP_SRC_ROOT}/api/scripts_lua.cpp"
 )
 foreach(f ${KP_API_SOURCES})
     if(NOT EXISTS ${f})
@@ -76,7 +111,7 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
 
     # KP_HARNESS_SOURCES comes from src/harness/harness.cmake, included before
     # this fragment; empty when that fragment was not included.
-    foreach(src ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES} ${KP_HARNESS_SOURCES})
+    foreach(src ${KP_DEVTOOLS_WIN_SOURCES} ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES} ${KP_HARNESS_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_RT_WIN32_OBJDIR}/rt_${name}.obj")
         # -MD records the headers this object really depends on and DEPFILE
@@ -90,7 +125,7 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_RT_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
-                    -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
+                    -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR} -I${CMAKE_SOURCE_DIR}/third_party/imgui
                     -MD -MF ${dep}
                     -c ${src} -o ${obj}
             DEPENDS ${src} ${KP_GENERATED_HEADERS}
@@ -122,7 +157,7 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
                 # The harness channel's loopback listener. An import library,
                 # so -static above does not apply to it; ws2_32.dll is part of
                 # every Windows and of Wine.
-                -lws2_32
+                -lws2_32 -lopengl32 -lgdi32 -limm32 -ldwmapi -ldinput8 -ldxguid
         DEPENDS ${KP_RT_WIN32_OBJECTS} image_win32 hooks_win32
                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
         COMMENT "i686-w64-mingw32-g++ kphasor.dll"

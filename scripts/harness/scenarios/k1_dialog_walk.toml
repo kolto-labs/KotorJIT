@@ -26,7 +26,7 @@ save = "000001 - AUTOSAVE"
 # end_m01aa.mod/m01aa.git.  Queue the normal approach action first: a direct
 # conversation request from the autosave PC at (10.55,15.70,-1.09) never
 # enters dialog because the actor is out of interaction range.
-start = "local trask=nwscript.call('GetObjectByTag','end_trask', 0); kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionMoveToObject',trask,1,0.75); nwscript.call('ActionStartConversation',trask, '') end)"
+start = "local trask=nwscript.call('GetObjectByTag','end_trask', 0); nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionMoveToObject',trask,1,0.75); nwscript.call('ActionStartConversation',trask, '') end)"
 max_replies = 9
 timeout = 90
 

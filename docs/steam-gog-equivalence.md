@@ -1,14 +1,13 @@
 # The Steam KOTOR 1 build, and why GOG addresses work on it
 
-Every address KotorPhasor uses for KOTOR 1 was derived from the GOG build, but the primary
-target is the Steam build. This note records why that is sound, and what the Steam wrapper
-actually is.
+Every address KotorPhasor uses for KOTOR 1 was derived from the GOG build. The primary
+target is the Steam build. Here is why that is sound, and what the Steam wrapper is.
 
 ## The Steam executable is encrypted on disk
 
 `swkotor.exe` from Steam (sha256 `34e6d971…439f34c88`) has a `.text` section that is not
-code. Shannon entropy is 7.999 bits per byte across every 256 KB chunk of it, there is not a
-single `55 8b ec` function prologue in 3.3 MB, and there is no `0xCC` padding anywhere.
+code. Shannon entropy is 7.999 bits per byte across every 256 KB chunk of it. There is not a
+single `55 8b ec` function prologue in 3.3 MB. There is no `0xCC` padding anywhere.
 Reading a known address out of the file returns noise:
 
 ```
@@ -24,12 +23,12 @@ without Steam does:
 
 > Application load error 5:0000065434
 
-That is SteamStub's error, and it is why the executable cannot be launched standalone under
-Wine — the stub refuses before the game gets control. Consequently the automated harness
+That is SteamStub's error. It is why the executable cannot be launched standalone under
+Wine. The stub refuses before the game gets control. Consequently the automated harness
 runs against the **deciphered** image rather than the shipped one.
 
 An earlier draft of this project's notes called the wrapper "SafeDisc-style". That was wrong,
-and it mattered: SafeDisc and SteamStub need different handling, and only one of them is
+and it mattered. SafeDisc and SteamStub need different handling, and only one of them is
 removed by the tooling we have.
 
 ## Steam and GOG differ by the wrapper, and by 38 bytes of letter case
@@ -52,7 +51,7 @@ Deciphering the Steam image and comparing its `.text` against GOG's, page by pag
 - both entry points resolve to `0x006fb38d`
 - all four shared sections sit at the same virtual addresses
 
-The other three sections are not quite untouched, and the difference is worth stating
+The other three sections are not quite untouched. The difference is worth stating
 precisely rather than rounding to zero:
 
 | section | bytes differing, Steam vs GOG |
@@ -61,7 +60,7 @@ precisely rather than rounding to zero:
 | `.data` | 0 of 94,208 |
 | `.rsrc` | 0 of 225,280 |
 
-All 38 are the letter case of imported DLL names — Steam writes `KERNEL32.dll`,
+All 38 are the letter case of imported DLL names. Steam writes `KERNEL32.dll`,
 `OPENGL32.dll`, `USER32.dll`; GOG writes them lowercase. No vtable, string literal, or
 function-pointer table is affected, so nothing a hook touches differs.
 
@@ -71,7 +70,7 @@ applies verbatim to the Steam build once `.text` has been deciphered in memory.
 ## Why this is not circular
 
 Comparing the unpacked image against GOG and finding the code identical would prove
-nothing on its own: someone splicing GOG's code into a Steam shell would produce exactly
+nothing on its own. Someone splicing GOG's code into a Steam shell would produce exactly
 that result. What rules it out is an asymmetry in the *other* sections.
 
 ```
@@ -83,17 +82,17 @@ that result. What rules it out is an asymmetry in the *other* sections.
 
 The unpacked image's `.rdata` matches **Steam**, not GOG, while its `.text` matches
 **GOG**. A splice would have carried GOG's `.rdata` across too. It did not, so the
-unpacker decrypted the Steam file in place — which is the thing we needed to believe.
+unpacker decrypted the Steam file in place. That is the thing we needed to believe.
 
 Independently of the unpacker at all: Steam's own on-disk `.data` and `.rsrc` are already
-byte-identical to GOG's, and Steam `.text` matches GOG in 13,270 of 3,391,488 bytes —
-1 in 256, exactly chance, confirming the whole section is encrypted rather than partly
-shared.
+byte-identical to GOG's, and Steam `.text` matches GOG in 13,270 of 3,391,488 bytes.
+That is 1 in 256, exactly chance, confirming the whole section is encrypted rather than
+partly shared.
 
 Two further checks agree:
 
 1. A separate project derived Steam addresses for the VM stack accessors by its own means and
-   landed on `0x005D1000`, `0x005D1010`, `0x005D1080`, `0x005D1090` — precisely the GOG
+   landed on `0x005D1000`, `0x005D1010`, `0x005D1080`, `0x005D1090`. Those are precisely the GOG
    addresses the corpus records for `StackPop/PushInteger` and `StackPop/PushString`.
 2. The routine count is 772 by three separate routes: parsing `nwscript.nss`, the
    `ScriptFunctions` enum recovered from the binary, and the binary's own `cmp edx, 0x304`.

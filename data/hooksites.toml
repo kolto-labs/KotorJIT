@@ -2190,3 +2190,222 @@ class  = "CWorldTimer"
 method = "timer_paused"
 kind   = "field"
 required = false
+
+# --- kp.camera Stage 1: client chase camera (read-only, K1 GOG only) ----------
+# Evidence: data/adjudication/k1_gog_103_camera_bindings.json. Every row is
+# optional so builds without a camera receipt never gain a required site.
+[[site]]
+name   = "client.module"
+class  = "CClientExoAppInternal"
+method = "module"
+kind   = "field"
+required = false
+purpose = "CSWCModule* (client module). GetModule 0x5ed530 -> 0x644760 reads it."
+
+[[site]]
+name   = "client.options"
+class  = "CClientExoAppInternal"
+method = "options"
+kind   = "field"
+required = false
+purpose = "CClientOptions*, as GetClientOptions returns it."
+
+[[site]]
+name   = "client_options.camera_mode"
+class  = "CClientOptions"
+method = "camera_mode"
+kind   = "field"
+required = false
+purpose = "u8 camera mode that SetCameraMode stores. Raw byte."
+
+[[site]]
+name   = "client_module.vtable"
+class  = "CSWCModule"
+method = "vtable"
+kind   = "reference"
+required = false
+purpose = "Exact identity of the client module object. Compared as a pointer."
+
+[[site]]
+name   = "client_module.camera"
+class  = "CSWCModule"
+method = "camera"
+kind   = "field"
+required = false
+purpose = "CAurCamera* the camera messages go to."
+
+[[site]]
+name   = "camera.vtable"
+class  = "CAurCamera"
+method = "vtable"
+kind   = "reference"
+required = false
+purpose = "Exact identity of the client camera. Compared as a pointer."
+
+[[site]]
+name   = "camera.active_behavior"
+class  = "CAurCamera"
+method = "active_behavior"
+kind   = "field"
+required = false
+purpose = "Current camera behaviour object (embedded Gob at +4, its +0x188)."
+
+[[site]]
+name   = "camera_chase.vtable"
+class  = "CSWCameraOnAStick"
+method = "vtable"
+kind   = "reference"
+required = false
+purpose = "Chase behaviour identity (type id 0x106a). Any other vtable is not a chase camera."
+
+[[site]]
+name   = "camera_chase.distance"
+class  = "CSWCameraOnAStick"
+method = "m_fDist"
+kind   = "field"
+required = false
+purpose = "f32 target distance. Recomputed every tick while camera_chase.dolly is nonzero."
+
+[[site]]
+name   = "camera_chase.speed"
+class  = "CSWCameraOnAStick"
+method = "m_fSpeed"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "camera_chase.preset_pitch"
+class  = "CSWCameraOnAStick"
+method = "m_fPresetPitch"
+kind   = "field"
+required = false
+purpose = "f32, units unverified."
+
+[[site]]
+name   = "camera_chase.height"
+class  = "CSWCameraOnAStick"
+method = "m_fHeight"
+kind   = "field"
+required = false
+purpose = "f32, units unverified."
+
+[[site]]
+name   = "camera_chase.dolly"
+class  = "CSWCameraOnAStick"
+method = "dolly"
+kind   = "field"
+required = false
+purpose = "u32; nonzero makes Control recompute m_fDist from the two base values each tick."
+
+[[site]]
+name   = "camera_chase.base_distance"
+class  = "CSWCameraOnAStick"
+method = "base_distance"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "camera_chase.base_view_angle"
+class  = "CSWCameraOnAStick"
+method = "base_view_angle"
+kind   = "field"
+required = false
+
+[[site]]
+name   = "camera_chase.style_row"
+class  = "CSWCameraOnAStick"
+method = "style_row"
+kind   = "field"
+required = false
+purpose = "i32 cached camerastyle.2da row; -1 for defaults."
+
+[[site]]
+name   = "camera_chase.raw_28_unverified"
+class  = "CSWCameraOnAStick"
+method = "raw_28_unverified"
+kind   = "field"
+required = false
+purpose = "4 x f32. Meaning unverified."
+
+[[site]]
+name   = "camera_chase.raw_38_unverified"
+class  = "CSWCameraOnAStick"
+method = "raw_38_unverified"
+kind   = "field"
+required = false
+purpose = "3 x f32. Meaning unverified."
+
+[[site]]
+name   = "camera_chase.raw_50_unverified"
+class  = "CSWCameraOnAStick"
+method = "raw_50_unverified"
+kind   = "field"
+required = false
+purpose = "3 x f32. Meaning unverified."
+
+[[site]]
+name   = "g.camera_style_pending"
+class  = ""
+method = "g_camera_style_pending"
+kind   = "field"
+required = false
+purpose = "i32 global; -1 means no camera-style reload is pending."
+
+# --- kp.motion Stage M1: server placeable capture (read-only, K1 GOG only) ----
+# Evidence: data/adjudication/k1_gog_103_motion_bindings.json. Every row is
+# optional so builds without a motion receipt never gain a required site.
+[[site]]
+name   = "server_object.area_id"
+class  = "CSWSObject"
+method = "area_id"
+kind   = "field"
+required = false
+purpose = "u32 object id of the owning area. GetArea 0x4cb120 resolves it."
+
+[[site]]
+name   = "server_object.position"
+class  = "CSWSObject"
+method = "position"
+kind   = "field"
+required = false
+purpose = "3 x f32 server position that SetPosition writes."
+
+[[site]]
+name   = "server_object.orientation"
+class  = "CSWSObject"
+method = "orientation"
+kind   = "field"
+required = false
+purpose = "3 x f32 facing direction that SetOrientation writes."
+
+[[site]]
+name   = "server_object.client_push_gate_unverified"
+class  = "CSWSObject"
+method = "client_push_gate_unverified"
+kind   = "field"
+required = false
+purpose = "u32 gate on the per-tick client push of the dirty bits. What its value means is unverified."
+
+[[site]]
+name   = "server_object.dirty_bits"
+class  = "CSWSObject"
+method = "dirty_bits"
+kind   = "field"
+required = false
+purpose = "u32 bitset. Bit 1 (2) = position, bit 2 (4) = orientation. Other bits are not reviewed."
+
+[[site]]
+name   = "placeable.aabb_registered"
+class  = "CSWSPlaceable"
+method = "aabb_registered"
+kind   = "field"
+required = false
+purpose = "i32 marker: >= 0 walkmesh AABB registered, -1 none. Not an index."
+
+[[site]]
+name   = "placeable.quaternion_raw_order_unverified"
+class  = "CSWSPlaceable"
+method = "quaternion_raw_order_unverified"
+kind   = "field"
+required = false
+purpose = "4 x f32 placeable quaternion. Component order unverified."

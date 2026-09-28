@@ -19,7 +19,7 @@ timeout = 300
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing') end; kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end); return {pc=pc,trask=t,distance=nwscript.call('GetDistanceBetween',pc,t),action=nwscript.call('GetCurrentAction',pc)}"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing') end; nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end); return {pc=pc,trask=t,distance=nwscript.call('GetDistanceBetween',pc,t),action=nwscript.call('GetCurrentAction',pc)}"
 
 [[step]]
 do = "sleep"

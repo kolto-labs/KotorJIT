@@ -116,13 +116,13 @@ platform::LogLevel level_from(lua_State* L, int index) {
     return platform::LogLevel::Info;   // not reached; luaL_argerror does not return
 }
 
-// kp.log(text [, level]) -> nothing
+// kp.diagnostic(text [, level]) -> nothing
 //
 // Always available, including before hooks are installed and after they are
 // removed. This is the surface a script can rely on when nothing else works.
-int l_log(lua_State* L) {
+int l_diagnostic(lua_State* L) {
     const char* text = luaL_checkstring(L, 1);
-    if (lua_gettop(L) > 2) return luaL_error(L, "kp.log expects at most 2 arguments (got %d)",
+    if (lua_gettop(L) > 2) return luaL_error(L, "kp.diagnostic expects at most 2 arguments (got %d)",
                                              lua_gettop(L));
     const platform::LogLevel level = level_from(L, 2);
     for (const std::string& line : split_lines(text))
@@ -222,7 +222,7 @@ void console_write(const char* text) {
 
 void register_output(lua_State* L) {
     push_kp_table(L);
-    lua_pushcfunction(L, l_log);      lua_setfield(L, -2, "log");
+    lua_pushcfunction(L, l_diagnostic);      lua_setfield(L, -2, "diagnostic");
     lua_pushcfunction(L, l_console);  lua_setfield(L, -2, "console");
     lua_pushcfunction(L, l_feedback); lua_setfield(L, -2, "feedback");
     lua_pop(L, 1);

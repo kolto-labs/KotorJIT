@@ -2,7 +2,7 @@
 -- and for creatures hp/hostility/action. Use it to learn a room before
 -- writing route steps for it.
 --
--- OBJECT_TYPE: 1 creature, 4 item, 8 door(? use 8), 64 placeable, 32 trigger
+-- OBJECT_TYPE: 1 creature, 2 item, 4 trigger, 8 door, 32 waypoint, 64 placeable
 -- (nwscript.nss values). Doors are 8 in this engine's GetObjectType.
 
 local OBJECT_TYPE = 1

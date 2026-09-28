@@ -72,7 +72,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
 end
 ```
 
-`AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a script closure NWScript can build and Lua can't. Use `kp.as(object_id, function() ... end)` and `kp.registertimer(ms, "callback_name", data)` instead.
+`AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a script closure NWScript can build and Lua can't. Use `nwscript.with_caller(object_id, function() ... end)` and `kp.registertimer(ms, "callback_name", data)` instead.
 
 ## Multiplayer
 

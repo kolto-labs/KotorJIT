@@ -1,14 +1,1 @@
-say "Four mods. Each one file, each a real idea."
-run "ls scripts/examples/showcase/"
-beat 2
-say "Manaan is neutral ground, and the Selkath enforce it."
-run "cat scripts/examples/showcase/10_ahto_city_law.lua"
-beat 4
-say "A Sith sentry who spots you now tells the others."
-run "sed -n '1,12p;24,40p' scripts/examples/showcase/20_sith_patrol_alarm.lua"
-beat 4
-say "Bastila's battle meditation, running whether you asked or not."
-run "sed -n '36,52p' scripts/examples/showcase/30_battle_meditation.lua"
-beat 4
-say "None of them needed a change to the runtime."
-beat 2
+say "The old text/buff showcases are retired. Native scene candidates and review status live in scripts/demos/catalog.json."

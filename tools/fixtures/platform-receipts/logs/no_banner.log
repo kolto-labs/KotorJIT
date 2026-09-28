@@ -1,0 +1,3 @@
+[running] kp-session=0f1e2d3c4b5a69788796a5b4c3d2e1f0 start
+[running] kp-session=0f1e2d3c4b5a69788796a5b4c3d2e1f0 log=esc1 host: wine=no wine_version=- os=10.0.22631 overlays=-
+[running] kp-session=0f1e2d3c4b5a69788796a5b4c3d2e1f0 gl: vendor="SYNTHETIC VENDOR" renderer="SYNTHETIC GPU" version="4.6.0 SYNTHETIC"

@@ -1,7 +1,7 @@
 # KOTOR 1 event semantics
 
-How the engine turns things that happen into scripts that run, and what a Lua
-runtime can honestly do about it.
+The engine turns things that happen into scripts that run. Here is what a
+Lua runtime can honestly do about that.
 
 Everything here comes from recovered C for the K1 GOG build
 (`swkotor.exe`, md5 `9a44891011437deb6536d992bccdfe4b`), under:
@@ -19,8 +19,8 @@ The machine-readable table is `data/events.draft.toml`.
 
 ## Two corrections to the working assumptions
 
-Read these first. Both were stated as settled in the brief. Both are wrong, and
-both would produce silent bugs.
+Read these first. Both were stated as settled in the brief. Both are wrong.
+Both would produce silent bugs.
 
 ### 1. `CScriptEvent` parameters are variable-length arrays
 
@@ -85,7 +85,7 @@ order from `nwscreature.cpp:11456-12137`, are:
 `5, 0xE, 4, 9, 1, 0x14, 0x15, 0x16, 0xF, 8, 0x13, 0xB, 0x12, 0xA, 0x1B`
 
 There is no branch on 0, 2, 3, 6 or 7. And 3, 6 and 7 are not gaps in the
-numbering at all -- they are `EVENT_LEFT_TRIGGER`, `EVENT_CLOSE_OBJECT` and
+numbering at all. They are `EVENT_LEFT_TRIGGER`, `EVENT_CLOSE_OBJECT` and
 `EVENT_OPEN_OBJECT`. Creatures simply do not implement them. Doors do
 (`nwsdoor.cpp:1672` and `:1678`).
 
@@ -119,7 +119,7 @@ single easiest way to build a wrong event table.
           CVirtualMachine::RunScript(<a resref from the object>, objectId, 1)
 ```
 
-### Layer 1 -- engine event ids
+### Layer 1: engine event ids
 
 `CServerAIMaster::AddEventAbsoluteTime` logs every queued event, and the log
 strings are a complete, authoritative name table
@@ -153,9 +153,9 @@ subset it cares about and returns from the rest. Waypoints implement exactly
 one: 0xB, destroy (`nwswaypoint.cpp:49-57`).
 
 One trap in that function: `if (!bVar4)` at `serveraimaster.cpp:998-1002` gates on
-`GetGameObject` -- dispatch happens on the *inverted* return, i.e. on success.
+`GetGameObject`. Dispatch happens on the *inverted* return, i.e. on success.
 
-### Layer 2 -- script event types
+### Layer 2: script event types
 
 When the engine event id is 10, the payload is a `CScriptEvent` and its
 `event_type` selects the script. The same log function names all of these
@@ -222,8 +222,8 @@ layer-1 id 0xA (`nwsdoor.cpp:1651-1658`). The two 0x1A's are unrelated.
 ## The `EventHandler` signature
 
 Ghidra recovered `CSWSCreature::EventHandler` with three parameters and the
-other nine handlers with five. The five-parameter form is correct for all of
-them:
+other nine handlers with five. The five-parameter form is the correct one for
+all of them:
 
 ```c
 void __thiscall EventHandler(this,
@@ -240,11 +240,11 @@ Evidence, in order of strength:
    stores them (`nwsmodule.cpp:1156-1161`). So does the area
    (`nwsarea.cpp:5626-5632`) and the door (`nwsdoor.cpp:1741-1748`). Ghidra
    only recovers parameters that are used, which is why the creature handler
-   looks shorter -- it has no heartbeat case.
+   looks shorter. It has no heartbeat case.
 2. `CServerAIMaster::UpdateState` unpacks a queue node and passes
    `(node[4], node[2], node[5], node[0], node[1])` (`serveraimaster.cpp:989-1017`).
-3. `AddEventDeltaTime(this, lenDays, lenMS, callerId, objectId, eventId, data)`
-   -- the door posts a mine event with the attacker as caller and itself as
+3. `AddEventDeltaTime(this, lenDays, lenMS, callerId, objectId, eventId, data)`.
+   The door posts a mine event with the attacker as caller and itself as
    target (`nwsdoor.cpp:1651-1658`).
 
 Argument 2 is the **caller**, not the target. `this` is the target. The creature
@@ -279,7 +279,7 @@ which is why it is passed as an immediate rather than a pointer.
 
 ### `CSWCCMessageData` is not `CScriptEvent`
 
-The decompiled listings constantly call `CSWCCMessageData::GetInteger` on
+The decompiled listings call `CSWCCMessageData::GetInteger` on
 objects that are then destroyed as `CScriptEvent`. That looks like one class
 with two names. It is not:
 
@@ -291,20 +291,19 @@ with two names. It is not:
 | `CScriptEvent::~CScriptEvent` | `0x004d7590` | 139 |
 
 (SQLite `func`, `binary_id = 8`.) Two distinct constructors, two distinct
-destructors, and two different source files -- `clientcore/nwmessage.cpp`
+destructors, and two different source files: `clientcore/nwmessage.cpp`
 versus `servercore/nwsscriptevent.cpp`. Both are 52 bytes and both are
 `operator_new(0x34)`.
 
 Most likely the layouts are identical and the compiler folded the accessors, so
 Ghidra attached one name to shared code. Treat that as probable, not proven.
-Concretely: event id 0x16's payload really is `CSWCCMessageData` and its
-parameter layout should be marked unverified until the two structs are compared
-byte for byte.
+Event id 0x16's payload really is `CSWCCMessageData`. Mark its parameter layout
+unverified until the two structs are compared byte for byte.
 
 ## Script slots are per-type index tables
 
 Each object type keeps its script resrefs in a `CExoString` array. The index
-into that array is what the code uses; the GFF field name is what a modder
+into that array is what the code uses. The GFF field name is what a modder
 sees. The mapping comes from the save/load functions, which pair
 `CResRef::CResRef(&tmp, scripts + N)` with `WriteFieldCResRef(..., "Name")`.
 
@@ -352,9 +351,10 @@ array: area has `OnHeartbeat / OnUserDefined / OnEnter / OnExit`
 
 ## Not everything goes through `EventHandler`
 
-This is the finding that most changes how a Lua runtime should be wired.
+Six creature scripts never go through `EventHandler`. Wire the runtime from
+where those scripts actually run.
 
-Six creature scripts are **never** reachable through `event.creature`:
+Those six are **never** reachable through `event.creature`:
 
 | script slot | where it actually runs |
 |---|---|
@@ -369,10 +369,10 @@ The layer-2 enum has `ON_HEARTBEAT`, `ON_SPAWN_IN`, `ON_DAMAGED`, `ON_DEATH`
 and `ON_RESTED` constants, and other object types *do* use them. The creature
 handler just has no cases for them. For `ON_DAMAGED` this is visibly wasteful:
 `nwseffectlist.cpp:6386-6402` builds a type-4 event carrying the damage amount
-and queues it at the damaged object; if that object is a creature, the event is
+and queues it at the damaged object. If that object is a creature, the event is
 delivered, matched against nothing, and destroyed.
 
-Two more creature quirks worth knowing:
+Two more creature quirks:
 
 - `ScriptDamaged` does not run for the party leader. The guard is
   `CSWPartyTable::GetIsLeader(...) == 0` at `nwseffectlist.cpp:6632`.
@@ -390,8 +390,8 @@ the event is observable at all.
 **This is a hook-site decision, not a documentation detail.** `data/hooksites.toml`
 marks `event.creature` as `required = true` and `vm.run_script` as `required = true`,
 but treats the pairing as if `event.creature` were the richer of the two for
-creature events. It is not. Six of the creature's fourteen script slots --
-heartbeat, spawn, damaged, end-of-round, death and end-dialogue -- are invisible
+creature events. It is not. Six of the creature's fourteen script slots
+(heartbeat, spawn, damaged, end-of-round, death and end-dialogue) are invisible
 from `event.creature` and reachable only from `vm.run_script`. Any creature
 event surface that intends to cover those must be built on `vm.run_script`,
 with `event.creature` supplying the caller id and the typed payload for the
@@ -401,9 +401,9 @@ events that do route through it.
 
 `CVirtualMachineInternal::RunScript` (`0x005d45d0`) returns an `int`:
 
-- `0` -- empty script name, `ReadScriptFile` failed, or the stack was
+- `0`: empty script name, `ReadScriptFile` failed, or the stack was
   unbalanced on return.
-- `1` -- the script ran and the stack was clean.
+- `1`: the script ran and the stack was clean.
 
 Separately, if the script left exactly one `INTEGER` on the stack, `RunScript`
 stashes it: type tag `3` into `field1_0x1c`, value into `field2_0x20`.
@@ -425,10 +425,9 @@ if (uVar2 == 1) {
 That is the dialogue node conditional. Nothing else in the engine looks at what
 a script returned.
 
-The practical consequence: **`OnDialogConditional` is the only event where a
-Lua handler can meaningfully "override" the result by changing a return value.**
-Everywhere else the engine ignores the result, so the only lever is suppressing
-the call.
+**`OnDialogConditional` is the only event where a Lua handler can meaningfully
+"override" the result by changing a return value.** Everywhere else the engine
+ignores the result. The only lever is suppressing the call.
 
 Every `EventHandler` returns `void`.
 
@@ -442,7 +441,7 @@ their bookkeeping around the call, not because of it.
 
 **Can you suppress the whole event?** Usually no. Detouring `event.*` and
 returning early skips work the rest of the engine has already committed to, and
-in most branches also leaks the payload -- the handler owns it and frees it at
+in most branches also leaks the payload. The handler owns it and frees it at
 the end.
 
 The clearest cases:
@@ -469,8 +468,8 @@ The clearest cases:
   and restores it (`nwsarea.cpp:5640-5649`). The restore is unconditional, so
   blocking the script alone is fine.
 
-The genuinely advisory ones -- where `RunScript` is the last statement in its
-branch and everything before it already happened -- include creature
+The genuinely advisory ones are the branches where `RunScript` is the last
+statement and everything before it already happened. That set includes creature
 perception, user-defined, inventory-disturbed, path-blocked and attacked, and
 the equivalents on doors, placeables, triggers, encounters and the module. Those
 are the events a Lua API can honestly offer as blockable. They are marked
@@ -479,7 +478,7 @@ are the events a Lua API can honestly offer as blockable. They are marked
 `EVENT_BROADCAST_AOO` (0x14) is a special case: on creatures the entire branch
 is a `return` (`nwscreature.cpp:11590-11593`). It is a leftover from NWN's
 attack-of-opportunity system. There is nothing to block and nothing to observe
-beyond the fact that it fired.
+except that it fired.
 
 ## Two engine bugs found on the way
 
@@ -512,7 +511,7 @@ that helpfully "fixes" this will disagree with every stock K1 script.
 **`RunScript`'s script-name `CExoString` reports a length one byte too long.**
 Found empirically, not from the readable C: hex-dumping the bytes a live,
 running game handed to a Lua script for `k_def_attacked01` gave
-`6B 5F 64 65 66 5F 61 74 74 61 63 6B 65 64 30 31 00` -- 16 real characters
+`6B 5F 64 65 66 5F 61 74 74 61 63 6B 65 64 30 31 00`: 16 real characters
 plus a trailing `00`, with `length` reporting 17. Every other `CExoString`
 this runtime reads is not NUL-terminated by contract (see `read_exostring` in
 `src/runtime/hook_bodies.cpp`), so nothing about the type signature suggested
@@ -568,5 +567,5 @@ Everywhere else the TOML omits `default_script`.
 
 `nwshandleplayermessage.cpp:595-615` handles player message subtype 8 by
 reading a script name off the wire (up to 0x20 characters) and running it on the
-sending player's creature. Any Lua sandbox that reasons about where a script
-came from should know this path exists.
+sending player's creature. A Lua sandbox that reasons about where a script
+came from needs to know this path exists.

@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "featured": [],
+  "candidates": [
+    {
+      "id": "native-player-scale",
+      "source_path": "scripts/demos/model-memory/player_scale.lua",
+      "support_paths": [
+        "scripts/demos/model-memory/model_scene.lua"
+      ],
+      "review": "candidate; consult exact scene evidence before publication"
+    },
+    {
+      "id": "native-npc-scale-wave",
+      "source_path": "scripts/demos/model-memory/npc_wave.lua",
+      "support_paths": [
+        "scripts/demos/model-memory/model_scene.lua"
+      ],
+      "review": "candidate; consult exact scene evidence before publication"
+    },
+    {
+      "id": "native-animation-comparison",
+      "source_path": "scripts/demos/animation-memory/two_actor_freeze.lua",
+      "support_paths": [],
+      "review": "stock dance script; configured bow/victory observations do not promote these stock bytes"
+    }
+  ],
+  "policy": "Explicit scene catalog. Candidate is not a visual or live pass. Original regression inventory is separate."
+}

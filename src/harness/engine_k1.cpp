@@ -853,8 +853,14 @@ Result GameAdapter::load_save(const std::string& dir) {
     // not an authority, but it must load the same module because retail K1 UI
     // code directly reads CServerExoApp::GetModule().  Its network replies are
     // suppressed by the transport detour.
+    load_step_ = LoadStep::Idle;
+    load_from_save_observed_ = false;
+    load_server_internal_ = 0;
     callv("app.set_load_from_savegame", reinterpret_cast<void*>(sapp), 1);
     callv("client.set_loading_savegame", reinterpret_cast<void*>(capp), 1);
+    load_server_internal_ = server_internal();
+    load_from_save_observed_ = load_server_internal_ != 0 &&
+        rd(load_server_internal_, "server.load_from_savegame").value_or(-1) == 1;
 
     // 9. SendLoadGameRequest(client, slot, &dir, &lastModule):
     //    undefined4 __thiscall (CClientExoApp*, ulong, CExoString*, CExoString*) UN/_005e.cpp:8025.
@@ -896,20 +902,27 @@ Result GameAdapter::load_save(const std::string& dir) {
 // OnPanelRemoved; it does not free it, so the CSWGuiMainMenu object stays
 // allocated until the process exits, and StopServices skips its destructor
 // because PanelExists is then 0.
-void GameAdapter::retire_main_menu() {
-    if (!have("gui.remove_panel") || !have("gui.panel_exists")) {
-        log("main menu: gui.remove_panel unresolved, the frame keeps the menu panel");
-        return;
-    }
+bool GameAdapter::retire_main_menu() {
     const std::uintptr_t cint = client_internal();
-    const auto mgr = rd_ptr(cint, "client.gui_manager");
     const auto menu = rd_ptr(cint, "client.main_menu");
-    if (!mgr || *mgr == 0 || !menu || *menu == 0) return;
+    if (main_menu_pointer_absent(menu)) return true;
+    if (!menu) return false;
+    if (!have("gui.panel_exists")) {
+        log("main menu: gui.panel_exists unresolved; cannot verify menu absence");
+        return false;
+    }
+    const auto mgr = rd_ptr(cint, "client.gui_manager");
+    if (!mgr || *mgr == 0) return false;
     // The panel is at +0 of CSWGuiMainMenu (types.h:7385), which is why the
     // phase check already hands this same pointer to PanelExists.
     const auto exists = call<int>("gui.panel_exists", reinterpret_cast<void*>(*mgr),
                                   reinterpret_cast<void*>(*menu));
-    if (!exists || *exists == 0) return;
+    if (!exists) return false;
+    if (*exists == 0) return true;
+    if (!have("gui.remove_panel")) {
+        log("main menu: gui.remove_panel unresolved; panel remains listed");
+        return false;
+    }
     const auto rc = call<int>("gui.remove_panel", reinterpret_cast<void*>(*mgr),
                               reinterpret_cast<void*>(*menu));
     const auto after = call<int>("gui.panel_exists", reinterpret_cast<void*>(*mgr),
@@ -917,6 +930,7 @@ void GameAdapter::retire_main_menu() {
     log("main menu: RemovePanel(mgr=%08x, panel=%08x) rc=%d, PanelExists now %d",
         static_cast<unsigned>(*mgr), static_cast<unsigned>(*menu), rc.value_or(-1),
         after.value_or(-1));
+    return after && *after == 0;
 }
 
 // ------------------------------------------- the AreaLoaded step -----------
@@ -998,8 +1012,7 @@ void GameAdapter::step_load_completion() {
         if (not_ready == 0) {
             log("load step: the client finished the load -- area_not_ready=%d, "
                 "player_creature_id=%08x", not_ready, static_cast<unsigned>(pcid));
-            retire_main_menu();
-            load_step_ = LoadStep::Done;
+            load_step_ = retire_main_menu() ? LoadStep::Done : LoadStep::GaveUp;
         } else if (!load_control_fallback_sent_ && from_save == 0 &&
                    pcid == kInvalidObjectId && server_mode == 2 &&
                    continue_message_processing == 0 &&
@@ -1032,6 +1045,15 @@ void GameAdapter::step_load_completion() {
     bool module_ready = false;
     if (const std::uintptr_t sapp = server_app(); sapp != 0 && have("app.get_module"))
         module_ready = call<std::uintptr_t>("app.get_module", reinterpret_cast<void*>(sapp)).value_or(0) != 0;
+    if (normal_load_completed(load_from_save_observed_,
+                              sint != 0 && sint == load_server_internal_,
+                              server_mode, module_ready, not_ready, from_save)) {
+        log("load step: native load completed normally; retiring main menu");
+        // One attempt per issued load, including an unresolved/failed panel call.
+        // A failed absence check is terminal uncertainty, never a claimed Done.
+        load_step_ = retire_main_menu() ? LoadStep::Done : LoadStep::GaveUp;
+        return;
+    }
     if (!area_loaded_due(server_mode, not_ready, pcid, module_ready)) return;
 
     if (!have("msg.area_loaded")) {

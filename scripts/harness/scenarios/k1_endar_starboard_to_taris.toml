@@ -48,7 +48,7 @@ timeout = 120
 [[step]]
 label = "open the footlocker"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
 timeout = 20
 
 [[step]]
@@ -83,7 +83,7 @@ timeout = 120
 [[step]]
 label = "use the security console"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
 timeout = 20
 
 [[step]]
@@ -174,7 +174,7 @@ timeout = 120
 [[step]]
 label = "use the escape pod"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
 timeout = 20
 
 [[step]]

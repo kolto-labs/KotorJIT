@@ -1,0 +1,32 @@
+=== container kpharness_playback_test 2026-09-27T13:45:26-05:00
+rc=1 2026-09-27T13:47:55-05:00
+Ran 34 tests in 146.473s
+
+FAILED (errors=1)
+1177540 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== container kpharness_pioneer_policy_test 2026-09-27T13:47:56-05:00
+rc=0 2026-09-27T13:48:09-05:00
+Ran 21 tests in 2.456s
+
+OK
+1177540 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== container kpharness_offline_test 2026-09-27T13:48:10-05:00
+rc=0 2026-09-27T13:54:10-05:00
+[13:54:06] target k1: data /tmp/kpharness_stage_57ybpd85/install
+[13:54:06] staged tree /tmp/kpharness_stage_57ybpd85/bad_resource (new)
+[13:54:06]   copied writable dir Saves
+1177540 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== container kpharness_creative_test 2026-09-27T13:54:12-05:00
+rc=0 2026-09-27T13:55:52-05:00
+Ran 33 tests in 18.300s
+
+OK
+1177540 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve

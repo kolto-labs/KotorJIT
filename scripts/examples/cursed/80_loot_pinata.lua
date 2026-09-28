@@ -46,7 +46,7 @@ local function armed()
   if not armed_flag then return false end
   local pc = q("GetFirstPC")
   if not pc then return false end
-  if yes(q("IsInConversation", pc)) then return false end
+  if yes(q("GetIsInConversation", pc)) then return false end
   return true
 end
 function OnTick(tick, relevant)
@@ -77,9 +77,9 @@ end
 
 local function pinata(corpse, pc)
   if burst[corpse] then return end
-  burst[corpse] = true
   local pos = q("GetPosition", corpse)
   if type(pos) ~= "table" then return end
+  burst[corpse] = true
   local sparkle = q("EffectVisualEffect", VFX_STUN_GRENADE)
   if sparkle then q("ApplyEffectToObject", 0, sparkle, corpse, 0.0) end
 
@@ -100,7 +100,7 @@ local function pinata(corpse, pc)
     if liz and yes(q("GetIsObjectValid", liz)) then
       gizkas = gizkas + 1
       q("ChangeToStandardFaction", liz, STANDARD_FACTION_HOSTILE_1)
-      if kp and kp.as then kp.as(liz, function() q("ActionAttack", pc, 0) end) end
+      if nwscript and nwscript.with_caller then nwscript.with_caller(liz, function() q("ActionAttack", pc, 0) end) end
       kp.print(("[cursed:pinata] gizka released (#%d)"):format(gizkas))
     end
   end

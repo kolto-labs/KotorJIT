@@ -363,6 +363,7 @@ class FakeSession:
         self.game_dir = game.game_dir
         self.save_dir = save_dir
         self.build = game.build
+        self.target = T.get("k1")
         self.alive = True
         self.stderr = ""
         self.rtlog = ""
@@ -710,7 +711,7 @@ class TestWaits(Base):
     def test_dialog_waiting_and_auto_skip(self):
         self.ch.request("load_save", dir="000001 - AUTOSAVE")
         W.wait_until(self.ch, W.phase_is("gameplay"), 5.0, poll=0.01)
-        self.ch.lua("kp.as(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
+        self.ch.lua("nwscript.with_caller(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
         st = self.ch.state()
         self.assertEqual(st["phase"], "dialog")
         # The runtime spells these `waiting_on_sound` and `waiting_for_player`;
@@ -738,7 +739,7 @@ class TestWaits(Base):
         the protocol provides instead of defaulting a missing key to true."""
         self.ch.request("load_save", dir="000001 - AUTOSAVE")
         W.wait_until(self.ch, W.phase_is("gameplay"), 5.0, poll=0.01)
-        self.ch.lua("kp.as(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
+        self.ch.lua("nwscript.with_caller(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
         d = self.ch.request("dialog")
         self.assertTrue(all("active" in r for r in d["replies"]))
         self.assertEqual([r["index"] for r in d["replies"] if r["active"]], [0, 2])
@@ -971,6 +972,14 @@ do = "sleep"; seconds = 0
         r.watchdog.hang_seconds = 5.0
         return r, logs
 
+    def test_runner_uses_effective_session_target_for_report_and_fallback_checkpoints(self):
+        sc = Scenario.parse('target="k1"\n[[step]]\ndo="quit"\n')
+        self.session.target = T.get("k2-native")
+        runner = ScenarioRunner(sc, self.session, self.ch, log=lambda _: None)
+        self.assertEqual(sc.target, "k1")
+        self.assertEqual(runner.report.target, "k2-native")
+        self.assertEqual(runner.checkpoints.target.name, "k2-native")
+
     def test_runner_end_to_end_pass(self):
         text = '''
 name = "offline"
@@ -1000,7 +1009,7 @@ do = "set_global"; name = "END_TRASK_TALK"; value = 1
 [[step]]
 wait = "global"; name = "END_TRASK_TALK"; equals = 1; timeout = 2
 [[step]]
-do = "lua"; code = "kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation',nwscript.call('GetObjectByTag','end_trask',0), '') end)"
+do = "lua"; code = "nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation',nwscript.call('GetObjectByTag','end_trask',0), '') end)"
 [[step]]
 wait = "phase"; equals = "dialog"; timeout = 2
 [[step]]
@@ -1237,7 +1246,7 @@ do = "load_save"; dir = "000001 - AUTOSAVE"
 [[step]]
 wait = "phase"; equals = "gameplay"; timeout = 5
 [[step]]
-do = "walk_dialog"; save = "000001 - AUTOSAVE"; start = "kp.as(pc, function() nwscript.call('ActionStartConversation',t, '') end)"; timeout = 3
+do = "walk_dialog"; save = "000001 - AUTOSAVE"; start = "nwscript.with_caller(pc, function() nwscript.call('ActionStartConversation',t, '') end)"; timeout = 3
 '''
         r, logs = self._runner(text, load_timeout=5.0, shot_interval=0)
         rep = r.run()
@@ -1350,7 +1359,7 @@ do = "scripted_door_open"; tag = "end_door05"; timeout = 10
         self.assertEqual(set(request) - {"id"}, {"cmd", "door"})
         # The self-command went first and at least one probe saw the door
         # still closed before the commit was issued.
-        self.assertIn("kp.as(d,function() nwscript.call(\"ActionOpenDoor\",d) end)", self.game.lua_codes[0])
+        self.assertIn("nwscript.with_caller(d,function() nwscript.call(\"ActionOpenDoor\",d) end)", self.game.lua_codes[0])
         self.assertGreaterEqual(sum(1 for c in self.game.lua_codes if "GetIsOpen" in c), 2)
 
     def test_scripted_door_open_does_not_commit_a_door_that_opens(self):
@@ -1407,7 +1416,7 @@ do = "clear_room"; radius = 30; until_global = "END_ROOM3_DEAD"; until_value = 2
         self.assertEqual(len(attacks), 2, attacks)
         self.assertIn("local t=10;", attacks[0])
         self.assertIn("local t=11;", attacks[1])
-        self.assertIn("kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)", attacks[0])
+        self.assertIn("nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)", attacks[0])
         probe = next(c for c in self.game.lua_codes if "GetFirstObjectInArea" in c)
         self.assertIn('nwscript.call("GetGlobalNumber","END_ROOM3_DEAD")', probe)
         self.assertIn("d<=30.0", probe)
@@ -1471,7 +1480,7 @@ do = "move_to"; tag = "end_door10_cut2"; timeout = 10
         self.assertIn("move_to end_door10_cut2: dist 1.6 in", rep.steps[0].detail)
         self.assertEqual(len(moves), 1, moves)
         self.assertIn('nwscript.call(\"GetObjectByTag\","end_door10_cut2",0)', moves[0])
-        self.assertIn("kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,1,1.5) end)",
+        self.assertIn("nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,1,1.5) end)",
                       moves[0])
         probe = next(c for c in self.game.lua_codes if "GetCurrentAction" in c)
         self.assertIn("nwscript.call(\"GetDistanceBetween\",pc,t)", probe)
@@ -1742,7 +1751,7 @@ walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.275]
         emitted = "\n".join(self.game.lua_codes)
         self.assertIn("local door=2147483664", emitted)
         self.assertIn("door identity changed", emitted)
-        self.assertIn("kp.as", emitted)
+        self.assertIn("nwscript.with_caller", emitted)
         self.assertIn("ActionMoveToObject", emitted)
         self.assertIn("ActionOpenDoor", emitted)
         self.assertIn("ActionMoveToLocation", emitted)
@@ -2471,6 +2480,11 @@ class TestStaging(unittest.TestCase):
         (inst / "chitin.key").write_bytes(b"KEY V1  ")
         (inst / "swkotor.exe").write_bytes(b"MZ")
         (inst / "binkw32.dll").write_bytes(b"\0" * 300000)     # the real codec, by size
+        (inst / "kphasor.dll").write_bytes(b"source-runtime")
+        (inst / "steam_appid.txt").write_text("source-appid\n")
+        (inst / "kotorphasor.log").write_text("source-runtime-log\n")
+        (inst / "kotorphasor-proxy.log").write_text("source-proxy-log\n")
+        (inst / "kotorphasor.ini").write_text("error_budget = 3\n")
         (inst / "swkotor.ini").write_text("[Game Options]\nEnableCheats=0\n"
                                           "[Graphics Options]\nFullScreen=1\nFrame Buffer=1\n")
         build = self.tmp / "build"
@@ -2524,6 +2538,68 @@ class TestStaging(unittest.TestCase):
         s2.stage()
         s2._session_log.close()
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
+
+    def test_stage_preserves_runtime_written_source_files_and_repairs_legacy_links(self):
+        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.ini",
+                 "kotorphasor.log", "kotorphasor-proxy.log", "swkotor.ini")
+        before = {name: (self.inst / name).read_bytes() for name in names}
+        staged = self.tmp / "legacy-links"
+        staged.mkdir()
+        for entry in self.inst.iterdir():
+            (staged / entry.name).symlink_to(entry)
+
+        s = GameSession("k1", staged=str(staged), log=lambda _: None)
+        s.stage()
+        write_runtime_ini(s.game_dir, 27015)
+        s._session_log.close()
+        for name in names:
+            self.assertFalse((staged / name).is_symlink(), name)
+            self.assertEqual((self.inst / name).read_bytes(), before[name], name)
+        self.assertEqual((staged / "kphasor.dll").read_bytes(), b"dll")
+        self.assertEqual((staged / "steam_appid.txt").read_text(), "32370\n")
+
+    def test_stage_refuses_source_install_even_through_symlink(self):
+        alias = self.tmp / "install-alias"
+        alias.symlink_to(self.inst)
+        s = GameSession("k1", staged=str(alias), log=lambda _: None)
+        with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
+            s.stage()
+
+    def test_default_stage_alias_is_rejected_before_lock_or_source_write(self):
+        fake_root = self.tmp / "checkout"
+        (fake_root / "tmp").mkdir(parents=True)
+        (fake_root / "tmp" / "k1_harness").symlink_to(self.inst)
+        before = {p.name: (p.read_bytes() if p.is_file() else None) for p in self.inst.iterdir()}
+        with mock.patch.object(D, "repo_root", return_value=fake_root):
+            s = GameSession("k1", reset_saves=True, log=lambda _: None)
+        self.assertEqual(s.staged, self.inst.resolve())
+        with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
+            s.acquire_stage_lock()
+        after = {p.name: (p.read_bytes() if p.is_file() else None) for p in self.inst.iterdir()}
+        self.assertEqual(after, before)
+        self.assertFalse((self.inst / ".kpharness-stage.lock").exists())
+
+    def test_lock_first_fresh_stage_initializes_overlay_and_private_ini(self):
+        staged = self.tmp / "fresh-boot-order"
+        source_ini = (self.inst / "swkotor.ini").read_bytes()
+        source_runtime_ini = (self.inst / "kotorphasor.ini").read_bytes()
+        s = GameSession("k1", staged=str(staged), reset_saves=True, log=lambda _: None)
+        s.acquire_stage_lock()
+        try:
+            self.assertEqual([p.name for p in staged.iterdir()], [".kpharness-stage.lock"])
+            s.stage()
+            s.port = 27015
+            write_runtime_ini(s.game_dir, s.port)
+            self.assertTrue((staged / "modules").is_symlink())
+            self.assertTrue((staged / "binkw32_real.dll").is_file())
+            self.assertFalse((staged / "swkotor.ini").is_symlink())
+            self.assertFalse((staged / "kotorphasor.ini").is_symlink())
+            self.assertEqual((self.inst / "swkotor.ini").read_bytes(), source_ini)
+            self.assertEqual((self.inst / "kotorphasor.ini").read_bytes(), source_runtime_ini)
+        finally:
+            if s._session_log is not None:
+                s._session_log.close()
+            s.release_stage_lock()
 
     def test_reset_saves_restores_k1_source_baseline(self):
         staged = self.tmp / "k1_reset_harness"
@@ -2848,6 +2924,19 @@ class TestConfigurationContracts(unittest.TestCase):
                 path.write_text('target="k1"\n[execution]\ngame_speed=false\n[[step]]\ndo="quit"\n')
                 self.assertEqual(cli.main(["run", str(path)]), 3)
                 session.assert_not_called()
+
+    def test_cli_reports_malformed_workspace_configuration_as_invalid_input(self):
+        import contextlib
+        import io
+        from kpharness import cli
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            (base / "kotorphasor.toml").write_text("[broken")
+            stderr = io.StringIO()
+            with mock.patch.object(Path, "cwd", return_value=base), \
+                    contextlib.redirect_stderr(stderr):
+                self.assertEqual(cli.main(["status"]), 3)
+            self.assertIn("kotorphasor.toml", stderr.getvalue())
 
     def test_shared_header_validation_including_empty_pioneer_route(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -1,0 +1,50 @@
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ERROR
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... FAIL
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... FAIL
+
+======================================================================
+ERROR: test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 972, in test_control_turns_an_empty_reply_into_a_playback_error
+    self.PB.control(out, {'op': 'status'})
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 773, in control
+    reply = json.loads(raw)
+            ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+FAIL: test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 934, in test_eviction_during_widened_gap_keeps_the_reply
+    self.assertTrue(raw, f'command ran {self.executed} but the reply was dropped')
+AssertionError: b'' is not true : command ran ['play'] but the reply was dropped
+
+======================================================================
+FAIL: test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 953, in test_socket_evicted_before_admission_never_runs_the_command
+    self.assertEqual(self.executed, [], 'an evicted connection still ran its command')
+AssertionError: Lists differ: ['play'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'play'
+
+- ['play']
++ [] : an evicted connection still ran its command
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.006s
+
+FAILED (failures=2, errors=1)

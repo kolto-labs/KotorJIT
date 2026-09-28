@@ -1,0 +1,222 @@
+# Object blaster Stage 2: observe the stock disruptor bolt load with the frozen projectile runtime
+#
+# Declared inputs. Check them before launch; the route cannot hash its runtime.
+#   runtime   kphasor.dll sha256 165f00008e8633173127de990668f6f93906e461fe96c94833f47a45fff55b9c
+#             frozen projectile build, passed with --build-dir
+#             /home/brunner56/kp-live-20260922/frozen-projectile-visual2 . session.log must
+#             report runtime 165f00008e86. Never copy it into the repository.
+#   fixture   private blaster_fixture.lua (projectile-research), deployed console-only to
+#             kotorphasor/console-examples/blaster_fixture.lua
+#   save      owned "000001 - AUTOSAVE" with an unequipped single disruptor pistol
+#             (base item 16, ammunition row 3 "Disruptor")
+#
+# Pass: status().supported; at least one new record with a nonempty original model,
+# load_ok, ammo_row 3 (Disruptor) and reason stock_observation, which the native
+# service sets only when the source equals the freshly resolved PC (source_client == PC).
+# Every new PC record must be row 3 and share one source_client. Selection stays off.
+# Models are the installed game's own resources. Nothing retail is copied.
+# The last step is the Stage 1 restoration gate. It failed in run 20260922-143031
+# and stays failing until Stage 1 lands, even when this stage's own steps pass.
+name = "object blaster: stage 2 observe"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 45
+load_timeout = 600
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+timeout = 600
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+do = "mark_log"
+
+[[step]]
+label = "projectile runtime present: kp.projectiles supported, selection off, observation off"
+do = "assert_lua"
+code = "local s=kp.projectiles and kp.projectiles.status(); return s~=nil and s.supported==true and s.enabled==false and s.observing==false"
+equals = true
+
+[[step]]
+label = "snapshot original equipment and existing area creatures"
+do = "assert_lua"
+code = "local q=nwscript.call; p=q('GetFirstPC'); oldright=q('GetItemInSlot',4,p); oldleft=q('GetItemInSlot',5,p); oldmin=q('GetMinOneHP',p); existing={}; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do existing[o]=true; o=q('GetNextObjectInArea',q('GetArea',p),1) end; q('SetCameraMode',p,2); q('SetCameraFacing',q('GetFacing',p)); beforeitems={}; local function keep(i) if q('GetIsObjectValid',i)==1 then beforeitems[i]={stack=q('GetItemStackSize',i),base=q('GetBaseItemType',i),owner=q('GetItemPossessor',i),tag=q('GetTag',i)} end end; local i=q('GetFirstItemInInventory',p); local seen={}; local n=0; while q('GetIsObjectValid',i)==1 do assert(not seen[i] and n<512,'inventory enumeration incomplete'); seen[i]=true;n=n+1;keep(i);i=q('GetNextItemInInventory',p) end;keep(oldright);keep(oldleft); return q('GetIsInCombat',p)==0"
+equals = true
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: borrow the disruptor and spawn the disposable target"
+do = "console_command"
+code = "blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "independent borrowed disruptor pistol (base 16) and exactly one owned target"
+do = "assert_lua"
+code = "local q=nwscript.call; local gun=q('GetItemInSlot',4,p); local prior=beforeitems[gun]; if not prior or prior.stack~=1 or gun==oldright or gun==oldleft or q('GetIsObjectValid',gun)~=1 or q('GetItemPossessor',gun)~=p or q('GetItemStackSize',gun)~=1 or q('GetBaseItemType',gun)~=16 or prior.base~=16 then return false end; selectedgun=gun; local n=0; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do if not existing[o] then n=n+1; target=o end; o=q('GetNextObjectInArea',q('GetArea',p),1) end; if n~=1 then return false end; baselinehp=q('GetCurrentHitPoints',target); return q('GetMinOneHP',target)==1 and q('GetIsObjectValid',q('GetItemInSlot',5,p))==0"
+equals = true
+poll = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: kp.projectiles.observe(true)"
+do = "console_command"
+code = "local s=assert(kp.projectiles.observe(true)); return s.observing==true and s.enabled==false"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "independent observation on, selection off; mark the record sequence before firing"
+do = "assert_lua"
+code = "local s=kp.projectiles.status(); obs_before=s.observed; obs_epoch=s.epoch; return s.supported==true and s.observing==true and s.enabled==false and s.dropped==0"
+equals = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: fire the borrowed disruptor at the target"
+do = "console_command"
+code = "return blaster_fixture.fire()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "stock combat damages the disposable target"
+do = "assert_lua"
+code = "local q=nwscript.call; return q('GetIsObjectValid',target)==1 and q('GetCurrentHitPoints',target)<baselinehp and q('GetIsDead',target)==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "Stage 2 pass: a new PC disruptor load record, stock model kept, load_ok"
+do = "assert_lua"
+code = "local s=kp.projectiles.status(); if s.epoch~=obs_epoch or s.dropped~=0 then error('projectile epoch changed or records dropped') end; local n=0; local src; for _,r in ipairs(kp.projectiles.records()) do if r.sequence>obs_before and r.reason=='stock_observation' then if r.ammo_row~=3 or r.replaced~=false or r.selected~=r.original or r.epoch~=obs_epoch then error('unexpected PC record '..r.sequence..' row='..r.ammo_row..' replaced='..tostring(r.replaced)) end; src=src or r.source_client; if r.source_client~=src or src==0 or src==2130706432 then error('PC records disagree on source_client') end; if r.original~='' and r.load_ok==true then n=n+1 end end end; obs_count=n; return s.supported==true and s.enabled==false and n>=1"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: kp.projectiles.records() summary, kept in the kp.console.v1 receipt"
+do = "console_command"
+code = "local t={}; local r=kp.projectiles.records(); for i=math.max(1,#r-7),#r do local x=r[i]; t[#t+1]=x.sequence..'/'..x.version..'/'..x.reason..'/row'..x.ammo_row..'/'..x.original..'>'..x.selected..'/ok='..tostring(x.load_ok)..'/src='..x.source_client end; local s=kp.projectiles.status(); return 'records: observed='..s.observed..' replaced='..s.replaced..' dropped='..s.dropped..' '..table.concat(t,' ')"
+contains = ["records:"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: stop firing"
+do = "console_command"
+code = "return blaster_fixture.stop()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: kp.projectiles.observe(false)"
+do = "console_command"
+code = "local s=assert(kp.projectiles.observe(false)); return s.observing==false and s.enabled==false"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "independent return to the minimal stock path: observation and selection off"
+do = "assert_lua"
+code = "local s=kp.projectiles.status(); return s.supported==true and s.observing==false and s.enabled==false"
+equals = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: stop firing, destroy the target, re-equip the original weapons"
+do = "console_command"
+code = "return blaster_fixture.cleanup()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "record restore_report before the restoration gate (diagnostic only)"
+do = "console_command"
+code = "return blaster_fixture.restore_report()"
+contains = ["restore_report:"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "Stage 1 gate: independent target deletion, equipment and exact inventory restoration"
+do = "assert_lua"
+code = "local q=nwscript.call; local after={};local seen={};local n=0; local function keep(i) if q('GetIsObjectValid',i)==1 then after[i]={stack=q('GetItemStackSize',i),base=q('GetBaseItemType',i),owner=q('GetItemPossessor',i),tag=q('GetTag',i)} end end; local i=q('GetFirstItemInInventory',p); while q('GetIsObjectValid',i)==1 do assert(not seen[i] and n<512,'inventory enumeration incomplete');seen[i]=true;n=n+1;keep(i);i=q('GetNextItemInInventory',p) end;keep(q('GetItemInSlot',4,p));keep(q('GetItemInSlot',5,p)); for id,item in pairs(beforeitems) do local now=after[id];if not now or now.stack~=item.stack or now.base~=item.base or now.owner~=item.owner or now.tag~=item.tag then return false end end; for id in pairs(after) do if not beforeitems[id] then return false end end; return q('GetIsObjectValid',target)==0 and q('GetItemInSlot',4,p)==oldright and q('GetItemInSlot',5,p)==oldleft and q('GetMinOneHP',p)==oldmin"
+equals = true
+poll = true
+
+[[step]]
+do = "advance_ticks"
+ticks = 90

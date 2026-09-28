@@ -66,6 +66,7 @@ re-encoded per route.
 """
 from __future__ import annotations
 
+import contextlib
 import fnmatch
 import hashlib
 import json
@@ -470,11 +471,12 @@ class ScenarioRunner:
             load_tick_seconds=float(s["load_tick_seconds"]),
             stagnation_seconds=float(s["stagnation_seconds"]), log=self.log, shooter=self.shooter)
         self.checkpoints = checkpoints
+        effective_target = getattr(getattr(session, "target", None), "name", scenario.target)
         if self.checkpoints is None and getattr(session, "save_dir", None):
             from . import targets as T
-            self.checkpoints = Checkpoints(T.get(scenario.target), Path(session.save_dir))
+            self.checkpoints = Checkpoints(T.get(effective_target), Path(session.save_dir))
         self.mark_seq = 0
-        self.report = Report(scenario=scenario.name, target=scenario.target,
+        self.report = Report(scenario=scenario.name, target=effective_target,
                              build=str(getattr(session, "build", "")),
                              run_dir=str(self.run_dir), started=time.time())
 
@@ -491,6 +493,8 @@ class ScenarioRunner:
         return float(step.raw.get("timeout", self.sc.settings[key]))
 
     def _on_poll(self, state: dict) -> None:
+        if getattr(self, "cancel_event", None) is not None and self.cancel_event.is_set():
+            raise W.WaitCancelled("execution stop requested")
         self._answer_authored_bark(state)
         if self.shooter is not None:
             self.shooter.maybe(state)
@@ -520,13 +524,54 @@ class ScenarioRunner:
 
     def _wait(self, step: Step, pred: W.Predicate, what: str, progress: bool, timeout: float) -> dict:
         return W.wait_until(self.ch, pred, timeout, what=what, watchdog=self.watchdog,
-                            progress=progress, on_poll=self._on_poll)
+                            progress=progress, on_poll=self._on_poll,
+                            cancel_event=getattr(self, "cancel_event", None))
 
-    def _configure_execution(self) -> None:
+    def _read_execution_speed(self) -> float:
+        result = self.ch.lua("return kp.game_speed()")
+        values = result.get("values") if isinstance(result, dict) else None
+        value = values[0] if isinstance(values, list) and len(values) == 1 else None
+        if type(value) not in (int, float) or not math.isfinite(value) or not 0 < value <= 16:
+            raise ScenarioError("cannot capture attached session game speed")
+        return float(value)
+
+    @contextlib.contextmanager
+    def attached_execution(self, validate_owner=None):
+        """Own only the temporary route speed, never the attached game process.
+
+        A step that deliberately changes speed keeps that change; otherwise
+        restore the captured scale even when dispatch/configuration fails.
+        """
+        if validate_owner is not None:
+            validate_owner()
+        previous = self._read_execution_speed()
+        requested = float(self.sc.settings["game_speed"])
+        ownership = {"retain": False}
+        try:
+            self._configure_execution(attached=True)
+            yield ownership
+        finally:
+            # Compare before restoring: do not overwrite an explicit speed
+            # action or another owner's changed setting. Read failure is not
+            # permission to blindly mutate an unknown session.
+            if validate_owner is not None:
+                validate_owner()
+            current = self._read_execution_speed()
+            if not ownership["retain"] and math.isclose(current, requested, rel_tol=0.0, abs_tol=1e-6):
+                result = self.ch.request("speed", scale=previous)
+                restored = result.get("scale") if isinstance(result, dict) else None
+                if type(restored) not in (int, float) or not math.isclose(
+                        restored, previous, rel_tol=0.0, abs_tol=1e-6):
+                    raise ScenarioError("attached execution speed restoration was not acknowledged")
+                self.report.execution["game_speed_restored"] = previous
+            else:
+                self.report.execution["game_speed_retained"] = current
+
+    def _configure_execution(self, *, attached: bool = False) -> None:
         """Apply scenario-wide execution policy before the first route step."""
         requested = float(self.sc.settings["game_speed"])
         self.report.execution["game_speed_requested"] = requested
-        if requested == 1.0:
+        if requested == 1.0 and not attached:
             # Every managed run starts a fresh process at retail speed.  The
             # explicit opt-out also works on builds without the speed binding.
             self.report.execution["game_speed_effective"] = 1.0
@@ -546,6 +591,15 @@ class ScenarioRunner:
     def _do(self, step: Step) -> str:
         r = step.raw
         verb = str(r["do"])
+        # Physical-console actions are isolated from ordinary scenario and
+        # predicate logic.  They require a live, owned X11 game window and
+        # use kp.console.v1 exact request outcomes; see console_steps.py.
+        if verb in {"console_open", "console_command", "owned_input", "advance_ticks"}:
+            from .console_steps import ConsoleStepError, execute_console_step
+            try:
+                return execute_console_step(self, step)
+            except ConsoleStepError as error:
+                raise _StepFailure(str(error), state=error.state) from error
         # A load issues the engine's own sequence and returns; it does not wait
         # for the load to finish. It still gets the load budget rather than the
         # default reply timeout, because the reply comes back after several
@@ -633,7 +687,12 @@ class ScenarioRunner:
             seconds = float(r.get("seconds", r.get("duration", 0)))
             if seconds < 0 or seconds > 300:
                 raise _StepFailure("sleep: seconds must be between 0 and 300")
-            time.sleep(seconds)
+            cancel = getattr(self, "cancel_event", None)
+            if cancel is not None:
+                if cancel.wait(seconds):
+                    raise W.WaitCancelled("execution stop requested")
+            else:
+                time.sleep(seconds)
             return f"slept {seconds:g}s"
         if verb == "lua":
             result = self.ch.lua(str(r["code"]), timeout=float(r.get("timeout", 30)))
@@ -899,7 +958,7 @@ class ScenarioRunner:
                     "if nwscript.call(\"GetTag\",placeable):gsub('%%z+$','')~=%s or nwscript.call(\"GetObjectType\",placeable)~=64 then error('placeable identity changed') end; "
                     "local p=nwscript.call(\"GetPosition\",placeable); if math.sqrt((p.x-(%.9g))^2+(p.y-(%.9g))^2+(p.z-(%.9g))^2)>%.9g then error('placeable position changed') end; "
                     "if (nwscript.call(\"GetIsOpen\",placeable)==1)~=%s then error('placeable pre-open state changed') end; "
-                    "kp.as(pc,function() nwscript.call(\"ActionMoveToObject\",placeable,1,%.9g) end)"
+                    "nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToObject\",placeable,1,%.9g) end)"
                     % (target_id, tag, float(position[0]), float(position[1]), float(position[2]),
                        tolerance, pre_open_lua, interaction_range))
         # Queueing the move is idempotent: re-issuing it when the PC already
@@ -943,7 +1002,7 @@ class ScenarioRunner:
                         "if nwscript.call(\"GetIsInCombat\",pc)~=0 then error('PC entered combat before placeable interaction') end; "
                         "if nwscript.call(\"GetCurrentAction\",pc)~=0 and nwscript.call(\"GetCurrentAction\",pc)~=65534 then error('PC is not idle before placeable interaction') end; "
                         "if nwscript.call(\"GetDistanceBetween2D\",pc,placeable)>%.9g then error('PC left declared interaction range') end; "
-                        "kp.as(pc,function() nwscript.call(\"ActionInteractObject\",placeable) end)"
+                        "nwscript.with_caller(pc,function() nwscript.call(\"ActionInteractObject\",placeable) end)"
                         % (target_id, tag, float(position[0]), float(position[1]), float(position[2]),
                            tolerance, pre_open_lua, interaction_range))
         self.ch.lua(interact_lua, timeout=remaining("interaction action"))
@@ -1055,7 +1114,7 @@ class ScenarioRunner:
                     # not serialize as `p.z--1.3`, which Lua treats as a line
                     # comment and therefore reports as an EOF syntax error.
                     "local p=nwscript.call(\"GetPosition\",door); if math.sqrt((p.x-(%.9g))^2+(p.y-(%.9g))^2+(p.z-(%.9g))^2)>%.9g then error('door position changed') end; "
-                    "kp.as(pc,function() nwscript.call(\"ActionMoveToObject\",door,1,0.75); nwscript.call(\"ActionOpenDoor\",door) end)"
+                    "nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToObject\",door,1,0.75); nwscript.call(\"ActionOpenDoor\",door) end)"
                     % (target_id, tag, int(r.get("type", 8)), float(position[0]), float(position[1]), float(position[2]), tolerance))
         self.ch.lua(open_lua, timeout=min(self._timeout(step), 30.0))
         deadline = time.monotonic() + self._timeout(step)
@@ -1088,7 +1147,7 @@ class ScenarioRunner:
                 if not moved and World.door_open_unlocked(current, current_target):
                     # Only an observed open selected instance may authorize the
                     # far-side ordinary movement action.
-                    self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local where=nwscript.call(\"Location\",{x=%.9g,y=%.9g,z=%.9g},0); kp.as(pc,function() nwscript.call(\"ActionMoveToLocation\",where,1) end)" % (x, y, z),
+                    self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local where=nwscript.call(\"Location\",{x=%.9g,y=%.9g,z=%.9g},0); nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToLocation\",where,1) end)" % (x, y, z),
                                 timeout=min(10.0, max(1.0, deadline - time.monotonic())))
                     moved = True
                 pc = current.get("pc", {}).get("position", {})
@@ -1321,7 +1380,7 @@ class ScenarioRunner:
         budget = float(r.get("timeout", self._timeout(step)))
         found = self.ch.lua(
             "local d=nwscript.call(\"GetObjectByTag\",%s,0); if nwscript.call(\"GetIsObjectValid\",d)~=1 then "
-            "error('door tag not found') end; kp.as(d,function() nwscript.call(\"ActionOpenDoor\",d) end); return d"
+            "error('door tag not found') end; nwscript.with_caller(d,function() nwscript.call(\"ActionOpenDoor\",d) end); return d"
             % json.dumps(tag), timeout=min(30.0, budget))
         values = found.get("values") if isinstance(found, dict) else None
         if not isinstance(values, list) or not values:
@@ -1624,7 +1683,7 @@ class ScenarioRunner:
                              f"dist={float(hostiles[0].get('dist', 0.0)):.1f} act={act}")
                     self.ch.lua(
                         "local pc=nwscript.call(\"GetFirstPC\"); local t=%d; "
-                        "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)"
+                        "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)"
                         % nearest, timeout=min(30.0, max(1.0, deadline - time.monotonic())))
             self._on_poll(state)
             time.sleep(0.5)
@@ -1668,7 +1727,7 @@ class ScenarioRunner:
                 "return {dist=nwscript.call(\"GetDistanceBetween\",pc,t),act=nwscript.call(\"GetCurrentAction\",pc),combat=nwscript.call(\"GetIsInCombat\",pc),hd=hd,hid=hid,x=p.x,y=p.y}")
             move_lua = (
                 "local pc=nwscript.call(\"GetFirstPC\"); " + resolve +
-                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,%d,%s) end); "
+                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,%d,%s) end); "
                 "return {issued=1}" % (run, json.dumps(rng)))
         else:
             if not isinstance(position, (list, tuple)) or len(position) != 3:
@@ -1683,7 +1742,7 @@ class ScenarioRunner:
                 "return {dist=math.sqrt(dx*dx+dy*dy+dz*dz),act=nwscript.call(\"GetCurrentAction\",pc),combat=nwscript.call(\"GetIsInCombat\",pc),hd=hd,hid=hid,x=p.x,y=p.y}")
             move_lua = (
                 "local pc=nwscript.call(\"GetFirstPC\"); "
-                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); "
+                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); "
                 "nwscript.call(\"ActionMoveToLocation\",nwscript.call(\"Location\",nwscript.call(\"Vector\",%s,%s,%s),0.0),%d) end); "
                 "return {issued=1}" % (x, y, z, run))
         drv = _DialogDriver(grace=float(self.sc.settings.get("dialog_grace", 10.0)))
@@ -1787,7 +1846,7 @@ class ScenarioRunner:
                     # combat takes the queue, and the walk resumes after.
                     self.log(f"move_to {label}: blocked with hostile id={hid} at {hd:.1f}, attacking")
                     self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local t=%d; if nwscript.call(\"GetIsObjectValid\",t)==1 then "
-                                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end) end; return 1"
+                                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end) end; return 1"
                                 % hid, timeout=budget())
                     fought = True
                     mark, mark_at = dist, now
@@ -1934,6 +1993,8 @@ class ScenarioRunner:
         expect_verdict = step.raw.get("expect_verdict")
         expect_error = step.raw.get("expect_error")
         try:
+            if getattr(self, "cancel_event", None) is not None and self.cancel_event.is_set():
+                raise W.WaitCancelled("execution stop requested")
             if kind == "screenshot":
                 return self._screenshot(step)
             if kind == "do":
@@ -1959,6 +2020,8 @@ class ScenarioRunner:
                                   f"{v.kind}: {v.reason}", verdict=v.to_dict(), state=v.state)
             return StepResult(step.index, desc, "failed", time.monotonic() - t0, str(v),
                               verdict=v.to_dict(), state=v.state)
+        except W.WaitCancelled as e:
+            return StepResult(step.index, desc, "cancelled", time.monotonic() - t0, str(e))
         except W.WaitTimeout as e:
             return StepResult(step.index, desc, "failed", time.monotonic() - t0, str(e),
                               state=e.state)

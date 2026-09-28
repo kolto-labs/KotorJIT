@@ -14,7 +14,7 @@ local pc = nwscript.call('GetFirstPC')
 if TARGET_TAG then
   local t = nwscript.call('GetObjectByTag',TARGET_TAG, 0)
   if nwscript.call('GetIsObjectValid',t) ~= 1 then error("no object tagged " .. TARGET_TAG) end
-  kp.as(pc, function()
+  nwscript.with_caller(pc, function()
     nwscript.call('ClearAllActions')
     nwscript.call('ActionMoveToObject',t, 1, RANGE)     -- 1 == run
   end)
@@ -23,7 +23,7 @@ end
 
 local p = nwscript.call('GetPosition',pc)
 local there = nwscript.call('Location',nwscript.call('Vector',p.x + OFFSET.x, p.y + OFFSET.y, p.z + OFFSET.z), 0.0)
-kp.as(pc, function()
+nwscript.with_caller(pc, function()
   nwscript.call('ClearAllActions')
   nwscript.call('ActionMoveToLocation',there, 1)
 end)

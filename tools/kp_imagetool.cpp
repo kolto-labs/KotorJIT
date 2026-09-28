@@ -11,6 +11,8 @@
 //   kp_imagetool sections <file>        parsed section map
 //   kp_imagetool dump <file> <out>      write the mapped image back out
 #include <cstdio>
+#include <cinttypes>
+#include <fstream>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -19,6 +21,7 @@
 #include "../src/image/internal.hpp"
 #include "../src/image/loaded_image.hpp"
 #include "../src/image/pe_elf.hpp"
+#include "../src/image/macho.hpp"
 #include "../src/image/sha256.hpp"
 
 using namespace kp::image;
@@ -26,6 +29,59 @@ using namespace kp::image;
 namespace {
 
 constexpr std::size_t kChunk = 64 * 1024;
+
+// Dispatch only by container magic here; all Mach-O decoding stays in macho.
+bool macho_file(const std::string& path) {
+    std::ifstream f(path, std::ios::binary);
+    unsigned char b[4] = {};
+    if (!f.read(reinterpret_cast<char*>(b), 4)) return false;
+    const std::uint32_t magic = std::uint32_t(b[0]) | (std::uint32_t(b[1]) << 8) |
+        (std::uint32_t(b[2]) << 16) | (std::uint32_t(b[3]) << 24);
+    return magic == 0xfeedface || magic == 0xfeedfacf || magic == 0xcefaedfe ||
+        magic == 0xcffaedfe || magic == 0xcafebabe || magic == 0xbebafeca ||
+        magic == 0xcafebabf || magic == 0xbfbafeca;
+}
+
+int cmd_macho(const std::string& command, const std::string& path, bool mapped) {
+    if (mapped || (command != "identify" && command != "sections")) {
+        std::fprintf(stderr, "Mach-O supports only offline identify/sections; mapped, classify and dump are unsupported\n");
+        return 2;
+    }
+    const auto bytes = read_file(path);
+    macho::Headers h;
+    std::string error;
+    if (!macho::read_file(bytes.data(), bytes.size(), h, error)) {
+        std::fprintf(stderr, "Mach-O: %s\n", error.c_str());
+        return 2;
+    }
+    const auto hash = sha256_hex(bytes.data(), bytes.size());
+    const auto* build = lookup_build(hash);
+    const char* arch = h.cpu_type == 7 ? "x86" : h.cpu_type == 0x1000007 ? "x86_64" :
+        h.cpu_type == 12 ? "arm" : h.cpu_type == 0x100000c ? "arm64" : "unknown";
+    std::printf("%s\n  format      Mach-O%u little-endian\n", path.c_str(), h.bits);
+    std::printf("  architecture %s cpu=0x%08x subtype=0x%08x container_bits=%u\n",
+                arch, h.cpu_type, h.cpu_subtype, h.bits);
+    std::printf("  sha256      %s\n  build       %s\n", hash.c_str(), build ? build->alias : "<unrecognised>");
+    std::printf("  metadata-only; preferred unslid VAs; no runtime admission or ASLR mapping\n");
+    if (command == "sections") {
+        for (const auto& segment : h.segments) {
+            std::printf("  segment %s va=0x%016" PRIx64 " size=0x%016" PRIx64
+                        " file_offset=0x%016" PRIx64 " file_size=0x%016" PRIx64
+                        " protection=0x%x max=0x%x\n", segment.name.c_str(), segment.address,
+                        segment.size, segment.file_offset, segment.file_size,
+                        segment.initial_protection, segment.max_protection);
+            for (const auto& section : segment.sections) {
+                std::printf("    section %s,%s va=0x%016" PRIx64 " size=0x%016" PRIx64
+                            " file_offset=0x%08x file_size=0x%016" PRIx64 " %s\n",
+                            section.segment_name.c_str(), section.name.c_str(), section.address,
+                            section.size, section.file_offset, section.zero_fill ? std::uint64_t(0) : section.size,
+                            section.zero_fill ? "zero-fill (no file bytes)" : "file-backed");
+            }
+        }
+    }
+    return 0; // Successful metadata inspection does not require a supported runtime build.
+}
+
 
 struct Opened {
     std::vector<std::uint8_t>    file;
@@ -261,7 +317,8 @@ int usage() {
                  "  sections <file>      parsed section map\n"
                  "  dump <file> <out>    write the mapped image to <out>\n"
                  "\n"
-                 "  --mapped             parse the loader-shaped image, as the runtime must\n");
+                 "  --mapped             parse the loader-shaped image, as the runtime must\n"
+                 "  Mach-O: offline identify/sections only; metadata success does not admit runtime use\n");
     return 2;
 }
 
@@ -282,6 +339,8 @@ int main(int argc, char** argv) {
     if (args.size() < 2) return usage();
 
     const std::string& cmd = args[0];
+    if ((cmd == "identify" || cmd == "sections" || cmd == "classify" || cmd == "dump") &&
+        macho_file(args[1])) return cmd_macho(cmd, args[1], mapped);
     if (cmd == "classify") return cmd_classify(args[1], mapped);
     if (cmd == "identify") return cmd_identify(args[1], mapped);
     if (cmd == "sections") return cmd_sections(args[1], mapped);

@@ -21,7 +21,7 @@ local c = nwscript.call('GetFirstObjectInArea',area, 1)
 while nwscript.call('GetIsObjectValid',c) == 1 do
   if nwscript.call('GetIsEnemy',c, pc) == 1 and nwscript.call('GetIsDead',c) == 0 then
     local d = nwscript.call('GetDistanceBetween',pc, c)
-    if d < best_d then best, best_d = c, d end
+    if d <= RADIUS and d < best_d then best, best_d = c, d end
   end
   c = nwscript.call('GetNextObjectInArea',area, 1)
 end
@@ -31,7 +31,7 @@ if act == 3 or act == 39 then
   return { target = clean(nwscript.call('GetTag',best)), dist = best_d, reason = "already engaged", action = act }
 end
 
-kp.as(pc, function()
+nwscript.with_caller(pc, function()
   nwscript.call('ClearAllActions')
   nwscript.call('ActionAttack',best, 0)      -- 0 == no combat feat
 end)

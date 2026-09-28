@@ -181,7 +181,43 @@ def gen_docs(events: list[dict]) -> str:
                      + ("Returning false stops the game's own handler."
                         if e["blocking"] else ""))
             L.append("")
+    L += NATIVE_CAMERA_DOCS
     return "\n".join(L)
+
+
+# Hand-written native facility section, kept here so the generated reference
+# stays the single source. Source: src/api/camera_lua.cpp.
+NATIVE_CAMERA_DOCS = [
+    "## Native camera (`kp.camera`)", "",
+    "Status: host-tested, K1 GOG only, no live proof yet. Read-only; nothing here writes game memory.", "",
+    "Tests ran against synthetic memory (`kp_cameratest`, `camera_profile_consistency_test`). No snapshot has "
+    "been taken in a running game. Every other build reports `available = false`.", "",
+    "#### `kp.camera.capabilities()`", "",
+    "Returns a table: `available` (bool), `profile` (`\"windows-k1-gog\"` or `\"unsupported\"`), `abi`, "
+    "`writes` (always false) and `limits` (text).", "",
+    "#### `kp.camera.snapshot()`", "",
+    "Returns a protected, read-only capture, or `nil, message, code` on failure. `code` is one of "
+    "`unsupported`, `guard`, `chain` or `value`. A failed code guard, a wrong vtable, a null or unreadable "
+    "pointer, or a non-finite float gives a failure. You never get a partial capture.", "",
+    "| field | type | meaning |",
+    "|---|---|---|",
+    "| `behavior` | string | `\"chase\"` for the chase camera, `\"other\"` for any other behaviour |",
+    "| `mode` | int | camera mode byte (client options +0x6d) |",
+    "| `pending_style` | int | pending camera-style global, `-1` when none |",
+    "| `module`, `camera`, `behavior_ptr`, `behavior_vtable` | string | hex pointers, for diagnostics |",
+    "| `distance` | number | `m_fDist` (+0x110), the target distance |",
+    "| `speed` | number | `m_fSpeed` (+0x114) |",
+    "| `pitch` | number | `m_fPresetPitch` (+0x11c), units unverified |",
+    "| `height` | number | `m_fHeight` (+0x120), units unverified |",
+    "| `dolly` | int | raw dword at +0x84; nonzero makes the engine recompute `distance` every tick |",
+    "| `base_distance`, `base_view_angle` | number | +0x88 and +0x8c |",
+    "| `style_row` | int | cached camera-style row at +0x5c, `-1` for defaults |",
+    "| `raw_28_unverified` | {4 numbers} | floats at +0x28, meaning unverified |",
+    "| `raw_38_unverified`, `raw_50_unverified` | {3 numbers} | floats at +0x38 and +0x50, meaning unverified |",
+    "",
+    "Fields from `distance` down are nil unless `behavior` is `\"chase\"`. For any other behaviour the "
+    "runtime reads only its vtable.", "",
+]
 
 
 def main() -> int:

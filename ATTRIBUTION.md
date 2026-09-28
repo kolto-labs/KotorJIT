@@ -1,10 +1,10 @@
 # Attribution
 
-KotorPhasor stands on work other people did first. This file records who, and for what.
+KotorPhasor stands on work other people did first. Who, and for what:
 
 ## Architectural model
 
-**[Phasor](https://github.com/urbanyoung/Phasor)** — urbanyoung, MIT.
+**[Phasor](https://github.com/urbanyoung/Phasor)**: urbanyoung, MIT.
 
 Phasor is a Lua scripting host for Halo servers. KotorPhasor borrows its shape, and the
 borrowing is deliberate rather than incidental:
@@ -25,7 +25,7 @@ quarantine is on by default here.
 
 ## Patching and hooks
 
-**[kotor-patch-manager](https://github.com/LaneDibello/kotor-patch-manager)** — Lane Dibello
+**[kotor-patch-manager](https://github.com/LaneDibello/kotor-patch-manager)**: Lane Dibello
 and contributors, MIT, 2025.
 
 The prior art for running native code inside KOTOR. Credited for its code caves, injection
@@ -41,7 +41,7 @@ are no collisions, so the two can be installed together.
 Individual patches in that project are credited to their own authors: Lane, Vriff, J,
 Synchro, VexFlint, Shae Condon, and Arniel_Stanislaus.
 
-**Kotor-Script-Extender** — MIT. Credited for the pattern of waiting on a sentinel until the
+**Kotor-Script-Extender**: MIT. Credited for the pattern of waiting on a sentinel until the
 Steam build's encrypted code section has been deciphered in memory, and for publishing
 offsets for that build.
 
@@ -60,4 +60,4 @@ game binaries. You need your own copy of the game.
 
 ## Dependencies
 
-**[LuaJIT](https://luajit.org/)** — Mike Pall, MIT. Fetched at build time, not vendored.
+**[LuaJIT](https://luajit.org/)**: Mike Pall, MIT. Fetched at build time, not vendored.
