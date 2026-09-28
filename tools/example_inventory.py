@@ -47,11 +47,11 @@ def validate_inventory(manifest, root=None):
     if type(manifest.get('schema')) is not int or manifest['schema'] != 2:
         raise ValueError('example manifest schema must be 2')
     entries = manifest['examples']
-    if type(manifest.get('inventory_count')) is not int or manifest['inventory_count'] != 41 or len(entries) != 41:
+    if type(manifest.get('inventory_count')) is not int or manifest['inventory_count'] != 42 or len(entries) != 42:
         raise ValueError('original41 inventory drift')
     identities = [e['path'] for e in entries]
     sources = [e['source_path'] for e in entries]
-    if len(set(identities)) != 41 or len({s.casefold() for s in sources}) != 41:
+    if len(set(identities)) != 42 or len({s.casefold() for s in sources}) != 42:
         raise ValueError('duplicate example identity/source')
     if {e['path'] for e in entries if e['disposition'] == 'retired_public'} != RETIRED:
         raise ValueError('reviewed retirement set drift')

@@ -954,7 +954,7 @@ do = "sleep"; seconds = 0
         from kpharness.scenario import list_scenarios, find_scenario
         paths = sorted(d.rglob("*.toml"))
         self.assertEqual(list_scenarios(), paths)
-        self.assertEqual(len([p for p in paths if p.parent.name == "cursed"]), 10)
+        self.assertEqual(len([p for p in paths if p.parent.name == "cursed"]), 11)
         for p in paths:
             self.assertEqual(find_scenario(str(p)), p)
             self.assertEqual(find_scenario(p.relative_to(d).with_suffix("").as_posix()), p)

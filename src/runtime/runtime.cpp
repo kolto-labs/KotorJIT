@@ -436,17 +436,16 @@ bool Runtime::await_and_verify(const Config& cfg) {
         if(address > UINTPTR_MAX)return false;
         return live.read(static_cast<std::uintptr_t>(address),out,size);
     };
-    auto log_model = [](const std::string& message,void*) { Runtime::instance().log("%s",message.c_str()); };
-    if(!api::model::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
-        log("model: %s",model_error.c_str());
     if(!api::camera::bind_native(image_sha256_,runtime_base_,read_model,nullptr,model_error))
         log("camera: %s",model_error.c_str());
     if(!api::motion::bind_native(image_sha256_,runtime_base_,read_model,nullptr,model_error))
         log("motion: %s",model_error.c_str());
-    if(!api::animation::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
-        log("animation: %s",model_error.c_str());
     if(!api::projectiles::bind_native(image_sha256_,runtime_base_,model_error))
         log("projectiles: %s",model_error.c_str());
+    // Model/animation binding is intentionally deferred until resolve(): it
+    // requires the admitted hook-pack's exact target and generated role table.
+    api::animation::operations().unbind();
+    api::model::operations().unbind();
     return true;
 }
 
@@ -522,6 +521,44 @@ bool Runtime::resolve(const Config& cfg) {
     const std::string& source = pack.empty() ? chosen : pack;
     log("address table: %s (%zu sites, build %s, %s)", source.c_str(), table_->sites().size(),
         table_->build().c_str(), table_->platform_name().c_str());
+
+    // A compiled profile establishes the separately-qualified layout and ABI.
+    // Its callable sites come from the admitted generated operation, never a
+    // profile-only fallback.  Missing/ambiguous/stale roles leave this optional
+    // capability unavailable while ordinary hooks continue to start.
+    constexpr std::array<const char*, 5> model_roles{{
+        "kp.model.convert", "kp.model.creature", "kp.model.model",
+        "kp.model.setter", "kp.model.server-object",
+    }};
+    const bool generated_model = !pack.empty() &&
+        table_->expected_sha256() == image_sha256_ &&
+        table_->has_operation("kotor.k1.model-scale.v1");
+    std::array<api::model::Address, 5> generated_sites{};
+    bool roles_resolved = generated_model;
+    if (roles_resolved) {
+        for (std::size_t i=0; i<model_roles.size(); ++i) {
+            const hooks::Site* site = table_->find_adapter(model_roles[i]);
+            if (site == nullptr || !site->resolved) { roles_resolved=false; break; }
+            generated_sites[i]=static_cast<api::model::Address>(site->addr);
+        }
+    }
+    if (!roles_resolved) {
+        log("model: unavailable; generated model-scale operation, exact pack image identity, and five resolved roles are required");
+        return true;
+    }
+    std::string model_error;
+    auto read_model = [](api::model::Address address, void* out, std::size_t size, void*) {
+        image::LiveImage live(0);
+        if(address > UINTPTR_MAX)return false;
+        return live.read(static_cast<std::uintptr_t>(address),out,size);
+    };
+    auto log_model = [](const std::string& message,void*) { Runtime::instance().log("%s",message.c_str()); };
+    if(!api::model::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,&generated_sites,model_error)) {
+        log("model: %s",model_error.c_str());
+        return true;
+    }
+    if(!api::animation::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
+        log("animation: %s",model_error.c_str());
     return true;
 }
 

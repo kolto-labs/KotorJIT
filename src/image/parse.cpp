@@ -174,6 +174,14 @@ std::optional<Format> detect_format(const LoadedImage& img) {
     if (!img.read(img.base(), magic, sizeof magic)) return std::nullopt;
     if (magic[0] == 'M' && magic[1] == 'Z') return Format::Pe32;
     if (magic[0] == 0x7f && magic[1] == 'E' && magic[2] == 'L' && magic[3] == 'F') return Format::Elf32;
+    // Mach-O 32-bit LE (0xFEEDFACE) or fat (0xCAFEBABE). Recognized so Mac
+    // profiles can bind; parse/load remain PE/ELF until a Mach-O loader exists.
+    if ((magic[0] == 0xCE && magic[1] == 0xFA && magic[2] == 0xED && magic[3] == 0xFE) ||
+        (magic[0] == 0xFE && magic[1] == 0xED && magic[2] == 0xFA && magic[3] == 0xCE) ||
+        (magic[0] == 0xCA && magic[1] == 0xFE && magic[2] == 0xBA && magic[3] == 0xBE) ||
+        (magic[0] == 0xBE && magic[1] == 0xBA && magic[2] == 0xFE && magic[3] == 0xCA)) {
+        return Format::MachO;
+    }
     return std::nullopt;
 }
 

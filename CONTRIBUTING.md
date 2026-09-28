@@ -37,10 +37,14 @@ Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`.
 | KOTOR 1 | GOG, Windows | Supported |
 | KOTOR 1 | Steam, Windows | Supported (identical `.text` to GOG once deciphered) |
 | KOTOR 1 | Amazon Games, Windows | Unbound — target-native recovery required |
+| KOTOR 1 | Mac (Aspyr) | Registered / static_only: corpus signatures exist; no Mach-O loader in the PE/ELF runtime yet |
+| KOTOR 2 | Native Linux (Aspyr) | Unbound — prior cross-placed bindings were withdrawn |
 | KOTOR 2 | GOG Aspyr, Windows | Supported |
 | KOTOR 2 | Steam Aspyr, Windows | Supported |
-| KOTOR 2 | Native Linux (Aspyr) | Unbound — prior cross-placed bindings were withdrawn |
+| KOTOR 2 | Mac (Aspyr) | Registered / static_only: same Mach-O loader gap as K1 Mac |
 | KOTOR 2 | Retail CD 1.0 / 1.0b, Windows | Unbound — target-native recovery required |
+
+Machine-readable profile table: [`data/profiles/builds.toml`](data/profiles/builds.toml) (`python3 tools/list_profiles.py`). See [`docs/user/platform-profiles.md`](docs/user/platform-profiles.md).
 
 "Supported" means every required hook site resolves and the runtime installs cleanly: the `nwscript.call(name, ...)` routine bridge and event dispatch both work. It does **not** yet mean every corner is verified — K2's struct field layouts (`kp.struct`) were researched against the K1 build only, so typed field access on a K2 build is unverified and may read the wrong offset. Raw `kp.mem.*` reads and writes are unaffected; they don't depend on struct research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
 

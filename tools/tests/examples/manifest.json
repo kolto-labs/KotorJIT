@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "inventory_count": 41,
+  "inventory_count": 42,
   "examples": [
     {
       "path": "arbitration/10_abstain_nil.lua",
@@ -1400,6 +1400,44 @@
         "date": "2026-09-22",
         "reason": "Removed from public showcase: text/buff commentary or unfocused random effects; regression and historical live obligations retained."
       }
+    },
+    {
+      "path": "cursed/110_footlocker_blaster.lua",
+      "sha256": "cdf9d55447b1dd6afefb86bbf0eada031a722daf3990b55d118f788c6db859f6",
+      "syntax": {
+        "status": "required",
+        "evidence": "generated host receipt"
+      },
+      "host": {
+        "status": "required",
+        "tier": "controlled_backend",
+        "evidence": "generated host receipt cases"
+      },
+      "live": {
+        "status": "unvalidated",
+        "evidence": null,
+        "required_predicates": [
+          "cursed.110_footlocker_blaster.arm_gate",
+          "cursed.110_footlocker_blaster.crate_flight",
+          "cursed.110_footlocker_blaster.impact_push",
+          "cursed.110_footlocker_blaster.ammo_console",
+          "cursed.110_footlocker_blaster.clean_recording"
+        ],
+        "unmet_preconditions": [
+          "Current-source and deployed-source hash-bound live receipt",
+          "Independent engine predicates and clean session",
+          "Historical receipts are unbound and cannot be promoted"
+        ],
+        "predicate_obligations": {
+          "cursed.110_footlocker_blaster.arm_gate": "No crate spawns before 200 post-load/area-enter ticks or while the PC is not holding a ranged weapon; a module load or area enter re-arms and clears counters.",
+          "cursed.110_footlocker_blaster.crate_flight": "A PC ranged shot (OnCreatureBroadcastSafeProjectile, falling back to OnCreatureAttacked) creates one placeable of the configured ammo blueprint and independently observed positions trace it along the PC-to-target line over the flight steps, not just a spawn event.",
+          "cursed.110_footlocker_blaster.impact_push": "On arrival the target independently reads back the Force-Push/whirlwind/force-wave effects and the crate placeable is destroyed; the PC and party members are never targeted.",
+          "cursed.110_footlocker_blaster.ammo_console": "`footammo <placeable>` changes the spawned blueprint on the next shot and `footammo` alone reports the current ammo/shot/impact counters without changing them.",
+          "cursed.110_footlocker_blaster.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
+        }
+      },
+      "source_path": "scripts/examples/cursed/110_footlocker_blaster.lua",
+      "disposition": "retained"
     }
   ]
 }
