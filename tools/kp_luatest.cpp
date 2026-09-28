@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     const std::string dir = argv[1];
     const std::string what = argv[2];
 
-    lua::Host host({dir, /*error_budget=*/3, /*hot_reload=*/false, {}});
+    lua::Host host({dir, /*error_budget=*/3, /*hot_reload=*/false});
     std::vector<std::string> errors;
     const unsigned loaded = host.load_all(errors);
 

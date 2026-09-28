@@ -3017,7 +3017,9 @@ class RecorderTests(unittest.TestCase):
         self.assertEqual(recorder._read_diagnostic(path, 0), (b"abcdef", 6))
         path.write_bytes(b"x")
         with self.assertRaises(OSError): recorder._read_diagnostic(path, 6)
-        path.unlink(); path.write_bytes(b"replacement")
+        # Rename rather than unlink: the old inode must stay allocated, or ext4
+        # can hand the same inode number to the replacement and hide the swap.
+        path.rename(self.root / "diagnostic.replaced"); path.write_bytes(b"replacement")
         with self.assertRaises(OSError): recorder._read_diagnostic(path, 0)
         large = self.root / "large"; large.touch()
         with large.open('r+b') as stream: stream.truncate(R.MAX_DIAGNOSTIC_READ + 1)

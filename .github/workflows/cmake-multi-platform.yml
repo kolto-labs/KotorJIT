@@ -41,10 +41,15 @@ jobs:
       # ubuntu-latest's default g++/clang++ only carry 64-bit headers.
       # g++-mingw-w64-i686 + binutils-mingw-w64-i686: cross-compiles
       # kphasor.dll and the proxy binkw32.dll.
+      # luajit: configure-time find_program(... REQUIRED) in CMakeLists.txt,
+      # src/api/model.cmake and src/api/animation.cmake; the example, model
+      # and animation tests run under it. lua5.1: kpharness_world_test runs
+      # the emitted probe through a plain `lua` interpreter.
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc-multilib g++-multilib \
-          g++-mingw-w64-i686 binutils-mingw-w64-i686
+          g++-mingw-w64-i686 binutils-mingw-w64-i686 \
+          luajit lua5.1
 
     - name: Fetch LuaJIT
       # Not a submodule -- third_party/ is gitignored, same as a developer's

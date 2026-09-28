@@ -241,7 +241,7 @@ void shape_and_host_cases() {
              "end\n";
     }
 
-    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false, {}});
+    lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
     std::vector<std::string> errors;
     const unsigned loaded = host.load_all(errors);
     for (const auto& e : errors) std::printf("  load error: %s\n", e.c_str());

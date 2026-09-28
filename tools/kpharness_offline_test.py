@@ -2667,6 +2667,15 @@ class TestStaging(unittest.TestCase):
                        "walkmesh_size": len(data),
                        "walkmesh_sha256": hashlib.sha256(data).hexdigest()}
         completed = subprocess.CompletedProcess(["kq"], 0, stdout=data, stderr=b"")
+        # subprocess.run is mocked below, but _kq_binary still insists on an
+        # executable kq; give it a stand-in so the test does not depend on the
+        # developer's own kq install.
+        fake_kq = self.tmp / "fake-kq"
+        fake_kq.write_text("#!/bin/sh\nexit 1\n")
+        fake_kq.chmod(0o755)
+        kq_env = mock.patch.dict(os.environ, {"KQ_BIN": str(fake_kq)})
+        kq_env.start()
+        self.addCleanup(kq_env.stop)
         with mock.patch.object(S.subprocess, "run", return_value=completed) as run:
             s = GameSession("k1", staged=str(staged))
             s.stage([Resource.from_legacy(declaration)])

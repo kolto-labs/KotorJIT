@@ -7,7 +7,7 @@ Technical reference: build, install, supported builds, and where to go for scrip
 You need a 32-bit Windows cross-compiler and LuaJIT built for that target.
 
 ```sh
-sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686
+sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686 luajit lua
 
 git clone --branch v2.1 https://github.com/LuaJIT/LuaJIT third_party/luajit
 make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows BUILDMODE=static
@@ -18,7 +18,7 @@ cmake --build build
 
 That produces `build/kphasor.dll` and the proxy `build/binkw32.dll`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `kphasor.dll` needs to link against.
 
-On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, and `binutils-mingw-w64-i686`; see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
+On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, `binutils-mingw-w64-i686`, `luajit`, and `lua5.1` (configure requires a `luajit` interpreter; one harness test runs `lua`); see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
 
 Full build, install, and first-run steps: [`docs/user/install.md`](docs/user/install.md).
 

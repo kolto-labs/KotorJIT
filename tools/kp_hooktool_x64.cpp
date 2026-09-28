@@ -294,7 +294,7 @@ void test_relocation() {
 extern "C" {
 int kp_x64_global = 100;
 int kp_x64_target(int);         // assembly below
-extern const std::uint8_t kp_x64_target_bytes[];
+extern std::uint8_t kp_x64_target_bytes[];  // written by the tests: not const, or the stores are UB clang may drop
 }
 // Fixed bytes, own page. Written in assembly so compiler flags (endbr64,
 // stack protector, -O level) cannot change what the decoder sees, and on its
