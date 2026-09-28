@@ -1,0 +1,17 @@
+selected 60 overlay built in 185.0 s
+unpatched refused: absolute local paths or private names in packaged text: scripts/harness/kpharness/capture_diagnostic.py:54, scripts/harness/kpharness/oracle.py:246
+{
+ "dry_run": false,
+ "zip": "/home/brunner56/kp-live-20260922/review-probes-packaging-r2/out-real/kotorphasor-creative-harness.zip",
+ "zip_crc": "PASS",
+ "manifest_hashes": "PASS",
+ "files_checked": 62,
+ "zip_sha256": "569c56600b6d072ec8f2dedf8112c0203922ee3968b085ed8f7132fb3969f63a"
+}
+suppressed only: [('scripts/harness/kpharness/capture_diagnostic.py', 54, '/home/'), ('scripts/harness/kpharness/oracle.py', 246, 'run id')]
+total 633.9 s
+
+real	11m27.232s
+user	0m2.643s
+sys	0m0.181s
+rc=0

@@ -1,0 +1,90 @@
+[
+  {
+    "case": "healthy8",
+    "encode_rc": "retained",
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 34.146768948063254,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5590526
+  },
+  {
+    "case": "half_frozen_bottom8_true",
+    "encode_rc": 0,
+    "eval_status": "failed",
+    "frame_count": 480,
+    "index_status": "failed",
+    "probe_elapsed": 37.2771114410134,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5577691
+  },
+  {
+    "case": "duplicate8",
+    "encode_rc": "retained",
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 28.075762388994917,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5590357
+  },
+  {
+    "case": "single_skip8",
+    "encode_rc": "retained",
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 32.91552135406528,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5590586
+  },
+  {
+    "case": "healthy34",
+    "encode_rc": "retained",
+    "eval_status": "passed",
+    "frame_count": 2040,
+    "index_status": "passed",
+    "probe_elapsed": 164.20639107597526,
+    "probe_rc": 0,
+    "pts_count": 2040,
+    "raw_bytes": 23761716
+  },
+  {
+    "case": "slowq8",
+    "encode_rc": 0,
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 39.444789962959476,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5592217
+  },
+  {
+    "case": "fast4_8",
+    "encode_rc": 0,
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 49.41147781803738,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5593163
+  },
+  {
+    "case": "static8",
+    "encode_rc": 0,
+    "eval_status": "passed",
+    "frame_count": 480,
+    "index_status": "passed",
+    "probe_elapsed": 75.32891679601744,
+    "probe_rc": 0,
+    "pts_count": 480,
+    "raw_bytes": 5589564
+  }
+]

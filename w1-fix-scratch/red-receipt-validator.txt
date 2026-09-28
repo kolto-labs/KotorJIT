@@ -1,0 +1,9 @@
+OLD validator on new-format fixtures (red = VALID where the new one rejects):
+  mesa_renderer              VALID
+  gl_line_disagrees          VALID
+  host_fields_disagree       VALID
+  overlay_snapshot_failed    VALID
+  wine_registry_yes          VALID
+  two_host_tokens            REJECT: host.wine=None disagrees with log line wine=no
+  forged_for_spoofed_log     VALID
+  session_id_mismatch        REJECT: log.host_line missing or unparsable; runtime never reported its host

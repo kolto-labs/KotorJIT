@@ -1,0 +1,9 @@
+pwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+bca12b48d48b9d9545b6dead2f5f8314b06ac3ff96958328183dd35da4e32575  scripts/harness/kpharness/display_backends.py
+7bdc2df4ae3750a58660465340eaf352eb3d6f36b38a2fea1bcdf231100cda2d  tools/kpharness_capture_diagnostic_test.py
+ccb220b6058db9c818b2978b14e0c9644560578b882e4949160e1f4af07ce48c  tools/kpharness_gamescope_backend_test.py
+347e2942fc5a3153fb88b410aaab372ee077f1122252ed6c5f9e802deca04d7b  docs/creative-runner.md
+----------------------------------------------------------------------
+Ran 61 tests in 21.455s
+
+OK

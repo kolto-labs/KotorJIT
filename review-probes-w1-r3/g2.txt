@@ -1,0 +1,59 @@
+src/runtime/hook_bodies.cpp:424:        KP_HOOK_GUARD_BEGIN("creature.add_move_to_point_action", g_poison_add_move_to_point, {})
+src/runtime/hook_bodies.cpp:575:    KP_HOOK_GUARD_BEGIN("client.area_get_server_area",
+src/runtime/hook_bodies.cpp:704:        KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, verdict = ScriptVerdict{})
+src/runtime/hook_bodies.cpp:743:        KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, {})
+src/runtime/hook_bodies.cpp:774:        KP_HOOK_GUARD_BEGIN("app.server_main_loop", g_poison_main_loop, {})
+src/runtime/hook_bodies.cpp:1012:        KP_HOOK_GUARD_BEGIN("console.do_console", g_poison_do_console, consumed = false)
+src/runtime/hook_bodies.cpp:1058:        KP_HOOK_GUARD_BEGIN(site, poison, skip = false)
+src/runtime/hook_bodies.cpp:1169:        KP_HOOK_GUARD_BEGIN("vm.save_script_situation", g_poison_save, {})
+src/runtime/hook_bodies.cpp:1185:        KP_HOOK_GUARD_BEGIN("vm.load_script_situation", g_poison_load, {})
+src/runtime/hook_bodies.cpp:1224:        KP_HOOK_GUARD_BEGIN("creature.ai_action_move_to_point", g_poison_move_to_point, {})
+src/runtime/internal.hpp:167://     KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison, verdict = Verdict{})
+src/runtime/internal.hpp:191:#define KP_HOOK_GUARD_BEGIN(site, poison, fallback)                       \
+src/harness/commands.cpp:615:        KP_HOOK_GUARD_BEGIN("harness.state", g_poison, { ran = false; })
+src/harness/commands.cpp:740:    KP_HOOK_GUARD_BEGIN("harness.lua", g_poison, { ran = false; faulted = true; })
+src/harness/commands.cpp:764:    KP_HOOK_GUARD_BEGIN("harness.reload", g_poison, { faulted = true; })
+---
+}
+
+FaultFrame::~FaultFrame() {
+    ThreadFrames& tf = t_frames;
+    if (slot_ < kMaxDepth) tf.armed[slot_] = false;
+    if (tf.depth > 0) --tf.depth;
+}
+
+void* FaultFrame::buf() {
+    ThreadFrames& tf = t_frames;
+    // Past the cap the frame is unarmed: claim() refuses to claim at a depth it
+    // has no buffer for, so a fault there passes through rather than jumping
+    // somewhere arbitrary.
+    return slot_ < kMaxDepth ? static_cast<void*>(&tf.bufs[slot_])
+                             : static_cast<void*>(&tf.scratch);
+}
+
+void FaultFrame::note_fault() {
+    // Take this site out of service. It faulted once; the same call with the
+    // same inputs will fault again, and a second recovery tells us nothing the
+    // first did not.
+    if (poison_ != nullptr) poison_->store(true, std::memory_order_release);
+
+    // And take the whole runtime out of service. The longjmp that got us here
+    // skipped every destructor between the fault and this frame, so a
+    // lua_State unwound mid-pcall is left inconsistent and the next dispatch
+    // into it is not trustworthy. Hooks stay installed and forward to the
+    // original; the game keeps running without us.
+    //
+    // `lua reload` puts it back, because a reload rebuilds every state from
+    // scratch. The poison above does not lift: that is per site and permanent.
+    set_live(false);
+
+    ThreadFrames& tf = t_frames;
+    Runtime::instance().log("fault in hook body \"%s\": address 0x%08lx, pc 0x%08lx, code 0x%lx "
+                            "-- site poisoned, scripting off until `lua reload`",
+                            site_ != nullptr ? site_ : "(unnamed)",
+                            static_cast<unsigned long>(tf.fault_addr),
+                            static_cast<unsigned long>(tf.fault_pc),
+                            static_cast<unsigned long>(tf.fault_code));
+}
+---
+757:    for (const std::string& e : errors) log("script: %s", e.c_str());

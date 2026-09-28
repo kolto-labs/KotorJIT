@@ -1,0 +1,7 @@
+FAIL m10: PROT_NONE target refuses NotExecutable target page is not executable
+FAIL m10: PROT_NONE target refuses expect NotExecutable target page is not executable
+FAIL m10: install on a PROT_NONE page refuses child exit 1
+FAIL m10 split: r-x | --- refuses NotExecutable target page is not executable
+FAIL m10 split: r-x | --- refuses expect NotExecutable target page is not executable
+FAIL m10: patch window crossing into a PROT_NONE page refuses child exit 1
+2 of 654 checks FAILED

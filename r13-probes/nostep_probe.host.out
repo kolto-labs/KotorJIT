@@ -1,0 +1,3 @@
+step_dropped_contrast04 failed 0.0 ['calibration_ambiguous', 'capture_content_sequence'] ambiguous b/i/a=0/479/0 min/med/max=2.002/2.557/3.685
+step_eval_init failed 0.0 ['calibration_ambiguous', 'capture_content_sequence'] ambiguous b/i/a=0/479/0 min/med/max=2.002/2.559/3.671
+step_dropped_slowq failed 0.0 ['capture_content_static', 'capture_content_sequence'] separated b/i/a=479/0/0 min/med/max=0.947/1.179/1.466

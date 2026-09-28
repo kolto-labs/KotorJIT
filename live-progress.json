@@ -1,0 +1,17 @@
+{
+  "preflight": {
+    "run": "20260922-094527",
+    "result": "pass",
+    "scope": "K1 GOG Dantooine gameplay and conscious active party Bastila; no full example claim"
+  },
+  "chaos_baseline": {
+    "run": "20260922-095353",
+    "result": "route_pass",
+    "source": {
+      "cursed/50_chaos_roulette.lua": "954bbe8a7164233b1bf48869f08981a0cb3ac13e474b81aba52b83a44935e905"
+    },
+    "scope": "pre-fix source, real Endar checkpoint, six hostile combat kills, request counter; no final-current-byte or all-random-effect claim",
+    "video": "partial-gameplay.mp4 starts after load; initial capture failed due wrong dimensions",
+    "source_install_unchanged": true
+  }
+}

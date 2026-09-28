@@ -1,0 +1,567 @@
+# Review package: 997a0cf..69291c9
+
+## Commits
+69291c9 test: harden harness staging and live scheduling
+
+## Files changed
+ CMakeLists.txt                            |  3 ++
+ docs/harness-driver.md                    |  7 +++--
+ scripts/harness/gameplay_tests/run_all.sh | 14 +++++----
+ scripts/harness/kpharness/scenario.py     |  5 ++--
+ scripts/harness/kpharness/session.py      | 25 ++++++++++++++--
+ tools/gameplay_scheduler_test.sh          | 47 +++++++++++++++++++++++++++++
+ tools/kpharness_offline_test.py           | 50 +++++++++++++++++++++++++++++++
+ 7 files changed, 140 insertions(+), 11 deletions(-)
+
+## Diff
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 550bebf..e7a7eb8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,20 +27,23 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE
+ # scripts/harness/ stays a separate, explicitly opt-in tier that needs a real
+ # KOTOR install.
+ enable_testing()
+ 
+ # These are offline fake-server/parser gates; no game, Wine or display is launched.
+ find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
+ foreach(gate kpharness_offline_test kpharness_world_test)
+     add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
+     set_tests_properties(${gate} PROPERTIES LABELS "offline;harness" TIMEOUT 300)
+ endforeach()
++add_test(NAME gameplay_scheduler_test
++    COMMAND bash ${CMAKE_SOURCE_DIR}/tools/gameplay_scheduler_test.sh)
++set_tests_properties(gameplay_scheduler_test PROPERTIES LABELS "offline;harness" TIMEOUT 60)
+ 
+ # Classification reads every byte of every section, twice over for the marker
+ # scan. Unoptimised that is a third of a second at load time, inside a game's
+ # startup, so an optimised default is the honest one.
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "build type" FORCE)
+ endif()
+ 
+ set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+diff --git a/docs/harness-driver.md b/docs/harness-driver.md
+index f603fe9..b959efb 100644
+--- a/docs/harness-driver.md
++++ b/docs/harness-driver.md
+@@ -71,21 +71,23 @@ discovery. Environment/config installation candidates still have to pass the
+ existing content checks; an invalid candidate falls through. GLU discovery can
+ return multiple valid directories, ordered by the table above. Staging and Wine
+ prefix keys have no workspace TOML equivalents. These are the existing supported
+ knobs, not a mechanism for adding target capabilities.
+ 
+ ## Driver lifecycle and results
+ 
+ `run NAME_OR_PATH` resolves the route (including `cursed/NAME`), parses and
+ validates its header and declarations before creating the session, stages its
+ typed resources, boots, executes steps, writes `report.json`, and tears down.
+-`--target` overrides the route's session target when explicitly supplied.
++`--target` overrides the route's session target when explicitly supplied. The
++route remains immutable and keeps its authored target; the generated report and
++automatic checkpoint namespace record the effective session target.
+ The stage has writable saves/runtime data and links to installation assets;
+ scenario runs reset the staged saves from their source under the stage lock.
+ The driver never rewrites a route during replay. Resource bytes come from the
+ selected installation via `kq`, verified by size and SHA-256; matching staged
+ bytes can be reused. Failure to obtain or verify bytes aborts before launch.
+ 
+ `boot` leaves a session attached for `state`, `exec`, `events`, `shots`, `reply`,
+ and `down`. Pioneer `init` creates a route, `step` executes against an attached
+ session and records a pending result, and explicit `commit` appends it. Pioneer
+ uses the same validated header and step/resource normalization as replay,
+@@ -101,21 +103,22 @@ for live commands, watchdogs, and recording.
+ ## Offline gate
+ 
+ ### Concurrency policy
+ 
+ `scripts/harness/gameplay_tests/run_all.sh` runs independent host-only checks in
+ parallel by default (`KP_FAST_JOBS=3`). Set `KP_FAST_JOBS` to a smaller positive
+ integer on a constrained machine, or raise it when the checks are known to be
+ CPU- and I/O-safe. Each test keeps its own log and exit status, and the summary
+ is emitted in stable test-list order.
+ 
+-Live game checks are never parallelized by this setting. They remain behind the
++Live game checks, including the `--live-all` work-in-progress group, are never
++parallelized by this setting. They remain behind the
+ single `tmp/harness-locks/live-game.lock` slot because staging, saves, Xvfb,
+ Wine, and the engine process are shared mutable state. Parallel live sessions
+ require separate staged trees, prefixes, displays, and an explicit orchestration
+ layer; the default driver refuses to infer that isolation.
+ 
+ ```sh
+ cmake -S . -B build
+ cmake --build build -j3
+ ctest --test-dir build --output-on-failure
+ ```
+diff --git a/scripts/harness/gameplay_tests/run_all.sh b/scripts/harness/gameplay_tests/run_all.sh
+index 5730065..67b1ba9 100755
+--- a/scripts/harness/gameplay_tests/run_all.sh
++++ b/scripts/harness/gameplay_tests/run_all.sh
+@@ -13,22 +13,26 @@ set -uo pipefail
+ DIR="$(cd "$(dirname "$0")" && pwd)"
+ ROOT="$(cd "$DIR/../../.." && pwd)"
+ 
+ FAST=(test_arbitration.sh test_quarantine.sh)
+ # Live tests whose matching demo_play oracle has been seen on a real boot.
+ LIVE=(test_battle_meditation.sh test_alignment_drift.sh test_enclave_arrival.sh)
+ # Implemented but not release-gated: perception/attacker-direction/companion-HP flakes.
+ LIVE_WIP=(test_sith_patrol_alarm.sh test_ahto_city_law.sh test_party_wounded.sh)
+ 
+ RUN=("${FAST[@]}")
+-[[ "${1:-}" == "--live" ]] && RUN+=("${LIVE[@]}")
+-[[ "${1:-}" == "--live-all" ]] && RUN+=("${LIVE[@]}" "${LIVE_WIP[@]}")
++case "${1:-}" in
++  "") ;;
++  --live) RUN+=("${LIVE[@]}") ;;
++  --live-all) RUN+=("${LIVE[@]}" "${LIVE_WIP[@]}") ;;
++  *) echo "usage: $0 [--live|--live-all]" >&2; exit 2 ;;
++esac
+ 
+ total_pass=0 total_fail=0 failed_tests=()
+ LIVE_LOCK="$ROOT/tmp/harness-locks/live-game.lock"
+ mkdir -p "$ROOT/tmp/harness-locks"
+ FAST_JOBS="${KP_FAST_JOBS:-3}"
+ if ! [[ "$FAST_JOBS" =~ ^[1-9][0-9]*$ ]]; then
+   echo "KP_FAST_JOBS must be a positive integer (got '$FAST_JOBS')" >&2
+   exit 2
+ fi
+ 
+@@ -46,54 +50,54 @@ reap_one_fast() {
+     [[ -e "$pid_file" ]] || continue
+     pid=$(cat "$pid_file")
+     wait "$pid" 2>/dev/null || true
+     rm -f "$pid_file"
+     fast_count=$((fast_count-1))
+     return
+   done
+ }
+ for t in "${RUN[@]}"; do
+   is_live=0
+-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
++  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+   [[ "$is_live" -eq 0 ]] || continue
+   while (( fast_count >= FAST_JOBS )); do
+     reap_one_fast
+   done
+   echo "=== $t (parallel host-only) ==="
+   log="$fast_tmp/$t.log"
+   (bash "$DIR/$t" >"$log" 2>&1; echo "$?" >"$fast_tmp/$t.status") &
+   echo "$!" >"$fast_tmp/$t.pid"
+   fast_count=$((fast_count+1))
+ done
+ while (( fast_count > 0 )); do
+   reap_one_fast
+ done
+ for t in "${RUN[@]}"; do
+   is_live=0
+-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
++  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+   [[ "$is_live" -eq 0 ]] || continue
+   log="$fast_tmp/$t.log"
+   cat "$log"
+   status=$(cat "$fast_tmp/$t.status")
+   if [[ "$status" == 0 ]]; then
+     total_pass=$((total_pass+1))
+   else
+     total_fail=$((total_fail+1))
+     failed_tests+=("$t")
+   fi
+   echo
+ done
+ 
+ # Live tests are intentionally serial, regardless of KP_FAST_JOBS.
+ for t in "${RUN[@]}"; do
+   is_live=0
+-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
++  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+   [[ "$is_live" -eq 1 ]] || continue
+   echo "=== $t ==="
+   if [[ "$is_live" -eq 1 ]]; then
+     exec 9>"$LIVE_LOCK"
+     flock 9 || { echo "another live gameplay test holds $LIVE_LOCK" >&2; exit 1; }
+   fi
+   if bash "$DIR/$t"; then
+     total_pass=$((total_pass+1))
+   else
+     total_fail=$((total_fail+1))
+diff --git a/scripts/harness/kpharness/scenario.py b/scripts/harness/kpharness/scenario.py
+index 3242e03..b35ec5f 100644
+--- a/scripts/harness/kpharness/scenario.py
++++ b/scripts/harness/kpharness/scenario.py
+@@ -463,25 +463,26 @@ class ScenarioRunner:
+         self.shooter = shooter
+         if self.shooter is None and getattr(session, "game_dir", None):
+             self.shooter = Shooter(channel, Path(session.game_dir), self.run_dir,
+                                    interval=float(s["shot_interval"]), log=self.log)
+         self.watchdog = watchdog or Watchdog(
+             session, channel, hang_seconds=float(s["hang_seconds"]),
+             load_seconds=float(s["load_seconds"]),
+             load_tick_seconds=float(s["load_tick_seconds"]),
+             stagnation_seconds=float(s["stagnation_seconds"]), log=self.log, shooter=self.shooter)
+         self.checkpoints = checkpoints
++        effective_target = getattr(getattr(session, "target", None), "name", scenario.target)
+         if self.checkpoints is None and getattr(session, "save_dir", None):
+             from . import targets as T
+-            self.checkpoints = Checkpoints(T.get(scenario.target), Path(session.save_dir))
++            self.checkpoints = Checkpoints(T.get(effective_target), Path(session.save_dir))
+         self.mark_seq = 0
+-        self.report = Report(scenario=scenario.name, target=scenario.target,
++        self.report = Report(scenario=scenario.name, target=effective_target,
+                              build=str(getattr(session, "build", "")),
+                              run_dir=str(self.run_dir), started=time.time())
+ 
+     # ----------------------------------------------------------- helpers --
+     def sync_cursor(self) -> int:
+         """Advance the cursor to the runtime's latest seq."""
+         for _ in range(64):
+             items = self.ch.events(since=self.ch.cursor, limit=500)
+             if not items:
+                 break
+diff --git a/scripts/harness/kpharness/session.py b/scripts/harness/kpharness/session.py
+index 9a4e75a..bb20e3b 100644
+--- a/scripts/harness/kpharness/session.py
++++ b/scripts/harness/kpharness/session.py
+@@ -333,20 +333,24 @@ def write_runtime_ini(game_dir: Path, port: int, bind: str = "127.0.0.1") -> Pat
+ def proxy_is_ours(dll: Path) -> bool:
+     """The proxy is small and names kphasor; the real codec is ~370 KB."""
+     try:
+         if dll.stat().st_size >= 200000:
+             return False
+         return b"kphasor.dll" in dll.read_bytes()
+     except OSError:
+         return False
+ 
+ 
++RUNTIME_WRITTEN_FILES = {"kphasor.dll", "steam_appid.txt", "kotorphasor.log",
++                         "kotorphasor-proxy.log"}
++
++
+ def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
+                  depth: int = 0, log: Log = _quiet) -> None:
+     """Symlink `src`'s entries into `dst`; real copies for `writable` dirs.
+ 
+     Top-level files are copied when `copy_files` (the ELF and its bundled
+     libraries must sit in a real directory next to each other; RPATH is
+     ".") and symlinked otherwise. Writable directories are copied so the
+     game finds its existing saves and can add to them without touching the
+     install.
+     """
+@@ -355,21 +359,22 @@ def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
+         target = dst / entry.name
+         if target.exists() or target.is_symlink():
+             continue
+         if entry.is_dir():
+             if entry.name.lower() in [w.lower() for w in writable]:
+                 shutil.copytree(entry, target, symlinks=True)
+                 log(f"  copied writable dir {entry.name}")
+             else:
+                 target.symlink_to(entry)
+         else:
+-            if copy_files or entry.suffix.lower() == ".ini":
++            if (copy_files or entry.suffix.lower() == ".ini"
++                    or entry.name.lower() in RUNTIME_WRITTEN_FILES):
+                 shutil.copy2(entry, target)
+             else:
+                 target.symlink_to(entry)
+ 
+ 
+ # ---------------------------------------------------------------- session --
+ 
+ @dataclass
+ class SessionInfo:
+     """What `boot` leaves behind so `status`, `exec` and `down` can find it."""
+@@ -504,20 +509,23 @@ class GameSession:
+             return shared
+         return self.root / "tmp" / f"wineprefix-{self.target.name}"
+ 
+     def stage(self, resources: Optional[List[Resource]] = None) -> None:
+         """Make tmp/<target>_harness/ usable: overlay, runtime, inis."""
+         t = self.target
+         data = discover.data_dir(t)
+         self.data_dir = data
+         install = discover.install_root(t, data)
+         staged = self.staged
++        if staged == install.resolve() or staged == data.resolve():
++            raise BootFailure("unsafe staged tree",
++                              f"staged tree must differ from source install: {staged}")
+         fresh = not staged.is_dir()
+         staged.mkdir(parents=True, exist_ok=True)
+         self.run_dir.mkdir(parents=True, exist_ok=True)
+         self._session_log = open(self.run_dir / "session.log", "a")
+         self.log(f"target {t.name}: data {data}")
+         self.log(f"staged tree {staged}{' (new)' if fresh else ' (reused)'}")
+ 
+         if t.name == "k1":
+             if fresh:
+                 overlay_tree(install, staged, list(t.writable_dirs), copy_files=False, log=self.log)
+@@ -547,20 +555,30 @@ class GameSession:
+ 
+         for d in t.writable_dirs:
+             p = self.game_dir / d
+             if p.is_symlink():
+                 # An older overlay linked it; the game must write here.
+                 real = p.resolve()
+                 p.unlink()
+                 shutil.copytree(real, p, symlinks=True)
+             p.mkdir(parents=True, exist_ok=True)
+ 
++        # Older overlay versions linked every non-INI file. Materialize files
++        # that the loader/runtime write before those writes can reach source.
++        for name in RUNTIME_WRITTEN_FILES:
++            p = self.game_dir / name
++            if p.is_symlink():
++                source = p.resolve()
++                p.unlink()
++                if source.is_file():
++                    shutil.copy2(source, p)
++
+         exe = self._ensure_executable(install)
+         self.log(f"executable {exe}")
+         self._install_runtime()
+         self._tune_inis()
+         if t.steam_appid:
+             (exe.parent / "steam_appid.txt").write_text(t.steam_appid + "\n")
+ 
+     def _reset_k1_saves(self, install: Path) -> None:
+         """Replace the reused K1 staging save tree with the source baseline."""
+         assert self.game_dir is not None
+@@ -767,21 +785,24 @@ class GameSession:
+             if not proxy.exists() and not proxy.is_symlink():
+                 raise BootFailure("not a game directory", f"no binkw32.dll in {gd}")
+             if not real.exists():
+                 if proxy_is_ours(proxy):
+                     raise BootFailure("install state", "binkw32.dll is the proxy but "
+                                       "binkw32_real.dll is missing")
+                 shutil.copy2(proxy, real)
+                 self.log("saved original binkw32.dll -> binkw32_real.dll")
+             if proxy.is_symlink():
+                 proxy.unlink()
+-            shutil.copy2(self.build_dir / "kphasor.dll", gd / "kphasor.dll")
++            runtime_dll = gd / "kphasor.dll"
++            if runtime_dll.is_symlink():
++                runtime_dll.unlink()
++            shutil.copy2(self.build_dir / "kphasor.dll", runtime_dll)
+             shutil.copy2(self.build_dir / "binkw32.dll", proxy)
+         else:
+             shutil.copy2(self.build_dir / "libkphasor.so", kp / "libkphasor.so")
+             if t.name == "k2-native":
+                 self._install_k2_libglu(kp)
+         addr = kp / "addresses"
+         if addr.is_symlink():
+             addr.unlink()
+         elif addr.is_dir():
+             shutil.rmtree(addr)
+diff --git a/tools/gameplay_scheduler_test.sh b/tools/gameplay_scheduler_test.sh
+new file mode 100644
+index 0000000..04a9afe
+--- /dev/null
++++ b/tools/gameplay_scheduler_test.sh
+@@ -0,0 +1,47 @@
++#!/usr/bin/env bash
++set -euo pipefail
++
++ROOT="$(cd "$(dirname "$0")/.." && pwd)"
++TMP="$(mktemp -d)"
++trap 'rm -rf "$TMP"' EXIT
++DIR="$TMP/a/b/c/gameplay_tests"
++mkdir -p "$DIR"
++cp "$ROOT/scripts/harness/gameplay_tests/run_all.sh" "$DIR/run_all.sh"
++
++names=(test_arbitration.sh test_quarantine.sh test_battle_meditation.sh
++  test_alignment_drift.sh test_enclave_arrival.sh test_sith_patrol_alarm.sh
++  test_ahto_city_law.sh test_party_wounded.sh)
++for name in "${names[@]}"; do
++  cat >"$DIR/$name" <<'EOF'
++#!/usr/bin/env bash
++set -eu
++name="$(basename "$0")"
++if [[ "$name" != test_arbitration.sh && "$name" != test_quarantine.sh ]]; then
++  mkdir "${TRACE_DIR}/live-active" 2>/dev/null || { echo overlap >&2; exit 9; }
++  printf 'live:%s\n' "$name" >>"${TRACE_DIR}/trace"
++  sleep 0.03
++  rmdir "${TRACE_DIR}/live-active"
++else
++  printf 'fast:%s\n' "$name" >>"${TRACE_DIR}/trace"
++fi
++EOF
++  chmod +x "$DIR/$name"
++done
++
++run_case() {
++  local expected=$1; shift
++  : >"$TMP/trace"
++  TRACE_DIR="$TMP" KP_FAST_JOBS=8 bash "$DIR/run_all.sh" "$@" >/dev/null
++  [[ "$(wc -l <"$TMP/trace")" -eq "$expected" ]]
++}
++run_case 2
++run_case 5 --live
++run_case 8 --live-all
++
++if TRACE_DIR="$TMP" KP_FAST_JOBS=0 bash "$DIR/run_all.sh" >/dev/null 2>&1; then
++  echo "invalid KP_FAST_JOBS was accepted" >&2; exit 1
++fi
++if TRACE_DIR="$TMP" bash "$DIR/run_all.sh" --bogus >/dev/null 2>&1; then
++  echo "invalid mode was accepted" >&2; exit 1
++fi
++echo "gameplay scheduler regression: PASS"
+diff --git a/tools/kpharness_offline_test.py b/tools/kpharness_offline_test.py
+index 79c8e5f..560542d 100755
+--- a/tools/kpharness_offline_test.py
++++ b/tools/kpharness_offline_test.py
+@@ -356,20 +356,21 @@ class FakeServer(threading.Thread):
+ 
+ class FakeSession:
+     """What the Watchdog and the runner need from a session."""
+ 
+     def __init__(self, game: FakeGame, run_dir: Path, save_dir: Path):
+         self.game = game
+         self.run_dir = run_dir
+         self.game_dir = game.game_dir
+         self.save_dir = save_dir
+         self.build = game.build
++        self.target = T.get("k1")
+         self.alive = True
+         self.stderr = ""
+         self.rtlog = ""
+         self.dumps = 0
+ 
+     def process_alive(self):
+         return self.alive
+ 
+     def read_new_stderr(self):
+         s, self.stderr = self.stderr, ""
+@@ -964,20 +965,28 @@ do = "sleep"; seconds = 0
+ 
+     def _runner(self, text, **settings):
+         sc = Scenario.parse(text)
+         sc.settings.update(settings)
+         cps = Checkpoints(T.get("k1"), self.save_dir, self.tmp / "checkpoints")
+         logs = []
+         r = ScenarioRunner(sc, self.session, self.ch, log=logs.append, checkpoints=cps)
+         r.watchdog.hang_seconds = 5.0
+         return r, logs
+ 
++    def test_runner_uses_effective_session_target_for_report_and_fallback_checkpoints(self):
++        sc = Scenario.parse('target="k1"\n[[step]]\ndo="quit"\n')
++        self.session.target = T.get("k2-native")
++        runner = ScenarioRunner(sc, self.session, self.ch, log=lambda _: None)
++        self.assertEqual(sc.target, "k1")
++        self.assertEqual(runner.report.target, "k2-native")
++        self.assertEqual(runner.checkpoints.target.name, "k2-native")
++
+     def test_runner_end_to_end_pass(self):
+         text = '''
+ name = "offline"
+ target = "k1"
+ [settings]
+ shot_interval = 0
+ [[step]]
+ do = "load_save"; dir = "000001 - AUTOSAVE"
+ [[step]]
+ do = "sleep"; seconds = 0
+@@ -2464,20 +2473,24 @@ class TestStaging(unittest.TestCase):
+         self.tmp = Path(tempfile.mkdtemp(prefix="kpharness_stage_"))
+         inst = self.tmp / "install"
+         (inst / "modules").mkdir(parents=True)
+         (inst / "modules" / "end_m01aa.rim").write_bytes(b"rim")
+         (inst / "Saves" / "000001 - AUTOSAVE").mkdir(parents=True)
+         (inst / "Saves" / "000001 - AUTOSAVE" / "SAVEGAME.sav").write_bytes(b"s")
+         (inst / "Saves" / "000001 - AUTOSAVE" / "SAVENFO.res").write_bytes(b"source-info")
+         (inst / "chitin.key").write_bytes(b"KEY V1  ")
+         (inst / "swkotor.exe").write_bytes(b"MZ")
+         (inst / "binkw32.dll").write_bytes(b"\0" * 300000)     # the real codec, by size
++        (inst / "kphasor.dll").write_bytes(b"source-runtime")
++        (inst / "steam_appid.txt").write_text("source-appid\n")
++        (inst / "kotorphasor.log").write_text("source-runtime-log\n")
++        (inst / "kotorphasor-proxy.log").write_text("source-proxy-log\n")
+         (inst / "swkotor.ini").write_text("[Game Options]\nEnableCheats=0\n"
+                                           "[Graphics Options]\nFullScreen=1\nFrame Buffer=1\n")
+         build = self.tmp / "build"
+         build.mkdir()
+         (build / "kphasor.dll").write_bytes(b"dll")
+         (build / "binkw32.dll").write_bytes(b"proxy kphasor.dll")
+         self.inst, self.build = inst, build
+         self.saved_env = {k: os.environ.get(k) for k in ("KOTOR1_DIR", "KP_BUILD_DIR")}
+         os.environ["KOTOR1_DIR"] = str(inst)
+         os.environ["KP_BUILD_DIR"] = str(build)
+@@ -2518,20 +2531,44 @@ class TestStaging(unittest.TestCase):
+         self.assertIn("harness_port = 27015", (staged / "kotorphasor.ini").read_text())
+         self.assertEqual((self.inst / "swkotor.ini").read_text().count("EnableCheats=1"), 0)
+         self.assertTrue((s.run_dir / "session.log").is_file())
+         # A second stage() on the same tree is a no-op for the overlay and
+         # re-installs the runtime without complaint.
+         s2 = GameSession("k1", staged=str(staged), log=logs.append)
+         s2.stage()
+         s2._session_log.close()
+         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
+ 
++    def test_stage_preserves_runtime_written_source_files_and_repairs_legacy_links(self):
++        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.log", "kotorphasor-proxy.log")
++        before = {name: (self.inst / name).read_bytes() for name in names}
++        staged = self.tmp / "legacy-links"
++        staged.mkdir()
++        for entry in self.inst.iterdir():
++            (staged / entry.name).symlink_to(entry)
++
++        s = GameSession("k1", staged=str(staged), log=lambda _: None)
++        s.stage()
++        s._session_log.close()
++        for name in names:
++            self.assertFalse((staged / name).is_symlink(), name)
++            self.assertEqual((self.inst / name).read_bytes(), before[name], name)
++        self.assertEqual((staged / "kphasor.dll").read_bytes(), b"dll")
++        self.assertEqual((staged / "steam_appid.txt").read_text(), "32370\n")
++
++    def test_stage_refuses_source_install_even_through_symlink(self):
++        alias = self.tmp / "install-alias"
++        alias.symlink_to(self.inst)
++        s = GameSession("k1", staged=str(alias), log=lambda _: None)
++        with self.assertRaisesRegex(BootFailure, "staged tree must differ"):
++            s.stage()
++
+     def test_reset_saves_restores_k1_source_baseline(self):
+         staged = self.tmp / "k1_reset_harness"
+         original = self.inst / "Saves" / "000001 - AUTOSAVE"
+         initial = GameSession("k1", staged=str(staged), log=lambda _: None)
+         initial.stage()
+         initial._session_log.close()
+         staged_save = staged / "Saves" / "000001 - AUTOSAVE"
+         (staged_save / "SAVEGAME.sav").write_bytes(b"mutated")
+         (staged / "Saves" / "999999 - GENERATED").mkdir()
+         (staged / "Saves" / "999999 - GENERATED" / "SAVEGAME.sav").write_bytes(b"generated")
+@@ -2842,20 +2879,33 @@ class TestConfigurationContracts(unittest.TestCase):
+             with mock.patch.object(cli, "GameSession") as session, contextlib.redirect_stderr(io.StringIO()):
+                 session.return_value.boot.side_effect = BootFailure("test stop before launch")
+                 self.assertEqual(cli.main(["run", str(path)]), 2)
+                 self.assertEqual(session.return_value.boot.call_args.kwargs["resources"],
+                                  list(Scenario.load(path).resources.values()))
+                 session.reset_mock()
+                 path.write_text('target="k1"\n[execution]\ngame_speed=false\n[[step]]\ndo="quit"\n')
+                 self.assertEqual(cli.main(["run", str(path)]), 3)
+                 session.assert_not_called()
+ 
++    def test_cli_reports_malformed_workspace_configuration_as_invalid_input(self):
++        import contextlib
++        import io
++        from kpharness import cli
++        with tempfile.TemporaryDirectory() as directory:
++            base = Path(directory)
++            (base / "kotorphasor.toml").write_text("[broken")
++            stderr = io.StringIO()
++            with mock.patch.object(Path, "cwd", return_value=base), \
++                    contextlib.redirect_stderr(stderr):
++                self.assertEqual(cli.main(["status"]), 3)
++            self.assertIn("kotorphasor.toml", stderr.getvalue())
++
+     def test_shared_header_validation_including_empty_pioneer_route(self):
+         with tempfile.TemporaryDirectory() as directory:
+             route = Path(directory) / "route.toml"
+             for text in ('target="k1"\n[execution]\ngame_speed=0',
+                          'target="k1"\n[settings]\nauthored_barks=[true]',
+                          'target="k1"\n[execution]\nload_timeout="slow"',
+                          'target="k1"\n[settings]\nunknown=1',
+                          'target="k1"\n[settings]\n[execution]',
+                          'target="k9"', 'target="k1"\nschema_version=true',
+                          'target="k1"\nstep=[1]', 'target="k1"\nresources=[]'):

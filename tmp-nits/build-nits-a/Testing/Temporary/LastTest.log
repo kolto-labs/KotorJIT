@@ -1,0 +1,51 @@
+Start testing: Sep 27 19:46 CDT
+----------------------------------------------------------
+7/36 Testing: kp_machotest
+7/36 Test: kp_machotest
+Command: "/home/brunner56/kp-live-20260922/tmp-nits/build-nits-a/kp_machotest"
+Directory: /home/brunner56/kp-live-20260922/tmp-nits/build-nits-a
+"kp_machotest" start time: Sep 27 19:46 CDT
+Output:
+----------------------------------------------------------
+PASS 27808 checks
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"kp_machotest" end time: Sep 27 19:46 CDT
+"kp_machotest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/36 Testing: kp_imagetool_macho_test
+8/36 Test: kp_imagetool_macho_test
+Command: "/home/brunner56/.local/bin/python3.14" "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_imagetool_macho_test.py" "/home/brunner56/kp-live-20260922/tmp-nits/build-nits-a/kp_imagetool"
+Directory: /home/brunner56/kp-live-20260922/tmp-nits/build-nits-a
+"kp_imagetool_macho_test" start time: Sep 27 19:46 CDT
+Output:
+----------------------------------------------------------
+PASS synthetic Mach-O CLI32/64, hashes, spans, malformed and unsupported modes
+<end of output>
+Test time =  11.03 sec
+----------------------------------------------------------
+Test Passed.
+"kp_imagetool_macho_test" end time: Sep 27 19:47 CDT
+"kp_imagetool_macho_test" time elapsed: 00:00:11
+----------------------------------------------------------
+
+11/36 Testing: kp_hooktool_x64.selftest
+11/36 Test: kp_hooktool_x64.selftest
+Command: "/home/brunner56/kp-live-20260922/tmp-nits/build-nits-a/kp_hooktool_x64" "selftest"
+Directory: /home/brunner56/kp-live-20260922/tmp-nits/build-nits-a
+"kp_hooktool_x64.selftest" start time: Sep 27 19:47 CDT
+Output:
+----------------------------------------------------------
+PASS 656 checks
+<end of output>
+Test time =   0.56 sec
+----------------------------------------------------------
+Test Passed.
+"kp_hooktool_x64.selftest" end time: Sep 27 19:47 CDT
+"kp_hooktool_x64.selftest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 27 19:47 CDT

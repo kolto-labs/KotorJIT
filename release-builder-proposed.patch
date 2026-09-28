@@ -1,0 +1,250 @@
+Proposed release-builder patch (NOT APPLIED). Written 2026-09-27 for the publication-boundary round;
+revised the same day (follow-up round: P-1, P-2 and the assert note; nits round: 11 more ACCEPTED
+entries per progress.md:286's "accept the 11" ruling, ACCEPTED now 16 keys).
+
+Target: /home/brunner56/kp-release-20260927/  (package.py plus five CMake files in its source/ export)
+Apply only after owner review, into a FRESH copy of the release folder (package.py refuses an existing
+package/ and ZIP):   cd <fresh copy> && patch -p1 --dry-run < release-builder-proposed.patch
+Checked with `patch -p1 --dry-run` against a /tmp copy of the 0927 inputs (6 files, clean). Nothing under
+kp-release-* was touched.
+
+What it changes
+ package.py
+  - Refuses to run under python -O or PYTHONOPTIMIZE (`if not __debug__: raise SystemExit`). Every
+    acceptance check in this script is an assert, and -O removes asserts (review P-2).
+  - Loads the hardened scanner (worktree tools/scan_release_zip.py, override with KP_SCANNER) and runs
+    scanner.scan() on the finished ZIP as a mandatory gate. The ZIP is written as *.zip.unscanned and is
+    renamed to the release name only when every finding is in ACCEPTED (16 reviewed exceptions, each with a
+    reason: 5 from triage F3/F5/F8/F9, plus 11 /tmp findings accepted per the boundary-followup ruling in
+    progress.md:286). verification.json gains privacy_scan, the accepted list and scanner_sha256.
+  - The gate, the program-binary check and the ZIP-unchanged check exit with `raise SystemExit(...)`, not
+    assert, so they hold even if the -O guard above is removed (review P-2).
+  - Tar headers: uid=gid=0, uname=gname='', mtime=SOURCE_DATE_EPOCH (default 1790467200 =
+    2026-09-27T00:00Z), mode 0644/0755. Gzip header: no file name, fixed mtime (triage M1, R5).
+  - Excludes third_party/luajit/src/host/minilua, data/codecaves.toml and data/events.draft.toml
+    (ruling 3; triage F6, F10, M2), and stops on any other ELF/PE/Mach-O/wasm bytes in the tarball (R3).
+  - The receipt no longer lists private exclusion names (.superpowers/... etc.): they are counted and
+    hashed instead (triage F2, R6).
+ CMake (every i686-w64-mingw32-g++ custom command; add_compile_options does not reach them)
+  - Compile lines gain, exactly:
+        -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
+        -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+    at CMakeLists.txt:94, src/hooks/hooks.cmake:92, src/api/structs.cmake:117,
+       src/runtime/runtime.cmake:111, src/proxy/proxy.cmake:31  (line numbers in the ca329e5 export)
+  - Link lines gain -s:  src/runtime/runtime.cmake:129 (kphasor.dll), src/proxy/proxy.cmake:31 (binkw32.dll)
+  - No -DNDEBUG (orchestrator ruling: keep asserts). The maps and -s alone remove the paths. A verification
+    rebuild of the 0927 source with exactly these flags (release-rebuild-verify.md) took kphasor.dll from 18
+    scratch-root path strings to 0, and binkw32.dll had 0 before and after. The 18 ImGui IM_ASSERT __FILE__
+    strings stay, mapped to ./..., and msvcrt!_assert is still imported. Imports, exports and .text/.data/
+    .bss sizes are identical. -s renames .eh_frame to .eh_fram (C++ exceptions still caught in a wine DLL
+    test) and drops the 4-byte .sxdata.
+  - Correction to the earlier note: the project has no runtime assert() of its own. `grep -rnE
+    '(^|[^_a-z])assert\(' src | grep -v static_assert` finds nothing, and no source includes <cassert> or
+    <assert.h>. src/hooks/trampoline.hpp:46 is a static_assert, which NDEBUG does not affect. The only runtime
+    asserts in kphasor.dll are ImGui's IM_ASSERT (→ assert → _assert), and NDEBUG would have turned those off.
+  - Not covered: src/api/entity.cmake:90 and src/api/support.cmake:110 also call KP_MINGW_CXX, but neither
+    object is linked into kphasor.dll or binkw32.dll (runtime.cmake:131-132). They need the same flags only if
+    their objects ever ship.
+
+Trial on a /tmp copy of the 20260927 inputs (existing DLLs, not rebuilt), with the follow-up scanner:
+  exit 1, ZIP held as *.zip.unscanned, no release-named ZIP. The gate found 26 findings. This trial's own
+  numbers (16 ACCEPTED keys matched, blocked on 10) are derived, not re-run: with the 11 /tmp entries below
+  now in ACCEPTED (nits round, progress.md:286's "accept the 11" ruling), the 11 x "/tmp/" line that used to
+  block is gone, leaving the same 10 that were already unresolved before this round:
+    9 x kphasor.dll "/home/" (the shipped DLL predates the CMake flags above; a rebuild clears them)
+    1 x source/scripts/harness/scenarios/k1_fresh_trask_quest.toml:141 "run id" (runs/20260915-071620;
+        edit the comment in the repo, or the owner adds it to ACCEPTED)
+    (formerly also blocked, now in ACCEPTED) 11 x "/tmp/" in source.tar.gz (the scanner flags /tmp/ and
+        /var/tmp/ paths). None names a user or a build tree, so the boundary-followup ruling accepted all
+        11 rather than editing upstream/self-test sources: .gitignore:12 (ignore rule "/tmp/") and :29
+        (comment), scripts/harness/harness_paths.sh:43 (df/du hint), third_party/luajit/doc/install.html:568
+        (upstream DESTDIR example), third_party/luajit/src/lib_os.c:86 and lj_trace.c:92,113 (upstream
+        tmpnam and perf map), tools/kp_hooktool.cpp:678,679 and tools/kp_namespacetest.cpp:140 (self-test
+        scratch files), tools/tests/examples/evidence_test.py:73 (a rejected-path test case)
+  Tar: 603 members (606 minus 3 held back), all ('', '', 0, 0), mtime 1790467200.
+  Under python3 -O: exit 1 at the __debug__ guard, nothing written. With the guard line deleted, under -O:
+  exit 1 at the gate, only *.zip.unscanned. The earlier revision of this patch, under -O, exited 0 and
+  wrote the release-named ZIP past the failing gate.
+
+Note for /home/brunner56/kp-release-20260922/package.py (not patched here; the 0922 ZIP is superseded):
+  The same five CMake files are byte-identical in the 0922 export (cmp), so the CMake hunks apply to
+  /home/brunner56/kp-release-20260922/source unchanged. Its package.py has the same shape at other lines:
+  source_allowed :11-20 (add the same three exclusions), the tar loop :52-59 (same header normalization),
+  receipt :60, ZIP write :64-68 (same holding name + scanner gate with explicit exits, and the -O guard;
+  the 0922 builder has no CRC check, so add the testzip/manifest re-read too). It also copies
+  live-acceptance.json (:47), which in 0922 holds run_directory=/home/... (triage F11); the gate now blocks
+  that, so strip the field before copying.
+
+diff -ru a/package.py b/package.py
+--- a/package.py	2026-09-27 00:17:47.525608559 -0500
++++ b/package.py	2026-09-27 18:45:46.983254776 -0500
+@@ -1,6 +1,33 @@
+ from pathlib import Path
+-import hashlib, io, json, shutil, tarfile, zipfile
++import gzip, hashlib, importlib.util, io, json, os, shutil, tarfile, zipfile
++# Every acceptance check below is an assert, and python -O or PYTHONOPTIMIZE removes asserts. Refuse to run
++# without them. The privacy gate further down also exits on its own, without assert (review P-2).
++if not __debug__:raise SystemExit('package.py needs its assert checks; run it without python -O or PYTHONOPTIMIZE')
+ r=Path(__file__).resolve().parent
++# Mandatory privacy gate: the hardened scanner from the reviewed worktree, pinned by path, hashed into
++# verification.json. The ca329e5 export's own tools/scan_release_zip.py predates the tar-owner checks.
++SCANNER=Path(os.environ.get('KP_SCANNER','/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/scan_release_zip.py'))
++_spec=importlib.util.spec_from_file_location('scan_release_zip',SCANNER);scanner=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(scanner)
++SOURCE_DATE_EPOCH=int(os.environ.get('SOURCE_DATE_EPOCH','1790467200'))  # 2026-09-27T00:00:00Z
++# Reviewed exceptions: (entry, kind, detail) -> reason. Anything else the scanner reports fails the build.
++ACCEPTED={
++    ('kotorphasor-preview/source.tar.gz!source/.gitignore','marker','line 40: .worktrees'):'ignore pattern, not a path (triage F5)',
++    ('kotorphasor-preview/source.tar.gz!source/data/research/phasor_structs.json','private folder','research'):'structs.cmake build input (triage F3, receipt research_exception)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/img/contact.png','magic','magic: png'):'upstream LuaJIT doc image (triage F8)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html','marker','line 165: /home/'):'upstream example PREFIX=/home/myself (triage F9)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html','marker','line 189: /home/'):'upstream example PREFIX=/home/myself (triage F9)',
++    ('kotorphasor-preview/source.tar.gz!source/.gitignore','marker','line 12: /tmp/'):'ignore rule for /tmp/, not a path (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/.gitignore','marker','line 29: /tmp/'):'comment mentioning /tmp/, not a path (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/scripts/harness/harness_paths.sh','marker','line 43: /tmp/'):'df/du hint text, not a path (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html','marker','line 568: /tmp/'):'upstream LuaJIT DESTDIR example (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_os.c','marker','line 86: /tmp/'):'upstream LuaJIT tmpnam() fallback (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.c','marker','line 92: /tmp/'):'upstream LuaJIT perf map path (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.c','marker','line 113: /tmp/'):'upstream LuaJIT perf map path (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool.cpp','marker','line 678: /tmp/'):'self-test scratch file path, not a build tree (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool.cpp','marker','line 679: /tmp/'):'self-test scratch file path, not a build tree (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/tools/kp_namespacetest.cpp','marker','line 140: /tmp/'):'self-test scratch file path, not a build tree (boundary-followup ruling: accept the 11)',
++    ('kotorphasor-preview/source.tar.gz!source/tools/tests/examples/evidence_test.py','marker','line 73: /tmp/'):"a rejected-path test case's literal, not a real path (boundary-followup ruling: accept the 11)",
++}
+ s=r/'source';b=r/'build';p=r/'package'
+ acceptance=json.loads((r/'live-acceptance.json').read_text())
+ assert acceptance['k1']['result']=='passed' and acceptance['k2']['result']=='passed'
+@@ -35,9 +51,11 @@
+     if '.git' in parts or '__pycache__' in parts:return False
+     if name.startswith('data/adjudication/'):return False
+     if name.startswith('data/research/') and name!='data/research/phasor_structs.json':return False
++    # Held back from every package pending the owner decision on retail instruction bytes (triage F6, M2).
++    if name in {'data/codecaves.toml','data/events.draft.toml'}:return False
+     if rel.suffix.lower() in retail|build_outputs:return False
+     if parts[0]=='third_party' and parts[1] not in {'luajit','imgui'}:return False
+-    if name in {'third_party/luajit/src/luajit','third_party/luajit/src/host/buildvm'}:return False
++    if name in {'third_party/luajit/src/luajit','third_party/luajit/src/host/buildvm','third_party/luajit/src/host/minilua'}:return False
+     return True
+ def clean_bytes(f, name):
+     data=k2bytes if f==s/'data/addresses/k2_gog_aspyr.json' else f.read_bytes()
+@@ -77,26 +95,44 @@
+ a=p/'kotorphasor/addresses';a.mkdir(parents=True)
+ for name in ('k1_gog_103.json','k2_gog_aspyr.json'):
+     (a/name).write_bytes(clean_bytes(s/'data/addresses'/name,'kotorphasor/addresses/'+name))
+-with tarfile.open(p/'source.tar.gz','w:gz') as tf:
++# No owner, host time or file name in the gzip or tar headers (triage M1, R5).
++with open(p/'source.tar.gz','xb') as raw_tgz, gzip.GzipFile(filename='',fileobj=raw_tgz,mode='wb',mtime=SOURCE_DATE_EPOCH) as gz, tarfile.open(fileobj=gz,mode='w',format=tarfile.PAX_FORMAT) as tf:
+     for f in files:
+         if not f.is_file():continue
+         rel=f.relative_to(s)
+         if not source_allowed(rel):excluded.append(rel.as_posix());continue
+         data=clean_bytes(f,'source/'+rel.as_posix())
++        # Any other host program stops the build for review (triage R3).
++        if scanner.magic_kind(data) in {'elf','pe/dos','mach-o','wasm'}:raise SystemExit('program binary in source: '+rel.as_posix())
+         info=tf.gettarinfo(str(f),arcname='source/'+rel.as_posix());info.size=len(data)
++        info.uid=info.gid=0;info.uname=info.gname='';info.mtime=SOURCE_DATE_EPOCH
++        info.mode=0o755 if info.mode&0o111 else 0o644
+         tf.addfile(info,io.BytesIO(data));source_hashes[rel.as_posix()]=hashlib.sha256(data).hexdigest()
+-receipt={'exclusions':excluded,'sanitizations':sanitized,'source_files_sha256':source_hashes,'research_exception':'data/research/phasor_structs.json retained because structs.cmake requires it to regenerate the shipped layout table','scope':'No retail assets; private corpus files and research reports excluded. Descriptive private path metadata removed from packaged JSON only; build source unchanged.'}
++# The receipt ships: private or marked exclusion names are counted and hashed, not listed (triage F2, R6).
++markers=scanner.privacy_markers()
++withheld=sorted(x for x in excluded if scanner.private_part(x) or scanner.path_scan(x,x.encode(),markers))
++listed=[x for x in excluded if x not in set(withheld)]
++excluded_record={'listed':listed,'withheld_count':len(withheld),'withheld_sha256':hashlib.sha256('\n'.join(withheld).encode()).hexdigest()}
++receipt={'exclusions':excluded_record,'sanitizations':sanitized,'source_files_sha256':source_hashes,'research_exception':'data/research/phasor_structs.json retained because structs.cmake requires it to regenerate the shipped layout table','scope':'No retail assets; private corpus files and research reports excluded. Descriptive private path metadata removed from packaged JSON only; build source unchanged.'}
+ (p/'packaging-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+ manifest={'scope':'K1/K2 GOG Windows preview tested under Wine; K1 44 checks; K2 one copied save and eight physical-console commands with mixed Steam assets and empty Override; native Windows and Mac unverified','files':{str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(p.rglob('*')) if f.is_file()}}
+ (p/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+ z=r/'kotorphasor-k1-k2-gog-console-preview.zip'
+-with zipfile.ZipFile(z,'x',compression=zipfile.ZIP_DEFLATED) as out:
++# Written under a holding name; it takes the release name only after the privacy gate passes.
++held=z.with_name(z.name+'.unscanned')
++with zipfile.ZipFile(held,'x',compression=zipfile.ZIP_DEFLATED) as out:
+     for f in sorted(p.rglob('*')):
+         if f.is_file():out.write(f,arcname='kotorphasor-preview/'+str(f.relative_to(p)))
+-(r/'zip-sha256.txt').write_text(hashlib.sha256(z.read_bytes()).hexdigest()+'  '+z.name+'\n')
+-with zipfile.ZipFile(z) as check:
++with zipfile.ZipFile(held) as check:
+     assert check.testzip() is None,'ZIP CRC failure'
+     for name,expected in manifest['files'].items():
+         assert hashlib.sha256(check.read('kotorphasor-preview/'+name)).hexdigest()==expected,name
+-(r/'verification.json').write_text(json.dumps({'zip_crc':'PASS','manifest_hashes':'PASS','files_checked':len(manifest['files']),'zip_sha256':hashlib.sha256(z.read_bytes()).hexdigest()},indent=2)+'\n')
++gate=scanner.scan(held,allow=('*.dll',))
++blocking=[x for x in gate['findings'] if (x['entry'],x['kind'],x['detail']) not in ACCEPTED]
++if blocking:raise SystemExit('release privacy scan failed; '+held.name+' kept for review, not released: '+json.dumps(blocking[:40],indent=1))
++os.rename(held,z)
++zip_sha=hashlib.sha256(z.read_bytes()).hexdigest()
++if zip_sha!=gate['zip_sha256']:raise SystemExit('ZIP changed after the privacy scan')
++(r/'zip-sha256.txt').write_text(zip_sha+'  '+z.name+'\n')
++(r/'verification.json').write_text(json.dumps({'zip_crc':'PASS','manifest_hashes':'PASS','files_checked':len(manifest['files']),'zip_sha256':zip_sha,'privacy_scan':'PASS','privacy_scan_accepted':[{'entry':e,'kind':k,'detail':d,'reason':why} for (e,k,d),why in sorted(ACCEPTED.items()) if any((x['entry'],x['kind'],x['detail'])==(e,k,d) for x in gate['findings'])],'scanner_sha256':hashlib.sha256(SCANNER.read_bytes()).hexdigest()},indent=2)+'\n')
+ print(z)
+diff -ru a/source/CMakeLists.txt b/source/CMakeLists.txt
+--- a/source/CMakeLists.txt	2026-09-22 14:24:51.000000000 -0500
++++ b/source/CMakeLists.txt	2026-09-27 18:45:46.998366865 -0500
+@@ -92,6 +92,8 @@
+             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_WIN32_OBJDIR}
+             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -Isrc
++                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
++                    -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+                     -c ${CMAKE_SOURCE_DIR}/${src} -o ${obj}
+             DEPENDS ${CMAKE_SOURCE_DIR}/${src}
+             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+diff -ru a/source/src/api/structs.cmake b/source/src/api/structs.cmake
+--- a/source/src/api/structs.cmake	2026-09-22 14:24:51.000000000 -0500
++++ b/source/src/api/structs.cmake	2026-09-27 18:45:46.998857234 -0500
+@@ -115,6 +115,8 @@
+         COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_STRUCTS_WIN32_OBJDIR}
+         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                 ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
++                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
++                -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+                 -I${KP_STRUCTS_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
+                 -c "${KP_STRUCTS_DIR}/structs.cpp" -o ${KP_STRUCTS_WIN32_OBJ}
+         DEPENDS "${KP_STRUCTS_DIR}/structs.cpp"
+diff -ru a/source/src/hooks/hooks.cmake b/source/src/hooks/hooks.cmake
+--- a/source/src/hooks/hooks.cmake	2026-09-22 14:24:51.000000000 -0500
++++ b/source/src/hooks/hooks.cmake	2026-09-27 18:45:46.998559985 -0500
+@@ -90,6 +90,8 @@
+             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_HOOKS_WIN32_OBJDIR}
+             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -I${KP_SRC_DIR}
++                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
++                    -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+                     -c ${src} -o ${obj}
+             DEPENDS ${src} ${KP_GENERATED_HEADERS}
+             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"
+diff -ru a/source/src/proxy/proxy.cmake b/source/src/proxy/proxy.cmake
+--- a/source/src/proxy/proxy.cmake	2026-09-22 14:24:51.000000000 -0500
++++ b/source/src/proxy/proxy.cmake	2026-09-27 18:45:46.999116557 -0500
+@@ -28,7 +28,9 @@
+     add_custom_command(
+         OUTPUT ${KP_BINKW32}
+         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+-                ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -shared
++                ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -shared -s
++                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
++                -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+                 -o ${KP_BINKW32}
+                 "${KP_PROXY_DIR}/binkw32.cpp" "${KP_PROXY_DIR}/binkw32.def"
+                 -static -static-libgcc -static-libstdc++
+diff -ru a/source/src/runtime/runtime.cmake b/source/src/runtime/runtime.cmake
+--- a/source/src/runtime/runtime.cmake	2026-09-22 14:24:51.000000000 -0500
++++ b/source/src/runtime/runtime.cmake	2026-09-27 18:45:46.998985736 -0500
+@@ -109,6 +109,8 @@
+             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_RT_WIN32_OBJDIR}
+             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
++                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=. -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
++                    -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=.
+                     -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR} -I${CMAKE_SOURCE_DIR}/third_party/imgui
+                     -MD -MF ${dep}
+                     -c ${src} -o ${obj}
+@@ -126,7 +128,7 @@
+     add_custom_command(
+         OUTPUT ${KP_KPHASOR_DLL}
+         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+-                ${KP_MINGW_CXX} -shared -o ${KP_KPHASOR_DLL}
++                ${KP_MINGW_CXX} -shared -s -o ${KP_KPHASOR_DLL}
+                 ${KP_RT_WIN32_OBJECTS} ${KP_WIN32_OBJECTS} ${KP_HOOKS_WIN32_OBJECTS}
+                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
+                 # Static, and this is not a preference. A dynamic dependency on

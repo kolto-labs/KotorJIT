@@ -1,0 +1,10 @@
+PASS	arming, eligible target, requests and duplicate guard
+PASS	conversation invalid and distant or party exclusions
+PASS	transient inner PC failure allows retry
+PASS	party min-one-HP guard restores each prior flag after settle, transition and unload
+PASS	unreadable prior min-one-HP flag leaves that party member untouched
+FAIL	module load re-resolves a guarded party member whose object ID changed	tools/tests/examples/cursed.lua:212: party member re-created under a new ID kept min-one-HP=1
+FAIL	module load re-resolves the guarded PC through GetFirstPC when its object ID changed	tools/tests/examples/cursed.lua:220: PC re-created under a new ID left immortal
+FAIL	a member that cannot be re-resolved is recorded and retried; every resolvable guard is still cleared	tools/tests/examples/cursed.lua:229: PC not cleared while another member was missing
+PASS	frag VFX is unreachable when blast deaths arrive after the hook returns
+PASS	frag VFX is reached only if a death script re-enters during the damage call

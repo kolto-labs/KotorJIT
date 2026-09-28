@@ -1,0 +1,53 @@
+.....F........F...FFFF....
+======================================================================
+FAIL: test_every_projectile_profile_is_read (__main__.SyntheticDrift.test_every_projectile_profile_is_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 416, in test_every_projectile_profile_is_read
+    self.assertIn(("profile-sha-unregistered", "projectiles:windows-k9-extra-i386"), self.new())
+AssertionError: ('profile-sha-unregistered', 'projectiles:windows-k9-extra-i386') not found in set()
+
+======================================================================
+FAIL: test_projectile_profile_array_form (__main__.SyntheticDrift.test_projectile_profile_array_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 425, in test_projectile_profile_array_form
+    self.assertIn(("profile-sha-unregistered", "projectiles:windows-k9-arr-i386"), self.new())
+AssertionError: ('profile-sha-unregistered', 'projectiles:windows-k9-arr-i386') not found in set()
+
+======================================================================
+FAIL: test_runtime_alias_other_forms (__main__.SyntheticDrift.test_runtime_alias_other_forms) ["k9_rev_%d" == build_]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 408, in test_runtime_alias_other_forms
+    self.assertIn(("runtime-alias-unknown", alias), self.new())
+AssertionError: ('runtime-alias-unknown', 'k9_rev_0') not found in set()
+
+======================================================================
+FAIL: test_runtime_alias_other_forms (__main__.SyntheticDrift.test_runtime_alias_other_forms) [build_ != "k9_ne_%d"]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 408, in test_runtime_alias_other_forms
+    self.assertIn(("runtime-alias-unknown", alias), self.new())
+AssertionError: ('runtime-alias-unknown', 'k9_ne_1') not found in set()
+
+======================================================================
+FAIL: test_runtime_alias_other_forms (__main__.SyntheticDrift.test_runtime_alias_other_forms) [build() == "k9_acc_%d"]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 408, in test_runtime_alias_other_forms
+    self.assertIn(("runtime-alias-unknown", alias), self.new())
+AssertionError: ('runtime-alias-unknown', 'k9_acc_2') not found in set()
+
+======================================================================
+FAIL: test_runtime_alias_other_forms (__main__.SyntheticDrift.test_runtime_alias_other_forms) ["k9_racc_%d" != build()]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py", line 408, in test_runtime_alias_other_forms
+    self.assertIn(("runtime-alias-unknown", alias), self.new())
+AssertionError: ('runtime-alias-unknown', 'k9_racc_3') not found in set()
+
+----------------------------------------------------------------------
+Ran 23 tests in 6.450s
+
+FAILED (failures=6)

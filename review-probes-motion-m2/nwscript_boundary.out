@@ -1,0 +1,2 @@
+NWScript boundary violations:
+docs/devtools-design.md:134: dotted member on removed host root: kotor.lua

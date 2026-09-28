@@ -1,0 +1,234 @@
+{
+ "scenario": "F12 held-key release and return-to-game input",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-122456",
+ "started": 1790097922.6898603,
+ "finished": 1790097949.3065298,
+ "seconds": 26.617,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\"}",
+   "status": "ok",
+   "seconds": 0.041,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\"}",
+   "status": "ok",
+   "seconds": 4.012,
+   "detail": "phase=gameplay module=danm14aa server_tick=23 client_tick=26 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 23,
+    "client_tick": 26,
+    "pc": {
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "id": 2147483644,
+     "max_hp": 96
+    },
+    "party": [
+     {
+      "tag": "",
+      "id": 2147483644
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.021,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.197,
+   "detail": "saved native log offset 6156"
+  },
+  {
+   "index": 5,
+   "step": "do advance_ticks {\"ticks\": 120}",
+   "status": "ok",
+   "seconds": 3.736,
+   "detail": "observed server ticks 31 -> 152"
+  },
+  {
+   "index": 6,
+   "step": "do lua {\"code\": \"p=nwscript.call('GetFirstPC'); start=nwscript.call('GetPosition',p); return start\"}",
+   "status": "ok",
+   "seconds": 0.023,
+   "detail": "lua -> {\"values\": [{\"x\": 105.67625427246094, \"y\": 96.4639663696289, \"z\": 0.9961421489715576}]}"
+  },
+  {
+   "index": 7,
+   "step": "do owned_input {\"action\": \"keydown\", \"key\": \"s\"}",
+   "status": "ok",
+   "seconds": 0.054,
+   "detail": "sent keydown to owned game window 0xc00004"
+  },
+  {
+   "index": 8,
+   "step": "do advance_ticks {\"ticks\": 30}",
+   "status": "ok",
+   "seconds": 0.773,
+   "detail": "observed server ticks 160 -> 193"
+  },
+  {
+   "index": 9,
+   "step": "held backwards key moves PC before overlay",
+   "status": "ok",
+   "seconds": 0.041,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 10,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.13,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 11,
+   "step": "do advance_ticks {\"ticks\": 60}",
+   "status": "ok",
+   "seconds": 2.952,
+   "detail": "observed server ticks 201 -> 270"
+  },
+  {
+   "index": 12,
+   "step": "do lua {\"code\": \"held=nwscript.call('GetPosition',p); return held\"}",
+   "status": "ok",
+   "seconds": 0.054,
+   "detail": "lua -> {\"values\": [{\"x\": 104.33761596679688, \"y\": 91.15506744384766, \"z\": 1.3352258205413818}]}"
+  },
+  {
+   "index": 13,
+   "step": "do advance_ticks {\"ticks\": 90}",
+   "status": "ok",
+   "seconds": 1.945,
+   "detail": "observed server ticks 274 -> 376"
+  },
+  {
+   "index": 14,
+   "step": "opening F12 releases preexisting held movement",
+   "status": "ok",
+   "seconds": 0.032,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 15,
+   "step": "do owned_input {\"action\": \"keyup\", \"key\": \"s\"}",
+   "status": "ok",
+   "seconds": 0.063,
+   "detail": "sent keyup to owned game window 0xc00004"
+  },
+  {
+   "index": 16,
+   "step": "do console_command {\"code\": \"2+2\", \"contains\": [\"number: 4\"]}",
+   "status": "ok",
+   "seconds": 0.269,
+   "detail": "> 2+2\nnumber: 4"
+  },
+  {
+   "index": 17,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.083,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 18,
+   "step": "do advance_ticks {\"ticks\": 90}",
+   "status": "ok",
+   "seconds": 3.495,
+   "detail": "observed server ticks 401 -> 491"
+  },
+  {
+   "index": 19,
+   "step": "release inside overlay does not stick after close",
+   "status": "ok",
+   "seconds": 0.069,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 20,
+   "step": "do owned_input {\"action\": \"keydown\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.076,
+   "detail": "sent keydown to owned game window 0xc00004"
+  },
+  {
+   "index": 21,
+   "step": "do advance_ticks {\"ticks\": 30}",
+   "status": "ok",
+   "seconds": 1.554,
+   "detail": "observed server ticks 497 -> 527"
+  },
+  {
+   "index": 22,
+   "step": "do owned_input {\"action\": \"keyup\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.127,
+   "detail": "sent keyup to owned game window 0xc00004"
+  },
+  {
+   "index": 23,
+   "step": "do advance_ticks {\"ticks\": 90}",
+   "status": "ok",
+   "seconds": 6.597,
+   "detail": "observed server ticks 530 -> 626"
+  },
+  {
+   "index": 24,
+   "step": "game movement input restored after F12 close",
+   "status": "ok",
+   "seconds": 0.272,
+   "detail": "assert_lua == true"
+  }
+ ]
+}

@@ -1,0 +1,56 @@
+{
+  "kind": "x11-window",
+  "root_capture": false,
+  "window_id": "0xc00004",
+  "input": ":1",
+  "lease_id": "gamescope-a628da919fa042bdabc4fec6bfe329b3",
+  "command": [
+    "ffmpeg",
+    "-nostdin",
+    "-y",
+    "-threads",
+    "2",
+    "-f",
+    "x11grab",
+    "-framerate",
+    "60",
+    "-video_size",
+    "1024x768",
+    "-window_id",
+    "0xc00004",
+    "-i",
+    ":1",
+    "-an",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "ultrafast",
+    "-crf",
+    "28",
+    "-pix_fmt",
+    "yuv420p",
+    "-threads",
+    "2",
+    "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70/continuous.mp4"
+  ],
+  "capture_sampling_fps_requested": 60,
+  "interpolation": false,
+  "start": "after_first_mapped_owned_window",
+  "status": "passed",
+  "geometry_at_start": [
+    1024,
+    768
+  ],
+  "watch": {
+    "interval_ms": 250,
+    "checks": 690
+  },
+  "initial_native_log_offset": 4245,
+  "marker": {
+    "line": "[running] info: [script] [model-scene:task7scale] phase=1 actor=1 base=0.350 effective=0.350",
+    "detected_monotonic": 599361.424446232,
+    "capture_seconds": 207.11726061801892,
+    "selection_clock": "monotonic log detection, 100ms poll; capture startup latency not calibrated"
+  },
+  "error": null
+}

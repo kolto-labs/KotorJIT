@@ -1,0 +1,13 @@
+{
+  "asset_source": "/run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets",
+  "exe_source": "/home/brunner56/swkotor-multiplayer-investigation/artifacts/k2_gog_aspyr_20260917/swkotor2-client.exe",
+  "exe_sha256": "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
+  "dll_sha256": "895471980503fb87576b2e3b1b2645c48a0b150c247541559b72357feec57bf5",
+  "proxy_sha256": "765385d145af9a308eb9c11d2ef8db86d26c157949518a3cebf91510add2618c",
+  "table_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k2_gog_aspyr.json",
+  "experimental_table": true,
+  "table_sha256": "4e21a72a9754ae2b1a7babfe2d7fbf0d0b0c5a165efd0b92588a997923b38187",
+  "source_override_mods_omitted": true,
+  "override_policy": "empty private directory; installed source mods omitted for one copied save smoke; missing mod assets may prevent loading",
+  "scope": "mixed exact GOG PE / installed Steam assets; one copied Steam cloud save; read-only native calls"
+}

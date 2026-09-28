@@ -1,0 +1,3 @@
+[1/3] Building CXX object CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o
+[2/3] Linking CXX static library libkp_hooks_x64.a
+[3/3] Linking CXX executable kp_hooktool_x64

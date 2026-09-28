@@ -1,0 +1,4 @@
+{
+  "scripts/harness/kpharness/display_backends.py": "7ae70093eb8967d9cd80b7b464ef98f1b002356f1c65234362d12f2ab47e57eb",
+  "tools/kpharness_capture_diagnostic_test.py": "bfd9ce2d13045dc023aa5af6e9d14c903fa678e3ef33a09c53d80cd771d88a73"
+}

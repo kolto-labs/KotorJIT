@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-09-22T15:54:07.426617+00:00",
+  "scope": "Visual review of existing automatic excerpts and source linkage for three completed K1 runs. No live-game or current-stage data was accessed.",
+  "overall_assessment": "All three automatic excerpts are hash-linked to their continuous sources, but none is deliverable-quality as an immediately understandable feature demo. The footage is encoded at a native capture rate of 12 fps. Raising export fps would only duplicate or synthesize frames, so future demos should capture natively at 60 fps and stage the defining effect immediately in a clean view using the primary debug render backend.",
+  "proof_boundary": "Visual review reports only what appears in sampled frames. A report ok flag, counters, route metadata, existing characters, or ordinary combat do not independently prove the named scripted behavior.",
+  "runs": [
+    {
+      "run_id": "20260922-102211",
+      "scenario": "chaos_roulette",
+      "report_ok": true,
+      "source": {
+        "path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102211/continuous.mp4",
+        "sha256_manifest": "c712b5a2010bf9d9ff02a827b33349cdd65caa28504ccf95f0ef797ec948ccd6",
+        "sha256_verified": true,
+        "duration_seconds": 153.916667,
+        "width": 1024,
+        "height": 768,
+        "capture_rate": "12/1",
+        "frame_count": 1847
+      },
+      "automatic_excerpt": {
+        "start_seconds": 95.83900000000001,
+        "duration_seconds": 10,
+        "selection_note": "automatic arena/combat route marker; requires visual review for defining effects",
+        "mp4_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102211/representative.mp4",
+        "mp4_sha256_manifest": "ff575bc9ebd24cbd6c39e119019c2074f2e7bb2126b077e03de6a4e80d06b5c3",
+        "mp4_sha256_verified": true,
+        "gif_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102211/representative.gif",
+        "gif_sha256_manifest": "89dc578bd8d76261b9db9df0489cfd21a97d167c51a2e82a3bf7dd9ac165edbd",
+        "gif_sha256_verified": true
+      },
+      "review_assets": {
+        "one_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-102211-contact.jpg",
+        "one_fps_contact_sheet_sha256": "7ba6b780f5bfd3c15396e77ea84d0e8724a81505e14d8a66095d8f892d319b5f",
+        "last_five_seconds_two_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-102211-effect-detail.jpg",
+        "last_five_seconds_two_fps_contact_sheet_sha256": "ab8ee682a1fce7d8715815d1b4532cff0195f17277b38d226b827dcc196ff79d"
+      },
+      "visual_review": {
+        "name": "chaos_roulette",
+        "visible_observation": "The excerpt begins with the party and a hostile droid largely stationary in a corridor, then shows ordinary combat: red blaster bolts cross the corridor, characters enter attack poses, and several impact sparks appear. Bodies already on the floor are visible throughout.",
+        "semantic_proof_limit": "The excerpt does not make random roulette selection, changing outcomes, or their causal ordering visually legible. Existing bodies and ordinary blaster combat cannot by themselves prove the chaos-roulette behavior.",
+        "clarity": "low for the named feature; combat is visible, but the defining roulette effect is not immediately distinguishable."
+      },
+      "cadence_sample": null
+    },
+    {
+      "run_id": "20260922-104031",
+      "scenario": "rave",
+      "report_ok": true,
+      "source": {
+        "path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031/continuous.mp4",
+        "sha256_manifest": "f4b709ffe24491b82ed0a79f8931d8087ef788d8172c6189507d255d9fc58975",
+        "sha256_verified": true,
+        "duration_seconds": 118.333333,
+        "width": 1024,
+        "height": 768,
+        "capture_rate": "12/1",
+        "frame_count": 1420
+      },
+      "automatic_excerpt": {
+        "start_seconds": 46.638,
+        "duration_seconds": 10,
+        "selection_note": "automatic arena/combat route marker; requires visual review for defining effects",
+        "mp4_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031/representative.mp4",
+        "mp4_sha256_manifest": "d84c0d87e9082c85a7061751e18ed0b1eae580c40393831fbd7aaf8b4142ddd5",
+        "mp4_sha256_verified": true,
+        "gif_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031/representative.gif",
+        "gif_sha256_manifest": "b39a865d1349a3803b7c76a04e98c1e0cef5fd8129d5626c9c9acdde7136856c",
+        "gif_sha256_verified": true
+      },
+      "review_assets": {
+        "one_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104031-contact.jpg",
+        "one_fps_contact_sheet_sha256": "99f3d78951d2ef975e0f2d055ecb55fe7d116d870b6b0b81f7c6ea7c15aeeaa4",
+        "last_five_seconds_two_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104031-effect-detail.jpg",
+        "last_five_seconds_two_fps_contact_sheet_sha256": "4f5158b50971b447d534e25cbd603a06f5fd934e28b257586a51d7158ef3e082"
+      },
+      "visual_review": {
+        "name": "rave",
+        "visible_observation": "The excerpt shows a conspicuous warm yellow-gold illumination that briefly floods most of the corridor, followed by localized yellow light on the floor around combatants and bodies. Ordinary melee/blaster combat and impact flashes continue around it.",
+        "semantic_proof_limit": "The visual sample proves that a strong yellow lighting change is present, but it does not establish a multicolor cycle, timing logic, or that the lighting was caused by the scripted rave behavior rather than another in-game effect.",
+        "clarity": "medium for a lighting effect, low for the full named feature; the yellow flash is obvious but brief and lacks explanatory staging."
+      },
+      "cadence_sample": {
+        "source_video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031/continuous.mp4",
+        "start_seconds": 46.638,
+        "duration_seconds": 5,
+        "declared_capture_rate_fps": 12,
+        "frames_decoded": 60,
+        "adjacent_pairs": 59,
+        "exact_repeated_adjacent_frames": 1,
+        "exact_repeated_adjacent_fraction": 0.016949,
+        "adjacent_pairs_below_0_5_mean_abs_luma_delta": 40,
+        "low_change_adjacent_fraction": 0.677966,
+        "limits": "Exact repeats are measured after decoding and downscaling to 160x120 grayscale. Low-change pairs can be legitimate idle or subtle motion; neither metric proves render cadence above the 12 fps capture.",
+        "detail_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104031-cadence-5s.json",
+        "detail_sha256": "8d5c758f74cb0e7e5ea5a528a0c48d23d4e8cc2745d2e49e753530b4c074193e"
+      }
+    },
+    {
+      "run_id": "20260922-104259",
+      "scenario": "doppelganger",
+      "report_ok": true,
+      "source": {
+        "path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259/continuous.mp4",
+        "sha256_manifest": "577743cb7a1ad91af2a2f2689fe3edd3e122b6218e8356caea3c50362c7c3152",
+        "sha256_verified": true,
+        "duration_seconds": 174.416667,
+        "width": 1024,
+        "height": 768,
+        "capture_rate": "12/1",
+        "frame_count": 2093
+      },
+      "automatic_excerpt": {
+        "start_seconds": 99.414,
+        "duration_seconds": 10,
+        "selection_note": "automatic arena/combat route marker; requires visual review for defining effects",
+        "mp4_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259/representative.mp4",
+        "mp4_sha256_manifest": "d8d7ba37f1f9b85d65d0fb1308c7881d3818106e854b7d2472c7ca83db9be501",
+        "mp4_sha256_verified": true,
+        "gif_path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259/representative.gif",
+        "gif_sha256_manifest": "13610a271f36890dc917b79928dbd947051bad31fe675e00295acf28483cc4a5",
+        "gif_sha256_verified": true
+      },
+      "review_assets": {
+        "one_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104259-contact.jpg",
+        "one_fps_contact_sheet_sha256": "3d8bba246b8f384ed72f911477ca99909972ac653e3b11f35d4454da799b4390",
+        "last_five_seconds_two_fps_contact_sheet_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104259-effect-detail.jpg",
+        "last_five_seconds_two_fps_contact_sheet_sha256": "9889953157be3eb839e3015d0f634e112b82dd21c60c08bf727aa9ac08453277"
+      },
+      "visual_review": {
+        "name": "doppelganger",
+        "visible_observation": "The excerpt shows the player, party members, armored enemies, target UI, ordinary attack motion, and a purple-white hit effect near the end.",
+        "semantic_proof_limit": "No unambiguous duplicate creation, identical pair, or spawn transition is visible in the sampled excerpt. Character presence and combat counters cannot prove doppelganger creation or identity.",
+        "clarity": "low for the named feature; the sampled action reads as ordinary combat."
+      },
+      "cadence_sample": {
+        "source_video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259/continuous.mp4",
+        "start_seconds": 99.414,
+        "duration_seconds": 5,
+        "declared_capture_rate_fps": 12,
+        "frames_decoded": 60,
+        "adjacent_pairs": 59,
+        "exact_repeated_adjacent_frames": 3,
+        "exact_repeated_adjacent_fraction": 0.050847,
+        "adjacent_pairs_below_0_5_mean_abs_luma_delta": 52,
+        "low_change_adjacent_fraction": 0.881356,
+        "limits": "Exact repeats are measured after decoding and downscaling to 160x120 grayscale. Low-change pairs can be legitimate idle or subtle motion; neither metric proves render cadence above the 12 fps capture.",
+        "detail_path": "/home/brunner56/kp-live-20260922/media/automatic-review-assets/20260922-104259-cadence-5s.json",
+        "detail_sha256": "ae4d9e3b7f6e4f30a3ddd5865405832aa2886521165e0e1a10f43db68efdb780"
+      }
+    }
+  ]
+}

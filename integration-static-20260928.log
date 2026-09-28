@@ -1,0 +1,52 @@
+=== python3 /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/address_table_layout_test.py ===
+test_bad_adapter_key_fails (__main__.HookpackHelper.test_bad_adapter_key_fails) ... ok
+test_duplicate_adapter_key_fails (__main__.HookpackHelper.test_duplicate_adapter_key_fails) ... ok
+test_good_pack_passes (__main__.HookpackHelper.test_good_pack_passes) ... ok
+test_instances_for_another_binary_fail (__main__.HookpackHelper.test_instances_for_another_binary_fail) ... ok
+test_missing_stack_site_fails (__main__.HookpackHelper.test_missing_stack_site_fails) ... ok
+test_wrong_game_offset_fails (__main__.HookpackHelper.test_wrong_game_offset_fails) ... ok
+test_wrong_offset_is_not_rescued_by_overlay (__main__.HookpackHelper.test_wrong_offset_is_not_rescued_by_overlay) ... ok
+test_absent_field_fails (__main__.Predicate.test_absent_field_fails) ... ok
+test_complete_layout_passes (__main__.Predicate.test_complete_layout_passes) ... ok
+test_missing_offset_fails (__main__.Predicate.test_missing_offset_fails) ... ok
+test_unresolved_field_fails (__main__.Predicate.test_unresolved_field_fails) ... ok
+test_wrong_kind_fails (__main__.Predicate.test_wrong_kind_fails) ... ok
+test_wrong_size_fails (__main__.Predicate.test_wrong_size_fails) ... ok
+test_k1_wrong_layout_and_missing_required_stack_site_fail (__main__.RedTemporaryCopy.test_k1_wrong_layout_and_missing_required_stack_site_fail) ... ok
+test_bind_sites_set_is_parsed_and_runtime_looks_each_up (__main__.ShippedTables.test_bind_sites_set_is_parsed_and_runtime_looks_each_up) ... ok
+test_every_build_agrees_with_its_games_donor (__main__.ShippedTables.test_every_build_agrees_with_its_games_donor) ... ok
+test_every_vm_table_carries_its_games_layout_values (__main__.ShippedTables.test_every_vm_table_carries_its_games_layout_values) ... ok
+test_every_vm_table_carries_the_vm_layout (__main__.ShippedTables.test_every_vm_table_carries_the_vm_layout) ... ok
+test_every_vm_table_passes_the_full_check (__main__.ShippedTables.test_every_vm_table_passes_the_full_check) ... ok
+test_every_vm_table_resolves_every_bind_sites_site (__main__.ShippedTables.test_every_vm_table_resolves_every_bind_sites_site) ... ok
+test_k1_derivation_matches_the_disassembly (__main__.ShippedTables.test_k1_derivation_matches_the_disassembly) ... ok
+test_no_hookpack_is_committed (__main__.ShippedTables.test_no_hookpack_is_committed) ... ok
+test_some_tables_hook_the_vm (__main__.ShippedTables.test_some_tables_hook_the_vm) ... ok
+test_k2_wrapper_offset_in_k1_fails (__main__.ValuePredicate.test_k2_wrapper_offset_in_k1_fails) ... ok
+test_missing_expectation_fails (__main__.ValuePredicate.test_missing_expectation_fails) ... ok
+test_null_addr_stack_site_fails (__main__.ValuePredicate.test_null_addr_stack_site_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 5.904s
+
+OK
+rc=0
+=== python3 /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/camera_profile_consistency_test.py ===
+test_image_bytes (__main__.CameraConsistency.test_image_bytes) ... ok
+test_lua_names_are_not_routines (__main__.CameraConsistency.test_lua_names_are_not_routines) ... ok
+test_overlay_records_guards_and_derivations (__main__.CameraConsistency.test_overlay_records_guards_and_derivations) ... ok
+test_profile_parsed (__main__.CameraConsistency.test_profile_parsed) ... ok
+test_table_matches_profile (__main__.CameraConsistency.test_table_matches_profile) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.071s
+
+OK
+rc=0
+=== python3 /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py ===
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 3.743s
+
+OK
+rc=0

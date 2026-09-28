@@ -1,0 +1,8 @@
+{
+  "scripts/harness/kpharness/devtools_bridge.py": "b0190b39be55e2f14baf4243faa258efa88d69267105cb6b057390c86f493a03",
+  "web/devtools/kotor-console.mjs": "c0c4919c14ca8b0a676b87290cf8e5b5f1f91615093c3914bbb996ae98e333fa",
+  "web/devtools/kotor-console.test.mjs": "ef099856b1e353aa143f1083c81402000b6567c5b34db55ec40200f584b888b6",
+  "tools/kpharness_devtools_bridge_test.py": "383630653ddbff951a537f2afe901b500699d6529e5e0ca8ffccc358d6d77df6",
+  "web/devtools/MANIFEST": "7a771f608d08c23a1ad42067890ff67debf1e614d9b4eb0ee1660857ce123752",
+  "docs/devtools-protocol.md": "2a7dca35a2d587db5d90be6fc939f0768101aa55799249295781dbd67680e10e"
+}

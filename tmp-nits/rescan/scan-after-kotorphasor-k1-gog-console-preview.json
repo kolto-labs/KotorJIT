@@ -1,0 +1,3254 @@
+{
+  "zip": "kotorphasor-k1-gog-console-preview.zip",
+  "zip_sha256": "de14c1261e0e1b0e0aec124c8676f8e40ec696b47a258d9e1b0adc97af677131",
+  "entries": 17,
+  "ok": false,
+  "finding_counts": {
+    "NUL byte": 1,
+    "excluded file": 2,
+    "magic": 2,
+    "marker": 31,
+    "not UTF-8": 1,
+    "private folder": 1,
+    "tar owner": 606
+  },
+  "findings": [
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 112973: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113103: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113104: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113105: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114130: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114140: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114142: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114168: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114432: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/live-acceptance.json",
+      "kind": "marker",
+      "detail": "line 10: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 4: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 5: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 6: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 7: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 8: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "marker",
+      "detail": "line 12: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "marker",
+      "detail": "line 29: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "marker",
+      "detail": "line 40: .worktrees"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/ATTRIBUTION.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/CHANGELOG.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/CMakeLists.txt",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/CONTRIBUTING.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/LICENSE",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/VERSION",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/addresses/k1_gog_103.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/addresses/k1_steam_103.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/addresses/k1_steam_103_unpacked.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/addresses/k2_gog_aspyr.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/addresses/k2_steam_aspyr.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/api_aliases.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/app_signatures.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/codecaves.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/codecaves.toml",
+      "kind": "excluded file",
+      "detail": "data/codecaves.toml is held back pending an owner decision"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.draft.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.draft.toml",
+      "kind": "excluded file",
+      "detail": "data/events.draft.toml is held back pending an owner decision"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.draft.toml",
+      "kind": "marker",
+      "detail": "line 5: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/hooksites.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/hostapi.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/research/phasor_structs.json",
+      "kind": "private folder",
+      "detail": "research"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/research/phasor_structs.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/routines/k1.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/routines/k2.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/docs/devtools-console.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/docs/devtools-protocol.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/docs/user/install.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/animation-memory/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/animation-memory/two_actor_freeze.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/arbitration.scene",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/catalog.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/image.scene",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/model-memory/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/model-memory/model_scene.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/model-memory/npc_wave.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/model-memory/player_scale.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/quarantine.scene",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/routines.scene",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/demos/showcase.scene",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/10_abstain_nil.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/20_abstain_badstring.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/25_claims_via_string.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/30_claims_false.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/40_too_late.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/arbitration/50_number_two_is_false.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/coverage/10_cover.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/100_item_airstrike.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/10_rancor_roulette.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/20_fus_ro_dah.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/30_necromancer.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/40_chain_reaction.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/70_doppelganger.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/80_loot_pinata.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/90_bullet_time.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/cursed/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/edge_fallback/all_abstain.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/edge_number_two/50_number_two_is_false.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/edge_quarantine/always_errors.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/100_module_transition.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/10_world_probe.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/110_loot_container.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/20_dialog_state.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/30_move_to.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/40_attack_nearest.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/50_doors.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/60_area_dump.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/70_pc_status.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/80_signal_event.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/90_run_script.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/harness/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/multiplayer/10_avatar_sync.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/multiplayer/10_avatar_sync_test.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/probe/00_probe.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/examples/probe/10_position_trace.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/gen_bink_def.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/coverage.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/demo_lib.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/demo_play.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/demo_scenes/arbitration.scene.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/demo_scenes/quarantine.scene.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/demo_scenes/showcase.scene.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/deploy_showcase.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/drive_k1_console.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/env_isolate.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/lib.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/run_all.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_ahto_city_law.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_alignment_drift.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_arbitration.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_battle_meditation.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_enclave_arrival.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_party_wounded.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_quarantine.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/gameplay_tests/test_sith_patrol_alarm.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/harness_paths.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/harness_paths.sh",
+      "kind": "marker",
+      "detail": "line 43: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/ini_tune.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/__init__.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/__main__.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/bwm.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/checkpoints.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/cli.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/client.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/creative.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/creative_checkpoints.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/creative_steps.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/creative_wine.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/discover.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/oracle.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/pioneer.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/recording.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/resources.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/scenario.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/session.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/shots.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/targets.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/waits.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness/world.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kpharness.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/kq.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/live_session.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/lock.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/measure_boot.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/pick_save.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/record.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/record_cursed.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/record_proof.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/record_showcase.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/record_terminal.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/animation-memory/freeze.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/100_item_airstrike.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/10_rancor_roulette.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/20_fus_ro_dah.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/30_necromancer.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/40_chain_reaction.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/50_chaos_roulette.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/60_rave.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/70_doppelganger.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/80_loot_pinata.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/cursed/90_bullet_time.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_dialog_walk.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_combat.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_door01.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_room3_onward.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_starboard_to_taris.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_trask_begin_diag.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_trask_opening.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_endar_trask_range_diag.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_events.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_fresh_endar_locker_open.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_fresh_game_smoke.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_fresh_trask_opening.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_fresh_trask_quest.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_fresh_trask_quest.toml",
+      "kind": "marker",
+      "detail": "line 141: run id"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_getfacing_diag.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_new_game_preflight.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_quest_drive.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_smoke.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_softlock_detect.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_state_drive.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_trask_approach_diag.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k1_trask_diag.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/k2_smoke.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/model-memory/player.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/scenarios/model-memory/wave.toml",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/spike_headless_k1.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/harness/ui_wait.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/scripts/install_to_game.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation_backend.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation_lua.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/animation_profiles.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/compat.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/compat.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/enginestruct.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/enginestruct.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/entity.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/entity.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/entity.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/memory.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/memory.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/memory.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model_backend.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model_lua.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/model_profiles.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/output.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/output.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/routines.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/routines.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/routines.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/strings.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/strings.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/structs.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/structs.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/structs.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/support.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/timers.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/api/timers.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/console.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/console.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/editor_input.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/editor_input.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/history.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/devtools/overlay.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/contract.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/dispatch.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/payload.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/payload.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/situation.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/situation.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/table.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/events/table.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/builds.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/callbacks.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/compat_aliases.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/compat_events.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/events.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/routine_defaults_k1.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/routine_defaults_k2.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/routines_k1.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/routines_k2.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/generated/structs_k1.inc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/channel.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/channel.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/chargen.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/commands.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/commands.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/engine.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/engine_k1.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/engine_k2.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/fields.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/harness.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/json.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/json.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/ring.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/harness/ring.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/arm32/decode.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/arm32/decode.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/arm32/trampoline.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/arm32/trampoline.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/hooks.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/registry.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/registry.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/thiscall.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/trampoline.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/hooks/trampoline.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/build_table.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/classify.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/image.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/internal.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/load.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/loaded_image.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/loaded_image.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/parse.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/pe_elf.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/pe_elf.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/sha256.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/image/sha256.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/lua/host.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/lua/host.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/lua/luahost.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/lua/value.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/lua/value.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/multiplayer/role.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/multiplayer/transport.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/multiplayer/transport.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/platform/platform.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/platform/platform.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/platform/platform_linux.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/platform/platform_win32.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/proxy/binkw32.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/proxy/binkw32.def",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/proxy/proxy.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/dllmain.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/fault_guard.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/hook_bodies.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/internal.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/runtime.cmake",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/runtime.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/runtime/runtime.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/src/version.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/LICENSE.txt",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/PIN.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/backends/imgui_impl_opengl2.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/backends/imgui_impl_opengl2.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/backends/imgui_impl_win32.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/backends/imgui_impl_win32.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imconfig.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui_draw.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui_internal.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui_tables.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imgui_widgets.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imstb_rectpack.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imstb_textedit.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/imgui/imstb_truetype.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/.gitattributes",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/.gitignore",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/.relver",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/COPYRIGHT",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/Makefile",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/README",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/bluequad-print.css",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/bluequad.css",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/contact.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_buffer.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_c_api.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_ffi.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_ffi_api.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_ffi_semantics.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_ffi_tutorial.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_jit.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/ext_profiler.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/extensions.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/img/contact.png",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/img/contact.png",
+      "kind": "magic",
+      "detail": "magic: png"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 165: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 189: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 568: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/luajit.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/running.html",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_arm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_arm.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_arm64.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_arm64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_mips.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_mips.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_mips64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_ppc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_ppc.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_proto.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_x64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_x86.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dasm_x86.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/dynasm/dynasm.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/etc/luajit.1",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/etc/luajit.pc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/.gitignore",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/Makefile",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/Makefile.dep",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/.gitignore",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/README",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_arch.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_asm.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_fold.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_lib.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_libbc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/buildvm_peobj.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/genlibbc.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/genminilua.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/genversion.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "magic",
+      "detail": "magic: elf"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "not UTF-8",
+      "detail": "not UTF-8"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "NUL byte",
+      "detail": "NUL byte"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/.gitignore",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/bc.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/bcsave.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_arm.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_arm64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_arm64be.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mips.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mips64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mips64el.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mips64r6.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mips64r6el.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_mipsel.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_ppc.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_x64.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dis_x86.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/dump.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/p.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/v.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/vmdef.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/jit/zone.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lauxlib.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_aux.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_base.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_bit.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_buffer.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_debug.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_ffi.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_init.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_io.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_jit.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_math.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_os.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_os.c",
+      "kind": "marker",
+      "detail": "line 86: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_package.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_string.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lib_table.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_alloc.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_alloc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_api.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_arch.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm_arm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm_arm64.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm_mips.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm_ppc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_asm_x86.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_assert.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bc.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bcdef.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bcdump.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bcread.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_bcwrite.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_buf.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_buf.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_carith.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_carith.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ccall.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ccall.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ccallback.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ccallback.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cconv.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cconv.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cdata.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cdata.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_char.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_char.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_clib.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_clib.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cparse.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_cparse.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_crecord.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_crecord.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ctype.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ctype.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_debug.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_debug.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_def.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_dispatch.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_dispatch.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_emit_arm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_emit_arm64.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_emit_mips.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_emit_ppc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_emit_x86.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_err.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_err.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_errmsg.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ff.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ffdef.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ffrecord.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ffrecord.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_folddef.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_frame.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_func.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_func.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_gc.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_gc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_gdbjit.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_gdbjit.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ir.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ir.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_ircall.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_iropt.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_jit.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_lex.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_lex.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_lib.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_lib.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_libdef.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_load.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_mcode.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_mcode.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_meta.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_meta.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_obj.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_obj.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_dce.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_fold.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_loop.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_mem.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_narrow.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_sink.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_opt_split.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_parse.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_parse.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_prng.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_prng.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_profile.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_profile.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_recdef.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_record.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_record.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_serialize.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_serialize.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_snap.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_snap.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_state.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_state.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_str.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_str.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_strfmt.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_strfmt.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_strfmt_num.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_strscan.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_strscan.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_tab.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_tab.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target_arm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target_arm64.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target_mips.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target_ppc.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_target_x86.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.c",
+      "kind": "marker",
+      "detail": "line 92: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.c",
+      "kind": "marker",
+      "detail": "line 113: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_trace.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_traceerr.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_udata.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_udata.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_vm.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_vmevent.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_vmevent.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lj_vmmath.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/ljamalg.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lua.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lua.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/luaconf.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/luajit.c",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/luajit.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/luajit_relver.txt",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/luajit_rolling.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/lualib.h",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/msvcbuild.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/nxbuild.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/ps4build.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/ps5build.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/psvitabuild.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_arm.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_arm64.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_mips.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_mips64.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_ppc.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_x64.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/vm_x86.dasc",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/xb1build.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/xedkbuild.bat",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/animation_scene_test.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/contribute_findings.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/coverage_scan.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/coverage_walk.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/example_configuration.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/example_inventory.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/example_validation.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gameplay_scheduler_test.sh",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_address_tables.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_compat.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_event_glue.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_routine_defaults.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_routine_glue.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_routine_table.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/gen_structs.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/harness_coverage_report.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/harness_progress.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_animationtest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_consoletest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_corpus_coverage.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_editorinputtest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_entitytest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_eventtest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_executable_split.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_faulttest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_harnesstest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool.cpp",
+      "kind": "marker",
+      "detail": "line 678: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool.cpp",
+      "kind": "marker",
+      "detail": "line 679: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_hooktool_arm32.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_imagetool.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_luatest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_memtest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_modeltest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_namespacetest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_namespacetest.cpp",
+      "kind": "marker",
+      "detail": "line 140: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_routinetest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_structtest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_supporttest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kp_transporttest.cpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kpdiscover.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kpharness_creative_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kpharness_offline_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kpharness_pioneer_policy_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/kpharness_world_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/merge_event_draft.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/model_scene_test.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/nwscript_boundary_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/cursed.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/evidence_test.py",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/evidence_test.py",
+      "kind": "marker",
+      "detail": "line 73: /tmp/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixture.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/README.md",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/cursed/50_chaos_roulette.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/cursed/60_rave.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/harness.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/manifest.json",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/probes_coverage.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/run.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/examples/showcase.lua",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/tools/tests/model_backend_fixture.hpp",
+      "kind": "tar owner",
+      "detail": "uname is the build user; gname is the build user; uid 1000 gid 1000 (nonzero)"
+    }
+  ],
+  "expected": [
+    {
+      "entry": "kotorphasor-preview/binkw32.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    }
+  ],
+  "markers": 26,
+  "allow": [
+    "*.dll"
+  ],
+  "unchanged": true
+}

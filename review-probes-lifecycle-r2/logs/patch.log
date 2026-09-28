@@ -1,0 +1,8 @@
+patching file src/runtime/hook_bodies.cpp
+patching file src/runtime/runtime.cmake
+patching file src/runtime/runtime.cpp
+Hunk #2 succeeded at 735 (offset 27 lines).
+Hunk #3 succeeded at 753 (offset 27 lines).
+Hunk #4 succeeded at 814 (offset 27 lines).
+Hunk #5 succeeded at 879 (offset 27 lines).
+patching file tools/kp_namespacetest.cpp

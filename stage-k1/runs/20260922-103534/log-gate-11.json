@@ -1,0 +1,7 @@
+{
+  "pattern": "\\[meditation\\] round \\d+: steadied [23] of the party",
+  "offset": 8877,
+  "lines": [
+    "[running] info: [30_battle_meditation] [meditation] round 1: steadied 3 of the party"
+  ]
+}

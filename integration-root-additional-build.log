@@ -1,0 +1,42 @@
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/lifecycle-cfg
+[ 91%] Built target kphasor
+[ 91%] Building CXX object CMakeFiles/kp_cameratest.dir/tools/kp_cameratest.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_profiles.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_backend.cpp.o
+[100%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_lua.cpp.o
+[100%] Linking CXX executable kp_cameratest
+[100%] Built target kp_cameratest
+[ 87%] Built target kphasor
+[ 87%] Building CXX object CMakeFiles/kp_supporttest.dir/tools/kp_supporttest.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp: In function ‘void {anonymous}::function_timer_cases(const std::filesystem::__cxx11::path&)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:560:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  560 |     lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                            ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:560:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp: In function ‘int main(int, char**)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:815:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  815 |     lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                                ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:815:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+[ 87%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/output.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/timers.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/strings.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_supporttest.dir/src/lua/host.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_supporttest.dir/src/lua/value.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform_linux.cpp.o
+[100%] Linking CXX executable kp_supporttest
+[100%] Built target kp_supporttest
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/tools/kp_consoleprotocoltest.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/console_protocol.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/json.cpp.o
+[100%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/devtools/console.cpp.o
+[100%] Linking CXX executable kp_consoleprotocoltest
+[100%] Built target kp_consoleprotocoltest
+[100%] Built target kphasor
+[100%] Building CXX object CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o
+[100%] Linking CXX executable kp_routinetest
+[100%] Built target kp_routinetest

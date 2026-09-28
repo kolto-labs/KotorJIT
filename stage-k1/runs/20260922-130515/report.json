@@ -1,0 +1,255 @@
+{
+ "scenario": "native animation: two actor freeze",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-130515",
+ "started": 1790100337.639757,
+ "finished": 1790100366.3139734,
+ "seconds": 28.674,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.049,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 4.602,
+   "detail": "phase=gameplay module=danm14aa server_tick=12 client_tick=16 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 12,
+    "client_tick": 16,
+    "pc": {
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "max_hp": 96,
+     "id": 2147483644
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.519,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.067,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.035,
+   "detail": "saved native log offset 6156"
+  },
+  {
+   "index": 6,
+   "step": "native API available and peaceful player",
+   "status": "ok",
+   "seconds": 0.068,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "record pre-existing area objects",
+   "status": "ok",
+   "seconds": 0.13,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 8,
+   "step": "do lua {\"code\": \"local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',nwscript.call('GetFacing',p))\"}",
+   "status": "ok",
+   "seconds": 0.167,
+   "detail": "lua -> {\"values\": []}"
+  },
+  {
+   "index": 9,
+   "step": "do advance_ticks {\"ticks\": 180}",
+   "status": "ok",
+   "seconds": 3.532,
+   "detail": "observed server ticks 26 -> 223"
+  },
+  {
+   "index": 10,
+   "step": "do capture_free_look",
+   "status": "ok",
+   "seconds": 0.044,
+   "detail": "Toggled native free-look on owned game display; visual confirmation required"
+  },
+  {
+   "index": 11,
+   "step": "do advance_ticks {\"ticks\": 120}",
+   "status": "ok",
+   "seconds": 1.217,
+   "detail": "observed server ticks 228 -> 348"
+  },
+  {
+   "index": 12,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.065,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 13,
+   "step": "do console_command {\"code\": \"dofile(\\\"kotorphasor/console-examples/giant_bow_freeze.lua\\\"); function animation_tick() OnTick(); local p=nwscript.call(\\\"GetFirstPC\\\"); return nwscript.call(\\\"GetLocalNumber\\\",p,7)~=1 and nwscript.call(\\\"GetLocalNumber\\\",p,8)~=1 end; return type(OnTick)\", \"contains\": [\"string: function\"]}",
+   "status": "ok",
+   "seconds": 3.825,
+   "detail": "> dofile(\"kotorphasor/console-examples/giant_bow_freeze.lua\"); function animation_tick() OnTick(); local p=nwscript.call(\"GetFirstPC\"); return nwscript.call(\"GetLocalNumber\",p,7)~=1 and nwscript.call(\"GetLocalNumber\",p,8)~=1 end; return type(OnTick)\nstring: function"
+  },
+  {
+   "index": 14,
+   "step": "do console_command {\"code\": \"local p=nwscript.call(\\\"GetFirstPC\\\"); nwscript.call(\\\"SetLocalNumber\\\",p,7,0); nwscript.call(\\\"SetLocalNumber\\\",p,8,0); nwscript.call(\\\"SetLocalNumber\\\",p,5,8); animation_clock=kp.registertimer(16,\\\"animation_tick\\\"); return animation_clock>0\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 3.866,
+   "detail": "> local p=nwscript.call(\"GetFirstPC\"); nwscript.call(\"SetLocalNumber\",p,7,0); nwscript.call(\"SetLocalNumber\",p,8,0); nwscript.call(\"SetLocalNumber\",p,5,8); animation_clock=kp.registertimer(16,\"animation_tick\"); return animation_clock>0\nboolean: true"
+  },
+  {
+   "index": 15,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.142,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 16,
+   "step": "capture two new friendly actors with active baseline",
+   "status": "ok",
+   "seconds": 0.04,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 17,
+   "step": "both native dance clocks advance from zero",
+   "status": "ok",
+   "seconds": 2.609,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 18,
+   "step": "sample the held actor and comparison actor",
+   "status": "ok",
+   "seconds": 1.545,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 19,
+   "step": "client frames advance while held",
+   "status": "ok",
+   "seconds": 0.661,
+   "detail": "observed client ticks 1240 -> 1267"
+  },
+  {
+   "index": 20,
+   "step": "one clock stays fixed while the other progresses",
+   "status": "ok",
+   "seconds": 0.038,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 21,
+   "step": "held actor resumes its existing clock",
+   "status": "ok",
+   "seconds": 0.847,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 22,
+   "step": "both owned actors reset to known pause1 baseline",
+   "status": "ok",
+   "seconds": 0.467,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 23,
+   "step": "successful completion and exact owned actor removal",
+   "status": "ok",
+   "seconds": 2.709,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 24,
+   "step": "do await_log {\"pattern\": \"\\\\[animation-scene:freeze\\\\] complete owned=2 baseline=pause1\", \"minimum\": 1, \"maximum\": 1}",
+   "status": "ok",
+   "seconds": 0.017,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 25,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.06,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 26,
+   "step": "do console_command {\"code\": \"OnScriptUnload(); OnTick=nil; OnScriptUnload=nil; animation_tick=nil; return true\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 1.297,
+   "detail": "> OnScriptUnload(); OnTick=nil; OnScriptUnload=nil; animation_tick=nil; return true\nboolean: true"
+  },
+  {
+   "index": 27,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.057,
+   "detail": "F12 overlay open=False"
+  }
+ ]
+}

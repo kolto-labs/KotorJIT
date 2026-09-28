@@ -1,0 +1,7 @@
+name="t"
+target="k1"
+[settings]
+game_speed=1.0
+[[step]]
+do="lua"
+code="return true"

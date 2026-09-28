@@ -1,0 +1,1034 @@
+[
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/devtools/console.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/devtools/console.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/overlay.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/overlay.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/runtime/fault_guard.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/fault_guard.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/fault_guard.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/runtime/fault_guard.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/multiplayer/transport.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/multiplayer/transport.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/multiplayer/transport.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/multiplayer/transport.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/events/dispatch.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/events/dispatch.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/events/table.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/table.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/table.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/events/table.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/events/payload.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/payload.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/payload.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/events/payload.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/events/situation.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/situation.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/situation.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/events/situation.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/routines.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/routines.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/routines.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/routines.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/enginestruct.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/enginestruct.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/enginestruct.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/enginestruct.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/structs.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/structs.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/structs.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/structs.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/entity.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/entity.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/entity.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/entity.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/memory.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/memory.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/projectiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/projectiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/projectiles_profile.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_profile.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_profile.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/projectiles_profile.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/projectiles_native.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_native.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_native.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/projectiles_native.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/projectiles_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_lua.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/projectiles_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/model.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/model.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/model_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/model_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/model_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/model_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/model_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/model_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/camera.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/camera.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/camera_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_profiles.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/camera_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/camera_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_backend.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/camera_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/camera_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_lua.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/camera_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/animation.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/animation.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/animation_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_profiles.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/animation_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/animation_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_backend.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/animation_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/animation_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_lua.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/animation_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/output.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/output.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/timers.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/timers.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/strings.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/strings.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/api/compat.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/compat.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/compat.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/api/compat.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/sha256.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/sha256.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/sha256.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/sha256.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/loaded_image.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/loaded_image.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/loaded_image.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/loaded_image.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/pe_elf.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/pe_elf.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/pe_elf.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/pe_elf.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/macho.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/macho.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/parse.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/parse.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/parse.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/parse.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/classify.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/classify.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/classify.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/classify.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/build_table.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/build_table.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/build_table.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/build_table.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/image/load.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/load.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/load.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/image/load.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/hooks/trampoline.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/trampoline.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/trampoline.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/hooks/trampoline.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/hooks/registry.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/registry.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/registry.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/hooks/registry.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/channel.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/channel.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/channel.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/channel.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/commands.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/commands.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/console_protocol.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/console_protocol.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/console_protocol.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/console_protocol.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/json.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/json.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/ring.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/ring.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/ring.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/ring.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/engine_k1.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/engine_k1.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -Dkphasor_EXPORTS -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -fPIC -m32 -Wall -Wextra -o CMakeFiles/kphasor.dir/src/harness/engine_k2.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k2.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k2.cpp",
+  "output": "CMakeFiles/kphasor.dir/src/harness/engine_k2.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -m32 -Wall -Wextra -o CMakeFiles/kp_vectortest.dir/tools/kp_vectortest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_vectortest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_vectortest.cpp",
+  "output": "CMakeFiles/kp_vectortest.dir/tools/kp_vectortest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -m32 -Wall -Wextra -o CMakeFiles/kp_vectortest.dir/src/api/vector.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/vector.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/vector.cpp",
+  "output": "CMakeFiles/kp_vectortest.dir/src/api/vector.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/sha256.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/sha256.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/sha256.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/sha256.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/loaded_image.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/loaded_image.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/loaded_image.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/loaded_image.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/pe_elf.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/pe_elf.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/pe_elf.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/pe_elf.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/macho.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/macho.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/parse.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/parse.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/parse.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/parse.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/classify.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/classify.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/classify.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/classify.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/build_table.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/build_table.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/build_table.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/build_table.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_image.dir/src/image/load.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/load.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/load.cpp",
+  "output": "CMakeFiles/kp_image.dir/src/image/load.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_imagetool.dir/tools/kp_imagetool.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_imagetool.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_imagetool.cpp",
+  "output": "CMakeFiles/kp_imagetool.dir/tools/kp_imagetool.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -Wall -Wextra -o CMakeFiles/kp_machotest.dir/tools/kp_machotest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_machotest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_machotest.cpp",
+  "output": "CMakeFiles/kp_machotest.dir/tools/kp_machotest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -Wall -Wextra -o CMakeFiles/kp_machotest.dir/src/image/macho.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/image/macho.cpp",
+  "output": "CMakeFiles/kp_machotest.dir/src/image/macho.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_transporttest.dir/tools/kp_transporttest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_transporttest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_transporttest.cpp",
+  "output": "CMakeFiles/kp_transporttest.dir/tools/kp_transporttest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_transporttest.dir/src/multiplayer/transport.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/multiplayer/transport.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/multiplayer/transport.cpp",
+  "output": "CMakeFiles/kp_transporttest.dir/src/multiplayer/transport.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_hooks.dir/src/hooks/trampoline.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/trampoline.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/trampoline.cpp",
+  "output": "CMakeFiles/kp_hooks.dir/src/hooks/trampoline.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_hooks.dir/src/hooks/registry.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/registry.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/registry.cpp",
+  "output": "CMakeFiles/kp_hooks.dir/src/hooks/registry.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_hooks.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_hooks.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_hooks.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_hooks.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -fcf-protection=none -m32 -Wall -Wextra -o CMakeFiles/kp_hooktool.dir/tools/kp_hooktool.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_hooktool.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_hooktool.cpp",
+  "output": "CMakeFiles/kp_hooktool.dir/tools/kp_hooktool.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -O2 -g -DNDEBUG -std=c++20 -fcf-protection=none -m32 -Wall -Wextra -o CMakeFiles/kp_hooktool.dir/src/api/memory.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "output": "CMakeFiles/kp_hooktool.dir/src/api/memory.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -Wall -Wextra -o CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/decode.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/decode.cpp",
+  "output": "CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -Wall -Wextra -o CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/trampoline.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/trampoline.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/trampoline.cpp",
+  "output": "CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/trampoline.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -Wall -Wextra -o CMakeFiles/kp_hooktool_x64.dir/tools/kp_hooktool_x64.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_hooktool_x64.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_hooktool_x64.cpp",
+  "output": "CMakeFiles/kp_hooktool_x64.dir/tools/kp_hooktool_x64.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_routinetest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_routinetest.cpp",
+  "output": "CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_structs.dir/src/api/structs.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/structs.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/structs.cpp",
+  "output": "CMakeFiles/kp_structs.dir/src/api/structs.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_structtest.dir/tools/kp_structtest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_structtest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_structtest.cpp",
+  "output": "CMakeFiles/kp_structtest.dir/tools/kp_structtest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_entity.dir/src/api/entity.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/entity.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/entity.cpp",
+  "output": "CMakeFiles/kp_entity.dir/src/api/entity.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_entitytest.dir/tools/kp_entitytest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_entitytest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_entitytest.cpp",
+  "output": "CMakeFiles/kp_entitytest.dir/tools/kp_entitytest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_support.dir/src/api/output.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "output": "CMakeFiles/kp_support.dir/src/api/output.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_support.dir/src/api/timers.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "output": "CMakeFiles/kp_support.dir/src/api/timers.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_support.dir/src/api/strings.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "output": "CMakeFiles/kp_support.dir/src/api/strings.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/tools/kp_supporttest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/tools/kp_supporttest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/api/output.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/api/output.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/api/timers.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/api/timers.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/api/strings.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/api/strings.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_supporttest.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_supporttest.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_namespacetest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_namespacetest.cpp",
+  "output": "CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/tools/kp_harnesstest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_harnesstest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_harnesstest.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/tools/kp_harnesstest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/src/harness/channel.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/channel.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/channel.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/src/harness/channel.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/src/harness/json.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/src/harness/json.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/src/harness/ring.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/ring.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/ring.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/src/harness/ring.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_harnesstest.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_harnesstest.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_memtest.dir/tools/kp_memtest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_memtest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_memtest.cpp",
+  "output": "CMakeFiles/kp_memtest.dir/tools/kp_memtest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_memtest.dir/src/api/memory.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "output": "CMakeFiles/kp_memtest.dir/src/api/memory.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_modeltest.dir/tools/kp_modeltest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_modeltest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_modeltest.cpp",
+  "output": "CMakeFiles/kp_modeltest.dir/tools/kp_modeltest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_modeltest.dir/src/api/model.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "output": "CMakeFiles/kp_modeltest.dir/src/api/model.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_modeltest.dir/src/api/model_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "output": "CMakeFiles/kp_modeltest.dir/src/api/model_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_modeltest.dir/src/api/model_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "output": "CMakeFiles/kp_modeltest.dir/src/api/model_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_modeltest.dir/src/api/model_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "output": "CMakeFiles/kp_modeltest.dir/src/api/model_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_cameratest.dir/tools/kp_cameratest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_cameratest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_cameratest.cpp",
+  "output": "CMakeFiles/kp_cameratest.dir/tools/kp_cameratest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_cameratest.dir/src/api/camera.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.cpp",
+  "output": "CMakeFiles/kp_cameratest.dir/src/api/camera.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_cameratest.dir/src/api/camera_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_profiles.cpp",
+  "output": "CMakeFiles/kp_cameratest.dir/src/api/camera_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_cameratest.dir/src/api/camera_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_backend.cpp",
+  "output": "CMakeFiles/kp_cameratest.dir/src/api/camera_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_cameratest.dir/src/api/camera_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_lua.cpp",
+  "output": "CMakeFiles/kp_cameratest.dir/src/api/camera_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/tools/kp_animationtest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_animationtest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_animationtest.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/tools/kp_animationtest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/animation.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/animation.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/animation_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_profiles.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/animation_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/animation_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_backend.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/animation_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/animation_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/animation_lua.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/animation_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/model.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/model.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/model_profiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_profiles.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/model_profiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/model_backend.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_backend.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/model_backend.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_animationtest.dir/src/api/model_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp",
+  "output": "CMakeFiles/kp_animationtest.dir/src/api/model_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/tools/kp_luatest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_luatest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_luatest.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/tools/kp_luatest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/src/events/dispatch.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/src/events/dispatch.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_luatest.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_luatest.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/tools/kp_eventtest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_eventtest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_eventtest.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/tools/kp_eventtest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/events/table.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/table.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/table.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/events/table.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/events/payload.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/payload.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/payload.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/events/payload.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/events/situation.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/situation.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/situation.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/events/situation.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/events/dispatch.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/events/dispatch.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/events/dispatch.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/.. -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -fcf-protection=none -o CMakeFiles/kp_eventtest.dir/src/api/memory.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/memory.cpp",
+  "output": "CMakeFiles/kp_eventtest.dir/src/api/memory.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_lifecycletest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_lifecycletest.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/api/strings.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/api/strings.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_lifecycletest.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_lifecycletest.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_scriptsapitest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_scriptsapitest.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/scripts_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/scripts_lua.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/lua/value.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/value.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/lua/value.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/output.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/api/strings.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/strings.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/api/strings.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/platform/platform.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/platform/platform.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++ -DKP_REPO=\\\"/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation\\\" -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/.. -I/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default/luajit32/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_scriptsapitest.dir/src/platform/platform_linux.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_linux.cpp",
+  "output": "CMakeFiles/kp_scriptsapitest.dir/src/platform/platform_linux.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -fno-pie -Wall -Wextra -o CMakeFiles/kp_projectilestest.dir/tools/kp_projectilestest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_projectilestest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_projectilestest.cpp",
+  "output": "CMakeFiles/kp_projectilestest.dir/tools/kp_projectilestest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -fno-pie -Wall -Wextra -o CMakeFiles/kp_projectilestest.dir/src/api/projectiles.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles.cpp",
+  "output": "CMakeFiles/kp_projectilestest.dir/src/api/projectiles.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -fno-pie -Wall -Wextra -o CMakeFiles/kp_projectilestest.dir/src/api/projectiles_lua.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_lua.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_lua.cpp",
+  "output": "CMakeFiles/kp_projectilestest.dir/src/api/projectiles_lua.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -fno-pie -Wall -Wextra -o CMakeFiles/kp_projectilestest.dir/src/api/projectiles_entry.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_entry.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/projectiles_entry.cpp",
+  "output": "CMakeFiles/kp_projectilestest.dir/src/api/projectiles_entry.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoleprotocoltest.dir/tools/kp_consoleprotocoltest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_consoleprotocoltest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_consoleprotocoltest.cpp",
+  "output": "CMakeFiles/kp_consoleprotocoltest.dir/tools/kp_consoleprotocoltest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoleprotocoltest.dir/src/harness/console_protocol.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/console_protocol.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/console_protocol.cpp",
+  "output": "CMakeFiles/kp_consoleprotocoltest.dir/src/harness/console_protocol.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoleprotocoltest.dir/src/harness/json.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/json.cpp",
+  "output": "CMakeFiles/kp_consoleprotocoltest.dir/src/harness/json.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoleprotocoltest.dir/src/devtools/console.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "output": "CMakeFiles/kp_consoleprotocoltest.dir/src/devtools/console.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoletest.dir/tools/kp_consoletest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_consoletest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_consoletest.cpp",
+  "output": "CMakeFiles/kp_consoletest.dir/tools/kp_consoletest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/luajit/src -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_consoletest.dir/src/devtools/console.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/console.cpp",
+  "output": "CMakeFiles/kp_consoletest.dir/src/devtools/console.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/tools/kp_editorinputtest.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_editorinputtest.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_editorinputtest.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/tools/kp_editorinputtest.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/src/devtools/editor_input.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/editor_input.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/editor_input.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/src/devtools/editor_input.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_draw.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_draw.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_draw.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_draw.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_tables.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_tables.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_tables.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_tables.cpp.o"
+},
+{
+  "directory": "/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default",
+  "command": "/home/brunner56/.local/bin/c++  -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src -I/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui -O2 -g -DNDEBUG -std=c++20 -m32 -Wall -Wextra -o CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_widgets.cpp.o -c /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_widgets.cpp",
+  "file": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/third_party/imgui/imgui_widgets.cpp",
+  "output": "CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_widgets.cpp.o"
+}
+]

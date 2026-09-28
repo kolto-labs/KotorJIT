@@ -1,0 +1,7 @@
+LIVE RUN FAILED: preflight: /tmp user quota is full (tmpfs  12769M  12769M  12769M           99377       0       0); Xvfb needs it for its lock file and keymap
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/live_example_gpu.py", line 182, in <module>
+    channel=session.boot()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/session.py", line 1405, in boot
+    raise BootFailure("preflight", problem)
+kpharness.session.BootFailure: preflight: /tmp user quota is full (tmpfs  12769M  12769M  12769M           99377       0       0); Xvfb needs it for its lock file and keymap

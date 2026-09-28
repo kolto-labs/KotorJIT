@@ -1,0 +1,23 @@
+[ 87%] Built target kphasor
+[ 87%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/value.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/api/strings.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform_linux.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_lifecycletest[0m
+[100%] Built target kp_lifecycletest
+[ 84%] Built target kphasor
+[ 84%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/strings.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o[0m
+[ 90%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform.cpp.o[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/value.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform_linux.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_scriptsapitest[0m
+[100%] Built target kp_scriptsapitest

@@ -1,0 +1,3 @@
+ldso_renamed_enc detected= True loader_program= /tmp/r13-ldso-2e5lrkxh/enc loader_match= ffmpeg sha256 exe_match= None comm= ld-linux-x86-64
+ldso_named_ffmpeg detected= True loader_program= /tmp/r13-ldso-2e5lrkxh/ffmpeg loader_match= ffmpeg sha256 exe_match= None comm= ld-linux-x86-64
+ldso_options_then_relative_enc detected= True loader_program= ./enc loader_match= ffmpeg sha256 exe_match= None comm= ld-linux-x86-64

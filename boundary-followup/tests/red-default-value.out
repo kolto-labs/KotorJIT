@@ -1,0 +1,35 @@
+FF
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'R="${K1_ROOT:-/tmp/k1_harness}"\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 788, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'R="${K1_ROOT:-/tmp/k1_harness}"\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'W="${WINEPREFIX:-/var/tmp/wineprefix}"\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 788, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/var/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/var/tmp/'
+
+- []
++ ['/var/tmp/'] : b'W="${WINEPREFIX:-/var/tmp/wineprefix}"\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=2)

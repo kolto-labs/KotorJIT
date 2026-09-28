@@ -1,0 +1,28 @@
+FAIL scripts_api.list_shape
+     - list() ran: [string "local t = kp.scripts.list()..."]:1: attempt to index field 'scripts' (a nil value)
+     - list() fields: <nil>
+FAIL scripts_api.unload_request_then_service
+     - unload() ran: [string "id = kp.scripts.unload('a')..."]:1: attempt to index field 'scripts' (a nil value)
+     - result before service is 'pending': <nil>
+     - a unloaded after service
+     - OnScriptUnload once
+     - result() ran: [string "local res = kp.scripts.result(id)..."]:1: attempt to index field 'scripts' (a nil value)
+     - result after service: <nil>
+     - list shows a unloaded, 0 timers
+     - load brings a back as generation 2: <nil>
+FAIL scripts_api.self_unload_from_callback_safe
+     - a's callback ran to the end after asking to unload itself
+     - b's timer ran to the end after asking to reload itself
+     - service ran both requests
+     - a unloaded
+     - b reloaded
+FAIL scripts_api.console_state_has_no_scriptname
+     - console calls ran: [string "n = tostring(kp.scriptname())..."]:1: attempt to index global 'kp' (a nil value)
+     - scriptname() is nil in the console: <nil>
+     - scriptdir() is the host dir: <nil>
+     - console request is pending
+     - console request serviced
+    load error: 20_named.lua: ...idation/tmp/lifecycle-build/scratch-s/names/20_named.lua:1: attempt to call field 'scriptname' (a nil value)
+stack traceback:
+	...idation/tmp/lifecycle-build/scratch-s/names/20_named.lua:1: in main chunk
+rc=139

@@ -1,0 +1,31 @@
+{
+  "checked_at_utc": "2026-09-28T03:46:52.029506+00:00",
+  "result": "PASS",
+  "lua_files": 55,
+  "tcp_commands": 46,
+  "devtools_operations": [
+    "status",
+    "submit",
+    "outcome",
+    "output",
+    "complete",
+    "cancel"
+  ],
+  "python_modules": 37,
+  "python_top_level_and_class_functions": 776,
+  "lua_callable_and_metamethod_names": 201,
+  "ordinary_lua_callable_names": 172,
+  "metamethod_names": 29,
+  "event_names": 111,
+  "implemented_events": 97,
+  "server_events": 94,
+  "client_events": 1,
+  "process_lifecycle_events": 2,
+  "dead_event_names": 14,
+  "native_routine_counts": {
+    "k1": 769,
+    "k2": 803
+  },
+  "distinct_native_routine_names": 806,
+  "proof_class": "Source inventory and classification only; no live-game or multiplayer validation."
+}

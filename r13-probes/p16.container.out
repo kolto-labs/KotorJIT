@@ -1,0 +1,2 @@
+a) threading.active_count()=1 os_threads=2
+b) handler_ran=2000/2000 mask_left_blocked_after_raise=0

@@ -1,0 +1,40 @@
+N1 staged skip vs events the new generation should get
+  OBSERVE reload ok=1 err=
+  OBSERVE sequence: b-tick old-unload old-tick b-tick new-load new-tick b-tick
+  OBSERVE after commit: new-tick=1 old-tick=0 b-tick=1 new-save=1 save.called=1
+  OBSERVE n1-final: a state=Loaded gen=2 timers=0 L=017d01c8 last_error=-
+N2 new version throws at top level while events fire
+  OBSERVE poll errors=1 first=a: ...ve-20260922\review-probes-lifecycle-r2\win\t\r2\n2\a.lua:4: boom at top le
+  OBSERVE old-tick=3 staged-tick=0 staged-global-tick=0 old-unload=0
+  OBSERVE bound(OnTick)=0 errors=0
+  OBSERVE n2-after: a state=Loaded gen=1 timers=1 L=017901c8 last_error=set
+  OBSERVE states created=1 closed=1 during N2 (staged state closed once)
+  OBSERVE after fix: fixed-tick=1 old-tick=0 old-unload=1
+  OBSERVE n2-fixed: a state=Loaded gen=2 timers=0 L=017b01c8 last_error=-
+N3 delete-then-create with two polls
+  OBSERVE A poll1-absent: a state=Loaded gen=1 timers=0 L=017901c8 last_error=-
+  OBSERVE A poll2-recreated: a state=Loaded gen=1 timers=0 L=017901c8 last_error=-
+  OBSERVE A unload=0 v1=1 v2=0
+  OBSERVE A absent-present-absent: a state=Loaded gen=1 timers=0 L=017901c8 last_error=-
+  OBSERVE B dropped: a absent
+  OBSERVE B unload=1
+  OBSERVE B recreated: a state=Loaded gen=1 timers=0 L=017901c8 last_error=-
+  OBSERVE B v2=1
+  OBSERVE C empty-after-absent: a state=Loaded gen=1 timers=0 L=017901c8 last_error=-
+  OBSERVE C filled: a state=Loaded gen=2 timers=0 L=017b01c8 last_error=-
+  OBSERVE C v1=0 v2=1
+  OBSERVE D after rename poll1: held=2 one tick ran body 2 time(s)
+  OBSERVE D after poll2: held=1 one tick ran body 1 time(s)
+  OBSERVE E unloaded+delete+recreate within window: a state=Unloaded gen=1 timers=0 L=00000000 last_error=-
+N4 coalescing vs order of unload/reload
+  OBSERVE reload,unload          ids: 1 2 pending=2
+  OBSERVE reload,unload          last ask=unload final=Unloaded; result(last id)=OK
+  OBSERVE unload,reload,unload   ids: 1 2 1 pending=2
+  OBSERVE unload,reload,unload   last ask=unload final=Loaded; result(last id)=OK
+  OBSERVE reload,unload,reload   ids: 1 2 1 pending=2
+  OBSERVE reload,unload,reload   last ask=reload final=Unloaded; result(last id)=OK
+  OBSERVE unload,load,unload     ids: 1 2 1 pending=2
+  OBSERVE unload,load,unload     last ask=unload final=Loaded; result(last id)=OK
+N5 raising_self_ scope
+  OBSERVE b's reload('a') from nested tick inside a's OnScriptLoad -> ERROR: 'a' cannot load or reload itself from its own OnScriptLoad or reload OnScriptUnload; it would reload on every service
+created=25 closed=25 (must match)

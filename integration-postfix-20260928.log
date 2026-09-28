@@ -1,0 +1,85 @@
+=== /tmp/lifecycle-cfg/kp_namespacetest ===
+namespace contract: 0 failure(s)
+rc=0
+=== /tmp/lifecycle-cfg/kp_namespacetest k2 ===
+namespace contract: 0 failure(s)
+rc=0
+=== /tmp/lifecycle-cfg/kp_motiontest /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation ===
+PASS motion.unsupported_profile_capabilities_false
+PASS motion.relocated_image_refused
+PASS motion.span_table_valid
+PASS motion.guard_flip_refuses_before_call
+PASS motion.chain_failure_refuses_before_call
+PASS motion.invalid_object_id_refused_before_call
+PASS motion.non_placeable_type_refuses
+PASS motion.wrong_vtable_refuses
+PASS motion.id_roundtrip_mismatch_refuses
+PASS motion.capture_reads_server_xyz_and_orientation
+PASS motion.nonfinite_value_refuses
+PASS motion.unreadable_field_refuses
+PASS motion.accepts_client_id_0xffffffff
+PASS motion.unbind_bumps_epoch
+PASS motion.lua_unbound_capabilities_false
+PASS motion.forged_userdata_argerror
+PASS motion.lua_capture_surface
+  PENDING regeneration: server_object.area_id
+  PENDING regeneration: server_object.position
+  PENDING regeneration: server_object.orientation
+  PENDING regeneration: server_object.client_push_gate_unverified
+  PENDING regeneration: server_object.dirty_bits
+  PENDING regeneration: placeable.aabb_registered
+  PENDING regeneration: placeable.quaternion_raw_order_unverified
+  PENDING regeneration: server.get_placeable_by_object_id (proposed row)
+  PENDING regeneration: placeable.vtable (proposed row)
+PASS motion.profile_matches_address_table_row
+PASS motion.bindings_json_matches_profile
+PASS motion.spans_match_reference_image
+PASS motion.gate_refusal_zero_reads_zero_calls
+PASS motion.lua_gate_refusal_before_args
+PASS motion.nonfinite_refused_zero_calls
+PASS motion.step_bound_refused
+PASS motion.dz_bound_refused
+PASS motion.origin_range_refused
+PASS motion.stale_capture_pose_refused
+PASS motion.stale_capture_pose_refused_on_signed_zero
+PASS motion.stale_capture_refused_on_nan_before_fence
+PASS motion.stale_epoch_refused
+PASS motion.area_change_refused
+PASS motion.area_sentinel_refused
+PASS motion.collision_registered_refused_by_default
+PASS motion.collision_opt_in_allows
+PASS motion.relocate_single_setter_call_flags_110
+PASS motion.readback_requires_exact_pos_and_dirty_bit
+PASS motion.readback_mismatch_reports_mutation_and_keeps_entry
+PASS motion.readback_mismatch_on_signed_zero
+PASS motion.readback_refused_on_nan_landed
+PASS motion.same_position_reported_noop_zero_setter_calls
+PASS motion.restore_exact_readback
+PASS motion.restore_refused_after_identity_change
+PASS motion.restore_conflict_when_moved_by_other_writer_no_write
+PASS motion.restore_conflict_on_signed_zero
+PASS motion.restore_refused_on_nan_before_fence
+PASS motion.relocate_conflict_on_signed_zero
+PASS motion.second_owner_refused
+PASS motion.owner_token_not_pointer
+PASS motion.write_refused_without_host_owner_core
+PASS motion.write_refused_without_host_owner
+PASS motion.write_refused_while_staged
+PASS motion.restore_allowed_while_staged
+PASS motion.unbind_clears_ledger
+PASS motion.observe_reports_push_consumed_without_client_read
+PASS motion.lua_relocate_surface
+PASS motion.capabilities_tables
+PASS motion.new_spans_match_reference_image
+PASS motion.names_disjoint_from_nwscript_routines
+58/58 tests passed, 4158 checks (synthetic memory; no live ABI proof)
+rc=0
+=== /tmp/lifecycle-cfg/kp_enginegatetest ===
+PASS engine_gate.unbound_refuses
+PASS engine_gate.bound_probe_true_allows
+PASS engine_gate.rebind_nullptr_refuses
+PASS engine_gate.other_thread_refused
+PASS engine_gate.concurrent_rebind_never_tears
+PASS engine_gate.concurrent_two_writers_never_tear
+6/6 tests passed, 19 checks
+rc=0

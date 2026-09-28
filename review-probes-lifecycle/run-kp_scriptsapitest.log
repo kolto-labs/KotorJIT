@@ -1,0 +1,11 @@
+PASS scripts_api.list_shape
+PASS scripts_api.unload_request_then_service
+PASS scripts_api.self_unload_from_callback_safe
+PASS scripts_api.console_state_has_no_scriptname
+PASS scripts_api.scriptname_and_scriptdir_in_a_script
+PASS scripts_api.no_pascalcase_keys
+PASS scripts_api.bad_args_error_not_crash
+PASS scripts_api.unbound_host
+PASS scripts_api.names_are_not_nwscript_names
+9 case(s), 0 failed
+rc=0

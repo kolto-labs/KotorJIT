@@ -1,0 +1,25 @@
+name = "k1 Endar checkpoint position check"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 90
+authored_barks = [37, 48, 50, 53]
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_first_door"
+timeout = 300
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 120
+
+[[step]]
+do = "lua"
+timeout = 30
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetPosition',pc); local d1=nwscript.call('GetObjectByTag','end_door01',0); local d2=nwscript.call('GetObjectByTag','end_door02',0); return {px=p.x,py=p.y,door01_open=nwscript.call('GetIsOpen',d1),door02_open=nwscript.call('GetIsOpen',d2),combat=nwscript.call('GetIsInCombat',pc)}"
+
+[[step]]
+do = "quit"

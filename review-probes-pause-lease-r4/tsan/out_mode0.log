@@ -1,0 +1,72 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=2495114)
+  Read of size 8 at 0x00000189d798 by thread T2:
+    #0 <null> <null> (race_mode0+0x4bcca7) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (race_mode0+0x4bce59) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #2 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 8 at 0x00000189d798 by thread T1:
+    #0 <null> <null> (race_mode0+0x4bcc69) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (race_mode0+0x4bcdf1) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #2 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Thread T2 (tid=2495143, running) created by main thread at:
+    #0 <null> <null> (race_mode0+0x435d0e) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+  Thread T1 (tid=2495139, finished) created by main thread at:
+    #0 <null> <null> (race_mode0+0x435d0e) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+SUMMARY: ThreadSanitizer: data race (/home/brunner56/kp-live-20260922/review-probes-pause-lease-r4/tsan/race_mode0+0x4bcca7) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f) 
+==================
+==================
+WARNING: ThreadSanitizer: data race (pid=2495114)
+  Read of size 1 at 0x7fff9eddf60c by thread T2:
+    #0 <null> <null> (race_mode0+0x4be26c) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (race_mode0+0x4bccd6) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #2 <null> <null> (race_mode0+0x4bce59) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #3 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 1 at 0x7fff9eddf60c by thread T1:
+    #0 <null> <null> (race_mode0+0x4bd133) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (race_mode0+0x4bcc5f) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #2 <null> <null> (race_mode0+0x4bcdf1) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #3 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Location is stack of main thread.
+
+  Thread T2 (tid=2495143, running) created by main thread at:
+    #0 <null> <null> (race_mode0+0x435d0e) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+  Thread T1 (tid=2495139, finished) created by main thread at:
+    #0 <null> <null> (race_mode0+0x435d0e) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+SUMMARY: ThreadSanitizer: data race (/home/brunner56/kp-live-20260922/review-probes-pause-lease-r4/tsan/race_mode0+0x4be26c) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f) 
+==================
+ThreadSanitizer:DEADLYSIGNAL
+==2495114==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000e40 (pc 0x0000004be237 bp 0x7fa7f3ffd700 sp 0x7fa7f3ffd680 T2495329)
+==2495114==The signal is caused by a READ memory access.
+==2495114==Hint: address points to the zero page.
+    #0 <null> <null> (race_mode0+0x4be237) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #1 <null> <null> (race_mode0+0x4bccd6) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #2 <null> <null> (race_mode0+0x4bce59) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #3 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #4 <null> <null> (race_mode0+0x435c6b) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f)
+    #5 <null> <null> (libc.so.6+0x9cb83) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+    #6 <null> <null> (libc.so.6+0x129d6b) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+==2495114==Register values:
+rax = 0x0000000000000000  rbx = 0x0000000000000000  rcx = 0x0000100000000000  rdx = 0x0000000040019c0f  
+rdi = 0x00007fa7f3ffdf80  rsi = 0x0000100000001c80  rbp = 0x00007fa7f3ffd700  rsp = 0x00007fa7f3ffd680  
+ r8 = 0x0000000000000e40   r9 = 0x00007fa7f55800b8  r10 = 0x00007fa7f55800c0  r11 = 0x00000000000aae80  
+r12 = 0x00007fa7f7c8fda0  r13 = 0xfffffffffffff8c0  r14 = 0x0000000000001000  r15 = 0x00007fa7f3ffdf80  
+ThreadSanitizer can not provide additional info.
+SUMMARY: ThreadSanitizer: SEGV (/home/brunner56/kp-live-20260922/review-probes-pause-lease-r4/tsan/race_mode0+0x4be237) (BuildId: 90a8395170ea153cd67f06af3d17da93d43ce66f) 
+==2495114==ABORTING

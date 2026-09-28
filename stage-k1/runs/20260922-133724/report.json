@@ -1,0 +1,248 @@
+{
+ "scenario": "F12 rapid history regression",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133724",
+ "started": 1790102278.906557,
+ "finished": 1790102293.96938,
+ "seconds": 15.063,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\"}",
+   "status": "ok",
+   "seconds": 0.178,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\"}",
+   "status": "ok",
+   "seconds": 7.792,
+   "detail": "phase=gameplay module=danm14aa server_tick=16 client_tick=22 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 16,
+    "client_tick": 22,
+    "pc": {
+     "max_hp": 96,
+     "id": 2147483644,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "hp": 96
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.526,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.133,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 5,
+   "step": "do console_command {\"code\": \"77+1\", \"contains\": [\"number: 78\"]}",
+   "status": "ok",
+   "seconds": 0.159,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 6,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.223,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 7,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.202,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 8,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.308,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 9,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.206,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 10,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.281,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 11,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.324,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 12,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.367,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 13,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.369,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 14,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.259,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 15,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.287,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 16,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.202,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 17,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.179,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 18,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.603,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 19,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.445,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 20,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.335,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 21,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.341,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 22,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.22,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 23,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.409,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 24,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.23,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 25,
+   "step": "do console_command {\"code\": \"\", \"keys_before_submit\": [\"ctrl+Up\"], \"contains\": [\"number: 78\"], \"timeout\": 5}",
+   "status": "ok",
+   "seconds": 0.356,
+   "detail": "> 77+1\nnumber: 78"
+  },
+  {
+   "index": 26,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.127,
+   "detail": "F12 overlay open=False"
+  }
+ ]
+}

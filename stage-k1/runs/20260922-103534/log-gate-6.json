@@ -1,0 +1,7 @@
+{
+  "pattern": "\\[arrival\\] dan",
+  "offset": 0,
+  "lines": [
+    "[running] info: [50_enclave_arrival] [arrival] dan"
+  ]
+}

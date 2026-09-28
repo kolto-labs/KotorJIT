@@ -1,0 +1,157 @@
+{
+ "scenario": "Object blaster fixture: unmodified pistol baseline",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-141926",
+ "started": 1790104781.5300264,
+ "finished": 1790104794.1483557,
+ "seconds": 12.618,
+ "ok": false,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.072,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 7.977,
+   "detail": "phase=gameplay module=danm14aa server_tick=10 client_tick=21 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 10,
+    "client_tick": 21,
+    "pc": {
+     "id": 2147483644,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "max_hp": 96,
+     "x": 105.67625427246094
+    },
+    "party": [
+     {
+      "tag": "",
+      "id": 2147483644
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.616,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.235,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.044,
+   "detail": "saved native log offset 6156"
+  },
+  {
+   "index": 6,
+   "step": "snapshot original equipment and existing area creatures",
+   "status": "ok",
+   "seconds": 0.05,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "do advance_ticks {\"ticks\": 120}",
+   "status": "ok",
+   "seconds": 2.321,
+   "detail": "observed server ticks 19 -> 155"
+  },
+  {
+   "index": 8,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.073,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 9,
+   "step": "do console_command {\"code\": \"blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 0.568,
+   "detail": "> blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true\nboolean: true"
+  },
+  {
+   "index": 10,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.119,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 11,
+   "step": "independent equipped pistol and one owned target",
+   "status": "ok",
+   "seconds": 0.033,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 12,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.239,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 13,
+   "step": "do console_command {\"code\": \"return blaster_fixture.fire()\", \"contains\": [\"boolean: true\"]}",
+   "status": "failed",
+   "seconds": 0.27,
+   "detail": "console missing output 'boolean: true': > return blaster_fixture.fire()\nkotorphasor/console-examples/blaster_fixture.lua:38: weapon equip has not settled\nstack traceback:\n\t[C]: in function 'assert'\n\tkotorphasor/console-examples/blaster_fixture.lua:38: in function <kotorphasor/console-examples/blaster_fixture.lua:37>"
+  }
+ ]
+}

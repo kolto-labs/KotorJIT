@@ -1,0 +1,7 @@
+checking file package.py
+checking file source/CMakeLists.txt
+checking file source/src/api/structs.cmake
+checking file source/src/hooks/hooks.cmake
+checking file source/src/proxy/proxy.cmake
+checking file source/src/runtime/runtime.cmake
+dry-run rc=0

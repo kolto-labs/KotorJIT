@@ -1,0 +1,104 @@
+[
+  {
+    "name": "K1__k1_mac_swkotor.app",
+    "sha256": "aa6283733d3c738d11d12453f77dfc6b7e87f95326a07ee97daab1a37734b032",
+    "magic": "0xfeedface",
+    "cpu": 7,
+    "filetype": 2,
+    "ncmds": 22,
+    "sizeofcmds": 2944,
+    "segments": [
+      {
+        "name": "__PAGEZERO",
+        "vmaddr": 0,
+        "vmsize": 4096,
+        "fileoff": 0,
+        "filesize": 0,
+        "sections": 0
+      },
+      {
+        "name": "__TEXT",
+        "vmaddr": 4096,
+        "vmsize": 4714496,
+        "fileoff": 0,
+        "filesize": 4714496,
+        "sections": 11
+      },
+      {
+        "name": "__DATA",
+        "vmaddr": 4718592,
+        "vmsize": 1134592,
+        "fileoff": 4714496,
+        "filesize": 524288,
+        "sections": 10
+      },
+      {
+        "name": "__IMPORT",
+        "vmaddr": 5853184,
+        "vmsize": 12288,
+        "fileoff": 5238784,
+        "filesize": 12288,
+        "sections": 2
+      },
+      {
+        "name": "__LINKEDIT",
+        "vmaddr": 5865472,
+        "vmsize": 3198976,
+        "fileoff": 5251072,
+        "filesize": 3196980,
+        "sections": 0
+      }
+    ]
+  },
+  {
+    "name": "TSL__k2_mac_swkotor2.app",
+    "sha256": "f14f285b1b6ed7e4bf000fe19ebcd0d6528d1d3e86d2832be6092761557c130d",
+    "magic": "0xfeedface",
+    "cpu": 7,
+    "filetype": 2,
+    "ncmds": 46,
+    "sizeofcmds": 5408,
+    "segments": [
+      {
+        "name": "__PAGEZERO",
+        "vmaddr": 0,
+        "vmsize": 4096,
+        "fileoff": 0,
+        "filesize": 0,
+        "sections": 0
+      },
+      {
+        "name": "__TEXT",
+        "vmaddr": 4096,
+        "vmsize": 5615616,
+        "fileoff": 0,
+        "filesize": 5615616,
+        "sections": 7
+      },
+      {
+        "name": "__DATA",
+        "vmaddr": 5619712,
+        "vmsize": 630784,
+        "fileoff": 5615616,
+        "filesize": 172032,
+        "sections": 12
+      },
+      {
+        "name": "__OBJC",
+        "vmaddr": 6250496,
+        "vmsize": 8192,
+        "fileoff": 5787648,
+        "filesize": 8192,
+        "sections": 15
+      },
+      {
+        "name": "__LINKEDIT",
+        "vmaddr": 6258688,
+        "vmsize": 3321856,
+        "fileoff": 5795840,
+        "filesize": 3319500,
+        "sections": 0
+      }
+    ]
+  }
+]

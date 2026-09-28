@@ -1,0 +1,46 @@
+[14:19:29] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[14:19:29] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[14:19:29] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[14:19:29] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[14:19:29] runtime already current (27077224b72a)
+[14:19:29] ini tuned: swkotor.ini (14 keys)
+[14:19:30] Owned GPU display ready :0
+[14:19:30] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[14:19:30] wineserver settled before launch
+[14:19:30] launching: bwrap --die-with-parent --ro-bind / / --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260922-141925/runtime/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[14:19:41] channel up on 127.0.0.1:57201: build k1_gog_103, 19 hooks, live=True
+Capturing owned game window ('0xe00004', 'Star Wars: Knights of the Old Republic', '1024', '768')
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE", "timeout": 600}
+  ok (0.1s) load_save '000001 - AUTOSAVE' issued
+step 2: wait phase {"equals": "gameplay", "timeout": 600}
+screenshot -> 0001_periodic.png
+  ok (8.0s) phase=gameplay module=danm14aa server_tick=10 client_tick=21 pc=(105.7,96.5,1.0) hp=96/96
+step 3: do clear_auto_pause
+  ok (0.6s) clear_auto_pause ok
+step 4: do advance_dialog {"until": "gameplay", "timeout": 120}
+  ok (0.2s) advance_dialog reached 'gameplay' after 0 picks
+step 5: do mark_log
+  ok (0.0s) saved native log offset 6156
+step 6: snapshot original equipment and existing area creatures
+  ok (0.1s) assert_lua == true
+step 7: do advance_ticks {"ticks": 120}
+  ok (2.3s) observed server ticks 19 -> 155
+step 8: do console_open {"open": true}
+  ok (0.1s) F12 overlay open=True
+step 9: do console_command {"code": "blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true", "contains": ["boolean: true"]}
+  ok (0.6s) > blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true
+boolean: true
+step 10: do console_open {"open": false}
+  ok (0.1s) F12 overlay open=False
+step 11: independent equipped pistol and one owned target
+  ok (0.0s) assert_lua == true
+step 12: do console_open {"open": true}
+  ok (0.2s) F12 overlay open=True
+step 13: do console_command {"code": "return blaster_fixture.fire()", "contains": ["boolean: true"]}
+  failed (0.3s) console missing output 'boolean: true': > return blaster_fixture.fire()
+kotorphasor/console-examples/blaster_fixture.lua:38: weapon equip has not settled
+stack 
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-141926/report.json
+{"ok": false, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-141926"}
+[14:19:55] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-141926

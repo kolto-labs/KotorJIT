@@ -1,0 +1,10 @@
+{"testsrc2_60": {"fresh": 719, "dup": 0, "fresh_min": 1.8907, "dup_max": null}}
+{"testsrc2_30_to_60": {"fresh": 359, "dup": 360, "fresh_min": 3.0935, "dup_max": 0.1797}}
+{"testsrc2_20_to_60": {"fresh": 239, "dup": 480, "fresh_min": 3.8659, "dup_max": 0.5374}}
+{"testsrc2_6_to_60": {"fresh": 71, "dup": 648, "fresh_min": 4.1965, "dup_max": 0.3311}}
+{"testsrc2_59_to_60": {"fresh": 707, "dup": 12, "fresh_min": 1.8911, "dup_max": 0.3048}}
+{"testsrc2_15_to_60": {"fresh": 179, "dup": 540, "fresh_min": 3.9283, "dup_max": 0.48}}
+{"testsrc2_45_to_60": {"fresh": 539, "dup": 180, "fresh_min": 2.295, "dup_max": 0.7596}}
+{"testsrc_60": {"fresh": 719, "dup": 0, "fresh_min": 0.1347, "dup_max": null}}
+{"testsrc_30_to_60": {"fresh": 359, "dup": 360, "fresh_min": 0.297, "dup_max": 0.0567}}
+{"ALL_testsrc2": {"fresh_frames": 2813, "dup_frames": 2220, "fresh_min_maxdif": 1.8907, "dup_max_maxdif": 0.7596, "geometric_midpoint": 1.1984, "floor": 1.2, "margin_above_dup_max": 1.58, "margin_below_fresh_min": 1.58, "dups_above_floor": 0, "fresh_at_or_below_floor": 0}}

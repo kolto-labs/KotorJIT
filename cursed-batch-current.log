@@ -1,0 +1,9 @@
+RUN 60_rave.lua
+RESULT {"script": "60_rave.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031", "source_unchanged": true}
+RUN 70_doppelganger.lua
+RESULT {"script": "70_doppelganger.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259", "source_unchanged": true}
+RUN 80_loot_pinata.lua
+RESULT {"script": "80_loot_pinata.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104621", "source_unchanged": true}
+RUN 90_bullet_time.lua
+RESULT {"script": "90_bullet_time.lua", "exit_code": -2, "code": 2, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104936", "source_unchanged": true}
+Route failed; halted for diagnosis

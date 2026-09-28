@@ -1,0 +1,7 @@
+{
+  "pattern": "\\[model-scene:player\\] complete phases=6 restored=1",
+  "offset": 6311,
+  "lines": [
+    "[running] info: [player_scale] [model-scene:player] complete phases=6 restored=1"
+  ]
+}

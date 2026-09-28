@@ -1,0 +1,2 @@
+writes 150ms apart with equal mtime: 0/20; stamps with sub-second part: 20/20
+writes150msapartwithequalmtime:17/20;stampswithsub-secondpart:0/20

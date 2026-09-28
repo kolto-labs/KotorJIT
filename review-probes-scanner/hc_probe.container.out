@@ -1,0 +1,6 @@
+flood                    rc=-9 bytes=65536 secs=0.01
+drip_forever             rc=-9 bytes=10 secs=10.01
+close_stdout_then_sleep  rc=-9 bytes=0 secs=11.00
+bg_child_holds_pipe      rc=-9 bytes=20 secs=10.02
+exact_64k_then_exit      rc=0 bytes=65536 secs=0.01
+maxrss_kb 13044

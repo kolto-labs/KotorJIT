@@ -1,0 +1,17 @@
+{
+  "label": "bridge_recovery",
+  "code": "6 * 7",
+  "request": 7,
+  "lines": [
+    {
+      "request": 7,
+      "kind": "input",
+      "text": "> 6 * 7"
+    },
+    {
+      "request": 7,
+      "kind": "result",
+      "text": "number: 42"
+    }
+  ]
+}

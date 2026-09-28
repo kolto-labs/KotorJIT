@@ -1,0 +1,137 @@
+{
+ "scenario": "isolated K1 Dantooine/Bastila validation preflight",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527",
+ "started": 1790088359.809123,
+ "finished": 1790088413.875,
+ "seconds": 54.066,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 16.0,
+  "game_speed_effective": 16.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\"}",
+   "status": "ok",
+   "seconds": 1.419,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait module {\"equals\": \"danm14aa\", \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 8.84,
+   "detail": "phase=loading module=danm14aa server_tick=4 client_tick=8",
+   "state": {
+    "phase": "loading",
+    "phase_detail": {
+     "server_mode": 1,
+     "loading_module": 0,
+     "area_not_ready": 1,
+     "input_class": 0,
+     "main_menu": 1,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": -1,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 3,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 4,
+    "client_tick": 8,
+    "pc": null,
+    "party": null,
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 26.692,
+   "detail": "phase=gameplay module=danm14aa server_tick=7 client_tick=11 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 1,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 7,
+    "client_tick": 11,
+    "pc": {
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "id": 2147483644,
+     "max_hp": 96,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 4,
+   "step": "Bastila is a valid conscious active party member",
+   "status": "ok",
+   "seconds": 15.778,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 5,
+   "step": "dantooine-party-preflight",
+   "status": "ok",
+   "seconds": 0.551,
+   "detail": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527/shots/0002_dantooine-party-preflight.png"
+  }
+ ]
+}

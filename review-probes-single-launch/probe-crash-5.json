@@ -1,0 +1,62 @@
+{
+ "raised": "BootFailure",
+ "reason": "crash",
+ "launch_count": 5,
+ "max_boot_attempts": 5,
+ "evidence_path": "/tmp/kp_probe_e1yad0yu/stage/runs/20260927-182739/boot-attempts.json",
+ "mode": "crash",
+ "env": "5",
+ "elapsed": 7.8,
+ "game_launch_popens": 5,
+ "wineserver_k_calls": 5,
+ "evidence_exists_after_teardown": true,
+ "session_json_exists": false,
+ "evidence": {
+  "max_boot_attempts": 5,
+  "max_boot_attempts_source": "env",
+  "launch_count": 5,
+  "outcome": "failed",
+  "attempts": [
+   {
+    "attempt": 1,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551659.0569334,
+    "ended": 1790551660.1134613
+   },
+   {
+    "attempt": 2,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551660.631365,
+    "ended": 1790551661.711423
+   },
+   {
+    "attempt": 3,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551662.2123814,
+    "ended": 1790551663.2298484
+   },
+   {
+    "attempt": 4,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551663.7307158,
+    "ended": 1790551664.745993
+   },
+   {
+    "attempt": 5,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551665.2544794,
+    "ended": 1790551666.3355243
+   }
+  ]
+ }
+}

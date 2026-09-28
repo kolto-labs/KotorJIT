@@ -1,0 +1,297 @@
+name="Task 7 attempt 2 native scale, read-only camera (V1)"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=45
+load_timeout=600
+shot_interval=0
+
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+timeout=600
+
+[[step]]
+wait="phase"
+equals="gameplay"
+timeout=600
+
+[[step]]
+do="clear_auto_pause"
+
+[[step]]
+do="advance_dialog"
+until="gameplay"
+timeout=120
+
+[[step]]
+label="peaceful danm14aa, native model and camera available, original scale"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); if not (kp.camera and kp.camera.capabilities) then error('kp.camera missing: wrong build') end; local cc=kp.camera.capabilities(); if cc.available~=true or cc.profile~='windows-k1-gog' then error('kp.camera unavailable: '..tostring(cc.profile)) end; if q('GetModuleFileName')~='danm14aa' or q('GetIsObjectValid',p)~=1 or q('GetIsDead',p)==1 or q('GetIsInCombat',p)~=0 or q('GetIsInConversation',p)~=0 or not kp.model.capabilities().available then return false end; t7_original=assert(kp.model.snapshot(p)); t7_module=q('GetModuleFileName'); t7_area=q('GetArea',p); t7_locals={}; for i=5,9 do t7_locals[i]=q('GetLocalNumber',p,i) end; T7={q=0.001,p=0.01,cfg=0.0001,face=0.1,pos=0.01}; function t7_cam(soft) local function bad(m) if soft then return nil,m end; error(m) end; local c,msg,code=kp.camera.snapshot(); if not c then return bad('camera snapshot failed: '..tostring(code)..' '..tostring(msg)) end; if c.behavior~='chase' then return bad('camera behavior '..tostring(c.behavior)..' vtable '..tostring(c.behavior_vtable)) end; if c.pending_style~=-1 then return bad('camera style reapply pending '..tostring(c.pending_style)) end; return {mode=c.mode,module=c.module,camera=c.camera,behavior_ptr=c.behavior_ptr,distance=c.distance,speed=c.speed,pitch=c.pitch,height=c.height,dolly=c.dolly,style_row=c.style_row,base_distance=c.base_distance,base_view_angle=c.base_view_angle,q=c.raw_28_unverified,p=c.raw_38_unverified,p2=c.raw_50_unverified} end; function t7_camdev(a,b) for _,k in ipairs{'mode','module','camera','behavior_ptr','dolly','style_row'} do if a[k]~=b[k] then return false,k..' changed '..tostring(a[k])..'->'..tostring(b[k]) end end; for _,k in ipairs{'distance','speed','pitch','height','base_distance','base_view_angle'} do if math.abs(a[k]-b[k])>T7.cfg then return false,k..' changed '..a[k]..'->'..b[k] end end; local mq,mp=0,0; for i=1,4 do mq=math.max(mq,math.abs(a.q[i]-b.q[i])) end; for i=1,3 do mp=math.max(mp,math.abs(a.p[i]-b.p[i]),math.abs(a.p2[i]-b.p2[i])) end; if mq>T7.q then return false,'raw_28 moved '..mq end; if mp>T7.p then return false,'raw_38/raw_50 moved '..mp end; return true,'same',mq,mp end; function t7_pose() local q=nwscript.call; local p=q('GetFirstPC'); local v=q('GetPosition',p); return {f=q('GetFacing',p),x=v.x,y=v.y,z=v.z} end; function t7_posedev(a,b) if math.abs(a.f-b.f)>T7.face then return false,'PC facing changed' end; for _,k in ipairs{'x','y','z'} do if math.abs(a[k]-b[k])>T7.pos then return false,'PC moved' end end; return true end; function t7_stable(where) local ok,why=t7_camdev(t7_cam0,t7_cam()); if not ok then error('camera moved at '..where..': '..why) end; local pk,pw=t7_posedev(t7_pose0,t7_pose()); if not pk then error(pw..' at '..where) end; return true end; return math.abs(t7_original.base-1)<0.001"
+equals=true
+
+[[step]]
+label="one-time camera setup: chase mode only (no facing, no distance)"
+do="assert_lua"
+code="local q=nwscript.call; q('SetCameraMode',q('GetFirstPC'),2); return true"
+equals=true
+
+[[step]]
+do="advance_ticks"
+ticks=600
+timeout=180
+
+[[step]]
+label="camera settled: >=15 samples and >=20 s within tolerance of one fixed anchor"
+do="assert_lua"
+code="local c,why=t7_cam(true); t7_settle_last=why; t7_resets=t7_resets or 0; if not c then t7_anchor=nil; return false end; if not t7_anchor then t7_anchor=c; t7_anchor_t=os.time(); t7_same=0; return false end; local ok=t7_camdev(t7_anchor,c); if ok then t7_same=t7_same+1 else t7_anchor=c; t7_anchor_t=os.time(); t7_same=0; t7_resets=t7_resets+1 end; return t7_same>=15 and os.difftime(os.time(),t7_anchor_t)>=20"
+equals=true
+poll=true
+timeout=300
+
+[[step]]
+label="camera baseline taken and equal to the settle anchor (before start marker)"
+do="assert_lua"
+code="t7_cam0=t7_cam(); local ok,why=t7_camdev(t7_anchor,t7_cam0); if not ok then error('camera moved after settle: '..why) end; t7_pose0=t7_pose(); return true"
+equals=true
+
+[[step]]
+do="lua"
+label="camera baseline receipt (record)"
+code="local c=t7_cam0; return ('d=%.4f s=%.3g pi=%.4f h=%.4f fov=%.4g bd=%.4g do=%s sr=%d q=%.4f,%.4f,%.4f,%.4f p=%.3f,%.3f,%.3f r=%d f=%.2f'):format(c.distance,c.speed,c.pitch,c.height,c.base_view_angle,c.base_distance,tostring(c.dolly),c.style_row,c.q[1],c.q[2],c.q[3],c.q[4],c.p[1],c.p[2],c.p[3],t7_resets,t7_pose0.f)"
+
+[[step]]
+screenshot=true
+label="framing still A: calm baseline, outside cadence window"
+
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=60
+
+[[step]]
+screenshot=true
+label="framing still B: calm baseline +180 ticks, outside cadence window"
+
+[[step]]
+label="camera unchanged over 180 settled ticks (before start marker)"
+do="assert_lua"
+code="return t7_stable('pre-marker +180 ticks')"
+equals=true
+
+[[step]]
+do="console_open"
+open=true
+
+[[step]]
+label="physical F12 1: construct finite scene tiny=0.35 giant=1.9"
+do="console_command"
+code="task7s2=dofile('kotorphasor/scripts/task7s2_scale.lua');return task7s2.construct{tiny=0.35,giant=1.9}"
+contains=["boolean: true"]
+expect_values=[{type="Boolean", value=true}]
+return_count=1
+timeout=30
+
+[[step]]
+do="mark_log"
+
+[[step]]
+label="physical F12 2: arm delayed scene timer and trigger"
+do="console_command"
+code="return task7s2.arm()"
+contains=["boolean: true"]
+expect_values=[{type="Boolean", value=true}]
+return_count=1
+timeout=30
+
+[[step]]
+do="console_open"
+open=false
+
+[[step]]
+label="console closed before calm_start; scene not started; camera unchanged"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); t7_stable('console closed'); return q('GetLocalNumber',p,6)==0 and q('GetLocalNumber',p,8)==0"
+equals=true
+
+[[step]]
+do="await_log"
+label="calm_start has not fired before console closed"
+pattern="\\[task7s2\\] calm_start$"
+minimum=0
+maximum=0
+timeout=5
+
+[[step]]
+do="await_log"
+label="armed line"
+pattern="\\[task7s2\\] armed tiny=0\\.350 giant=1\\.900$"
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+label="independent native phase 1 (base 0.35), identity, ratio, peaceful, camera unchanged"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; t7_stable('phase 1 poll'); if q('GetLocalNumber',p,6)~=1 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==t7_module and q('GetArea',p)==t7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==t7_original.id and c.model==t7_original.model and c.creature==t7_original.creature and math.abs(c.base-0.35)<0.001 and math.abs(c.effective-t7_original.effective/t7_original.base*0.35)<0.001"
+equals=true
+poll=true
+timeout=90
+
+[[step]]
+label="independent native phase 2 (base 1.9), identity, ratio, peaceful, camera unchanged"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; t7_stable('phase 2 poll'); if q('GetLocalNumber',p,6)~=2 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==t7_module and q('GetArea',p)==t7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==t7_original.id and c.model==t7_original.model and c.creature==t7_original.creature and math.abs(c.base-1.9)<0.001 and math.abs(c.effective-t7_original.effective/t7_original.base*1.9)<0.001"
+equals=true
+poll=true
+timeout=90
+
+[[step]]
+label="independent native phase 3 (base 1.0), identity, ratio, peaceful, camera unchanged"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; t7_stable('phase 3 poll'); if q('GetLocalNumber',p,6)~=3 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==t7_module and q('GetArea',p)==t7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==t7_original.id and c.model==t7_original.model and c.creature==t7_original.creature and math.abs(c.base-1.0)<0.001 and math.abs(c.effective-t7_original.effective/t7_original.base*1.0)<0.001"
+equals=true
+poll=true
+timeout=90
+
+[[step]]
+label="native completion and exact original scale restored, camera unchanged"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; t7_stable('completion poll'); local c=assert(kp.model.snapshot(p)); return q('GetLocalNumber',p,7)==1 and q('GetLocalNumber',p,6)==3 and c.model==t7_original.model and c.creature==t7_original.creature and math.abs(c.base-t7_original.base)<0.001 and math.abs(c.effective-t7_original.effective)<0.001"
+equals=true
+poll=true
+timeout=90
+
+[[step]]
+do="await_log"
+label="calm_end (restored lead-out finished)"
+pattern="\\[task7s2\\] calm_end$"
+minimum=1
+maximum=1
+timeout=120
+
+[[step]]
+do="await_log"
+label="marker calm_start exactly once"
+pattern="\\[task7s2\\] calm_start$"
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="marker tiny exactly once"
+pattern="\\[model-scene:task7s2\\] phase=1 actor=1 base=0\\.350 "
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="marker giant exactly once"
+pattern="\\[model-scene:task7s2\\] phase=2 actor=1 base=1\\.900 "
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="marker normal exactly once"
+pattern="\\[model-scene:task7s2\\] phase=3 actor=1 base=1\\.000 "
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="marker restored exactly once"
+pattern="\\[model-scene:task7s2\\] restored actors=1 holding-original-scale"
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="marker complete exactly once"
+pattern="\\[model-scene:task7s2\\] complete phases=3 restored=1"
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="three phase lines"
+pattern="\\[model-scene:task7s2\\] phase="
+minimum=3
+maximum=3
+timeout=10
+
+[[step]]
+do="await_log"
+label="scene-side camera watch stable"
+pattern="\\[task7s2\\] camera_watch .* cfg_changed=0 failures=0 stable=1$"
+minimum=1
+maximum=1
+timeout=10
+
+[[step]]
+do="await_log"
+label="no scene failure or timer error"
+pattern="\\[(model-scene:)?task7s2\\] (failed=|error=|scene_failed)"
+minimum=0
+maximum=0
+timeout=5
+
+[[step]]
+label="camera unchanged after calm_end (independent)"
+do="assert_lua"
+code="return t7_stable('after calm_end')"
+equals=true
+
+[[step]]
+do="lua"
+label="camera after-window receipt (record)"
+code="local _,_,mq,mp=t7_camdev(t7_cam0,t7_cam()); return ('after calm_end vs baseline: max_q=%.6f max_p=%.6f'):format(mq,mp)"
+
+[[step]]
+screenshot=true
+label="framing still C: restored, after calm_end, outside cadence window"
+
+[[step]]
+do="advance_ticks"
+ticks=120
+timeout=60
+
+[[step]]
+do="console_open"
+open=true
+
+[[step]]
+label="physical F12 3: verify completion and release scene-owned state"
+do="console_command"
+code="return task7s2.cleanup()"
+contains=["boolean: true"]
+expect_values=[{type="Boolean", value=true}]
+return_count=1
+timeout=30
+
+[[step]]
+do="console_open"
+open=false
+
+[[step]]
+label="native locals 5-9 and scale restored after physical cleanup"
+do="assert_lua"
+code="local q=nwscript.call; local p=q('GetFirstPC'); for i=5,9 do if q('GetLocalNumber',p,i)~=t7_locals[i] then return false end end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==t7_module and q('GetArea',p)==t7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.model==t7_original.model and c.creature==t7_original.creature and math.abs(c.base-t7_original.base)<0.001 and math.abs(c.effective-t7_original.effective)<0.001"
+equals=true
+
+[[step]]
+do="lua"
+label="post-cleanup camera comparison (record only, not a gate)"
+code="local ok,why=t7_camdev(t7_cam0,t7_cam()); return 'post-cleanup camera (record only): '..tostring(ok)..' '..tostring(why)"
+
+[[step]]
+do="advance_ticks"
+ticks=120
+timeout=60

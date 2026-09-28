@@ -1,0 +1,510 @@
+name = "Current Lua harness examples through Endar"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 240
+load_timeout = 600
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_room3"
+timeout = 300
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+label = "actual example 20_dialog_state.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"20\"]=(function()\n-- Conversation state from the engine's side. Pair it with the harness\n-- `state` command's `dialog` block (entry, waiting_for_player,\n-- waiting_on_sound, replies), which reads the GUI panel.\n--\n-- A conversation that shows active=1 here while the panel has entry=-1 and\n-- nobody is in it (pc_in=0, partner_in=0) is still initialising: the owner\n-- has not sent its first entry. `dialog_skip` fails on it (\"dialog owner has\n-- no game object\"); wait, then escalate to `dialog_abort` if it never starts.\n\nlocal PARTNER_TAG = \"end_trask\"\n\nlocal function clean(s) return (s:gsub(\"%z\", \"\")) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal partner = nwscript.call('GetObjectByTag',PARTNER_TAG, 0)\n\nlocal out = {\n  active = nwscript.call('GetIsConversationActive'),\n  pc_in = nwscript.call('GetIsInConversation',pc),\n  last_speaker = clean(nwscript.call('GetTag',nwscript.call('GetLastSpeaker'))),\n  pc_speaker = clean(nwscript.call('GetTag',nwscript.call('GetPCSpeaker'))),\n  pc_action = nwscript.call('GetCurrentAction',pc),\n}\nif nwscript.call('GetIsObjectValid',partner) == 1 then\n  out.partner_in = nwscript.call('GetIsInConversation',partner)\n  out.partner_action = nwscript.call('GetCurrentAction',partner)   -- 7 == dialog object\n  out.partner_dist = nwscript.call('GetDistanceBetween',pc, partner)\nend\nreturn out\n\nend)(); return validation_results[\"20\"]"
+timeout = 60
+
+[[step]]
+label = "dialog snapshot has valid NW integer state"
+do = "assert_lua"
+code = "local r=validation_results[\"20\"]; return (r.active==0 or r.active==1) and (r.pc_in==0 or r.pc_in==1) and type(r.partner_dist)==\"number\""
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "actual example 10_world_probe.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"10\"]=(function()\n-- World probe: where the PC is, who is hostile nearby, what the party looks\n-- like. One round trip; everything a combat or movement decision needs.\n--\n-- Returns:\n--   pc        {x, y, z, hp, max_hp, in_combat, action, commandable}\n--   hostiles  [{id, tag, hp, dist, action}], nearest first, within RADIUS\n--   party     [{id, tag, hp, dist, action}] for the other party members\n--   globals   the END_* room counters that gate the Endar Spire doors\n\nlocal RADIUS = 60.0\n\nlocal function clean(s) return (s:gsub(\"%z\", \"\")) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal area = nwscript.call('GetArea',pc)\nlocal p = nwscript.call('GetPosition',pc)\n\nlocal out = {\n  pc = {\n    x = p.x, y = p.y, z = p.z,\n    hp = nwscript.call('GetCurrentHitPoints',pc),\n    max_hp = nwscript.call('GetMaxHitPoints',pc),\n    in_combat = nwscript.call('GetIsInCombat',pc),\n    action = nwscript.call('GetCurrentAction',pc),\n    commandable = nwscript.call('GetCommandable',pc),\n  },\n  hostiles = {},\n  party = {},\n  globals = {},\n}\n\n-- 1 == OBJECT_TYPE_CREATURE\nlocal c = nwscript.call('GetFirstObjectInArea',area, 1)\nwhile nwscript.call('GetIsObjectValid',c) == 1 do\n  if c ~= pc then\n    local d = nwscript.call('GetDistanceBetween',pc, c)\n    local row = { id = c, tag = clean(nwscript.call('GetTag',c)),\n                  hp = nwscript.call('GetCurrentHitPoints',c), dist = d,\n                  action = nwscript.call('GetCurrentAction',c) }\n    if nwscript.call('GetIsEnemy',c, pc) == 1 and nwscript.call('GetIsDead',c) == 0 and d <= RADIUS then\n      out.hostiles[#out.hostiles + 1] = row\n    elseif nwscript.call('IsObjectPartyMember', c) == 1 then\n      out.party[#out.party + 1] = row\n    end\n  end\n  c = nwscript.call('GetNextObjectInArea',area, 1)\nend\ntable.sort(out.hostiles, function(a, b) return a.dist < b.dist end)\n\nfor _, g in ipairs({ \"END_ROOM3_DEAD\", \"END_ROOM5_DEAD\", \"END_ROOM7_DEAD\",\n                     \"END_ROOM8_DEAD\", \"END_SITH_DEAD\", \"END_TRASK_DLG\",\n                     \"END_BRIDGE_SEALED\" }) do\n  out.globals[g] = nwscript.call('GetGlobalNumber',g)\nend\n\nreturn out\n\nend)(); return validation_results[\"10\"]"
+timeout = 60
+
+[[step]]
+label = "world result invariants and actual PC HP"
+do = "assert_lua"
+code = "local r=validation_results[\"10\"]; local pc=nwscript.call(\"GetFirstPC\"); if r.pc.hp~=nwscript.call(\"GetCurrentHitPoints\",pc) or type(r.globals.END_ROOM3_DEAD)~=\"number\" then return false end; local prev=-1; for _,o in ipairs(r.hostiles) do if o.dist<prev or o.dist>60 then return false end; prev=o.dist end; for _,o in ipairs(r.party) do if o.tag==\"end_trask\" then return true end end; return false"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 60_area_dump.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"60\"]=(function()\n-- Dump every object of one type in the PC's area: tag, position, distance,\n-- and for creatures hp/hostility/action. Use it to learn a room before\n-- writing route steps for it.\n--\n-- OBJECT_TYPE: 1 creature, 2 item, 4 trigger, 8 door, 32 waypoint, 64 placeable\n-- (nwscript.nss values). Doors are 8 in this engine's GetObjectType.\n\nlocal OBJECT_TYPE = 1\nlocal MAX = 40\n\nlocal function clean(s) return (s:gsub(\"%z\", \"\")) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal area = nwscript.call('GetArea',pc)\nlocal rows = {}\nlocal o = nwscript.call('GetFirstObjectInArea',area, OBJECT_TYPE)\nwhile nwscript.call('GetIsObjectValid',o) == 1 and #rows < MAX do\n  local p = nwscript.call('GetPosition',o)\n  local row = { id = o, tag = clean(nwscript.call('GetTag',o)), name = clean(nwscript.call('GetName',o)),\n                x = p.x, y = p.y, z = p.z, dist = nwscript.call('GetDistanceBetween',pc, o) }\n  if OBJECT_TYPE == 1 then\n    row.hp = nwscript.call('GetCurrentHitPoints',o)\n    row.dead = nwscript.call('GetIsDead',o)\n    row.hostile = nwscript.call('GetIsEnemy',o, pc)\n    row.action = nwscript.call('GetCurrentAction',o)\n  elseif OBJECT_TYPE == 8 then\n    row.open = nwscript.call('GetIsOpen',o)\n    row.locked = nwscript.call('GetLocked',o)\n  end\n  rows[#rows + 1] = row\n  o = nwscript.call('GetNextObjectInArea',area, OBJECT_TYPE)\nend\ntable.sort(rows, function(a, b) return a.dist < b.dist end)\nreturn rows\n\nend)(); return validation_results[\"60\"]"
+timeout = 60
+
+[[step]]
+label = "area dump sorted valid creatures and player present"
+do = "assert_lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); local seen=false; local prev=-1; for _,r in ipairs(validation_results[\"60\"]) do if r.dist<prev or nwscript.call(\"GetIsObjectValid\",r.id)~=1 then return false end; prev=r.dist; if r.id==pc then seen=true end end; return seen"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 40_attack_nearest.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"40\"]=(function()\n-- Attack the nearest live hostile within RADIUS, unless the PC is already\n-- fighting it. Re-issuing ActionAttack every poll restarts the combat round,\n-- so this is a no-op while the PC is mid-round (action 39) or already\n-- attacking (action 3).\n--\n-- After queueing, expect the engine's autopause to fire on the first combat\n-- event unless the ini disabled it: if the harness `state` shows\n-- phase=paused, send `clear_auto_pause` (it also unpauses the world timers,\n-- which is what actually lets rounds resolve).\n\nlocal RADIUS = 40.0\n\nlocal function clean(s) return (s:gsub(\"%z\", \"\")) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal area = nwscript.call('GetArea',pc)\nlocal act = nwscript.call('GetCurrentAction',pc)\n\nlocal best, best_d = nil, RADIUS + 1\nlocal c = nwscript.call('GetFirstObjectInArea',area, 1)\nwhile nwscript.call('GetIsObjectValid',c) == 1 do\n  if nwscript.call('GetIsEnemy',c, pc) == 1 and nwscript.call('GetIsDead',c) == 0 then\n    local d = nwscript.call('GetDistanceBetween',pc, c)\n    if d <= RADIUS and d < best_d then best, best_d = c, d end\n  end\n  c = nwscript.call('GetNextObjectInArea',area, 1)\nend\n\nif best == nil then return { target = nil, reason = \"no live hostile in radius\" } end\nif act == 3 or act == 39 then\n  return { target = clean(nwscript.call('GetTag',best)), dist = best_d, reason = \"already engaged\", action = act }\nend\n\nnwscript.with_caller(pc, function()\n  nwscript.call('ClearAllActions')\n  nwscript.call('ActionAttack',best, 0)      -- 0 == no combat feat\nend)\nreturn { target = clean(nwscript.call('GetTag',best)), id = best, hp = nwscript.call('GetCurrentHitPoints',best), dist = best_d, queued = true }\n\nend)(); return validation_results[\"40\"]"
+timeout = 60
+
+[[step]]
+label = "attack result documents queued, already engaged, or no enemy"
+do = "assert_lua"
+code = "local r=validation_results[\"40\"]; return r.queued==true or r.reason==\"already engaged\" or r.reason==\"no live hostile in radius\""
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 70_pc_status.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"70\"]=(function()\n-- The PC in detail: hit points, active effects, equipped slots, inventory.\n-- Effects explain a creature that will not move or act (paralysis, cutscene\n-- holds); an empty list with commandable=1 means the block is elsewhere\n-- (paused world timers, see README).\n\nlocal function clean(s) return (s:gsub(\"%z\", \"\")) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal out = {\n  hp = nwscript.call('GetCurrentHitPoints',pc),\n  max_hp = nwscript.call('GetMaxHitPoints',pc),\n  dead = nwscript.call('GetIsDead',pc),\n  commandable = nwscript.call('GetCommandable',pc),\n  in_combat = nwscript.call('GetIsInCombat',pc),\n  action = nwscript.call('GetCurrentAction',pc),\n  effects = {},\n  slots = {},\n  inventory = {},\n}\n\nlocal e = nwscript.call('GetFirstEffect',pc)\nwhile nwscript.call('GetIsEffectValid',e) == 1 do\n  out.effects[#out.effects + 1] = nwscript.call('GetEffectType',e)\n  e = nwscript.call('GetNextEffect',pc)\nend\n\n-- INVENTORY_SLOT_* 0..11; 4 is the right weapon on Endar's short sword.\nfor slot = 0, 11 do\n  local it = nwscript.call('GetItemInSlot',slot, pc)\n  if nwscript.call('GetIsObjectValid',it) == 1 then out.slots[\"slot\" .. slot] = clean(nwscript.call('GetTag',it)) end\nend\n\nlocal it = nwscript.call('GetFirstItemInInventory',pc)\nwhile nwscript.call('GetIsObjectValid',it) == 1 do\n  out.inventory[#out.inventory + 1] = { id = it, tag = clean(nwscript.call('GetTag',it)) }\n  it = nwscript.call('GetNextItemInInventory',pc)\nend\nreturn out\n\nend)(); return validation_results[\"70\"]"
+timeout = 60
+
+[[step]]
+label = "PC status real HP, equipment and inventory"
+do = "assert_lua"
+code = "local r=validation_results[\"70\"]; local pc=nwscript.call(\"GetFirstPC\"); if r.hp~=nwscript.call(\"GetCurrentHitPoints\",pc) or r.max_hp~=nwscript.call(\"GetMaxHitPoints\",pc) then return false end; for key,tag in pairs(r.slots) do local slot=tonumber(key:sub(5)); local it=nwscript.call(\"GetItemInSlot\",slot,pc); if nwscript.call(\"GetTag\",it):gsub(\"%z\",\"\")~=tag then return false end end; for _,it in ipairs(r.inventory) do if nwscript.call(\"GetItemPossessor\",it.id)~=pc then return false end end; return true"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM3_DEAD"
+until_value = 2
+radius = 40
+timeout = 180
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 90
+
+[[step]]
+label = "actual example 50_doors.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"50\"]=(function()\n-- Doors: inspect one, and open it the way the Endar Spire scripts do.\n--\n-- Endar's story doors (end_door01/02/05, ...) are plot doors the PC cannot\n-- use: GetIsDoorActionPossible(d, 0) is 0, and a PC-queued ActionOpenDoor,\n-- the retail `door_use` command and DoDoorAction all drop silently. The\n-- authored scripts open them by having the door command itself\n-- (k_pend_traskdl40 for end_door01), which is what OPEN=true does here.\n-- Poll GetIsOpen afterwards; the open completes within a few ticks.\n--\n-- If GetIsOpen stays 0 after the self-command, the door is stuck in the\n-- first phase of opening: the engine sets the \"opening\" animation but only\n-- commits open_state (what GetIsOpen and the walkmesh read) from the\n-- client's animation-done callback, which the headless client does not\n-- deliver for doors unlocked at runtime (both end_door05s, end_door04). Once\n-- stuck, every further open action is a no-op. The harness command\n-- `door_commit_open` (CSWSDoor::MoveToNextOpenState) finishes the open; the\n-- `scripted_door_open` route verb sends it itself after 2.5s.\n\nlocal TAG = \"end_door05\"\nlocal OPEN = false\n\nlocal d = nwscript.call('GetObjectByTag',TAG, 0)\nif nwscript.call('GetIsObjectValid',d) ~= 1 then error(\"no door tagged \" .. TAG) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal info = {\n  tag = TAG, id = d,\n  open = nwscript.call('GetIsOpen',d),\n  locked = nwscript.call('GetLocked',d),\n  key_required = nwscript.call('GetLockKeyRequired',d),\n  plot = nwscript.call('GetPlotFlag',d),\n  pc_can_open = nwscript.call('GetIsDoorActionPossible',d, 0),   -- 0 == DOOR_ACTION_OPEN\n  dist = nwscript.call('GetDistanceBetween',pc, d),\n}\n\nif OPEN and info.open == 0 then\n  nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor',d) end)\n  info.queued = true\nend\nreturn info\n\nend)(); return validation_results[\"50\"]"
+timeout = 60
+
+[[step]]
+label = "door default is inspection with matching live fields"
+do = "assert_lua"
+code = "local r=validation_results[\"50\"]; return r.queued==nil and r.open==nwscript.call(\"GetIsOpen\",r.id) and r.locked==nwscript.call(\"GetLocked\",r.id) and r.plot==nwscript.call(\"GetPlotFlag\",r.id)"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 50_doors.lua documented configuration"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"50-configured\"]=(function()\n-- Doors: inspect one, and open it the way the Endar Spire scripts do.\n--\n-- Endar's story doors (end_door01/02/05, ...) are plot doors the PC cannot\n-- use: GetIsDoorActionPossible(d, 0) is 0, and a PC-queued ActionOpenDoor,\n-- the retail `door_use` command and DoDoorAction all drop silently. The\n-- authored scripts open them by having the door command itself\n-- (k_pend_traskdl40 for end_door01), which is what OPEN=true does here.\n-- Poll GetIsOpen afterwards; the open completes within a few ticks.\n--\n-- If GetIsOpen stays 0 after the self-command, the door is stuck in the\n-- first phase of opening: the engine sets the \"opening\" animation but only\n-- commits open_state (what GetIsOpen and the walkmesh read) from the\n-- client's animation-done callback, which the headless client does not\n-- deliver for doors unlocked at runtime (both end_door05s, end_door04). Once\n-- stuck, every further open action is a no-op. The harness command\n-- `door_commit_open` (CSWSDoor::MoveToNextOpenState) finishes the open; the\n-- `scripted_door_open` route verb sends it itself after 2.5s.\n\nlocal TAG = \"end_door05\"\nlocal OPEN = true\n\nlocal d = nwscript.call('GetObjectByTag',TAG, 0)\nif nwscript.call('GetIsObjectValid',d) ~= 1 then error(\"no door tagged \" .. TAG) end\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal info = {\n  tag = TAG, id = d,\n  open = nwscript.call('GetIsOpen',d),\n  locked = nwscript.call('GetLocked',d),\n  key_required = nwscript.call('GetLockKeyRequired',d),\n  plot = nwscript.call('GetPlotFlag',d),\n  pc_can_open = nwscript.call('GetIsDoorActionPossible',d, 0),   -- 0 == DOOR_ACTION_OPEN\n  dist = nwscript.call('GetDistanceBetween',pc, d),\n}\n\nif OPEN and info.open == 0 then\n  nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor',d) end)\n  info.queued = true\nend\nreturn info\n\nend)(); return validation_results[\"50-configured\"]"
+timeout = 60
+
+[[step]]
+label = "open authored end_door05"
+do = "scripted_door_open"
+tag = "end_door05"
+timeout = 30
+
+[[step]]
+label = "door actually open after documented driver completion"
+do = "assert_lua"
+code = "return nwscript.call(\"GetIsOpen\",validation_results[\"50\"].id)==1"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+label = "actual example 30_move_to.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"30\"]=(function()\n-- Move the PC: to a tagged object, or to an offset from where it stands.\n-- Party members follow on their own (companion AI re-asserts follow-leader).\n--\n-- This only queues the move. Poll `GetCurrentAction(pc)` afterwards: 0 while\n-- walking, 65534 once the queue empties (arrived, or the path was cut short).\n-- Confirm arrival with the distance, never with the action alone.\n\nlocal TARGET_TAG = \"end_door05\"   -- set to nil to use the OFFSET move instead\nlocal RANGE = 1.5                 -- stop this far from the object\nlocal OFFSET = { x = -3.0, y = 0.0, z = 0.0 }\n\nlocal pc = nwscript.call('GetFirstPC')\n\nif TARGET_TAG then\n  local t = nwscript.call('GetObjectByTag',TARGET_TAG, 0)\n  if nwscript.call('GetIsObjectValid',t) ~= 1 then error(\"no object tagged \" .. TARGET_TAG) end\n  nwscript.with_caller(pc, function()\n    nwscript.call('ClearAllActions')\n    nwscript.call('ActionMoveToObject',t, 1, RANGE)     -- 1 == run\n  end)\n  return { target = TARGET_TAG, dist = nwscript.call('GetDistanceBetween',pc, t) }\nend\n\nlocal p = nwscript.call('GetPosition',pc)\nlocal there = nwscript.call('Location',nwscript.call('Vector',p.x + OFFSET.x, p.y + OFFSET.y, p.z + OFFSET.z), 0.0)\nnwscript.with_caller(pc, function()\n  nwscript.call('ClearAllActions')\n  nwscript.call('ActionMoveToLocation',there, 1)\nend)\nreturn { from = { x = p.x, y = p.y, z = p.z } }\n\nend)(); return validation_results[\"30\"]"
+timeout = 60
+
+[[step]]
+label = "queued move reaches configured door radius"
+do = "assert_lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); local d=nwscript.call(\"GetObjectByTag\",\"end_door05\",0); return nwscript.call(\"GetDistanceBetween\",pc,d)<=1.75"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+do = "clear_room"
+radius = 30
+timeout = 120
+
+[[step]]
+do = "move_to"
+position = [43.0, 55.7, -1.275]
+range = 1.0
+timeout = 120
+
+[[step]]
+label = "snapshot actual stocked metalbox items before queue"
+do = "assert_lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); local a=nwscript.call(\"GetArea\",pc); local best,dist=nil,1e9; local o=nwscript.call(\"GetFirstObjectInArea\",a,64); while nwscript.call(\"GetIsObjectValid\",o)==1 do if nwscript.call(\"GetTag\",o):gsub(\"%z\",\"\")==\"metalbox\" and nwscript.call(\"GetIsObjectValid\",nwscript.call(\"GetFirstItemInInventory\",o))==1 then local d=nwscript.call(\"GetDistanceBetween\",pc,o); if d<dist then best,dist=o,d end end; o=nwscript.call(\"GetNextObjectInArea\",a,64) end; if not best then return false end; validation_loot={box=best,items={},gold=nwscript.call(\"GetGold\",pc)}; local it=nwscript.call(\"GetFirstItemInInventory\",best); while nwscript.call(\"GetIsObjectValid\",it)==1 do validation_loot.items[#validation_loot.items+1]={id=it,tag=nwscript.call(\"GetTag\",it):gsub(\"%z\",\"\")}; it=nwscript.call(\"GetNextItemInInventory\",best) end; return #validation_loot.items>0"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 110_loot_container.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"110\"]=(function()\n-- Empty a container without the container GUI.\n--\n-- Engine tags are lowercase and several placeables often share one\n-- (\"metalbox\", \"footlker\"), and GetObjectByTag returns the first match,\n-- which may be an empty one. This picks the nearest same-tag placeable\n-- that still holds items and takes each with ActionTakeItem(item,\n-- container) -- the authored NWScript call -- so the PC never has to path\n-- to a wall-flush box (ActionInteractObject is silently dropped there).\n-- Verified live on the Endar Spire corridor: metalbox (medpac, credits) and\n-- footlker (class-4 armor, long sword, two frag grenades).\n--\n-- The returned 'taken' count means requests queued, not items acquired.\n-- Poll the PC's inventory afterwards; the takes complete within a few ticks.\n\nlocal TAG = \"metalbox\"\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal area = nwscript.call('GetArea',pc)\nlocal best, best_d = nil, 1e9\nlocal o = nwscript.call('GetFirstObjectInArea',area, 64)      -- 64 == OBJECT_TYPE_PLACEABLE\nwhile nwscript.call('GetIsObjectValid',o) == 1 do\n  if nwscript.call('GetTag',o):gsub(\"%z\", \"\"):lower() == TAG\n     and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o)) == 1 then\n    local d = nwscript.call('GetDistanceBetween',pc, o)\n    if d < best_d then best, best_d = o, d end\n  end\n  o = nwscript.call('GetNextObjectInArea',area, 64)\nend\nif best == nil then return { taken = 0, reason = \"no stocked placeable tagged \" .. TAG } end\n\nlocal items = {}\nlocal it = nwscript.call('GetFirstItemInInventory',best)\nwhile nwscript.call('GetIsObjectValid',it) == 1 do\n  items[#items + 1] = it\n  it = nwscript.call('GetNextItemInInventory',best)\nend\nnwscript.with_caller(pc, function()\n  nwscript.call('ClearAllActions')\n  for _, i in ipairs(items) do nwscript.call('ActionTakeItem',i, best) end\nend)\nreturn { container = best, dist = best_d, taken = #items }\n\nend)(); return validation_results[\"110\"]"
+timeout = 60
+
+[[step]]
+label = "queued count identifies exact source container"
+do = "assert_lua"
+code = "local r=validation_results[\"110\"]; return r.container==validation_loot.box and r.taken==#validation_loot.items"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "exact container emptied, ordinary items possessed, credits reflected"
+do = "assert_lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); if nwscript.call(\"GetIsObjectValid\",nwscript.call(\"GetFirstItemInInventory\",validation_loot.box))==1 then return false end; local credit=false; for _,it in ipairs(validation_loot.items) do if it.tag:find(\"credits\",1,true) then credit=true elseif nwscript.call(\"GetItemPossessor\",it.id)~=pc then return false end end; return not credit or nwscript.call(\"GetGold\",pc)>validation_loot.gold"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+do = "move_to"
+position = [47.3, 60.9, -1.275]
+range = 1.0
+timeout = 120
+
+[[step]]
+label = "take everything from the nearest stocked footlker (ActionTakeItem; no container GUI needed)"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local a,s=false,false; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do local t=nwscript.call('GetTag',it):gsub('%z',''); if t=='g_a_class4001' then a=true end; if t=='g_w_lngswrd01' then s=true end; it=nwscript.call('GetNextItemInInventory',pc) end; return a and s"
+equals = true
+poll = true
+timeout = 20
+
+[[step]]
+do = "equip_item"
+tag = "g_a_class4001"
+slot = 1
+timeout = 60
+
+[[step]]
+do = "equip_item"
+tag = "g_w_lngswrd01"
+slot = 4
+timeout = 60
+
+[[step]]
+do = "move_to"
+tag = "end_door10_cut2"
+range = 1.5
+timeout = 90
+
+[[step]]
+label = "open authored end_door10_cut2"
+do = "scripted_door_open"
+tag = "end_door10_cut2"
+timeout = 30
+
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "actual example 80_signal_event.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"80\"]=(function()\n-- Fire an authored UserDefined event, the way a module's own scripts do.\n--\n-- Endar's room5 ambush is a chain: door10_cut2's OnOpen checks that a party\n-- member opened it (IsObjectPartyMember(GetLastOpenedBy())), plays two\n-- cosmetic CutsceneAttacks, then SignalEvent(area, UserDefined 20). The\n-- area's handler (k_pend_area02, case 20) cancels combat and has Trask start\n-- the cutscene conversation whose scripts turn end_cut2_sith1/2/4 hostile.\n-- A door opened by self-command never passes that party-member check, so the\n-- route signals the event itself and gets the same authored result minus\n-- the two cosmetic swings. Verified live: the dialog runs, the three Sith\n-- flip to faction 1, the extras despawn.\n--\n-- TARGET: \"area\" for the PC's area, or an object tag.\n\nlocal TARGET = \"area\"\nlocal EVENT = 20\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal who\nif TARGET == \"area\" then\n  who = nwscript.call('GetArea',pc)\nelse\n  who = nwscript.call('GetObjectByTag',TARGET, 0)\n  if nwscript.call('GetIsObjectValid',who) ~= 1 then error(\"no object tagged \" .. TARGET) end\nend\nnwscript.call('SignalEvent',who, nwscript.call('EventUserDefined',EVENT))\nreturn { target = TARGET, event = EVENT, id = who }\n\nend)(); return validation_results[\"80\"]"
+timeout = 60
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 6.0
+timeout = 300
+
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "event20 produced three authored hostile Sith"
+do = "assert_lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); local n=0; for _,tag in ipairs({\"end_cut2_sith1\",\"end_cut2_sith2\",\"end_cut2_sith4\"}) do local o=nwscript.call(\"GetObjectByTag\",tag,0); if nwscript.call(\"GetIsObjectValid\",o)==1 and (nwscript.call(\"GetIsEnemy\",o,pc)==1 or nwscript.call(\"GetIsDead\",o)==1) then n=n+1 end end; return n==3"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM5_DEAD"
+until_value = 3
+radius = 50
+timeout = 240
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetLocked',nwscript.call('GetObjectByTag','end_door16',0))"
+equals = 0
+poll = true
+timeout = 20
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door16"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open authored end_door16"
+do = "scripted_door_open"
+tag = "end_door16"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 180
+
+[[step]]
+label = "restart Trask's party AI"
+do = "run_script"
+script = "k_pman_npcstart"
+tag = "end_trask"
+timeout = 20
+
+[[step]]
+label = "ensure the corridor reinforcements exist and are hostile"
+do = "lua"
+code = "local j=nwscript.call('GetObjectByTag','end_jedicut',0); local done=nwscript.call('GetGlobalNumber','END_ROOM8_DEAD')>=2; local a=nwscript.call('GetObjectByTag','end_reinforce1',0); local b=nwscript.call('GetObjectByTag','end_reinforce2',0); if not done and nwscript.call('GetIsObjectValid',a)~=1 and nwscript.call('GetIsObjectValid',b)~=1 then nwscript.call('ExecuteScript','k_pend_reinfrc03', j) end; if not done then nwscript.call('SignalEvent',j, nwscript.call('EventUserDefined',10)) end; return 1"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local n=nwscript.call('GetGlobalNumber','END_ROOM8_DEAD'); for _,t in ipairs({'end_reinforce1','end_reinforce2'}) do local o=nwscript.call('GetObjectByTag',t,0); if nwscript.call('GetIsObjectValid',o)==1 and nwscript.call('GetIsDead',o)~=1 and nwscript.call('GetIsEnemy',o,pc)==1 then n=n+1 end end; return n>=2"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM8_DEAD"
+until_value = 2
+radius = 60
+timeout = 240
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 90
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door08"
+range = 2.0
+timeout = 120
+
+[[step]]
+label = "authored bridge script prerequisites"
+do = "assert_lua"
+code = "return nwscript.call(\"GetGlobalNumber\",\"END_ROOM8_DEAD\")>=2"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 90_run_script.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"90\"]=(function()\n-- Run an authored NCS with a chosen object as OBJECT_SELF.\n--\n-- This is how the route fires scripts whose only in-game trigger has no\n-- headless equivalent. Verified live on the Endar Spire:\n--   k_pend_door20 on end_door08   the bridge door's OnFailToOpen (a click on\n--                                  the locked plot door): checks\n--                                  END_ROOM8_DEAD >= 2, spawns the bridge\n--                                  Sith, unlocks and opens itself, sets\n--                                  TraskState 31, despawns the placeholder\n--                                  Carth.\n--   k_pend_reinfrc03 on end_jedicut the cutscene node that creates\n--                                  end_reinforce1/2 at their _1 waypoints.\n--   k_pman_npcstart on end_trask   restarts a companion's follow/combat AI\n--                                  after a cutscene's k_pman_npcstop.\n--\n-- The script decides its own postconditions (it may refuse: door20 does\n-- nothing under the kill threshold), so read the world afterwards -- door\n-- lock/open flags, globals, spawned tags -- rather than trusting the call.\n\nlocal SCRIPT = \"k_pend_door20\"\nlocal TARGET_TAG = \"end_door08\"   -- or nil for the PC\n\nlocal who\nif TARGET_TAG then\n  who = nwscript.call('GetObjectByTag',TARGET_TAG, 0)\n  if nwscript.call('GetIsObjectValid',who) ~= 1 then error(\"no object tagged \" .. TARGET_TAG) end\nelse\n  who = nwscript.call('GetFirstPC')\nend\nnwscript.call('ExecuteScript',SCRIPT, who)\nreturn { script = SCRIPT, on = TARGET_TAG or \"pc\", id = who }\n\nend)(); return validation_results[\"90\"]"
+timeout = 60
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door08',0))"
+equals = 1
+poll = true
+timeout = 30
+
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM7_DEAD"
+until_value = 2
+radius = 40
+timeout = 240
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetXP',nwscript.call('GetFirstPC')) >= 1000"
+equals = true
+poll = true
+timeout = 20
+
+[[step]]
+label = "level up to 2"
+do = "auto_levelup"
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetHitDice',nwscript.call('GetFirstPC'))"
+equals = 2
+poll = true
+timeout = 20
+
+[[step]]
+do = "move_to"
+tag = "end_door15"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open end_door15 through its own OnFailToOpen"
+do = "run_script"
+script = "k_pend_door15"
+tag = "end_door15"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door15',0))"
+equals = 1
+poll = true
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door19"
+range = 1.5
+timeout = 120
+
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "open end_door19: Trask holds off Bandon"
+do = "lua"
+code = "local d=nwscript.call('GetObjectByTag','end_door19',0); nwscript.with_caller(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
+timeout = 20
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetPartyMemberCount')"
+equals = 1
+poll = true
+timeout = 60
+
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "actual example 100_module_transition.lua default"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"100\"]=(function()\n-- Cross a module transition the way the transition door does.\n--\n-- A transition door (end_door10 -> end_m01ab at waypoint from_01a) needs a\n-- player \"use\", which plot doors refuse in headless mode. The door's own\n-- transition boils down to StartNewModule(module, waypoint), so the route\n-- calls that directly. Afterwards gate on the harness `state`:\n--   wait module == \"end_m01ab\", then phase in {gameplay, dialog, paused}\n-- (the arrival often opens with a dialog -- Carth's comlink call here).\n--\n-- INSPECT=true only reports the door's link; set it false to go.\n\nlocal DOOR_TAG = \"end_door10\"\nlocal MODULE, WAYPOINT = \"end_m01ab\", \"from_01a\"\nlocal INSPECT = true\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal d = nwscript.call('GetObjectByTag',DOOR_TAG, 0)\nlocal info = {\n  module_now = nwscript.call('GetModuleName'),\n  door_valid = nwscript.call('GetIsObjectValid',d),\n  door_dist = nwscript.call('GetIsObjectValid',d) == 1 and nwscript.call('GetDistanceBetween',pc, d) or -1,\n  party = nwscript.call('GetPartyMemberCount'),\n}\nif INSPECT then return info end\nnwscript.call('StartNewModule',MODULE, WAYPOINT)\ninfo.requested = MODULE .. \"/\" .. WAYPOINT\nreturn info\n\nend)(); return validation_results[\"100\"]"
+timeout = 60
+
+[[step]]
+label = "transition default only inspected Endar"
+do = "assert_lua"
+code = "local r=validation_results[\"100\"]; return r.module_now:lower():gsub(\"%z\",\"\")==\"end_m01aa\" and r.requested==nil and r.party==1 and r.door_valid==1"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+label = "actual example 100_module_transition.lua documented configuration"
+do = "lua"
+code = "validation_results=validation_results or {}; validation_results[\"100-configured\"]=(function()\n-- Cross a module transition the way the transition door does.\n--\n-- A transition door (end_door10 -> end_m01ab at waypoint from_01a) needs a\n-- player \"use\", which plot doors refuse in headless mode. The door's own\n-- transition boils down to StartNewModule(module, waypoint), so the route\n-- calls that directly. Afterwards gate on the harness `state`:\n--   wait module == \"end_m01ab\", then phase in {gameplay, dialog, paused}\n-- (the arrival often opens with a dialog -- Carth's comlink call here).\n--\n-- INSPECT=true only reports the door's link; set it false to go.\n\nlocal DOOR_TAG = \"end_door10\"\nlocal MODULE, WAYPOINT = \"end_m01ab\", \"from_01a\"\nlocal INSPECT = false\n\nlocal pc = nwscript.call('GetFirstPC')\nlocal d = nwscript.call('GetObjectByTag',DOOR_TAG, 0)\nlocal info = {\n  module_now = nwscript.call('GetModuleName'),\n  door_valid = nwscript.call('GetIsObjectValid',d),\n  door_dist = nwscript.call('GetIsObjectValid',d) == 1 and nwscript.call('GetDistanceBetween',pc, d) or -1,\n  party = nwscript.call('GetPartyMemberCount'),\n}\nif INSPECT then return info end\nnwscript.call('StartNewModule',MODULE, WAYPOINT)\ninfo.requested = MODULE .. \"/\" .. WAYPOINT\nreturn info\n\nend)(); return validation_results[\"100-configured\"]"
+timeout = 60
+
+[[step]]
+wait = "module"
+equals = "end_m01ab"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 180
+
+[[step]]
+label = "final exact starboard gameplay party state"
+do = "assert_lua"
+code = "return nwscript.call(\"GetModuleName\"):lower():gsub(\"%z\",\"\")==\"end_m01ab\" and nwscript.call(\"GetPartyMemberCount\")==1"
+equals = true
+poll = false
+timeout = 30
+
+[[step]]
+screenshot = true
+label = "final-starboard"

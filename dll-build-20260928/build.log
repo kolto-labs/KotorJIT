@@ -1,0 +1,112 @@
++ set -x
++ export PYTHONDONTWRITEBYTECODE=1
++ PYTHONDONTWRITEBYTECODE=1
++ D=/home/brunner56/kp-live-20260922/dll-build-20260928
++ W=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
++ G=/run/host/usr/bin/i686-w64-mingw32-g++
++ echo '=== compiler version ==='
+=== compiler version ===
++ /run/host/usr/bin/i686-w64-mingw32-g++ --version
+i686-w64-mingw32-g++ (GCC) 16.1.1 20260501 (Fedora MinGW 16.1.1-1.fc44)
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
++ /run/host/usr/bin/i686-w64-mingw32-objdump --version
++ head -1
+GNU objdump version 2.46.0.20260210
++ echo '=== configure ==='
+=== configure ===
++ cmake -S /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation -B /home/brunner56/kp-live-20260922/dll-build-20260928/build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DKP_MINGW_CXX=/run/host/usr/bin/i686-w64-mingw32-g++
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /home/brunner56/.local/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /home/brunner56/.local/bin/python3.14 (found suitable version "3.14.5", minimum required is "3.11") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (9.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/brunner56/kp-live-20260922/dll-build-20260928/build
++ echo '=== build (kphasor_dll only, -j2) ==='
+=== build (kphasor_dll only, -j2) ===
++ cmake --build /home/brunner56/kp-live-20260922/dll-build-20260928/build --target kphasor_dll -j2
+[  0%] [1m[34mi686-w64-mingw32-g++ trampoline.cpp[0m
+[  4%] [1m[34mi686-w64-mingw32-g++ src/image/sha256.cpp[0m
+[  4%] [1m[34mi686-w64-mingw32-g++ src/image/loaded_image.cpp[0m
+[  8%] [1m[34mi686-w64-mingw32-g++ registry.cpp[0m
+[  8%] [1m[34mi686-w64-mingw32-g++ src/image/pe_elf.cpp[0m
+[ 12%] [1m[34mi686-w64-mingw32-g++ src/image/macho.cpp[0m
+[ 12%] [1m[34mi686-w64-mingw32-g++ src/image/parse.cpp[0m
+[ 12%] [1m[34mi686-w64-mingw32-g++ platform.cpp[0m
+[ 12%] [1m[34mi686-w64-mingw32-g++ platform_win32.cpp[0m
+[ 12%] Built target hooks_win32
+[ 16%] [1m[34mi686-w64-mingw32-g++ src/image/classify.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ src/image/build_table.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ src/image/load.cpp[0m
+[ 16%] Built target image_win32
+[ 16%] [1m[34mi686-w64-mingw32-g++ projectiles_entry.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ editor_input.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ imgui.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ imgui_draw.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ imgui_tables.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ imgui_widgets.cpp[0m
+[ 16%] [1m[34mi686-w64-mingw32-g++ imgui_impl_win32.cpp[0m
+[ 20%] [1m[34mi686-w64-mingw32-g++ imgui_impl_opengl2.cpp[0m
+[ 20%] [1m[34mi686-w64-mingw32-g++ runtime.cpp[0m
+[ 24%] [1m[34mi686-w64-mingw32-g++ console.cpp[0m
+[ 24%] [1m[34mi686-w64-mingw32-g++ overlay.cpp[0m
+[ 28%] [1m[34mi686-w64-mingw32-g++ dllmain.cpp[0m
+[ 28%] [1m[34mi686-w64-mingw32-g++ fault_guard.cpp[0m
+[ 28%] [1m[34mi686-w64-mingw32-g++ hook_bodies.cpp[0m
+[ 32%] [1m[34mi686-w64-mingw32-g++ transport.cpp[0m
+[ 36%] [1m[34mi686-w64-mingw32-g++ host.cpp[0m
+[ 36%] [1m[34mi686-w64-mingw32-g++ value.cpp[0m
+[ 36%] [1m[34mi686-w64-mingw32-g++ dispatch.cpp[0m
+[ 36%] [1m[34mi686-w64-mingw32-g++ table.cpp[0m
+[ 40%] [1m[34mi686-w64-mingw32-g++ payload.cpp[0m
+[ 40%] [1m[34mi686-w64-mingw32-g++ situation.cpp[0m
+[ 40%] [1m[34mi686-w64-mingw32-g++ routines.cpp[0m
+[ 40%] [1m[34mi686-w64-mingw32-g++ enginestruct.cpp[0m
+[ 44%] [1m[34mi686-w64-mingw32-g++ structs.cpp[0m
+[ 48%] [1m[34mi686-w64-mingw32-g++ entity.cpp[0m
+[ 48%] [1m[34mi686-w64-mingw32-g++ memory.cpp[0m
+[ 48%] [1m[34mi686-w64-mingw32-g++ projectiles.cpp[0m
+[ 48%] [1m[34mi686-w64-mingw32-g++ projectiles_profile.cpp[0m
+[ 48%] [1m[34mi686-w64-mingw32-g++ projectiles_native.cpp[0m
+[ 52%] [1m[34mi686-w64-mingw32-g++ projectiles_lua.cpp[0m
+[ 52%] [1m[34mi686-w64-mingw32-g++ model.cpp[0m
+[ 52%] [1m[34mi686-w64-mingw32-g++ model_profiles.cpp[0m
+[ 56%] [1m[34mi686-w64-mingw32-g++ model_backend.cpp[0m
+[ 56%] [1m[34mi686-w64-mingw32-g++ model_lua.cpp[0m
+[ 56%] [1m[34mi686-w64-mingw32-g++ camera.cpp[0m
+[ 56%] [1m[34mi686-w64-mingw32-g++ camera_profiles.cpp[0m
+[ 60%] [1m[34mi686-w64-mingw32-g++ camera_backend.cpp[0m
+[ 60%] [1m[34mi686-w64-mingw32-g++ camera_lua.cpp[0m
+[ 60%] [1m[34mi686-w64-mingw32-g++ vector.cpp[0m
+[ 64%] [1m[34mi686-w64-mingw32-g++ motion.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ motion_profiles.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ motion_backend.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ motion_lua.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ engine_gate.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ animation.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ animation_profiles.cpp[0m
+[ 68%] [1m[34mi686-w64-mingw32-g++ animation_backend.cpp[0m
+[ 72%] [1m[34mi686-w64-mingw32-g++ animation_lua.cpp[0m
+[ 72%] [1m[34mi686-w64-mingw32-g++ output.cpp[0m
+[ 72%] [1m[34mi686-w64-mingw32-g++ timers.cpp[0m
+[ 72%] [1m[34mi686-w64-mingw32-g++ strings.cpp[0m
+[ 72%] [1m[34mi686-w64-mingw32-g++ compat.cpp[0m
+[ 76%] [1m[34mi686-w64-mingw32-g++ scripts_lua.cpp[0m
+[ 80%] [1m[34mi686-w64-mingw32-g++ channel.cpp[0m
+[ 80%] [1m[34mi686-w64-mingw32-g++ commands.cpp[0m
+[ 80%] [1m[34mi686-w64-mingw32-g++ console_protocol.cpp[0m
+[ 84%] [1m[34mi686-w64-mingw32-g++ json.cpp[0m
+[ 88%] [1m[34mi686-w64-mingw32-g++ ring.cpp[0m
+[ 92%] [1m[34mi686-w64-mingw32-g++ engine_k1.cpp[0m
+[ 92%] [1m[34mi686-w64-mingw32-g++ engine_k2.cpp[0m
+[ 96%] [1m[34mi686-w64-mingw32-g++ kphasor.dll[0m
+[100%] Built target kphasor_dll

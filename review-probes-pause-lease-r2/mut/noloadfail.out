@@ -1,0 +1,254 @@
+
+== initially running: acquire pauses once, release unpauses once ==
+  [PASS] register ok
+  [PASS] seeded game intent = running
+  [PASS] acquire ok
+  [PASS] exactly 1 original Pause, 1 edge
+  [PASS] physically paused
+  [PASS] effective paused by tool only
+  [PASS] release ok
+  [PASS] exactly 1 original Unpause
+  [PASS] running again
+  [PASS] no other native calls
+
+== initially paused by game: lease makes no native calls, pause persists ==
+  [PASS] seeded game intent = paused
+  [PASS] acquire ok
+  [PASS] release ok
+  [PASS] 0 original calls
+  [PASS] game pause persists
+
+== game Pause after tool acquire: game pause survives tool release ==
+  [PASS] game Pause while held is suppressed (no native call)
+  [PASS] recorded as game intent
+  [PASS] diagnostic counted
+  [PASS] release makes 0 Unpause calls
+  [PASS] still paused for the game
+
+== game Unpause while held: suppressed, remembered, applied once at release ==
+  [PASS] game Unpause did not reach the original
+  [PASS] game intent now running
+  [PASS] still effective paused by tool
+  [PASS] suppression counted on the timer
+  [PASS] exactly 1 Unpause at release
+  [PASS] running, as the game asked
+
+== pause/unpause/pause while held: last game intent wins ==
+  [PASS] intent paused after P,U,P
+  [PASS] stays paused, 0 Unpause
+  [PASS] only the tool's 1 Pause reached the original
+  [PASS] intent running after U,P,U
+  [PASS] 1 Unpause, running
+
+== no lease: game calls are stock and update intent ==
+  [PASS] Pause forwarded
+  [PASS] intent paused
+  [PASS] second Pause forwarded, stock no-op
+  [PASS] Unpause forwarded
+  [PASS] intent running
+
+== two tool leases compose ==
+  [PASS] second lease ok
+  [PASS] second acquire made no native call
+  [PASS] 2 leases
+  [PASS] first release: no call, still paused
+  [PASS] last release restores running
+
+== repeated acquire with the same key is idempotent ==
+  [PASS] same key again ok
+  [PASS] still 1 lease
+  [PASS] same ticket identity
+  [PASS] one release restores
+
+== double release is a no-op with a diagnostic ==
+  [PASS] second release -> AlreadyReleased
+  [PASS] 0 native calls
+  [PASS] DoubleRelease counted
+  [PASS] stale key cannot release B
+  [PASS] B still holds
+
+== unknown timer passes through untouched ==
+  [PASS] both forwarded
+  [PASS] not recorded
+  [PASS] UnknownTimerHook counted
+  [PASS] acquire on unregistered timer refused
+
+== tool-origin calls never become game ownership ==
+  [PASS] tool Pause re-entry did not set game intent
+  [PASS] passthrough counted
+  [PASS] tool Unpause re-entry: intent still running
+  [PASS] re-entries were forwarded (lease count already settled)
+  [PASS] scoped tool Pause forwarded, not game intent
+  [PASS] scoped tool Unpause forwarded with no lease
+  [PASS] tool Unpause on leased timer suppressed
+  [PASS] ToolUnpauseSuppressed counted
+  [PASS] and not recorded as game intent
+  [PASS] release still restores running
+
+== failed hook install: no ownership mode, hooks pass through ==
+  [PASS] acquire refused
+  [PASS] no native call, no lease
+  [PASS] game calls forwarded
+  [PASS] acquire refused
+  [PASS] no native call, no lease
+  [PASS] game calls forwarded
+  [PASS] acquire refused
+  [PASS] no native call, no lease
+  [PASS] game calls forwarded
+  [PASS] cannot drop a hook while a lease holds
+  [PASS] hook drop accepted once no lease holds
+
+== acquire when the original cannot run or does not take ==
+  [PASS] no trampoline -> NativeCallFailed
+  [PASS] no lease granted
+  [PASS] register ok
+  [PASS] unreadable flag -> ReadbackFailed
+  [PASS] no native call, no lease
+  [PASS] Pause that does not take -> NativeCallFailed
+  [PASS] 1 Pause attempted, no lease
+  [PASS] failed tool Pause is not game intent
+  [PASS] unreadable timer cannot seed intent
+
+== pending cleanup: failed restore is reported, not claimed ==
+  [PASS] release -> PendingCleanup
+  [PASS] lease gone, pending set
+  [PASS] physical still paused and reported
+  [PASS] CleanupFailed counted
+  [PASS] retry while still refusing stays pending
+  [PASS] retry made exactly 1 more Unpause
+  [PASS] retry succeeds
+  [PASS] cleared, running
+  [PASS] exactly 3 Unpause total
+  [PASS] pending resolved by game Pause
+  [PASS] no native call to resolve
+
+== epoch reset: timer reused at the same address ==
+  [PASS] generation advanced
+  [PASS] identity dropped
+  [PASS] re-registered with a new epoch
+  [PASS] queued old release rejected
+  [PASS] 0 native calls
+  [PASS] StaleRelease counted
+  [PASS] old ticket cannot release same-key new lease
+  [PASS] new lease holds
+  [PASS] new ticket releases
+
+== no native call on an expired timer ==
+  [PASS] shutdown with nothing live is Ok
+  [PASS] 0 native calls after invalidate
+  [PASS] no leases
+
+== deduplication of timer identities ==
+  [PASS] second register ok
+  [PASS] second register kept the slot, lease and epoch
+  [PASS] second register did not reseed intent from tool-held flag
+  [PASS] one release restores
+
+== release_client drops only that client's leases ==
+  [PASS] release_client ok
+  [PASS] T1 still held by B
+  [PASS] T2 restored
+  [PASS] no Unpause on T1
+
+== load lifecycle: acquire refused while loading; pre-load release ==
+  [PASS] begin_load ok
+  [PASS] T1 released to running before load
+  [PASS] T2 left paused for the game
+  [PASS] identities dropped, loading
+  [PASS] acquire while loading refused
+  [PASS] register while loading refused
+  [PASS] no native calls while loading
+  [PASS] explicit re-register and acquire after load
+  [PASS] pre-load ticket stale
+
+== shutdown: releases all; failed cleanup keeps hooks ==
+  [PASS] clean shutdown restores running
+  [PASS] no leases
+  [PASS] failed cleanup -> CleanupIncomplete
+  [PASS] pending kept visible
+  [PASS] hooks stay installed (drop refused while pending)
+  [PASS] explicit drop refused while pending
+
+== flag cleared behind a lease is a capability failure ==
+  [PASS] verify ok while held
+  [PASS] verify -> ExternalMutation
+  [PASS] flag visible in status
+  [PASS] counted
+  [PASS] not silently re-paused
+  [PASS] release still ok
+  [PASS] no Unpause on an already-running timer
+  [PASS] verify on unknown timer
+
+== fixed tables refuse overflow ==
+  [PASS] timer table full
+  [PASS] lease table full
+  [PASS] exactly max leases
+
+== R1/F1: unobserved Unpause before acquire is reseeded, release restores running ==
+  [PASS] scoped Unpause forwarded (timer running)
+  [PASS] verify reports IntentDrift before acquire
+  [PASS] acquire ok
+  [PASS] acquire reseeded intent = running
+  [PASS] IntentReseeded counted
+  [PASS] release restores running (was running before acquire)
+  [PASS] 1 tool Pause, 1 recovery + 1 release Unpause
+
+== R3/F1: timer registered before hooks; unhooked game Unpause absorbed at acquire ==
+  [PASS] release restores running
+  [PASS] intent running
+
+== F1: no reseed while a restore is pending ==
+  [PASS] reacquire during pending ok
+  [PASS] intent stays running (stuck flag not taken as game's)
+  [PASS] release restores running
+  [PASS] no reseed counted
+
+== R2/F2: recovery unpause through the game path while held ==
+  [PASS] suppressed while held
+  [PASS] recorded: game intent running
+  [PASS] release applies it: 1 Unpause, running
+
+== R4/F3: game Pause on a held timer found unpaused is forwarded ==
+  [PASS] flag set: game Pause still suppressed (0 calls)
+  [PASS] flag clear: forwarded, paused again
+  [PASS] GamePauseRepaired counted
+  [PASS] intent paused, lease kept
+  [PASS] game pause persists after release
+
+== R5/F4: set_hooks_installed reports refusal ==
+  [PASS] install ok
+  [PASS] withdraw while leased -> LeasesHeld
+  [PASS] state unchanged
+  [PASS] withdraw after release ok
+
+== R6/F5: failed begin_load restore stays visible ==
+  [PASS] begin_load -> CleanupIncomplete
+  [FAIL] failure kept: timer id and generation
+  [PASS] LoadCleanupFailed counted
+  [PASS] no native call on the expired timer afterwards
+
+== R7/F6: acquire and register refused after shutdown ==
+  [PASS] acquire -> ShutDown
+  [PASS] register -> ShutDown
+  [PASS] no native call, latched
+
+== F7: all-or-nothing multi-timer acquire ==
+  [PASS] acquire_all ok
+  [PASS] all paused
+  [PASS] tickets filled
+  [PASS] released
+  [PASS] failure status propagated
+  [PASS] failed index = 2
+  [PASS] pre-held T1 lease kept
+  [PASS] T2 rolled back to running
+  [PASS] T2: 1 Pause + 1 Unpause
+  [PASS] T3 no lease
+  [PASS] out span too small refused
+  [PASS] no lease from a refused call
+
+== F1: verify reports unleased drift ==
+  [PASS] consistent -> Ok
+  [PASS] drift -> IntentDrift
+  [PASS] verify does not reseed
+
+188 checks, 1 failures

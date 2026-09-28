@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O2 -g -DNDEBUG -m32 -Wl,--dependency-file=CMakeFiles/kp_entitytest.dir/link.d CMakeFiles/kp_entitytest.dir/tools/kp_entitytest.cpp.o -o kp_entitytest  libkp_entity.a luajit32/src/libluajit.a -lm -ldl

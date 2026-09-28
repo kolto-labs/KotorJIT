@@ -1,0 +1,4 @@
+creative rc=0
+gamescope_boot_repair rc=0
+gamescope_backend rc=0
+capture_diagnostic rc=0

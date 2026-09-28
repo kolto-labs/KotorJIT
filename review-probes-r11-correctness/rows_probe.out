@@ -1,0 +1,9 @@
+half_dup_with_I_dup_0.76_every_250 {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('failed', 0.5003, ['capture_content_static: distinct-frame ratio is below the policy minimum'])}
+stale_1.2pct_P_dup_0.33 {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('failed', 0.9879, ['capture_content_static: distinct-frame ratio is below the policy minimum'])}
+stale_0.8pct {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('passed', 0.9919, [])}
+dup_exactly_at_floor_1.2_every_2nd {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('failed', 0.5003, ['capture_content_static: distinct-frame ratio is below the policy minimum'])}
+dup_just_above_floor_1.2001 {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('passed', 1.0, [])}
+black_startup_then_live {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('passed', 1.0, [])}
+black_first_acceptance_frame {'game-capture-v1': ('failed', 1.0, ['capture_content_black: first acceptance frame luma max is at or below the black threshold or has zero variance']), 'animated-diagnostic-v1': ('failed', 1.0, ['capture_content_black: first acceptance frame luma max is at or below the black threshold or has zero variance'])}
+chroma_only_change {'game-capture-v1': ('passed', 1.0, []), 'animated-diagnostic-v1': ('passed', 1.0, [])}
+interval_after_last_frame ('failed', 0.0, ['capture_content_black: no frame at or after the acceptance start marker'])

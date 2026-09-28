@@ -1,0 +1,123 @@
+=== T3 backup missing, binkw32_real.dll = original
+WARNING: backup kotorphasor/backup/20260927T200014Z/binkw32.dll missing or changed; restoring binkw32.dll from binkw32_real.dll, which matches the recorded original
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+after: swkotor.exe chitin.key binkw32.dll !binkw32_real.dll !kphasor.dll !kotorphasor/install-manifest.json | sentinel ok
+  bink sha: da32b9be412a
+=== T4 backup tampered
+WARNING: backup kotorphasor/backup/20260927T200018Z/binkw32.dll missing or changed; restoring binkw32.dll from binkw32_real.dll, which matches the recorded original
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+after: swkotor.exe chitin.key binkw32.dll !binkw32_real.dll !kphasor.dll !kotorphasor/install-manifest.json | sentinel ok
+  bink sha: da32b9be412a
+=== T4b backup tampered AND binkw32_real tampered
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept. Files: binkw32.dll,
+     | binkw32_real.dll
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== T5 read-only bink (chmod 444)
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T5/g
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T5/g/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T5/g/kotorphasor/install-manifest.json
+rc=0
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+after: swkotor.exe chitin.key binkw32.dll !binkw32_real.dll !kphasor.dll !kotorphasor/install-manifest.json | sentinel ok
+  bink sha: da32b9be412a
+=== T6 pre-existing addresses/k1_gog_103.json
+     | install failed and was rolled back:
+     | kotorphasor/addresses/k1_gog_103.json already exists and is not ours;
+     | refusing
+rc=1
+. ./binkw32.dll ./chitin.key ./kotorphasor ./kotorphasor/addresses ./kotorphasor/addresses/k1_gog_103.json ./swkotor.exe 
+da32b9be412a
+=== T7 unknown bink, then -TrustBinkSha256 uppercase
+     | a known Bink build; pass -TrustBinkSha256
+     | 40b86798aad9c616bcf9b8a4abfa36518e2afcdad01867675e48cb587a9e5081 only if
+     | you know it is the game's original
+rc=1
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T7/g
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T7/g/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T7/g/kotorphasor/install-manifest.json
+rc=0
+"bink_trusted_override": "40b86798aad9c616bcf9b8a4abfa36518e2afcdad01867675e48cb587a9e5081"
+=== T8 relative GameDir
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T8/g
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T8/g/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T8/g/kotorphasor/install-manifest.json
+rc=0
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+=== S1 symlinked backup timestamp dir -> outside victim dir
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: backup folder
+     | '/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-S1/g/kotorphasor/backup/20260927T200047Z' is a junction or symbolic link; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+victimdir:
+binkw32.dll
+precious.txt
+drwxr-xr-x. 1 brunner56 ubuntu 86 Sep 27 15:00 ..
+lrwxrwxrwx. 1 brunner56 ubuntu 76 Sep 27 15:00 20260927T200047Z -> /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-S1/victimdir
+=== S2 kotorphasor dir itself a symlink to outside
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: backup folder
+     | '/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-S2/g/kotorphasor' is a junction or symbolic link; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-S2/kpreal:
+addresses
+backup
+install-manifest.json
+scripts
+
+/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-S2/kpreal/scripts:
+mine.lua
+=== N5actArr :: f=m['files'][1]; f['action']=['created','replaced']; f['original_sha256']=hashlib.sha256(open('/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-N5actArr/g/chitin.key','rb').read()).hexdigest(); f['backup']='chitin.key'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest action of
+     | 'kphasor.dll' is not a single string
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+  kphasor.dll content now:
+MZ fake runtime
+=== N10order :: r=[f for f in m['files'] if f['path']=='binkw32_real.dll'][0]; m['files'].remove(r); m['files'].append(r); import shutil; shutil.rmtree('/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-N10order/g/kotorphasor/backup')
+WARNING: backup kotorphasor/backup/20260927T200108Z/binkw32.dll missing or changed; restoring binkw32.dll from binkw32_real.dll, which matches the recorded original
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+after: swkotor.exe chitin.key binkw32.dll !binkw32_real.dll !kphasor.dll !kotorphasor/install-manifest.json | sentinel ok
+  bink sha: da32b9be412a
+=== N11onlyKp :: m['files']=[f for f in m['files'] if f['path']=='kphasor.dll']
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest has 0
+     | binkw32.dll entries, want exactly 1; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== H1 huge manifest: 20000 created entries (missing files)
+2909979 bytes
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+107.10 s
+after: swkotor.exe chitin.key binkw32.dll !binkw32_real.dll !kphasor.dll !kotorphasor/install-manifest.json | sentinel ok
+  bink sha: da32b9be412a
+=== H2 deep nesting JSON
+     | uninstall refused, nothing removed; manifest kept: Conversion from JSON
+     | failed with error: The reader's MaxDepth of 1024 has been exceeded. Path
+     | 'junk.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+DONE
+inst2 rc=0

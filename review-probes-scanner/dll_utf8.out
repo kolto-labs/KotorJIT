@@ -1,0 +1,6 @@
+kp-release-20260927 kphasor.dll invalid UTF-8 at byte 2 -> wide scan runs
+kp-release-20260927 binkw32.dll invalid UTF-8 at byte 2 -> wide scan runs
+kp-release-20260927 copilot whole-word hits: {}
+kp-release-20260922 kphasor.dll invalid UTF-8 at byte 2 -> wide scan runs
+kp-release-20260922 binkw32.dll invalid UTF-8 at byte 2 -> wide scan runs
+kp-release-20260922 copilot whole-word hits: {}

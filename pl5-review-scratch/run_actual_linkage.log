@@ -1,0 +1,5 @@
+actual GameAdapter::step_load_completion -> finish_load call path: PASS
+/home/brunner56/kp-live-20260922/pl5-review-scratch/run_actual_linkage.sh: line 31: 574089 Aborted                    timeout 10s "$SCR/actual_finish_fixture_expectation_mutant" > "$SCR/actual-mutant-run.log" 2>&1
+actual_finish_fixture_expectation_mutant: /home/brunner56/kp-live-20260922/pl5-review-scratch/actual_finish_fixture_expectation_mutant.cpp:17: int main(): Assertion `!adapter.pause_machine_.loading()' failed.
+timeout: the monitored command dumped core
+production finish_load cleanup mutant: red as expected

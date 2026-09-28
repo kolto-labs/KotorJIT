@@ -1,0 +1,8 @@
+{
+  "behavior_status": "pass",
+  "passed_steps": 27,
+  "visual_showcase_status": "not_accepted",
+  "visual_reason": "Stable framing but visible gesture difference is too subtle to demonstrate native animation freeze intuitively. Active native clock proof does not establish a dominant visible pose. Investigate blend/controller ownership before promoting a short.",
+  "continuous_video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-124910/continuous.mp4",
+  "runtime_sha256": "db3f0734ef9d18207f39432bf93d984f514e60dee71e7ba170a333fb60af044d"
+}

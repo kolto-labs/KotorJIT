@@ -1,0 +1,11 @@
+[running] info: [script] [task7s2] camera_construct dist=6.2500 pitch=80.0000 height=3.5000 speed=20 fov=55 dolly=0 row=3 q=0.0000,0.0000,0.3800,0.9200 p=100.000,90.000,4.000
+[running] info: [script] [task7s2] armed tiny=0.350 giant=1.900
+[running] info: [script] [task7s2] calm_start
+[running] info: [script] [model-scene:task7s2] setup actors=1 awaiting-models
+[running] info: [script] [model-scene:task7s2] phase=1 actor=1 base=0.350 effective=0.438
+[running] info: [script] [model-scene:task7s2] phase=2 actor=1 base=1.900 effective=2.375
+[running] info: [script] [model-scene:task7s2] phase=3 actor=1 base=1.000 effective=1.250
+[running] info: [script] [model-scene:task7s2] restored actors=1 holding-original-scale
+[running] info: [script] [model-scene:task7s2] complete phases=3 restored=1
+[running] info: [script] [task7s2] camera_watch samples=601 max_q=0.000000 max_p=0.000000 cfg_changed=0 failures=0 stable=1
+[running] info: [script] [task7s2] calm_end

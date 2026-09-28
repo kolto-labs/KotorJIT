@@ -1,0 +1,326 @@
+FFFEFFFFFEFFF.FFFFFFFFFFFFFFFFFFFFF
+======================================================================
+ERROR: test_s2_all_git_scopes_and_the_origin_owner_are_identities (package_creative_harness_test.FollowupScanTests.test_s2_all_git_scopes_and_the_origin_owner_are_identities)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 823, in test_s2_all_git_scopes_and_the_origin_owner_are_identities
+    with mock.patch.object(self.Z, '_git_config', side_effect=lambda key: config.get(key, '')), \
+  File "/usr/lib/python3.12/unittest/mock.py", line 1458, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1431, in get_original
+    raise AttributeError(
+AttributeError: <module 'scan_release_zip' from '/tmp/kpf-red/scan_release_zip.py'> does not have the attribute '_origin_url'
+
+======================================================================
+ERROR: test_s2_origin_owner_is_parsed_from_common_url_forms (package_creative_harness_test.FollowupScanTests.test_s2_origin_owner_is_parsed_from_common_url_forms)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 842, in test_s2_origin_owner_is_parsed_from_common_url_forms
+    O = self.Z.owner_from_url
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'scan_release_zip' has no attribute 'owner_from_url'
+
+======================================================================
+FAIL: test_s1_utf16_is_scanned_whenever_nul_bytes_are_present (package_creative_harness_test.FollowupScanTests.test_s1_utf16_is_scanned_whenever_nul_bytes_are_present) (name='top/log.dat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 818, in test_s1_utf16_is_scanned_whenever_nul_bytes_are_present
+    self.assertIn((name, 'marker'), self.kinds(report))
+AssertionError: ('top/log.dat', 'marker') not found in set()
+
+======================================================================
+FAIL: test_s1_utf16_is_scanned_whenever_nul_bytes_are_present (package_creative_harness_test.FollowupScanTests.test_s1_utf16_is_scanned_whenever_nul_bytes_are_present) (name='top/cfg.bin')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 818, in test_s1_utf16_is_scanned_whenever_nul_bytes_are_present
+    self.assertIn((name, 'marker'), self.kinds(report))
+AssertionError: ('top/cfg.bin', 'marker') not found in set()
+
+======================================================================
+FAIL: test_s1_utf16_is_scanned_whenever_nul_bytes_are_present (package_creative_harness_test.FollowupScanTests.test_s1_utf16_is_scanned_whenever_nul_bytes_are_present) (name='top/k.dll')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 818, in test_s1_utf16_is_scanned_whenever_nul_bytes_are_present
+    self.assertIn((name, 'marker'), self.kinds(report))
+AssertionError: ('top/k.dll', 'marker') not found in set()
+
+======================================================================
+FAIL: test_s2_generic_identity_allow_list (package_creative_harness_test.FollowupScanTests.test_s2_generic_identity_allow_list) (name='Copilot')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 838, in test_s2_generic_identity_allow_list
+    self.assertFalse(self.Z._identity_ok(name), name)
+AssertionError: True is not false : Copilot
+
+======================================================================
+FAIL: test_s2_generic_identity_allow_list (package_creative_harness_test.FollowupScanTests.test_s2_generic_identity_allow_list) (name='copilot')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 838, in test_s2_generic_identity_allow_list
+    self.assertFalse(self.Z._identity_ok(name), name)
+AssertionError: True is not false : copilot
+
+======================================================================
+FAIL: test_s2_generic_identity_allow_list (package_creative_harness_test.FollowupScanTests.test_s2_generic_identity_allow_list) (name='GitHub')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 838, in test_s2_generic_identity_allow_list
+    self.assertFalse(self.Z._identity_ok(name), name)
+AssertionError: True is not false : GitHub
+
+======================================================================
+FAIL: test_s2_generic_identity_allow_list (package_creative_harness_test.FollowupScanTests.test_s2_generic_identity_allow_list) (name='github-actions[bot]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 838, in test_s2_generic_identity_allow_list
+    self.assertFalse(self.Z._identity_ok(name), name)
+AssertionError: True is not false : github-actions[bot]
+
+======================================================================
+FAIL: test_s2_generic_identity_allow_list (package_creative_harness_test.FollowupScanTests.test_s2_generic_identity_allow_list) (name='dependabot[bot]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 838, in test_s2_generic_identity_allow_list
+    self.assertFalse(self.Z._identity_ok(name), name)
+AssertionError: True is not false : dependabot[bot]
+
+======================================================================
+FAIL: test_s3_bytes_no_entry_covers_are_findings (package_creative_harness_test.FollowupScanTests.test_s3_bytes_no_entry_covers_are_findings) (label='gap')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 861, in test_s3_bytes_no_entry_covers_are_findings
+    self.assertIn('uncovered bytes', kinds, report['findings'])
+AssertionError: 'uncovered bytes' not found in set() : []
+
+======================================================================
+FAIL: test_s3_bytes_no_entry_covers_are_findings (package_creative_harness_test.FollowupScanTests.test_s3_bytes_no_entry_covers_are_findings) (label='trailing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 861, in test_s3_bytes_no_entry_covers_are_findings
+    self.assertIn('uncovered bytes', kinds, report['findings'])
+AssertionError: 'uncovered bytes' not found in set() : []
+
+======================================================================
+FAIL: test_s3_bytes_no_entry_covers_are_findings (package_creative_harness_test.FollowupScanTests.test_s3_bytes_no_entry_covers_are_findings) (label='slack')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 861, in test_s3_bytes_no_entry_covers_are_findings
+    self.assertIn('uncovered bytes', kinds, report['findings'])
+AssertionError: 'uncovered bytes' not found in set() : []
+
+======================================================================
+FAIL: test_s3_nonzero_bytes_after_the_tar_end_are_findings (package_creative_harness_test.FollowupScanTests.test_s3_nonzero_bytes_after_the_tar_end_are_findings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 901, in test_s3_nonzero_bytes_after_the_tar_end_are_findings
+    self.assertIn(('top/source.tar.gz', 'uncovered bytes'), self.kinds(report))
+AssertionError: ('top/source.tar.gz', 'uncovered bytes') not found in set()
+
+======================================================================
+FAIL: test_s4_nul_in_a_zip_name_is_reported_and_its_tail_scanned (package_creative_harness_test.FollowupScanTests.test_s4_nul_in_a_zip_name_is_reported_and_its_tail_scanned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 910, in test_s4_nul_in_a_zip_name_is_reported_and_its_tail_scanned
+    self.assertIn(('top/a.lua', 'unsafe name'), kinds)
+AssertionError: ('top/a.lua', 'unsafe name') not found in set()
+
+======================================================================
+FAIL: test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper (package_creative_harness_test.FollowupScanTests.test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper) (names=['data/codecaves.toml'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 921, in test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper
+    self.assertIn((names[0], kind), self.kinds(report))
+AssertionError: ('data/codecaves.toml', 'excluded file') not found in set()
+
+======================================================================
+FAIL: test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper (package_creative_harness_test.FollowupScanTests.test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper) (names=['data/codecaves.toml', 'data/events.draft.toml', 'data/hooksites.toml'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 921, in test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper
+    self.assertIn((names[0], kind), self.kinds(report))
+AssertionError: ('data/codecaves.toml', 'excluded file') not found in set()
+
+======================================================================
+FAIL: test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper (package_creative_harness_test.FollowupScanTests.test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper) (names=['tmp/a.lua', 'tmp/b.lua'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 921, in test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper
+    self.assertIn((names[0], kind), self.kinds(report))
+AssertionError: ('tmp/a.lua', 'private folder') not found in set()
+
+======================================================================
+FAIL: test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper (package_creative_harness_test.FollowupScanTests.test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper) (names=['runs/x/report.md'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 921, in test_s5_a_lone_data_tmp_or_runs_folder_is_not_a_wrapper
+    self.assertIn((names[0], kind), self.kinds(report))
+AssertionError: ('runs/x/report.md', 'private folder') not found in set()
+
+======================================================================
+FAIL: test_s6_unix_owner_in_5855_000d_and_7855_extra_fields (package_creative_harness_test.FollowupScanTests.test_s6_unix_owner_in_5855_000d_and_7855_extra_fields) (label='5855')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 935, in test_s6_unix_owner_in_5855_000d_and_7855_extra_fields
+    self.assertIn(('top/a.lua', 'zip owner'), self.kinds(self.scan_raw(raw, markers=())))
+AssertionError: ('top/a.lua', 'zip owner') not found in set()
+
+======================================================================
+FAIL: test_s6_unix_owner_in_5855_000d_and_7855_extra_fields (package_creative_harness_test.FollowupScanTests.test_s6_unix_owner_in_5855_000d_and_7855_extra_fields) (label='000d')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 935, in test_s6_unix_owner_in_5855_000d_and_7855_extra_fields
+    self.assertIn(('top/a.lua', 'zip owner'), self.kinds(self.scan_raw(raw, markers=())))
+AssertionError: ('top/a.lua', 'zip owner') not found in set()
+
+======================================================================
+FAIL: test_s6_unix_owner_in_5855_000d_and_7855_extra_fields (package_creative_harness_test.FollowupScanTests.test_s6_unix_owner_in_5855_000d_and_7855_extra_fields) (label='7855')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 935, in test_s6_unix_owner_in_5855_000d_and_7855_extra_fields
+    self.assertIn(('top/a.lua', 'zip owner'), self.kinds(self.scan_raw(raw, markers=())))
+AssertionError: ('top/a.lua', 'zip owner') not found in set()
+
+======================================================================
+FAIL: test_s7_duplicate_tar_members_are_collisions (package_creative_harness_test.FollowupScanTests.test_s7_duplicate_tar_members_are_collisions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 964, in test_s7_duplicate_tar_members_are_collisions
+    self.assertIn(('top/source.tar.gz!source/a.lua', 'name collision'), self.kinds(report))
+AssertionError: ('top/source.tar.gz!source/a.lua', 'name collision') not found in set()
+
+======================================================================
+FAIL: test_s7_duplicates_and_file_folder_clashes_are_collisions (package_creative_harness_test.FollowupScanTests.test_s7_duplicates_and_file_folder_clashes_are_collisions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 951, in test_s7_duplicates_and_file_folder_clashes_are_collisions
+    self.assertIn((entry, 'name collision'), kinds)
+AssertionError: ('p/dup.lua', 'name collision') not found in set()
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'// /tmp/kp-rebuild-verify/src/x.cpp\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'// /tmp/kp-rebuild-verify/src/x.cpp\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'"/tmp/k1_harness"\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'"/tmp/k1_harness"\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'see file:///tmp/x\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'see file:///tmp/x\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'@/tmp/.hidden-private/x\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'@/tmp/.hidden-private/x\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'/tmp/.X11-unix/X0 then /tmp/scratch/y\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/tmp/'
+
+- []
++ ['/tmp/'] : b'/tmp/.X11-unix/X0 then /tmp/scratch/y\n'
+
+======================================================================
+FAIL: test_tmp_and_var_tmp_are_markers (package_creative_harness_test.FollowupScanTests.test_tmp_and_var_tmp_are_markers) (text=b'/var/tmp/build/x.o\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 786, in test_tmp_and_var_tmp_are_markers
+    self.assertEqual([hit['marker'] for hit in hits], [label], text)
+AssertionError: Lists differ: [] != ['/var/tmp/']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/var/tmp/'
+
+- []
++ ['/var/tmp/'] : b'/var/tmp/build/x.o\n'
+
+======================================================================
+FAIL: test_tmp_marker_spares_relative_folders_and_fixed_system_names (package_creative_harness_test.FollowupScanTests.test_tmp_marker_spares_relative_folders_and_fixed_system_names) (text=b'/tmp/.kp_harness_write_probe/run/x\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 802, in test_tmp_marker_spares_relative_folders_and_fixed_system_names
+    self.assertTrue(self.Z.path_scan('x.py', text, markers), text)
+AssertionError: [] is not true : b'/tmp/.kp_harness_write_probe/run/x\n'
+
+======================================================================
+FAIL: test_tmp_marker_spares_relative_folders_and_fixed_system_names (package_creative_harness_test.FollowupScanTests.test_tmp_marker_spares_relative_folders_and_fixed_system_names) (text=b'/tmp/.X11-unixfoo/x\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 802, in test_tmp_marker_spares_relative_folders_and_fixed_system_names
+    self.assertTrue(self.Z.path_scan('x.py', text, markers), text)
+AssertionError: [] is not true : b'/tmp/.X11-unixfoo/x\n'
+
+======================================================================
+FAIL: test_tmp_marker_spares_relative_folders_and_fixed_system_names (package_creative_harness_test.FollowupScanTests.test_tmp_marker_spares_relative_folders_and_fixed_system_names) (text=b'/tmp/.X0-lock/x\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 802, in test_tmp_marker_spares_relative_folders_and_fixed_system_names
+    self.assertTrue(self.Z.path_scan('x.py', text, markers), text)
+AssertionError: [] is not true : b'/tmp/.X0-lock/x\n'
+
+======================================================================
+FAIL: test_tmp_markers_are_fixed_markers_not_identities (package_creative_harness_test.FollowupScanTests.test_tmp_markers_are_fixed_markers_not_identities)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py", line 806, in test_tmp_markers_are_fixed_markers_not_identities
+    self.assertIn('/tmp/', markers)
+AssertionError: '/tmp/' not found in ('/home/', '/run/media/', '/media/', '/Users/', '/Volumes/', '/root/', '/var/home/', 'C:\\Users', 'C:/Users', 'C:\\\\Users', 'Documents and Settings', 'kp-live', 'kp-release', '.superpowers', 'MyBook', '.worktrees', 'linuxbrew')
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.023s
+
+FAILED (failures=32, errors=2)
+scanner under test: /tmp/kpf-red/scan_release_zip.py

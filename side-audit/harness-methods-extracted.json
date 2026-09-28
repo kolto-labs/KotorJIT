@@ -1,0 +1,860 @@
+[
+  {
+    "method": "manager",
+    "line": 357,
+    "pointers": [
+      "manager("
+    ],
+    "sites": [
+      "g.app_manager"
+    ]
+  },
+  {
+    "method": "client_app",
+    "line": 365,
+    "pointers": [
+      "client_app(",
+      "manager("
+    ],
+    "sites": []
+  },
+  {
+    "method": "client_internal",
+    "line": 372,
+    "pointers": [
+      "client_app(",
+      "client_internal("
+    ],
+    "sites": [
+      "client.internal"
+    ]
+  },
+  {
+    "method": "server_app",
+    "line": 381,
+    "pointers": [
+      "manager(",
+      "server_app("
+    ],
+    "sites": []
+  },
+  {
+    "method": "server_internal",
+    "line": 387,
+    "pointers": [
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "server.internal"
+    ]
+  },
+  {
+    "method": "stats",
+    "line": 393,
+    "pointers": [
+      "manager("
+    ],
+    "sites": []
+  },
+  {
+    "method": "gui_in_game",
+    "line": 399,
+    "pointers": [
+      "client_app(",
+      "client_internal(",
+      "gui_in_game("
+    ],
+    "sites": [
+      "client.get_in_game_gui",
+      "client.gui_in_game"
+    ]
+  },
+  {
+    "method": "phase",
+    "line": 409,
+    "pointers": [
+      "client_app(",
+      "client_internal(",
+      "gui_in_game(",
+      "manager(",
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "client.area_not_ready_to_display",
+      "client.game_over_state",
+      "client.get_animation_timer",
+      "client.get_world_timer",
+      "client.gui_manager",
+      "client.input_class",
+      "client.is_movie_playing",
+      "client.main_menu",
+      "client.movie_player",
+      "gui.controller_pause",
+      "gui.dialog_active",
+      "gui.modal_data",
+      "gui.modal_size",
+      "gui.panel_exists",
+      "gui.status_summary_handle_input",
+      "gui.status_summary_panel",
+      "gui.sw_gui_status",
+      "gui.tutorial_box",
+      "server.get_world_timer",
+      "server.loading_module",
+      "server.move_to_module_pending",
+      "server.pause_state",
+      "server.server_mode",
+      "stats.continue_message_processing",
+      "stats.load_game_error",
+      "timer.paused"
+    ]
+  },
+  {
+    "method": "module_name",
+    "line": 547,
+    "pointers": [
+      "server_app("
+    ],
+    "sites": [
+      "app.get_module",
+      "module.name"
+    ]
+  },
+  {
+    "method": "read_last_module",
+    "line": 644,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "load_save",
+    "line": 679,
+    "pointers": [
+      "client_app(",
+      "client_internal(",
+      "manager(",
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "app.create_server",
+      "app.set_load_from_savegame",
+      "client.disable_input",
+      "client.get_client_name",
+      "client.get_world_timer",
+      "client.message_handler",
+      "client.net_layer",
+      "client.send_load_game_request",
+      "client.set_input_class",
+      "client.set_loading_savegame",
+      "client.set_player_character_name",
+      "g.app_manager",
+      "msg.area_loaded",
+      "msg.request_status",
+      "net.start_connect_to_session",
+      "server.get_world_timer",
+      "server.load_from_savegame",
+      "timer.pause_world_timer"
+    ]
+  },
+  {
+    "method": "retire_main_menu",
+    "line": 905,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "client.main_menu",
+      "gui.panel_exists",
+      "gui.remove_panel"
+    ]
+  },
+  {
+    "method": "step_load_completion",
+    "line": 956,
+    "pointers": [
+      "client_internal(",
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "app.get_module",
+      "app.update_client_game_objects",
+      "app.update_client_game_objects is unresolved",
+      "client.area_not_ready_to_display",
+      "client.player_creature_id",
+      "msg.area_loaded",
+      "server.load_from_savegame",
+      "server.server_mode",
+      "stats.continue_message_processing"
+    ]
+  },
+  {
+    "method": "new_game",
+    "line": 1078,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "client.main_menu",
+      "gui.control_active",
+      "gui.main_menu_new_game",
+      "gui.panel_bit_flags",
+      "gui.panel_exists",
+      "gui.panels_data",
+      "gui.panels_size"
+    ]
+  },
+  {
+    "method": "chargen_select_class",
+    "line": 1133,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.class_selection_select_button",
+      "gui.control_active",
+      "gui.main_chargen_begin_play",
+      "gui.panel_exists"
+    ]
+  },
+  {
+    "method": "chargen_begin_play",
+    "line": 1212,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.main_chargen_begin_play",
+      "gui.main_chargen_set_visible_panel",
+      "gui.panel_exists"
+    ]
+  },
+  {
+    "method": "chargen_stage",
+    "line": 1265,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager"
+    ]
+  },
+  {
+    "method": "save",
+    "line": 1305,
+    "pointers": [
+      "client_app(",
+      "server_app("
+    ],
+    "sites": [
+      "client.send_save_game_request",
+      "g.app_manager"
+    ]
+  },
+  {
+    "method": "warp",
+    "line": 1328,
+    "pointers": [
+      "server_app("
+    ],
+    "sites": [
+      "app.set_move_to_module_pending",
+      "app.set_move_to_module_start_waypoint",
+      "app.set_move_to_module_string",
+      "g.app_manager"
+    ]
+  },
+  {
+    "method": "as_sws_object",
+    "line": 1353,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "server_dialog",
+    "line": 1369,
+    "pointers": [
+      "server_app(",
+      "server_dialog("
+    ],
+    "sites": [
+      "gui.dialog_owner",
+      "gui.dialog_owner not readable",
+      "server.client_to_server_object_id",
+      "server.client_to_server_object_id unresolved",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "dialog",
+    "line": 1388,
+    "pointers": [
+      "gui_in_game(",
+      "server_dialog("
+    ],
+    "sites": [
+      "dialog.current_entry",
+      "dialog.current_reply",
+      "dialog.entries",
+      "dialog.entry",
+      "dialog.node_strref",
+      "dialog.panel_current_entry",
+      "gui.dialog_active",
+      "gui.dialog_panel",
+      "gui.dialog_pending",
+      "gui.reply_count",
+      "gui.reply_inactive_count",
+      "gui.reply_links",
+      "gui.reply_texts"
+    ]
+  },
+  {
+    "method": "reply",
+    "line": 1472,
+    "pointers": [
+      "gui_in_game(",
+      "server_dialog("
+    ],
+    "sites": [
+      "dialog.current_entry",
+      "dialog.current_reply",
+      "dialog.panel_current_entry",
+      "dialog.panel_visible_count",
+      "dialog.select_reply",
+      "gui.dialog_active",
+      "gui.dialog_owner",
+      "gui.dialog_panel",
+      "gui.dialog_pending",
+      "gui.reply_count",
+      "server.client_to_server_object_id",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "dialog_continue",
+    "line": 1535,
+    "pointers": [
+      "gui_in_game("
+    ],
+    "sites": [
+      "dialog.current_entry",
+      "dialog.current_reply",
+      "gui.dialog_active",
+      "gui.dialog_owner",
+      "gui.reply_count",
+      "gui.reply_links",
+      "gui.reply_texts",
+      "gui.set_dialog_selection",
+      "gui.update_dialog",
+      "server.client_to_server_object_id",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "dialog_skip",
+    "line": 1560,
+    "pointers": [
+      "gui_in_game(",
+      "server_app(",
+      "server_dialog("
+    ],
+    "sites": [
+      "dialog.skip_past",
+      "g.app_manager",
+      "gui.dialog_owner",
+      "gui.dialog_panel",
+      "server.client_to_server_object_id",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "dialog_abort",
+    "line": 1591,
+    "pointers": [
+      "gui_in_game(",
+      "server_dialog("
+    ],
+    "sites": [
+      "gui.dialog_active",
+      "gui.dialog_owner",
+      "gui.dialog_panel",
+      "gui.handle_dialog_selection",
+      "gui.reply_count",
+      "server.client_to_server_object_id",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "dialog_clear_sound_wait",
+    "line": 1618,
+    "pointers": [
+      "gui_in_game(",
+      "server_dialog("
+    ],
+    "sites": [
+      "gui.dialog_owner",
+      "gui.dialog_panel",
+      "server.client_to_server_object_id",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "clear_auto_pause",
+    "line": 1644,
+    "pointers": [
+      "server_internal("
+    ],
+    "sites": [
+      "g.app_manager",
+      "server.pause_state"
+    ]
+  },
+  {
+    "method": "apply_speed",
+    "line": 1669,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.set_game_speed"
+    ]
+  },
+  {
+    "method": "speed",
+    "line": 1684,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "set_speed",
+    "line": 1686,
+    "pointers": [],
+    "sites": [
+      "client.set_game_speed"
+    ]
+  },
+  {
+    "method": "after_frame",
+    "line": 1698,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "resolve_player_stats",
+    "line": 1712,
+    "pointers": [
+      "client_app(",
+      "resolve_player_stats("
+    ],
+    "sites": [
+      "client.get_sw_party",
+      "creature.stats"
+    ]
+  },
+  {
+    "method": "auto_levelup",
+    "line": 1739,
+    "pointers": [
+      "resolve_player_stats("
+    ],
+    "sites": [
+      "stats.auto_levelup",
+      "stats.experience",
+      "stats.get_level"
+    ]
+  },
+  {
+    "method": "step_auto_levelup",
+    "line": 1760,
+    "pointers": [
+      "resolve_player_stats("
+    ],
+    "sites": [
+      "stats.auto_levelup",
+      "stats.can_level_up",
+      "stats.experience",
+      "stats.get_level"
+    ]
+  },
+  {
+    "method": "set_party_leader",
+    "line": 1805,
+    "pointers": [
+      "client_app("
+    ],
+    "sites": [
+      "client.get_creature_by_object_id",
+      "client.get_sw_party"
+    ]
+  },
+  {
+    "method": "step_party_leader",
+    "line": 1842,
+    "pointers": [
+      "client_app("
+    ],
+    "sites": [
+      "client.get_sw_party"
+    ]
+  },
+  {
+    "method": "use_item",
+    "line": 1880,
+    "pointers": [
+      "client_app("
+    ],
+    "sites": [
+      "client.get_creature_by_object_id",
+      "client.get_sw_party"
+    ]
+  },
+  {
+    "method": "step_use_item",
+    "line": 1920,
+    "pointers": [
+      "client_app("
+    ],
+    "sites": [
+      "client.get_creature_by_object_id",
+      "client.get_sw_party"
+    ]
+  },
+  {
+    "method": "equip_item",
+    "line": 1960,
+    "pointers": [
+      "client_app(",
+      "server_app("
+    ],
+    "sites": [
+      "client.get_sw_party",
+      "creature.inventory",
+      "creature.run_equip",
+      "item.id",
+      "item.possessor",
+      "server.get_item_by_object_id"
+    ]
+  },
+  {
+    "method": "step_equip_item",
+    "line": 2015,
+    "pointers": [
+      "client_app(",
+      "server_app("
+    ],
+    "sites": [
+      "client.get_sw_party",
+      "creature.inventory",
+      "creature.run_equip",
+      "item.id",
+      "item.possessor",
+      "server.get_item_by_object_id"
+    ]
+  },
+  {
+    "method": "world_timers",
+    "line": 2082,
+    "pointers": [
+      "client_app(",
+      "server_app(",
+      "world_timers("
+    ],
+    "sites": [
+      "client.get_world_timer",
+      "server.get_world_timer"
+    ]
+  },
+  {
+    "method": "unpause_timers",
+    "line": 2098,
+    "pointers": [
+      "client_app(",
+      "world_timers("
+    ],
+    "sites": [
+      "client.get_animation_timer",
+      "client.get_world_timer",
+      "client.set_auto_paused",
+      "client.set_paused_by_combat",
+      "g.app_manager",
+      "server.get_world_timer",
+      "timer.unpause_world_timer"
+    ]
+  },
+  {
+    "method": "advance_tutorial",
+    "line": 2127,
+    "pointers": [
+      "client_internal(",
+      "gui_in_game("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.messagebox_callback",
+      "gui.messagebox_callback_context",
+      "gui.panel_exists",
+      "gui.remove_panel",
+      "gui.tutorial_box",
+      "gui.tutorial_handle_input"
+    ]
+  },
+  {
+    "method": "finish_hidden_tutorial",
+    "line": 2160,
+    "pointers": [
+      "client_internal(",
+      "gui_in_game("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.messagebox_callback",
+      "gui.messagebox_callback_arg",
+      "gui.messagebox_callback_context",
+      "gui.panel_exists",
+      "gui.tutorial_box",
+      "gui.tutorial_unpause"
+    ]
+  },
+  {
+    "method": "dismiss_status_summary",
+    "line": 2185,
+    "pointers": [
+      "client_internal(",
+      "gui_in_game("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.panel_exists",
+      "gui.status_summary_handle_input",
+      "gui.status_summary_panel"
+    ]
+  },
+  {
+    "method": "equipment_screen",
+    "line": 2214,
+    "pointers": [
+      "gui_in_game("
+    ],
+    "sites": [
+      "gui.hide_sw_in_game_gui",
+      "gui.in_game_screen_active",
+      "gui.last_gui_panel",
+      "gui.show_sw_in_game_gui"
+    ]
+  },
+  {
+    "method": "door_use",
+    "line": 2249,
+    "pointers": [
+      "client_internal(",
+      "server_app("
+    ],
+    "sites": [
+      "client.message_handler",
+      "msg.change_door_state",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "door_commit_open",
+    "line": 2280,
+    "pointers": [
+      "server_app("
+    ],
+    "sites": [
+      "door.move_to_next_open_state",
+      "door.open_state",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "door_security",
+    "line": 2309,
+    "pointers": [
+      "client_app(",
+      "client_internal(",
+      "server_app("
+    ],
+    "sites": [
+      "client.get_sw_party",
+      "client.message_handler",
+      "door.lockable",
+      "door.locked",
+      "door.open_state",
+      "msg.unlock_object",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "step_door_security",
+    "line": 2362,
+    "pointers": [
+      "client_app(",
+      "client_internal(",
+      "server_app("
+    ],
+    "sites": [
+      "client.get_sw_party",
+      "client.message_handler",
+      "door.locked",
+      "door.open_state",
+      "msg.unlock_object",
+      "server.get_game_object"
+    ]
+  },
+  {
+    "method": "attack",
+    "line": 2417,
+    "pointers": [
+      "client_internal(",
+      "server_app("
+    ],
+    "sites": [
+      "client.message_handler",
+      "client.player_creature_id",
+      "msg.attack",
+      "server.client_to_server_object_id",
+      "server.get_game_object",
+      "server.get_player_creature_id"
+    ]
+  },
+  {
+    "method": "dismiss_messagebox",
+    "line": 2448,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "client.input_class",
+      "gui.messagebox_handle_input",
+      "gui.modal_data",
+      "gui.modal_size"
+    ]
+  },
+  {
+    "method": "container_input",
+    "line": 2492,
+    "pointers": [
+      "client_internal("
+    ],
+    "sites": [
+      "client.gui_manager",
+      "gui.container_handle_input",
+      "gui.container_mode",
+      "gui.container_take_all",
+      "gui.modal_data",
+      "gui.modal_size",
+      "gui.panel_exists"
+    ]
+  },
+  {
+    "method": "dismiss_container",
+    "line": 2548,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "take_all_container",
+    "line": 2555,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "accept_party_selection",
+    "line": 2562,
+    "pointers": [
+      "client_internal(",
+      "gui_in_game(",
+      "server_internal("
+    ],
+    "sites": [
+      "client.get_in_game_gui",
+      "client.gui_manager",
+      "client.input_class",
+      "gui.initialized",
+      "gui.modal_data",
+      "gui.modal_size",
+      "gui.panel_exists",
+      "gui.party_selection_accept_party",
+      "gui.party_selection_entry0_flags",
+      "gui.party_selection_mode",
+      "gui.party_selection_selected_count",
+      "gui.party_selection_vtable",
+      "server.pause_state"
+    ]
+  },
+  {
+    "method": "set_fixed_step",
+    "line": 2620,
+    "pointers": [
+      "client_app(",
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "client.get_animation_timer",
+      "client.get_pause_timer",
+      "client.get_world_timer",
+      "g.app_manager",
+      "server.get_pause_timer",
+      "server.get_world_timer",
+      "server.pause_timer",
+      "server.world_timer",
+      "timer.pause_world_timer",
+      "timer.paused",
+      "timer.set_fixed_snapshot_rate",
+      "timer.unpause_world_timer"
+    ]
+  },
+  {
+    "method": "set_movies",
+    "line": 2663,
+    "pointers": [],
+    "sites": [
+      "client.play_movies"
+    ]
+  },
+  {
+    "method": "movies_enabled",
+    "line": 2669,
+    "pointers": [],
+    "sites": []
+  },
+  {
+    "method": "walk_globals",
+    "line": 2673,
+    "pointers": [
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "app.get_global_variable_table",
+      "g.app_manager"
+    ]
+  },
+  {
+    "method": "walk_journal",
+    "line": 2761,
+    "pointers": [
+      "server_app(",
+      "server_internal("
+    ],
+    "sites": [
+      "app.get_party_table",
+      "g.app_manager"
+    ]
+  },
+  {
+    "method": "missing_sites",
+    "line": 2804,
+    "pointers": [],
+    "sites": []
+  }
+]

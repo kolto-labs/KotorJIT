@@ -1,0 +1,4 @@
+src/harness/commands.cpp:31:10: fatal error: lauxlib.h: No such file or directory
+   31 | #include "lauxlib.h"
+      |          ^~~~~~~~~~~
+compilation terminated.

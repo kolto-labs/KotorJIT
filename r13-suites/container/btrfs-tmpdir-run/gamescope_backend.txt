@@ -1,0 +1,25 @@
+...........{"cleanup_ledger_sha256":"82fde3856a5160c1cbd88298e504435b42ace08e6b906d38438358bf9f9f19ac","event":"recovery_resolution","failure_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","kind":"kpharness.cleanup-ledger-head.v1","nonce":"63e3ee8efec44638a617d0bbe296d230","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmp3pg2g8ww","sequence":2,"utc":"2026-09-27T23:49:33.147717+00:00"}
+..{"cleanup_ledger_sha256":"094664ecd2cbf1b935e187a79022d83c792df127c96b5dc85f6207abeca0721e","event":"recovery_resolution","failure_id":"cccccccccccccccccccccccccccccccc","kind":"kpharness.cleanup-ledger-head.v1","nonce":"a584595692a643cba87fdb05575ede35","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmp7ec_b7x4","sequence":2,"utc":"2026-09-27T23:49:33.834882+00:00"}
+{"cleanup_ledger_sha256":"eecfc49b53f2fda932be3d096a395a8d3a6ea033e5e52949cdfa222b5279d169","event":"recovery_resolution","failure_id":"dddddddddddddddddddddddddddddddd","kind":"kpharness.cleanup-ledger-head.v1","nonce":"a584595692a643cba87fdb05575ede35","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmp7ec_b7x4","sequence":4,"utc":"2026-09-27T23:49:33.959035+00:00"}
+.....................{"cleanup_ledger_sha256":"e555018a984e7a87b2c3bbf6ca7cc193205b157fe87e3a76886691e6859abc33","event":"recovery_resolution","failure_id":"44444444444444444444444444444444","kind":"kpharness.cleanup-ledger-head.v1","nonce":"4c5a414489b6446c9c2eb3f6853500ce","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmp9iqt4dxs","sequence":2,"utc":"2026-09-27T23:49:41.027498+00:00"}
+........E.......{"cleanup_ledger_sha256":"06cdb90b56f5d1f17cae68e0f4d0b7506af8a2ae69757d481de2bb652982b2f8","event":"acceptance_failure","failure_id":"7edfcedcdb234a4b9f5bc7c1fa87090a","kind":"kpharness.cleanup-ledger-head.v1","nonce":"b72b69ddc431441eb54d7a8b44c3b31d","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmpffv292a7","sequence":1,"utc":"2026-09-27T23:50:29.042915+00:00"}
+{"cleanup_ledger_sha256":"934c687885ee3e40c15a1a1fc8800adf8c80ee21427928cefdeb5ea96626c448","event":"signal_error_reaped","failure_id":"7edfcedcdb234a4b9f5bc7c1fa87090a","kind":"kpharness.cleanup-ledger-head.v1","nonce":"b72b69ddc431441eb54d7a8b44c3b31d","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmpffv292a7","sequence":2,"utc":"2026-09-27T23:50:29.097291+00:00"}
+{"cleanup_ledger_sha256":"934c687885ee3e40c15a1a1fc8800adf8c80ee21427928cefdeb5ea96626c448","command":["ffprobe"],"commitment_log_error":null,"failure_id":"7edfcedcdb234a4b9f5bc7c1fa87090a","head_changed_during_probe":false,"instruction":"do not accept or export this run; retain this line, the ledger head, and the survivor PID/start out of band","kind":"kpharness.ffprobe-survivor.v1","ledger_error":null,"pid":6262,"pid_start":"captured-start","recorded_in_ledger":true,"run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmpffv292a7"}
+.....{"cleanup_ledger_sha256":"d4db5a24722b08f550d824833c39f36557dc79a819bf952c2e3411d3db2c1152","event":"acceptance_failure","failure_id":"19bc95faef7c4208b71f02193776d0d7","kind":"kpharness.cleanup-ledger-head.v1","nonce":"9d76e7762bdd482ab9372d125e53b1e4","run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmpnvzbf_fe","sequence":1,"utc":"2026-09-27T23:50:29.728347+00:00"}
+{"cleanup_ledger_sha256":"d4db5a24722b08f550d824833c39f36557dc79a819bf952c2e3411d3db2c1152","command":["/proc/self/fd/9","args"],"commitment_log_error":null,"failure_id":"19bc95faef7c4208b71f02193776d0d7","head_changed_during_probe":false,"instruction":"do not accept or export this run; retain this line, the ledger head, and the survivor PID/start out of band","kind":"kpharness.ffprobe-survivor.v1","ledger_error":null,"pid":4242,"pid_start":"fixture-start","recorded_in_ledger":true,"run_dir":"/home/brunner56/kp-live-20260922/r13-work/tmp/tmpnvzbf_fe"}
+.........................................................................s..........................
+======================================================================
+ERROR: test_readiness_child_import_preserves_snapshot_and_ignores_shadow (__main__.BackendTests.test_readiness_child_import_preserves_snapshot_and_ignores_shadow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 865, in test_readiness_child_import_preserves_snapshot_and_ignores_shadow
+    before = S.verify_snapshot(snapshot)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/gamescope_snapshot.py", line 219, in verify_snapshot
+    raise ValueError("Gamescope snapshot repository input changed")
+ValueError: Gamescope snapshot repository input changed
+
+----------------------------------------------------------------------
+Ran 155 tests in 106.596s
+
+FAILED (errors=1, skipped=1)

@@ -1,0 +1,8 @@
+{
+  "base_commit": "7ec5bef",
+  "change": "Formation heading offset+90degrees for camera calibration; all model operations, phases and cleanup unchanged.",
+  "files": {
+    "model_scene.lua": "b819f0b0f294a836a3737fef7936accf5d2c54be4d2f4524a13481013917e79c",
+    "npc_wave.lua": "e9c14a593c9823ab21ca5508b50a36fcae635b44816def70781bb72817365cf4"
+  }
+}

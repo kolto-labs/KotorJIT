@@ -1,0 +1,4 @@
+pts_frames=1200 content_rows=1200
+ffprobe:-v error: lock_fd_and_flock=('3', True)
+xwininfo_query_child_fds=['0', '1', '2', '3', '4'] lock_fd=3
+default_pts_probe_passes= (3,) default_content_probe_passes= (4, 3)

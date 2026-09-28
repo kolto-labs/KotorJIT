@@ -1,0 +1,22 @@
+{
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp": "d996a40eeb02970f16f9c96b8bbfe716918831961e580106257317a84274aad0",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp": "32447ae2c3472489a2102a8859863d0dafd7bdaf4321f10377168fbc2f18576d",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp": "5b561f0b24799e738a695ac0d7229c90173d0191851b9d5f8034a0f089d3e080",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/internal.hpp": "571816e0ab130fff9ae329eb430bd52426493a1136e2b0b3838104b2c10762e1",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/routines.cmake": "eb1cfd78116d62bcddceb841f2f6b7d685d303609391f261e7105d6db8b53f2a",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/vector.cmake": "1a2132521a9aed3e9ca7f3af1e2b8111507d1d1c78f6d07a9131598980148937",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/support.cmake": "eec455512ed0169dbd5f7945a4ac205c90d036029ae526458aee2330b099d2ef",
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_namespacetest.cpp": "7c1303f2d1953854b78428ece517246b1af225a8c7ace21324640bac4950c8e2",
+  "/tmp/lifecycle-cfg/libkphasor.so": "664c15b3bb2a7192c3f04dcecea68ec273540b5e8d60675066d425464e4b792e",
+  "/tmp/lifecycle-cfg/kp_namespacetest": "bf74ca6b90217959556fc8b84a9357cada23e4f76cce64fa7545545d77e82306",
+  "/tmp/kp-resume-runtime-boot-probe": "291e46d49d5d492e62cc7913c167939887dfd1744bd3e01593eeb30807a5f68c",
+  "/tmp/kp-resume-runtime-latch-probe": "0ac753eadb8e09e89b857c95575c72ca60ef30c3985bcb54d1fa92299e93a853",
+  "/home/brunner56/kp-live-20260922/resume-runtime-boot-probe.cpp": "f9c3e221986420e1d52a97076e728c3a28cc689d75c45a5383d37f8bf9207f4d",
+  "/home/brunner56/kp-live-20260922/resume-runtime-latch-probe.cpp": "df6328d684dad686b624678cf6e95f5073d2ca48fd272a999995c5f28d8405bd",
+  "/home/brunner56/kp-live-20260922/resume-runtime-boot-final.log": "19ecd88f6866240c0f71e05bf7b982d9be333b4ec5aa2fda12a075bb7fe4c468",
+  "/home/brunner56/kp-live-20260922/resume-runtime-failed-start.log": "c2b3b2598ee46671334d669fa638ae21ed4a77363678e61e04453433ec64ffe3",
+  "/home/brunner56/kp-live-20260922/resume-runtime-latch-green.log": "df197045126dcfdd58e3aafeae84fc499f8c90b46c4ce057dbad97fa2e0b85ea",
+  "/home/brunner56/kp-live-20260922/integration-root-ctest.log": "6cab834ea632b9a57744fa88ecbe895bcfc201c6441d1b8b1599f630b1a2c707",
+  "/home/brunner56/kp-live-20260922/latch-reset-debug.log": "6234c2eb63a81e41cb6f4c269c0026669402435e79a79ca6397bea704697f9bc",
+  "/home/brunner56/kp-live-20260922/latch-isolation-debug-summary.json": "55ec573a1d5c17fda4ef26ff4207126cb523db1b8ad12a0da5056b0b9acf1506"
+}

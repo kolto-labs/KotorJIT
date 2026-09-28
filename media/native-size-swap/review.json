@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-09-22T16:50:21.473254+00:00",
+  "run_id": "20260922-114443",
+  "scenario": "model memory: wave",
+  "report_ok": true,
+  "report_steps_total": 21,
+  "report_steps_ok": 21,
+  "source": {
+    "path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-114443/continuous.mp4",
+    "sha256": "0e5d3e69c1feceb2664fa5f0b75379d5fda80e8a1b8426efa8059ed29430955d",
+    "dimensions": "1024x768",
+    "codec": "H.264",
+    "pixel_format": "yuv444p",
+    "frame_rate": "60/1",
+    "frames": 962,
+    "duration_seconds": 16.033333,
+    "source_unchanged_during_media_work": true
+  },
+  "selected_excerpt": {
+    "source_start_seconds": 6.25,
+    "source_end_seconds": 16.0,
+    "duration_seconds": 9.75,
+    "reason": "Includes the first giant-center/tiny-sides reveal, the opposite giant-sides/tiny-center phase, subsequent size-wave phases, and roughly two seconds of equal-size restoration.",
+    "interpolation": "None. Source frames and timing retained at 60 fps.",
+    "audio": "No audio was added or fabricated."
+  },
+  "semantic_visual_review": {
+    "accepted": true,
+    "observation": "Three stationary Sith are centered in a clean first-person view with UI hidden. The center actor becomes giant while both outer actors become tiny; the relationship then reverses so both outer actors are giant and the center is tiny. Additional alternating phases occur before all three visibly return to equal normal size.",
+    "grounding_and_framing": "Accepted: complete heads, bodies, and feet remain visible in the reviewed extreme phases; feet visually meet the floor plane; no actor disappears or floats; the camera remains fixed.",
+    "clarity": "The size swap is immediately legible from silhouettes, shared floor plane, shadows, and the fixed doorway reference. There are no VFX, combat actions, camera spins, or screen flashes.",
+    "proof_limit": "The footage directly demonstrates per-actor rendered size changes and visible restoration. It does not by itself prove the requested numeric scale values, internal native base/effective fields, or cleanup after actors leave frame; those are corroborated separately by the successful 21-step report."
+  },
+  "cadence_summary": {
+    "sample_start_seconds": 6.5,
+    "sample_duration_seconds": 5,
+    "frames_decoded": 300,
+    "unique_frame_hashes": 288,
+    "adjacent_pairs": 299,
+    "exact_repeated_adjacent_frames": 2,
+    "exact_repeat_fraction": 0.006689,
+    "mean_adjacent_luma_delta": 0.122383,
+    "interpretation": "The scene is intentionally stationary and changes scale in held phases. Only two adjacent pairs were exact repeats in the downscaled sample; non-adjacent repeated hashes reflect held visual states."
+  },
+  "artifacts": {
+    "landscape_mp4": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/sith-size-swap-60fps.mp4",
+      "sha256": "28c8e974e9f9f91bcb10683af5667fa305cdee6ce9e37ffc76bde239fedbe3d0",
+      "bytes": 892391,
+      "dimensions": "1024x768",
+      "frame_rate": "60/1",
+      "frames": 585,
+      "duration_seconds": 9.75,
+      "codec": "H.264",
+      "encoding": "CRF 20, preset fast, yuv420p, 2 threads, full source frame"
+    },
+    "compact_gif": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/sith-size-swap-preview.gif",
+      "sha256": "1c9915a13e3631007e9f0377178adea5d183bdf37ca7e791f8043f0712f79a5e",
+      "bytes": 744638,
+      "dimensions": "320x240",
+      "nominal_frame_rate": "24/1",
+      "frames": 234,
+      "duration_seconds": 9.75,
+      "encoding": "128-color palette, Bayer dithering",
+      "under_8_mib": true
+    },
+    "portrait_mp4": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/sith-size-swap-vertical-1080x1920.mp4",
+      "sha256": "bebb8aada20308833feff3374a310acbde097a6deed50566ceb9ca58192d2394",
+      "bytes": 1035311,
+      "dimensions": "1080x1920",
+      "frame_rate": "60/1",
+      "frames": 585,
+      "duration_seconds": 9.75,
+      "codec": "H.264",
+      "caption": "THE SITH HAVE A SIZE PROBLEM",
+      "composition": "Full uncropped 4:3 game frame over a darkened background"
+    },
+    "contact_sheet": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/contact-4s-16s.jpg",
+      "sha256": "870d3df25d87202bbefeb6bd844382958fb2dd92b642e4c82d3bcd20c70f832e",
+      "bytes": 514289,
+      "sample": "source seconds 4-16 at 2 fps"
+    },
+    "detail_contact_sheet": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/contact-detail-5.5s-16s.jpg",
+      "sha256": "0a6b620f1e4b59930e6ad12ff25c84bc1a8da04897077269f92ecb23e25c949f",
+      "bytes": 615274,
+      "sample": "source seconds 5.5-16 at 4 fps"
+    },
+    "cadence_proof": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/cadence-6.5s-11.5s.json",
+      "sha256": "b7c85e52d7c0a9d3a382863fb57f8579e662f15c58d61e4194f097b8e852650c",
+      "bytes": 62494,
+      "sample": "source seconds 6.5-11.5; per-frame downscaled hashes and adjacent luma differences"
+    },
+    "verification_first_phase": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/verify-landscape-start.jpg",
+      "sha256": "cb2ecda53a05cf0c48cefba003514e8dc688651f5a084cfe312442966c1bb989",
+      "bytes": 71053,
+      "source_time_seconds": 6.75,
+      "observation": "Center Sith giant; both outer Sith tiny; all bodies and feet visible."
+    },
+    "verification_opposite_phase": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/verify-landscape-opposite.jpg",
+      "sha256": "46171731764a1bcae8419584b262573538b31160b63bff375698a9a4f850786e",
+      "bytes": 88950,
+      "source_time_seconds": 8.0,
+      "observation": "Outer Sith giant; center Sith tiny; all bodies and feet visible."
+    },
+    "verification_restored": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/verify-landscape-restored.jpg",
+      "sha256": "61118ef7dd6fa87355db519483c64f0cb3ea1479f13b8fe1750e00a9e989efac",
+      "bytes": 78999,
+      "source_time_seconds": 14.75,
+      "observation": "All three Sith visibly restored to equal normal size."
+    },
+    "verification_portrait": {
+      "path": "/home/brunner56/kp-live-20260922/media/native-size-swap/verify-vertical.jpg",
+      "sha256": "5299834810900872e33c1fa802628e116d30f92dd1e3db7cb4e1eecb756dc2d1",
+      "bytes": 117215,
+      "source_time_seconds": 6.75,
+      "observation": "Caption and full uncropped game frame remain inside portrait output."
+    }
+  }
+}

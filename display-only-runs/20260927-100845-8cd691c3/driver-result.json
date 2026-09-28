@@ -1,0 +1,998 @@
+{
+  "boot_error": null,
+  "boot_passed": true,
+  "candidate_display": ":1",
+  "canonical_lock": {
+    "dev": 2065,
+    "exclusive": true,
+    "fd": 3,
+    "ino": 40769209,
+    "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock"
+  },
+  "cleanup_attempts": [
+    {
+      "attempt": 1,
+      "status": "passed"
+    }
+  ],
+  "cleanup_attempts_before_finally": [],
+  "cleanup_error": null,
+  "controller": {
+    "dedicated_single_launch": true,
+    "network_namespace": {
+      "dev": 5,
+      "ino": 4026531833
+    },
+    "pid": 1142286,
+    "relationship": [
+      1141744,
+      1141744,
+      1141744,
+      "59783384"
+    ],
+    "start": "59783384",
+    "subreaper": true
+  },
+  "evidence_error": null,
+  "flags": {
+    "dont_write_bytecode": true,
+    "isolated": 1,
+    "no_site": 1
+  },
+  "forbidden_processes_during_lease": [],
+  "geometry": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "1024 768"
+  },
+  "interpreter": "/usr/bin/python3.14",
+  "known_members": [
+    {
+      "pid": 1142374,
+      "start": "59783562"
+    },
+    {
+      "pid": 1142335,
+      "start": "59783517"
+    },
+    {
+      "pid": 1142304,
+      "start": "59783448"
+    },
+    {
+      "pid": 1142369,
+      "start": "59783555"
+    }
+  ],
+  "leader_returncode": 0,
+  "lease": {
+    "command": [
+      "gamescope",
+      "--backend",
+      "headless",
+      "-w",
+      "1024",
+      "-h",
+      "768",
+      "-W",
+      "1024",
+      "-H",
+      "768",
+      "-r",
+      "60",
+      "--",
+      "/usr/bin/python3.14",
+      "-I",
+      "-S",
+      "-B",
+      "-c",
+      "import runpy,sys;sys.path.insert(0,'/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100845-8cd691c3/runtime');runpy.run_module('kpharness.gamescope_xwayland',run_name='__main__')",
+      "--ready-child",
+      "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/gamescope-a2effafd77a145cfae735ead411e9255.ready.json"
+    ],
+    "forensic_lease_evidence": {
+      "path": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/gamescope-lease.json",
+      "retained": true
+    },
+    "kind": "gamescope-xwayland",
+    "lease_id": "gamescope-a2effafd77a145cfae735ead411e9255",
+    "owner": {
+      "gamescope": {
+        "pid": 1142304,
+        "start": "59783448"
+      },
+      "ready_child": {
+        "pid": 1142374,
+        "start": "59783562"
+      }
+    },
+    "process_group": {
+      "child_descends_from_gamescope": true,
+      "pgid": 1142304,
+      "session": 1142304
+    },
+    "readiness": {
+      "elapsed_seconds": 2.511843429063447,
+      "status": "passed"
+    },
+    "renderer": {
+      "accelerated": true,
+      "direct": true,
+      "probe": "renderer.txt",
+      "renderer": "AMD Radeon RX 460 Graphics (radeonsi, polaris11, ACO, DRM 3.64, 7.1.9-200.fc44.x86_64)",
+      "status": "accelerated"
+    },
+    "requested_geometry": [
+      1024,
+      768
+    ],
+    "x11": {
+      "access": {
+        "access_model": "owned-endpoint-host-local-no-cookie",
+        "ancestry": [
+          {
+            "parent_pid": 1142286,
+            "pgid": 1142304,
+            "pid": 1142335,
+            "session": 1142304,
+            "start": "59783517"
+          },
+          {
+            "parent_pid": 1141744,
+            "pgid": 1141744,
+            "pid": 1142286,
+            "session": 1141744,
+            "start": "59783384"
+          }
+        ],
+        "candidate": {
+          "ancestry": [
+            {
+              "parent_pid": 1142286,
+              "pgid": 1142304,
+              "pid": 1142335,
+              "session": 1142304,
+              "start": "59783517"
+            },
+            {
+              "parent_pid": 1141744,
+              "pgid": 1141744,
+              "pid": 1142286,
+              "session": 1141744,
+              "start": "59783384"
+            }
+          ],
+          "cmdline": [
+            "Xwayland",
+            ":1",
+            "-rootless",
+            "-core",
+            "-terminate",
+            "-listenfd",
+            "41",
+            "-listenfd",
+            "42",
+            "-displayfd",
+            "46",
+            "-noTouchPointerEmulation",
+            "-force-xrandr-emulation"
+          ],
+          "display": ":1",
+          "executable": "/usr/bin/Xwayland",
+          "launch_owner": {
+            "parent_pid": 1142286,
+            "pgid": 1142304,
+            "pid": 1142304,
+            "session": 1142304,
+            "start": "59783448"
+          },
+          "listeners": {
+            "/tmp/.X11-unix/X1": "567350540",
+            "@/tmp/.X11-unix/X1": "567350539"
+          },
+          "network_namespace": {
+            "controller": {
+              "dev": 5,
+              "ino": 4026531833
+            },
+            "xwayland": {
+              "dev": 5,
+              "ino": 4026531833
+            }
+          },
+          "parent_pid": 1142286,
+          "pgid": 1142304,
+          "phase": "admitted",
+          "pid": 1142335,
+          "session": 1142304,
+          "socket_fds": {
+            "39": "socket:[567350537]",
+            "4": "socket:[567356487]",
+            "41": "socket:[567350539]",
+            "42": "socket:[567350540]",
+            "43": "socket:[567350542]"
+          },
+          "socket_rows": [
+            "00000000ac83aa8c: 00000002 00000000 00010000 0001 01 567350540 /tmp/.X11-unix/X1",
+            "0000000006bf8fc1: 00000003 00000000 00000000 0001 03 567356487 @/tmp/.X11-unix/X1",
+            "00000000cb02c293: 00000002 00000000 00010000 0001 01 567350539 @/tmp/.X11-unix/X1"
+          ],
+          "start": "59783517",
+          "state": "S"
+        },
+        "display_selection": "displayfd",
+        "listeners": {
+          "/tmp/.X11-unix/X1": "567350540",
+          "@/tmp/.X11-unix/X1": "567350539"
+        },
+        "pathname_node": {
+          "basename": "X1",
+          "network_namespace": {
+            "controller": {
+              "dev": 5,
+              "ino": 4026531833
+            },
+            "xwayland": {
+              "dev": 5,
+              "ino": 4026531833
+            }
+          },
+          "node": {
+            "ctime_ns": 1790503733951171430,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 1300302,
+            "mode": 49645,
+            "mtime_ns": 1790503733951171430,
+            "size": 0,
+            "uid": 1000
+          },
+          "parent": "/tmp/.X11-unix",
+          "parent_identity": {
+            "dev": 52,
+            "gid": 0,
+            "ino": 3,
+            "mode": 17407,
+            "uid": 0
+          },
+          "path": "/tmp/.X11-unix/X1",
+          "type": "socket"
+        },
+        "peers": [
+          {
+            "ancestry": [
+              {
+                "parent_pid": 1142286,
+                "pgid": 1142304,
+                "pid": 1142304,
+                "session": 1142304,
+                "start": "59783448"
+              }
+            ],
+            "pid": 1142304,
+            "start": "59783448",
+            "transport": "pathname",
+            "uid": 1000
+          },
+          {
+            "ancestry": [
+              {
+                "parent_pid": 1142286,
+                "pgid": 1142304,
+                "pid": 1142304,
+                "session": 1142304,
+                "start": "59783448"
+              }
+            ],
+            "pid": 1142304,
+            "start": "59783448",
+            "transport": "abstract",
+            "uid": 1000
+          }
+        ],
+        "pid": 1142335,
+        "start": "59783517",
+        "tcp": "no-listeners",
+        "xauthority_mode": "no-cookie-sentinel"
+      },
+      "candidate_display": ":1",
+      "display": ":1",
+      "socket_cleanup": null,
+      "xauthority_mode": "no-cookie-sentinel",
+      "xauthority_present": false
+    }
+  },
+  "lease_after_close": {
+    "command": [
+      "gamescope",
+      "--backend",
+      "headless",
+      "-w",
+      "1024",
+      "-h",
+      "768",
+      "-W",
+      "1024",
+      "-H",
+      "768",
+      "-r",
+      "60",
+      "--",
+      "/usr/bin/python3.14",
+      "-I",
+      "-S",
+      "-B",
+      "-c",
+      "import runpy,sys;sys.path.insert(0,'/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100845-8cd691c3/runtime');runpy.run_module('kpharness.gamescope_xwayland',run_name='__main__')",
+      "--ready-child",
+      "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/gamescope-a2effafd77a145cfae735ead411e9255.ready.json"
+    ],
+    "forensic_lease_evidence": {
+      "path": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/gamescope-lease.json",
+      "retained": true
+    },
+    "kind": "gamescope-xwayland",
+    "lease_id": "gamescope-a2effafd77a145cfae735ead411e9255",
+    "owner": {
+      "gamescope": {
+        "pid": 1142304,
+        "start": "59783448"
+      },
+      "ready_child": {
+        "pid": 1142374,
+        "start": "59783562"
+      }
+    },
+    "process_group": {
+      "child_descends_from_gamescope": true,
+      "pgid": 1142304,
+      "session": 1142304
+    },
+    "readiness": {
+      "elapsed_seconds": 2.511843429063447,
+      "status": "passed"
+    },
+    "renderer": {
+      "accelerated": true,
+      "direct": true,
+      "probe": "renderer.txt",
+      "renderer": "AMD Radeon RX 460 Graphics (radeonsi, polaris11, ACO, DRM 3.64, 7.1.9-200.fc44.x86_64)",
+      "status": "accelerated"
+    },
+    "requested_geometry": [
+      1024,
+      768
+    ],
+    "x11": {
+      "access": {
+        "access_model": "owned-endpoint-host-local-no-cookie",
+        "ancestry": [
+          {
+            "parent_pid": 1142286,
+            "pgid": 1142304,
+            "pid": 1142335,
+            "session": 1142304,
+            "start": "59783517"
+          },
+          {
+            "parent_pid": 1141744,
+            "pgid": 1141744,
+            "pid": 1142286,
+            "session": 1141744,
+            "start": "59783384"
+          }
+        ],
+        "candidate": {
+          "ancestry": [
+            {
+              "parent_pid": 1142286,
+              "pgid": 1142304,
+              "pid": 1142335,
+              "session": 1142304,
+              "start": "59783517"
+            },
+            {
+              "parent_pid": 1141744,
+              "pgid": 1141744,
+              "pid": 1142286,
+              "session": 1141744,
+              "start": "59783384"
+            }
+          ],
+          "cmdline": [
+            "Xwayland",
+            ":1",
+            "-rootless",
+            "-core",
+            "-terminate",
+            "-listenfd",
+            "41",
+            "-listenfd",
+            "42",
+            "-displayfd",
+            "46",
+            "-noTouchPointerEmulation",
+            "-force-xrandr-emulation"
+          ],
+          "display": ":1",
+          "executable": "/usr/bin/Xwayland",
+          "launch_owner": {
+            "parent_pid": 1142286,
+            "pgid": 1142304,
+            "pid": 1142304,
+            "session": 1142304,
+            "start": "59783448"
+          },
+          "listeners": {
+            "/tmp/.X11-unix/X1": "567350540",
+            "@/tmp/.X11-unix/X1": "567350539"
+          },
+          "network_namespace": {
+            "controller": {
+              "dev": 5,
+              "ino": 4026531833
+            },
+            "xwayland": {
+              "dev": 5,
+              "ino": 4026531833
+            }
+          },
+          "parent_pid": 1142286,
+          "pgid": 1142304,
+          "phase": "admitted",
+          "pid": 1142335,
+          "session": 1142304,
+          "socket_fds": {
+            "39": "socket:[567350537]",
+            "4": "socket:[567356487]",
+            "41": "socket:[567350539]",
+            "42": "socket:[567350540]",
+            "43": "socket:[567350542]"
+          },
+          "socket_rows": [
+            "00000000ac83aa8c: 00000002 00000000 00010000 0001 01 567350540 /tmp/.X11-unix/X1",
+            "0000000006bf8fc1: 00000003 00000000 00000000 0001 03 567356487 @/tmp/.X11-unix/X1",
+            "00000000cb02c293: 00000002 00000000 00010000 0001 01 567350539 @/tmp/.X11-unix/X1"
+          ],
+          "start": "59783517",
+          "state": "S"
+        },
+        "display_selection": "displayfd",
+        "listeners": {
+          "/tmp/.X11-unix/X1": "567350540",
+          "@/tmp/.X11-unix/X1": "567350539"
+        },
+        "pathname_node": {
+          "basename": "X1",
+          "network_namespace": {
+            "controller": {
+              "dev": 5,
+              "ino": 4026531833
+            },
+            "xwayland": {
+              "dev": 5,
+              "ino": 4026531833
+            }
+          },
+          "node": {
+            "ctime_ns": 1790503733951171430,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 1300302,
+            "mode": 49645,
+            "mtime_ns": 1790503733951171430,
+            "size": 0,
+            "uid": 1000
+          },
+          "parent": "/tmp/.X11-unix",
+          "parent_identity": {
+            "dev": 52,
+            "gid": 0,
+            "ino": 3,
+            "mode": 17407,
+            "uid": 0
+          },
+          "path": "/tmp/.X11-unix/X1",
+          "type": "socket"
+        },
+        "peers": [
+          {
+            "ancestry": [
+              {
+                "parent_pid": 1142286,
+                "pgid": 1142304,
+                "pid": 1142304,
+                "session": 1142304,
+                "start": "59783448"
+              }
+            ],
+            "pid": 1142304,
+            "start": "59783448",
+            "transport": "pathname",
+            "uid": 1000
+          },
+          {
+            "ancestry": [
+              {
+                "parent_pid": 1142286,
+                "pgid": 1142304,
+                "pid": 1142304,
+                "session": 1142304,
+                "start": "59783448"
+              }
+            ],
+            "pid": 1142304,
+            "start": "59783448",
+            "transport": "abstract",
+            "uid": 1000
+          }
+        ],
+        "pid": 1142335,
+        "start": "59783517",
+        "tcp": "no-listeners",
+        "xauthority_mode": "no-cookie-sentinel"
+      },
+      "candidate_display": ":1",
+      "display": ":1",
+      "socket_cleanup": {
+        "endpoint_absence_scope": "admitted-controller-network-namespace",
+        "lock": {
+          "dev": 2065,
+          "exclusive": true,
+          "fd": 3,
+          "ino": 40769209,
+          "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock"
+        },
+        "network_namespace": {
+          "controller": {
+            "dev": 5,
+            "ino": 4026531833
+          },
+          "xwayland": {
+            "dev": 5,
+            "ino": 4026531833
+          }
+        },
+        "observed_network_namespace": {
+          "dev": 5,
+          "ino": 4026531833
+        },
+        "path": "/tmp/.X11-unix/X1",
+        "race_limit": "unlinkat cannot exclude uncooperative replacement after final stat",
+        "recorded": {
+          "basename": "X1",
+          "network_namespace": {
+            "controller": {
+              "dev": 5,
+              "ino": 4026531833
+            },
+            "xwayland": {
+              "dev": 5,
+              "ino": 4026531833
+            }
+          },
+          "node": {
+            "ctime_ns": 1790503733951171430,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 1300302,
+            "mode": 49645,
+            "mtime_ns": 1790503733951171430,
+            "size": 0,
+            "uid": 1000
+          },
+          "parent": "/tmp/.X11-unix",
+          "parent_identity": {
+            "dev": 52,
+            "gid": 0,
+            "ino": 3,
+            "mode": 17407,
+            "uid": 0
+          },
+          "path": "/tmp/.X11-unix/X1",
+          "type": "socket"
+        },
+        "sibling_listeners_after": {
+          "X0": [
+            "000000009c0b1904: 00000003 00000000 00000000 0001 03 58921 @/tmp/.X11-unix/X0",
+            "000000006fe52eb9: 00000003 00000000 00000000 0001 03 557292298 @/tmp/.X11-unix/X0",
+            "000000003b26c270: 00000003 00000000 00000000 0001 03 557292823 @/tmp/.X11-unix/X0",
+            "00000000387d49ff: 00000003 00000000 00000000 0001 03 382027976 @/tmp/.X11-unix/X0",
+            "000000007189680e: 00000003 00000000 00000000 0001 03 557337802 @/tmp/.X11-unix/X0",
+            "00000000d79bd63a: 00000003 00000000 00000000 0001 03 61999 @/tmp/.X11-unix/X0",
+            "0000000057340252: 00000003 00000000 00000000 0001 03 382027982 @/tmp/.X11-unix/X0",
+            "00000000efb29dac: 00000003 00000000 00000000 0001 03 382027975 @/tmp/.X11-unix/X0",
+            "00000000a01cad5c: 00000003 00000000 00000000 0001 03 73326 @/tmp/.X11-unix/X0",
+            "0000000023b32643: 00000003 00000000 00000000 0001 03 382016189 @/tmp/.X11-unix/X0",
+            "0000000076708c63: 00000003 00000000 00000000 0001 03 557292822 @/tmp/.X11-unix/X0",
+            "00000000e8f81b36: 00000002 00000000 00010000 0001 01 51782 /tmp/.X11-unix/X0",
+            "0000000025a24faa: 00000003 00000000 00000000 0001 03 557292820 @/tmp/.X11-unix/X0",
+            "00000000e179e365: 00000003 00000000 00000000 0001 03 58209 @/tmp/.X11-unix/X0",
+            "00000000b106d431: 00000003 00000000 00000000 0001 03 59914 @/tmp/.X11-unix/X0",
+            "00000000542b1ac6: 00000003 00000000 00000000 0001 03 56873 @/tmp/.X11-unix/X0",
+            "00000000d7d5f872: 00000003 00000000 00000000 0001 03 59051 @/tmp/.X11-unix/X0",
+            "000000000709bf78: 00000003 00000000 00000000 0001 03 557386172 @/tmp/.X11-unix/X0",
+            "0000000031634062: 00000003 00000000 00000000 0001 03 512342655 @/tmp/.X11-unix/X0",
+            "00000000d298dbf4: 00000002 00000000 00010000 0001 01 51783 @/tmp/.X11-unix/X0"
+          ],
+          "X100": [
+            "00000000dbda99ae: 00000002 00000000 00010000 0001 01 408605563 /tmp/.X11-unix/X100",
+            "00000000d163bd6b: 00000002 00000000 00010000 0001 01 408605562 @/tmp/.X11-unix/X100"
+          ],
+          "X94": [
+            "0000000094a964e9: 00000003 00000000 00000000 0001 03 541835464 @/tmp/.X11-unix/X94",
+            "0000000002db3753: 00000003 00000000 00000000 0001 03 541835466 @/tmp/.X11-unix/X94",
+            "0000000027d9fcd7: 00000002 00000000 00010000 0001 01 512908621 /tmp/.X11-unix/X94",
+            "000000005cd905c6: 00000002 00000000 00010000 0001 01 512908620 @/tmp/.X11-unix/X94"
+          ]
+        },
+        "sibling_listeners_before": {
+          "X0": [
+            "000000009c0b1904: 00000003 00000000 00000000 0001 03 58921 @/tmp/.X11-unix/X0",
+            "000000006fe52eb9: 00000003 00000000 00000000 0001 03 557292298 @/tmp/.X11-unix/X0",
+            "000000003b26c270: 00000003 00000000 00000000 0001 03 557292823 @/tmp/.X11-unix/X0",
+            "00000000387d49ff: 00000003 00000000 00000000 0001 03 382027976 @/tmp/.X11-unix/X0",
+            "000000007189680e: 00000003 00000000 00000000 0001 03 557337802 @/tmp/.X11-unix/X0",
+            "00000000d79bd63a: 00000003 00000000 00000000 0001 03 61999 @/tmp/.X11-unix/X0",
+            "0000000057340252: 00000003 00000000 00000000 0001 03 382027982 @/tmp/.X11-unix/X0",
+            "00000000efb29dac: 00000003 00000000 00000000 0001 03 382027975 @/tmp/.X11-unix/X0",
+            "00000000a01cad5c: 00000003 00000000 00000000 0001 03 73326 @/tmp/.X11-unix/X0",
+            "0000000023b32643: 00000003 00000000 00000000 0001 03 382016189 @/tmp/.X11-unix/X0",
+            "0000000076708c63: 00000003 00000000 00000000 0001 03 557292822 @/tmp/.X11-unix/X0",
+            "00000000e8f81b36: 00000002 00000000 00010000 0001 01 51782 /tmp/.X11-unix/X0",
+            "0000000025a24faa: 00000003 00000000 00000000 0001 03 557292820 @/tmp/.X11-unix/X0",
+            "00000000e179e365: 00000003 00000000 00000000 0001 03 58209 @/tmp/.X11-unix/X0",
+            "00000000b106d431: 00000003 00000000 00000000 0001 03 59914 @/tmp/.X11-unix/X0",
+            "00000000542b1ac6: 00000003 00000000 00000000 0001 03 56873 @/tmp/.X11-unix/X0",
+            "00000000d7d5f872: 00000003 00000000 00000000 0001 03 59051 @/tmp/.X11-unix/X0",
+            "000000000709bf78: 00000003 00000000 00000000 0001 03 557386172 @/tmp/.X11-unix/X0",
+            "0000000031634062: 00000003 00000000 00000000 0001 03 512342655 @/tmp/.X11-unix/X0",
+            "00000000d298dbf4: 00000002 00000000 00010000 0001 01 51783 @/tmp/.X11-unix/X0"
+          ],
+          "X100": [
+            "00000000dbda99ae: 00000002 00000000 00010000 0001 01 408605563 /tmp/.X11-unix/X100",
+            "00000000d163bd6b: 00000002 00000000 00010000 0001 01 408605562 @/tmp/.X11-unix/X100"
+          ],
+          "X94": [
+            "0000000094a964e9: 00000003 00000000 00000000 0001 03 541835464 @/tmp/.X11-unix/X94",
+            "0000000002db3753: 00000003 00000000 00000000 0001 03 541835466 @/tmp/.X11-unix/X94",
+            "0000000027d9fcd7: 00000002 00000000 00010000 0001 01 512908621 /tmp/.X11-unix/X94",
+            "000000005cd905c6: 00000002 00000000 00010000 0001 01 512908620 @/tmp/.X11-unix/X94"
+          ]
+        },
+        "siblings_after": {
+          "X0": {
+            "ctime_ns": 1789906006698893482,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 123,
+            "mode": 49645,
+            "mtime_ns": 1789906006698893482,
+            "size": 0,
+            "uid": 1000
+          },
+          "X100": {
+            "ctime_ns": 1790110738184165132,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 905457,
+            "mode": 49663,
+            "mtime_ns": 1790110738184165132,
+            "size": 0,
+            "uid": 1000
+          },
+          "X94": {
+            "ctime_ns": 1790484722137973835,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 941784,
+            "mode": 49663,
+            "mtime_ns": 1790484722137973835,
+            "size": 0,
+            "uid": 1000
+          }
+        },
+        "siblings_before": {
+          "X0": {
+            "ctime_ns": 1789906006698893482,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 123,
+            "mode": 49645,
+            "mtime_ns": 1789906006698893482,
+            "size": 0,
+            "uid": 1000
+          },
+          "X100": {
+            "ctime_ns": 1790110738184165132,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 905457,
+            "mode": 49663,
+            "mtime_ns": 1790110738184165132,
+            "size": 0,
+            "uid": 1000
+          },
+          "X94": {
+            "ctime_ns": 1790484722137973835,
+            "dev": 52,
+            "gid": 1000,
+            "ino": 941784,
+            "mode": 49663,
+            "mtime_ns": 1790484722137973835,
+            "size": 0,
+            "uid": 1000
+          }
+        },
+        "socket_rows": [],
+        "status": "already_absent",
+        "utc": "2026-09-27T10:08:59.817613+00:00"
+      },
+      "xauthority_mode": "no-cookie-sentinel",
+      "xauthority_present": false
+    }
+  },
+  "lease_alive_before_close": true,
+  "lease_closed": true,
+  "module": "/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100845-8cd691c3/runtime/kpharness/gamescope_xwayland.py",
+  "owned_topology": [
+    {
+      "comm": "gamescope-wl",
+      "pgid": 1142304,
+      "pid": 1142304,
+      "ppid": 1142286,
+      "sid": 1142304,
+      "start": "59783448",
+      "state": "S"
+    },
+    {
+      "argv": [
+        "Xwayland",
+        ":1",
+        "-rootless",
+        "-core",
+        "-terminate",
+        "-listenfd",
+        "41",
+        "-listenfd",
+        "42",
+        "-displayfd",
+        "46",
+        "-noTouchPointerEmulation",
+        "-force-xrandr-emulation"
+      ],
+      "comm": "Xwayland",
+      "pgid": 1142304,
+      "pid": 1142335,
+      "ppid": 1142286,
+      "sid": 1142304,
+      "start": "59783517",
+      "state": "S"
+    },
+    {
+      "argv": [
+        "gamescopereaper",
+        "--",
+        "/usr/bin/python3.14",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import runpy,sys;sys.path.insert(0,'/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100845-8cd691c3/runtime');runpy.run_module('kpharness.gamescope_xwayland',run_name='__main__')",
+        "--ready-child",
+        "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/gamescope-a2effafd77a145cfae735ead411e9255.ready.json"
+      ],
+      "comm": "gamescopereaper",
+      "pgid": 1142304,
+      "pid": 1142369,
+      "ppid": 1142304,
+      "sid": 1142304,
+      "start": "59783555",
+      "state": "S"
+    },
+    {
+      "comm": "python3.14",
+      "pgid": 1142304,
+      "pid": 1142374,
+      "ppid": 1142369,
+      "sid": 1142304,
+      "start": "59783562",
+      "state": "S"
+    }
+  ],
+  "repository_root": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation",
+  "socket_cleanup": {
+    "endpoint_absence_scope": "admitted-controller-network-namespace",
+    "lock": {
+      "dev": 2065,
+      "exclusive": true,
+      "fd": 3,
+      "ino": 40769209,
+      "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock"
+    },
+    "network_namespace": {
+      "controller": {
+        "dev": 5,
+        "ino": 4026531833
+      },
+      "xwayland": {
+        "dev": 5,
+        "ino": 4026531833
+      }
+    },
+    "observed_network_namespace": {
+      "dev": 5,
+      "ino": 4026531833
+    },
+    "path": "/tmp/.X11-unix/X1",
+    "race_limit": "unlinkat cannot exclude uncooperative replacement after final stat",
+    "recorded": {
+      "basename": "X1",
+      "network_namespace": {
+        "controller": {
+          "dev": 5,
+          "ino": 4026531833
+        },
+        "xwayland": {
+          "dev": 5,
+          "ino": 4026531833
+        }
+      },
+      "node": {
+        "ctime_ns": 1790503733951171430,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1300302,
+        "mode": 49645,
+        "mtime_ns": 1790503733951171430,
+        "size": 0,
+        "uid": 1000
+      },
+      "parent": "/tmp/.X11-unix",
+      "parent_identity": {
+        "dev": 52,
+        "gid": 0,
+        "ino": 3,
+        "mode": 17407,
+        "uid": 0
+      },
+      "path": "/tmp/.X11-unix/X1",
+      "type": "socket"
+    },
+    "sibling_listeners_after": {
+      "X0": [
+        "000000009c0b1904: 00000003 00000000 00000000 0001 03 58921 @/tmp/.X11-unix/X0",
+        "000000006fe52eb9: 00000003 00000000 00000000 0001 03 557292298 @/tmp/.X11-unix/X0",
+        "000000003b26c270: 00000003 00000000 00000000 0001 03 557292823 @/tmp/.X11-unix/X0",
+        "00000000387d49ff: 00000003 00000000 00000000 0001 03 382027976 @/tmp/.X11-unix/X0",
+        "000000007189680e: 00000003 00000000 00000000 0001 03 557337802 @/tmp/.X11-unix/X0",
+        "00000000d79bd63a: 00000003 00000000 00000000 0001 03 61999 @/tmp/.X11-unix/X0",
+        "0000000057340252: 00000003 00000000 00000000 0001 03 382027982 @/tmp/.X11-unix/X0",
+        "00000000efb29dac: 00000003 00000000 00000000 0001 03 382027975 @/tmp/.X11-unix/X0",
+        "00000000a01cad5c: 00000003 00000000 00000000 0001 03 73326 @/tmp/.X11-unix/X0",
+        "0000000023b32643: 00000003 00000000 00000000 0001 03 382016189 @/tmp/.X11-unix/X0",
+        "0000000076708c63: 00000003 00000000 00000000 0001 03 557292822 @/tmp/.X11-unix/X0",
+        "00000000e8f81b36: 00000002 00000000 00010000 0001 01 51782 /tmp/.X11-unix/X0",
+        "0000000025a24faa: 00000003 00000000 00000000 0001 03 557292820 @/tmp/.X11-unix/X0",
+        "00000000e179e365: 00000003 00000000 00000000 0001 03 58209 @/tmp/.X11-unix/X0",
+        "00000000b106d431: 00000003 00000000 00000000 0001 03 59914 @/tmp/.X11-unix/X0",
+        "00000000542b1ac6: 00000003 00000000 00000000 0001 03 56873 @/tmp/.X11-unix/X0",
+        "00000000d7d5f872: 00000003 00000000 00000000 0001 03 59051 @/tmp/.X11-unix/X0",
+        "000000000709bf78: 00000003 00000000 00000000 0001 03 557386172 @/tmp/.X11-unix/X0",
+        "0000000031634062: 00000003 00000000 00000000 0001 03 512342655 @/tmp/.X11-unix/X0",
+        "00000000d298dbf4: 00000002 00000000 00010000 0001 01 51783 @/tmp/.X11-unix/X0"
+      ],
+      "X100": [
+        "00000000dbda99ae: 00000002 00000000 00010000 0001 01 408605563 /tmp/.X11-unix/X100",
+        "00000000d163bd6b: 00000002 00000000 00010000 0001 01 408605562 @/tmp/.X11-unix/X100"
+      ],
+      "X94": [
+        "0000000094a964e9: 00000003 00000000 00000000 0001 03 541835464 @/tmp/.X11-unix/X94",
+        "0000000002db3753: 00000003 00000000 00000000 0001 03 541835466 @/tmp/.X11-unix/X94",
+        "0000000027d9fcd7: 00000002 00000000 00010000 0001 01 512908621 /tmp/.X11-unix/X94",
+        "000000005cd905c6: 00000002 00000000 00010000 0001 01 512908620 @/tmp/.X11-unix/X94"
+      ]
+    },
+    "sibling_listeners_before": {
+      "X0": [
+        "000000009c0b1904: 00000003 00000000 00000000 0001 03 58921 @/tmp/.X11-unix/X0",
+        "000000006fe52eb9: 00000003 00000000 00000000 0001 03 557292298 @/tmp/.X11-unix/X0",
+        "000000003b26c270: 00000003 00000000 00000000 0001 03 557292823 @/tmp/.X11-unix/X0",
+        "00000000387d49ff: 00000003 00000000 00000000 0001 03 382027976 @/tmp/.X11-unix/X0",
+        "000000007189680e: 00000003 00000000 00000000 0001 03 557337802 @/tmp/.X11-unix/X0",
+        "00000000d79bd63a: 00000003 00000000 00000000 0001 03 61999 @/tmp/.X11-unix/X0",
+        "0000000057340252: 00000003 00000000 00000000 0001 03 382027982 @/tmp/.X11-unix/X0",
+        "00000000efb29dac: 00000003 00000000 00000000 0001 03 382027975 @/tmp/.X11-unix/X0",
+        "00000000a01cad5c: 00000003 00000000 00000000 0001 03 73326 @/tmp/.X11-unix/X0",
+        "0000000023b32643: 00000003 00000000 00000000 0001 03 382016189 @/tmp/.X11-unix/X0",
+        "0000000076708c63: 00000003 00000000 00000000 0001 03 557292822 @/tmp/.X11-unix/X0",
+        "00000000e8f81b36: 00000002 00000000 00010000 0001 01 51782 /tmp/.X11-unix/X0",
+        "0000000025a24faa: 00000003 00000000 00000000 0001 03 557292820 @/tmp/.X11-unix/X0",
+        "00000000e179e365: 00000003 00000000 00000000 0001 03 58209 @/tmp/.X11-unix/X0",
+        "00000000b106d431: 00000003 00000000 00000000 0001 03 59914 @/tmp/.X11-unix/X0",
+        "00000000542b1ac6: 00000003 00000000 00000000 0001 03 56873 @/tmp/.X11-unix/X0",
+        "00000000d7d5f872: 00000003 00000000 00000000 0001 03 59051 @/tmp/.X11-unix/X0",
+        "000000000709bf78: 00000003 00000000 00000000 0001 03 557386172 @/tmp/.X11-unix/X0",
+        "0000000031634062: 00000003 00000000 00000000 0001 03 512342655 @/tmp/.X11-unix/X0",
+        "00000000d298dbf4: 00000002 00000000 00010000 0001 01 51783 @/tmp/.X11-unix/X0"
+      ],
+      "X100": [
+        "00000000dbda99ae: 00000002 00000000 00010000 0001 01 408605563 /tmp/.X11-unix/X100",
+        "00000000d163bd6b: 00000002 00000000 00010000 0001 01 408605562 @/tmp/.X11-unix/X100"
+      ],
+      "X94": [
+        "0000000094a964e9: 00000003 00000000 00000000 0001 03 541835464 @/tmp/.X11-unix/X94",
+        "0000000002db3753: 00000003 00000000 00000000 0001 03 541835466 @/tmp/.X11-unix/X94",
+        "0000000027d9fcd7: 00000002 00000000 00010000 0001 01 512908621 /tmp/.X11-unix/X94",
+        "000000005cd905c6: 00000002 00000000 00010000 0001 01 512908620 @/tmp/.X11-unix/X94"
+      ]
+    },
+    "siblings_after": {
+      "X0": {
+        "ctime_ns": 1789906006698893482,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 123,
+        "mode": 49645,
+        "mtime_ns": 1789906006698893482,
+        "size": 0,
+        "uid": 1000
+      },
+      "X100": {
+        "ctime_ns": 1790110738184165132,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 905457,
+        "mode": 49663,
+        "mtime_ns": 1790110738184165132,
+        "size": 0,
+        "uid": 1000
+      },
+      "X94": {
+        "ctime_ns": 1790484722137973835,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 941784,
+        "mode": 49663,
+        "mtime_ns": 1790484722137973835,
+        "size": 0,
+        "uid": 1000
+      }
+    },
+    "siblings_before": {
+      "X0": {
+        "ctime_ns": 1789906006698893482,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 123,
+        "mode": 49645,
+        "mtime_ns": 1789906006698893482,
+        "size": 0,
+        "uid": 1000
+      },
+      "X100": {
+        "ctime_ns": 1790110738184165132,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 905457,
+        "mode": 49663,
+        "mtime_ns": 1790110738184165132,
+        "size": 0,
+        "uid": 1000
+      },
+      "X94": {
+        "ctime_ns": 1790484722137973835,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 941784,
+        "mode": 49663,
+        "mtime_ns": 1790484722137973835,
+        "size": 0,
+        "uid": 1000
+      }
+    },
+    "socket_rows": [],
+    "status": "already_absent",
+    "utc": "2026-09-27T10:08:59.817613+00:00"
+  }
+}

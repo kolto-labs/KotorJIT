@@ -1,0 +1,29 @@
+✔ evaluate preserves identity, String bytes and output correlation (21.386755ms)
+✔ stale outcome rejects without replay (4.442057ms)
+✔ wrong outcome identity and hung fetch are failures without replay (15.589819ms)
+✔ Requested stays pending and failed errors retain native bytes (52.944494ms)
+✖ every response stays in the accepted runtime and output must be Found (2.931631ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 997.411813
+
+✖ failing tests:
+
+test at web/devtools/kotor-console.test.mjs:71:1
+✖ every response stays in the accepted runtime and output must be Found (2.931631ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: submit {"runtime":"another-runtime"}
+      at async TestContext.<anonymous> (file:///run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/web/devtools/kotor-console.test.mjs:97:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

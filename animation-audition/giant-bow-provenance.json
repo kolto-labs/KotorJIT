@@ -1,0 +1,7 @@
+{
+  "base_source": "/home/brunner56/kp-live-20260922/animation-audition/two_actor_bow.lua",
+  "base_sha256": "5ee06e00d7faf2b6a576a4630f1f6856c0da5474acfccb1f9e7fa63a8b1f7da0",
+  "transformation": "native resize actor1 to1.8 before baseline; native restore both captured original scales at phase6",
+  "script_sha256": "b94eb8d37372d60913cbca68f9f6a8dc27f3376a6495b43293697c1716331c16",
+  "scope": "controller diagnostic composition, awaiting source integration/review"
+}

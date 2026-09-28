@@ -1,0 +1,5 @@
+{
+  "status": "needs_visual_review",
+  "source": "continuous.mp4",
+  "reason": "Select actual native behavior and verify clarity before rendering showcase; old generic combat-marker rendering is not accepted."
+}

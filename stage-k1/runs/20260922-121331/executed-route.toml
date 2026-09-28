@@ -1,0 +1,143 @@
+name="F12 real-keyboard Lua console smoke"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=30
+
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+[[step]]
+wait="phase"
+equals="gameplay"
+[[step]]
+do="clear_auto_pause"
+[[step]]
+do="mark_log"
+[[step]]
+do="advance_ticks"
+ticks=120
+timeout=30
+[[step]]
+do="lua"
+code="console_pc=nwscript.call('GetFirstPC'); console_before=nwscript.call('GetPosition',console_pc); return console_before"
+[[step]]
+do="owned_input"
+action="keydown"
+key="w"
+[[step]]
+do="advance_ticks"
+ticks=30
+timeout=15
+[[step]]
+do="owned_input"
+action="keyup"
+key="w"
+[[step]]
+do="advance_ticks"
+ticks=90
+timeout=15
+[[step]]
+do="assert_lua"
+code="local p=nwscript.call('GetPosition',console_pc); local d=(p.x-console_before.x)^2+(p.y-console_before.y)^2; console_before=p; print('closed movement squared',d,'baseline',p.x,p.y); return d>0.0025"
+equals=true
+label="game movement input works before opening overlay"
+[[step]]
+do="console_open"
+open=true
+[[step]]
+do="owned_input"
+action="keydown"
+key="w"
+[[step]]
+do="advance_ticks"
+ticks=30
+timeout=15
+[[step]]
+do="owned_input"
+action="keyup"
+key="w"
+[[step]]
+do="console_command"
+code="1 + 1"
+contains=["number: 2"]
+[[step]]
+do="console_command"
+code='return nil, false, 42, "KotOR is live"'
+contains=["nil: nil","boolean: false","number: 42","KotOR is live"]
+[[step]]
+do="console_command"
+code='print("hello", 42); io.write("stdout\n"); io.stderr:write("stderr\n")'
+contains=["hello","stdout","stderr"]
+[[step]]
+do="console_command"
+code='error("intentional test")'
+contains=["intentional test","stack traceback"]
+kind="error"
+allow_error=true
+[[step]]
+do="console_command"
+code="6 * 7"
+contains=["number: 42"]
+[[step]]
+do="console_command"
+code="demo_value = 23"
+contains=["no return values"]
+[[step]]
+do="console_command"
+code="demo_value * 2"
+contains=["number: 46"]
+[[step]]
+do="console_command"
+code="while true do end"
+contains=["budget"]
+kind="error"
+allow_error=true
+[[step]]
+do="console_command"
+code="21 * 2"
+contains=["number: 42"]
+[[step]]
+do="console_command"
+code='pc = nwscript.call("GetFirstPC"); body = assert(kp.model.snapshot(pc)); return body.base'
+contains=["number: 1"]
+[[step]]
+do="assert_lua"
+code="local p=nwscript.call('GetPosition',console_pc); print('input isolation before',console_before.x,console_before.y,'after',p.x,p.y); return math.abs(p.x-console_before.x)<0.01 and math.abs(p.y-console_before.y)<0.01"
+equals=true
+label="typing game key bindings did not move PC"
+[[step]]
+do="console_command"
+code="assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base"
+contains=["0.35"]
+[[step]]
+do="assert_lua"
+code="return math.abs(kp.model.snapshot(console_pc).base-0.35)<0.001"
+equals=true
+label="independent native scale readback from typed console command"
+[[step]]
+do="console_open"
+open=false
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+do="console_open"
+open=true
+[[step]]
+do="console_command"
+code="assert(kp.model.restore(body)); return kp.model.snapshot(pc).base"
+contains=["number: 1"]
+[[step]]
+do="assert_lua"
+code="return math.abs(kp.model.snapshot(console_pc).base-1)<0.001"
+equals=true
+[[step]]
+do="console_open"
+open=false
+[[step]]
+do="advance_ticks"
+ticks=90
+timeout=30

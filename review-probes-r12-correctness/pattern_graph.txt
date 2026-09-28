@@ -1,0 +1,1 @@
+testsrc2=size=1024x768:rate=60,eq=contrast=0.4:brightness=(3*n-7*floor(3*n/7)-3)*0.11:eval=frame

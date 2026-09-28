@@ -1,0 +1,104 @@
+{
+  "kind": "kpharness.creative-harness-package.v1",
+  "scope": "K1 GOG 1.03, Linux, Wine inside a private Gamescope display, KDE Plasma Wayland evidence host only. Capture (C7) is known-failing. Other hosts not attempted.",
+  "entries": [
+    "kpharness.creative",
+    "kpharness.gamescope_snapshot",
+    "kpharness.creative_accept",
+    "kpharness.creative_export",
+    "kpharness.capture_diagnostic",
+    "kpharness.commit_inputs",
+    "kpharness.export_verify"
+  ],
+  "snapshot_entries": [
+    "kpharness.creative",
+    "kpharness.gamescope_snapshot"
+  ],
+  "snapshot_files": [
+    {
+      "path": "kpharness/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "kpharness/creative.py",
+      "sha256": "ae764935a6b0038548c70565566a4a318a02b48fd1caaa3f2ec109a516becc80"
+    },
+    {
+      "path": "kpharness/creative_accept.py",
+      "sha256": "150d75d5a4c2d8afd62759a0f794f7b5cd3c049129f810ad05cd111daa984897"
+    },
+    {
+      "path": "kpharness/gamescope_snapshot.py",
+      "sha256": "261a9112a2918e2aba03e19a2f221a027ab4b6f9e946a6c39814f54e18e07dfc"
+    },
+    {
+      "path": "kpharness/shared.py",
+      "sha256": "b6631639de17fb869c43278f858c465cc5b71c8ec51c8c25d803905361f8a544"
+    }
+  ],
+  "snapshot_files_sha256": "25a986d3b7762427bfde10c158d14cff265bd761d43f4c2610faf2d291084dbd",
+  "exclusions": [
+    {
+      "path": "data/addresses/k2_gog_aspyr.json",
+      "reason": "not allowlisted"
+    },
+    {
+      "path": "scripts/examples/cursed/(name withheld)",
+      "reason": "private evidence folder"
+    },
+    {
+      "path": "scripts/examples/cursed/accepted-media-x/export.json",
+      "reason": "run evidence"
+    },
+    {
+      "path": "scripts/examples/cursed/clip.gif",
+      "reason": "media suffix"
+    },
+    {
+      "path": "scripts/examples/cursed/continuous.mp4",
+      "reason": "run evidence"
+    },
+    {
+      "path": "scripts/examples/cursed/party.sav",
+      "reason": "retail asset suffix"
+    },
+    {
+      "path": "scripts/examples/probe/creative-run.json",
+      "reason": "run evidence"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/pioneer.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/kpharness/playback.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/scenarios/cursed/50_retired.toml",
+      "reason": "retired: no matching public example"
+    }
+  ],
+  "sanitizations": [
+    {
+      "path": "data/addresses/k1_gog_103.json",
+      "removed_metadata_keys": [
+        "reference_image",
+        "source_path"
+      ]
+    }
+  ],
+  "path_scan": [],
+  "content_check": "every file is UTF-8 text with no media, archive or program magic",
+  "staging": "each source read once; provenance and ZIP use those bytes; sources re-read at the end",
+  "provenance": {
+    "base_commit": null,
+    "overlay_files": 22,
+    "bound_by_base": []
+  },
+  "media": "none; no media, saves or run evidence are packaged"
+}

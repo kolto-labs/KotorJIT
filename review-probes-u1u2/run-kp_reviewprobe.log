@@ -1,0 +1,133 @@
+[kp:error] timer 'function [string "p2"]:3': [string "p2"]:3: attempt to remove timer 2 within its own callback; return false from the callback instead
+stack traceback:
+	[C]: in function 'removetimer'
+	[string "p2"]:3: in function <[string "p2"]:3>
+[kp:error] timer 'function [string "p6"]:3': [string "p6"]:3: attempt to yield across C-call boundary
+stack traceback:
+	[C]: in function 'yield'
+	[string "p6"]:3: in function <[string "p6"]:3>
+[kp:error] timer 'function [C]:-1': 11
+stack traceback:
+	[builtin#19]: at 0x080c7d90
+[kp:error] timer 'function [string "p7"]:3': (non-string error)
+stack traceback:
+	[C]: in function 'error'
+	[string "p7"]:3: in function <[string "p7"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+[kp:error] timer 'function [string "p8"]:3': [string "p8"]:3: x
+stack traceback:
+	[C]: in function 'error'
+	[string "p8"]:3: in function <[string "p8"]:3>
+=== U2 probes ===
+  P1 register                                                            ok
+  P1 removetimer(self) raises (pcall-caught) inside own callback         ok
+  P1 pcall-swallowed self-remove + return true: timer keeps renewing     ok
+  P1 removetimer from outside                                            ok
+  P1 ref released after external removetimer                             ok
+  P2 unprotected self-remove: error path cancels, ref released           ok
+  P3 re-registered timer not fired in same pump                          ok
+  P3 chain of re-registrations runs 3 times then stops                   ok
+  P4 cancelled-mid-pump timer skipped and its ref released               ok
+  P5 coroutine timer owned by main state                                 ok
+  P5 fires on main state after coroutine collected; upvalue intact       ok
+  P6 yield-across-C error isolated; next timer still runs                ok
+  P7 C-function and table-error callbacks isolated                       ok
+  P8 128 fresh registry refs distinct after 60 complete/error/cancel cycles ok
+  P9 NaN delay rejected                                                  ok
+  P9 callable table rejected (documented: string or function only)       ok
+  P9 4 args rejected                                                     ok
+  P9 nothing scheduled by rejected calls                                 ok
+    [p10] round1 fn register ok=true
+    [p10] round2 fn register ok=false kp.registertimer: this script's state is closing
+  P10 no timers survive lua_close (both finaliser rounds)                ok
+  P10 pump after close touches nothing                                   ok
+    pending before close=1 after=0
+=== U1 probes ===
+  V1 metatable unreachable (host debug stripping)                        ok
+    [V2] tostring(nan-field vec) = vec(1, -nan, 3)
+  V2 fields writable; junk revalidated on every op                       ok
+    [V3] kp.vec(1e308,1e308,0):length() ok=true -> inf
+    [V3] kp.vec(1e155,0,0): length=inf lengthsq=inf dot=inf distance0=inf normalize=vec(0, 0, 0)
+  V3 overflow caught at result                                           ok
+  V4 method shadowing by field                                           ok
+    tiny normalize -> vec(0, 0, 0)
+  V5 eq/lerp/normalize/-0                                                ok
+  V6 kp.vec with __index proxy and with string numbers                   ok
+  V7 (observation) kp.vec(1e39,0,0) accepted though > FLT_MAX            ok
+
+27 check(s), 0 failure(s)

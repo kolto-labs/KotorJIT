@@ -1,0 +1,8 @@
+test_duplicate_then_skip_accepts_ffprobe_microsecond_pts (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_duplicate_then_skip_accepts_ffprobe_microsecond_pts) ... ok
+test_within_policy_source_drop_keeps_level_and_index_gates_green (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_within_policy_source_drop_keeps_level_and_index_gates_green) ... ok
+test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.058s
+
+OK

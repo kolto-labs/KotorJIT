@@ -1,0 +1,2 @@
+      8 OK
+      2 test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ERROR

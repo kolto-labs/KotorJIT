@@ -1,0 +1,4 @@
+{"module": "/tmp/r12c-snap-oopa3qe7/snap/runtime/kpharness/capture_diagnostic.py", "trusted_lock": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock", "root": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation"}
+refused: lock descriptor is not the canonical lock file
+ 
+supervisor canonical_lock_path /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock

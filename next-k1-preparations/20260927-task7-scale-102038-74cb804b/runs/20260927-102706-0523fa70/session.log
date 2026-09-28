@@ -1,0 +1,17 @@
+[05:29:22] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[05:29:22] staged tree /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1 (new)
+[05:29:22]   copied writable dir Saves
+[05:29:22]   copied writable dir Temp
+[05:29:22]   copied writable dir currentgame
+[05:29:22]   copied writable dir futuregame
+[05:29:22]   copied writable dir gameinprogress
+[05:29:22]   copied writable dir kotorphasor
+[05:29:22]   copied writable dir logs
+[05:29:22] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[05:29:28] executable /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1/swkotor.exe
+[05:29:29] runtime installed from /home/brunner56/kp-console-protocol-20260927/build
+[05:29:29] ini tuned: swkotor.ini (14 keys)
+[05:29:31] settling wine prefix (wineboot -i)
+[05:30:33] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-0f4905e7a58f5042 /tmp --bind /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1 --bind /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/wineprefix-k1 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1)
+[05:30:59] channel up on 127.0.0.1:56447: build k1_gog_103, 19 hooks, live=True
+[05:34:57] torn down; logs in /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70

@@ -1,0 +1,3698 @@
+{
+  "scope": "All 46 in-process TCP commands, six devtools operations, and all Python harness module-level/class functions. Host callbacks do not become engine-server code because the protocol is a TCP server.",
+  "commands": [
+    {
+      "command": "ping",
+      "side": "process-local",
+      "reason": "Harness/runtime liveness, version and server tick counter; no object mutation.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:472",
+      "adapter_source": null
+    },
+    {
+      "command": "status",
+      "side": "process-local runtime metadata",
+      "reason": "Build, phase, hook/script counts, local client/server tick counters, and adapter metadata; no direct game-object reads.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:481",
+      "adapter_source": null
+    },
+    {
+      "command": "state",
+      "side": "both, read-only aggregate",
+      "reason": "Combines runtime state with client GUI/input/timers and server mode/module/pause/world state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:590",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:409"
+    },
+    {
+      "command": "events",
+      "side": "process-local event transport",
+      "reason": "Reads/subscribes the runtime event ring. Each event retains its own origin; this is not a new game event hook.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:675",
+      "adapter_source": null
+    },
+    {
+      "command": "subscribe",
+      "side": "process-local event transport",
+      "reason": "Reads/subscribes the runtime event ring. Each event retains its own origin; this is not a new game event hook.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:696",
+      "adapter_source": null
+    },
+    {
+      "command": "unsubscribe",
+      "side": "process-local event transport",
+      "reason": "Reads/subscribes the runtime event ring. Each event retains its own origin; this is not a new game event hook.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:706",
+      "adapter_source": null
+    },
+    {
+      "command": "devtools",
+      "side": "process-local console protocol; submitted code can reach either side",
+      "reason": "status, submit, outcome, output, complete, cancel address the shared local console. Console Lua code determines game effects.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:712",
+      "adapter_source": null
+    },
+    {
+      "command": "lua",
+      "side": "process-local Lua executor; submitted code can reach either side",
+      "reason": "Runs code in harness Lua state. Native APIs/VM calls determine client/server access.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:732",
+      "adapter_source": null
+    },
+    {
+      "command": "reload",
+      "side": "process-local script host",
+      "reason": "Reloads scripts; their unload/load callbacks may perform client/server operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:757",
+      "adapter_source": null
+    },
+    {
+      "command": "load_save",
+      "side": "both plus local filesystem",
+      "reason": "Unpacks save resources, accesses client and server app, pauses world timers, routes load requests. Split Server role prepares authoritative save and waits; split Client uses transport request.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:789",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:679"
+    },
+    {
+      "command": "new_game",
+      "side": "client GUI",
+      "reason": "Native main-menu/class-selection/chargen callbacks; engine may create/load world downstream.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:797",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1078"
+    },
+    {
+      "command": "chargen_select_class",
+      "side": "client GUI",
+      "reason": "Native main-menu/class-selection/chargen callbacks; engine may create/load world downstream.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:802",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1078"
+    },
+    {
+      "command": "chargen_begin_play",
+      "side": "client GUI",
+      "reason": "Native main-menu/class-selection/chargen callbacks; engine may create/load world downstream.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:814",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1078"
+    },
+    {
+      "command": "save",
+      "side": "client-to-server request",
+      "reason": "Client SendSaveGameRequest; server consumes/save on subsequent tick.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:819",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1305"
+    },
+    {
+      "command": "warp",
+      "side": "server",
+      "reason": "Sets pending module/start-waypoint fields on server app; server loop executes transition.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:834",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1328"
+    },
+    {
+      "command": "dialog",
+      "side": "both, read-only",
+      "reason": "Client GUI panel/replies combined with server owner/dialog state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:842",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1388"
+    },
+    {
+      "command": "reply",
+      "side": "client dialog selection with server validation",
+      "reason": "Checks GUI and server dialog agreement; calls SelectReply on the client dialog panel, not directly on server dialog.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:850",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1472"
+    },
+    {
+      "command": "dialog_continue",
+      "side": "client dialog selection with server validation",
+      "reason": "Checks combined dialog state, then GUI SetDialogSelection and UpdateDialog.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:862",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1535"
+    },
+    {
+      "command": "dialog_skip",
+      "side": "server mutation selected through client UI",
+      "reason": "Resolves GUI owner to server object and calls server SkipPastDialog.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:867",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1560"
+    },
+    {
+      "command": "dialog_abort",
+      "side": "client primary, server fallback",
+      "reason": "GUI HandleDialogSelection(-2) when available; otherwise server object StopDialog.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:872",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1591"
+    },
+    {
+      "command": "dialog_clear_sound_wait",
+      "side": "server mutation selected through client UI",
+      "reason": "Resolves GUI owner and clears server object.dialog_send_pending.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:877",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1618"
+    },
+    {
+      "command": "clear_auto_pause",
+      "side": "server",
+      "reason": "Writes server.pause_state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:882",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1644"
+    },
+    {
+      "command": "speed",
+      "side": "client timers",
+      "reason": "Uses client.set_game_speed; distinct from kp.speed server-loop repetition.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:887",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1669"
+    },
+    {
+      "command": "fixed_step",
+      "side": "both",
+      "reason": "Changes fixed snapshot rate on client world/pause/animation and server world/pause timers.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1111",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2620"
+    },
+    {
+      "command": "unpause_timers",
+      "side": "both",
+      "reason": "Unpauses client and server world timers and client animation/pause flags.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:904",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2098"
+    },
+    {
+      "command": "advance_tutorial",
+      "side": "client GUI",
+      "reason": "Native GUI/tutorial/panel operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:909",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2127"
+    },
+    {
+      "command": "finish_hidden_tutorial",
+      "side": "client GUI",
+      "reason": "Native GUI/tutorial/panel operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:914",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2127"
+    },
+    {
+      "command": "dismiss_status_summary",
+      "side": "client GUI",
+      "reason": "Native GUI/tutorial/panel operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:919",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2127"
+    },
+    {
+      "command": "dismiss_messagebox",
+      "side": "client GUI",
+      "reason": "Native GUI/tutorial/panel operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:924",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2127"
+    },
+    {
+      "command": "equipment_screen",
+      "side": "client GUI",
+      "reason": "Native GUI/tutorial/panel operations.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:929",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2127"
+    },
+    {
+      "command": "door_use",
+      "side": "client-to-server request plus server validation",
+      "reason": "Validates server door, sends client message handler change_door_state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:939",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2249"
+    },
+    {
+      "command": "door_commit_open",
+      "side": "server",
+      "reason": "Calls door.move_to_next_open_state and checks server door open_state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:956",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2280"
+    },
+    {
+      "command": "door_security",
+      "side": "client-to-server request plus server readback",
+      "reason": "Client message handler unlock_object; server door identity/state validation before and after.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:973",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2309"
+    },
+    {
+      "command": "attack",
+      "side": "client-to-server request plus server validation",
+      "reason": "Maps/validates IDs through server, sends client message handler attack.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:992",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2417"
+    },
+    {
+      "command": "dismiss_container",
+      "side": "client GUI",
+      "reason": "Container panel input handling; take-all causes downstream inventory gameplay.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1009",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2492"
+    },
+    {
+      "command": "take_all_container",
+      "side": "client GUI",
+      "reason": "Container panel input handling; take-all causes downstream inventory gameplay.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1014",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2492"
+    },
+    {
+      "command": "accept_party_selection",
+      "side": "both",
+      "reason": "Client party-selection GUI/party plus server pause state.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1019",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2562"
+    },
+    {
+      "command": "auto_levelup",
+      "side": "server mutation through client player selection",
+      "reason": "Client party PC resolves to server creature/stats; native stats.auto_levelup mutates server stats.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1024",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1739"
+    },
+    {
+      "command": "set_party_leader",
+      "side": "client party",
+      "reason": "Client party members/creatures and party.set_leader, verified client slot0.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1036",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1805"
+    },
+    {
+      "command": "use_item",
+      "side": "client action request",
+      "reason": "Client actor/target and client_creature.party_menu_use_item. Does not directly call server RunEquip.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1057",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1880"
+    },
+    {
+      "command": "equip_item",
+      "side": "server mutation through client player selection",
+      "reason": "Client party leader resolves to server creature/item, calls creature.run_equip and reads server inventory; K1-only gate.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1082",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:1960"
+    },
+    {
+      "command": "movies",
+      "side": "client playback policy",
+      "reason": "Controls client.play_movies hook suppression.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1124",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2663"
+    },
+    {
+      "command": "screenshot",
+      "side": "client renderer plus filesystem",
+      "reason": "Deferred render-thread OpenGL framebuffer read/write, not server-world snapshot.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1133",
+      "adapter_source": null
+    },
+    {
+      "command": "globals",
+      "side": "server read-only",
+      "reason": "Server global-variable or party-journal tables.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1148",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2673"
+    },
+    {
+      "command": "journal",
+      "side": "server read-only",
+      "reason": "Server global-variable or party-journal tables.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1168",
+      "adapter_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/engine_k1.cpp:2673"
+    },
+    {
+      "command": "quit",
+      "side": "process lifecycle",
+      "reason": "Sets quit request; client loop flushes harness and returns its exit indication. Does not mean a game-server network disconnect.",
+      "wrapper_source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/harness/commands.cpp:1185",
+      "adapter_source": null
+    }
+  ],
+  "devtools_operations": [
+    "status",
+    "submit",
+    "outcome",
+    "output",
+    "complete",
+    "cancel"
+  ],
+  "python_modules": [
+    {
+      "path": "scripts/harness/kpharness/__init__.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [],
+      "sha256": "9282a855bb913f8b0a3168df7bb6a92c278977f05625e8c649dcc51f74fad4c5"
+    },
+    {
+      "path": "scripts/harness/kpharness/__main__.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [],
+      "sha256": "7caf42fff231e75c0d146933511cefd1309e8c48c03001154fd519450a0f5280"
+    },
+    {
+      "path": "scripts/harness/kpharness/bwm.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "Bwm.walkable_faces",
+          "line": 33
+        },
+        {
+          "name": "_range",
+          "line": 37
+        },
+        {
+          "name": "parse",
+          "line": 42
+        },
+        {
+          "name": "_graph",
+          "line": 75
+        },
+        {
+          "name": "select_far_side",
+          "line": 92
+        },
+        {
+          "name": "_path",
+          "line": 131
+        }
+      ],
+      "sha256": "4d9e1226bdaafe3727d075ac0ecfb2173e0075a177c0928c6ae3e50e2a845f1e"
+    },
+    {
+      "path": "scripts/harness/kpharness/capture_diagnostic.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_utc",
+          "line": 154
+        },
+        {
+          "name": "_canonical",
+          "line": 158
+        },
+        {
+          "name": "_write",
+          "line": 162
+        },
+        {
+          "name": "client_command",
+          "line": 166
+        },
+        {
+          "name": "route_document",
+          "line": 175
+        },
+        {
+          "name": "_exe_sha256",
+          "line": 197
+        },
+        {
+          "name": "_tool_index",
+          "line": 204
+        },
+        {
+          "name": "_match_exe",
+          "line": 214
+        },
+        {
+          "name": "_is_loader",
+          "line": 244
+        },
+        {
+          "name": "loader_program",
+          "line": 248
+        },
+        {
+          "name": "process_inventory",
+          "line": 265
+        },
+        {
+          "name": "_target_names",
+          "line": 330
+        },
+        {
+          "name": "_launch_chain",
+          "line": 348
+        },
+        {
+          "name": "forbidden_processes",
+          "line": 361
+        },
+        {
+          "name": "unreadable_processes",
+          "line": 374
+        },
+        {
+          "name": "preflight",
+          "line": 381
+        },
+        {
+          "name": "protected_displays",
+          "line": 401
+        },
+        {
+          "name": "process_alive",
+          "line": 416
+        },
+        {
+          "name": "kill_owned_identity",
+          "line": 426
+        },
+        {
+          "name": "canonical_lock_path",
+          "line": 456
+        },
+        {
+          "name": "acquire_lock",
+          "line": 461
+        },
+        {
+          "name": "native_elf_identity",
+          "line": 476
+        },
+        {
+          "name": "with_inherited_descriptor",
+          "line": 499
+        },
+        {
+          "name": "ordered_cleanup",
+          "line": 509
+        },
+        {
+          "name": "stop_client",
+          "line": 528
+        },
+        {
+          "name": "child_config",
+          "line": 544
+        },
+        {
+          "name": "create_child_token",
+          "line": 552
+        },
+        {
+          "name": "trusted_lock_path",
+          "line": 563
+        },
+        {
+          "name": "verify_child_authority",
+          "line": 570
+        },
+        {
+          "name": "record_owned",
+          "line": 621
+        },
+        {
+          "name": "_record_lease_owned",
+          "line": 636
+        },
+        {
+          "name": "_ChildSignals.__init__",
+          "line": 647
+        },
+        {
+          "name": "_ChildSignals.handler",
+          "line": 652
+        },
+        {
+          "name": "_ChildSignals.install",
+          "line": 657
+        },
+        {
+          "name": "_ChildSignals.unblock",
+          "line": 662
+        },
+        {
+          "name": "_ChildSignals.restore",
+          "line": 666
+        },
+        {
+          "name": "_append_marker",
+          "line": 671
+        },
+        {
+          "name": "_wait_for_window",
+          "line": 676
+        },
+        {
+          "name": "run_child",
+          "line": 687
+        },
+        {
+          "name": "_child_main",
+          "line": 757
+        },
+        {
+          "name": "_acceptance_interval",
+          "line": 777
+        },
+        {
+          "name": "evaluate",
+          "line": 786
+        },
+        {
+          "name": "_cadence_recomputed_apart_from_content",
+          "line": 875
+        },
+        {
+          "name": "content_recomputation",
+          "line": 888
+        },
+        {
+          "name": "content_separation_status",
+          "line": 902
+        },
+        {
+          "name": "supervisor_thread_count",
+          "line": 909
+        },
+        {
+          "name": "Dependencies.host",
+          "line": 931
+        },
+        {
+          "name": "_owned_identities",
+          "line": 941
+        },
+        {
+          "name": "_all_owned",
+          "line": 956
+        },
+        {
+          "name": "_SupervisorSignals.__init__",
+          "line": 975
+        },
+        {
+          "name": "_SupervisorSignals.handler",
+          "line": 981
+        },
+        {
+          "name": "_SupervisorSignals.forward",
+          "line": 987
+        },
+        {
+          "name": "_SupervisorSignals.install",
+          "line": 995
+        },
+        {
+          "name": "_SupervisorSignals.restore",
+          "line": 999
+        },
+        {
+          "name": "_wait_for_child",
+          "line": 1004
+        },
+        {
+          "name": "_kill_owned_after_budget",
+          "line": 1024
+        },
+        {
+          "name": "_proc_start",
+          "line": 1048
+        },
+        {
+          "name": "supervise",
+          "line": 1053
+        },
+        {
+          "name": "main",
+          "line": 1244
+        }
+      ],
+      "sha256": "9dd5a3c28cfa9a13986b14dbc893c4eb7d6f0443d4d8c429ffe0f0e391c55ebc"
+    },
+    {
+      "path": "scripts/harness/kpharness/checkpoints.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "Checkpoints.__init__",
+          "line": 35
+        },
+        {
+          "name": "Checkpoints.path",
+          "line": 41
+        },
+        {
+          "name": "Checkpoints.names",
+          "line": 46
+        },
+        {
+          "name": "Checkpoints.meta",
+          "line": 49
+        },
+        {
+          "name": "Checkpoints.save_folders",
+          "line": 56
+        },
+        {
+          "name": "Checkpoints.store",
+          "line": 61
+        },
+        {
+          "name": "Checkpoints.restore",
+          "line": 78
+        },
+        {
+          "name": "Checkpoints.load",
+          "line": 92
+        },
+        {
+          "name": "Checkpoints.load_folder",
+          "line": 101
+        }
+      ],
+      "sha256": "c844589b971a468fdb8ef2990b05347b9ca827ab247158bde0b17087abdeec25"
+    },
+    {
+      "path": "scripts/harness/kpharness/cli.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_info",
+          "line": 64
+        },
+        {
+          "name": "_channel",
+          "line": 78
+        },
+        {
+          "name": "_print",
+          "line": 94
+        },
+        {
+          "name": "_boot_budget_error",
+          "line": 98
+        },
+        {
+          "name": "_boot_failed",
+          "line": 110
+        },
+        {
+          "name": "cmd_boot",
+          "line": 118
+        },
+        {
+          "name": "cmd_status",
+          "line": 142
+        },
+        {
+          "name": "cmd_state",
+          "line": 160
+        },
+        {
+          "name": "cmd_reply",
+          "line": 166
+        },
+        {
+          "name": "cmd_exec",
+          "line": 172
+        },
+        {
+          "name": "cmd_events",
+          "line": 183
+        },
+        {
+          "name": "cmd_shots",
+          "line": 189
+        },
+        {
+          "name": "cmd_down",
+          "line": 200
+        },
+        {
+          "name": "cmd_run",
+          "line": 209
+        },
+        {
+          "name": "cmd_pioneer_init",
+          "line": 252
+        },
+        {
+          "name": "cmd_pioneer_step",
+          "line": 264
+        },
+        {
+          "name": "cmd_pioneer_commit",
+          "line": 299
+        },
+        {
+          "name": "cmd_pioneer_discard",
+          "line": 320
+        },
+        {
+          "name": "cmd_pioneer_status",
+          "line": 334
+        },
+        {
+          "name": "_authored",
+          "line": 355
+        },
+        {
+          "name": "_playback_session",
+          "line": 365
+        },
+        {
+          "name": "cmd_pioneer_attach",
+          "line": 373
+        },
+        {
+          "name": "cmd_pioneer_play",
+          "line": 384
+        },
+        {
+          "name": "cmd_pioneer_stop",
+          "line": 411
+        },
+        {
+          "name": "cmd_pioneer_reclaim",
+          "line": 427
+        },
+        {
+          "name": "cmd_list",
+          "line": 438
+        },
+        {
+          "name": "cmd_devtools_bridge",
+          "line": 449
+        },
+        {
+          "name": "build_parser",
+          "line": 462
+        },
+        {
+          "name": "main",
+          "line": 601
+        }
+      ],
+      "sha256": "6d22fed124ae0ea68f59922aabf3efa003bf81df79460e99352c0667ffb0b759"
+    },
+    {
+      "path": "scripts/harness/kpharness/client.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "ChannelError.__init__",
+          "line": 29
+        },
+        {
+          "name": "ChannelError.unsupported",
+          "line": 36
+        },
+        {
+          "name": "Channel.__init__",
+          "line": 58
+        },
+        {
+          "name": "Channel.connect",
+          "line": 78
+        },
+        {
+          "name": "Channel.close",
+          "line": 85
+        },
+        {
+          "name": "Channel.set_wait_reconnector",
+          "line": 94
+        },
+        {
+          "name": "Channel._reconnect_for_wait",
+          "line": 105
+        },
+        {
+          "name": "Channel.connected",
+          "line": 125
+        },
+        {
+          "name": "Channel.__enter__",
+          "line": 128
+        },
+        {
+          "name": "Channel.__exit__",
+          "line": 133
+        },
+        {
+          "name": "Channel._send_line",
+          "line": 137
+        },
+        {
+          "name": "Channel._read_frame",
+          "line": 147
+        },
+        {
+          "name": "Channel._note_event",
+          "line": 179
+        },
+        {
+          "name": "Channel.request",
+          "line": 186
+        },
+        {
+          "name": "Channel.drain_events",
+          "line": 218
+        },
+        {
+          "name": "Channel.ping",
+          "line": 235
+        },
+        {
+          "name": "Channel.status",
+          "line": 238
+        },
+        {
+          "name": "Channel.state",
+          "line": 241
+        },
+        {
+          "name": "Channel.state_for_wait",
+          "line": 244
+        },
+        {
+          "name": "Channel.lua",
+          "line": 258
+        },
+        {
+          "name": "Channel.events",
+          "line": 275
+        },
+        {
+          "name": "Channel._note_events_reply",
+          "line": 281
+        },
+        {
+          "name": "Channel.events_for_wait",
+          "line": 290
+        },
+        {
+          "name": "Channel.subscribe",
+          "line": 307
+        },
+        {
+          "name": "Channel.unsubscribe",
+          "line": 311
+        },
+        {
+          "name": "Channel.recent_events",
+          "line": 317
+        },
+        {
+          "name": "Channel.screenshot",
+          "line": 320
+        },
+        {
+          "name": "Channel.equipment_screen",
+          "line": 323
+        },
+        {
+          "name": "Channel.quit",
+          "line": 326
+        },
+        {
+          "name": "events_after",
+          "line": 335
+        },
+        {
+          "name": "event_names",
+          "line": 339
+        },
+        {
+          "name": "summarise_state",
+          "line": 343
+        }
+      ],
+      "sha256": "4c9ca9d24ff2d44e85f844cbd5409838a55e2ac0eb230ee28e22e2444e120fb9"
+    },
+    {
+      "path": "scripts/harness/kpharness/commit_inputs.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_sha256_regular",
+          "line": 30
+        },
+        {
+          "name": "ffprobe_identity",
+          "line": 49
+        },
+        {
+          "name": "_append_line",
+          "line": 64
+        },
+        {
+          "name": "commit_inputs",
+          "line": 79
+        },
+        {
+          "name": "main",
+          "line": 106
+        }
+      ],
+      "sha256": "39d3aa8b51b5f794a8593feaed4a403f02604af3cb036f26034b3ca1f4031c1f"
+    },
+    {
+      "path": "scripts/harness/kpharness/console_protocol.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_u64",
+          "line": 32
+        },
+        {
+          "name": "canonical_u64",
+          "line": 43
+        },
+        {
+          "name": "decode_bytes",
+          "line": 49
+        },
+        {
+          "name": "display_text",
+          "line": 65
+        },
+        {
+          "name": "ConsoleClient.__init__",
+          "line": 89
+        },
+        {
+          "name": "ConsoleClient._call",
+          "line": 95
+        },
+        {
+          "name": "ConsoleClient._identity",
+          "line": 107
+        },
+        {
+          "name": "ConsoleClient.status",
+          "line": 117
+        },
+        {
+          "name": "ConsoleClient.capture",
+          "line": 124
+        },
+        {
+          "name": "ConsoleClient.assert_identity",
+          "line": 128
+        },
+        {
+          "name": "ConsoleClient.wait_open",
+          "line": 137
+        },
+        {
+          "name": "ConsoleClient.exact_submission",
+          "line": 156
+        },
+        {
+          "name": "ConsoleClient.outcome",
+          "line": 169
+        },
+        {
+          "name": "ConsoleClient.wait_terminal",
+          "line": 193
+        },
+        {
+          "name": "ConsoleClient.output_for",
+          "line": 212
+        }
+      ],
+      "sha256": "6b60936c68437c82ab31b068f5be07d35644feb1db8a571369a7b3a6df662e7c"
+    },
+    {
+      "path": "scripts/harness/kpharness/console_steps.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "ConsoleStepError.__init__",
+          "line": 20
+        },
+        {
+          "name": "_receipt",
+          "line": 25
+        },
+        {
+          "name": "_typed_value_equal",
+          "line": 40
+        },
+        {
+          "name": "_expect_values",
+          "line": 55
+        },
+        {
+          "name": "_evidence_strings",
+          "line": 63
+        },
+        {
+          "name": "_console_command",
+          "line": 77
+        },
+        {
+          "name": "execute_console_step",
+          "line": 111
+        }
+      ],
+      "sha256": "41c7745064b313face29c1e656c158f384cb8c5aa829b08668bc390477fb59fd"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "marker_configuration",
+          "line": 40
+        },
+        {
+          "name": "backend",
+          "line": 68
+        },
+        {
+          "name": "shared_lock_path",
+          "line": 86
+        },
+        {
+          "name": "live_lock",
+          "line": 95
+        },
+        {
+          "name": "retired_script_paths",
+          "line": 106
+        },
+        {
+          "name": "script_inputs",
+          "line": 129
+        },
+        {
+          "name": "boot_budget",
+          "line": 150
+        },
+        {
+          "name": "boot_evidence",
+          "line": 167
+        },
+        {
+          "name": "run_creative",
+          "line": 199
+        },
+        {
+          "name": "parser",
+          "line": 456
+        },
+        {
+          "name": "main",
+          "line": 483
+        }
+      ],
+      "sha256": "f160f81f0acdab15b8815aa12395fd47db5c0879ce86fb428dcf69e9c4e29ee6"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative_accept.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "CleanupLedgerChanged.__init__",
+          "line": 47
+        },
+        {
+          "name": "CommitmentLogFailed.__init__",
+          "line": 58
+        },
+        {
+          "name": "execution_receipt_sha256",
+          "line": 65
+        },
+        {
+          "name": "acceptance_receipt_sha256",
+          "line": 74
+        },
+        {
+          "name": "_regular_nonsymlink",
+          "line": 81
+        },
+        {
+          "name": "_read_regular",
+          "line": 89
+        },
+        {
+          "name": "_atomic_regular_write",
+          "line": 103
+        },
+        {
+          "name": "_exclusive_regular_write",
+          "line": 126
+        },
+        {
+          "name": "_utc_now",
+          "line": 140
+        },
+        {
+          "name": "_utc",
+          "line": 145
+        },
+        {
+          "name": "_hex",
+          "line": 154
+        },
+        {
+          "name": "_exact_int",
+          "line": 158
+        },
+        {
+          "name": "_canonical_bytes",
+          "line": 162
+        },
+        {
+          "name": "_record_digest",
+          "line": 166
+        },
+        {
+          "name": "_unique_object",
+          "line": 172
+        },
+        {
+          "name": "_reject_constant",
+          "line": 181
+        },
+        {
+          "name": "_host_identity",
+          "line": 185
+        },
+        {
+          "name": "_validate_tool",
+          "line": 198
+        },
+        {
+          "name": "_validate_failure_payload",
+          "line": 217
+        },
+        {
+          "name": "_validate_cleanup_record",
+          "line": 242
+        },
+        {
+          "name": "_launch_bytes",
+          "line": 278
+        },
+        {
+          "name": "_load_cleanup_ledger",
+          "line": 282
+        },
+        {
+          "name": "validate_commitment_log",
+          "line": 311
+        },
+        {
+          "name": "_aliases_run_tree",
+          "line": 332
+        },
+        {
+          "name": "_emit_head",
+          "line": 356
+        },
+        {
+          "name": "append_commitment_line",
+          "line": 372
+        },
+        {
+          "name": "_ledger_lock",
+          "line": 389
+        },
+        {
+          "name": "initialize_cleanup_ledger",
+          "line": 407
+        },
+        {
+          "name": "cleanup_ledger_sha256",
+          "line": 419
+        },
+        {
+          "name": "unrecorded_survivors",
+          "line": 424
+        },
+        {
+          "name": "cleanup_state_clear",
+          "line": 429
+        },
+        {
+          "name": "_append_cleanup_record",
+          "line": 441
+        },
+        {
+          "name": "_stat_identity",
+          "line": 491
+        },
+        {
+          "name": "_fd_identity_and_sha",
+          "line": 496
+        },
+        {
+          "name": "_regular_identity_and_sha",
+          "line": 510
+        },
+        {
+          "name": "_stable_regular_copy",
+          "line": 518
+        },
+        {
+          "name": "_stable_unlinked_fd",
+          "line": 553
+        },
+        {
+          "name": "verify_acceptance",
+          "line": 574
+        },
+        {
+          "name": "_verified_tool_fd",
+          "line": 606
+        },
+        {
+          "name": "_persist_probe_cleanup_failure",
+          "line": 623
+        },
+        {
+          "name": "_record_surviving_probe",
+          "line": 644
+        },
+        {
+          "name": "_process_identity",
+          "line": 704
+        },
+        {
+          "name": "_wait_pidfd",
+          "line": 728
+        },
+        {
+          "name": "recover_cleanup",
+          "line": 733
+        },
+        {
+          "name": "accept",
+          "line": 820
+        },
+        {
+          "name": "main",
+          "line": 943
+        }
+      ],
+      "sha256": "d0722f46eed52844c33af90af536740825d25839755fba41df0cce03cef69b01"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative_checkpoints.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "child",
+          "line": 7
+        },
+        {
+          "name": "CreativeCheckpoints.__init__",
+          "line": 17
+        },
+        {
+          "name": "CreativeCheckpoints.path",
+          "line": 22
+        },
+        {
+          "name": "CreativeCheckpoints._save_path",
+          "line": 27
+        },
+        {
+          "name": "CreativeCheckpoints.store",
+          "line": 32
+        },
+        {
+          "name": "CreativeCheckpoints.restore",
+          "line": 39
+        }
+      ],
+      "sha256": "aae80bdef1db9cc218a36c4e0622bcabcb0ae6779334362a9e1bca51e5faff2b"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative_export.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "accepted_receipt",
+          "line": 20
+        },
+        {
+          "name": "export",
+          "line": 41
+        },
+        {
+          "name": "main",
+          "line": 108
+        }
+      ],
+      "sha256": "cdc663b7650cd1a539748000c494c97dfff0dd241a32ea89b7eb82fa6eff1289"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative_steps.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "CreativeRunner.sync_cursor",
+          "line": 14
+        },
+        {
+          "name": "CreativeRunner._capture_check",
+          "line": 23
+        },
+        {
+          "name": "CreativeRunner.run_step",
+          "line": 27
+        },
+        {
+          "name": "CreativeRunner._do",
+          "line": 33
+        }
+      ],
+      "sha256": "bc1849a0c63a603766d8b63fec33077f893bfcfef256a56a301506763522c89c"
+    },
+    {
+      "path": "scripts/harness/kpharness/creative_wine.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "disjoint",
+          "line": 20
+        },
+        {
+          "name": "claim_directory",
+          "line": 25
+        },
+        {
+          "name": "private_tree",
+          "line": 44
+        },
+        {
+          "name": "source_receipt",
+          "line": 63
+        },
+        {
+          "name": "owned_pid",
+          "line": 76
+        },
+        {
+          "name": "LinuxWineCreativeSession.__init__",
+          "line": 87
+        },
+        {
+          "name": "LinuxWineCreativeSession._validate_staged_path",
+          "line": 98
+        },
+        {
+          "name": "LinuxWineCreativeSession.acquire_lock",
+          "line": 103
+        },
+        {
+          "name": "LinuxWineCreativeSession.boot",
+          "line": 110
+        },
+        {
+          "name": "LinuxWineCreativeSession.game_pids",
+          "line": 118
+        },
+        {
+          "name": "LinuxWineCreativeSession.process_alive",
+          "line": 122
+        },
+        {
+          "name": "LinuxWineCreativeSession._stage_resources",
+          "line": 125
+        },
+        {
+          "name": "LinuxWineCreativeSession.stage",
+          "line": 135
+        },
+        {
+          "name": "LinuxWineCreativeSession.start_xvfb",
+          "line": 160
+        },
+        {
+          "name": "LinuxWineCreativeSession.teardown",
+          "line": 164
+        },
+        {
+          "name": "DeferredGamescopeRecorder.__init__",
+          "line": 185
+        },
+        {
+          "name": "DeferredGamescopeRecorder.attach",
+          "line": 188
+        },
+        {
+          "name": "DeferredGamescopeRecorder.__getattr__",
+          "line": 193
+        },
+        {
+          "name": "DeferredGamescopeRecorder.stop",
+          "line": 199
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession.__init__",
+          "line": 206
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession.boot",
+          "line": 215
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession._build_env",
+          "line": 246
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession.check_capture",
+          "line": 249
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession._persist_cleanup",
+          "line": 255
+        },
+        {
+          "name": "LinuxWineGamescopeCreativeSession.teardown",
+          "line": 263
+        }
+      ],
+      "sha256": "0bb74fd07de603080e6153766a44ab24001cde083c7a7af6ed263bff6eea5812"
+    },
+    {
+      "path": "scripts/harness/kpharness/devtools_bridge.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "StandaloneChannel._read_frame",
+          "line": 41
+        },
+        {
+          "name": "state_dir",
+          "line": 49
+        },
+        {
+          "name": "read_or_create_token",
+          "line": 58
+        },
+        {
+          "name": "_json_bytes",
+          "line": 76
+        },
+        {
+          "name": "Bridge.__init__",
+          "line": 81
+        },
+        {
+          "name": "Bridge.forward",
+          "line": 89
+        },
+        {
+          "name": "Bridge.static",
+          "line": 121
+        },
+        {
+          "name": "Bridge.validate_publication",
+          "line": 140
+        },
+        {
+          "name": "_Handler.setup",
+          "line": 152
+        },
+        {
+          "name": "_Handler.bridge",
+          "line": 157
+        },
+        {
+          "name": "_Handler._canonical",
+          "line": 160
+        },
+        {
+          "name": "_Handler._guard",
+          "line": 164
+        },
+        {
+          "name": "_Handler._reply",
+          "line": 180
+        },
+        {
+          "name": "_Handler.do_OPTIONS",
+          "line": 188
+        },
+        {
+          "name": "_Handler.do_GET",
+          "line": 198
+        },
+        {
+          "name": "_Handler.do_POST",
+          "line": 208
+        },
+        {
+          "name": "_Handler.log_message",
+          "line": 236
+        },
+        {
+          "name": "BridgeServer.__init__",
+          "line": 244
+        },
+        {
+          "name": "run_standalone",
+          "line": 251
+        },
+        {
+          "name": "main",
+          "line": 272
+        }
+      ],
+      "sha256": "b0190b39be55e2f14baf4243faa258efa88d69267105cb6b057390c86f493a03"
+    },
+    {
+      "path": "scripts/harness/kpharness/discover.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "repo_root",
+          "line": 25
+        },
+        {
+          "name": "_load_kpdiscover",
+          "line": 31
+        },
+        {
+          "name": "kpdiscover",
+          "line": 45
+        },
+        {
+          "name": "harness_config",
+          "line": 52
+        },
+        {
+          "name": "build_dir",
+          "line": 57
+        },
+        {
+          "name": "data_dir",
+          "line": 69
+        },
+        {
+          "name": "install_root",
+          "line": 84
+        },
+        {
+          "name": "executable",
+          "line": 91
+        },
+        {
+          "name": "_has_libglu",
+          "line": 110
+        },
+        {
+          "name": "libglu_dirs",
+          "line": 126
+        },
+        {
+          "name": "xdg_game_dir",
+          "line": 180
+        },
+        {
+          "name": "describe",
+          "line": 200
+        }
+      ],
+      "sha256": "9fad36c358bded7ec37c3d77aeeb400317a4e70ec54f99957755599fbc423a9d"
+    },
+    {
+      "path": "scripts/harness/kpharness/display_backends.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "pattern_index_bit_expr",
+          "line": 100
+        },
+        {
+          "name": "pattern_index_parity_expr",
+          "line": 104
+        },
+        {
+          "name": "pattern_index_regions",
+          "line": 109
+        },
+        {
+          "name": "pattern_index_filters",
+          "line": 119
+        },
+        {
+          "name": "pattern_index_cell_crops",
+          "line": 133
+        },
+        {
+          "name": "decode_index_cells",
+          "line": 144
+        },
+        {
+          "name": "_sha256_file",
+          "line": 170
+        },
+        {
+          "name": "_probe_tool_matches",
+          "line": 178
+        },
+        {
+          "name": "_canonical_pts",
+          "line": 202
+        },
+        {
+          "name": "_exact_ints",
+          "line": 247
+        },
+        {
+          "name": "geometry_precondition",
+          "line": 251
+        },
+        {
+          "name": "geometry_precondition_sha256",
+          "line": 281
+        },
+        {
+          "name": "_geometry_evidence_matches",
+          "line": 285
+        },
+        {
+          "name": "_index_cells_valid",
+          "line": 302
+        },
+        {
+          "name": "_content_rows_valid",
+          "line": 308
+        },
+        {
+          "name": "_black",
+          "line": 320
+        },
+        {
+          "name": "evaluate_content",
+          "line": 324
+        },
+        {
+          "name": "decode_levels",
+          "line": 403
+        },
+        {
+          "name": "content_level_sequence",
+          "line": 431
+        },
+        {
+          "name": "content_index_sequence",
+          "line": 496
+        },
+        {
+          "name": "content_separation",
+          "line": 624
+        },
+        {
+          "name": "_content_evidence_passed",
+          "line": 646
+        },
+        {
+          "name": "content_recomputed",
+          "line": 656
+        },
+        {
+          "name": "_pts_summary_matches",
+          "line": 693
+        },
+        {
+          "name": "_deep_frozen",
+          "line": 739
+        },
+        {
+          "name": "HostFacts.__post_init__",
+          "line": 761
+        },
+        {
+          "name": "BackendCapabilities.__post_init__",
+          "line": 778
+        },
+        {
+          "name": "ProcessIdentity.__post_init__",
+          "line": 787
+        },
+        {
+          "name": "OwnedWindow.__post_init__",
+          "line": 806
+        },
+        {
+          "name": "OwnedWindow.receipt",
+          "line": 821
+        },
+        {
+          "name": "DisplayLease.is_alive",
+          "line": 837
+        },
+        {
+          "name": "DisplayLease.close",
+          "line": 838
+        },
+        {
+          "name": "DisplayLease.receipt",
+          "line": 839
+        },
+        {
+          "name": "detect_host",
+          "line": 842
+        },
+        {
+          "name": "admit_backend",
+          "line": 857
+        },
+        {
+          "name": "process_start",
+          "line": 885
+        },
+        {
+          "name": "process_relationship",
+          "line": 894
+        },
+        {
+          "name": "discover_owned_x11_window",
+          "line": 903
+        },
+        {
+          "name": "OwnedWindowVerifier.__init__",
+          "line": 950
+        },
+        {
+          "name": "OwnedWindowVerifier.__call__",
+          "line": 956
+        },
+        {
+          "name": "_single_flags",
+          "line": 970
+        },
+        {
+          "name": "_cadence_evidence_passed",
+          "line": 982
+        },
+        {
+          "name": "_window_capture_matches",
+          "line": 1200
+        },
+        {
+          "name": "schema2_receipt",
+          "line": 1269
+        },
+        {
+          "name": "execution_evidence_ready",
+          "line": 1334
+        },
+        {
+          "name": "_route_report_matches",
+          "line": 1388
+        },
+        {
+          "name": "_route_execution_matches",
+          "line": 1516
+        }
+      ],
+      "sha256": "7ae70093eb8967d9cd80b7b464ef98f1b002356f1c65234362d12f2ab47e57eb"
+    },
+    {
+      "path": "scripts/harness/kpharness/export_verify.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_read_regular",
+          "line": 35
+        },
+        {
+          "name": "_sha256_regular",
+          "line": 54
+        },
+        {
+          "name": "_number",
+          "line": 70
+        },
+        {
+          "name": "_require",
+          "line": 74
+        },
+        {
+          "name": "_artifact_path",
+          "line": 79
+        },
+        {
+          "name": "_local_path_fields",
+          "line": 91
+        },
+        {
+          "name": "verify_export",
+          "line": 108
+        },
+        {
+          "name": "main",
+          "line": 204
+        }
+      ],
+      "sha256": "ad5bf187f6794df3175bdec68243710cdaf2d41d777d099b782861185ef1255d"
+    },
+    {
+      "path": "scripts/harness/kpharness/gamescope_processes.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "process_ids",
+          "line": 16
+        },
+        {
+          "name": "process_state",
+          "line": 20
+        },
+        {
+          "name": "subreaper_enabled",
+          "line": 25
+        },
+        {
+          "name": "establish_subreaper",
+          "line": 34
+        },
+        {
+          "name": "AncestryError.__init__",
+          "line": 57
+        },
+        {
+          "name": "verify_ancestry",
+          "line": 62
+        },
+        {
+          "name": "signal_identity",
+          "line": 104
+        },
+        {
+          "name": "_chain_evidence",
+          "line": 121
+        },
+        {
+          "name": "verify_private_xwayland",
+          "line": 126
+        }
+      ],
+      "sha256": "0bae1acea229128da5eab031a5b459d1f049e0c3d433c38f4981fee8eddaed21"
+    },
+    {
+      "path": "scripts/harness/kpharness/gamescope_snapshot.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_sha256",
+          "line": 33
+        },
+        {
+          "name": "_canonical_json",
+          "line": 41
+        },
+        {
+          "name": "_atomic_write",
+          "line": 45
+        },
+        {
+          "name": "assert_persistable_evidence",
+          "line": 67
+        },
+        {
+          "name": "_module_path",
+          "line": 82
+        },
+        {
+          "name": "_imported_modules",
+          "line": 94
+        },
+        {
+          "name": "runtime_module_paths",
+          "line": 120
+        },
+        {
+          "name": "_file_entries",
+          "line": 140
+        },
+        {
+          "name": "create_snapshot",
+          "line": 146
+        },
+        {
+          "name": "_load_manifest",
+          "line": 186
+        },
+        {
+          "name": "verify_snapshot",
+          "line": 211
+        },
+        {
+          "name": "runtime_resolution_receipt",
+          "line": 245
+        },
+        {
+          "name": "create_run_manifest",
+          "line": 265
+        },
+        {
+          "name": "verify_run_manifest",
+          "line": 279
+        },
+        {
+          "name": "driver_command",
+          "line": 297
+        },
+        {
+          "name": "main",
+          "line": 307
+        }
+      ],
+      "sha256": "89fa339c9b5bcbca6305b092f438762f94ffea2ad1733e31c12c1ab5b3ec2def"
+    },
+    {
+      "path": "scripts/harness/kpharness/gamescope_socket.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_identity",
+          "line": 18
+        },
+        {
+          "name": "_parent_identity",
+          "line": 23
+        },
+        {
+          "name": "capture_socket_node",
+          "line": 27
+        },
+        {
+          "name": "common_repository_root",
+          "line": 45
+        },
+        {
+          "name": "canonical_lock_path_for",
+          "line": 58
+        },
+        {
+          "name": "trusted_repository_root",
+          "line": 62
+        },
+        {
+          "name": "_fdinfo_flock_write_inode",
+          "line": 83
+        },
+        {
+          "name": "_confirm_exclusive_lock_held",
+          "line": 111
+        },
+        {
+          "name": "held_lock_descriptor",
+          "line": 135
+        },
+        {
+          "name": "canonical_lock_guard",
+          "line": 158
+        },
+        {
+          "name": "network_namespace",
+          "line": 188
+        },
+        {
+          "name": "socket_rows",
+          "line": 194
+        },
+        {
+          "name": "cleanup_socket_node",
+          "line": 209
+        }
+      ],
+      "sha256": "c068b861ac613f2002942fbe75b81a7e74fc712235807a96b27320233425bb12"
+    },
+    {
+      "path": "scripts/harness/kpharness/gamescope_xwayland.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "isolated_environment",
+          "line": 33
+        },
+        {
+          "name": "parse_renderer",
+          "line": 44
+        },
+        {
+          "name": "process_authority",
+          "line": 59
+        },
+        {
+          "name": "readiness_child_command",
+          "line": 71
+        },
+        {
+          "name": "GamescopeXwaylandLease.__init__",
+          "line": 82
+        },
+        {
+          "name": "GamescopeXwaylandLease._write_evidence",
+          "line": 145
+        },
+        {
+          "name": "GamescopeXwaylandLease.start",
+          "line": 201
+        },
+        {
+          "name": "GamescopeXwaylandLease.is_alive",
+          "line": 360
+        },
+        {
+          "name": "GamescopeXwaylandLease.game_environment",
+          "line": 376
+        },
+        {
+          "name": "GamescopeXwaylandLease.receipt",
+          "line": 381
+        },
+        {
+          "name": "GamescopeXwaylandLease.close",
+          "line": 404
+        },
+        {
+          "name": "GamescopeXwaylandLease._close",
+          "line": 420
+        },
+        {
+          "name": "_ready_child",
+          "line": 554
+        }
+      ],
+      "sha256": "4d73632e9f48cf82258c7cf7231f7acccfa1e192c4f502ae4667ec7bb3c8f3cf"
+    },
+    {
+      "path": "scripts/harness/kpharness/oracle.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "Verdict.to_dict",
+          "line": 60
+        },
+        {
+          "name": "Verdict.__str__",
+          "line": 68
+        },
+        {
+          "name": "OracleTrip.__init__",
+          "line": 73
+        },
+        {
+          "name": "Probe.process_alive",
+          "line": 82
+        },
+        {
+          "name": "Probe.read_new_stderr",
+          "line": 83
+        },
+        {
+          "name": "Probe.read_new_runtime_log",
+          "line": 84
+        },
+        {
+          "name": "Probe.stack_dump",
+          "line": 85
+        },
+        {
+          "name": "fingerprint",
+          "line": 88
+        },
+        {
+          "name": "load_signature",
+          "line": 111
+        },
+        {
+          "name": "Watchdog.__init__",
+          "line": 118
+        },
+        {
+          "name": "Watchdog._verdict",
+          "line": 143
+        },
+        {
+          "name": "Watchdog._stall_ceiling",
+          "line": 159
+        },
+        {
+          "name": "Watchdog.reset_progress",
+          "line": 170
+        },
+        {
+          "name": "Watchdog.check_logs",
+          "line": 176
+        },
+        {
+          "name": "Watchdog.note_unresponsive",
+          "line": 190
+        },
+        {
+          "name": "Watchdog.check",
+          "line": 210
+        }
+      ],
+      "sha256": "f6eb286ab13ad88b4dfe052a2c6e7fc125988d9fda8470112a2a18c730e2fa07"
+    },
+    {
+      "path": "scripts/harness/kpharness/owned_x11.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "OwnedX11Input.__init__",
+          "line": 39
+        },
+        {
+          "name": "OwnedX11Input.from_owned_window",
+          "line": 46
+        },
+        {
+          "name": "OwnedX11Input.from_session",
+          "line": 58
+        },
+        {
+          "name": "OwnedX11Input._command",
+          "line": 84
+        },
+        {
+          "name": "OwnedX11Input.focus",
+          "line": 90
+        },
+        {
+          "name": "OwnedX11Input.key",
+          "line": 95
+        },
+        {
+          "name": "OwnedX11Input.type",
+          "line": 100
+        },
+        {
+          "name": "OwnedX11Input.action",
+          "line": 107
+        },
+        {
+          "name": "OwnedX11Input.submit_console",
+          "line": 122
+        },
+        {
+          "name": "OwnedX11Input.focus_owned_game_window",
+          "line": 142
+        },
+        {
+          "name": "OwnedX11Input.press_f12",
+          "line": 145
+        },
+        {
+          "name": "OwnedX11Input.select_all",
+          "line": 148
+        },
+        {
+          "name": "OwnedX11Input.type_text",
+          "line": 151
+        },
+        {
+          "name": "OwnedX11Input.press_enter",
+          "line": 160
+        },
+        {
+          "name": "OwnedX11Input.console_entry",
+          "line": 163
+        },
+        {
+          "name": "ConsoleEntryInput.focus_owned_game_window",
+          "line": 185
+        },
+        {
+          "name": "ConsoleEntryInput.press_f12",
+          "line": 188
+        },
+        {
+          "name": "ConsoleEntryInput.select_all",
+          "line": 191
+        },
+        {
+          "name": "ConsoleEntryInput.type_text",
+          "line": 194
+        },
+        {
+          "name": "ConsoleEntryInput.press_enter",
+          "line": 201
+        }
+      ],
+      "sha256": "592ad9714c66b1acd660fb393f5318a36d5285af7bc0942c9581d7474d38fd7a"
+    },
+    {
+      "path": "scripts/harness/kpharness/physical_console.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "ConsoleProtocolPort.status",
+          "line": 18
+        },
+        {
+          "name": "ConsoleProtocolPort.outcome",
+          "line": 19
+        },
+        {
+          "name": "ConsoleProtocolPort.output",
+          "line": 20
+        },
+        {
+          "name": "OwnedInputPort.focus_owned_game_window",
+          "line": 24
+        },
+        {
+          "name": "OwnedInputPort.press_f12",
+          "line": 25
+        },
+        {
+          "name": "OwnedInputPort.select_all",
+          "line": 26
+        },
+        {
+          "name": "OwnedInputPort.type_text",
+          "line": 27
+        },
+        {
+          "name": "OwnedInputPort.press_enter",
+          "line": 28
+        },
+        {
+          "name": "Clock.monotonic",
+          "line": 32
+        },
+        {
+          "name": "Clock.sleep",
+          "line": 33
+        },
+        {
+          "name": "SystemClock.monotonic",
+          "line": 37
+        },
+        {
+          "name": "SystemClock.sleep",
+          "line": 40
+        },
+        {
+          "name": "FrozenMapping.__init__",
+          "line": 49
+        },
+        {
+          "name": "FrozenMapping.__setattr__",
+          "line": 52
+        },
+        {
+          "name": "FrozenMapping.__getitem__",
+          "line": 55
+        },
+        {
+          "name": "FrozenMapping.__iter__",
+          "line": 58
+        },
+        {
+          "name": "FrozenMapping.__len__",
+          "line": 61
+        },
+        {
+          "name": "FrozenMapping._blocked",
+          "line": 64
+        },
+        {
+          "name": "_freeze",
+          "line": 70
+        },
+        {
+          "name": "thaw_receipt",
+          "line": 78
+        },
+        {
+          "name": "PhysicalConsoleFailure.__init__",
+          "line": 97
+        },
+        {
+          "name": "ChannelConsoleProtocolPort.__init__",
+          "line": 107
+        },
+        {
+          "name": "ChannelConsoleProtocolPort._call",
+          "line": 110
+        },
+        {
+          "name": "ChannelConsoleProtocolPort.status",
+          "line": 116
+        },
+        {
+          "name": "ChannelConsoleProtocolPort.outcome",
+          "line": 119
+        },
+        {
+          "name": "ChannelConsoleProtocolPort.output",
+          "line": 122
+        },
+        {
+          "name": "_require_protocol",
+          "line": 126
+        },
+        {
+          "name": "_identity",
+          "line": 133
+        },
+        {
+          "name": "PhysicalConsoleDriver.__init__",
+          "line": 145
+        },
+        {
+          "name": "PhysicalConsoleDriver._record",
+          "line": 150
+        },
+        {
+          "name": "PhysicalConsoleDriver._status",
+          "line": 156
+        },
+        {
+          "name": "PhysicalConsoleDriver._until_open",
+          "line": 168
+        },
+        {
+          "name": "PhysicalConsoleDriver._submission",
+          "line": 178
+        },
+        {
+          "name": "PhysicalConsoleDriver._outcome",
+          "line": 199
+        },
+        {
+          "name": "PhysicalConsoleDriver._output",
+          "line": 228
+        },
+        {
+          "name": "PhysicalConsoleDriver.open_overlay",
+          "line": 265
+        },
+        {
+          "name": "PhysicalConsoleDriver.execute",
+          "line": 288
+        }
+      ],
+      "sha256": "e8c972aec6c591fcc5bad47ce3878f5f95551fa3f246e970e15495c1d441e4a5"
+    },
+    {
+      "path": "scripts/harness/kpharness/pioneer.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_SessionProbe.__init__",
+          "line": 66
+        },
+        {
+          "name": "_SessionProbe.process_alive",
+          "line": 69
+        },
+        {
+          "name": "_SessionProbe._read",
+          "line": 73
+        },
+        {
+          "name": "_SessionProbe.read_new_stderr",
+          "line": 81
+        },
+        {
+          "name": "_SessionProbe.read_new_runtime_log",
+          "line": 88
+        },
+        {
+          "name": "_SessionProbe.stack_dump",
+          "line": 92
+        },
+        {
+          "name": "_pending_path",
+          "line": 96
+        },
+        {
+          "name": "Pending.to_dict",
+          "line": 109
+        },
+        {
+          "name": "Pending.from_dict",
+          "line": 114
+        },
+        {
+          "name": "load_pending",
+          "line": 126
+        },
+        {
+          "name": "save_pending",
+          "line": 136
+        },
+        {
+          "name": "clear_pending",
+          "line": 140
+        },
+        {
+          "name": "_digest",
+          "line": 146
+        },
+        {
+          "name": "_json_hash",
+          "line": 150
+        },
+        {
+          "name": "_atomic_write",
+          "line": 154
+        },
+        {
+          "name": "_sync_directory",
+          "line": 172
+        },
+        {
+          "name": "_lock_file",
+          "line": 184
+        },
+        {
+          "name": "route_lock",
+          "line": 203
+        },
+        {
+          "name": "session_proof",
+          "line": 217
+        },
+        {
+          "name": "_same_session",
+          "line": 241
+        },
+        {
+          "name": "execute_pending",
+          "line": 247
+        },
+        {
+          "name": "execute_pending_locked",
+          "line": 253
+        },
+        {
+          "name": "commit_pending",
+          "line": 294
+        },
+        {
+          "name": "commit_pending_locked",
+          "line": 300
+        },
+        {
+          "name": "discard_pending",
+          "line": 363
+        },
+        {
+          "name": "_toml_value",
+          "line": 377
+        },
+        {
+          "name": "render_step",
+          "line": 396
+        },
+        {
+          "name": "init_route",
+          "line": 403
+        },
+        {
+          "name": "append_step",
+          "line": 424
+        },
+        {
+          "name": "_load_header_only",
+          "line": 431
+        },
+        {
+          "name": "run_one_step",
+          "line": 441
+        }
+      ],
+      "sha256": "f70e9d41fc4e63781a9b7f0f5db57d9cfc33107ebe0766b4ad5c7a84d7899a12"
+    },
+    {
+      "path": "scripts/harness/kpharness/playback.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "start_timeout",
+          "line": 70
+        },
+        {
+          "name": "paths",
+          "line": 79
+        },
+        {
+          "name": "private_read",
+          "line": 85
+        },
+        {
+          "name": "private_write",
+          "line": 97
+        },
+        {
+          "name": "state_root",
+          "line": 103
+        },
+        {
+          "name": "engine_lock_path",
+          "line": 113
+        },
+        {
+          "name": "engine_guard",
+          "line": 129
+        },
+        {
+          "name": "validate_speed",
+          "line": 159
+        },
+        {
+          "name": "validate_options",
+          "line": 165
+        },
+        {
+          "name": "_cancel_is_read_only",
+          "line": 183
+        },
+        {
+          "name": "Owner.__init__",
+          "line": 189
+        },
+        {
+          "name": "Owner._make_runner",
+          "line": 227
+        },
+        {
+          "name": "Owner.snapshot",
+          "line": 237
+        },
+        {
+          "name": "Owner.publish",
+          "line": 241
+        },
+        {
+          "name": "Owner.publish_quiet",
+          "line": 253
+        },
+        {
+          "name": "Owner.write_descriptor",
+          "line": 260
+        },
+        {
+          "name": "Owner.validate_session",
+          "line": 265
+        },
+        {
+          "name": "Owner.validate_owner",
+          "line": 271
+        },
+        {
+          "name": "Owner.reload_route",
+          "line": 277
+        },
+        {
+          "name": "Owner.speed_guard",
+          "line": 292
+        },
+        {
+          "name": "Owner.retain_speed",
+          "line": 315
+        },
+        {
+          "name": "Owner._finish_speed",
+          "line": 320
+        },
+        {
+          "name": "Owner.request_stop",
+          "line": 346
+        },
+        {
+          "name": "Owner.command",
+          "line": 353
+        },
+        {
+          "name": "Owner.initialize",
+          "line": 401
+        },
+        {
+          "name": "Owner.execute",
+          "line": 433
+        },
+        {
+          "name": "Owner.author_step",
+          "line": 487
+        },
+        {
+          "name": "Owner.author_commit",
+          "line": 511
+        },
+        {
+          "name": "Owner.author_discard",
+          "line": 531
+        },
+        {
+          "name": "Owner.run_job",
+          "line": 542
+        },
+        {
+          "name": "Owner.worker",
+          "line": 559
+        },
+        {
+          "name": "Owner.cleanup",
+          "line": 571
+        },
+        {
+          "name": "Owner.remove_descriptor",
+          "line": 588
+        },
+        {
+          "name": "read_request_line",
+          "line": 601
+        },
+        {
+          "name": "Handler.handle",
+          "line": 638
+        },
+        {
+          "name": "_line_waiting",
+          "line": 663
+        },
+        {
+          "name": "ControlServer.__init__",
+          "line": 687
+        },
+        {
+          "name": "ControlServer.admitted",
+          "line": 694
+        },
+        {
+          "name": "ControlServer._evict_one",
+          "line": 702
+        },
+        {
+          "name": "ControlServer.process_request",
+          "line": 712
+        },
+        {
+          "name": "ControlServer.shutdown_request",
+          "line": 727
+        },
+        {
+          "name": "serve",
+          "line": 740
+        },
+        {
+          "name": "unreachable_hint",
+          "line": 774
+        },
+        {
+          "name": "control",
+          "line": 779
+        },
+        {
+          "name": "start",
+          "line": 815
+        },
+        {
+          "name": "launch",
+          "line": 852
+        },
+        {
+          "name": "status",
+          "line": 869
+        },
+        {
+          "name": "_read_speed",
+          "line": 885
+        },
+        {
+          "name": "reclaim",
+          "line": 894
+        },
+        {
+          "name": "_reclaim_locked",
+          "line": 925
+        },
+        {
+          "name": "wait_job",
+          "line": 970
+        },
+        {
+          "name": "author",
+          "line": 983
+        },
+        {
+          "name": "attached",
+          "line": 991
+        },
+        {
+          "name": "main",
+          "line": 996
+        }
+      ],
+      "sha256": "0b11a8b1a628ba52e4543e659f539d7999235573589429efe3840cb786f6b77c"
+    },
+    {
+      "path": "scripts/harness/kpharness/recording.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "probe_deadline_seconds",
+          "line": 42
+        },
+        {
+          "name": "CadenceThresholds.__post_init__",
+          "line": 66
+        },
+        {
+          "name": "_progress_counter",
+          "line": 79
+        },
+        {
+          "name": "parse_progress_blocks",
+          "line": 85
+        },
+        {
+          "name": "analyze_pts",
+          "line": 137
+        },
+        {
+          "name": "normalize_display_screen_zero",
+          "line": 197
+        },
+        {
+          "name": "ProbeCleanupError.__init__",
+          "line": 206
+        },
+        {
+          "name": "_bounded_probe_cleanup",
+          "line": 219
+        },
+        {
+          "name": "probe_tool_identity",
+          "line": 243
+        },
+        {
+          "name": "_bounded_probe_output",
+          "line": 255
+        },
+        {
+          "name": "probe_frame_pts",
+          "line": 312
+        },
+        {
+          "name": "probe_frame_content",
+          "line": 337
+        },
+        {
+          "name": "_xwininfo_fields",
+          "line": 428
+        },
+        {
+          "name": "parse_xwininfo_geometry",
+          "line": 441
+        },
+        {
+          "name": "xwayland_rootless",
+          "line": 459
+        },
+        {
+          "name": "sha256",
+          "line": 471
+        },
+        {
+          "name": "artifact",
+          "line": 479
+        },
+        {
+          "name": "probe_video",
+          "line": 483
+        },
+        {
+          "name": "X11Recorder.__init__",
+          "line": 501
+        },
+        {
+          "name": "X11Recorder.start",
+          "line": 539
+        },
+        {
+          "name": "X11Recorder.observe",
+          "line": 565
+        },
+        {
+          "name": "X11Recorder._marker_order_status",
+          "line": 603
+        },
+        {
+          "name": "X11Recorder._watch",
+          "line": 615
+        },
+        {
+          "name": "X11Recorder.stop",
+          "line": 622
+        },
+        {
+          "name": "X11WindowRecorder.__init__",
+          "line": 650
+        },
+        {
+          "name": "X11WindowRecorder._inherit",
+          "line": 715
+        },
+        {
+          "name": "X11WindowRecorder._default_pts_probe",
+          "line": 718
+        },
+        {
+          "name": "X11WindowRecorder._default_content_probe",
+          "line": 722
+        },
+        {
+          "name": "X11WindowRecorder._query",
+          "line": 730
+        },
+        {
+          "name": "X11WindowRecorder.set_route_interval",
+          "line": 735
+        },
+        {
+          "name": "X11WindowRecorder._progress_sample_receipt",
+          "line": 741
+        },
+        {
+          "name": "X11WindowRecorder._finalize_cadence",
+          "line": 747
+        },
+        {
+          "name": "X11WindowRecorder._measure_content",
+          "line": 917
+        },
+        {
+          "name": "X11WindowRecorder._geometry",
+          "line": 953
+        },
+        {
+          "name": "X11WindowRecorder._binding",
+          "line": 966
+        },
+        {
+          "name": "X11WindowRecorder._scan_ffmpeg_log",
+          "line": 977
+        },
+        {
+          "name": "X11WindowRecorder._read_progress",
+          "line": 989
+        },
+        {
+          "name": "X11WindowRecorder._read_diagnostic",
+          "line": 1012
+        },
+        {
+          "name": "X11WindowRecorder._valid_output",
+          "line": 1034
+        },
+        {
+          "name": "X11WindowRecorder._publish_output",
+          "line": 1043
+        },
+        {
+          "name": "X11WindowRecorder._close_capture_stage",
+          "line": 1062
+        },
+        {
+          "name": "X11WindowRecorder._startup_cleanup",
+          "line": 1076
+        },
+        {
+          "name": "X11WindowRecorder._admit_startup",
+          "line": 1112
+        },
+        {
+          "name": "X11WindowRecorder.start",
+          "line": 1144
+        },
+        {
+          "name": "X11WindowRecorder._fail",
+          "line": 1288
+        },
+        {
+          "name": "X11WindowRecorder._watch_window",
+          "line": 1306
+        },
+        {
+          "name": "X11WindowRecorder.check",
+          "line": 1343
+        },
+        {
+          "name": "X11WindowRecorder.stop",
+          "line": 1347
+        },
+        {
+          "name": "X11WindowRecorder.receipt",
+          "line": 1446
+        },
+        {
+          "name": "clip_window",
+          "line": 1457
+        },
+        {
+          "name": "render",
+          "line": 1469
+        },
+        {
+          "name": "encode_clip",
+          "line": 1488
+        }
+      ],
+      "sha256": "939160e924db2bf74321917ce27af6099f73d7bbbace31e3fc06c3eac735deb9"
+    },
+    {
+      "path": "scripts/harness/kpharness/resources.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "Resource.parse",
+          "line": 19
+        },
+        {
+          "name": "Resource.from_legacy",
+          "line": 43
+        }
+      ],
+      "sha256": "03bd74b28285c69528dde880119353c71383e713467abcfad017463458876963"
+    },
+    {
+      "path": "scripts/harness/kpharness/scenario.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "normalize_header",
+          "line": 127
+        },
+        {
+          "name": "normalize_resources",
+          "line": 172
+        },
+        {
+          "name": "expand_semicolons",
+          "line": 209
+        },
+        {
+          "name": "Step.kind",
+          "line": 272
+        },
+        {
+          "name": "Step.describe",
+          "line": 297
+        },
+        {
+          "name": "Scenario.parse",
+          "line": 323
+        },
+        {
+          "name": "Scenario.load",
+          "line": 343
+        },
+        {
+          "name": "StepResult.to_dict",
+          "line": 360
+        },
+        {
+          "name": "Report.to_dict",
+          "line": 386
+        },
+        {
+          "name": "Report.write",
+          "line": 394
+        },
+        {
+          "name": "_StepFailure.__init__",
+          "line": 402
+        },
+        {
+          "name": "_DialogDriver.__init__",
+          "line": 427
+        },
+        {
+          "name": "ScenarioRunner.__init__",
+          "line": 452
+        },
+        {
+          "name": "ScenarioRunner.sync_cursor",
+          "line": 484
+        },
+        {
+          "name": "ScenarioRunner._timeout",
+          "line": 492
+        },
+        {
+          "name": "ScenarioRunner._on_poll",
+          "line": 495
+        },
+        {
+          "name": "ScenarioRunner._answer_authored_bark",
+          "line": 502
+        },
+        {
+          "name": "ScenarioRunner._wait",
+          "line": 525
+        },
+        {
+          "name": "ScenarioRunner._read_execution_speed",
+          "line": 530
+        },
+        {
+          "name": "ScenarioRunner.attached_execution",
+          "line": 539
+        },
+        {
+          "name": "ScenarioRunner._configure_execution",
+          "line": 570
+        },
+        {
+          "name": "ScenarioRunner._do",
+          "line": 591
+        },
+        {
+          "name": "ScenarioRunner._placeable_transaction",
+          "line": 878
+        },
+        {
+          "name": "ScenarioRunner._door_transaction",
+          "line": 1044
+        },
+        {
+          "name": "ScenarioRunner._verify_walkmesh_route",
+          "line": 1168
+        },
+        {
+          "name": "ScenarioRunner._resolve_save_dir",
+          "line": 1208
+        },
+        {
+          "name": "ScenarioRunner._walk_dialog",
+          "line": 1221
+        },
+        {
+          "name": "ScenarioRunner._use_item",
+          "line": 1288
+        },
+        {
+          "name": "ScenarioRunner._door_by_tag",
+          "line": 1337
+        },
+        {
+          "name": "ScenarioRunner._scripted_door_open",
+          "line": 1353
+        },
+        {
+          "name": "ScenarioRunner._advance_dialog",
+          "line": 1413
+        },
+        {
+          "name": "ScenarioRunner._dialog_request",
+          "line": 1482
+        },
+        {
+          "name": "ScenarioRunner._drive_dialog",
+          "line": 1497
+        },
+        {
+          "name": "ScenarioRunner._clear_room",
+          "line": 1576
+        },
+        {
+          "name": "ScenarioRunner._move_to",
+          "line": 1693
+        },
+        {
+          "name": "ScenarioRunner._reply",
+          "line": 1867
+        },
+        {
+          "name": "ScenarioRunner._wait_step",
+          "line": 1919
+        },
+        {
+          "name": "ScenarioRunner._expect_events",
+          "line": 1961
+        },
+        {
+          "name": "ScenarioRunner._screenshot",
+          "line": 1968
+        },
+        {
+          "name": "ScenarioRunner.run_step",
+          "line": 1988
+        },
+        {
+          "name": "ScenarioRunner.run",
+          "line": 2041
+        },
+        {
+          "name": "scenario_dir",
+          "line": 2071
+        },
+        {
+          "name": "find_scenario",
+          "line": 2075
+        },
+        {
+          "name": "list_scenarios",
+          "line": 2085
+        },
+        {
+          "name": "_slug",
+          "line": 2090
+        }
+      ],
+      "sha256": "98f1b3678bdd5f363184a621cd5ad8ee12b2f7976c7e1262a8df9931c1bfdf47"
+    },
+    {
+      "path": "scripts/harness/kpharness/session.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "BootFailure.__init__",
+          "line": 86
+        },
+        {
+          "name": "resolve_max_boot_attempts",
+          "line": 101
+        },
+        {
+          "name": "_quiet",
+          "line": 127
+        },
+        {
+          "name": "pid_start",
+          "line": 133
+        },
+        {
+          "name": "pids_by_name",
+          "line": 146
+        },
+        {
+          "name": "free_port",
+          "line": 171
+        },
+        {
+          "name": "display_in_use",
+          "line": 177
+        },
+        {
+          "name": "preflight_tmp_write",
+          "line": 190
+        },
+        {
+          "name": "_human_size",
+          "line": 235
+        },
+        {
+          "name": "wine_isolation_enabled",
+          "line": 244
+        },
+        {
+          "name": "wine_tmp_roots",
+          "line": 248
+        },
+        {
+          "name": "wine_tmp_backing",
+          "line": 253
+        },
+        {
+          "name": "wine_command",
+          "line": 270
+        },
+        {
+          "name": "tune_ini",
+          "line": 304
+        },
+        {
+          "name": "write_runtime_ini",
+          "line": 351
+        },
+        {
+          "name": "proxy_is_ours",
+          "line": 369
+        },
+        {
+          "name": "overlay_tree",
+          "line": 383
+        },
+        {
+          "name": "SessionInfo.to_dict",
+          "line": 436
+        },
+        {
+          "name": "SessionInfo.from_dict",
+          "line": 440
+        },
+        {
+          "name": "channel_timeout",
+          "line": 444
+        },
+        {
+          "name": "GameSession.__init__",
+          "line": 457
+        },
+        {
+          "name": "GameSession.log",
+          "line": 515
+        },
+        {
+          "name": "GameSession._stage_root",
+          "line": 526
+        },
+        {
+          "name": "GameSession.runtime_log",
+          "line": 540
+        },
+        {
+          "name": "GameSession.wineprefix",
+          "line": 545
+        },
+        {
+          "name": "GameSession._wineprefix_root",
+          "line": 549
+        },
+        {
+          "name": "GameSession.stage",
+          "line": 558
+        },
+        {
+          "name": "GameSession._reset_k1_saves",
+          "line": 627
+        },
+        {
+          "name": "GameSession._recover_k1_save_backup",
+          "line": 662
+        },
+        {
+          "name": "GameSession._stage_resources",
+          "line": 684
+        },
+        {
+          "name": "GameSession._kq_binary",
+          "line": 752
+        },
+        {
+          "name": "GameSession._ensure_miles_case_symlinks",
+          "line": 761
+        },
+        {
+          "name": "GameSession._ensure_executable",
+          "line": 783
+        },
+        {
+          "name": "GameSession._install_runtime",
+          "line": 799
+        },
+        {
+          "name": "GameSession._install_k2_libglu",
+          "line": 858
+        },
+        {
+          "name": "GameSession._tune_inis",
+          "line": 879
+        },
+        {
+          "name": "GameSession._seed_k2_saves",
+          "line": 910
+        },
+        {
+          "name": "GameSession._lock_dir",
+          "line": 932
+        },
+        {
+          "name": "GameSession._choose_display",
+          "line": 935
+        },
+        {
+          "name": "GameSession._read_lock",
+          "line": 946
+        },
+        {
+          "name": "GameSession._lock_live",
+          "line": 957
+        },
+        {
+          "name": "GameSession.acquire_lock",
+          "line": 967
+        },
+        {
+          "name": "GameSession.acquire_stage_lock",
+          "line": 988
+        },
+        {
+          "name": "GameSession._validate_staged_path",
+          "line": 1003
+        },
+        {
+          "name": "GameSession.release_lock",
+          "line": 1014
+        },
+        {
+          "name": "GameSession.release_stage_lock",
+          "line": 1025
+        },
+        {
+          "name": "GameSession.start_xvfb",
+          "line": 1037
+        },
+        {
+          "name": "GameSession._kill_xvfb_by_display",
+          "line": 1088
+        },
+        {
+          "name": "GameSession.capture_owned_game_window",
+          "line": 1098
+        },
+        {
+          "name": "GameSession._build_env",
+          "line": 1162
+        },
+        {
+          "name": "GameSession.launch",
+          "line": 1211
+        },
+        {
+          "name": "GameSession._wine_command",
+          "line": 1270
+        },
+        {
+          "name": "GameSession._wine_tmp",
+          "line": 1278
+        },
+        {
+          "name": "GameSession._settle_wineserver",
+          "line": 1287
+        },
+        {
+          "name": "GameSession.process_alive",
+          "line": 1307
+        },
+        {
+          "name": "GameSession.game_pids",
+          "line": 1312
+        },
+        {
+          "name": "GameSession._read_new",
+          "line": 1315
+        },
+        {
+          "name": "GameSession.read_new_stderr",
+          "line": 1328
+        },
+        {
+          "name": "GameSession.read_new_runtime_log",
+          "line": 1331
+        },
+        {
+          "name": "GameSession.stack_dump",
+          "line": 1334
+        },
+        {
+          "name": "GameSession.connect",
+          "line": 1370
+        },
+        {
+          "name": "GameSession._launch_and_connect",
+          "line": 1436
+        },
+        {
+          "name": "GameSession._write_boot_attempts",
+          "line": 1498
+        },
+        {
+          "name": "GameSession._attach_boot_evidence",
+          "line": 1517
+        },
+        {
+          "name": "GameSession._kill_game",
+          "line": 1527
+        },
+        {
+          "name": "GameSession.boot",
+          "line": 1559
+        },
+        {
+          "name": "GameSession.write_session_info",
+          "line": 1606
+        },
+        {
+          "name": "GameSession.session_info_path",
+          "line": 1623
+        },
+        {
+          "name": "GameSession._kill",
+          "line": 1628
+        },
+        {
+          "name": "GameSession.teardown",
+          "line": 1634
+        },
+        {
+          "name": "GameSession.__enter__",
+          "line": 1686
+        },
+        {
+          "name": "GameSession.__exit__",
+          "line": 1690
+        },
+        {
+          "name": "teardown_from_info",
+          "line": 1694
+        }
+      ],
+      "sha256": "29a454b2fbe15a4e68c267b2e9b59db1dafff7082902f27a3d6c0e0d05e41b14"
+    },
+    {
+      "path": "scripts/harness/kpharness/shots.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "have_pillow",
+          "line": 37
+        },
+        {
+          "name": "have_tesseract",
+          "line": 41
+        },
+        {
+          "name": "ppm_to_png",
+          "line": 45
+        },
+        {
+          "name": "Shooter.__init__",
+          "line": 60
+        },
+        {
+          "name": "Shooter.maybe",
+          "line": 76
+        },
+        {
+          "name": "Shooter.take",
+          "line": 83
+        },
+        {
+          "name": "ocr_text",
+          "line": 128
+        },
+        {
+          "name": "_norm",
+          "line": 167
+        },
+        {
+          "name": "best_match",
+          "line": 171
+        },
+        {
+          "name": "expected_texts",
+          "line": 188
+        },
+        {
+          "name": "check_screen",
+          "line": 206
+        }
+      ],
+      "sha256": "b5e903ebab783b9d33bdc3cbee6d7df346c76edb6acc59405845227fe9073bf8"
+    },
+    {
+      "path": "scripts/harness/kpharness/targets.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_common_ini",
+          "line": 39
+        },
+        {
+          "name": "Target.wine",
+          "line": 82
+        },
+        {
+          "name": "Target.exe_in_data_dir",
+          "line": 86
+        },
+        {
+          "name": "get",
+          "line": 133
+        },
+        {
+          "name": "names",
+          "line": 142
+        }
+      ],
+      "sha256": "2cd427a49c9c0f34415b7443ff56f8c075cfa1d323db6701640285e7b54a54cd"
+    },
+    {
+      "path": "scripts/harness/kpharness/waits.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "WaitTimeout.__init__",
+          "line": 37
+        },
+        {
+          "name": "_as_dict",
+          "line": 45
+        },
+        {
+          "name": "_waiting_on_sound",
+          "line": 49
+        },
+        {
+          "name": "_waiting_for_player",
+          "line": 59
+        },
+        {
+          "name": "wait_until",
+          "line": 68
+        },
+        {
+          "name": "phase_is",
+          "line": 128
+        },
+        {
+          "name": "phase_is_any",
+          "line": 134
+        },
+        {
+          "name": "chargen_open",
+          "line": 145
+        },
+        {
+          "name": "chargen_stage_is",
+          "line": 154
+        },
+        {
+          "name": "module_is",
+          "line": 162
+        },
+        {
+          "name": "event_seen",
+          "line": 170
+        },
+        {
+          "name": "event_matches",
+          "line": 199
+        },
+        {
+          "name": "spec_name",
+          "line": 217
+        },
+        {
+          "name": "events_in_order",
+          "line": 225
+        },
+        {
+          "name": "dialog_entry_is",
+          "line": 255
+        },
+        {
+          "name": "dialog_waiting",
+          "line": 263
+        },
+        {
+          "name": "read_global",
+          "line": 278
+        },
+        {
+          "name": "_loose_equal",
+          "line": 306
+        },
+        {
+          "name": "global_equals",
+          "line": 315
+        },
+        {
+          "name": "read_journal_state",
+          "line": 322
+        },
+        {
+          "name": "journal_state",
+          "line": 339
+        },
+        {
+          "name": "all_of",
+          "line": 346
+        }
+      ],
+      "sha256": "ac1141c71df4e2960e97a35beac274567d0ed87d93f8d770a4db5d8abfec6f9f"
+    },
+    {
+      "path": "scripts/harness/kpharness/world.py",
+      "classification": "external host orchestration; engine side inherited from invoked command/Lua or OS input/capture",
+      "functions": [
+        {
+          "name": "_lua_probe_code",
+          "line": 22
+        },
+        {
+          "name": "_normalise_response",
+          "line": 126
+        },
+        {
+          "name": "observe_world",
+          "line": 204
+        },
+        {
+          "name": "require_complete",
+          "line": 224
+        },
+        {
+          "name": "select_object",
+          "line": 230
+        },
+        {
+          "name": "select_route_object",
+          "line": 242
+        },
+        {
+          "name": "revalidate_route_object",
+          "line": 276
+        },
+        {
+          "name": "stable_gameplay",
+          "line": 287
+        },
+        {
+          "name": "door_open_unlocked",
+          "line": 308
+        },
+        {
+          "name": "within_distance",
+          "line": 318
+        },
+        {
+          "name": "within_object_distance",
+          "line": 331
+        },
+        {
+          "name": "target_dead",
+          "line": 344
+        },
+        {
+          "name": "door_changed",
+          "line": 353
+        }
+      ],
+      "sha256": "4d232f9b33dfba1172bc8e1aefdb49fa94c436e83a93f86f8d94d2144bc251e3"
+    }
+  ]
+}

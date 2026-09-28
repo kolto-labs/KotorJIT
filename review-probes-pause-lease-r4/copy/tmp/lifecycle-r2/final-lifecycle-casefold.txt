@@ -1,0 +1,32 @@
+PASS lifecycle.unload_one_raises_OnScriptUnload_once
+PASS lifecycle.unload_one_drops_timers
+PASS lifecycle.unload_one_drops_bound_handlers
+PASS lifecycle.reload_one_increments_generation_and_rebinds
+PASS lifecycle.old_unload_cannot_touch_new_bindings
+PASS lifecycle.deleted_file_unloads_on_poll
+PASS lifecycle.new_file_loads_on_poll
+PASS lifecycle.edit_inside_first_window_detected
+PASS lifecycle.duplicate_load_refused
+PASS lifecycle.failed_reload_keeps_running_generation
+    load error: a.lua: ...undary-validation/tmp/lifecycle-r2/cf3/s/failfirst/a.lua:1: '=' expected near 'is'
+PASS lifecycle.failed_first_load_is_FailedToLoad
+PASS lifecycle.quarantine_then_edit_recovers
+PASS lifecycle.state_closing_hook_once_per_close
+PASS lifecycle.request_from_own_callback_deferred
+PASS lifecycle.request_from_timer_deferred
+PASS lifecycle.unknown_name_result_error
+PASS lifecycle.priority_resort_after_reload
+PASS lifecycle.explicit_unload_survives_poll
+PASS lifecycle.load_request_for_new_file
+PASS lifecycle.service_runs_snapshot_only
+PASS lifecycle.sync_refused_while_dispatching
+PASS lifecycle.nested_dispatch_during_staging_skips_old
+PASS lifecycle.alias_of_held_script_refused
+PASS lifecycle.case_variant_request_refused
+PASS lifecycle.delete_window_keeps_script
+PASS lifecycle.empty_file_not_reloaded
+PASS lifecycle.request_queue_coalesced_and_bounded
+PASS lifecycle.nul_name_refused
+PASS lifecycle.queued_requests_discarded_by_load_all
+PASS lifecycle.symlink_outside_dir_refused
+30 case(s), 0 failed

@@ -1,0 +1,80 @@
+P1_launch_lines=(1, 1)
+P1_launch_heads_differ=True
+P1_launch_logged=True
+P0_honest_accept_exit=0
+P0_honest_verifies=True
+P2_fail_exit=1
+P2_fail_stdout_has_id_and_head=True
+P2_stderr_event=['acceptance_failure']
+P2_stdout_head_eq_stderr_eq_log=True
+P2_stdout_id_eq_log=True
+P2_baseline_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_baseline_gate_clear_tool_head=False
+P2_baseline_accept_with_STALE_launch_head=exit=1
+P2_reset_to_launch_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_reset_to_launch_gate_clear_tool_head=False
+P2_reset_to_launch_accept_with_STALE_launch_head=exit=0
+P2_fresh_nonce_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_fresh_nonce_gate_clear_tool_head=False
+P2_fresh_nonce_accept_with_STALE_launch_head=exit=1
+P2_delete_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_delete_gate_clear_tool_head=False
+P2_delete_accept_with_STALE_launch_head=exit=1
+P2_forged_pair_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_forged_pair_gate_clear_tool_head=False
+P2_forged_pair_accept_with_STALE_launch_head=exit=1
+P2_drop_new_nonce_accept_with_tool_head=exit=1 ok=False receipt=pending
+P2_drop_new_nonce_gate_clear_tool_head=False
+P2_drop_new_nonce_accept_with_STALE_launch_head=exit=1
+P2b_log_last_head_is_forged=True
+P2b_stdout_head_still_refuses=True
+P3_unreadable=refused (ValueError: cleanup process identity is unreadable; failure remains unresolved)
+P3_other_boot=refused (ValueError: cleanup recovery runs on a different or unknown boot; refusing)
+P3_other_ns=refused (ValueError: cleanup recovery runs in a different or unknown PID namespace; refusing)
+P3_held_start_changes=refused (ValueError: cleanup PID identity changed while pidfd held)
+P3_survivor=refused (ValueError: matching cleanup process survived bounded pidfd recovery)
+P3_gate_blocked_after_refusals=True
+P3_pid_reuse=RESOLVED original_exited_pid_reused
+P3_reuse_shape=('not_needed', 'not_sent', 'start_mismatch')
+P3_reuse_head_logged=True
+P3_gate_clear_with_new_head=True
+P3_real_reader_pid1=present
+P3_same_start_parser=True
+P4_bool_sequence_gate_clear_selfhead=False
+P4_float_schema_gate_clear_selfhead=False
+P4_bool_ledger_schema_gate_clear_selfhead=False
+P4_float_wait_gate_clear_selfhead=False
+P4_bool_pid_gate_clear_selfhead=False
+P4_res_bool_pid_gate_clear_selfhead=False
+P4_payload_int_gate_clear_selfhead=False
+P4_payload_list_gate_clear_selfhead=False
+P4_z_timestamp_gate_clear_selfhead=False
+P4_no_micro_ts_gate_clear_selfhead=False
+P4_res_before_failure_gate_clear_selfhead=False
+P4_offset_ts_gate_clear_selfhead=False
+P4_unhashable_failure_id_gate_clear_selfhead=False
+P4_empty_boot_resolved_gate_clear_selfhead=False
+P4_unavailable_resolved_gate_clear_selfhead=False
+P4_dup_key_gate_clear_selfhead=False
+P4_noncanonical_space_gate_clear_selfhead=False
+P4_no_trailing_newline_gate_clear_selfhead=False
+P4_nan_gate_clear_selfhead=False
+P4_base_restored_clear_with_good_head=True
+P5_events=['acceptance_failure', 'signal_error_reaped']
+P5_stdout_head_is_final=True
+P5_gate_clear_final_head=True
+P6_reapedFalse_records=[('failure', 'unavailable')]
+P6_reapedFalse_gate_clear_tool_head=False
+P6_reapedFalse_recover=refused (cleanup failure has no start identity; it is unrecoverable for this run)
+P6_reapedTrue_records=[('failure', 'unavailable')]
+P6_reapedTrue_gate_clear_tool_head=False
+P6_reapedTrue_recover=refused (cleanup failure has no start identity; it is unrecoverable for this run)
+P7_results=['ok', 'refused cleanup ledger head changed; refusing to extend an unanchored chain']
+P7_failures_retained=1
+P8_exit_stdout=(1, 'te it outside the run directory", "instruction": "do not accept or export this run; retain this line, the ledger head, and the survivor PID/start out of band"}}')
+P8_stderr_heads=1
+P8_ledger_records=1
+P8_gate_clear_with_launch_head=False
+P8_next_accept_with_launch_head_exit=1
+P8b_hardlinked_log_records=1
+P8b_gate_clear_with_launch_head=False

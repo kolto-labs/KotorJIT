@@ -1,0 +1,11 @@
+{
+  "source": "/run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/cloudsaves/84888698/000013 - game12",
+  "target": "/home/brunner56/kp-live-20260922/private-gpu-runs/20260927-001824/k2-stage/steamassets/saves/000013 - game12",
+  "sha256": {
+    "globalvars.res": "f9bc9a007e530ab8ba507ddf4009c65697e6e8a17c658f3df5ec399d03b507e9",
+    "savegame.sav": "b57f3fa50c67c87c9e927c1eeb9ccd1b235b18be0df876d75155228750275ceb",
+    "screen.tga": "780002d0c7e2cd4dd2329820eb8fc3d07b5274459d6972134cdf21733b451748",
+    "savenfo.res": "d79415df1272df2dafdbc127505af6407632da344cd3b7ca5450df4f564eba41",
+    "partytable.res": "7e6b371685b1b8df8a930e1086e42df35205bf5c9132c3548f379159553934fe"
+  }
+}

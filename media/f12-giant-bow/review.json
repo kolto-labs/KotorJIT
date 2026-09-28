@@ -1,0 +1,45 @@
+{
+  "source_run": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-130515",
+  "diagnostic_provenance": "/home/brunner56/kp-live-20260922/animation-audition/giant-bow-provenance.json",
+  "route_passed": true,
+  "route_steps_passed": 27,
+  "visual_review": "Contact sheets at 12-24 and 24-30 seconds show fixed framing, full bodies, one enlarged actor, distinct bow poses, and restoration to matching sizes. Export is a diagnostic composition; product source integration and presentation polish remain. Named animation-clock freeze is not whole-world pause.",
+  "trim_seconds": [
+    18,
+    27
+  ],
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1024,
+        "height": 768,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "539/9",
+        "duration": "9.000000",
+        "nb_frames": "539"
+      }
+    ]
+  },
+  "files": {
+    "giant-bow-60fps.mp4": {
+      "sha256": "6856910d1f74bb92deafe8a0b787e0ae6890168541e903a51d8a9eec5323e6f9",
+      "bytes": 1013732
+    },
+    "giant-bow-preview.gif": {
+      "sha256": "52b1d8553a7df80614318b6c12a141b9391d41a1139c50ed6e10a4d401ba8ed3",
+      "bytes": 2244642
+    }
+  },
+  "cadence_sample": {
+    "clip_seconds": [
+      2,
+      6
+    ],
+    "decoded_frames": 239,
+    "distinct_decoded_hashes": 239,
+    "consecutive_equal_frames": 0,
+    "method": "FFmpeg decoded and scaled 256x192 frame hashes; distinct image samples support cadence but do not prove every engine update or display scanout."
+  }
+}

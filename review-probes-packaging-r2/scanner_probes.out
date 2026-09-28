@@ -1,0 +1,37 @@
+/usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'pkg/a.lua'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+clean                            ok
+marker_in_entry_name_user        ok
+marker_in_entry_name_runid       ok
+marker_in_entry_name_home        ok
+kp_live_as_filename              ok
+case_private_dir                 ok
+case_marker_text                 ok
+zip_comment_marker               ok
+entry_comment_marker             ok
+extra_field_marker               ok
+prepended_blob                   ok
+appended_blob_after_eocd         ok
+nul_in_name                      ok
+bidi_name                        ok
+nfd_twins                        ok
+case_twins                       ok
+duplicate_names                  FLAGGED marker:line 1: /home/
+win_reserved                     ok
+bom_magic                        ok
+pdf_ascii_polyglot               ok
+utf16le_marker_in_dll            FLAGGED magic:magic: pe/dos
+ascii_marker_in_dll              FLAGGED magic:magic: pe/dos; marker:line 1: /home/
+fp_run_id_like_date_in_doc       FLAGGED marker:line 1: run id
+fp_bioware_like_text             ok
+fp_mz_text                       FLAGGED magic:magic: pe/dos
+fp_kb2_text                      FLAGGED magic:magic: bink2
+fp_docs_research                 FLAGGED private folder:research
+fp_runs_folder                   FLAGGED private folder:runs
+fp_linuxbrew_word                FLAGGED marker:line 1: linuxbrew
+encrypted_flag                   EXC RuntimeError: File 'pkg/a.lua' is encrypted, password required for extraction
+nested_targz_marker              FLAGGED magic:magic: gzip; marker:line 1: /home/
+nested_tarxz_allowed             FLAGGED magic:magic: xz
+nested_tarxz_with_allow_*.xz     ok [] expected ['magic']
+ascii_marker_in_dll_with_allow   FLAGGED ['marker']
+CLI encrypted rc 1 stderr tail ["RuntimeError: File 'pkg/a.lua' is encrypted, password required for extraction"] stdout 

@@ -1,0 +1,13 @@
+probe_r11 rc=0
+probe_r10 rc=0
+replay_r0_r7 rc=0
+spawn_race rc=0
+p11b_supervisor_spawn_window rc=0
+p12_child_token rc=0
+p13_lock_inheritance rc=1
+p14_content_attacks rc=1
+p11a_popen_signal_window rc=0
+p11c_signals_per_phase rc=0
+p10_preflight rc=0
+p13host rc=0
+p14host rc=0

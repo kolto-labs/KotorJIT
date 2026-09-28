@@ -1,0 +1,20 @@
+
+=== kp.vec (Lua) ===
+  vec.construct_finite_only                                        ok
+  vec.arith_ops                                                    ok
+  vec.length_normalize_zero                                        ok
+  vec.dot_cross                                                    ok
+  vec.lerp_endpoints                                               ok
+  vec.distance                                                     ok
+  vec.equality                                                     ok
+  vec.metatable_protected                                          ok
+  vec.mutated_fields_revalidated                                   ok
+  vec.tostring_unpack_copy                                         ok
+  vec.names_not_routines                                           ok
+
+=== kp.vec through the routine bridge (fake VM) ===
+  vec.plain_table_still_marshals (kp.vec in)                       ok
+  vec.plain_table_still_marshals (plain table in)                  ok
+  vec.plain_table_still_marshals (round trip)                      ok
+
+14 check(s), 0 failure(s)

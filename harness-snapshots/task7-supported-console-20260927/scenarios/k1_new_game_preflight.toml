@@ -1,0 +1,45 @@
+# Internal bring-up only: prove the first fresh-game GUI transition from engine
+# state. This is deliberately not a live-proof scenario and does not record a
+# video: it stops after the class-to-route GUI transition, before substantive
+# gameplay exists.
+name = "k1 new game: engine-owned class selection"
+target = "k1"
+
+[settings]
+default_timeout = 45
+shot_interval = 120
+
+[[step]]
+# OnNewGamePicked deliberately waits for five engine Draw frames before it
+# accepts input. This is a bounded engine-settle delay, not visual reasoning.
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "new_game"
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "class"
+timeout = 45
+
+[[step]]
+do = "chargen_select_class"
+# The class page exposes its engine-selected default first. Moving focus to a
+# different class is a separate GUI transition with its own live control gate;
+# this preflight proves the safe active-control path first.
+index = 0 # Scoundrel
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "route"
+timeout = 45
+
+[[step]]
+screenshot = true
+label = "main-chargen-route-sanity"
+
+[[step]]
+do = "quit"

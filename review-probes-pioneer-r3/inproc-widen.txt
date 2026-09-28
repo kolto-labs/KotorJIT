@@ -1,0 +1,15 @@
+{
+ "calls": 300,
+ "flooders": 4,
+ "widen": 0.02,
+ "flood_connects": 3912,
+ "evict_calls": 2906,
+ "evict_saw_closed_socket": 0,
+ "failures": 2,
+ "failure_kinds": {
+  "JSONDecodeError:Expecting value: line 1 column 1 (char 0)": 2
+ },
+ "p50": 0.0305,
+ "p99": 1.105,
+ "max": 1.4911
+}

@@ -1,0 +1,381 @@
+test_default_keeps_five_attempts (__main__.TestDefaultAndEvidence.test_default_keeps_five_attempts) ... ERROR
+test_every_attempt_is_recorded_with_count_and_reasons (__main__.TestDefaultAndEvidence.test_every_attempt_is_recorded_with_count_and_reasons) ... ERROR
+test_failed_evidence_names_final_failure (__main__.TestDefaultAndEvidence.test_failed_evidence_names_final_failure) ... ERROR
+test_refusal_is_still_not_retried_under_default (__main__.TestDefaultAndEvidence.test_refusal_is_still_not_retried_under_default) ... ok
+test_unwritable_receipt_does_not_mask_boot_failure (__main__.TestDefaultAndEvidence.test_unwritable_receipt_does_not_mask_boot_failure) ... ERROR
+test_constructor_kwarg_wins_over_env (__main__.TestInvalidValues.test_constructor_kwarg_wins_over_env) ... ERROR
+test_constructor_refuses_invalid_env (__main__.TestInvalidValues.test_constructor_refuses_invalid_env) ... ERROR
+test_constructor_refuses_invalid_kwarg (__main__.TestInvalidValues.test_constructor_refuses_invalid_kwarg) ... ERROR
+test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) ... 
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='0') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='6') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='-1') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value=' ') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='one') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='1.0') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='2.5') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='0x2') ... ERROR
+  test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='5 ') ... ERROR
+test_invalid_env_is_refused_by_value_error_catchers (__main__.TestInvalidValues.test_invalid_env_is_refused_by_value_error_catchers) ... ERROR
+test_invalid_env_refuses_before_any_launch (__main__.TestInvalidValues.test_invalid_env_refuses_before_any_launch) ... ERROR
+test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) ... 
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=0) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=6) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=-1) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=True) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=False) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=1.0) ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value='1') ... ERROR
+  test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value='abc') ... ERROR
+test_resolver_accepts_one_to_five (__main__.TestInvalidValues.test_resolver_accepts_one_to_five) ... ERROR
+test_env_one_forces_single_launch (__main__.TestSingleLaunch.test_env_one_forces_single_launch) ... FAIL
+test_non_bootfailure_from_launch_is_still_counted (__main__.TestSingleLaunch.test_non_bootfailure_from_launch_is_still_counted) ... ERROR
+test_one_attempt_boot_timeout_launches_once (__main__.TestSingleLaunch.test_one_attempt_boot_timeout_launches_once) ... FAIL
+test_one_attempt_crash_launches_once_and_does_not_relaunch (__main__.TestSingleLaunch.test_one_attempt_crash_launches_once_and_does_not_relaunch) ... FAIL
+test_one_attempt_success_records_one_launch (__main__.TestSingleLaunch.test_one_attempt_success_records_one_launch) ... ERROR
+
+======================================================================
+ERROR: test_default_keeps_five_attempts (__main__.TestDefaultAndEvidence.test_default_keeps_five_attempts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 140, in test_default_keeps_five_attempts
+    ev = self._evidence()
+         ^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 72, in _evidence
+    return json.loads((self.tmp / "run" / "boot-attempts.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kp_single_launch_dmxcl6jr/run/boot-attempts.json'
+
+======================================================================
+ERROR: test_every_attempt_is_recorded_with_count_and_reasons (__main__.TestDefaultAndEvidence.test_every_attempt_is_recorded_with_count_and_reasons)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 149, in test_every_attempt_is_recorded_with_count_and_reasons
+    ev = self._evidence()
+         ^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 72, in _evidence
+    return json.loads((self.tmp / "run" / "boot-attempts.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kp_single_launch_wz852vya/run/boot-attempts.json'
+
+======================================================================
+ERROR: test_failed_evidence_names_final_failure (__main__.TestDefaultAndEvidence.test_failed_evidence_names_final_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 160, in test_failed_evidence_names_final_failure
+    s._launch_and_connect()
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/scripts/harness/kpharness/session.py", line 1342, in _launch_and_connect
+    return self.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 61, in connect
+    outcome = outcomes[s.launches - 1]
+              ~~~~~~~~^^^^^^^^^^^^^^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_unwritable_receipt_does_not_mask_boot_failure (__main__.TestDefaultAndEvidence.test_unwritable_receipt_does_not_mask_boot_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 176, in test_unwritable_receipt_does_not_mask_boot_failure
+    s._launch_and_connect()
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/scripts/harness/kpharness/session.py", line 1342, in _launch_and_connect
+    return self.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 61, in connect
+    outcome = outcomes[s.launches - 1]
+              ~~~~~~~~^^^^^^^^^^^^^^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_constructor_kwarg_wins_over_env (__main__.TestInvalidValues.test_constructor_kwarg_wins_over_env)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 233, in test_constructor_kwarg_wins_over_env
+    s = GameSession("k1", staged=str(self.tmp / "stage"), log=lambda _m: None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GameSession.__init__() got an unexpected keyword argument 'max_boot_attempts'
+
+======================================================================
+ERROR: test_constructor_refuses_invalid_env (__main__.TestInvalidValues.test_constructor_refuses_invalid_env)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 222, in test_constructor_refuses_invalid_env
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_constructor_refuses_invalid_kwarg (__main__.TestInvalidValues.test_constructor_refuses_invalid_kwarg)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 227, in test_constructor_refuses_invalid_kwarg
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='6')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value=' ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='one')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='1.0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='2.5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='0x2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) (value='5 ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 204, in test_invalid_env_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_is_refused_by_value_error_catchers (__main__.TestInvalidValues.test_invalid_env_is_refused_by_value_error_catchers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 238, in test_invalid_env_is_refused_by_value_error_catchers
+    self.assertTrue(issubclass(S.InvalidBootAttempts, ValueError))
+                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_env_refuses_before_any_launch (__main__.TestInvalidValues.test_invalid_env_refuses_before_any_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 216, in test_invalid_env_refuses_before_any_launch
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=6)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value=1.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) (value='abc')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 210, in test_invalid_kwarg_is_refused
+    with self.assertRaises(S.InvalidBootAttempts):
+                           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'InvalidBootAttempts'
+
+======================================================================
+ERROR: test_resolver_accepts_one_to_five (__main__.TestInvalidValues.test_resolver_accepts_one_to_five)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 196, in test_resolver_accepts_one_to_five
+    self.assertEqual(S.resolve_max_boot_attempts(), (n, "env"))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.session' has no attribute 'resolve_max_boot_attempts'
+
+======================================================================
+ERROR: test_non_bootfailure_from_launch_is_still_counted (__main__.TestSingleLaunch.test_non_bootfailure_from_launch_is_still_counted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 124, in test_non_bootfailure_from_launch_is_still_counted
+    ev = self._evidence()
+         ^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 72, in _evidence
+    return json.loads((self.tmp / "run" / "boot-attempts.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kp_single_launch_8budfzg7/run/boot-attempts.json'
+
+======================================================================
+ERROR: test_one_attempt_success_records_one_launch (__main__.TestSingleLaunch.test_one_attempt_success_records_one_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 109, in test_one_attempt_success_records_one_launch
+    ev = self._evidence()
+         ^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 72, in _evidence
+    return json.loads((self.tmp / "run" / "boot-attempts.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kp_single_launch_lno60uop/run/boot-attempts.json'
+
+======================================================================
+FAIL: test_env_one_forces_single_launch (__main__.TestSingleLaunch.test_env_one_forces_single_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 101, in test_env_one_forces_single_launch
+    with self.assertRaises(BootFailure):
+AssertionError: BootFailure not raised
+
+======================================================================
+FAIL: test_one_attempt_boot_timeout_launches_once (__main__.TestSingleLaunch.test_one_attempt_boot_timeout_launches_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 92, in test_one_attempt_boot_timeout_launches_once
+    with self.assertRaises(BootFailure) as caught:
+AssertionError: BootFailure not raised
+
+======================================================================
+FAIL: test_one_attempt_crash_launches_once_and_does_not_relaunch (__main__.TestSingleLaunch.test_one_attempt_crash_launches_once_and_does_not_relaunch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-single-launch/red/tools/kpharness_single_launch_test.py", line 79, in test_one_attempt_crash_launches_once_and_does_not_relaunch
+    with self.assertRaises(BootFailure) as caught:
+AssertionError: BootFailure not raised
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.351s
+
+FAILED (failures=3, errors=30)

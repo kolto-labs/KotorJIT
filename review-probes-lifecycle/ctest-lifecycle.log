@@ -1,0 +1,14 @@
+Test project /home/brunner56/kp-live-20260922/review-probes-lifecycle/build
+    Start 30: kp_lifecycletest
+1/2 Test #30: kp_lifecycletest .................   Passed    0.07 sec
+    Start 31: kp_scriptsapitest
+2/2 Test #31: kp_scriptsapitest ................   Passed    0.14 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+lifecycle    =   0.22 sec*proc (2 tests)
+offline      =   0.22 sec*proc (2 tests)
+
+Total Test time (real) =   0.23 sec
+ctest-rc=0

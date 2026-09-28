@@ -1,0 +1,62 @@
+# validate.py python 3.12.3
+sha256 0fbca9b985806d189a7fae24bac3de1f83240323e9ca370c93282b4020803b49 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/task7s2-v1-readonly-camera.toml
+sha256 421e3eaead1250024d6f341c68cb2cd4b87032bc117a1afe4ca3075f38b4d1a3 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/task7s2-v2-stage2-PLACEHOLDER.toml
+sha256 9fc558d4c14a9c596051c46c33e7cc64f5c760b9ea135fca93bfebef2a0928e4 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/task7s2_scale.lua
+sha256 07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e /home/brunner56/kp-live-20260922/frozen-model-393f68d/model_scene.lua
+sha256 3ae63e0425d9335c86b12008c4ac7de860673f18d11aa42cee8252826e2a5df5 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/generate-route.py
+sha256 59892fb54f5f0c033f9e7b7507ff48bffdaa582168cfb09026e50f7eb5ae0c06 /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/launcher-args.json
+sha256 839072637eb60ccf7ee837282237c07432a4ac613d6c4cebe30e39082be63b7f /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/framing-fit.py
+sha256 07ba1555e4ce8d260c685ba2ed15fafa38561ea16fa04f6931f37848769c635d /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/l1-camera-diagnostic.toml
+sha256 c2168be83846aa19f68ef16084faeb2728dcad7738351547de62a7493bc0795b /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/l1_camera_probe.lua
+sha256 4aeaba8ddceda95bf102553029dd34305df2f75eaec76ff401fd778d3f5f73ce /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/generate-l1.py
+sha256 0e4516346bb932d48510ecb571bcae4efc775ba0826c7d46d0ec4c37d8a33f1a /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/l1-launcher-args.json
+sha256 b3dbf34b90c77f5ecefe97469b39430728c0de4ca16cd0b8e42d93dda2ac99ff /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/postrun-gate.py
+V1 Scenario.load: ok, steps=46, physical_console_commands=3, target=k1, game_speed=1.0
+V2 Scenario.load: REJECTED as intended -> ScenarioError: unknown scenario fields: NOT_RUNNABLE_STAGE2_CAMERA_API_MISSING
+creative parser + marker_configuration: ok, markers=['calm_end', 'calm_start', 'complete', 'effect_start', 'giant', 'normal', 'restored', 'tiny'], cadence=calm_start..calm_end
+LuaJIT compile (Lua 5.1 syntax): ok, chunks=76 (LuaJIT 2.1.1767980792 -- Copyright (C) 2005-2026 Mike Pall. https://luajit.org/)
+NWScript-name scan vs 772 K1 routines: no bare routine names; routines reached only via nwscript.call: ChangeToStandardFaction, CreateObject, DestroyObject, GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, GetStandardFaction, Location, SetCameraMode, SetCommandable, SetLocalNumber
+SIM nominal tps=10: all 46 steps passed; marker order ok; await_log bounds ok; sim ticks=1882 fake_seconds=188
+  log: [task7s2] camera_construct dist=6.2500 pitch=80.0000 height=3.5000 speed=20 fov=55 dolly=0 row=3 q=0.0000,0.0000,0.3800,0.9200 p=100.000,90.000,4.000 | [task7s2] armed tiny=0.350 giant=1.900 | [task7s2] calm_start | [model-scene:task7s2] setup actors=1 awaiting-models | [model-scene:task7s2] phase=1 actor=1 base=0.350 effective=0.438 | [model-scene:task7s2] phase=2 actor=1 base=1.900 effective=2.375 | [model-scene:task7s2] phase=3 actor=1 base=1.000 effective=1.250 | [model-scene:task7s2] restored actors=1 holding-original-scale | [model-scene:task7s2] complete phases=3 restored=1 | [task7s2] camera_watch samples=482 max_q=0.000000 max_p=0.000000 cfg_changed=0 failures=0 stable=1 | [task7s2] calm_end
+  routines called via nwscript.call: GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, SetCameraMode, SetLocalNumber
+  WT X11Recorder marker observer on this log: order=ordered duplicates=[] sequence=[['effect_start', 2], ['calm_start', 1], ['tiny', 3], ['giant', 4], ['normal', 5], ['restored', 6], ['complete', 7], ['calm_end', 8]]
+SIM nominal tps=60: all 46 steps passed; marker order ok; await_log bounds ok; sim ticks=3060 fake_seconds=51
+  log: [task7s2] camera_construct dist=6.2500 pitch=80.0000 height=3.5000 speed=20 fov=55 dolly=0 row=3 q=0.0000,0.0000,0.3800,0.9200 p=100.000,90.000,4.000 | [task7s2] armed tiny=0.350 giant=1.900 | [task7s2] calm_start | [model-scene:task7s2] setup actors=1 awaiting-models | [model-scene:task7s2] phase=1 actor=1 base=0.350 effective=0.438 | [model-scene:task7s2] phase=2 actor=1 base=1.900 effective=2.375 | [model-scene:task7s2] phase=3 actor=1 base=1.000 effective=1.250 | [model-scene:task7s2] restored actors=1 holding-original-scale | [model-scene:task7s2] complete phases=3 restored=1 | [task7s2] camera_watch samples=601 max_q=0.000000 max_p=0.000000 cfg_changed=0 failures=0 stable=1 | [task7s2] calm_end
+  routines called via nwscript.call: GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, SetCameraMode, SetLocalNumber
+  WT X11Recorder marker observer on this log: order=ordered duplicates=[] sequence=[['effect_start', 2], ['calm_start', 1], ['tiny', 3], ['giant', 4], ['normal', 5], ['restored', 6], ['complete', 7], ['calm_end', 8]]
+SIM negative (raw_28 moves 0.01 during giant): route FAILS at step 25 -> error: step:1: camera moved at phase 3 poll: raw_28 moved 0.01
+  scene-side watch line (not reached before failure, expected empty or stable=0): none
+SIM negative (build without kp.camera): route FAILS at step 5 (precondition, before any F12) -> error: step:1: kp.camera missing: wrong build
+SIM settle (raw_28 drifts 2e-5/tick until tick 1000, then still): route passes; baseline receipt (lua step detail) -> d=6.2500 s=20 pi=80.0000 h=3.5000 fov=55 bd=6.25 do=0 sr=3 q=0.0000,0.0000,0.3800,0.9400 p=100.000,90.000,4.000 r=7 f=136.47
+SIM negative (drift never stops, 2e-5/tick): route FAILS at settle step 8 -> mismatch: false
+L1 Scenario.load: ok, steps=47, console_command=0, stills at steps [10, 13, 30, 33], shot_interval=0, name marks NON-ACCEPTANCE
+  V1 chunks reused byte-identical: V1 step -> L1 step 5->5, 6->7, 8->27, 9->28, 14->47
+L1 launcher flags: creative parser ok, named markers={'effect_start': '\\[l1cam\\] loaded camera='}, cadence=None..None, 1024x768, --marker matches the probe load line
+SIM L1 nominal: all 47 steps passed; 30 lua receipts, longest 77 chars; no quotes/backslashes
+  R1a beh=chase mode=2 ps=-1 dolly=0 sr=3 vt=0x75165c bp=0x30 cam=0x20 mod=0x10
+  R1b d=6.25 s=20 pi=80 h=3.5 bd=6.25 fov=55
+  R1c q28=0,0,0.38,0.92
+  R1d p38=100,90,4 p50=100,90,4
+  R1e pc=105.676,96.464,0.996 f=136.474 t=1000060
+  R1f r38=8.60234108 dz38=3.004 r50=8.60234108 dz50=3.004
+  R2 vs R1 idsame=1 dcfg=0 dq=0 dp38=0 dp50=0 dpc=0 df=0 dt=18
+  R4 vs R3 idsame=1 dcfg=0 dq=0 dp38=0 dp50=0 dpc=0 df=0 dt=18
+SIM L1 huge values (-1.23456789e+30 in every float, 0xffffffff pointers, pending_style -2^31): all 15 R1/R2 receipts (2 takes, 12 records, 1 delta) recorded, longest 136 chars (limit 150); then the settle rehearsal fails at step 27 as it must (pending_style ~= -1)
+SIM L1 negative (build without kp.camera): FAILS at step 5 before any reading -> error: step:1: kp.camera missing: wrong build
+SIM L1 non-chase behaviour: R1/R2 recorded (R1a beh=other mode=2 ps=-1 dolly=nil sr=), then FAILS at settle rehearsal step 27 (V1 would die at its step 8)
+SIM L1 pan during R1->R2 (raw_28 moves, then stops): route passes; delta receipt -> R2 vs R1 idsame=1 dcfg=0 dq=0.0109 dp38=0 dp50=0 dpc=0 df=0 dt=18
+postrun-gate task7s2-v1-readonly-camera.toml: pass (PNG stills)=PASS; pass (one PPM kept)=PASS; still 2 not taken=FAIL (still step 13: ok / no screenshot taken); still 1 empty=FAIL (still step 11: empty file); still 3 800x600=FAIL (still step 39: size (800, 600) != (1024,); boot budget 5=FAIL (boot max_boot_attempts=5); two launches=FAIL (boot launch_count=2); KP_MAX_BOOT_ATTEMPTS unset=FAIL (KP_MAX_BOOT_ATTEMPTS in driver env=None )
+postrun-gate l1-camera-diagnostic.toml: pass (PNG stills)=PASS; pass (one PPM kept)=PASS; still 2 not taken=FAIL (still step 13: ok / no screenshot taken); still 1 empty=FAIL (still step 10: empty file); still 3 800x600=FAIL (still step 30: size (800, 600) != (1024,); boot budget 5=FAIL (boot max_boot_attempts=5); two launches=FAIL (boot launch_count=2); KP_MAX_BOOT_ATTEMPTS unset=FAIL (KP_MAX_BOOT_ATTEMPTS in driver env=None )
+require-l1: RED-FIRST pre-r3 (V1, no L1 anywhere)=PASS exit 0 <- the bug Finding I1 found
+require-l1: GREEN, same dir, r3 (V1, no L1 anywhere)=REFUSE: missing-l1: acceptance route /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/task7s2-v1-readonly-camera.toml requires --require-l1 <L1 run-dir> (round-2 Finding I1: a V1 check with no L1 path must refuse, not silently pass) (exit 1)
+require-l1: well-formed pair=PASS exit 0
+require-l1: no --require-l1=REFUSE: missing-l1: acceptance route /home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/task7s2-v1-readonly-camera.toml requires --require-l1 <L1 run-dir> (round-2 Finding I1: a V1 check with no L1 path must refuse, not silently pass) (exit 1)
+require-l1: L1 failed its own gate=REFUSE: l1-precondition: L1 gate did not pass: verdict='FAIL' (exit 1)
+require-l1: wrong L1 route hash=REFUSE: l1-precondition: L1 route hash 'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef' != checked-in l1-camera-diagnostic.toml '07ba1555e4ce8d260c685ba2ed15fafa38561ea16fa04f6931f37848769c635d' (exit 1)
+require-l1: L1 launch_count=2 (stale PASS receipt)=REFUSE: l1-precondition: L1 boot-attempts.json launch_count=2 (need 1) (exit 1)
+require-l1: L1 after V1 started=REFUSE: l1-precondition: L1 finished (5010.0) did not happen before this run started (95.0) (exit 1)
+require-l1: admission A3 (height 272px, out of 192-230 band)=REFUSE: l1-precondition: admission rule failed: A3: still 3 height=272 not in 192-230 (exit 1)
+require-l1: admission A4 (dx=-10px, sign must not hide it)=REFUSE: l1-precondition: admission rule failed: A4: feature dx=-10.0 exceeds 4px (exit 1)
+require-l1: admission A4 (dq=NaN, must not pass "<=1e-4")=REFUSE: l1-precondition: admission rule failed: A4: equality rule failed: field 'dq' is not a finite number: nan (exit 1)
+require-l1: missing admission.json=REFUSE: l1-precondition: L1 admission.json unreadable: [Errno 2] No such file or directory: '/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-attempt2/.reql1-scratch/l1-noadm/admission.json' (exit 1)
+require-l1: admission A6 (runtime hash mismatch = different build)=REFUSE: l1-precondition: A6: build mismatch on runtime file 'kphasor.dll': L1 sha256='aaaa' V1 sha256='bbbb' (exit 1)

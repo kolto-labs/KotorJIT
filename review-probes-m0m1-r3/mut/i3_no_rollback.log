@@ -1,0 +1,23 @@
+FAIL m9: the refusal's EACCES reaches the detail old: restore refused
+FAIL I3 install once: original bytes rolled back ff 25 00 00 00 00 80 76 40 00 00 00 00 00 01 f8 c9 
+FAIL I3 install once: page resealed r-x rw-p
+FAIL I3: install, restore refused once: rolled back and resealed child killed by signal 11
+FAIL I3 install always: original bytes rolled back ff 25 00 00 00 00 80 76 40 00 00 00 00 00 01 f8 c9 
+FAIL m8: retry wrote nothing and left the page as it was rw-p
+FAIL I3: install, restore always refused: original bytes, page left RW child exit 1
+FAIL I3 stuck: ProtectFailed but installed ProtectFailed old: restore refused
+FAIL I3 stuck: trampoline kept 
+FAIL m7: stuck install detail says not executable old: restore refused
+FAIL I3 stuck: uninstall recovers 
+FAIL I3 stuck: original bytes back ff 25 00 00 00 00 80 76 40 00 00 00 00 00 01 f8 c9 
+FAIL I3 stuck: page back to the recorded r-x rw-p
+FAIL I3: install, rollback also refused: patch live, still installed child killed by signal 11
+FAIL I3 uninstall once: refused, patch kept ProtectFailed old: restore refused
+FAIL I3 uninstall once: page resealed r-x 
+FAIL I3: uninstall, restore refused once: patch rolled back, still installed child killed by signal 11
+FAIL I3 uninstall always: refused, patch bytes kept 
+FAIL I3: uninstall, restore always refused: patch rolled back, trampoline leaked on destroy child exit 1
+FAIL m7 uninstall: ProtectFailed, uninstalled ProtectFailed old: restore refused
+FAIL m7 uninstall: detail says not executable old: restore refused
+FAIL m7: uninstall, rollback also refused: uninstalled, page left RW child exit 1
+6 of 654 checks FAILED

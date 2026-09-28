@@ -1,0 +1,1 @@
+SOLE WRITER, capture-cadence ROUND 12. Your full spec is /home/brunner56/kp-live-20260922/task7-capture-cadence-round-12-brief.md — read it first and follow it exactly. Worktree is cwd; preserve unrelated dirty work; no git reset/stash/staging/commit. Red-first for every item. Host tools via /home/brunner56/.local/bin/host-cmd. Never run whole-worktree git diff --check.

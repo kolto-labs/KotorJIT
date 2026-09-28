@@ -1,0 +1,16 @@
+entries 63 testzip None zip comment b'' entry comments/extra []
+prefix bytes before first local header 0
+suffixes {'md': 4, '(none)': 1, 'json': 5, 'toml': 9, 'lua': 10, 'py': 34}
+case collisions []
+name/content findings []
+== kotorphasor-creative-harness/data/addresses/k1_gog_103.json [(4059, 'adjudication', '"by_adjudication": 216,')]
+== kotorphasor-creative-harness/docs/user/creative-harness.md [(88, 'kp-runs', 'mkdir -p ~/kp-runs'), (92, 'kp-runs', 'Keep both logs outside `~/kp-runs`. The tools refuse a log inside it.'), (105, 'kp-runs', '--log ~/kp-inputs.log --runs-dir ~/kp-runs'), (138, 'kp-runs', '--checkpoint-root ~/kp-checkpoints/k1 --output ~/kp-runs \\'), (162, 'kp-runs', 'sha256sum ~/kp-runs/RUN_ID/continuous.mp4'), (168, 'kp-runs', 'PYTHONPATH=scripts/harness python3 -m kpharness.creative_accept ~/kp-runs/RUN_ID \\')]
+== kotorphasor-creative-harness/scripts/harness/kpharness/capture_diagnostic.py [(54, '/home/', "DEFAULT_FFPROBE = '/home/linuxbrew/.linuxbrew/bin/ffprobe'"), (54, 'linuxbrew', "DEFAULT_FFPROBE = '/home/linuxbrew/.linuxbrew/bin/ffprobe'"), (54, 'linuxbrew', "DEFAULT_FFPROBE = '/home/linuxbrew/.linuxbrew/bin/ffprobe'")]
+== kotorphasor-creative-harness/scripts/harness/kpharness/gamescope_xwayland.py [(429, 'adjudication', '# poll() reaps the direct child before /proc survivor adjudication.')]
+== kotorphasor-creative-harness/scripts/harness/kpharness/oracle.py [(246, '20260910-095338', '# exact 20260910-095338 failure mode.')]
+== kotorphasor-creative-harness/tools/kpdiscover.py [(18, 'KOTORXID', '2. an environment variable (KOTOR1_DIR, KOTOR2_DIR, KOTORXID_DB, ...)'), (282, 'KOTORXID', 'env = os.environ.get("KOTORXID_DB")'), (291, 'biodecomp', 'for rel in ("biodecompwarehouse/kotorxid/db/kotorxid.sqlite",'), (291, 'kotorxid', 'for rel in ("biodecompwarehouse/kotorxid/db/kotorxid.sqlite",'), (291, 'kotorxid', 'for rel in ("biodecompwarehouse/kotorxid/db/kotorxid.sqlite",'), (292, 'kotorxid', '"kotorxid/db/kotorxid.sqlite",')]
+marker files 6
+manifest rehash True manifest files 62 not in manifest ['kotorphasor-creative-harness/manifest.json']
+provenance overlay entries 60 differs from pre-build overlay []
+shipped bytes == bound bytes for 59 of 60 (the other is the sanitized json): ['data/addresses/k1_gog_103.json']
+receipt keys ['content_check', 'entries', 'exclusions', 'kind', 'media', 'path_scan', 'provenance', 'sanitizations', 'scope', 'snapshot_entries', 'snapshot_files', 'snapshot_files_sha256', 'staging'] exclusions 73 sanitizations [{'path': 'data/addresses/k1_gog_103.json', 'removed_metadata_keys': ['reference_image']}] snapshot 492289a345098ad513093ce463e69c72f57dc5cdc79b1b7f269ce9a5bcc8a334

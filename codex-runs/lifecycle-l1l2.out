@@ -1,0 +1,22 @@
+Resumed and completed the interrupted L1/L2 host-only handoff without restarting the slow CMake/LTO link.
+
+The existing implementation was preserved and the required report was finished in place:
+
+- [lua-lifecycle-l1-l2-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/lua-lifecycle-l1-l2-report.md) — appended a resume-verification receipt and the required “Grill me” section; did not create a duplicate report.
+- [host.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp) and [host.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.hpp) — existing L1 lifecycle core retained: deferred operations, per-script load/unload/reload, immediate mtime stamps, deleted-file cleanup, staged R1 reload preservation, generations, close hook, and request-result retention.
+- [scripts_lua.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/scripts_lua.cpp) and [scripts_lua.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/scripts_lua.hpp) — existing L2 `kp.scripts`, `kp.scriptname`, and `kp.scriptdir` surface retained.
+- [lifecycle.cmake](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/lifecycle.cmake), [kp_lifecycletest.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_lifecycletest.cpp), and [kp_scriptsapitest.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_scriptsapitest.cpp) — existing host-only test integration retained.
+
+Verification rerun through the required host wrapper:
+
+```text
+kp_lifecycletest: 21 case(s), 0 failed — rc=0
+kp_scriptsapitest: 9 case(s), 0 failed — rc=0
+scoped git diff --check: rc=0
+```
+
+The scoped source diff is 427 insertions / 66 deletions across the three tracked Lua-host files; the new API/test files are intentionally untracked worktree additions and were preserved. The completed report documents the full file list and prior 30-case total.
+
+One important boundary remains honestly incomplete: runtime integration is intentionally not performed, because `src/runtime/**`, `CMakeLists.txt`, and `tools/kp_namespacetest.cpp` are forbidden for this task. The report contains the exact serialized I-L snippets for binding `kp.scripts`, servicing queued lifecycle work each tick, and namespace registration. Until that integration lands, live Lua states will not expose these APIs and queued requests cannot be serviced in-game.
+
+I did not start Wine, the game, Gamescope/X11 tooling, capture tooling, or any process beyond the two allowed host-only test invocations; I did not touch the live-game lock, canonical checkout, or unrelated dirty changes.

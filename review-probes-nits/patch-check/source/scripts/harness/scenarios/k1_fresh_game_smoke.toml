@@ -1,0 +1,57 @@
+# Fresh nonvisual start through the native K1 character-generation flow.
+# This exercises engine callbacks only: no fabricated BIC, save, net message,
+# panel bit, or raw memory write is used by the harness.
+name = "k1 fresh game: native chargen into Endar"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 90
+shot_interval = 120
+
+[[step]]
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "new_game"
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "class"
+timeout = 45
+
+[[step]]
+do = "chargen_select_class"
+index = 0
+
+[[step]]
+wait = "chargen_stage"
+equals = "route"
+timeout = 45
+
+[[step]]
+do = "chargen_begin_play"
+timeout = 45
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog"]
+timeout = 300
+
+# Every playable K1 class receives melee-weapon proficiency (feat.2da row 44)
+# before BeginPlayGame.  Row 45 is an unused XXXX_ feat and is never granted.
+# This is a live engine query; the offline fake never claims the feat.
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetHasFeat',44, nwscript.call('GetFirstPC')) == 1"
+equals = true
+timeout = 30
+
+[[step]]
+screenshot = true
+label = "fresh-endar-gameplay-sanity"
+
+[[step]]
+do = "quit"

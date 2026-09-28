@@ -1,0 +1,9 @@
+{
+  "accepted_gameplay_view": true,
+  "scope": "one copied-save load and console read-only smoke; no movement/combat/fullAPI acceptance",
+  "review": "Root visually inspected world screenshot and F12-over-world screenshot; world geometry, player and HUD present; main-menu logo and buttons absent.",
+  "images": {
+    "k2-world.png": "e6b234b434744cfa9c01b635e1c0a8b49a57c29d3b4b455825937de2e58bafab",
+    "k2-gameplay-console.png": "24efa0724cee1ce1ef4656a8768d4a08e5956d4133d5685422353ad111ef8e2a"
+  }
+}

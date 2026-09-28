@@ -1,0 +1,136 @@
+=== chain sha 9152960ef3c0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/chain_attacks.lua
+--- block 1
+BREAKS	A1 module load with new party IDs restores flag	new-id bastila min_one_hp=nil (prior was 0); SetMinOneHP calls=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+BREAKS	A2 failed restore is retried at the next disarm (f:arm calls OnModuleLoad)	GetMinOneHP reads=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:13: attempt to call field 'OnScriptUnload' (a nil value)
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 6
+HOLDS 	A6 boolean-false prior treated as unreadable	SetMinOneHP=0 (party member excluded when bridge returns false)
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 7
+BREAKS	A7 party gets floor(40/3)=13	amounts=40
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 8
+HOLDS 	A8 OnAreaEnter by any object disarms+restores	armed after non-PC OnAreaEnter=0 (pre-existing behaviour, not new)
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/pc_probe.lua
+--- block 1
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/mutations.lua
+--- block 1
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:10: mutation not applied
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+ERROR	tools/tests/examples/fixture.lua:4: unmapped example: cursed/100_item_airstrike.lua
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:8: bad argument #1 to 'open' (string expected, got nil)
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r2/pc_swap_probe.lua
+--- block 1
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:13: original PC was not guarded
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r3/r3_probes.lua
+--- block 1
+R3-1 two-gone-same-target: sets=[] old_pc(11)=nil atton(12,prior1)=1 pending_logged=false
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:21: attempt to call field 'OnScriptUnload' (a nil value)
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:19: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes.lua
+--- block 1
+R4-1a PC tag errors: during=nil new_pc(7)=1 sets=[] pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 6
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 7
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 8
+R4-4b death during load window: EffectDamage delta=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 9
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:23: attempt to call field 'OnScriptUnload' (a nil value)
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 10
+R4-6 5x same-module OnAreaEnter, tagged: pc=nil bastila=nil guards_left_pending=0 armed_local5=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 11
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 12
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 13
+R4-7 recycled ID corpse after load: detonations before=1 after=2
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 14
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes2.lua
+--- block 1
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes3.lua
+--- block 1
+ERROR	tools/tests/examples/fixture.lua:156: assertion failed!
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+R4-2L same-tag pair across OnModuleLoad: after=0,0 prior_unknown=0 pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probe8_detail.lua
+--- block 1
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[] pc1=nil member5=1 logs=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0

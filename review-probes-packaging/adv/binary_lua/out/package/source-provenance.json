@@ -1,0 +1,28 @@
+{
+  "base_commit": null,
+  "overlay_sha256": {
+    "ATTRIBUTION.md": "dc4950b21a3ae0900d5a80bda52bfc41068e83a54b3e24a291bbd6cf2a3abc59",
+    "LICENSE": "195dcf5a72d45bbdab0460fa1aaa4feec43308b9a5c90a19da07005eb475d6e7",
+    "data/addresses/k1_gog_103.json": "579ed889d3315d4ce698a7e8739e70e44f3c88ac0f27af2581a6f525bb15c7b2",
+    "data/app_signatures.toml": "5b2bcd1af89adccfd50879bfe6697ff3961c12524a8db86cdc28e1aeeb65fd6f",
+    "docs/creative-runner.md": "c99a48000bc6535a387c4dc30f3bd2ac1e4349537e316c31a958585d8f31ffae",
+    "docs/user/creative-harness.md": "829c47facc2fe641945de6fdeba1eecc527955d4659e6ea7241f04832e38cdb9",
+    "scripts/examples/cursed/10_rancor.lua": "c1e0a4798e786232a7fb873c03cfbaa9d8e665b740a735ea47a64d35cd9c917e",
+    "scripts/examples/cursed/README.md": "869dd8a9962ff49af45b40acb47502c5c712831e54edd56d4fb3ca84df053197",
+    "scripts/examples/cursed/evil.lua": "5253e4913f33728d00fcdaa1a6e858293e5b29f9d0cd955d1bffea98ef62ded4",
+    "scripts/examples/probe/00_probe.lua": "fb449136870255353bb3d9083194eb5f7927e3121215b7d0cd5ee0a47605c937",
+    "scripts/harness/kpharness/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/harness/kpharness/capture_diagnostic.py": "9767c8f5d5393eaab779d19dbb5e14e69624a447144edfab7c2a7cb05a5f0f97",
+    "scripts/harness/kpharness/commit_inputs.py": "1571eb29bda29d4025c369ae030f8696657fb9b527dd7982342282cf5c1462f9",
+    "scripts/harness/kpharness/creative.py": "ae764935a6b0038548c70565566a4a318a02b48fd1caaa3f2ec109a516becc80",
+    "scripts/harness/kpharness/creative_accept.py": "150d75d5a4c2d8afd62759a0f794f7b5cd3c049129f810ad05cd111daa984897",
+    "scripts/harness/kpharness/creative_export.py": "1571eb29bda29d4025c369ae030f8696657fb9b527dd7982342282cf5c1462f9",
+    "scripts/harness/kpharness/export_verify.py": "4d34a4c73acaad4e25a1e504c559d7f19198c5f7df3e40cad5e1b222e193bf9f",
+    "scripts/harness/kpharness/gamescope_snapshot.py": "261a9112a2918e2aba03e19a2f221a027ab4b6f9e946a6c39814f54e18e07dfc",
+    "scripts/harness/kpharness/shared.py": "b6631639de17fb869c43278f858c465cc5b71c8ec51c8c25d803905361f8a544",
+    "scripts/harness/scenarios/cursed/10_rancor.toml": "178121c2561b614d4b596b438fc9f33fcb8d197b804e54ef3568f6e2038fd4e9",
+    "tools/creative_host_check.py": "3727adff524e0616022eadd8f4af21a0778b29fc4c77bdfefd1afce2cbf5e4b7",
+    "tools/kpdiscover.py": "3727adff524e0616022eadd8f4af21a0778b29fc4c77bdfefd1afce2cbf5e4b7",
+    "tools/tests/examples/manifest.json": "8dc30f891cbbe62c2c2cc4625fdff0b5187ef2e72c7edbcf073b6271d19e2894"
+  }
+}

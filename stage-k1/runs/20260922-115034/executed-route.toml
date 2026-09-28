@@ -1,0 +1,131 @@
+name="Native animation clock probe - no NW animation"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=60
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+do = "mark_log"
+
+[[step]]
+do = "lua"
+code = "local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); anim_pc=assert(kp.model.snapshot(p)); local q=nwscript.call('GetPosition',p); local f=nwscript.call('GetFacing',p); local a=math.rad(f); anim_ids={}; anim_owners={}; for i=1,2 do local side=(i==1 and -1.5 or 1.5); local id=nwscript.call('CreateObject',1,'g_sithtroop01',nwscript.call('Location',{x=q.x+6*math.cos(a)-side*math.sin(a),y=q.y+6*math.sin(a)+side*math.cos(a),z=q.z},(f+180)%360),0); anim_ids[i]=id;anim_owners[i]=assert(kp.model.identify(id)); nwscript.call('SetCommandable',0,id);nwscript.call('ChangeToStandardFaction',id,2);end; return anim_ids"
+label = "owned actor setup, no NW animation calls"
+
+[[step]]
+do = "assert_lua"
+code = "anim_caps={}; for i,id in ipairs(anim_ids) do local c=kp.model.snapshot(id,anim_owners[i]); if not c then return false end; anim_caps[i]=c end; for i,c in ipairs(anim_caps) do for _,name in ipairs({'pause1','dance','bow'}) do local q=assert(kp.animation.inspect(c,name)); assert(q.available and q.duration>0,name..' unavailable') end end; return true"
+equals = true
+label = "native clip availability on actual effective models"
+poll = true
+timeout = 30
+
+[[step]]
+do = "advance_ticks"
+ticks = 180
+timeout = 30
+
+[[step]]
+do = "capture_free_look"
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+timeout = 30
+
+[[step]]
+do = "lua"
+code = "return kp.animation.cue(anim_caps[1],'dance',0.5,0),kp.animation.cue(anim_caps[2],'bow',0.5,0)"
+label = "native start: dance and bow"
+
+[[step]]
+do = "advance_ticks"
+ticks = 60
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "local a=assert(kp.animation.inspect(anim_caps[1],'dance'));local b=assert(kp.animation.inspect(anim_caps[2],'bow')); assert(a.active and b.active); return a.time>0.1 and b.time>0.1"
+equals = true
+label = "both native animation clocks advance"
+poll = false
+timeout = 30
+
+[[step]]
+do = "lua"
+code = "local r=assert(kp.animation.cue(anim_caps[1],'dance',0));anim_frozen=assert(kp.animation.inspect(anim_caps[1],'dance')).time;anim_other=assert(kp.animation.inspect(anim_caps[2],'bow')).time;return {frozen=anim_frozen,other=anim_other,result=r}"
+label = "pause only the left actor without restarting"
+
+[[step]]
+do = "advance_ticks"
+ticks = 150
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "local a=assert(kp.animation.inspect(anim_caps[1],'dance'));local b=assert(kp.animation.inspect(anim_caps[2],'bow')); return a.active and b.active and math.abs(a.time-anim_frozen)<0.005 and math.abs(b.time-anim_other)>0.05"
+equals = true
+label = "left clock held while right clock changes"
+poll = false
+timeout = 30
+
+[[step]]
+do = "lua"
+code = "local r=assert(kp.animation.cue(anim_caps[1],'dance',0.5));return r"
+label = "resume left actor at same clip time"
+
+[[step]]
+do = "advance_ticks"
+ticks = 60
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "local a=assert(kp.animation.inspect(anim_caps[1],'dance'));return a.active and math.abs(a.time-anim_frozen)>0.05"
+equals = true
+label = "resumed native clock advances"
+poll = false
+timeout = 30
+
+[[step]]
+do = "lua"
+code = "for _,c in ipairs(anim_caps) do assert(kp.animation.cue(c,'pause1',1,0)) end;return true"
+label = "known native idle baseline"
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "for i,id in ipairs(anim_ids) do assert(kp.model.matches(anim_owners[i]));local c=assert(kp.model.snapshot(id,anim_owners[i]));assert(math.abs(c.base-anim_caps[i].base)<0.001);assert(nwscript.call('GetIsInCombat',id)==0) end; local p=assert(kp.model.snapshot(anim_pc.id));return p.model==anim_pc.model and p.base==anim_pc.base"
+equals = true
+label = "identities, scales and peaceful state preserved"
+poll = false
+timeout = 30
+
+[[step]]
+do = "lua"
+code = "for i,id in ipairs(anim_ids) do assert(kp.model.matches(anim_owners[i]));nwscript.call('DestroyObject',id,0) end;return true"
+label = "remove only owned animation actors"
+
+[[step]]
+do = "assert_lua"
+code = "for _,id in ipairs(anim_ids) do if nwscript.call('GetIsObjectValid',id)==1 then return false end end;return true"
+equals = true
+label = "owned actors removed"
+poll = true
+timeout = 30

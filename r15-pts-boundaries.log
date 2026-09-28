@@ -1,0 +1,52 @@
+[
+  {
+    "case": "drop_ratio_exact_0.005",
+    "status": "passed",
+    "ratio": 0.005,
+    "gap": 0.03333333333333333,
+    "kinds": []
+  },
+  {
+    "case": "drop_ratio_just_over",
+    "status": "failed",
+    "ratio": 0.005012531328320802,
+    "gap": 0.03333333333333333,
+    "kinds": [
+      "source_drop_ratio"
+    ]
+  },
+  {
+    "case": "source_gap_exact_0.050",
+    "status": "passed",
+    "ratio": 0.0033333333333333335,
+    "gap": 0.05,
+    "kinds": []
+  },
+  {
+    "case": "source_gap_next_frame_0.0667",
+    "status": "failed",
+    "ratio": 0.002997002997002997,
+    "gap": 0.06666666666666667,
+    "kinds": [
+      "source_gap"
+    ]
+  },
+  {
+    "case": "sustained_delta2",
+    "status": "failed",
+    "ratio": 1.0,
+    "gap": 0.03333333333333333,
+    "kinds": [
+      "source_drop_ratio"
+    ]
+  },
+  {
+    "case": "same_brightness_delta7",
+    "status": "failed",
+    "ratio": 0.0029940119760479044,
+    "gap": 0.11666666666666667,
+    "kinds": [
+      "source_gap"
+    ]
+  }
+]

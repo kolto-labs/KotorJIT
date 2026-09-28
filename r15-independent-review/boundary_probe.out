@@ -1,0 +1,9 @@
+{"case": "isolated_drop", "drop_ratio": 0.0033333333333333335, "failures": [], "index": "passed", "kinds": [], "level": "passed", "max_gap": 0.016666666666666666, "status": "passed"}
+{"case": "accumulated_drop", "drop_ratio": 1.0, "failures": ["capture_content_index: 1 of 299 acceptance frames fail the per-frame index check"], "index": "failed", "kinds": ["source_drop_ratio"], "level": "passed", "max_gap": 0.016666666666666666, "status": "failed"}
+{"case": "excessive_maxgap", "drop_ratio": 0.004022988505747126, "failures": ["capture_content_index: 2 of 1740 acceptance frames fail the per-frame index check"], "index": "failed", "kinds": ["index_step_disagrees_with_elapsed_time", "source_gap"], "level": "passed", "max_gap": 0.11666666666666667, "status": "failed"}
+{"case": "loop7", "exception": "IndexError", "message": "list index out of range"}
+{"case": "loop14", "exception": "IndexError", "message": "list index out of range"}
+{"case": "stale_replay", "exception": "IndexError", "message": "list index out of range"}
+{"case": "reorder", "exception": "IndexError", "message": "list index out of range"}
+{"case": "halfregion_bottom_freeze", "drop_ratio": 0.0, "failures": ["capture_content_index: 181 of 300 acceptance frames fail the per-frame index check"], "index": "failed", "kinds": ["region_mismatch"], "level": "passed", "max_gap": 0.0, "status": "failed"}
+{"case": "non_index_game_policy", "drop_ratio": null, "failures": [], "index": null, "kinds": [], "level": null, "max_gap": null, "status": "passed"}

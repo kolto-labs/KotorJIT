@@ -1,0 +1,7 @@
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 8.036s
+
+OK

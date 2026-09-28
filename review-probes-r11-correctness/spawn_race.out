@@ -1,0 +1,8 @@
+supervisor_exit 1
+result_errors ['interrupted before launch: SIGINT']
+result_launches 1 child_returncode None
+result_owned_survivors []
+result_cleanup_budget {'components': {'display': 25, 'evidence_margin': 15, 'recorder': 1398.0, 'source_process': 4}, 'exhausted': False, 'seconds': 60.0}
+child_ready_after_supervisor_exit True
+owned_alive_3s_after_supervisor_exit [('display:gamescope', 124845), ('client', 124850)]
+child_ran_unsupervised_seconds 36.5 child_interrupts [] child_error evidence: FileNotFoundError: [Errno 2] No such file or directory: '/proc/124845/stat' cleanup_steps ['recorder', 'source_process', 'display']

@@ -1,0 +1,20 @@
+baseline_ready True
+r0_markers_absent ready= False
+r0_markers_reversed ready= False
+r0_terminal_drop_999 ready= True
+r0_interval_2_frames_10s ready= False
+r0_cmd_r1 ready= False
+r0_cmd_setpts ready= False
+r0_marker_uncertainty_250_poll ready= False
+r1_capture_gate_failed ready= False
+r1_input_option_after_i ready= False
+r2_shared_descriptor ready= False
+r2_interval_end_sample_exceeds_terminal ready= False
+r3_terminal_frame_lt_decoded ready= False
+r3_extra_marker_without_interval ready= False
+r6_speed_8_8 ready= False
+r7_2_session_pid_start 424242
+r7_2_process_identity {'state': 'present', 'start': '424242'}
+r8_1_permission {'state': 'unreadable', 'error': 'PermissionError: [Errno 13] denied'}
+r8_1_truncated {'state': 'unreadable', 'error': 'malformed stat: substring not found'}
+exit=0

@@ -1,0 +1,19 @@
+[
+  "bwrap",
+  "--die-with-parent",
+  "--unshare-pid",
+  "--unshare-net",
+  "--bind",
+  "/",
+  "/",
+  "--proc",
+  "/proc",
+  "--bind",
+  "/home/brunner56/kp-live-20260922/private-gpu-runs/20260922-141446/tmp",
+  "/tmp",
+  "--",
+  "/usr/bin/python3",
+  "/home/brunner56/kp-live-20260922/private_gpu_controller.py",
+  "--child",
+  "smoke"
+]

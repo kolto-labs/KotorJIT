@@ -1,0 +1,351 @@
+FFFFFFFFFFFFFF.FFFFFFFF.FF
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [dot (T1)]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 416, in assert_refused_untouched
+    self.assertEqual(before, after, f"{label}: files changed\n{out}")
+AssertionError: {'nest': 'dir', 'nest/game': 'dir', 'nest/game/binkw32.dll': '8[1388 chars]59f'} != {'nest': 'dir', 'nest/sibling-data.txt': 'e5fa1c5dd12f4c46eb946[204 chars]59f'}
+Diff is 1513 characters long. Set self.maxDiff to None to see it. : dot (T1): files changed
+restored original binkw32.dll
+Remove-Item: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/Install.ps1:201
+Line |
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/games/nest/game/kotorphasor/install-manifest.json' because it does not exist.
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [dotdot (T9)]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 416, in assert_refused_untouched
+    self.assertEqual(before, after, f"{label}: files changed\n{out}")
+AssertionError: {'nest': 'dir', 'nest/game': 'dir', 'nest/g[1408 chars]59f'} != {'victim.dll': '5881a46fbb355a9bc34a659eb27[116 chars]59f'}
+Diff is 1608 characters long. Set self.maxDiff to None to see it. : dotdot (T9): files changed
+restored original binkw32.dll
+Remove-Item: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/Install.ps1:201
+Line |
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/games/nest/game/kotorphasor/install-manifest.json' because it does not exist.
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [null]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 416, in assert_refused_untouched
+    self.assertEqual(before, after, f"{label}: files changed\n{out}")
+AssertionError: {'nest': 'dir', 'nest/game': 'dir', 'nest/game/binkw32.dll': '8[1388 chars]59f'} != {'nest': 'dir', 'nest/sibling-data.txt': 'e5fa1c5dd12f4c46eb946[204 chars]59f'}
+Diff is 1513 characters long. Set self.maxDiff to None to see it. : null: files changed
+restored original binkw32.dll
+Remove-Item: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/Install.ps1:201
+Line |
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/games/nest/game/kotorphasor/install-manifest.json' because it does not exist.
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [empty]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 416, in assert_refused_untouched
+    self.assertEqual(before, after, f"{label}: files changed\n{out}")
+AssertionError: {'nest': 'dir', 'nest/game': 'dir', 'nest/game/binkw32.dll': '8[1388 chars]59f'} != {'nest': 'dir', 'nest/sibling-data.txt': 'e5fa1c5dd12f4c46eb946[204 chars]59f'}
+Diff is 1513 characters long. Set self.maxDiff to None to see it. : empty: files changed
+restored original binkw32.dll
+Remove-Item: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/Install.ps1:201
+Line |
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/games/nest/game/kotorphasor/install-manifest.json' because it does not exist.
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [rooted absolute]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : rooted absolute: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [rooted drive]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : rooted drive: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [rooted backslash]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : rooted backslash: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [../victim]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : ../victim: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [..\victim]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : ..\victim: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [traversal inside prefix]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 416, in assert_refused_untouched
+    self.assertEqual(before, after, f"{label}: files changed\n{out}")
+AssertionError: {'nest': 'dir', 'nest/game': 'dir', 'nest/game/binkw32.dll': '8[1388 chars]59f'} != {'nest': 'dir', 'nest/sibling-data.txt': 'e5fa1c5dd12f4c46eb946[204 chars]59f'}
+Diff is 1513 characters long. Set self.maxDiff to None to see it. : traversal inside prefix: files changed
+restored original binkw32.dll
+Remove-Item: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/Install.ps1:201
+Line |
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-3sxfpi7i/games/nest/game/kotorphasor/install-manifest.json' because it does not exist.
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [own dir, no stamp]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : own dir, no stamp: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [absolute victim]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : absolute victim: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [scripts dir]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : scripts dir: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_backup_dir_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_backup_dir_tampering_refused_nothing_deleted) [stream]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 433, in test_backup_dir_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m.__setitem__("backup_dir", v))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : stream: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [../victim (T2)]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : ../victim (T2): uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [..\victim]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : ..\victim: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [absolute victim]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : absolute victim: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [dot]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : dot: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [empty]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : empty: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [null]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : null: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_file_path_tampering_refused_nothing_deleted (__main__.InstallerBehaviour.test_file_path_tampering_refused_nothing_deleted) [nested traversal]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 445, in test_file_path_tampering_refused_nothing_deleted
+    self.assert_refused_untouched(label, lambda m, v=value: m["files"].insert(
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 415, in assert_refused_untouched
+    self.assertNotEqual(rc, 0, f"{label}: uninstall did not refuse\n{out}")
+AssertionError: 0 == 0 : nested traversal: uninstall did not refuse
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+
+
+======================================================================
+FAIL: test_install_status_uninstall_round_trip (__main__.InstallerBehaviour.test_install_status_uninstall_round_trip)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 467, in test_install_status_uninstall_round_trip
+    self.assertEqual(tables, ["k1_gog_103.json"], "only the detected build's table")
+AssertionError: Lists differ: ['k1_gog_103.json', 'k2_steam_aspyr.json'] != ['k1_gog_103.json']
+
+First list contains 1 additional elements.
+First extra element 1:
+'k2_steam_aspyr.json'
+
+- ['k1_gog_103.json', 'k2_steam_aspyr.json']
++ ['k1_gog_103.json'] : only the detected build's table
+
+======================================================================
+FAIL: test_missing_backup_falls_back_to_verified_real_dll (__main__.InstallerBehaviour.test_missing_backup_falls_back_to_verified_real_dll)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 485, in test_missing_backup_falls_back_to_verified_real_dll
+    self.assertEqual(rc, 0, out)
+AssertionError: 1 != 0 : WARNING: backup kotorphasor/backup/20260927T174148Z/binkw32.dll missing; binkw32.dll left in place
+Exception: /home/brunner56/kp-live-20260922/w1-fix-scratch/tmp/kp-install-6rizxc7p/Install.ps1:177
+Line |
+ 177 |          throw "uninstall refused, nothing removed; manifest kept. Fil …
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept. Files: binkw32.dll
+
+
+======================================================================
+FAIL: test_status_refuses_tampered_manifest (__main__.InstallerBehaviour.test_status_refuses_tampered_manifest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py", line 504, in test_status_refuses_tampered_manifest
+    self.assertNotEqual(rc, 0, out)
+AssertionError: 0 == 0 : installed (k1_gog_103, since 09/27/2026 17:41:56)
+  ok       binkw32_real.dll
+  ok       kphasor.dll
+  ok       kotorphasor/addresses/k1_gog_103.json
+  ok       kotorphasor/addresses/k2_steam_aspyr.json
+  ok       binkw32.dll
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 340.288s
+
+FAILED (failures=24)

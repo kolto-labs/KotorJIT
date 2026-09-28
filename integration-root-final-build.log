@@ -1,0 +1,17 @@
+-- Configuring done (14.8s)
+-- Generating done (0.4s)
+-- Build files have been written to: /tmp/lifecycle-cfg
+[  0%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o
+[  0%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o
+[  0%] Linking CXX shared library libkphasor.so
+[100%] Built target kphasor
+[ 95%] Built target kphasor
+[100%] Linking CXX executable kp_namespacetest
+[100%] Built target kp_namespacetest
+[ 95%] Built target kphasor
+[100%] Linking CXX executable kp_vectortest
+[100%] Built target kp_vectortest
+[ 95%] Built target kphasor
+[ 95%] Building CXX object CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o
+[100%] Linking CXX executable kp_namespacetest
+[100%] Built target kp_namespacetest

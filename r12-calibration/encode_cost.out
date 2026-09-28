@@ -1,0 +1,5 @@
+old round1 wall=33.0s size=14838277 bitrate=6594.8kbits/s speed=0.555x elapsed=0:00:32.40    
+new round1 wall=63.3s size=16800886 bitrate=7467.1kbits/s speed=0.296x elapsed=0:01:00.75    
+old round2 wall=51.2s size=14838277 bitrate=6594.8kbits/s speed=0.359x elapsed=0:00:50.07    
+new round2 wall=15.0s size=16800886 bitrate=7467.1kbits/s speed=1.28x elapsed=0:00:14.03    
+ 14:07:28 up 7 days,  7:02,  1 user,  load average: 233.17, 259.66, 270.22

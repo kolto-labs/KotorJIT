@@ -1,0 +1,49 @@
+# k1 events: the event ring keeps order. After the autosave loads, the
+# module and area handlers must have fired in order; after a warp back to
+# the Endar Spire the same pair must fire again and be followed by one of
+# the module's own k_pend_* scripts. Asserted by cursor, never by sleeping.
+name = "k1 endar spire: event ordering"
+target = "k1"
+
+[settings]
+load_timeout = 300
+events_timeout = 120
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+expect_events = ["OnModuleLoad", "OnAreaEnter"]
+
+[[step]]
+do = "warp"
+module = "end_m01aa"
+
+[[step]]
+wait = "phase"
+equals = "loading"
+timeout = 30
+progress = false
+
+[[step]]
+wait = "module"
+equals = "end_m01aa"
+timeout = 300
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+expect_events = ["OnModuleLoad", "OnAreaEnter", {event = "OnRunScript", script = "k_pend_*"}]
+
+[[step]]
+screenshot = true
+label = "after_warp"

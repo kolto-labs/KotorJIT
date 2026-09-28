@@ -1,0 +1,297 @@
+{
+  "zip": "kotorphasor-k1-k2-gog-console-preview.zip",
+  "zip_sha256": "0388d0806c74c0ad158f7d120165a5d530798c14fbbaa1674b8c6c759ce867c9",
+  "entries": 18,
+  "ok": false,
+  "findings": [
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 112954: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113084: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113085: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113086: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114111: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114121: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114123: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114149: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114413: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 4: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 5: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 6: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 7: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 8: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "marker",
+      "detail": "line 40: .worktrees"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.draft.toml",
+      "kind": "marker",
+      "detail": "line 5: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/research/phasor_structs.json",
+      "kind": "private folder",
+      "detail": "research"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/img/contact.png",
+      "kind": "magic",
+      "detail": "magic: png"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 165: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 189: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "magic",
+      "detail": "magic: elf"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "not UTF-8",
+      "detail": "not UTF-8"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "NUL byte",
+      "detail": "NUL byte"
+    }
+  ],
+  "expected": [
+    {
+      "entry": "kotorphasor-preview/binkw32.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz",
+      "kind": "magic",
+      "detail": "magic: gzip"
+    }
+  ],
+  "markers": 16,
+  "allow": [
+    "*.dll",
+    "source.tar.gz"
+  ],
+  "unchanged": true
+}
+{
+  "zip": "kotorphasor-k1-gog-console-preview.zip",
+  "zip_sha256": "de14c1261e0e1b0e0aec124c8676f8e40ec696b47a258d9e1b0adc97af677131",
+  "entries": 17,
+  "ok": false,
+  "findings": [
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 112973: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113103: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113104: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 113105: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114130: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114140: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114142: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114168: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "marker",
+      "detail": "line 114432: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/live-acceptance.json",
+      "kind": "marker",
+      "detail": "line 10: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 4: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 5: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 6: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 7: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/packaging-receipt.json",
+      "kind": "marker",
+      "detail": "line 8: .superpowers"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/.gitignore",
+      "kind": "marker",
+      "detail": "line 40: .worktrees"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/events.draft.toml",
+      "kind": "marker",
+      "detail": "line 5: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/data/research/phasor_structs.json",
+      "kind": "private folder",
+      "detail": "research"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/img/contact.png",
+      "kind": "magic",
+      "detail": "magic: png"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 165: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/doc/install.html",
+      "kind": "marker",
+      "detail": "line 189: /home/"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "magic",
+      "detail": "magic: elf"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "not UTF-8",
+      "detail": "not UTF-8"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz!source/third_party/luajit/src/host/minilua",
+      "kind": "NUL byte",
+      "detail": "NUL byte"
+    }
+  ],
+  "expected": [
+    {
+      "entry": "kotorphasor-preview/binkw32.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    },
+    {
+      "entry": "kotorphasor-preview/kphasor.dll",
+      "kind": "magic",
+      "detail": "magic: pe/dos"
+    },
+    {
+      "entry": "kotorphasor-preview/source.tar.gz",
+      "kind": "magic",
+      "detail": "magic: gzip"
+    }
+  ],
+  "markers": 16,
+  "allow": [
+    "*.dll",
+    "source.tar.gz"
+  ],
+  "unchanged": true
+}

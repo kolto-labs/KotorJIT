@@ -1,0 +1,26 @@
+# validate.py python 3.12.3
+sha256 0fbca9b985806d189a7fae24bac3de1f83240323e9ca370c93282b4020803b49 /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/task7s2-v1-readonly-camera.toml
+sha256 421e3eaead1250024d6f341c68cb2cd4b87032bc117a1afe4ca3075f38b4d1a3 /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/task7s2-v2-stage2-PLACEHOLDER.toml
+sha256 9fc558d4c14a9c596051c46c33e7cc64f5c760b9ea135fca93bfebef2a0928e4 /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/task7s2_scale.lua
+sha256 07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e /home/brunner56/kp-live-20260922/frozen-model-393f68d/model_scene.lua
+sha256 3ae63e0425d9335c86b12008c4ac7de860673f18d11aa42cee8252826e2a5df5 /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/generate-route.py
+sha256 59892fb54f5f0c033f9e7b7507ff48bffdaa582168cfb09026e50f7eb5ae0c06 /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/launcher-args.json
+sha256 839072637eb60ccf7ee837282237c07432a4ac613d6c4cebe30e39082be63b7f /home/brunner56/kp-live-20260922/review-probes-k1-scale2/copy/framing-fit.py
+V1 Scenario.load: ok, steps=46, physical_console_commands=3, target=k1, game_speed=1.0
+V2 Scenario.load: REJECTED as intended -> ScenarioError: unknown scenario fields: NOT_RUNNABLE_STAGE2_CAMERA_API_MISSING
+creative parser + marker_configuration: ok, markers=['calm_end', 'calm_start', 'complete', 'effect_start', 'giant', 'normal', 'restored', 'tiny'], cadence=calm_start..calm_end
+LuaJIT compile (Lua 5.1 syntax): ok, chunks=39 (LuaJIT 2.1.1767980792 -- Copyright (C) 2005-2026 Mike Pall. https://luajit.org/)
+NWScript-name scan vs 772 K1 routines: no bare routine names; routines reached only via nwscript.call: ChangeToStandardFaction, CreateObject, DestroyObject, GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, GetStandardFaction, Location, SetCameraMode, SetCommandable, SetLocalNumber
+SIM nominal tps=10: all 46 steps passed; marker order ok; await_log bounds ok; sim ticks=1882 fake_seconds=188
+  log: [task7s2] camera_construct dist=6.2500 pitch=80.0000 height=3.5000 speed=20 fov=55 dolly=0 row=3 q=0.0000,0.0000,0.3800,0.9200 p=100.000,90.000,4.000 | [task7s2] armed tiny=0.350 giant=1.900 | [task7s2] calm_start | [model-scene:task7s2] setup actors=1 awaiting-models | [model-scene:task7s2] phase=1 actor=1 base=0.350 effective=0.438 | [model-scene:task7s2] phase=2 actor=1 base=1.900 effective=2.375 | [model-scene:task7s2] phase=3 actor=1 base=1.000 effective=1.250 | [model-scene:task7s2] restored actors=1 holding-original-scale | [model-scene:task7s2] complete phases=3 restored=1 | [task7s2] camera_watch samples=482 max_q=0.000000 max_p=0.000000 cfg_changed=0 failures=0 stable=1 | [task7s2] calm_end
+  routines called via nwscript.call: GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, SetCameraMode, SetLocalNumber
+  WT X11Recorder marker observer on this log: order=ordered duplicates=[] sequence=[['effect_start', 2], ['calm_start', 1], ['tiny', 3], ['giant', 4], ['normal', 5], ['restored', 6], ['complete', 7], ['calm_end', 8]]
+SIM nominal tps=60: all 46 steps passed; marker order ok; await_log bounds ok; sim ticks=3060 fake_seconds=51
+  log: [task7s2] camera_construct dist=6.2500 pitch=80.0000 height=3.5000 speed=20 fov=55 dolly=0 row=3 q=0.0000,0.0000,0.3800,0.9200 p=100.000,90.000,4.000 | [task7s2] armed tiny=0.350 giant=1.900 | [task7s2] calm_start | [model-scene:task7s2] setup actors=1 awaiting-models | [model-scene:task7s2] phase=1 actor=1 base=0.350 effective=0.438 | [model-scene:task7s2] phase=2 actor=1 base=1.900 effective=2.375 | [model-scene:task7s2] phase=3 actor=1 base=1.000 effective=1.250 | [model-scene:task7s2] restored actors=1 holding-original-scale | [model-scene:task7s2] complete phases=3 restored=1 | [task7s2] camera_watch samples=601 max_q=0.000000 max_p=0.000000 cfg_changed=0 failures=0 stable=1 | [task7s2] calm_end
+  routines called via nwscript.call: GetArea, GetFacing, GetFirstPC, GetIsDead, GetIsInCombat, GetIsInConversation, GetIsObjectValid, GetLocalNumber, GetModuleFileName, GetPosition, SetCameraMode, SetLocalNumber
+  WT X11Recorder marker observer on this log: order=ordered duplicates=[] sequence=[['effect_start', 2], ['calm_start', 1], ['tiny', 3], ['giant', 4], ['normal', 5], ['restored', 6], ['complete', 7], ['calm_end', 8]]
+SIM negative (raw_28 moves 0.01 during giant): route FAILS at step 25 -> error: step:1: camera moved at phase 3 poll: raw_28 moved 0.01
+  scene-side watch line (not reached before failure, expected empty or stable=0): none
+SIM negative (build without kp.camera): route FAILS at step 5 (precondition, before any F12) -> error: step:1: kp.camera missing: wrong build
+SIM settle (raw_28 drifts 2e-5/tick until tick 1000, then still): route passes; baseline receipt (lua step detail) -> d=6.2500 s=20 pi=80.0000 h=3.5000 fov=55 bd=6.25 do=0 sr=3 q=0.0000,0.0000,0.3800,0.9400 p=100.000,90.000,4.000 r=7 f=136.47
+SIM negative (drift never stops, 2e-5/tick): route FAILS at settle step 8 -> mismatch: false

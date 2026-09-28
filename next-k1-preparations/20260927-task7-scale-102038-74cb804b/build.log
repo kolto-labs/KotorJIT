@@ -1,0 +1,61 @@
+[  0%] i686-w64-mingw32-g++ src/image/sha256.cpp
+[  0%] i686-w64-mingw32-g++ trampoline.cpp
+[  0%] i686-w64-mingw32-g++ src/image/loaded_image.cpp
+[  3%] i686-w64-mingw32-g++ registry.cpp
+[  3%] i686-w64-mingw32-g++ src/image/pe_elf.cpp
+[  7%] i686-w64-mingw32-g++ src/image/parse.cpp
+[  7%] i686-w64-mingw32-g++ src/image/classify.cpp
+[ 11%] i686-w64-mingw32-g++ platform.cpp
+[ 11%] i686-w64-mingw32-g++ platform_win32.cpp
+[ 15%] i686-w64-mingw32-g++ src/image/build_table.cpp
+[ 15%] Built target hooks_win32
+[ 19%] i686-w64-mingw32-g++ src/image/load.cpp
+[ 19%] Built target image_win32
+[ 23%] i686-w64-mingw32-g++ editor_input.cpp
+[ 23%] i686-w64-mingw32-g++ imgui.cpp
+[ 26%] i686-w64-mingw32-g++ imgui_draw.cpp
+[ 26%] i686-w64-mingw32-g++ imgui_tables.cpp
+[ 30%] i686-w64-mingw32-g++ imgui_widgets.cpp
+[ 34%] i686-w64-mingw32-g++ imgui_impl_win32.cpp
+[ 34%] i686-w64-mingw32-g++ imgui_impl_opengl2.cpp
+[ 34%] i686-w64-mingw32-g++ runtime.cpp
+[ 38%] i686-w64-mingw32-g++ console.cpp
+[ 42%] i686-w64-mingw32-g++ overlay.cpp
+[ 42%] i686-w64-mingw32-g++ dllmain.cpp
+[ 42%] i686-w64-mingw32-g++ fault_guard.cpp
+[ 46%] i686-w64-mingw32-g++ hook_bodies.cpp
+[ 46%] i686-w64-mingw32-g++ transport.cpp
+[ 46%] i686-w64-mingw32-g++ host.cpp
+[ 50%] i686-w64-mingw32-g++ value.cpp
+[ 53%] i686-w64-mingw32-g++ dispatch.cpp
+[ 53%] i686-w64-mingw32-g++ table.cpp
+[ 53%] i686-w64-mingw32-g++ payload.cpp
+[ 57%] i686-w64-mingw32-g++ situation.cpp
+[ 61%] i686-w64-mingw32-g++ routines.cpp
+[ 61%] i686-w64-mingw32-g++ enginestruct.cpp
+[ 65%] i686-w64-mingw32-g++ structs.cpp
+[ 69%] i686-w64-mingw32-g++ entity.cpp
+[ 73%] i686-w64-mingw32-g++ memory.cpp
+[ 73%] i686-w64-mingw32-g++ model.cpp
+[ 76%] i686-w64-mingw32-g++ model_profiles.cpp
+[ 80%] i686-w64-mingw32-g++ model_backend.cpp
+[ 80%] i686-w64-mingw32-g++ model_lua.cpp
+[ 84%] i686-w64-mingw32-g++ animation.cpp
+[ 84%] i686-w64-mingw32-g++ animation_profiles.cpp
+[ 84%] i686-w64-mingw32-g++ animation_backend.cpp
+[ 88%] i686-w64-mingw32-g++ animation_lua.cpp
+[ 88%] i686-w64-mingw32-g++ output.cpp
+[ 92%] i686-w64-mingw32-g++ timers.cpp
+[ 92%] i686-w64-mingw32-g++ strings.cpp
+[ 92%] i686-w64-mingw32-g++ compat.cpp
+[ 96%] i686-w64-mingw32-g++ channel.cpp
+[ 96%] i686-w64-mingw32-g++ commands.cpp
+[ 96%] i686-w64-mingw32-g++ console_protocol.cpp
+[ 96%] i686-w64-mingw32-g++ json.cpp
+[ 96%] i686-w64-mingw32-g++ ring.cpp
+[ 96%] i686-w64-mingw32-g++ engine_k1.cpp
+[100%] i686-w64-mingw32-g++ engine_k2.cpp
+[100%] i686-w64-mingw32-g++ kphasor.dll
+[100%] Built target kphasor_dll
+i686-w64-mingw32-g++ binkw32.dll (proxy)
+Built target binkw32

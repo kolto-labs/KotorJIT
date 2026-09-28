@@ -1,0 +1,4 @@
+F1_print_newline  id=0123456789abcdef0123456789abcdef  host=[running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-  problems=
+F2_diag_cr  id=0123456789abcdef0123456789abcdef  host=[running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-  problems=
+F3_error_text  id=0123456789abcdef0123456789abcdef  host=[running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-  problems=
+F4_no_banner_control  id=  host=  problems=2 kp-session start lines in the current session, want 1; 2 different session ids in the current session; 2 host lines in the current session, want 1; 2 gl lines in the current session, want 1

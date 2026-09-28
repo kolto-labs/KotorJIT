@@ -1,0 +1,321 @@
+{
+  "ok": true,
+  "artifacts": {
+    "kphasor.dll": "fd8e069a1ff5a7b489f32a6492222f396f85e7b74539deb56228395b297dfac2",
+    "binkw32.dll": "1b25f37125237aefb67271533f88c48dcf07ddd37bf180743a3b0dfa2ff729d9"
+  },
+  "production_modules": {
+    "console_protocol.py": "6b60936c68437c82ab31b068f5be07d35644feb1db8a571369a7b3a6df662e7c",
+    "physical_console.py": "e8c972aec6c591fcc5bad47ce3878f5f95551fa3f246e970e15495c1d441e4a5",
+    "owned_x11.py": "171a7da1711637ec39df0c524dcbbec51dbe47e3929ccde63d2dfa722a3fee12",
+    "console_steps.py": "41c7745064b313face29c1e656c158f384cb8c5aa829b08668bc390477fb59fd",
+    "session.py": "3064be71c6c798bcc43c69e902980169ea58835a146594a73447d1f61005fde3"
+  },
+  "owned_window": {
+    "window": "0xc00004",
+    "pid": 236,
+    "geometry": "WINDOW=12582916\nX=1\nY=1\nWIDTH=1024\nHEIGHT=768\nSCREEN=0\n",
+    "display": ":0",
+    "display_owner_pid": 5,
+    "owned_game_pids": [
+      236
+    ]
+  },
+  "baseline": {
+    "protocol": "kp.console.v1",
+    "runtime": "52e2bc543d223ea7db3f7e5833a5b5983a46da9d699d3f8de4a0eb2b09b1c6d4",
+    "status": "Found",
+    "session": "1",
+    "submitted": "0",
+    "completed": "0",
+    "running": false,
+    "queued": "0",
+    "last_line": "1",
+    "dropped_lines": "0",
+    "open": false,
+    "input_calls": "70"
+  },
+  "after_input": {
+    "protocol": "kp.console.v1",
+    "runtime": "52e2bc543d223ea7db3f7e5833a5b5983a46da9d699d3f8de4a0eb2b09b1c6d4",
+    "status": "Found",
+    "session": "1",
+    "submitted": "1",
+    "completed": "1",
+    "running": false,
+    "queued": "0",
+    "last_line": "6",
+    "dropped_lines": "0",
+    "open": true,
+    "input_calls": "100"
+  },
+  "input_calls_delta": 30,
+  "identity": {
+    "runtime": "52e2bc543d223ea7db3f7e5833a5b5983a46da9d699d3f8de4a0eb2b09b1c6d4",
+    "session": "1",
+    "submitted": "0",
+    "last_line": "1"
+  },
+  "request": "1",
+  "outcome": {
+    "session": "1",
+    "request": "1",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "String",
+        "bytes": {
+          "encoding": "base64",
+          "data": "c3VwcG9ydGVkLXBoeXNpY2Fs",
+          "byte_length": "18"
+        },
+        "original_bytes": "18",
+        "truncated": false
+      },
+      {
+        "type": "Nil"
+      },
+      {
+        "type": "Boolean",
+        "value": false
+      },
+      {
+        "type": "Number",
+        "kind": "Finite",
+        "value": 42
+      }
+    ],
+    "return_count": "4",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "2",
+    "last_line": "6"
+  },
+  "lines": [
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "2",
+      "kind": {
+        "encoding": "base64",
+        "data": "aW5wdXQ=",
+        "byte_length": "5"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "PiByZXR1cm4gInN1cHBvcnRlZC1waHlzaWNhbCIsbmlsLGZhbHNlLDQy",
+        "byte_length": "42"
+      }
+    },
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "3",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "c3RyaW5nOiBzdXBwb3J0ZWQtcGh5c2ljYWw=",
+        "byte_length": "26"
+      }
+    },
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "4",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "bmlsOiBuaWw=",
+        "byte_length": "8"
+      }
+    },
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "5",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "Ym9vbGVhbjogZmFsc2U=",
+        "byte_length": "14"
+      }
+    },
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "6",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "bnVtYmVyOiA0Mg==",
+        "byte_length": "10"
+      }
+    }
+  ],
+  "output": {
+    "protocol": "kp.console.v1",
+    "runtime": "52e2bc543d223ea7db3f7e5833a5b5983a46da9d699d3f8de4a0eb2b09b1c6d4",
+    "status": "Found",
+    "session": "1",
+    "last_sequence": "6",
+    "dropped_lines": "0",
+    "dropped_through": "0",
+    "lines": [
+      {
+        "session": "1",
+        "request": "1",
+        "sequence": "2",
+        "kind": {
+          "encoding": "base64",
+          "data": "aW5wdXQ=",
+          "byte_length": "5"
+        },
+        "text": {
+          "encoding": "base64",
+          "data": "PiByZXR1cm4gInN1cHBvcnRlZC1waHlzaWNhbCIsbmlsLGZhbHNlLDQy",
+          "byte_length": "42"
+        }
+      },
+      {
+        "session": "1",
+        "request": "1",
+        "sequence": "3",
+        "kind": {
+          "encoding": "base64",
+          "data": "cmVzdWx0",
+          "byte_length": "6"
+        },
+        "text": {
+          "encoding": "base64",
+          "data": "c3RyaW5nOiBzdXBwb3J0ZWQtcGh5c2ljYWw=",
+          "byte_length": "26"
+        }
+      },
+      {
+        "session": "1",
+        "request": "1",
+        "sequence": "4",
+        "kind": {
+          "encoding": "base64",
+          "data": "cmVzdWx0",
+          "byte_length": "6"
+        },
+        "text": {
+          "encoding": "base64",
+          "data": "bmlsOiBuaWw=",
+          "byte_length": "8"
+        }
+      },
+      {
+        "session": "1",
+        "request": "1",
+        "sequence": "5",
+        "kind": {
+          "encoding": "base64",
+          "data": "cmVzdWx0",
+          "byte_length": "6"
+        },
+        "text": {
+          "encoding": "base64",
+          "data": "Ym9vbGVhbjogZmFsc2U=",
+          "byte_length": "14"
+        }
+      },
+      {
+        "session": "1",
+        "request": "1",
+        "sequence": "6",
+        "kind": {
+          "encoding": "base64",
+          "data": "cmVzdWx0",
+          "byte_length": "6"
+        },
+        "text": {
+          "encoding": "base64",
+          "data": "bnVtYmVyOiA0Mg==",
+          "byte_length": "10"
+        }
+      }
+    ]
+  },
+  "screenshot_sha256": "7609e9570c76e90d34981020cc0871851416845da36ef02c07fd70a03e0cf7c1",
+  "game_state": {
+    "phase": "gameplay",
+    "phase_detail": {
+      "server_mode": 2,
+      "loading_module": 0,
+      "area_not_ready": 0,
+      "input_class": 0,
+      "main_menu": 0,
+      "game_over": 0,
+      "pause": 0,
+      "controller_pause": 0,
+      "tutorial": 0,
+      "modal_count": 0,
+      "status_summary": 0,
+      "movie": 0,
+      "load_error": 0,
+      "move_pending": 0,
+      "timers_paused": 0,
+      "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 17,
+    "client_tick": 38,
+    "pc": {
+      "id": 2147483644,
+      "max_hp": 96,
+      "hp": 96,
+      "x": 105.67625427246094,
+      "y": 96.4639663696289,
+      "z": 0.9961421489715576
+    },
+    "party": [
+      {
+        "id": 2147483644,
+        "tag": ""
+      }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+      "globals": 1184,
+      "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+  },
+  "originals_unchanged": true,
+  "owned_game_pids_before_teardown": [
+    236
+  ],
+  "remaining_owned_game_pids": [],
+  "display_parent_reaped": true,
+  "display_owner_pid": 5
+}

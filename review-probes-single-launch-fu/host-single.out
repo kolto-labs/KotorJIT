@@ -1,0 +1,34 @@
+test_constructor_refusal_is_also_one_line (__main__.TestCliBootBudget.test_constructor_refusal_is_also_one_line) ... ok
+test_flag_is_parsed_on_boot_and_run (__main__.TestCliBootBudget.test_flag_is_parsed_on_boot_and_run) ... ok
+test_flag_reaches_session_and_failure_prints_evidence (__main__.TestCliBootBudget.test_flag_reaches_session_and_failure_prints_evidence) ... ok
+test_invalid_env_is_one_line_nonzero_without_session (__main__.TestCliBootBudget.test_invalid_env_is_one_line_nonzero_without_session) ... ok
+test_invalid_flag_is_one_line_nonzero_without_session (__main__.TestCliBootBudget.test_invalid_flag_is_one_line_nonzero_without_session) ... ok
+test_no_flag_leaves_env_to_the_session (__main__.TestCliBootBudget.test_no_flag_leaves_env_to_the_session) ... ok
+test_boot_evidence_judgement (__main__.TestCreativeRefusesBeforeClaims.test_boot_evidence_judgement) ... ok
+test_invalid_dev_flag_refused_before_any_claim (__main__.TestCreativeRefusesBeforeClaims.test_invalid_dev_flag_refused_before_any_claim) ... ok
+test_invalid_env_refused_before_any_claim (__main__.TestCreativeRefusesBeforeClaims.test_invalid_env_refused_before_any_claim) ... ok
+test_invalid_env_refused_even_with_valid_dev_flag (__main__.TestCreativeRefusesBeforeClaims.test_invalid_env_refused_even_with_valid_dev_flag) ... ok
+test_resolved_budget (__main__.TestCreativeRefusesBeforeClaims.test_resolved_budget) ... ok
+test_default_keeps_five_attempts (__main__.TestDefaultAndEvidence.test_default_keeps_five_attempts) ... ok
+test_every_attempt_is_recorded_with_count_and_reasons (__main__.TestDefaultAndEvidence.test_every_attempt_is_recorded_with_count_and_reasons) ... ok
+test_failed_evidence_names_final_failure (__main__.TestDefaultAndEvidence.test_failed_evidence_names_final_failure) ... ok
+test_refusal_is_still_not_retried_under_default (__main__.TestDefaultAndEvidence.test_refusal_is_still_not_retried_under_default) ... ok
+test_unwritable_receipt_does_not_mask_boot_failure (__main__.TestDefaultAndEvidence.test_unwritable_receipt_does_not_mask_boot_failure) ... ok
+test_constructor_kwarg_wins_over_env (__main__.TestInvalidValues.test_constructor_kwarg_wins_over_env) ... ok
+test_constructor_refuses_invalid_env (__main__.TestInvalidValues.test_constructor_refuses_invalid_env) ... ok
+test_constructor_refuses_invalid_kwarg (__main__.TestInvalidValues.test_constructor_refuses_invalid_kwarg) ... ok
+test_invalid_env_is_refused (__main__.TestInvalidValues.test_invalid_env_is_refused) ... ok
+test_invalid_env_is_refused_by_value_error_catchers (__main__.TestInvalidValues.test_invalid_env_is_refused_by_value_error_catchers) ... ok
+test_invalid_env_refuses_before_any_launch (__main__.TestInvalidValues.test_invalid_env_refuses_before_any_launch) ... ok
+test_invalid_kwarg_is_refused (__main__.TestInvalidValues.test_invalid_kwarg_is_refused) ... ok
+test_resolver_accepts_one_to_five (__main__.TestInvalidValues.test_resolver_accepts_one_to_five) ... ok
+test_env_one_forces_single_launch (__main__.TestSingleLaunch.test_env_one_forces_single_launch) ... ok
+test_non_bootfailure_from_launch_is_still_counted (__main__.TestSingleLaunch.test_non_bootfailure_from_launch_is_still_counted) ... ok
+test_one_attempt_boot_timeout_launches_once (__main__.TestSingleLaunch.test_one_attempt_boot_timeout_launches_once) ... ok
+test_one_attempt_crash_launches_once_and_does_not_relaunch (__main__.TestSingleLaunch.test_one_attempt_crash_launches_once_and_does_not_relaunch) ... ok
+test_one_attempt_success_records_one_launch (__main__.TestSingleLaunch.test_one_attempt_success_records_one_launch) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 8.995s
+
+OK

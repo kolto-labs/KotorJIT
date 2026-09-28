@@ -1,0 +1,27 @@
+{
+  "utc": "2026-09-27T09:30:43.389383+00:00",
+  "rejected_display": ":1",
+  "recorded_owned_pids": [
+    816616,
+    816722,
+    816778,
+    816785,
+    816853,
+    816854
+  ],
+  "owned_pids_present": [],
+  "socket_table_matches": [],
+  "socket_path_exists": true,
+  "selected_processes": [
+    {
+      "pid": 7277,
+      "comm": "Xwayland",
+      "display_arguments": [
+        ":0"
+      ]
+    }
+  ],
+  "private_xwayland": [],
+  "forbidden_processes": [],
+  "canonical_lock_free": true
+}

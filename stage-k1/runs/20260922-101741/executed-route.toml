@@ -1,0 +1,86 @@
+name = "Quick creative validation: 50_chaos_roulette"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 240
+load_timeout = 600
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_room3"
+timeout = 600
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+
+[[step]]
+label = "counter plumbing round-trip: PC local numbers 6 and 7 are writable and readable from the harness state"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); nwscript.call('SetLocalNumber',pc,7,42); nwscript.call('SetLocalNumber',pc,6,17); local a,b=nwscript.call('GetLocalNumber',pc,7),nwscript.call('GetLocalNumber',pc,6); nwscript.call('SetLocalNumber',pc,7,0); nwscript.call('SetLocalNumber',pc,6,0); return a==42 and b==17 and nwscript.call('GetLocalNumber',pc,7)==0"
+equals = true
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+label = "finish Trask's tutorial bark left open by the checkpoint"
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+do = "assert_lua"
+label = "quick harness setup: protect PC and equip a plain longsword; does not alter example Lua"
+code = "local pc=nwscript.call(\"GetFirstPC\"); nwscript.call(\"SetMinOneHP\",pc,1); validation_weapon=nwscript.call(\"CreateItemOnObject\",\"g_w_lngswrd01\",pc,1); nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionEquipItem\",validation_weapon,4) end); return nwscript.call(\"GetIsObjectValid\",validation_weapon)==1"
+equals = true
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+label = "equipment queue completed before arena"
+code = "return nwscript.call(\"GetItemInSlot\",4,nwscript.call(\"GetFirstPC\"))==validation_weapon"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "the curse is armed (PC local number 5 == 1, set by the script 200 ticks after the load)"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetLocalNumber',pc,5) == 1"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+label = "arena: summon three Sith troopers in a ring around the player (CreateObject + hostile faction)"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetPosition',pc); local n=0; for i=1,3 do local a=i/3*2*math.pi; local loc=nwscript.call('Location',{x=p.x+4.5*math.cos(a),y=p.y+4.5*math.sin(a),z=p.z},0); local c=nwscript.call('CreateObject',1,'g_sithtroop01',loc,1); if nwscript.call('GetIsObjectValid',c)==1 then nwscript.call('ChangeToStandardFaction',c,1); n=n+1 end end; return n==3"
+equals = true
+timeout = 60
+
+[[step]]
+label = "the ring engaged: the player is in combat, or a live hostile stands within 25m"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); if nwscript.call('GetIsInCombat',pc)==1 then return true end; local area=nwscript.call('GetArea',pc); local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetIsEnemy',o,pc)==1 and nwscript.call('GetIsDead',o)~=1 and nwscript.call('GetDistanceBetween',pc,o)<=25 then return true end; o=nwscript.call('GetNextObjectInArea',area,1) end; return false"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+label = "fight the room while the curse fires"
+do = "clear_room"
+radius = 40
+grace = 10
+timeout = 300
+
+[[step]]
+label = "the wheel spun at least eight times"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetLocalNumber',pc,7) >= 8"
+equals = true
+poll = true
+timeout = 120

@@ -1,0 +1,2 @@
+before: active_count 1 supervisor_thread_count 1
+with _thread: active_count 1 supervisor_thread_count 2

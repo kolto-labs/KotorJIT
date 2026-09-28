@@ -1,0 +1,4 @@
+OLD-pattern slow_quarter  v2: status=failed ratio=0.0000 sep=ambiguous below=1000 inside=79 above=0 failures=['calibration_ambiguous']
+OLD-pattern slow_half     v2: status=failed ratio=0.0000 sep=ambiguous below=3 inside=1076 above=0 failures=['calibration_ambiguous']
+OLD-pattern fresh60       v2: status=failed ratio=0.0000 sep=ambiguous below=0 inside=1079 above=0 failures=['calibration_ambiguous']
+OLD-pattern r30_k1        v2: status=failed ratio=0.3346 sep=ambiguous below=539 inside=540 above=0 failures=['calibration_ambiguous']

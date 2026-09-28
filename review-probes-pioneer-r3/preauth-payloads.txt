@@ -1,0 +1,7 @@
+deep_nesting   len= 65535 0.0170s reply=b'{"ok": false, "error": "maximum recursion depth exceeded while decodin'
+huge_int       len= 65524 0.0011s reply=b'{"ok": false, "error": "Exceeds the limit (4300 digits) for integer st'
+many_keys      len= 65536 0.0088s reply=b'{"ok": false, "error": "Invalid control character at: line 1 column 65'
+long_string    len= 65529 0.0013s reply=b'{"ok": false, "error": "control authentication failed"}\n'
+exact_limit    len= 65536 0.0035s reply=b'{"ok": false, "error": "Expecting value: line 1 column 1 (char 0)"}\n'
+over_limit     len= 65537 0.0009s reply=b'{"ok": false, "error": "invalid control message"}\n'
+threads_after 3

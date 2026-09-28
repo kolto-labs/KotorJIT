@@ -1,0 +1,24 @@
+name = "isolated K1 Dantooine/Bastila validation preflight"
+target = "k1"
+[execution]
+load_timeout = 180
+default_timeout = 45
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+[[step]]
+wait = "module"
+equals = "danm14aa"
+timeout = 180
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 120
+[[step]]
+label = "Bastila is a valid conscious active party member"
+do = "assert_lua"
+code = "local b=nwscript.call('GetObjectByTag','bastila',0); return nwscript.call('GetIsObjectValid',b)==1 and nwscript.call('IsObjectPartyMember',b)==1 and nwscript.call('GetIsDead',b)==0"
+equals = true
+[[step]]
+screenshot = true
+label = "dantooine-party-preflight"

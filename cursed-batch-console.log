@@ -1,0 +1,11 @@
+RUN 10_rancor_roulette.lua
+RESULT {"script": "10_rancor_roulette.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-095936", "source_unchanged": true}
+RUN 20_fus_ro_dah.lua
+RESULT {"script": "20_fus_ro_dah.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100404", "source_unchanged": true}
+RUN 30_necromancer.lua
+RESULT {"script": "30_necromancer.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100830", "source_unchanged": true}
+RUN 40_chain_reaction.lua
+RESULT {"script": "40_chain_reaction.lua", "exit_code": 0, "code": 0, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-101511", "source_unchanged": true}
+RUN 50_chaos_roulette.lua
+RESULT {"script": "50_chaos_roulette.lua", "exit_code": 1, "code": 1, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-101741", "source_unchanged": true}
+Route failed; halted for diagnosis

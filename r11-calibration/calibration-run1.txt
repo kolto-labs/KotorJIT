@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/r11-calibration/calibrate_noise_floor.py", line 60, in <module>
+    rows, pts = probe(encode(name, graph))
+                ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/r11-calibration/calibrate_noise_floor.py", line 48, in probe
+    rows = R.probe_frame_content(fdp, FFPROBE, pass_fds=(fd,), **DEADLINE)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/recording.py", line 330, in probe_frame_content
+    raw = _bounded_probe_output(command, pass_fds=pass_fds, maximum_bytes=MAX_CONTENT_PROBE_BYTES,
+                                popen=popen, monotonic=monotonic, sleep=sleep)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/recording.py", line 283, in _bounded_probe_output
+    raise subprocess.TimeoutExpired(command, 30)
+subprocess.TimeoutExpired: Command '['/home/linuxbrew/.linuxbrew/bin/ffprobe', '-v', 'error', '-f', 'lavfi', '-i', 'movie=/proc/self/fd/3,signalstats', '-show_entries', 'frame_tags=lavfi.signalstats.YMIN,lavfi.signalstats.YMAX,lavfi.signalstats.YAVG,lavfi.signalstats.YDIF,lavfi.signalstats.UDIF,lavfi.signalstats.VDIF', '-of', 'json']' timed out after 30 seconds
+done

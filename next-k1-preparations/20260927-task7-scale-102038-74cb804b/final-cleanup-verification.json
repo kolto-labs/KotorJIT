@@ -1,0 +1,37 @@
+{
+  "utc": "2026-09-27T10:44:38.059685+00:00",
+  "owned_pids": {
+    "1252193": "59907138",
+    "1252163": "59907101",
+    "1252153": "59907062",
+    "1252191": "59907137",
+    "1239962": "59892678",
+    "1257609": "59913887"
+  },
+  "owned_pids_present": [],
+  "private_socket_rows": [],
+  "private_socket_path_exists": false,
+  "private_display_lock_exists": false,
+  "canonical_lock_free": true,
+  "source_save_input_snapshot_preserved": true,
+  "cleanup_order": [
+    "recorder",
+    "game_wine",
+    "display"
+  ],
+  "cleanup_errors": [],
+  "lease_cleanup_attempts": [
+    {
+      "attempt": 1,
+      "status": "passed"
+    }
+  ],
+  "socket_cleanup_status": "already_absent",
+  "reaped_children": [
+    {
+      "pid": 1252163,
+      "start": "59907101",
+      "wait_status": 0
+    }
+  ]
+}

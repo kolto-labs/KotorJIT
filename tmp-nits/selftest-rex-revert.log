@@ -1,0 +1,4 @@
+FAIL grill#2 REX: over-length prefixes+REX is DecodeFailed, not Unreadable Unreadable target page is unmapped or not readable
+FAIL grill#2 REX: detail names the 15-byte instruction cap, not the guard page target page is unmapped or not readable
+FAIL grill#2 REX path: prefixes + REX alone overrun 15 bytes -> DecodeFailed, not Unreadable child exit 1
+1 of 656 checks FAILED

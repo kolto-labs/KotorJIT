@@ -1,0 +1,3 @@
+mode A: 20000 seeds x 400 steps, 0 diverging seeds
+mode B: 20000 seeds x 400 steps, 0 diverging seeds
+rc=0

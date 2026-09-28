@@ -1,0 +1,78 @@
+=== T1 backup_dir='.' (tampered manifest)
+ 201 |      Remove-Item -LiteralPath $ManifestPath -Force
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | '/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t1/kotorphasor/install-manifest.json' because it does not exist.
+rc=1
+after:
+ls: cannot access '/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t1': No such file or directory
+=== T2 created path traversal ../victim.txt with its hash
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+ls: cannot access '/home/brunner56/kp-live-20260922/review-probes-w0w1/games/victim.txt': No such file or directory
+=== T3 backup missing, binkw32_real.dll (=original) present
+Line |
+ 177 |          throw "uninstall refused, nothing removed; manifest kept. Fil …
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept. Files: binkw32.dll
+rc=1
+d2ca9cd3a5c89ebe
+da32b9be412a8ade
+=== T4 backup tampered
+Line |
+ 177 |          throw "uninstall refused, nothing removed; manifest kept. Fil …
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept. Files: binkw32.dll
+rc=1
+binkw32.dll
+binkw32_real.dll
+chitin.key
+kotorphasor
+kphasor.dll
+swkotor.exe
+=== T5 read-only original binkw32.dll (Linux chmod 444 on file)
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5/kotorphasor/install-manifest.json
+rc=0
+-rw-r--r--. 1 brunner56 ubuntu 48 Sep 27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5/binkw32.dll
+-r--r--r--. 1 brunner56 ubuntu 47 Sep 27 12:00 /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5/binkw32_real.dll
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+binkw32.dll
+chitin.key
+kotorphasor
+swkotor.exe
+-r--r--r--. 1 brunner56 ubuntu 47 Sep 27 12:00 /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t5/binkw32.dll
+=== T6 existing kotorphasor/addresses/k1_gog_103.json from manual install
+     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | install failed and was rolled back:
+     | kotorphasor/addresses/k1_gog_103.json already exists and is not ours;
+     | refusing
+rc=1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/binkw32.dll
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/chitin.key
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/kotorphasor
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/kotorphasor/addresses
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/kotorphasor/addresses/k1_gog_103.json
+/home/brunner56/kp-live-20260922/review-probes-w0w1/games/t6/swkotor.exe
+=== T7 TrustBinkSha256 on unknown bink, uppercase
+     | 40b86798aad9c616bcf9b8a4abfa36518e2afcdad01867675e48cb587a9e5081 is not
+     | a known Bink build; pass -TrustBinkSha256
+     | 40b86798aad9c616bcf9b8a4abfa36518e2afcdad01867675e48cb587a9e5081 only if
+     | you know it is the game's original
+rc=1
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t7
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t7/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t7/kotorphasor/install-manifest.json
+rc=0
+  "bink_trusted_override": "40b86798aad9c616bcf9b8a4abfa36518e2afcdad01867675e48cb587a9e5081",
+=== T8 relative GameDir from other cwd
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t8
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t8/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w0w1/games/t8/kotorphasor/install-manifest.json
+rc=0
+DONE

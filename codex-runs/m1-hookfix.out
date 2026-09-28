@@ -1,0 +1,47 @@
+Resumed and completed the existing M1 fix round without restarting or duplicating its report section.
+
+Status: **green for the requested host-only validation.**
+
+- The partial report was already present and already contained the completed `## Fix round` implementation/evidence. I preserved it and appended only a `### Resume verification` receipt, rather than adding another fix-round section: [platform-m0m1-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-m0m1-report.md).
+- The current self-test passes **654 checks**. The earlier report’s 650-check result was an initial green receipt; four checks were added afterward.
+- Rebuilt/validated from the existing external scratch directory:
+  `/home/brunner56/kp-live-20260922/fixround-m1/build`
+- Requested CTest filter passed **3/3**:
+
+  - `kp_machotest` — passed, 0.01 s
+  - `kp_imagetool_macho_test` — passed, 60.56 s on the loaded host
+  - `kp_hooktool_x64.selftest` — passed, 0.16 s
+
+  Total: 61.44 s, 0 failures.
+
+- Rebuilt the reviewer `dec_cli` against the **current** [decode.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/decode.cpp) and reran the reviewer’s `enum.py` from `/home/brunner56/kp-live-20260922/review-probes-m0m1/fuzz/`:
+
+  | Measure | Result |
+  |---|---:|
+  | Enumerated cases | 1,641,904 |
+  | Decoder-accepted | 1,129,845 |
+  | Capstone agreement | 930,579 |
+  | Length mismatches | **0** |
+  | RIP-relative mismatches | **0** |
+  | Capstone-invalid encodings | 199,266, unchanged |
+
+The implemented M1 scope remains confined to the requested five source files:
+
+- [decode.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/decode.hpp)
+- [decode.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/decode.cpp)
+- [trampoline.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/trampoline.hpp)
+- [trampoline.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/hooks/x64/trampoline.cpp)
+- [kp_hooktool_x64.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_hooktool_x64.cpp)
+
+The fixes covered the requested findings:
+
+- **I1:** REX.W precedence over `66` for immz decoding, backed by exhaustive prefix/REX table tests and zero remaining enumeration length mismatches.
+- **I2:** failed uninstall no longer unmaps a trampoline still reachable through a foreign chained hook; destructor and move-assignment deliberately leak it and count the leak.
+- **I3:** failed protection restore rolls bytes back while writable and retries resealing, with explicit installed-state semantics for the unrecoverable rollback-refused branch.
+- **m2:** call-plus-NOP-padding noreturn-wrapper heuristic now refuses the patch plan.
+- **m3:** near-map and ordinary-map `AllocFailed` diagnostics now describe the actual failed allocation path.
+- **m4:** target-page protections are captured and restored rather than always forced RX; write-time engine/libc-page guarding and non-libc byte copying were added.
+
+No Wine, game, Gamescope/X11 capture tooling, or live-game lock was touched. No staging, commit, stash, reset, push, or canonical-checkout edit was performed.
+
+Incomplete proof boundaries remain exactly as documented in the report: no Darwin runtime test, no retail executable hook, no real SELinux `execmod` refusal, and no dynamic two-mapping protection-span test. The decoder’s pre-existing acceptance of architecturally undefined encodings remains out of scope.

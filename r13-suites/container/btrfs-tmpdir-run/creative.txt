@@ -1,0 +1,85 @@
+.RuntimeError: cleanup failed: session: RuntimeError: parent cleanup failed
+...usage: kpharness_creative_test.py [-h] --backend BACKEND [--target TARGET]
+                                  --script SCRIPT --route ROUTE
+                                  [--source SOURCE] [--build-dir BUILD_DIR]
+                                  [--staged STAGED] [--wineprefix WINEPREFIX]
+                                  [--checkpoint-root CHECKPOINT_ROOT]
+                                  [--output OUTPUT]
+                                  [--capture-fps CAPTURE_FPS] [--width WIDTH]
+                                  [--height HEIGHT]
+                                  [--boot-timeout BOOT_TIMEOUT]
+                                  [--ffmpeg FFMPEG] [--ffprobe FFPROBE]
+                                  [--marker MARKER]
+                                  [--capture-marker NAME=REGEX]
+                                  [--cadence-start-marker CADENCE_START_MARKER]
+                                  [--cadence-end-marker CADENCE_END_MARKER]
+                                  [--cleanup-commitment-log CLEANUP_COMMITMENT_LOG]
+kpharness_creative_test.py: error: unrecognized arguments: --dev-max-boot-attempts 3
+E.....EERuntimeError: capture_binding_changed: late capture failure
+..EEF......................
+======================================================================
+ERROR: test_dev_override_passes_budget_but_is_never_acceptance (__main__.DriverIntegrationTests.test_dev_override_passes_budget_but_is_never_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 538, in test_dev_override_passes_budget_but_is_never_acceptance
+    result,_=self.exercise(dev_budget=3)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 298, in exercise
+    options=C.parser().parse_args(['--backend','linux-wine-k1','--script',str(script),'--route',str(route),'--output',str(self.root/'output')]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/argparse.py", line 1911, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/usr/lib/python3.12/argparse.py", line 2677, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/usr/lib/python3.12/argparse.py", line 2664, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_gamescope_relaunch_blocks_visual_acceptance (__main__.DriverIntegrationTests.test_gamescope_relaunch_blocks_visual_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 551, in test_gamescope_relaunch_blocks_visual_acceptance
+    self.assertFalse(result['ok']);self.assertFalse(result['acceptance_ready'])
+                                                    ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'acceptance_ready'
+
+======================================================================
+ERROR: test_gamescope_single_launch_stays_pending (__main__.DriverIntegrationTests.test_gamescope_single_launch_stays_pending)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 546, in test_gamescope_single_launch_stays_pending
+    self.assertTrue(result['boot_attempts']['acceptance_eligible'])
+                    ~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'boot_attempts'
+
+======================================================================
+ERROR: test_missing_boot_evidence_refuses_acceptance (__main__.DriverIntegrationTests.test_missing_boot_evidence_refuses_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 533, in test_missing_boot_evidence_refuses_acceptance
+    self.assertIsNone(result['boot_attempts']['evidence'])
+                      ~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'boot_attempts'
+
+======================================================================
+ERROR: test_relaunch_refuses_acceptance (__main__.DriverIntegrationTests.test_relaunch_refuses_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 527, in test_relaunch_refuses_acceptance
+    self.assertFalse(result['boot_attempts']['acceptance_eligible'])
+                     ~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'boot_attempts'
+
+======================================================================
+FAIL: test_single_launch_budget_is_passed_and_evidence_embedded (__main__.DriverIntegrationTests.test_single_launch_budget_is_passed_and_evidence_embedded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_creative_test.py", line 516, in test_single_launch_budget_is_passed_and_evidence_embedded
+    self.assertEqual(self.session_budget,1)
+AssertionError: None != 1
+
+----------------------------------------------------------------------
+Ran 39 tests in 6.451s
+
+FAILED (failures=1, errors=5)

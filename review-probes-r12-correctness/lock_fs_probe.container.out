@@ -1,0 +1,6 @@
+fdinfo_lock_lines ['lock:\t1: FLOCK  ADVISORY  WRITE 2155320 08:11:39738076 0 EOF\n']
+stat_key 08:11:39738076
+held {'path': '/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/r12c-lockfs-e0d28xvt/private.lock', 'fd': 3, 'dev': 2065, 'ino': 39738076, 'exclusive': True}
+other_open refused: canonical lock descriptor does not hold the exclusive lock
+trusted_root /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+trusted_lock_path /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock == supervisor True

@@ -1,0 +1,166 @@
+..F.....EEEEFFFFFFE.EFFFEE........
+======================================================================
+ERROR: test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame (__main__.ContentSeparationTests.test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame) (name='one_frame_at_the_floor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2598, in test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame
+    self.assertEqual(result['level_sequence']['status'], 'passed')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame (__main__.ContentSeparationTests.test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame) (name='fresh_inside_band_above_floor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2598, in test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame
+    self.assertEqual(result['level_sequence']['status'], 'passed')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame (__main__.ContentSeparationTests.test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame) (name='duplicates_inside_band_below_floor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2598, in test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame
+    self.assertEqual(result['level_sequence']['status'], 'passed')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_a_clean_capture_passes_and_records_the_level_histogram (__main__.LevelSequenceTests.test_a_clean_capture_passes_and_records_the_level_histogram)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2646, in test_a_clean_capture_passes_and_records_the_level_histogram
+    sequence = result['level_sequence']
+               ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_counted_duplicates_repeat_the_level_and_still_pass (__main__.LevelSequenceTests.test_counted_duplicates_repeat_the_level_and_still_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2664, in test_counted_duplicates_repeat_the_level_and_still_pass
+    self.assertEqual(result['level_sequence']['repeats'], 2)  # frames 200 and 400 are inside 1..9 s
+                     ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_policy_carries_the_pattern_period_step_and_a_calibrated_resolution_factor (__main__.LevelSequenceTests.test_policy_carries_the_pattern_period_step_and_a_calibrated_resolution_factor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2634, in test_policy_carries_the_pattern_period_step_and_a_calibrated_resolution_factor
+    self.assertEqual(policy['level_period'], CD.PATTERN_PERIOD_FRAMES)
+                     ~~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'level_period'
+
+======================================================================
+ERROR: test_violations_are_bounded_and_counted (__main__.LevelSequenceTests.test_violations_are_bounded_and_counted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2739, in test_violations_are_bounded_and_counted
+    sequence = self.evaluate(encoded_rows(yavg=yavg))['level_sequence']
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+ERROR: test_whole_clip_partial_freeze_is_a_documented_residual (__main__.LevelSequenceTests.test_whole_clip_partial_freeze_is_a_documented_residual)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2748, in test_whole_clip_partial_freeze_is_a_documented_residual
+    self.assertEqual(result['level_sequence']['status'], 'passed')
+                     ~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'level_sequence'
+
+======================================================================
+FAIL: test_guard_band_is_half_to_twice_the_floor_and_clears_both_calibrated_populations (__main__.ContentNoiseFloorTests.test_guard_band_is_half_to_twice_the_floor_and_clears_both_calibrated_populations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2484, in test_guard_band_is_half_to_twice_the_floor_and_clears_both_calibrated_populations
+    self.assertEqual(policy['separation_factor'], 2.0)
+AssertionError: 3.0 != 2.0
+
+======================================================================
+FAIL: test_a_fresh_frame_that_repeats_the_level_is_a_violation (__main__.LevelSequenceTests.test_a_fresh_frame_that_repeats_the_level_is_a_violation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2725, in test_a_fresh_frame_that_repeats_the_level_is_a_violation
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : []
+
+======================================================================
+FAIL: test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous (__main__.LevelSequenceTests.test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous) (name='native_speed_ambiguous')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2701, in test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : ['calibration_ambiguous: 480 of 480 acceptance frames have a difference inside the guard band around the noise floor']
+
+======================================================================
+FAIL: test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous (__main__.LevelSequenceTests.test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous) (name='slow_quarter_below_band')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2701, in test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : ['calibration_ambiguous: 120 of 480 acceptance frames have a difference inside the guard band around the noise floor']
+
+======================================================================
+FAIL: test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous (__main__.LevelSequenceTests.test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous) (name='slow_plain_testsrc2_shape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2701, in test_a_missing_step_fails_as_content_sequence_even_when_the_difference_is_ambiguous
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : ['calibration_ambiguous: 96 of 480 acceptance frames have a difference inside the guard band around the noise floor']
+
+======================================================================
+FAIL: test_a_single_skipped_source_frame_is_a_sequence_violation_with_evidence (__main__.LevelSequenceTests.test_a_single_skipped_source_frame_is_a_sequence_violation_with_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2710, in test_a_single_skipped_source_frame_is_a_sequence_violation_with_evidence
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : []
+
+======================================================================
+FAIL: test_a_torn_or_partial_frame_between_levels_fails_as_content_sequence (__main__.LevelSequenceTests.test_a_torn_or_partial_frame_between_levels_fails_as_content_sequence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2735, in test_a_torn_or_partial_frame_between_levels_fails_as_content_sequence
+    self.assertTrue(sequence_failures(result), result['failures'])
+AssertionError: [] is not true : []
+
+======================================================================
+FAIL: test_short_or_empty_intervals_fail_closed_without_raising (__main__.LevelSequenceTests.test_short_or_empty_intervals_fail_closed_without_raising)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2752, in test_short_or_empty_intervals_fail_closed_without_raising
+    self.assertEqual(result['status'], 'failed')
+AssertionError: 'passed' != 'failed'
+- passed
++ failed
+
+
+======================================================================
+FAIL: test_two_and_three_frame_stale_loops_fail_as_content_sequence (__main__.LevelSequenceTests.test_two_and_three_frame_stale_loops_fail_as_content_sequence) (loop=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2683, in test_two_and_three_frame_stale_loops_fail_as_content_sequence
+    self.assertEqual(result['status'], 'failed')
+AssertionError: 'passed' != 'failed'
+- passed
++ failed
+
+
+======================================================================
+FAIL: test_two_and_three_frame_stale_loops_fail_as_content_sequence (__main__.LevelSequenceTests.test_two_and_three_frame_stale_loops_fail_as_content_sequence) (loop=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2683, in test_two_and_three_frame_stale_loops_fail_as_content_sequence
+    self.assertEqual(result['status'], 'failed')
+AssertionError: 'passed' != 'failed'
+- passed
++ failed
+
+
+----------------------------------------------------------------------
+Ran 29 tests in 4.161s
+
+FAILED (failures=10, errors=8)

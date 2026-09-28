@@ -1,0 +1,8 @@
+fresh: status=passed ratio=1.0000 sep=separated below/inside/above=0/0/360 maxdif[min,p50,max]=[51.85,56.84,80.47] yavg[:8]=[87.6, 143.6, 71.7, 124.8, 176.9, 105.0, 161.5, 87.5] fails=[] t=0s
+abab_two_frames: status=failed ratio=1.0000 sep=separated below/inside/above=0/0/360 maxdif[min,p50,max]=[52.93,53.01,53.04] yavg[:8]=[124.8, 71.8, 124.8, 71.8, 124.8, 71.8, 124.8, 71.8] fails=['capture_content_sequence'] t=0s
+skip7_every_frame: status=failed ratio=0.6250 sep=ambiguous below/inside/above=0/6/2 maxdif[min,p50,max]=[2.64,4.19,9.76] yavg[:8]=[71.8, 71.9, 71.7, 71.3, 65.4, 71.7, 71.8, 71.8] fails=['calibration_ambiguous', 'capture_content_sequence'] t=0s
+half_frozen_bottom: status=passed ratio=0.9944 sep=separated below/inside/above=2/0/358 maxdif[min,p50,max]=[0.00,27.92,36.61] yavg[:8]=[79.6, 107.3, 71.9, 98.0, 123.7, 88.2, 116.1, 79.6] fails=[] t=0s
+quarter_fresh_top: status=passed ratio=0.9944 sep=separated below/inside/above=2/0/358 maxdif[min,p50,max]=[0.01,14.04,18.49] yavg[:8]=[75.7, 89.7, 71.9, 85.0, 97.9, 80.1, 94.1, 75.7] fails=[] t=0s
+tenth_fresh_top: status=failed ratio=0.9944 sep=ambiguous below/inside/above=2/351/7 maxdif[min,p50,max]=[0.01,5.91,7.91] yavg[:8]=[73.5, 79.4, 71.9, 77.4, 82.8, 75.3, 81.2, 73.5] fails=['calibration_ambiguous'] t=0s
+every_other_dup_noise3: status=failed ratio=0.5000 sep=separated below/inside/above=180/0/180 maxdif[min,p50,max]=[0.00,15.35,117.73] yavg[:8]=[161.6, 143.8, 143.8, 124.9, 124.9, 105.0, 105.0, 87.7] fails=['capture_content_static', 'capture_content_sequence'] t=0s
+tblend_average: status=failed ratio=1.0000 sep=separated below/inside/above=0/0/360 maxdif[min,p50,max]=[8.34,10.65,65.01] yavg[:8]=[114.1, 103.1, 94.9, 154.4, 145.3, 134.7, 124.2, 114.1] fails=['capture_content_sequence'] t=0s

@@ -1,0 +1,12 @@
+FAIL I2 dtor: trampoline recorded as leaked 
+FAIL I2 dtor: trampoline still mapped r-x ?
+FAIL I2: destructor after PatchClobbered keeps the trampoline child killed by signal 11
+FAIL I2 move: trampoline recorded as leaked 
+FAIL I2 move: trampoline still mapped r-x ?
+FAIL I2: move-assign after PatchClobbered keeps the trampoline child killed by signal 11
+FAIL I2 protect: trampoline recorded as leaked 
+FAIL I2 protect: trampoline still mapped r-x ?
+FAIL I2: destructor after ProtectFailed keeps the trampoline child killed by signal 11
+FAIL I3 uninstall always: destroy leaks the trampoline ?
+FAIL I3: uninstall, restore always refused: patch rolled back, trampoline leaked on destroy child exit 1
+4 of 654 checks FAILED

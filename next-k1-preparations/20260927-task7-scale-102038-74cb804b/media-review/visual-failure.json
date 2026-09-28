@@ -1,0 +1,39 @@
+{
+  "status": "failed",
+  "scope": "supplementary media review; not an acceptance receipt",
+  "master_sha256": "53831eb032b9d154766d67a762c92f22de57bac1291ab841db829ed161ac14c5",
+  "method": "all-timeline contact sheets sampled every2s; detailed204\u2013221s contact sheets sampled every0.25s; full-resolution202/208/213/220s frames; all12786 frames decoded for timestamps and pixel cadence",
+  "giant_first_pts": 211.8,
+  "giant_last_pts": 218.016667,
+  "restored_first_pts": 218.033333,
+  "defects": [
+    {
+      "kind": "full_body_framing",
+      "status": "failed",
+      "evidence": "giant head and upper body extend beyond top frame for211.800000\u2013218.016667s; frame-213s.png"
+    },
+    {
+      "kind": "camera_stability",
+      "status": "not_passed",
+      "evidence": "door and background shift horizontally between202s and220s; some drift also apparent through giant interval; cannot claim a perfectly fixed camera or isolate a native camera cause"
+    },
+    {
+      "kind": "representative_coverage",
+      "status": "failed",
+      "interval": [
+        206.11726061801892,
+        216.11726061801892
+      ],
+      "evidence": "selected clip ends216.117260618s, before visible restoration218.033333s"
+    },
+    {
+      "kind": "cadence",
+      "status": "failed",
+      "evidence": "average19179/352FPS versus nominal60,1293 reported dropped frames, central gameplay exact repeats0.633334s"
+    }
+  ],
+  "acceptance_command_executed": false,
+  "supplemental_25fps_gif_created": false,
+  "runner_generated_8fps_gif": "retained unaccepted; production render_media created it automatically before manual review",
+  "master_edited": false
+}

@@ -1,0 +1,79 @@
+[
+  {
+    "script": "10_rancor_roulette.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-095936",
+    "source_unchanged": true
+  },
+  {
+    "script": "20_fus_ro_dah.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100404",
+    "source_unchanged": true
+  },
+  {
+    "script": "30_necromancer.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100830",
+    "source_unchanged": true
+  },
+  {
+    "script": "40_chain_reaction.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-101511",
+    "source_unchanged": true
+  },
+  {
+    "script": "50_chaos_roulette.lua",
+    "exit_code": 1,
+    "code": 1,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-101741",
+    "source_unchanged": true
+  },
+  {
+    "script": "50_chaos_roulette.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102211",
+    "source_unchanged": true
+  },
+  {
+    "script": "60_rave.lua",
+    "exit_code": -15,
+    "code": 1,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534",
+    "source_unchanged": true
+  },
+  {
+    "script": "60_rave.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104031",
+    "source_unchanged": true
+  },
+  {
+    "script": "70_doppelganger.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104259",
+    "source_unchanged": true
+  },
+  {
+    "script": "80_loot_pinata.lua",
+    "exit_code": 0,
+    "code": 0,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104621",
+    "source_unchanged": true
+  },
+  {
+    "script": "90_bullet_time.lua",
+    "exit_code": -2,
+    "code": 2,
+    "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104936",
+    "source_unchanged": true
+  }
+]

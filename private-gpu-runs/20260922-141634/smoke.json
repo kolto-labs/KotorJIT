@@ -1,0 +1,11 @@
+{
+  "game_launched": false,
+  "mount_verified": true,
+  "loopback_verified": true,
+  "display": ":0",
+  "accelerated": true,
+  "gamescope_pid": 4,
+  "nested_wine_display_verified": true,
+  "nested_loopback_verified": true,
+  "display_parent_reaped": true
+}

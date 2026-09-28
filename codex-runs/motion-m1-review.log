@@ -1,0 +1,2333 @@
+2026-09-27T18:18:59.619024Z ERROR codex_models_manager::manager: failed to load models cache: EOF while parsing a value at line 1 column 0
+2026-09-27T18:19:31.916132Z ERROR codex_core::session::session: failed to load skill /home/brunner56/.agents/skills/canvas/SKILL.md: missing field `description`
+2026-09-27T18:19:35.070312Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.cloudflare.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-09-27T18:19:35.268585Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://idiolect.app/.well-known/oauth-protected-resource/api/mcp\"" })
+2026-09-27T18:19:36.582576Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.cloudflare.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-09-27T18:19:36.878680Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://idiolect.app/.well-known/oauth-protected-resource/api/mcp\"" })
+2026-09-27T18:19:42.557143Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 39)
+OpenAI Codex v0.154.0
+--------
+workdir: /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+model: gpt-5.6-terra
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: low
+reasoning summaries: detailed
+session id: 01a0e417-7f60-7b30-9737-08da36eec437
+--------
+user
+RESUME, DO NOT RESTART. A previous agent was doing exactly this task and was stopped mid-way at the user's request (model switch). Before doing anything new: inspect what it already produced — its output/report/review file if one exists (it may be partial), files it was allowed to edit (git diff --stat and mtimes in the worktree), and its scratch/probe dirs. Keep completed work that verifies; re-run its last checks; continue from where it stopped. Do not duplicate completed sections; if a partial section exists in an append-only review file, finish it rather than adding a second one. The previous agent's last status line is given below.
+
+GLOBAL RULES: Worktree (cwd) /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation is intentionally dirty with other writers' work — preserve every unrelated change; never git reset/stash/staging/commit/push; never edit the canonical checkout. Never run Wine, a game, Gamescope, Xvfb/Xwayland, mpv, or x11grab capture; never touch /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock; never signal processes you did not start. Host-only tools (ffprobe, 32-bit binaries, pwsh, gamescope) via /home/brunner56/.local/bin/host-cmd sh -c '...'. Never run whole-worktree `git diff --check` (>12 min). The disk and CPU are heavily loaded: prefer incremental builds in your own scratch dir. Lua-native APIs are kp.*; NWScript only via nwscript.call; Lua must not duplicate NWScript names. End with a final message: status, counts, files, and anything incomplete marked honestly.
+
+PREVIOUS AGENT LAST STATUS: I'll start by orienting on the specs, receipts, and changed files.
+
+TASK:
+Independent review (spec, then adversarial) of placeable-motion M1: read-only kp.motion.capabilities()/capture(id), K1 GOG. Read-only on worktree; write only /home/brunner56/kp-live-20260922/motion-m1-review.md; scratch under /home/brunner56/kp-live-20260922/review-probes-motion-m1/. Specs /home/brunner56/kp-live-20260922/fanout-lua-lifecycle-plan.md (M1), /home/brunner56/kp-live-20260922/motion-m0-rederivation.md + /home/brunner56/kp-live-20260922/motion-m0-verification.md (safe/keep-out lists). Report /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/motion-m1-report.md. Files: src/api/motion{.hpp,.cpp,_profiles.cpp,_backend.cpp,_lua.cpp,.cmake}, tools/kp_motiontest.cpp, data/adjudication/k1_gog_103_motion_bindings.json, data/hooksites.toml (7 appended rows). Check only safe-list offsets, guarded reads (dangling/freed object, id reuse), getter ABI thiscall ret 4, engine-thread requirement and what protects it, nil,"kind: reason" contract, facing range, naming vs NWScript, hooksites format/no camera collision, METHOD.md two-derivation rule. Build/run kp_motiontest in scratch + mingw compile. End "Motion M1 verdict: PASS|FAIL".
+
+
+AGENT-TO-AGENT PROTOCOL (prove-the-effort)
+
+1. Independent first. Form your own answer from the evidence before you read
+   any other agent's answer. Then read theirs. (Same-model agents that read
+   each other first converge on a confident wrong answer.)
+
+2. Claims carry referents. Every claim you make to another agent names the
+   thing that shows it: a command and its output, a file:line, a test name,
+   a number with its source, a worked example. A claim with none is marked
+   `unverified` by you, not discovered by them.
+
+3. Be skeptical once, then narrower, then stop. When a claim reaches you
+   without a referent: ask for the one thing that would settle it. If the
+   answer is still a principle ("best practice", "should work", "it's
+   designed that way"), ask narrower once. After two asks with no new
+   referent, mark the claim `unresolved` and move on. Never ask "are you
+   sure?". it is not a question and it flips answers without evidence.
+
+4. Defend by re-deriving, not by folding. When your claim is challenged,
+   go back to the evidence and re-derive; if it still holds, say so with
+   the referent and your confidence. Do not apologise and switch because
+   someone pushed. Do not restate the same claim a second time without a
+   new referent either. that is the signal to stop.
+
+5. Concede in under five words when a referent lands. "you're right",
+   "fair", "that holds". Then take the next claim.
+
+6. Compromise means the option that wins on the named criterion, not the
+   midpoint. Before arguing, both sides write the criterion the decision
+   turns on (latency, lines touched, blast radius, reversibility, what the
+   user asked for) and the measurement or example that would decide it.
+   Run the check if it can be run here. If both options hold, take the one
+   that is cheaper to reverse. If neither side can produce a referent inside
+   the round cap, hand both positions and the missing referent to a judge
+   that argued neither side, or to the user, with one line each.
+
+7. Null move is legal. If the other agent's claim survives your one
+   question, say "that holds" and stop. Do not manufacture a flaw.
+
+8. Round cap three. Ask, ask narrower, verdict. A judge reads both orders
+   and writes its evidence before its verdict; it never shares a backbone
+   with an arguer when that can be arranged.
+
+9. Aim at the claim, never the agent. Short turns. A hard line gets a
+   laugh, not a paragraph. Three short messages beat one wall of text.
+
+10. Report in this shape, one block per claim:
+    claim: <verbatim>
+    referent: <what showed it, or "none">
+    checked: <command / file:line / "not checkable here">
+    verdict: holds | does not hold | unresolved
+    confidence: <low | medium | high> and what would change it
+
+
+AGENT-TO-AGENT GRILL HANDSHAKE (grill-me, soft-curious, used between spawns)
+- If you are a WRITER: end your report with a "Grill me" section: the 3–5 short why / how-come / is-there-a-reason questions a skeptical reviewer would most likely ask about your change (the places you are least sure of), each followed by your answer with a referent (command+output, file:line, test name) or "unverified". Put your weakest answer first.
+- If you are a REVIEWER: first read the writer's "Grill me" section (after forming your own independent view per rule 1). Attack the weakest answered question first; for each one say "that holds" with the referent, or ask one narrower question and check it yourself. Add your own grill questions the writer missed. Curious, not cross-exam: aim at the claim, never the agent.
+- Either role: when you hand off, list the one question you could not settle and what single check would settle it.
+
+2026-09-27T18:19:55.133444Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 39)
+warning: Exceeded skills context budget. All skill descriptions were removed and 96 additional skills were not included in the model-visible skills list.
+hook: SessionStart
+hook: SessionStart Completed
+codex
+I’ll resume from the existing artifacts first, preserving the dirty worktree. I’ll independently re-derive the M1 evidence before reading the writer’s report, then finish the single review file and rerun the bounded host-only checks.
+exec
+/usr/bin/bash -lc "pwd && git diff --stat && find . -maxdepth 5 -type f \\( -name 'motion-m1-report.md' -o -name 'motion-m1-review.md' \\) -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null && find /home/brunner56/kp-live-20260922/review-probes-motion-m1 -maxdepth 3 -printf '%TY-%Tm-%Td %TH:%TM %y %p\\n' 2>/dev/null | sort | tail -80 && git status --short" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Planning rerun for command timeout**
+exec
+/usr/bin/bash -lc 'timeout 45s git diff --stat; code=$?; printf '"'\\ngit-diff-stat-exit=%s\\n' \""'$code"; find .superpowers -type f -name '"'motion-m1-report.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922 -maxdepth 2 -type f -name 'motion-m1-review.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922/review-probes-motion-m1 -maxdepth 3 -printf '%TY-%Tm-%Td %TH:%TM %y %p\\n' 2>/dev/null | sort | tail -80" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Diagnosing command timeout due to disk issues**
+exec
+/usr/bin/bash -lc "timeout 15s ls -ld . .superpowers /home/brunner56/kp-live-20260922 /home/brunner56/kp-live-20260922/review-probes-motion-m1; timeout 15s find .superpowers -type f -name 'motion-m1-report.md' -print; timeout 15s find /home/brunner56/kp-live-20260922 -maxdepth 2 -type f -name 'motion-m1-review.md' -print" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 72102ms:
+
+git-diff-stat-exit=124
+2026-09-27 12:35 .superpowers/sdd/lua-boundary-validation-plan/motion-m1-report.md
+2026-09-27 13:11 /home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md
+2026-09-27 12:47 d /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_backend.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_lua.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_profiles.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe.cpp
+2026-09-27 12:48 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe
+2026-09-27 12:49 d /home/brunner56/kp-live-20260922/review-probes-motion-m1
+2026-09-27 12:53 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/boundary.txt
+
+ succeeded in 37574ms:
+drwxr-xr-x. 12 brunner56 ubuntu  4096 Sep 27 12:45 .
+drwxr-xr-x.  3 brunner56 ubuntu  4096 Sep 22 08:50 .superpowers
+drwxr-xr-x.  1 brunner56 ubuntu 12556 Sep 27 13:21 /home/brunner56/kp-live-20260922
+drwxr-xr-x.  1 brunner56 ubuntu    88 Sep 27 12:49 /home/brunner56/kp-live-20260922/review-probes-motion-m1
+.superpowers/sdd/lua-boundary-validation-plan/motion-m1-report.md
+/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md
+
+**Testing terminal tool behavior**
+exec
+/usr/bin/bash -lc 'echo live; date -u +%FT%TZ' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Diagnosing shell initialization blockage**
+exec
+/usr/bin/bash -c '/bin/echo live' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 3ms:
+live
+
+**Identifying login issue**
+exec
+/usr/bin/bash -c 'timeout 45s git diff --stat; code=$?; printf '"'\\ngit-diff-stat-exit=%s\\n' \""'$code"; find .superpowers -type f -name '"'motion-m1-report.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922 -maxdepth 2 -type f -name 'motion-m1-review.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922/review-probes-motion-m1 -maxdepth 3 -printf '%TY-%Tm-%Td %TH:%TM %y %p\\n' 2>/dev/null | sort | tail -80" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Increasing git timeout to 60 seconds**
+exec
+/usr/bin/bash -c "find .superpowers -type f -name 'motion-m1-report.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922 -maxdepth 2 -type f -name 'motion-m1-review.md' -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null; find /home/brunner56/kp-live-20260922/review-probes-motion-m1 -maxdepth 3 -printf '%TY-%Tm-%Td %TH:%TM %y %p\\n' 2>/dev/null | sort | tail -80" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 1752ms:
+2026-09-27 13:11 /home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md
+2026-09-27 12:47 d /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_backend.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_lua.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_profiles.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe.cpp
+2026-09-27 12:48 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe
+2026-09-27 12:49 d /home/brunner56/kp-live-20260922/review-probes-motion-m1
+2026-09-27 12:53 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/boundary.txt
+
+ succeeded in 71059ms:
+live
+2026-09-27T18:23:14Z
+
+**Assessing prior agent's report review**
+ succeeded in 46899ms:
+
+git-diff-stat-exit=124
+2026-09-27 12:35 .superpowers/sdd/lua-boundary-validation-plan/motion-m1-report.md
+2026-09-27 13:11 /home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md
+2026-09-27 12:47 d /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_backend.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_lua.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw/motion_profiles.o
+2026-09-27 12:47 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe.cpp
+2026-09-27 12:48 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/probe
+2026-09-27 12:49 d /home/brunner56/kp-live-20260922/review-probes-motion-m1
+2026-09-27 12:53 f /home/brunner56/kp-live-20260922/review-probes-motion-m1/boundary.txt
+
+exec
+/usr/bin/bash -c "sed -n '1,260p' /home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md; printf '\\n--- existing report (writer; defer conclusions) ---\\n'; sed -n '1,260p' .superpowers/sdd/lua-boundary-validation-plan/motion-m1-report.md; printf '\\n--- plan M1 locations ---\\n'; rg -n -C 3 'M1|motion' /home/brunner56/kp-live-20260922/fanout-lua-lifecycle-plan.md | head -240" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 864ms:
+# Motion M1 report: read-only `kp.motion.capabilities()` / `kp.motion.capture(id)`
+
+Date: 2026-09-27. Stage M1 of `/home/brunner56/kp-live-20260922/fanout-lua-lifecycle-plan.md` (Track M).
+Evidence used: `motion-m0-rederivation.md` (sha256 `c9a3d022…`) and `motion-m0-verification.md` (sha256 `93cda1dc…`, verdict CONFIRMS). Only the verification's "safe to enter reviewed data" list was used.
+Nothing was staged, committed or pushed. No Wine or game was run. The live-game lock was not touched. `gen_address_tables.py` was not run. `data/addresses/*` was not edited.
+
+## Result
+
+- 20/20 tests pass, 2926 checks, on synthetic memory. The red-stub run failed 17/19. A later facing-edge test failed red before its fix.
+- The i686-w64-mingw32 compile of all four motion sources is clean, and the thiscall branch is the one compiled.
+- The standalone data check passes: TOML parses, there are no duplicate names, each new row binds in exactly one file, and no motion offset overlaps another binding.
+- Nothing is proven live.
+
+## Files (all new except the additive hooksites rows)
+
+| File | Lines | Role |
+|---|---|---|
+| `src/api/motion.hpp` | 98 | Profile, Span/Slot, Failure {None, Unsupported, Guard, Chain, Identity, Value}, Backend, Capture, Operations |
+| `src/api/motion_profiles.cpp` | 72 | One profile `windows-k1-gog` (SHA 9c10e045…): 23 byte spans and 4 vtable slots |
+| `src/api/motion.cpp` | 130 | Checked core |
+| `src/api/motion_backend.cpp` | 42 | Native adapter, `_WIN32 && __i386__` only; every other host gets no adapter |
+| `src/api/motion_lua.cpp` | 107 | `kp.motion.{capabilities,capture}` and the protected capture userdata |
+| `src/api/motion.cmake` | 16 | `kp_motiontest` target and `add_test` (label `offline;motion`); passes `${CMAKE_SOURCE_DIR}`. **Written, not configured**: I built by hand, and CMakeLists.txt does not include it yet |
+| `tools/kp_motiontest.cpp` | 534 | Tests. The fixture `MotionFake` is inlined at :37-78, because `tools/tests/` was not on the allowed list |
+| `data/adjudication/k1_gog_103_motion_bindings.json` | 395 | 1 function, 1 reference and 7 fields, plus 23 guards and 4 slots, with a two-derivation citation |
+| `data/hooksites.toml` | +59 at :2354 | 7 optional `kind="field"` rows, appended after `g.camera_style_pending`. Camera rows untouched (diff has 0 removed lines) |
+
+### Core behaviour (file:line)
+
+`Operations::capture`, `src/api/motion.cpp:81-127`, runs these steps in order:
+
+1. **Guards on every capture.** `:83` calls `guards()` (`:36-54`). That checks all 23 spans byte for byte and the 4 placeable vtable slots.
+2. **OBJECT_INVALID.** `:84` refuses `0x7f000000` before the call. `0xffffffff` and `0x7fffffff` are passed through to the getter.
+3. **Server chain.** `:86-91`: `[0x7a39fc]` → `+8` CServerExoApp → `+4` internal → `+0x1005c` array → a 1-byte probe. Any failure is `Chain`, and no call is made.
+4. **The only engine call.** `:93` calls `backend_->placeable(0x4AE7A0, server, id)`. On Win32 that is `thiscall(void*, uint32)` (`motion_backend.cpp:20`).
+5. **Fences.** `:96` requires vtable == 0x7494D0, `:98` requires type byte == 9, and `:100` requires `[obj+4]` == the requested id. Any failure is `Identity`.
+6. **Field reads.** Reads go into a local `Capture`. An unreadable field is `Chain`. Non-finite position, orientation or quaternion is `Value` (`:113-115`).
+7. **Output.** `out = c` at `:126` only after everything above passes. The caller's struct is never partially written, and every refusal test asserts that.
+
+Bind refuses an unknown SHA, an ABI or width mismatch, a zero base, and a relocated base (`:66`; the spans hold absolute immediates). A guard mismatch at bind unbinds and reports `Guard`.
+
+### Lua surface (`src/api/motion_lua.cpp`)
+
+- `kp.motion.capabilities()` returns these fields:
+  - `available`, `profile`, `abi` (`windows-i386-thiscall` or "no verified host binding").
+  - `writes=false`.
+  - `reads`, a list of the field names.
+  - `limits`, which covers the gate, the quaternion order, the facing normalisation and the missing live readback.
+- `kp.motion.capture(id)` returns a protected userdata (`kp.motion.capture`, magic `KPMOTIO1` at `:16`, size check, `__metatable` at `:97`, `__newindex` raises). On failure it returns `nil, "<kind>: <reason>"`.
+  - The id must be an exact uint32 number. Anything else returns `value:` before any engine call.
+- Capture fields:
+  - `id`, `area_id`, `epoch`, and `object` (a hex string).
+  - `position` and `orientation` as fresh `{x,y,z}` tables.
+  - `facing`: atan2(y,x) in degrees, [0,360). It wraps after the float cast (`motion.cpp:118-121`), because 360-5.7e-6 rounds to 360.0f.
+  - `push_gate_raw` (u32).
+  - `dirty_position` (bit 1) and `dirty_orientation` (bit 2). The raw word and bit 0 are not exposed.
+  - `collision_registered`: `+0x344 >= 0`. The marker value itself is not exposed.
+  - `quaternion_raw` (array of 4) and `quaternion_order="unverified"`.
+- Name check: routine names in `data/routines/k1.json` (772) and `k2.json` (877), compared case-insensitively. None equals `motion`, `capabilities`, `capture` or any capture field name. `x`, `y` and `z` occur only as argument names, never as routine names.
+
+## Tests (`tools/kp_motiontest.cpp`)
+
+The plan's seven M1 names are all present, marked with *. The rest are additions.
+
+| Test | Line | What it asserts |
+|---|---|---|
+| *motion.unsupported_profile_capabilities_false | :97 | 7 other build SHAs, `""` and `wrong` all fail with Unsupported; so do a null backend, width 8, a Darwin ABI and base 0. An unbound capture is Unsupported with 0 getter calls. On the Linux host `native_backend` is null and `bind_native` fails, including with a null reader |
+| motion.relocated_image_refused | :126 | base+0x10000 is Unsupported and says "relocated" |
+| motion.span_table_valid | :133 | 23 spans valid; negatives: empty, odd length, uppercase, non-hex, 17 bytes, null |
+| *motion.guard_flip_refuses_before_call | :146 | Every byte of every span, flipped before bind, gives Guard. Flipped after bind, then unmapped, gives Guard on capture with 0 getter calls and an untouched out. Each of the 4 slots, wrong at bind and zero after bind, gives Guard |
+| motion.chain_failure_refuses_before_call | :175 | Manager null or unreadable, server null, internal null, array null or unreadable: each is Chain with 0 calls |
+| motion.invalid_object_id_refused_before_call | :192 | 0x7f000000 is Identity with 0 calls |
+| *motion.non_placeable_type_refuses | :197 | Type 5, 10, 6 and 0 give Identity after exactly 1 call. An unknown id (getter returns null) gives Identity |
+| motion.wrong_vtable_refuses | :208 | CSWSObject vtable 0x745f18, vtable+4, 0 and unreadable: each is Identity |
+| motion.id_roundtrip_mismatch_refuses | :217 | `[obj+4]` != id gives Identity |
+| *motion.capture_reads_server_xyz_and_orientation | :222 | Reads XYZ, orientation, area id, facing, the gate (0, 1, 0xdeadbeef raw) and the dirty masks (1→none, 2, 4, all). Marker -1/0/3 maps to the boolean. Facing 0/90/180/270, and orientation (1,-1e-7) stays below 360. The quaternion passes through raw. 14 calls for 14 captures |
+| motion.nonfinite_value_refuses | :253 | NaN and ±inf in 7 float slots give Value with an untouched out |
+| motion.unreadable_field_refuses | :262 | 9 fields unmapped, one at a time: refused with an untouched out |
+| *motion.accepts_client_id_0xffffffff | :272 | 0xffffffff, 0x7fffffff, 0x80000001 and 0 each reach the getter exactly once and capture |
+| motion.unbind_bumps_epoch | :283 | After unbind, capture is Unsupported; after rebind the epoch is larger |
+| motion.lua_unbound_capabilities_false | :309 | `available==false` and `writes==false`; capture returns `unsupported:`; 0 calls |
+| *motion.forged_userdata_argerror | :320 | A `newproxy` given the capture metatable fails; a zeroed same-size userdata fails with "magic"; writing a field fails |
+| motion.lua_capture_surface | :336 | `kp.motion` keys are exactly `capabilities,capture`. There is no relocate, restore or observe, and no NWScript-shaped alias. Ten bad ids return `value:` with 0 calls. All fields are checked, and tables are copies. An unknown id or a type-5 object returns `identity:` |
+| *motion.profile_matches_address_table_row | :400 | Reads `data/addresses/k1_gog_103.json` read-only and is strict on existing rows: `server_object.set_position` addr 0x004CD1A0 with expected_bytes equal to span 0x4cd1a0; `object.id` +4/4; `object.type` +8/1; `g.app_manager` 0x007A39FC; `event.placeable` 0x00587BA0 equal to vtable slot +0x78. Motion rows must match when present, otherwise they are printed as PENDING |
+| motion.bindings_json_matches_profile | :439 | Diffs the C++ profile against `k1_gog_103_motion_bindings.json`: all 23 guards (order, VA, bytes), 4 slots, 7 field offsets and sizes with verdict accept, the getter addr and the vtable addr. Mutation check: changing one guard byte in a temp-root copy fails exactly this test (`19/20`) |
+| motion.spans_match_reference_image | :481 | Re-reads all 23 spans and 4 slots from the raw image (`$KP_K1_GOG_IMAGE`, or `$HOME/biodecompwarehouse/…/K1__k1_win_gog_swkotor.exe/artifacts/raw_image`); SKIP if absent. It ran here |
+
+## Commands and outputs
+
+The build and run below happen in the scratch dir `/tmp/kp-motion-build`. `g++` is the host wrapper. The 32-bit binary runs via `host-cmd`, because this container has no 32-bit loader.
+
+```
+W=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+g++ -std=c++20 -m32 -Wall -Wextra -O1 -I$W/src -I$W/third_party/luajit/src \
+  tools/kp_motiontest.cpp src/api/motion.cpp src/api/motion_profiles.cpp src/api/motion_backend.cpp src/api/motion_lua.cpp \
+  /run/media/brunner56/MyBook/Workspaces/KotorPhasor/build/luajit32/src/libluajit.a -lm -ldl -o /tmp/kp-motion-build/kp_motiontest
+host-cmd sh -c "/tmp/kp-motion-build/kp_motiontest $W"
+```
+
+Red run (stub core, backend and Lua). Stored at `/tmp/kp-motion-build/red.txt`:
+```
+FAIL motion.unsupported_profile_capabilities_false: line 123: op.bind(k1().sha256,f.base,&f,e)
+FAIL motion.relocated_image_refused: line 130: e.find("relocated")!=std::string::npos
+FAIL motion.span_table_valid: line 135: Operations::valid_span(s)
+FAIL motion.guard_flip_refuses_before_call: line 154: op.last_failure()==Failure::Guard
+... (13 more FAIL, all on bind or `kp` nil)
+PASS motion.profile_matches_address_table_row
+PASS motion.spans_match_reference_image
+2/19 tests passed, 239 checks (synthetic memory; no live ABI proof)
+```
+The two red-phase passes check profile data only, not the core.
+
+The green run went through two test-side fixes before it passed, then one core fix:
+- The quaternion literals `.1f` compared unequal under `-m32 -std=c++20` (x87 excess precision). I changed them to exactly representable values.
+- The expected call count was wrong, 15 instead of 13.
+- Review found that `facing` could equal 360.0. I added the test first; it failed red (`/tmp/kp-motion-build/facing-red.txt`: `FAIL ... line 247: c.facing>=0.f&&c.facing<360.f`, 18/19). Then I fixed the core.
+
+Final run, stored at `/tmp/kp-motion-build/green.txt`:
+```
+PASS motion.unsupported_profile_capabilities_false
+... (16 more PASS)
+  PENDING regeneration: server_object.area_id
+  PENDING regeneration: server_object.position
+  PENDING regeneration: server_object.orientation
+  PENDING regeneration: server_object.client_push_gate_unverified
+  PENDING regeneration: server_object.dirty_bits
+  PENDING regeneration: placeable.aabb_registered
+  PENDING regeneration: placeable.quaternion_raw_order_unverified
+  PENDING regeneration: server.get_placeable_by_object_id (proposed row)
+  PENDING regeneration: placeable.vtable (proposed row)
+PASS motion.profile_matches_address_table_row
+PASS motion.bindings_json_matches_profile
+PASS motion.spans_match_reference_image
+20/20 tests passed, 2926 checks (synthetic memory; no live ABI proof)
+exit=0
+```
+
+mingw compile check (`/tmp/kp-motion-build/mingw.txt`; re-run after the facing fix, `mingw2.txt`, still clean):
+```
+host-cmd sh -c "cd $W && for f in motion motion_profiles motion_backend motion_lua; do \
+  i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -I$W/src -I$W/third_party/luajit/src -c src/api/$f.cpp -o /tmp/kp-motion-build/mingw/$f.o || echo FAILED $f; done"
+```
+- There were no warnings and no FAILED lines. `_WIN32` and `__i386__` are both defined.
+- `nm` lists `(anonymous namespace)::Native::placeable`.
+- Its disassembly loads `ecx`=server (`mov 0x10(%ebp),%ecx`), pushes one stack arg, `call *%eax`, then `sub $0x4,%esp`. The `sub` is the compiler re-adjusting after a callee that cleans up, which matches `ret 4`.
+
+Data check, a scratch script that does not import the generator: `python3 /tmp/kp-motion-build/check_motion_data.py $W`
+```
+sites 283 duplicate names []
+OK  server_object.area_id CSWSObject::area_id ['k1_gog_103_motion_bindings.json']
+... (6 more OK)
+OVERLAP ... (5 pre-existing harness `sizeof` rows; none involve motion)
+motion data check: PASS
+```
+
+## Integration snippet (for the serialized I-M integrator; I did not touch these files)
+
+`src/runtime/runtime.cpp`:
+- Include: `#include "api/motion.hpp"`.
+- In the image-bind block after model/animation (about `:370-373`), reuse the existing `read_model` lambda (same `model::Reader` type):
+  ```cpp
+  if(!api::motion::bind_native(image_sha256_,runtime_base_,read_model,nullptr,model_error))
+      log("motion: %s",model_error.c_str());
+  ```
+- In `register_all` after `api::model::register_all(L);` (about `:698`):
+  ```cpp
+  api::motion::register_all(L);     // read-only placeable capture (K1 GOG)
+  ```
+- Next to both `api::model::operations().unbind();` (about `:785` and `:848`):
+  ```cpp
+  api::motion::operations().unbind();
+  ```
+
+`src/runtime/runtime.cmake`, next to the model sources (`:61-64`):
+```cmake
+    "${KP_SRC_ROOT}/api/motion.cpp"
+    "${KP_SRC_ROOT}/api/motion_profiles.cpp"
+    "${KP_SRC_ROOT}/api/motion_backend.cpp"
+    "${KP_SRC_ROOT}/api/motion_lua.cpp"
+```
+
+`CMakeLists.txt`, after `include(.../src/api/camera.cmake)` (`:137`):
+```cmake
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/motion.cmake)
+```
+
+`tools/kp_namespacetest.cpp`. It links `kphasor`, so it needs the runtime.cmake sources first.
+- Add `#include "api/motion.hpp"`.
+- In `install_native` after `kp::api::entity::register_all(L);`, add `kp::api::motion::register_all(L);`.
+- In the contract Lua, add:
+  ```lua
+  assert(type(kp.motion.capabilities) == 'function' and type(kp.motion.capture) == 'function')
+  assert(kp.motion.relocate == nil and kp.motion.SetPosition == nil and kp.motion.GetPosition == nil)
+  assert(kp.motion.capabilities().writes == false)
+  ```
+- The existing routine loop (`:121-131`) already proves that no routine name appears under `kp`. The double `install` checks that re-registration keeps the table (`register_all` reuses `kp` and replaces `kp.motion`).
+
+## Doc text (for `docs/lua-api.md` and `docs/user/api-status.md`; the integrator places it)
+
+> ### `kp.motion` (read-only, K1 GOG only)
+>
+> `kp.motion.capabilities()` returns a table:
+> - `available`, `profile` and `abi`.
+> - `writes` (always `false` in this stage).
+> - `reads`, the names of the fields a capture holds.
+> - `limits`, a text note on what is not yet proven.
+>
+> `kp.motion.capture(id)` looks up a server placeable by its server object ID and returns a read-only capture. On any failure it returns `nil, "<kind>: <reason>"`:
+> - `unsupported`: this build or host has no verified binding.
+> - `guard`: the game code does not match the reviewed bytes.
+> - `chain`: the server object table is not available.
+> - `identity`: the ID is not a placeable.
+> - `value`: the ID is not an exact whole number from 0 to 4294967295, or the object holds a non-finite number.
+>
+> A capture has these fields:
+> - `id`, `area_id`, `epoch` and `object` (an address string for logs).
+> - `position` and `orientation`, each a new `{x, y, z}` table on every read.
+> - `facing`, in degrees from 0 up to 360.
+> - `push_gate_raw`: a raw number. The engine uses it to decide whether it pushes this object's changes to the client. What its values mean is not yet known.
+> - `dirty_position` and `dirty_orientation`: true when the server has a change that the next tick will push.
+> - `collision_registered`: true when the placeable's walk-blocking box is registered with the area.
+> - `quaternion_raw`: four raw numbers. Their order is not yet known, so `quaternion_order` is `"unverified"`.
+>
+> A capture cannot be changed. This stage has no call that moves anything. The names do not match any NWScript routine; use `nwscript.call('GetPosition', id)` for the engine's own answer.
+
+`docs/user/api-status.md` row: `kp.motion.capabilities / capture` | K1 GOG | offline-tested (19 tests), live readback pending | read-only.
+
+## Address-table entries the orchestrator must regenerate (`k1_gog_103.json`)
+
+These 7 field rows are now in `data/hooksites.toml:2354-2411`, each backed by `k1_gog_103_motion_bindings.json`:
+
+| hooksites name | key | offset | size |
+|---|---|---|---|
+| `server_object.area_id` | `CSWSObject::area_id` | 0x8C | 4 |
+| `server_object.position` | `CSWSObject::position` | 0x90 | 12 |
+| `server_object.orientation` | `CSWSObject::orientation` | 0x9C | 12 |
+| `server_object.client_push_gate_unverified` | `CSWSObject::client_push_gate_unverified` | 0x1F8 | 4 |
+| `server_object.dirty_bits` | `CSWSObject::dirty_bits` | 0x1FC | 4 |
+| `placeable.aabb_registered` | `CSWSPlaceable::aabb_registered` | 0x344 | 4 |
+| `placeable.quaternion_raw_order_unverified` | `CSWSPlaceable::quaternion_raw_order_unverified` | 0x428 | 16 |
+
+Two more rows are proposed but not added, because I was allowed to add field rows only. Both are bound and inert in the bindings file:
+
+```toml
+[[site]]
+name     = "server.get_placeable_by_object_id"
+class    = "CServerExoApp"
+method   = "GetPlaceableByGameObjectID"
+kind     = "call"
+required = false
+purpose  = "CSWSPlaceable* __thiscall(this, uint32_t server_object_id). Typed placeable lookup used by kp.motion."
+convention = "thiscall"
+
+[[site]]
+name   = "placeable.vtable"
+class  = "CSWSPlaceable"
+method = "vtable"
+kind   = "reference"
+required = false
+purpose = "Exact identity of a server placeable. Compared as a pointer."
+
+--- plan M1 locations ---
+11-`git status --short` (this session) shows these files already modified or untracked by other writers: `CMakeLists.txt`, `src/runtime/runtime.cpp`, `src/runtime/runtime.cmake`, `src/harness/commands.cpp`, `src/api/routines.cpp`, `tools/kp_routinetest.cpp`, `tools/kp_harnesstest.cpp`, many `scripts/harness/kpharness/*.py`, and all `src/api/projectiles*`.
+12-
+13-- The camera plan (`/home/brunner56/kp-live-20260922/kp-camera-api-plan.md` §2d) edits `runtime.cpp` (bind block at about `:370-375`, registration at about `:698`, unbind at about `:785`/`:848`), `runtime.cmake:61-64`, `CMakeLists.txt:136`, `data/hooksites.toml`, `data/addresses/k1_gog_103.json`, `docs/lua-api.md`, `docs/user/api-status.md`, `data/hostapi.toml` and `tools/kp_namespacetest.cpp`.
+14:- Consequence: this plan does not put new tests into `kp_routinetest.cpp` or `kp_harnesstest.cpp`, even though the brief names them as examples. Both are dirty, and neither exercises `lua::Host` lifecycle. Each stage below adds a **new** test file and registers it in a `.cmake` fragment that is currently clean (`src/lua/luahost.cmake`, `src/api/support.cmake`, or a new `src/api/motion.cmake`).
+15-- All edits to `runtime.cpp`, `runtime.cmake`, `CMakeLists.txt`, `hook_bodies.cpp`, `kp_namespacetest.cpp` and the public docs are collected into **integration steps (I-x)** owned by one serialized integration writer. That writer is also the camera integrator, or runs strictly after them.
+16-
+17----
+--
+47-| Fact | Referent |
+48-|---|---|
+49-| Read-only position: `kp.obj.position(id)` and handle `:position()`, via the routine `GetPosition` (a C++ bridge, not a Lua export) | `src/api/entity.cpp:31,213,375,419,443,456` |
+50:| **No** Lua set-position, orientation, facing or smooth-move API. There is no `src/api/motion*` | `ls src/api/motion*` → absent |
+51-| `data/hostapi.toml` declares an **unbound** `kp.obj.move` through the routine CutsceneMove (k1 id 507). api-status lists it as unbound. Whether CutsceneMove moves placeables is `unverified` | `data/hostapi.toml:1064-1079`; `docs/user/api-status.md:230` |
+52-| Engine setter already called natively: `CSWSObject::SetPosition` via site `server_object.set_position`, flags `(1,1,0)`, used for creatures in multiplayer replay | `data/hooksites.toml:393-400`; `data/addresses/k1_gog_103.json:539-540` (`0x004CD1A0`, expected bytes `538b5c2408…`); `src/runtime/hook_bodies.cpp:267-307,332-352` |
+53-| Struct evidence: `CSWSObject.position` +0x90, `.orientation` +0x9C (set by `SetOrientation 0x4CD170`), dirty word +0x1FC bit 2; `CSWCObject.position` +0x24, `.orientation` +0x30; `CSWSPlaceable.orientation` quaternion at +1064 is **Low** confidence | `src/generated/structs_k1.inc:855-856,925,949-950,1288` |
+54-| Typed placeable lookup: `GetPlaceableByGameObjectID 0x4AE7A0` → internal `0x4B18D0`, type byte ==9 | `structs_k1.inc:1695`; `data/research/phasor_structs.json:6000` |
+55:| Bounded brief with Win K1 GOG and Mac K2 x64 ABI facts (setter args, flags, client wrapper 0x5ED5F0 +0x24, "do NOT reject valid 0xffffffff", no Lua GetPosition/SetPosition aliases, `kp.motion` with distinct capture/relocate/restore names) | `.superpowers/sdd/lua-boundary-validation-plan/task-9-motion-brief.md`. The underlying byte audit `/tmp/kp-native-motion-audit.md` **no longer exists** (`ls` fails), so the brief's addresses other than 0x4CD1A0 are `unverified` until re-derived |
+56-| Mac transform sites (K1 i386 / K2 i386 / K2 x64) | `docs/research/mac-model-memory.md:46-52` (research only, not live) |
+57-| Status in the directive audit: "Native site/ABI/profile research and a bounded implementation brief exist". Movement is not implemented | `docs/user-directive-audit.md:45` |
+58-| Template to copy: `kp.model` is a profile, Backend, checked `Operations`, and a protected userdata capture/restore | `src/api/model.hpp:9-83`, `model_lua.cpp`, `model_profiles.cpp:3-27`, `model.cmake`, `tools/kp_modeltest.cpp`, `tools/tests/model_backend_fixture.hpp`, `tools/model_scene_test.lua` |
+--
+81-G8. There is no generation or evidence counter, so a live test cannot tell "reloaded" from "never unloaded".
+82-G9. Lifecycle has no host tests (§1a last row).
+83-G10. Utilities: `kp.vec` and function-valued timers are missing (Task 11). `kp.scriptname`/`kp.scriptdir` are declared and unbound.
+84:G11. Movement: no `kp.motion` capture/relocate/restore/observe. Orientation is unimplemented. There is no smooth-move helper and no demo.
+85-G12. The Task-9 ABI facts beyond `0x4CD1A0`, which has expected bytes, lost their audit file and must be re-derived before code (`unverified`).
+86-
+87----
+--
+90-
+91-Convention for every stage: write the failing host test first, register it in CTest, make it pass, then run the regression suites `ctest -L offline`, `kp_namespacetest.k1/.k2`, `tools/nwscript_boundary_test.py` (the camera plan uses the same set), and `i686-w64-mingw32` compile of the touched sources. Live proofs go under the canonical lock, run by the controller. Route TOMLs stay **private** under `/home/brunner56/kp-live-20260922/…` (the established precedent is `release-console-strings.toml`), so no stage touches `scripts/harness/**`.
+92-
+93:Proposed Lua names, all lowercase and none equal to an NWScript routine: `kp.scripts.{list,status,load,unload,reload,result}`, `kp.scriptname`, `kp.scriptdir`, `kp.vec`, `kp.motion.{capabilities,capture,relocate,restore,observe}`. Each is added to the namespace contract test at integration time.
+94-
+95-### Track L: lifecycle
+96-
+--
+128-**L3: native ownership restore on close.**
+129-Depends on L1's `on_state_closing`.
+130-Files: new `src/api/ownership.hpp/.cpp` (per-`lua_State` list of `{module, restore_fn}`, plus `run_and_clear(L)`); new `tools/kp_ownershiptest.cpp` registered in `support.cmake`.
+131:Modules opt in: motion in M3, and optionally model as a separate stage because it touches `model_lua.cpp`.
+132-Rule: restore runs only while `live()` and before hook uninstall. At `Runtime::stop` it is skipped and logged (§1a shutdown row).
+133-Tests: `ownership.restore_runs_once_on_unload`, `ownership.skipped_when_not_live`, `ownership.restore_failure_logged_not_thrown`, `ownership.cleared_on_explicit_restore`.
+134-Integration I-L3: `runtime.cpp` wires `on_state_closing` to `ownership::run_and_clear` and `runtime.cmake`.
+--
+154-### Track M: placeable movement
+155-
+156-**M0: evidence re-derivation (read-only, no code).**
+157:Re-derive the Win K1 GOG facts listed in `task-9-motion-brief.md`: typed placeable wrapper and internal, conversion slot, `SetPosition 0x4CD1A0` signature, flags and `ret 16`, the same-position early return, client wrapper `0x5ED5F0` +0x24, and `SetOrientation 0x4CD170`. Use the raw image with SHA `9c10e045…` (the same image as `model_profiles.cpp:17`), in the camera plan's replay style.
+158-Output: a receipt file under `/home/brunner56/kp-live-20260922/`.
+159:Gate: none of M1+ proceeds on a fact without a receipt. Profile data lives in C++ only (model precedent). It is cross-checked by a test against the existing row `data/addresses/k1_gog_103.json:539-540`, **read-only**, so there are no `data/` edits and no conflict with camera.
+160-
+161:**M1: read-only `kp.motion.capabilities` / `capture`.**
+162:Files (all new): `src/api/motion.hpp`, `motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`, `motion.cmake`, `tools/kp_motiontest.cpp`, `tools/tests/motion_backend_fixture.hpp`.
+163-The capture is protected userdata (as in `model_lua.cpp:11-35`) with fields id, type-checked placeable pointer, server XYZ, orientation vector, area and epoch.
+164:Tests: `motion.unsupported_profile_capabilities_false`, `motion.guard_flip_refuses_before_call`, `motion.non_placeable_type_refuses`, `motion.capture_reads_server_xyz_and_orientation`, `motion.forged_userdata_argerror`, `motion.accepts_client_id_0xffffffff`, `motion.profile_matches_address_table_row` (reads `k1_gog_103.json`).
+165-Integration I-M:
+166-- `runtime.cpp`: `bind_native` after model (about `:370-375`), `register_all` (about `:698`), unbind (about `:784`/`:847`).
+167-- `runtime.cmake`: sources.
+168:- `CMakeLists.txt`: `include(motion.cmake)` next to `model.cmake`/`animation.cmake` (`:136-137`).
+169-- `kp_namespacetest.cpp`.
+170-These are the **same hunks as camera**, so the edits are serialized.
+171:Live proof: spawn one disposable footlocker via `nwscript.call('CreateObject', …)`. `kp.motion.capture(id).position` equals `nwscript.call('GetPosition', id)` within 1e-3. There is no mutation, and the source receipt is unchanged.
+172-
+173-**M2: `relocate` / `restore` / `observe`.**
+174:Files: the same M1 files (single writer).
+175-Refusal order: bounds (finite, |step| ≤ configured max, same area) → identity (id, object, area, epoch) → guards → one setter call with flags `(1,1,0)` (precedent at `hook_bodies.cpp:307`) → server readback. `observe(capture)` reads the client XYZ only and never calls the client setter. Restore verifies an exact return to the original.
+176:Tests: `motion.nonfinite_refused_zero_calls`, `motion.step_bound_refused`, `motion.stale_identity_refused`, `motion.area_change_refused`, `motion.relocate_single_setter_call_flags_110`, `motion.readback_mismatch_reports_possible_mutation`, `motion.same_position_reported_noop`, `motion.restore_exact_readback`, `motion.restore_refused_after_identity_change`, `motion.observe_reports_client_lag_without_client_setter`.
+177-Live proof: relocate the footlocker +1.0 m in x. The `GetPosition` oracle agrees (server), `observe` agrees within a bounded N ticks (client), and a screenshot shows it moved. Then restore, and the oracle equals the original. Collision and use-at-destination are **not** claimed (brief: separate acceptance).
+178-
+179-**M3: ownership auto-restore.** Depends on L3 and M2.
+180:Files: `motion.cpp`/`motion_lua.cpp`, registering with `ownership`.
+181:Tests: `motion.unload_restores_owned_placeable`, `motion.explicit_restore_clears_ownership`, `motion.unload_after_identity_change_logs_not_writes`.
+182-Live proof: script relocates the crate, then `kp.scripts.unload(...)`. The oracle shows the original position and the log shows one restore line.
+183-
+184-**M4: smooth choreography demo.**
+185:Files (new): `scripts/demos/placeable-motion/{motion_scene.lua,README.md}`, `tools/motion_scene_test.lua` (fake `kp`, following the `tools/model_scene_test.lua` pattern), and registration in `motion.cmake`.
+186-Motion: an L-path of per-tick `relocate` calls driven by one function-valued timer (U2) and `kp.vec` lerp (U1), with a corner pause, a return and a restore. NWScript is used only for spawn and oracle.
+187:Tests: `motion_scene.l_path_monotonic`, `motion_scene.pause_at_corner`, `motion_scene.restore_on_failure`, `motion_scene.no_teleport_steps_over_bound`.
+188-Live proof (controller): a continuous 60 fps recording of the fixed first-person camera, the crate visibly sliding, the per-step oracle log, and final restoration. Presentation acceptance is separate from behavior.
+189-
+190-**M5 (optional): orientation.** Only if M0 yields a receipt for `SetOrientation 0x4CD170` and the dirty-bit semantics. Otherwise report unsupported. Everything about it is `unverified` today.
+191-
+192-### Dependency order
+193-
+194:L1 → L2 → L3. U1 and U2 are independent of everything. M0 → M1 → M2 → M3 (also needs L3) → M4 (also needs U1 and U2). Integration I-L, I-U1 and I-M are serialized with the camera integration.
+195-
+196-### Parallel-writer disjointness
+197-
+--
+202-| U1 | `src/api/vector.*`, `tools/kp_vectortest.cpp`, `src/api/support.cmake`, `src/api/output.cpp` | L, U2, M, camera, harness |
+203-| U2 | `src/api/timers.{hpp,cpp}`, `tools/kp_supporttest.cpp` | L, U1, M, camera, harness |
+204-| M0 | none (a receipt outside the repo) | everything |
+205:| M1-M4 | `src/api/motion*`, `src/api/motion.cmake`, `tools/kp_motiontest.cpp`, `tools/tests/motion_backend_fixture.hpp`, `tools/motion_scene_test.lua`, `scripts/demos/placeable-motion/*` | L, U, camera (`src/api/camera*`), harness |
+206-| I-* (one integrator) | `src/runtime/runtime.cpp`, `src/runtime/runtime.cmake`, `src/runtime/hook_bodies.cpp`, `CMakeLists.txt`, `tools/kp_namespacetest.cpp`, `docs/lua-api.md`, `docs/lua-api-complete.md`, `docs/user/scripts.md`, `docs/user/api-status.md`, `data/hostapi.toml` | conflicts with camera integration and with the current uncommitted edits to `runtime.cpp`/`runtime.cmake`/`CMakeLists.txt` |
+207-
+208:Result: three writers can run at once (L1+L2, U1, U2), with M0 as a read-only fourth. M1 can start once M0 lands, and none of these touch camera or harness Python. Everything that touches the runtime goes through one integrator.
+209-
+210----
+211-
+--
+231-### Critical files for implementation
+232-- `/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/lua/host.cpp`
+233-- `/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/timers.cpp`
+234:- `/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/model_lua.cpp` (template for `motion_lua.cpp`)
+235-- `/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp` (integration, shared with camera)
+236-- `/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp` (service point `:785-793`; SetPosition precedent `:307`)
+
+**Investigating report source inconsistencies**
+exec
+/usr/bin/bash -c "git diff --stat -- src/api/motion.hpp src/api/motion.cpp src/api/motion_profiles.cpp src/api/motion_backend.cpp src/api/motion_lua.cpp src/api/motion.cmake tools/kp_motiontest.cpp data/adjudication/k1_gog_103_motion_bindings.json data/hooksites.toml; printf '\\n-- changed allowed files --\\n'; git status --short -- src/api/motion.hpp src/api/motion.cpp src/api/motion_profiles.cpp src/api/motion_backend.cpp src/api/motion_lua.cpp src/api/motion.cmake tools/kp_motiontest.cpp data/adjudication/k1_gog_103_motion_bindings.json data/hooksites.toml; printf '\\n-- mtimes --\\n'; stat -c '%y %n' src/api/motion.hpp src/api/motion.cpp src/api/motion_profiles.cpp src/api/motion_backend.cpp src/api/motion_lua.cpp src/api/motion.cmake tools/kp_motiontest.cpp data/adjudication/k1_gog_103_motion_bindings.json data/hooksites.toml; printf '\\n-- M0 safe keepout headings --\\n'; rg -n -C 2 'safe|keep|Safe|Keep|getter|GetPlaceable|0x4AE7A0|0x7A39FC|thiscall' /home/brunner56/kp-live-20260922/motion-m0-rederivation.md /home/brunner56/kp-live-20260922/motion-m0-verification.md | head -360" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 865ms:
+
+-- changed allowed files --
+ M data/hooksites.toml
+?? data/adjudication/k1_gog_103_motion_bindings.json
+?? src/api/motion.cmake
+?? src/api/motion.cpp
+?? src/api/motion.hpp
+?? src/api/motion_backend.cpp
+?? src/api/motion_lua.cpp
+?? src/api/motion_profiles.cpp
+?? tools/kp_motiontest.cpp
+
+-- mtimes --
+2026-09-27 11:51:37.510275444 -0500 src/api/motion.hpp
+2026-09-27 12:24:02.951769437 -0500 src/api/motion.cpp
+2026-09-27 12:24:54.660167231 -0500 src/api/motion_profiles.cpp
+2026-09-27 11:58:48.028307008 -0500 src/api/motion_backend.cpp
+2026-09-27 11:59:22.876905751 -0500 src/api/motion_lua.cpp
+2026-09-27 12:13:33.831096317 -0500 src/api/motion.cmake
+2026-09-27 12:24:38.755055564 -0500 tools/kp_motiontest.cpp
+2026-09-27 12:15:05.501028704 -0500 data/adjudication/k1_gog_103_motion_bindings.json
+2026-09-27 12:15:50.576503745 -0500 data/hooksites.toml
+
+-- M0 safe keepout headings --
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-30-## (1) Engine position setter 0x004CD1A0 (`CSWSObject::SetPosition`)
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-31-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:32:claim: The function is `__thiscall` with `this` in ECX and exactly 4 stack arguments. The callee cleans the stack: `ret 0x10`. The signature is `void SetPosition(this, const Vector* pos, int a2, int a3, int a4)`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-33-referent: `004cd1a7 mov esi, ecx` uses ECX as `this`. `004cd23c ret 0x10` pops 16 bytes. `hook_bodies.cpp:205` declares `SetPositionFn = void(KP_THISCALL*)(void*, Vector3*, int, int, int)`, which agrees.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-34-checked: `asm.py fn 4cd1a0`.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-53-referent: After `004cd1c1 push ebp`, `a1..a4` sit at `[esp+0x14..0x20]`. `004cd212 mov eax,[esp+0x18]` reads `a2` and gates `0x4cd21a..33`. No instruction reads `[esp+0x1c]` after the push. Before the push, `[esp+0x1c]` is `a4`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-54-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:55:`0x506FE0` is `__thiscall` on the area with `ret 4`. It searches `area+0x190/+0x194`, an id array with its count, for `obj+4`. It then swaps neighbours while it compares `obj+0x90`, the X coordinate (`00507069..0050706f`, `005070b5..005070ce`). I read the forward-swap pass. I did not read the reverse-direction branch at `0x507195`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-56-checked: `asm.py fn 4cd1a0 506fe0`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-57-verdict: holds for the `a2`/`a3` roles. The claim that 0x506FE0 is an X-sorted spatial index holds with medium confidence. Reading 0x507195 would settle the reverse pass.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-58-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-59-claim: The area comes from `this+0x8C`, which holds the area object id. The id is resolved through the server object array and `vtbl+0x28` (the AsSWSArea conversion). The area index is only touched when that lookup succeeds.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:60:referent: `004cd1cf..0x4cd200`: `[0x7A39FC]+8` → `0x4AED70`, which returns `internal+0x1005C`, the object array. Then `0x4D8230(id=[esi+0x8c], &out)`. On a hit, `0x4D8230` stores `node+4` and returns `al=0` (`004d827b..84`). `call [vtbl+0x28]` follows, and ebp=area is used at `004cd233`. The standalone `GetArea` at `0x4CB120` does the same thing.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-61-checked: `asm.py fn 4cd1a0 4aed70 4d8230 4cb120`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-62-verdict: holds. confidence: high.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-93-verdict: holds. confidence: high.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-94-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:95:claim: The typed server getter is the `CServerExoApp` wrapper 0x4AE7A0, which calls the internal function 0x4B18D0. It resolves an id through `internal+0x1005C`, requires type byte == `[0x746638]` (9), and returns `vtbl+0x48`. Otherwise it returns 0. It is `thiscall` with 1 argument, `ret 4`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-96-referent: `004ae7a0 mov ecx,[ecx+4]; jmp 0x4b18d0`, followed by `004b18fe..0b` (`cmp al,[0x746638]; jne` → `call [edx+0x48]`) and `004b1912 xor eax,eax`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-97-checked: `asm.py show 4b18d0`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-98-verdict: holds. confidence: high.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-99-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:100:claim: The client-side typed getter 0x5ED5F0 (`CClientExoApp`) calls 0x5F12C0. That function uses the client object array at `internal+0x14`, requires type 9, and returns `vtbl+0x4C`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-101-referent: `005ed5f0 mov ecx,[ecx+4]; jmp 0x5f12c0`, then `005f12c5 mov ecx,[ecx+0x14]`, then `005f12ee cmp al,[0x746638]` and `005f12f8 call [edx+0x4c]`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-102-checked: `asm.py fn 5ed5f0 5f12c0`.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-105-The brief says "client wrapper 0x5ED5F0 +0x24", and I could not tie that `+0x24` to anything in these two functions. unresolved. A second question would need the original audit's meaning of `+0x24`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-106-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:107:claim: The orientation is a 3-float direction vector at `this+0x9C/+0xA0/+0xA4`. `SetOrientation` at 0x4CD170 is `__thiscall(this, const Vector*)` with `ret 4`. It copies the vector and sets dirty bit 2 (`|= 4`). It has no equality early-return and no area or walkmesh side effects.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-108-referent: `004cd170..93` in full: `lea eax,[ecx+0x9c]`, 3 dword copies, `or dword ptr [ecx+0x1fc], 4`, `ret 4`. The ctor zeroes 0x9C..0xA4 (`004cfd27..33`). NWScript `SetFacing` builds `(cos θ, sin θ, 0)` from degrees × 0.0174533 (`005428ab..d5`; the constant at 0x7415F8 reads as 0.017453292) and passes it here.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-109-checked: `asm.py show 4cd170`, `pe.py f32(0x7415f8)`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-110-verdict: holds. confidence: high.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-111-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:112:claim: Placeables also keep a quaternion at `+0x428..+0x434`. `CSWSPlaceable::SetOrientation(quat*)` at 0x5853C0 (`ret 4`) stores it, derives the facing vector from it, and calls 0x4CD170. The ctor default is `[+0x428]=1.0` and the rest are 0.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-113-referent: `005853cf..e6` copies 16 bytes to `+0x428`, then there is float math, `0x4AB180` (normalize), and `00585451 call 0x4cd170`. The ctor has `005878a8..ba`. The callers are CreateObject `0052fc00`, the area GIT loader `0050a99c` (after reading `Bearing`) and `0x4CE220` `004ce602`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-114-checked: `asm.py fn 5853c0`, `asm.py callers 5853c0`.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-136-verdict: the writer holds. What 0x56DC60 tests (for example "visible to player" or "in player's area"): unverified. confidence: medium.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-137-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:138:Consequence: no separate "sync to client" call is needed. `SetPosition(..., a4=0)` or `SetOrientation` sets the bit, and the next server tick pushes the change to the client object. This depends on `[obj+0x1F8] != 0` and on MainLoop reaching `004bac73`, which requires `[[0x7A39FC]+0x14]->[0]==0 && [internal+0x10008]==2` (`004bac56..6b`).
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-139-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-140----
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-161-claim: The engine's full re-placement for a placeable is the pair `RemoveFromArea` 0x584950 and `AddToArea` 0x587170. These rebuild the placeable's collision state. SetPosition does not.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-162-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:163:`RemoveFromArea` (0x584950, `thiscall`, no arguments, `ret`) does the following:
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-164-1. If `[+0x344] >= 0`, it calls `area->0x58FEC0(obj id)` to remove the walkmesh AABB record, then sets `+0x344 = -1`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-165-2. It calls `area->0x50DC40(obj id)`.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-167-4. It calls `SetPosition(&{0,0,0}, 1, 1, 0)`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-168-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:169:`AddToArea` (0x587170, `thiscall(area, const Vector* pos, int)`, `ret 0xC`) does the following:
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-170-1. It calls `RemoveFromArea` first.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-171-2. It calls `SetArea(area)`.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-188-## (4) Risks
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-189-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:190:claim: Raw SetPosition on a placeable leaves its collision behind. The transformed mesh and its AABB record stay at the old spot, so the old spot keeps blocking and the new spot is walk-through.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-191-referent: The section (1) callee set does not touch `+0x344`, `+0x3A0`, `+0x3C0` or `+0x3D8`, or `area+0x44..0x50`. Only AddToArea writes those (section 3).
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-192-checked: listings.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-202-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-203-Other risks, not verified:
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:204:- AddToArea re-reads 2DA state and resets `+0x33C`/`+0x340`, and Remove/Add runs area object remove and add, which may re-fire area events or client create and destroy. Using Remove/Add per tick for smooth motion (M4) is unverified as safe. A per-tick SetPosition plus one final Remove/Add "settle" is the cheaper-to-reverse design. Treat it as a proposal only.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-205-- SetPosition's `a2=1` re-sort takes O(n) swaps per call inside the area X-order. Per-tick use in a crowded area has unmeasured cost.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-206-- No Z snap to the walkmesh happens anywhere in SetPosition. The caller must supply a valid Z.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-208----
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-209-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:210:## Offsets safe to enter reviewed data
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-211-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:212:Each item below has the instruction evidence above and belongs to the image with SHA `9c10e045…`. The expected bytes are the first 16 bytes at the VA, which is the existing `expected_bytes` convention. Keep them out of anything else publishable.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-213-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-214-| Name (proposed) | VA | Kind and convention | expected_bytes |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-215-|---|---|---|---|
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:216:| `server_object.set_position` (exists) | 0x004CD1A0 | thiscall, 4 args, ret 0x10 | `538b5c240856578bf18dbe9000000053` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:217:| `server_object.set_orientation` | 0x004CD170 | thiscall(`const Vector*`), ret 4 | `8b542404568b328d819c00000089308b` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:218:| `server.get_placeable_by_object_id` | 0x004AE7A0 | thiscall on CServerExoApp(id), ret via 0x4B18D0 `ret 4` | `8b4904e9283100009090909090909090` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:219:| `server_object.get_area` | 0x004CB120 | thiscall, 0 args, `ret` | `51a1fc397a00568bf1c7442404000000` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:220:| `placeable.set_orientation_quat` | 0x005853C0 | thiscall(`const float[4]*`), ret 4 | `83ec188b44241c568bf1578bd08b3a8d` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:221:| `placeable.remove_from_area` | 0x00584950 | thiscall, 0 args, `ret` | `83ec0c568bf1e8c567f4ff85c074388b` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:222:| `placeable.add_to_area` | 0x00587170 | thiscall(area, `const Vector*`, int), ret 0xC | `6aff64a10000000068a0047200506489` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:223:| `client.get_placeable_by_object_id` | 0x005ED5F0 | thiscall on CClientExoApp(id), tail to 0x5F12C0 `ret 4` | `8b4904e9c83c00009090909090909090` |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-224-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-225-Field offsets:
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-238-| placeable vtable | 0x7494D0 | Usable as a type fence alongside type byte 9 |
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-239-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:240:Keep these out of reviewed data until they have more evidence:
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-241-- `+0x3A0`, `+0x3C0` and `+0x3D8`: internal layout only.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-242-- 0x50DC40 and 0x50DFD0: semantics unverified.
+--
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-246-## What live readback M1 must prove
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-247-
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md:248:1. **Type fence.** For a known crate id, the typed getter 0x4AE7A0 returns non-null, `[p+8]==9` and `[p]==0x7494D0`. For the PC id it returns null. For a creature, `[p+8]!=9`.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-249-2. **Pose oracle.** `[p+0x90..0x98]` equals NWScript `GetPosition(oCrate)`. `atan2([p+0xA0],[p+0x9C])` in degrees equals `GetFacing(oCrate)` within 0.01°.
+/home/brunner56/kp-live-20260922/motion-m0-rederivation.md-250-3. **Area.** `[p+0x8C]` equals the id of `GetArea(oCrate)`, and 0x4CB120 returns a non-null area.
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-15-confidence: high
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-16-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:17:claim: expected_bytes for all 8 functions in the "safe" table
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:18:referent: 16-byte reads at 0x4CD1A0, 0x4CD170, 0x4AE7A0, 0x4CB120, 0x5853C0, 0x584950, 0x587170, 0x5ED5F0 all equal the receipt table, byte for byte
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-19-checked: independent python reader over the raw image
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-20-verdict: holds
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-23-## Functions
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-24-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:25:claim: 0x4CD1A0 SetPosition is thiscall(this, const Vector* pos, a2, a3, a4), ret 0x10
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-26-referent: `004cd1a7 mov esi, ecx`; `004cd23c ret 0x10`. Stack math: at `004cd1a1` one push has happened, so `[esp+8]` = arg1 = pos → ebx; `004cd1bd [esp+0x1c]` with 3 pushes = a4; `004cd212 [esp+0x18]` with 4 pushes = a2. There is no read of a3.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-27-checked: text.asm 004cd1a0..004cd23c
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-53-confidence: high
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-54-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:55:claim: 0x4AE7A0 is the server typed getter: tail call to 0x4B18D0, type byte == [0x746638] (9), returns vtbl+0x48, ret 4
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-56-referent: `004ae7a0 mov ecx,[ecx+4]; jmp 0x4b18d0`; `004b18d5 [ecx+0x1005c]`; `004b18fe mov al,[ecx+8]; cmp al,[0x746638]`; `004b190b call [edx+0x48]`; `ret 4`. The byte at 0x746638 is 09. Placeable vtable slots 0x10 and 0x48 are the only slots in 0x00..0x5C that return `this` (`mov eax,ecx; ret`).
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-57-checked: text.asm plus a raw-image read
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-59-confidence: high
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-60-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:61:claim: 0x4CB120 GetArea: thiscall, 0 args, ret; resolves +0x8C through the object array and vtbl+0x28
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-62-referent: `004cb139 mov edx,[esi+0x8c]` → `call 0x4d8230` → `004cb157 call [eax+0x28]`; `ret` with no immediate. 0x4AED70 = `[[ecx+4]+0x1005c]`.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-63-checked: text.asm
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-71-confidence: high for the call shape, low for the component order
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-72-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:73:claim: 0x584950 RemoveFromArea: thiscall, 0 args, ret. If +0x344 >= 0 it calls area->0x58FEC0(id) and sets +0x344=-1, then area->0x50DC40(id), then 0x4CB160(0), then SetPosition(&{0,0,0},1,1,0)
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-74-referent: `0058495f..0058497b` (`test; jl`; `call 0x58fec0`; `mov [esi+0x344],0xffffffff`); `00584992 call 0x50dc40`; `0058499b call 0x4cb160` with push 0; the pushes 0,1,1,&zero then `005849c5 call 0x4cd1a0`; `005849ce ret`. 0x58FEC0 scans `area+0x50` (count `+0x48`) for the id, ret 4.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-75-checked: text.asm
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-81-checked: text.asm
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-82-verdict: holds
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:83:confidence: high for the sequence. Medium for what 0x50DC40 and 0x50DFD0 mean (the receipt keeps them out of reviewed data, which is correct).
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-84-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:85:claim: 0x5ED5F0 is the client typed getter: tail call to 0x5F12C0, client array at internal+0x14, type 9, returns vtbl+0x4C, ret 4
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-86-referent: `005ed5f0 mov ecx,[ecx+4]; jmp 0x5f12c0`; `005f12c5 mov ecx,[ecx+0x14]`; `005f12ee cmp al,[0x746638]`; `005f12f8 call [edx+0x4c]`; `005f12fc ret 4`
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-87-checked: text.asm
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-141-confidence: high. It assumes 0x6449D0's list layout is {array, count}, which the consumer's own `[ebp-4]`/`[ebp]` reads agree with.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-142-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:143:claim: `this` for the typed getters
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-144-referent: server: callers load `ecx=[[0x7a39fc]+8]` (for example `004cd1cf..d8`), and the thunk does `[ecx+4]`, then `+0x1005c`. Client: the caller at `005fd9ec..f5` loads `ecx=[[0x7a39fc]+4]`, then `call 0x5ed5f0`.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-145-checked: text.asm
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-173-## Differences from the receipt
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-174-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:175:- None on substance. Every "safe" item re-derived to the same instruction evidence.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-176-- Nit: the MainLoop gate is `cmp word ptr [esi+0x10008], 2`, not a dword compare.
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-177-- Addition: placeable AI-list membership re-derived independently (ctor → 0x4B0850 prio 0, walked by the 5-list consumer).
+--
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-181-Motion M0 verification: CONFIRMS
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-182-
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:183:Safe to enter reviewed data (image sha 9c10e045…):
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:184:- functions: 0x4CD1A0 (set_position, exists), 0x4CD170, 0x4AE7A0, 0x4CB120, 0x5853C0, 0x584950, 0x587170, 0x5ED5F0
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-185-- fields: +0x04 id, +0x08 type (placeable == 9), +0x8C area id, +0x90 position vec3, +0x9C orientation vec3, +0x1F8 client-push gate (meaning of its value unverified), +0x1FC dirty bitset with bit1 = position (value 2) and bit2 = orientation (value 4), +0x344 AABB-registered marker (>=0 registered, -1 none; ctor sets -1; do not dereference as an index)
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-186-- vtable: 0x7494D0 (placeable)
+/home/brunner56/kp-live-20260922/motion-m0-verification.md-187-- +0x428 quaternion: offset only, no component order
+/home/brunner56/kp-live-20260922/motion-m0-verification.md:188:- keep out: +0x3A0, +0x3C0, +0x3D8, 0x50DC40, 0x50DFD0, client vtbl+0x12C/+0x130/+0x134, 0x506FE0's reverse pass, 0x52CCE0, "+0x24"
+
+**Investigating hooksites diff discrepancy**
+exec
+/usr/bin/bash -c "nl -ba src/api/motion.hpp | sed -n '1,220p'; nl -ba src/api/motion.cpp | sed -n '1,260p'; nl -ba src/api/motion_backend.cpp | sed -n '1,180p'; nl -ba src/api/motion_profiles.cpp | sed -n '1,180p'; nl -ba src/api/motion_lua.cpp | sed -n '1,220p'; nl -ba src/api/motion.cmake | sed -n '1,160p'; nl -ba data/hooksites.toml | sed -n '2325,2600p'" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 1597ms:
+     1	#include "api/motion.hpp"
+     2	#include <cmath>
+     3	#include <cstring>
+     4	// Checked core for kp.motion M1. Order on every capture:
+     5	//   profile bound -> exact guards (spans + vtable slots) -> id sentinel ->
+     6	//   server lookup chain -> typed getter (the only engine call) ->
+     7	//   fences (vtable, type byte, id round-trip) -> field reads -> finite checks.
+     8	// Nothing is written to the caller's Capture until every step has passed.
+     9	namespace kp::api::motion {
+    10	namespace {
+    11	constexpr std::uint32_t object_invalid = 0x7f000000;
+    12	int digit(char c) {
+    13	    if (c >= '0' && c <= '9') return c - '0';
+    14	    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    15	    return -1;
+    16	}
+    17	}
+    18	Operations& operations() { static Operations o; return o; }
+    19	
+    20	void Operations::unbind() { backend_ = nullptr; profile_ = nullptr; loaded_base_ = 0; ++epoch_; }
+    21	
+    22	bool Operations::fail(Failure f, std::string& error, const std::string& text) {
+    23	    failure_ = f;
+    24	    error = std::string(failure_name(f)) + ": " + text;
+    25	    return false;
+    26	}
+    27	
+    28	bool Operations::valid_span(const Span& s) {
+    29	    if (!s.hex) return false;
+    30	    std::size_t n = std::strlen(s.hex);
+    31	    if (n == 0 || n % 2 || n / 2 > max_span_bytes) return false;
+    32	    for (std::size_t i = 0; i < n; ++i) if (digit(s.hex[i]) < 0) return false;
+    33	    return true;
+    34	}
+    35	
+    36	bool Operations::guards(std::string& error) {
+    37	    if (!backend_ || !profile_) return fail(Failure::Unsupported, error, "no verified native motion binding");
+    38	    for (const auto& s : profile_->spans) {
+    39	        if (!s.va) continue;
+    40	        if (!valid_span(s)) return fail(Failure::Guard, error, "invalid guard span in profile");
+    41	        std::size_t n = std::strlen(s.hex) / 2;
+    42	        unsigned char actual[max_span_bytes]{};
+    43	        if (!backend_->read(at(s.va), actual, n)) return fail(Failure::Guard, error, "guard bytes unreadable");
+    44	        for (std::size_t j = 0; j < n; ++j)
+    45	            if (actual[j] != ((digit(s.hex[j * 2]) << 4) | digit(s.hex[j * 2 + 1])))
+    46	                return fail(Failure::Guard, error, "code guard mismatch");
+    47	    }
+    48	    for (const auto& s : profile_->slots) {
+    49	        if (!s.va) continue;
+    50	        Address target = 0;
+    51	        if (!pointer(at(s.va), target) || target != at(s.target))
+    52	            return fail(Failure::Guard, error, "placeable vtable slot mismatch");
+    53	    }
+    54	    return true;
+    55	}
+    56	
+    57	bool Operations::bind(const std::string& sha, Address base, Backend* backend, std::string& error) {
+    58	    unbind(); error.clear(); failure_ = Failure::None;
+    59	    const Profile* p = profile_for(sha);
+    60	    if (!p) return fail(Failure::Unsupported, error, "unknown executable SHA256");
+    61	    if (!backend || backend->abi() != p->abi || backend->width() != p->width)
+    62	        return fail(Failure::Unsupported, error, "motion OS/ABI/pointer width mismatch");
+    63	    if (!base) return fail(Failure::Unsupported, error, "invalid loaded-image base");
+    64	    // Guards embed absolute immediates (g_pAppManager, the type constant and
+    65	    // the vtable), so a relocated image cannot match them.
+    66	    if (base != p->preferred_base) return fail(Failure::Unsupported, error, "relocated image: absolute guards cannot match");
+    67	    profile_ = p; backend_ = backend; loaded_base_ = base;
+    68	    if (!guards(error)) { Failure f = failure_; unbind(); failure_ = f; return false; }
+    69	    failure_ = Failure::None;
+    70	    return true;
+    71	}
+    72	
+    73	bool Operations::pointer(Address address, Address& value) const {
+    74	    value = 0;
+    75	    std::uint32_t n = 0;
+    76	    if (!backend_->read(address, &n, 4)) return false;
+    77	    value = n;
+    78	    return value != 0;
+    79	}
+    80	
+    81	bool Operations::capture(std::uint32_t id, Capture& out, std::string& error) {
+    82	    error.clear();
+    83	    if (!guards(error)) return false;
+    84	    if (id == object_invalid) return fail(Failure::Identity, error, "OBJECT_INVALID is not a placeable");
+    85	    const Profile& p = *profile_;
+    86	    Address manager = 0, server = 0, internal = 0, array = 0;
+    87	    std::uint8_t probe = 0;
+    88	    if (!pointer(at(p.manager_slot), manager) || !pointer(manager + p.manager_server, server) ||
+    89	        !pointer(server + p.server_internal, internal) || !pointer(internal + p.internal_array, array) ||
+    90	        !backend_->read(array, &probe, 1))
+    91	        return fail(Failure::Chain, error, "server object array unavailable");
+    92	
+    93	    Address object = backend_->placeable(at(p.get_placeable), server, id);
+    94	    if (!object) return fail(Failure::Identity, error, "no server placeable with that ID");
+    95	    Address vtable = 0; std::uint8_t type = 0; std::uint32_t actual = 0;
+    96	    if (!pointer(object, vtable) || vtable != at(p.placeable_vtable))
+    97	        return fail(Failure::Identity, error, "object vtable is not CSWSPlaceable");
+    98	    if (!backend_->read(object + p.type, &type, 1) || type != p.placeable_type)
+    99	        return fail(Failure::Identity, error, "object type byte is not placeable");
+   100	    if (!backend_->read(object + p.id, &actual, 4) || actual != id)
+   101	        return fail(Failure::Identity, error, "object ID does not round-trip");
+   102	
+   103	    Capture c;
+   104	    std::uint32_t dirty = 0; std::int32_t marker = 0;
+   105	    if (!backend_->read(object + p.area_id, &c.area_id, 4) ||
+   106	        !backend_->read(object + p.position, c.position.data(), 12) ||
+   107	        !backend_->read(object + p.orientation, c.orientation.data(), 12) ||
+   108	        !backend_->read(object + p.push_gate, &c.push_gate_raw, 4) ||
+   109	        !backend_->read(object + p.dirty, &dirty, 4) ||
+   110	        !backend_->read(object + p.aabb_marker, &marker, 4) ||
+   111	        !backend_->read(object + p.quaternion, c.quaternion_raw.data(), 16))
+   112	        return fail(Failure::Chain, error, "placeable fields unreadable");
+   113	    for (float v : c.position) if (!std::isfinite(v)) return fail(Failure::Value, error, "position is not finite");
+   114	    for (float v : c.orientation) if (!std::isfinite(v)) return fail(Failure::Value, error, "orientation is not finite");
+   115	    for (float v : c.quaternion_raw) if (!std::isfinite(v)) return fail(Failure::Value, error, "quaternion is not finite");
+   116	    double deg = std::atan2(static_cast<double>(c.orientation[1]), static_cast<double>(c.orientation[0])) * 180.0 / 3.14159265358979323846;
+   117	    if (deg < 0) deg += 360.0;
+   118	    // Wrap after the cast: 360 - 5.7e-6 rounds to 360.0f in float.
+   119	    float facing = static_cast<float>(deg);
+   120	    if (facing >= 360.f || facing < 0.f) facing = 0.f;
+   121	    c.facing = facing;
+   122	    c.epoch = epoch_; c.id = id; c.object = object;
+   123	    c.dirty_position = (dirty & dirty_position_bit) != 0;
+   124	    c.dirty_orientation = (dirty & dirty_orientation_bit) != 0;
+   125	    c.collision_registered = marker >= 0;
+   126	    out = c;
+   127	    failure_ = Failure::None;
+   128	    return true;
+   129	}
+   130	} // namespace kp::api::motion
+     1	#include "api/motion.hpp"
+     2	#include <limits>
+     3	// Native adapter: Windows i386 only (the one profile is K1 GOG). Every other
+     4	// host gets no adapter, so no engine address is ever called there.
+     5	namespace kp::api::motion {
+     6	#if defined(_WIN32) && defined(__i386__)
+     7	namespace {
+     8	class Native final : public Backend {
+     9	public:
+    10	    model::Reader reader = nullptr; void* context = nullptr;
+    11	    Abi abi() const override { return Abi::Win32; }
+    12	    unsigned width() const override { return 4; }
+    13	    bool read(Address address, void* out, std::size_t size) const override {
+    14	        if (!reader || address > std::numeric_limits<std::uintptr_t>::max() ||
+    15	            size > std::numeric_limits<std::uintptr_t>::max() - address) return false;
+    16	        return reader(address, out, size, context);
+    17	    }
+    18	    // CServerExoApp::GetPlaceableByGameObjectID: thiscall(this, uint32), ret 4.
+    19	    Address placeable(Address f, Address server, std::uint32_t id) override {
+    20	        using Call = void*(__attribute__((thiscall)) *)(void*, std::uint32_t);
+    21	        void* result = reinterpret_cast<Call>(static_cast<std::uintptr_t>(f))(
+    22	            reinterpret_cast<void*>(static_cast<std::uintptr_t>(server)), id);
+    23	        return reinterpret_cast<std::uintptr_t>(result);
+    24	    }
+    25	};
+    26	}
+    27	#endif
+    28	Backend* native_backend(model::Reader read, void* context) {
+    29	#if defined(_WIN32) && defined(__i386__)
+    30	    static Native native; native.reader = read; native.context = context; return &native;
+    31	#else
+    32	    (void)read; (void)context; return nullptr;
+    33	#endif
+    34	}
+    35	bool bind_native(const std::string& sha, Address base, model::Reader read, void* context, std::string& error) {
+    36	    operations().unbind();
+    37	    if (!read) { error = "unsupported: motion binding requires a fallible reader"; return false; }
+    38	    Backend* native = native_backend(read, context);
+    39	    if (!native) { error = "unsupported: no native motion adapter for host OS/architecture"; return false; }
+    40	    return operations().bind(sha, base, native, error);
+    41	}
+    42	} // namespace kp::api::motion
+     1	#include "api/motion.hpp"
+     2	// One profile: K1 GOG 1.03 (image SHA256 9c10e045...91435). Every other build
+     3	// binds nothing. Offsets mirror data/adjudication/k1_gog_103_motion_bindings.json.
+     4	// Every span was read from the reference raw image and matches both the M0
+     5	// receipt and its independent verification. tools/kp_motiontest.cpp keeps the
+     6	// three in step: it diffs this table against the bindings JSON, re-reads every
+     7	// span and slot from the image when present, and cross-checks the existing
+     8	// data/addresses/k1_gog_103.json rows.
+     9	namespace kp::api::motion {
+    10	const std::array<Profile,1>& profiles() {
+    11	    static const std::array<Profile,1> p{{
+    12	        {"windows-k1-gog","9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",Abi::Win32,4,
+    13	         /*preferred_base*/0x400000,
+    14	         /*manager_slot*/0x7a39fc, /*manager_server*/0x8, /*server_internal*/0x4, /*internal_array*/0x1005c,
+    15	         /*get_placeable*/0x4ae7a0, /*placeable_vtable*/0x7494d0, /*placeable_type*/9,
+    16	         /*id*/0x4, /*type*/0x8,
+    17	         /*area_id*/0x8c, /*position*/0x90, /*orientation*/0x9c,
+    18	         /*push_gate*/0x1f8, /*dirty*/0x1fc,
+    19	         /*aabb_marker*/0x344, /*quaternion*/0x428,
+    20	         {{
+    21	           // Server lookup chain and the typed getter.
+    22	           {0x4cd1cf,"a1fc397a00"},                        // mov eax,[g_pAppManager]
+    23	           {0x4cd1d8,"8b4808"},                            // mov ecx,[eax+8]: app -> server
+    24	           {0x4aed70,"8b41048b805c000100c3"},              // [[server+4]+0x1005c]: object array
+    25	           {0x4ae7a0,"8b4904e9283100009090909090909090"},  // GetPlaceableByGameObjectID: mov ecx,[ecx+4]; jmp 0x4b18d0
+    26	           {0x4b18d5,"8b895c000100"},                      // internal: mov ecx,[ecx+0x1005c]
+    27	           {0x4b18fe,"8a4108"},                            // internal: mov al,[ecx+8] (type byte)
+    28	           {0x4b1901,"3a0538667400"},                      // internal: cmp al,[0x746638]
+    29	           {0x4b190b,"ff5248"},                            // internal: call [edx+0x48] (AsSWSPlaceable)
+    30	           // Placeable identity.
+    31	           {0x746638,"09"},                                // placeable type constant
+    32	           {0x587803,"8a0d38667400"},                      // placeable ctor: mov cl,[0x746638]
+    33	           {0x587824,"c706d0947400"},                      // placeable ctor: mov [esi],0x7494d0
+    34	           {0x4d7d70,"894804"},                            // CGameObject ctor: mov [eax+4],ecx (id)
+    35	           {0x4d7d73,"885008"},                            // CGameObject ctor: mov [eax+8],dl (type)
+    36	           // CSWSObject fields.
+    37	           {0x4cb139,"8b968c000000"},                      // GetArea: mov edx,[esi+0x8c]
+    38	           {0x4cd1e0,"8b968c000000"},                      // SetPosition: mov edx,[esi+0x8c]
+    39	           {0x4cd1a0,"538b5c240856578bf18dbe9000000053"},  // SetPosition head, incl. lea edi,[esi+0x90]
+    40	           {0x4cd177,"8d819c000000"},                      // SetOrientation: lea eax,[ecx+0x9c]
+    41	           {0x4b1098,"8b86f8010000"},                      // AI master: mov eax,[esi+0x1f8] (push gate)
+    42	           {0x4cd1c8,"838efc01000002"},                    // SetPosition: or [esi+0x1fc],2
+    43	           {0x4cd18b,"8389fc01000004"},                    // SetOrientation: or [ecx+0x1fc],4
+    44	           // CSWSPlaceable fields.
+    45	           {0x5879b4,"c78644030000ffffffff"},              // ctor: mov [esi+0x344],-1
+    46	           {0x58495f,"8b8644030000"},                      // RemoveFromArea: mov eax,[esi+0x344]
+    47	           {0x5853cf,"8d8e28040000"},                      // SetOrientation(quat): lea ecx,[esi+0x428]
+    48	         }},
+    49	         {{
+    50	           {0x749518,0x641db0}, // placeable vtable +0x48 -> mov eax,ecx; ret (AsSWSPlaceable)
+    51	           {0x7494e0,0x641db0}, // placeable vtable +0x10 -> same (AsSWSObject)
+    52	           {0x749500,0x63e7f0}, // placeable vtable +0x30 -> xor eax,eax; ret (not a creature)
+    53	           {0x749548,0x587ba0}, // placeable vtable +0x78 -> CSWSPlaceable::EventHandler (event.placeable)
+    54	         }}}
+    55	    }};
+    56	    return p;
+    57	}
+    58	const Profile* profile_for(const std::string& sha) {
+    59	    for (const auto& p: profiles()) if (sha == p.sha256) return &p;
+    60	    return nullptr;
+    61	}
+    62	const char* failure_name(Failure f) {
+    63	    switch (f) {
+    64	    case Failure::None: return "none";
+    65	    case Failure::Unsupported: return "unsupported";
+    66	    case Failure::Guard: return "guard";
+    67	    case Failure::Chain: return "chain";
+    68	    case Failure::Identity: return "identity";
+    69	    case Failure::Value: return "value";
+    70	    }
+    71	    return "unsupported";
+    72	}
+    73	} // namespace kp::api::motion
+     1	#include "api/motion.hpp"
+     2	#include <cmath>
+     3	#include <cstdio>
+     4	#include <new>
+     5	extern "C" {
+     6	#include "lua.h"
+     7	#include "lauxlib.h"
+     8	}
+     9	// kp.motion.{capabilities,capture}. Read-only. The capture is a protected
+    10	// userdata (size + metatable + magic checked on every access, as in
+    11	// model_lua.cpp); fields are copied out on read, so nothing Lua holds can
+    12	// alias engine memory. Failures return nil, "<kind>: <reason>".
+    13	namespace kp::api::motion {
+    14	namespace {
+    15	constexpr const char* capture_type = "kp.motion.capture";
+    16	constexpr std::uint64_t capture_magic = 0x4b504d4f54494f31ULL; // "KPMOTIO1"
+    17	struct Box { std::uint64_t magic; Capture value; };
+    18	
+    19	int failure(lua_State* L, const std::string& error) {
+    20	    lua_pushnil(L); lua_pushlstring(L, error.data(), error.size()); return 2;
+    21	}
+    22	const Capture& checked(lua_State* L, int index) {
+    23	    if (lua_type(L, index) != LUA_TUSERDATA || lua_objlen(L, index) != sizeof(Box))
+    24	        luaL_argerror(L, index, "motion capture allocation required");
+    25	    auto* box = static_cast<Box*>(luaL_checkudata(L, index, capture_type));
+    26	    if (box->magic != capture_magic) luaL_argerror(L, index, "invalid motion capture magic");
+    27	    return box->value;
+    28	}
+    29	void vec3(lua_State* L, const std::array<float, 3>& v) {
+    30	    lua_createtable(L, 0, 3);
+    31	    lua_pushnumber(L, v[0]); lua_setfield(L, -2, "x");
+    32	    lua_pushnumber(L, v[1]); lua_setfield(L, -2, "y");
+    33	    lua_pushnumber(L, v[2]); lua_setfield(L, -2, "z");
+    34	}
+    35	int index(lua_State* L) {
+    36	    const Capture& c = checked(L, 1);
+    37	    std::string key(luaL_checkstring(L, 2));
+    38	    if (key == "id") lua_pushnumber(L, c.id);
+    39	    else if (key == "area_id") lua_pushnumber(L, c.area_id);
+    40	    else if (key == "epoch") lua_pushnumber(L, static_cast<lua_Number>(c.epoch));
+    41	    else if (key == "object") {
+    42	        char text[32]; std::snprintf(text, sizeof text, "0x%llx", static_cast<unsigned long long>(c.object));
+    43	        lua_pushstring(L, text);
+    44	    }
+    45	    else if (key == "position") vec3(L, c.position);
+    46	    else if (key == "orientation") vec3(L, c.orientation);
+    47	    else if (key == "facing") lua_pushnumber(L, c.facing);
+    48	    else if (key == "push_gate_raw") lua_pushnumber(L, c.push_gate_raw);
+    49	    else if (key == "dirty_position") lua_pushboolean(L, c.dirty_position);
+    50	    else if (key == "dirty_orientation") lua_pushboolean(L, c.dirty_orientation);
+    51	    else if (key == "collision_registered") lua_pushboolean(L, c.collision_registered);
+    52	    else if (key == "quaternion_raw") {
+    53	        lua_createtable(L, 4, 0);
+    54	        for (int i = 0; i < 4; ++i) { lua_pushnumber(L, c.quaternion_raw[i]); lua_rawseti(L, -2, i + 1); }
+    55	    }
+    56	    else if (key == "quaternion_order") lua_pushliteral(L, "unverified");
+    57	    else lua_pushnil(L);
+    58	    return 1;
+    59	}
+    60	int newindex(lua_State* L) {
+    61	    checked(L, 1);
+    62	    return luaL_error(L, "motion capture is read-only");
+    63	}
+    64	int capture(lua_State* L) {
+    65	    if (lua_type(L, 1) != LUA_TNUMBER) return failure(L, "value: server ID must be an exact uint32 number");
+    66	    double id = lua_tonumber(L, 1);
+    67	    if (!std::isfinite(id) || id < 0 || id > 4294967295. || std::floor(id) != id)
+    68	        return failure(L, "value: server ID must be an exact uint32 number");
+    69	    Capture result; std::string error;
+    70	    if (!operations().capture(static_cast<std::uint32_t>(id), result, error)) return failure(L, error);
+    71	    new (lua_newuserdata(L, sizeof(Box))) Box{capture_magic, result};
+    72	    luaL_getmetatable(L, capture_type); lua_setmetatable(L, -2);
+    73	    return 1;
+    74	}
+    75	int capabilities(lua_State* L) {
+    76	    lua_newtable(L);
+    77	    lua_pushboolean(L, operations().available()); lua_setfield(L, -2, "available");
+    78	    const auto* p = operations().profile();
+    79	    lua_pushstring(L, p ? p->name : "unsupported"); lua_setfield(L, -2, "profile");
+    80	    lua_pushstring(L, p ? "windows-i386-thiscall" : "no verified host binding"); lua_setfield(L, -2, "abi");
+    81	    lua_pushboolean(L, 0); lua_setfield(L, -2, "writes");
+    82	    lua_pushliteral(L, "id area_id position orientation facing push_gate_raw dirty_position "
+    83	                       "dirty_orientation collision_registered quaternion_raw");
+    84	    lua_setfield(L, -2, "reads");
+    85	    lua_pushliteral(L, "K1 GOG only; server placeables only; read-only. push_gate_raw is a client-push gate "
+    86	                       "whose value meaning is unverified. quaternion_raw component order is unverified. "
+    87	                       "facing is atan2(y,x) in degrees [0,360); its match to GetFacing is unverified. "
+    88	                       "No live readback yet.");
+    89	    lua_setfield(L, -2, "limits");
+    90	    return 1;
+    91	}
+    92	}
+    93	void register_all(lua_State* L) {
+    94	    luaL_newmetatable(L, capture_type);
+    95	    lua_pushcfunction(L, index); lua_setfield(L, -2, "__index");
+    96	    lua_pushcfunction(L, newindex); lua_setfield(L, -2, "__newindex");
+    97	    lua_pushliteral(L, "protected motion capture"); lua_setfield(L, -2, "__metatable");
+    98	    lua_pop(L, 1);
+    99	    lua_getglobal(L, "kp");
+   100	    if (!lua_istable(L, -1)) { lua_pop(L, 1); lua_newtable(L); lua_pushvalue(L, -1); lua_setglobal(L, "kp"); }
+   101	    lua_newtable(L);
+   102	    lua_pushcfunction(L, capabilities); lua_setfield(L, -2, "capabilities");
+   103	    lua_pushcfunction(L, capture); lua_setfield(L, -2, "capture");
+   104	    lua_setfield(L, -2, "motion");
+   105	    lua_pop(L, 1);
+   106	}
+   107	} // namespace kp::api::motion
+     1	# kp.motion Stage M1 checked core and Lua surface (read-only, K1 GOG only);
+     2	# production sources ship in runtime.cmake.
+     3	if(UNIX AND NOT WIN32)
+     4	    add_executable(kp_motiontest "${CMAKE_SOURCE_DIR}/tools/kp_motiontest.cpp"
+     5	        "${CMAKE_CURRENT_LIST_DIR}/motion.cpp" "${CMAKE_CURRENT_LIST_DIR}/motion_profiles.cpp"
+     6	        "${CMAKE_CURRENT_LIST_DIR}/motion_backend.cpp" "${CMAKE_CURRENT_LIST_DIR}/motion_lua.cpp")
+     7	    target_include_directories(kp_motiontest PRIVATE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
+     8	    target_compile_options(kp_motiontest PRIVATE -m32 -Wall -Wextra)
+     9	    target_link_options(kp_motiontest PRIVATE -m32)
+    10	    target_link_libraries(kp_motiontest PRIVATE "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
+    11	    add_dependencies(kp_motiontest kphasor)
+    12	    # The argument is the source root: the test cross-checks the generated
+    13	    # data/addresses/k1_gog_103.json read-only.
+    14	    add_test(NAME kp_motiontest COMMAND kp_motiontest "${CMAKE_SOURCE_DIR}")
+    15	    set_tests_properties(kp_motiontest PROPERTIES LABELS "offline;motion")
+    16	endif()
+  2325	method = "raw_28_unverified"
+  2326	kind   = "field"
+  2327	required = false
+  2328	purpose = "4 x f32. Meaning unverified."
+  2329	
+  2330	[[site]]
+  2331	name   = "camera_chase.raw_38_unverified"
+  2332	class  = "CSWCameraOnAStick"
+  2333	method = "raw_38_unverified"
+  2334	kind   = "field"
+  2335	required = false
+  2336	purpose = "3 x f32. Meaning unverified."
+  2337	
+  2338	[[site]]
+  2339	name   = "camera_chase.raw_50_unverified"
+  2340	class  = "CSWCameraOnAStick"
+  2341	method = "raw_50_unverified"
+  2342	kind   = "field"
+  2343	required = false
+  2344	purpose = "3 x f32. Meaning unverified."
+  2345	
+  2346	[[site]]
+  2347	name   = "g.camera_style_pending"
+  2348	class  = ""
+  2349	method = "g_camera_style_pending"
+  2350	kind   = "field"
+  2351	required = false
+  2352	purpose = "i32 global; -1 means no camera-style reload is pending."
+  2353	
+  2354	# --- kp.motion Stage M1: server placeable capture (read-only, K1 GOG only) ----
+  2355	# Evidence: data/adjudication/k1_gog_103_motion_bindings.json. Every row is
+  2356	# optional so builds without a motion receipt never gain a required site.
+  2357	[[site]]
+  2358	name   = "server_object.area_id"
+  2359	class  = "CSWSObject"
+  2360	method = "area_id"
+  2361	kind   = "field"
+  2362	required = false
+  2363	purpose = "u32 object id of the owning area. GetArea 0x4cb120 resolves it."
+  2364	
+  2365	[[site]]
+  2366	name   = "server_object.position"
+  2367	class  = "CSWSObject"
+  2368	method = "position"
+  2369	kind   = "field"
+  2370	required = false
+  2371	purpose = "3 x f32 server position that SetPosition writes."
+  2372	
+  2373	[[site]]
+  2374	name   = "server_object.orientation"
+  2375	class  = "CSWSObject"
+  2376	method = "orientation"
+  2377	kind   = "field"
+  2378	required = false
+  2379	purpose = "3 x f32 facing direction that SetOrientation writes."
+  2380	
+  2381	[[site]]
+  2382	name   = "server_object.client_push_gate_unverified"
+  2383	class  = "CSWSObject"
+  2384	method = "client_push_gate_unverified"
+  2385	kind   = "field"
+  2386	required = false
+  2387	purpose = "u32 gate on the per-tick client push of the dirty bits. What its value means is unverified."
+  2388	
+  2389	[[site]]
+  2390	name   = "server_object.dirty_bits"
+  2391	class  = "CSWSObject"
+  2392	method = "dirty_bits"
+  2393	kind   = "field"
+  2394	required = false
+  2395	purpose = "u32 bitset. Bit 1 (2) = position, bit 2 (4) = orientation. Other bits are not reviewed."
+  2396	
+  2397	[[site]]
+  2398	name   = "placeable.aabb_registered"
+  2399	class  = "CSWSPlaceable"
+  2400	method = "aabb_registered"
+  2401	kind   = "field"
+  2402	required = false
+  2403	purpose = "i32 marker: >= 0 walkmesh AABB registered, -1 none. Not an index."
+  2404	
+  2405	[[site]]
+  2406	name   = "placeable.quaternion_raw_order_unverified"
+  2407	class  = "CSWSPlaceable"
+  2408	method = "quaternion_raw_order_unverified"
+  2409	kind   = "field"
+  2410	required = false
+  2411	purpose = "4 x f32 placeable quaternion. Component order unverified."
+
+**Investigating duplicate motion rows in diff**
+exec
+/usr/bin/bash -c "git diff --unified=0 -- data/hooksites.toml | sed -n '1,400p'; printf '\\n-- motion refs --\\n'; rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml; printf '\\n-- engine thread facilities --\\n'; rg -n -i -C 2 'engine.?thread|thread.*engine|is_engine|main thread|main_thread|thread_id' src | head -300; printf '\\n-- METHOD --\\n'; find . -name METHOD.md -print -exec sed -n '1,220p' {} \\;" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Identifying missing engine thread protection**
+**Inspecting host command for binary build**
+codex
+I found the prior work is intact: eight new M1 sources/data files, seven additive motion hooksite rows, and a pre-existing camera block in the same dirty `hooksites.toml` diff. The prior review target itself was not created; the only similarly named file is a copied task prompt under `codex-runs`, so I’m creating the required review at the specified path rather than duplicating a partial review.
+exec
+/usr/bin/bash -c 'set -e
+W=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+S=/home/brunner56/kp-live-20260922/review-probes-motion-m1
+/home/brunner56/.local/bin/host-cmd sh -c "$S/kp_motiontest '"'"'$W'"'\" | tee \""'$S/rerun-kp_motiontest.txt"
+mkdir -p "$S/mingw-rerun"
+/home/brunner56/.local/bin/host-cmd sh -c "cd '"'"'$W'"' && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/\\"'$f.cpp -o '"'"'$S/mingw-rerun'"'/\\"'$f.o || exit 1; done" 2>&1 | tee "$S/rerun-mingw.txt"
+printf '"'\\n-- artifacts --\\n'
+ls -lh \""'$S/kp_motiontest" "$S/mingw-rerun"/*.o' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Planning separate command execution**
+ succeeded in 41577ms:
+PASS motion.unsupported_profile_capabilities_false
+PASS motion.relocated_image_refused
+PASS motion.span_table_valid
+PASS motion.guard_flip_refuses_before_call
+PASS motion.chain_failure_refuses_before_call
+PASS motion.invalid_object_id_refused_before_call
+PASS motion.non_placeable_type_refuses
+PASS motion.wrong_vtable_refuses
+PASS motion.id_roundtrip_mismatch_refuses
+PASS motion.capture_reads_server_xyz_and_orientation
+PASS motion.nonfinite_value_refuses
+PASS motion.unreadable_field_refuses
+PASS motion.accepts_client_id_0xffffffff
+PASS motion.unbind_bumps_epoch
+PASS motion.lua_unbound_capabilities_false
+PASS motion.forged_userdata_argerror
+PASS motion.lua_capture_surface
+  PENDING regeneration: server_object.area_id
+  PENDING regeneration: server_object.position
+  PENDING regeneration: server_object.orientation
+  PENDING regeneration: server_object.client_push_gate_unverified
+  PENDING regeneration: server_object.dirty_bits
+  PENDING regeneration: placeable.aabb_registered
+  PENDING regeneration: placeable.quaternion_raw_order_unverified
+  PENDING regeneration: server.get_placeable_by_object_id (proposed row)
+  PENDING regeneration: placeable.vtable (proposed row)
+PASS motion.profile_matches_address_table_row
+PASS motion.bindings_json_matches_profile
+PASS motion.spans_match_reference_image
+20/20 tests passed, 2926 checks (synthetic memory; no live ABI proof)
+
+-- artifacts --
+-rwxr-xr-x. 1 brunner56 ubuntu 829K Sep 27 12:47 /home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest
+-rw-r--r--. 1 brunner56 ubuntu  14K Sep 27 13:25 /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/motion.o
+-rw-r--r--. 1 brunner56 ubuntu 5.3K Sep 27 13:25 /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/motion_backend.o
+-rw-r--r--. 1 brunner56 ubuntu 9.4K Sep 27 13:25 /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/motion_lua.o
+-rw-r--r--. 1 brunner56 ubuntu 2.7K Sep 27 13:25 /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/motion_profiles.o
+
+exec
+/usr/bin/bash -c 'W=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation; S=/home/brunner56/kp-live-20260922/review-probes-motion-m1; mkdir -p "$S/mingw-rerun"; /home/brunner56/.local/bin/host-cmd sh -c "cd '"'"'$W'"' && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/\\"'$f.cpp -o '"'"'$S/mingw-rerun'"'/\\"'$f.o || exit 1; done" >"$S/rerun-mingw.txt" 2>&1; rc=$?; cat "$S/rerun-mingw.txt"; printf '"'mingw_exit=%s\\n' \""'$rc"; ls -lh "$S/mingw-rerun"' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 629ms:
+mingw_exit=0
+total 40K
+-rw-r--r--. 1 brunner56 ubuntu  14K Sep 27 13:25 motion.o
+-rw-r--r--. 1 brunner56 ubuntu 5.3K Sep 27 13:25 motion_backend.o
+-rw-r--r--. 1 brunner56 ubuntu 9.4K Sep 27 13:25 motion_lua.o
+-rw-r--r--. 1 brunner56 ubuntu 2.7K Sep 27 13:25 motion_profiles.o
+
+**Assessing Lua engine threading and protection gaps**
+**Planning Lua runtime integration inspection**
+exec
+/usr/bin/bash -c "printf '%s\\n' '-- Lua entry call sites --'; rg -n -C 3 'lua_pcall|lua_call|host.*run|run.*lua|execute.*lua' src/runtime src/lua src/harness | head -360; printf '%s\\n' '-- integration state --'; rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp src/runtime/runtime.cmake tools/kp_namespacetest.cpp docs/lua-api.md docs/user/api-status.md 2>/dev/null || true; printf '%s\\n' '-- NWScript names --'; python3 - <<'PY'
+import json
+for f in ['data/routines/k1.json','data/routines/k2.json']:
+ d=json.load(open(f));
+ # accommodate dict/list
+ vals=d.values() if isinstance(d,dict) else d
+ found=[]
+ def rec(x):
+  if isinstance(x,dict):
+   for k,v in x.items():
+    if k in ('name','routine','routine_name') and isinstance(v,str): found.append(v.lower())
+    rec(v)
+  elif isinstance(x,list):
+   for v in x: rec(v)
+ rec(d)
+ print(f, len(found), sorted(set(found)&{'motion','capabilities','capture'}))
+PY
+printf '%s\\n' '-- bindings safe/restricted --'; jq -r '.. | objects | select(has(\"offset\") or has(\"address\")) | .name? // empty' data/adjudication/k1_gog_103_motion_bindings.json | sort -u; rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json || true" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 23348ms:
+nds.cpp-744-
+src/harness/commands.cpp:745:    if (faulted) { fail(out, "fault while running lua; harness site poisoned"); return; }
+src/harness/commands.cpp-746-    if (!ran) {
+src/harness/commands.cpp-747-        // The routine bridge answers with its own message when nwscript.call is
+src/harness/commands.cpp-748-        // called before the VM is captured; pass it through, it says why.
+--
+src/lua/host.cpp-25-const char kOwnerKey = 0;
+src/lua/host.cpp-26-
+src/lua/host.cpp-27-// Push a message handler that decorates an error with a traceback. Without one,
+src/lua/host.cpp:28:// lua_pcall returns just "attempt to index a nil value" and the script author
+src/lua/host.cpp-29-// has no idea which line produced it.
+src/lua/host.cpp-30-int traceback_handler(lua_State* L) {
+src/lua/host.cpp-31-    const char* msg = lua_tostring(L, 1);
+--
+src/lua/host.cpp-56-constexpr std::size_t kResultsKept = 64;
+src/lua/host.cpp-57-
+src/lua/host.cpp-58-const char* busy_error() {
+src/lua/host.cpp:59:    return "host busy: a script callback is running; lifecycle changes from Lua "
+src/lua/host.cpp-60-           "go through the deferred request queue";
+src/lua/host.cpp-61-}
+src/lua/host.cpp-62-
+--
+src/lua/host.cpp-161-
+src/lua/host.cpp-162-    lua_pushcfunction(N, traceback_handler);
+src/lua/host.cpp-163-    lua_insert(N, -2);
+src/lua/host.cpp:164:    if (lua_pcall(N, 0, 0, -2) != 0) return discard("chunk failed");
+src/lua/host.cpp-165-    lua_pop(N, 1);  // traceback handler
+src/lua/host.cpp-166-    staging_chunk_ = false;
+src/lua/host.cpp-167-    return true;
+--
+src/lua/host.cpp-318-    if (!s.push_handler(ev.lua_name)) { lua_settop(L, base); return; }
+src/lua/host.cpp-319-    for (const auto& a : args) a.push(L);
+src/lua/host.cpp-320-    lua_pushboolean(L, true);
+src/lua/host.cpp:321:    if (lua_pcall(L, int(args.size()) + 1, int(ev.results.size()), base + 1) != 0) {
+src/lua/host.cpp-322-        const char* msg = lua_tostring(L, -1);
+src/lua/host.cpp-323-        s.record_error(ev.lua_name, msg ? msg : "(no message)", tick_, cfg_.error_budget);
+src/lua/host.cpp-324-    }
+--
+src/lua/host.cpp-556-        const int nres  = int(ev.results.size());
+src/lua/host.cpp-557-        ++out.called;
+src/lua/host.cpp-558-
+src/lua/host.cpp:559:        if (lua_pcall(L, nargs, nres, base + 1) != 0) {
+src/lua/host.cpp-560-            const char* msg = lua_tostring(L, -1);
+src/lua/host.cpp-561-            s.record_error(ev.lua_name, msg ? msg : "(no message)",
+src/lua/host.cpp-562-                           tick_, cfg_.error_budget);
+--
+src/runtime/internal.hpp-46-
+src/runtime/internal.hpp-47-// True once the Lua host is fully built and its scripts are loaded.
+src/runtime/internal.hpp-48-//
+src/runtime/internal.hpp:49:// Hooks install before the host exists, per the phase order in runtime.hpp, so
+src/runtime/internal.hpp-50-// a game thread can enter a patched body while the worker thread is still in
+src/runtime/internal.hpp-51-// load_all(). A null check on host() is not enough for that -- load_all mutates
+src/runtime/internal.hpp-52-// the script vector after host_ becomes non-null. This flag is set with release
+--
+src/runtime/fault_guard.cpp-48-// is deliberate: a body that faulted once will fault again, and the second
+src/runtime/fault_guard.cpp-49-// recovery is not more informative than the first.
+src/runtime/fault_guard.cpp-50-//
+src/runtime/fault_guard.cpp:51:// The runtime-wide stop is not permanent, though. `lua reload` in the console
+src/runtime/fault_guard.cpp-52-// rebuilds every lua_State and re-arms dispatch, which is sound precisely
+src/runtime/fault_guard.cpp-53-// because the states were the part left inconsistent. Poison does not lift.
+src/runtime/fault_guard.cpp-54-#include "runtime/internal.hpp"
+--
+src/runtime/hook_bodies.cpp-649-    return out;
+src/runtime/hook_bodies.cpp-650-}
+src/runtime/hook_bodies.cpp-651-
+src/runtime/hook_bodies.cpp:652:void dispatch_run_script_done(lua::Host& host, const std::string& script_name,
+src/runtime/hook_bodies.cpp-653-                              std::uint32_t object_id, int has_object, bool ran,
+src/runtime/hook_bodies.cpp-654-                              bool blocked, const events::Outcome& outcome) {
+src/runtime/hook_bodies.cpp-655-    const events::EventContract* done = find_contract("OnRunScriptDone");
+--
+src/runtime/hook_bodies.cpp-696-    events::Outcome outcome;
+src/runtime/hook_bodies.cpp-697-    std::string script_name;
+src/runtime/hook_bodies.cpp-698-    bool saw_run_script = false;
+src/runtime/hook_bodies.cpp:699:    if (live() && host != nullptr && !g_poison_run_script.load(std::memory_order_acquire)) {
+src/runtime/hook_bodies.cpp-700-        // `verdict` is written inside the guarded region, so its value after a
+src/runtime/hook_bodies.cpp-701-        // fault is indeterminate and the fallback re-states it. The default is
+src/runtime/hook_bodies.cpp-702-        // "do not block", which is the right answer when our own dispatch just
+-- integration state --
+src/runtime/runtime.cpp:65:// goes below 1: kp.game_speed(0.25) is real slow motion. Returns the scale in
+-- NWScript names --
+data/routines/k1.json 1848 []
+data/routines/k2.json 2082 []
+-- bindings safe/restricted --
+CSWSObject::area_id
+CSWSObject::client_push_gate_unverified
+CSWSObject::dirty_bits
+CSWSObject::orientation
+CSWSObject::position
+CSWSPlaceable::aabb_registered
+CSWSPlaceable::quaternion_raw_order_unverified
+data/adjudication/k1_gog_103_motion_bindings.json:41:  "keep out: +0x3A0, +0x3C0, +0x3D8, 0x50DC40, 0x50DFD0, client vtbl+0x12C/+0x130/+0x134, 0x506FE0 reverse pass, 0x52CCE0, the brief's '+0x24'"
+
+**Planning patch-based review and integration check**
+**Identifying M1 integration failure and type mismatch**
+apply patch
+patch: completed
+/home/brunner56/kp-live-20260922/motion-m1-review.md
+diff --git a//home/brunner56/kp-live-20260922/motion-m1-review.md b//home/brunner56/kp-live-20260922/motion-m1-review.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..bad48d50bccc782f5ca411cfb51dd9b1112ae6e2
+--- /dev/null
++++ b//home/brunner56/kp-live-20260922/motion-m1-review.md
+@@ -0,0 +1,167 @@
++# Motion M1 independent review — K1 GOG read-only placeable capture
++
++Date: 2026-09-27
++
++Scope reviewed: `kp.motion.capabilities()` / `kp.motion.capture(id)`, the nine
++M1 implementation/data files named in the task, the seven M1 hooksite rows,
++the M0 safe/keep-out receipts, and the M1 report. This review did not change
++the worktree, run Wine/a game, touch the live-game lock, or run an address
++generator. Scratch artifacts are under
++`/home/brunner56/kp-live-20260922/review-probes-motion-m1/`.
++
++## Resume receipt
++
++The prior writer left these M1 paths untracked: `src/api/motion.hpp`,
++`motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`,
++`motion.cmake`, `tools/kp_motiontest.cpp`, and
++`data/adjudication/k1_gog_103_motion_bindings.json`.  The only tracked allowed
++file is `data/hooksites.toml`; its total dirty diff is +219 lines because it
++also contains an earlier camera block. The M1 portion is the seven rows at
++`data/hooksites.toml:2354-2411` (+58 lines). No required review file existed
++at this path; `/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md`
++was a copy of the task prompt, not a partial review.
++
++The prior `kp_motiontest` binary and four MinGW objects existed in the mandated
++scratch directory. I re-ran them rather than trusting their timestamps.
++
++## Independent specification pass
++
++### Claims that hold
++
++claim: M1 uses only M0-safe data and leaves the M0 keep-out set out.
++referent: `motion-m0-verification.md:183-188` safe list; `src/api/motion_profiles.cpp:12-53`; `data/adjudication/k1_gog_103_motion_bindings.json:41`.
++checked: `rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json` found only the adjudication keep-out declaration, not implementation use.
++verdict: holds.
++confidence: high; an independent raw-image re-read would be needed to re-prove M0 itself, which is out of M1 review scope.
++
++claim: capture refuses unsupported images/ABIs, checks guards before the getter, fences identity after the getter, and never writes a partial `Capture`.
++referent: `src/api/motion.cpp:57-70` (bind), `:81-128` (capture); `tools/kp_motiontest.cpp` test names `guard_flip_refuses_before_call`, `chain_failure_refuses_before_call`, `wrong_vtable_refuses`, `id_roundtrip_mismatch_refuses`, and `unreadable_field_refuses`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c '/home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest <worktree>'`.
++verdict: holds in the synthetic fallible-reader fixture. The run reports 20/20 tests, 2926 checks.
++confidence: high for the tested checked core; no live address/ABI proof is implied.
++
++claim: valid `0xffffffff` is not treated as invalid, while `OBJECT_INVALID` is refused before the call.
++referent: `src/api/motion.cpp:11,83-84`; `tools/kp_motiontest.cpp` test `motion.accepts_client_id_0xffffffff` and `motion.invalid_object_id_refused_before_call`.
++checked: same 20/20 synthetic run.
++verdict: holds.
++confidence: high.
++
++claim: the native getter ABI is Win32 i386 `thiscall(CServerExoApp*, uint32_t)` with a one-argument callee cleanup (`ret 4`).
++referent: `motion-m0-verification.md:55-59`; `src/api/motion_backend.cpp:18-23`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c "cd <worktree> && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/$f.cpp -o /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/$f.o || exit 1; done"`; exit 0, no compiler output. The source declaration uses `__attribute__((thiscall))` at `motion_backend.cpp:20`.
++verdict: holds as a compile-time declaration backed by the M0 disassembly receipt.
++confidence: high for call shape, medium for live invocation until the required M1 live proof runs.
++
++claim: the Lua capture object is protected/read-only and failures use `nil, "kind: reason"`.
++referent: `src/api/motion_lua.cpp:19-27,60-73,93-105`; `tools/kp_motiontest.cpp` tests `motion.forged_userdata_argerror` and `motion.lua_capture_surface`.
++checked: same 20/20 synthetic run.
++verdict: holds. The exact closed error prefixes are `unsupported`, `guard`, `chain`, `identity`, and `value` from `motion.cpp:22-25` and `motion_profiles.cpp:62-71`.
++confidence: high.
++
++claim: facing stays in `[0,360)` even when a near-360 double rounds upward as a float.
++referent: `src/api/motion.cpp:116-121`; `tools/kp_motiontest.cpp` test `motion.capture_reads_server_xyz_and_orientation`.
++checked: same 20/20 synthetic run, including the near-360 fixture assertion.
++verdict: holds.
++confidence: high.
++
++claim: `kp.motion`, `capabilities`, and `capture` do not duplicate an NWScript routine name.
++referent: proposed namespace in `fanout-lua-lifecycle-plan.md:93`; Lua registration at `motion_lua.cpp:101-104`.
++checked: a recursive JSON name extraction over `data/routines/k1.json` (1,848 name occurrences) and `k2.json` (2,082) intersected their case-folded names with `{motion,capabilities,capture}`; both intersections were empty.
++verdict: holds for the exposed routine/module names.
++confidence: high.
++
++claim: the seven motion hooksite rows are additive field rows and do not collide with camera rows.
++referent: `data/hooksites.toml:2354-2411`; the camera block ends at `:2352`.
++checked: `git diff --unified=0 -- data/hooksites.toml` shows the camera and motion blocks are both additions and has no removed line; `rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml` found each M1 name once.
++verdict: holds, with an attribution caveat: the file's +219 statistic must not be represented as M1-only work; only +58 lines are M1.
++confidence: high.
++
++claim: the binding material records two derivations rather than relying on a single uncorroborated source.
++referent: `data/adjudication/k1_gog_103_motion_bindings.json` citations and `motion-m0-rederivation.md` plus `motion-m0-verification.md`.
++checked: source inspection; the M0 verification explicitly says it independently re-derived every safe item at `motion-m0-verification.md:175-187`.
++verdict: holds for the stated METHOD-style two-derivation requirement.
++confidence: high.
++
++## Adversarial findings
++
++### F1 — FAIL: no engine-thread enforcement or binding, and no production integration
++
++`capture()` makes a direct engine call at `src/api/motion.cpp:93`. The module
++has no current-thread predicate, dispatcher, runtime-live predicate, or fault
++guard of its own. This matters because repository policy says engine calls are
++legal only on the game main thread: `src/harness/channel.hpp:5-8` and
++`src/harness/engine.hpp:12-15`. The eventual normal protection is architectural
++rather than present in this patch: Lua dispatch is executed from engine hook
++bodies (for example `src/runtime/hook_bodies.cpp:699+`), but none of the M1
++sources establishes or checks that precondition.
++
++More immediately, `rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp
++src/runtime/runtime.cmake tools/kp_namespacetest.cpp` returned no M1
++integration. `motion.cmake` itself says production sources belong in
++`runtime.cmake` (`src/api/motion.cmake:1-2`), but `CMakeLists.txt` does not
++include the fragment and the runtime never calls `bind_native`, `register_all`,
++or `unbind`. Thus the reviewed source can pass its standalone fixture while it
++is neither compiled into nor exposed by the actual runtime.
++
++This does not authorize touching the shared integration files: the plan makes
++I-M a serialized integration task (`fanout-lua-lifecycle-plan.md:165-170`). It
++does mean the submitted M1 behavior is incomplete and cannot claim an
++engine-thread guarantee.
++
++Required resolution owner: the serialized I-M integrator. It must add the
++motion production sources and lifecycle calls, register the API, and document
++the exact engine-thread gate (or make an explicit runtime assertion/dispatch
++that turns an off-thread request into `nil, "unsupported: ..."`). Then run the
++normal runtime-linked namespace test and the M1 live disposable-footlocker
++oracle from plan line 171 under the controller's lock.
++
++### F2 — contract mismatch: `capabilities().reads` is a string, not a list
++
++The implementation pushes one space-delimited literal at
++`src/api/motion_lua.cpp:82-84`. The writer report describes `reads` as “a list
++of field names.” A Lua caller receives `type(kp.motion.capabilities().reads) ==
++"string"`, not a table. The plan does not prescribe a representation, so this
++is not independently a safety failure; it is nevertheless a public-contract
++mismatch against the accompanying report/doc proposal. Resolve before public
++documentation: either return a fresh Lua array or describe it explicitly as a
++space-delimited string and add an assertion in `motion.lua_capture_surface`.
++
++### Non-finding: dangling/freed pointer and ID reuse
++
++The code cannot make arbitrary process memory safe once the engine getter has
++returned a pointer. It does minimize the window: every capture repeats all
++guards, traverses the current manager/server/internal/array chain before the
++call (`motion.cpp:83-93`), then validates the returned object’s vtable, type,
++and round-trip ID (`:94-101`) before fields, and obtains fields through the
++fallible reader (`:103-126`). The synthetic tests cover unmapped chain,
++vtable, field, and wrong-ID cases. This holds as a bounded defensive design;
++the race between a successful read and a concurrent free is unresolved without
++the engine-thread guarantee in F1. No live test currently proves ID reuse.
++
++## Writer grill-me check
++
++The writer’s weakest implied question is whether the direct getter is safely
++confined to the engine thread. That does not hold yet: the source evidence
++above shows neither a guard nor integration. The synthetic fixture proves
++ordering/refusal, not thread affinity. The single settling check is a
++runtime-linked test that exercises `kp.motion.capture` from the main hook
++dispatch and a deliberate off-thread/harness request that is rejected before
++the getter; then the controller performs the plan’s live footlocker oracle.
++
++## Verdict
++
++**Motion M1 verdict: FAIL.**
++
++The checked core, profile guards, Lua userdata, K1-GOG `thiscall` declaration,
++safe-list discipline, hooksite separation, and bounded synthetic/MingW checks
++are good. The result is not a shippable M1 surface until serialized I-M makes
++the feature part of the runtime and proves/enforces its engine-thread
++precondition. No live game/readback claim is made.
++
++## Re-run evidence
++
++* `review-probes-motion-m1/kp_motiontest`: **20/20 passed, 2,926 checks**;
++  synthetic memory only, exit 0. Saved as `rerun-kp_motiontest.txt`.
++* i686-w64-mingw32 compilation of the four M1 sources: **4/4 object files,
++  exit 0, no warnings**. Saved as `rerun-mingw.txt` and `mingw-rerun/*.o`.
++
+
+diff --git a//home/brunner56/kp-live-20260922/motion-m1-review.md b//home/brunner56/kp-live-20260922/motion-m1-review.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..bad48d50bccc782f5ca411cfb51dd9b1112ae6e2
+--- /dev/null
++++ b//home/brunner56/kp-live-20260922/motion-m1-review.md
+@@ -0,0 +1,167 @@
++# Motion M1 independent review — K1 GOG read-only placeable capture
++
++Date: 2026-09-27
++
++Scope reviewed: `kp.motion.capabilities()` / `kp.motion.capture(id)`, the nine
++M1 implementation/data files named in the task, the seven M1 hooksite rows,
++the M0 safe/keep-out receipts, and the M1 report. This review did not change
++the worktree, run Wine/a game, touch the live-game lock, or run an address
++generator. Scratch artifacts are under
++`/home/brunner56/kp-live-20260922/review-probes-motion-m1/`.
++
++## Resume receipt
++
++The prior writer left these M1 paths untracked: `src/api/motion.hpp`,
++`motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`,
++`motion.cmake`, `tools/kp_motiontest.cpp`, and
++`data/adjudication/k1_gog_103_motion_bindings.json`.  The only tracked allowed
++file is `data/hooksites.toml`; its total dirty diff is +219 lines because it
++also contains an earlier camera block. The M1 portion is the seven rows at
++`data/hooksites.toml:2354-2411` (+58 lines). No required review file existed
++at this path; `/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md`
++was a copy of the task prompt, not a partial review.
++
++The prior `kp_motiontest` binary and four MinGW objects existed in the mandated
++scratch directory. I re-ran them rather than trusting their timestamps.
++
++## Independent specification pass
++
++### Claims that hold
++
++claim: M1 uses only M0-safe data and leaves the M0 keep-out set out.
++referent: `motion-m0-verification.md:183-188` safe list; `src/api/motion_profiles.cpp:12-53`; `data/adjudication/k1_gog_103_motion_bindings.json:41`.
++checked: `rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json` found only the adjudication keep-out declaration, not implementation use.
++verdict: holds.
++confidence: high; an independent raw-image re-read would be needed to re-prove M0 itself, which is out of M1 review scope.
++
++claim: capture refuses unsupported images/ABIs, checks guards before the getter, fences identity after the getter, and never writes a partial `Capture`.
++referent: `src/api/motion.cpp:57-70` (bind), `:81-128` (capture); `tools/kp_motiontest.cpp` test names `guard_flip_refuses_before_call`, `chain_failure_refuses_before_call`, `wrong_vtable_refuses`, `id_roundtrip_mismatch_refuses`, and `unreadable_field_refuses`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c '/home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest <worktree>'`.
++verdict: holds in the synthetic fallible-reader fixture. The run reports 20/20 tests, 2926 checks.
++confidence: high for the tested checked core; no live address/ABI proof is implied.
++
++claim: valid `0xffffffff` is not treated as invalid, while `OBJECT_INVALID` is refused before the call.
++referent: `src/api/motion.cpp:11,83-84`; `tools/kp_motiontest.cpp` test `motion.accepts_client_id_0xffffffff` and `motion.invalid_object_id_refused_before_call`.
++checked: same 20/20 synthetic run.
++verdict: holds.
++confidence: high.
++
++claim: the native getter ABI is Win32 i386 `thiscall(CServerExoApp*, uint32_t)` with a one-argument callee cleanup (`ret 4`).
++referent: `motion-m0-verification.md:55-59`; `src/api/motion_backend.cpp:18-23`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c "cd <worktree> && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/$f.cpp -o /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/$f.o || exit 1; done"`; exit 0, no compiler output. The source declaration uses `__attribute__((thiscall))` at `motion_backend.cpp:20`.
++verdict: holds as a compile-time declaration backed by the M0 disassembly receipt.
++confidence: high for call shape, medium for live invocation until the required M1 live proof runs.
++
++claim: the Lua capture object is protected/read-only and failures use `nil, "kind: reason"`.
++referent: `src/api/motion_lua.cpp:19-27,60-73,93-105`; `tools/kp_motiontest.cpp` tests `motion.forged_userdata_argerror` and `motion.lua_capture_surface`.
++checked: same 20/20 synthetic run.
++verdict: holds. The exact closed error prefixes are `unsupported`, `guard`, `chain`, `identity`, and `value` from `motion.cpp:22-25` and `motion_profiles.cpp:62-71`.
++confidence: high.
++
++claim: facing stays in `[0,360)` even when a near-360 double rounds upward as a float.
++referent: `src/api/motion.cpp:116-121`; `tools/kp_motiontest.cpp` test `motion.capture_reads_server_xyz_and_orientation`.
++checked: same 20/20 synthetic run, including the near-360 fixture assertion.
++verdict: holds.
++confidence: high.
++
++claim: `kp.motion`, `capabilities`, and `capture` do not duplicate an NWScript routine name.
++referent: proposed namespace in `fanout-lua-lifecycle-plan.md:93`; Lua registration at `motion_lua.cpp:101-104`.
++checked: a recursive JSON name extraction over `data/routines/k1.json` (1,848 name occurrences) and `k2.json` (2,082) intersected their case-folded names with `{motion,capabilities,capture}`; both intersections were empty.
++verdict: holds for the exposed routine/module names.
++confidence: high.
++
++claim: the seven motion hooksite rows are additive field rows and do not collide with camera rows.
++referent: `data/hooksites.toml:2354-2411`; the camera block ends at `:2352`.
++checked: `git diff --unified=0 -- data/hooksites.toml` shows the camera and motion blocks are both additions and has no removed line; `rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml` found each M1 name once.
++verdict: holds, with an attribution caveat: the file's +219 statistic must not be represented as M1-only work; only +58 lines are M1.
++confidence: high.
++
++claim: the binding material records two derivations rather than relying on a single uncorroborated source.
++referent: `data/adjudication/k1_gog_103_motion_bindings.json` citations and `motion-m0-rederivation.md` plus `motion-m0-verification.md`.
++checked: source inspection; the M0 verification explicitly says it independently re-derived every safe item at `motion-m0-verification.md:175-187`.
++verdict: holds for the stated METHOD-style two-derivation requirement.
++confidence: high.
++
++## Adversarial findings
++
++### F1 — FAIL: no engine-thread enforcement or binding, and no production integration
++
++`capture()` makes a direct engine call at `src/api/motion.cpp:93`. The module
++has no current-thread predicate, dispatcher, runtime-live predicate, or fault
++guard of its own. This matters because repository policy says engine calls are
++legal only on the game main thread: `src/harness/channel.hpp:5-8` and
++`src/harness/engine.hpp:12-15`. The eventual normal protection is architectural
++rather than present in this patch: Lua dispatch is executed from engine hook
++bodies (for example `src/runtime/hook_bodies.cpp:699+`), but none of the M1
++sources establishes or checks that precondition.
++
++More immediately, `rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp
++src/runtime/runtime.cmake tools/kp_namespacetest.cpp` returned no M1
++integration. `motion.cmake` itself says production sources belong in
++`runtime.cmake` (`src/api/motion.cmake:1-2`), but `CMakeLists.txt` does not
++include the fragment and the runtime never calls `bind_native`, `register_all`,
++or `unbind`. Thus the reviewed source can pass its standalone fixture while it
++is neither compiled into nor exposed by the actual runtime.
++
++This does not authorize touching the shared integration files: the plan makes
++I-M a serialized integration task (`fanout-lua-lifecycle-plan.md:165-170`). It
++does mean the submitted M1 behavior is incomplete and cannot claim an
++engine-thread guarantee.
++
++Required resolution owner: the serialized I-M integrator. It must add the
++motion production sources and lifecycle calls, register the API, and document
++the exact engine-thread gate (or make an explicit runtime assertion/dispatch
++that turns an off-thread request into `nil, "unsupported: ..."`). Then run the
++normal runtime-linked namespace test and the M1 live disposable-footlocker
++oracle from plan line 171 under the controller's lock.
++
++### F2 — contract mismatch: `capabilities().reads` is a string, not a list
++
++The implementation pushes one space-delimited literal at
++`src/api/motion_lua.cpp:82-84`. The writer report describes `reads` as “a list
++of field names.” A Lua caller receives `type(kp.motion.capabilities().reads) ==
++"string"`, not a table. The plan does not prescribe a representation, so this
++is not independently a safety failure; it is nevertheless a public-contract
++mismatch against the accompanying report/doc proposal. Resolve before public
++documentation: either return a fresh Lua array or describe it explicitly as a
++space-delimited string and add an assertion in `motion.lua_capture_surface`.
++
++### Non-finding: dangling/freed pointer and ID reuse
++
++The code cannot make arbitrary process memory safe once the engine getter has
++returned a pointer. It does minimize the window: every capture repeats all
++guards, traverses the current manager/server/internal/array chain before the
++call (`motion.cpp:83-93`), then validates the returned object’s vtable, type,
++and round-trip ID (`:94-101`) before fields, and obtains fields through the
++fallible reader (`:103-126`). The synthetic tests cover unmapped chain,
++vtable, field, and wrong-ID cases. This holds as a bounded defensive design;
++the race between a successful read and a concurrent free is unresolved without
++the engine-thread guarantee in F1. No live test currently proves ID reuse.
++
++## Writer grill-me check
++
++The writer’s weakest implied question is whether the direct getter is safely
++confined to the engine thread. That does not hold yet: the source evidence
++above shows neither a guard nor integration. The synthetic fixture proves
++ordering/refusal, not thread affinity. The single settling check is a
++runtime-linked test that exercises `kp.motion.capture` from the main hook
++dispatch and a deliberate off-thread/harness request that is rejected before
++the getter; then the controller performs the plan’s live footlocker oracle.
++
++## Verdict
++
++**Motion M1 verdict: FAIL.**
++
++The checked core, profile guards, Lua userdata, K1-GOG `thiscall` declaration,
++safe-list discipline, hooksite separation, and bounded synthetic/MingW checks
++are good. The result is not a shippable M1 surface until serialized I-M makes
++the feature part of the runtime and proves/enforces its engine-thread
++precondition. No live game/readback claim is made.
++
++## Re-run evidence
++
++* `review-probes-motion-m1/kp_motiontest`: **20/20 passed, 2,926 checks**;
++  synthetic memory only, exit 0. Saved as `rerun-kp_motiontest.txt`.
++* i686-w64-mingw32 compilation of the four M1 sources: **4/4 object files,
++  exit 0, no warnings**. Saved as `rerun-mingw.txt` and `mingw-rerun/*.o`.
++
+
+**Planning Git diff status check**
+exec
+/usr/bin/bash -c "sed -n '1,320p' /home/brunner56/kp-live-20260922/motion-m1-review.md; printf '\\n-- review file --\\n'; stat -c '%s bytes %y %n' /home/brunner56/kp-live-20260922/motion-m1-review.md; printf '\\n-- worktree mutation check allowed paths --\\n'; git status --short -- src/api/motion.hpp src/api/motion.cpp src/api/motion_profiles.cpp src/api/motion_backend.cpp src/api/motion_lua.cpp src/api/motion.cmake tools/kp_motiontest.cpp data/adjudication/k1_gog_103_motion_bindings.json data/hooksites.toml" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 0ms:
+# Motion M1 independent review — K1 GOG read-only placeable capture
+
+Date: 2026-09-27
+
+Scope reviewed: `kp.motion.capabilities()` / `kp.motion.capture(id)`, the nine
+M1 implementation/data files named in the task, the seven M1 hooksite rows,
+the M0 safe/keep-out receipts, and the M1 report. This review did not change
+the worktree, run Wine/a game, touch the live-game lock, or run an address
+generator. Scratch artifacts are under
+`/home/brunner56/kp-live-20260922/review-probes-motion-m1/`.
+
+## Resume receipt
+
+The prior writer left these M1 paths untracked: `src/api/motion.hpp`,
+`motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`,
+`motion.cmake`, `tools/kp_motiontest.cpp`, and
+`data/adjudication/k1_gog_103_motion_bindings.json`.  The only tracked allowed
+file is `data/hooksites.toml`; its total dirty diff is +219 lines because it
+also contains an earlier camera block. The M1 portion is the seven rows at
+`data/hooksites.toml:2354-2411` (+58 lines). No required review file existed
+at this path; `/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md`
+was a copy of the task prompt, not a partial review.
+
+The prior `kp_motiontest` binary and four MinGW objects existed in the mandated
+scratch directory. I re-ran them rather than trusting their timestamps.
+
+## Independent specification pass
+
+### Claims that hold
+
+claim: M1 uses only M0-safe data and leaves the M0 keep-out set out.
+referent: `motion-m0-verification.md:183-188` safe list; `src/api/motion_profiles.cpp:12-53`; `data/adjudication/k1_gog_103_motion_bindings.json:41`.
+checked: `rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json` found only the adjudication keep-out declaration, not implementation use.
+verdict: holds.
+confidence: high; an independent raw-image re-read would be needed to re-prove M0 itself, which is out of M1 review scope.
+
+claim: capture refuses unsupported images/ABIs, checks guards before the getter, fences identity after the getter, and never writes a partial `Capture`.
+referent: `src/api/motion.cpp:57-70` (bind), `:81-128` (capture); `tools/kp_motiontest.cpp` test names `guard_flip_refuses_before_call`, `chain_failure_refuses_before_call`, `wrong_vtable_refuses`, `id_roundtrip_mismatch_refuses`, and `unreadable_field_refuses`.
+checked: `/home/brunner56/.local/bin/host-cmd sh -c '/home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest <worktree>'`.
+verdict: holds in the synthetic fallible-reader fixture. The run reports 20/20 tests, 2926 checks.
+confidence: high for the tested checked core; no live address/ABI proof is implied.
+
+claim: valid `0xffffffff` is not treated as invalid, while `OBJECT_INVALID` is refused before the call.
+referent: `src/api/motion.cpp:11,83-84`; `tools/kp_motiontest.cpp` test `motion.accepts_client_id_0xffffffff` and `motion.invalid_object_id_refused_before_call`.
+checked: same 20/20 synthetic run.
+verdict: holds.
+confidence: high.
+
+claim: the native getter ABI is Win32 i386 `thiscall(CServerExoApp*, uint32_t)` with a one-argument callee cleanup (`ret 4`).
+referent: `motion-m0-verification.md:55-59`; `src/api/motion_backend.cpp:18-23`.
+checked: `/home/brunner56/.local/bin/host-cmd sh -c "cd <worktree> && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/$f.cpp -o /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/$f.o || exit 1; done"`; exit 0, no compiler output. The source declaration uses `__attribute__((thiscall))` at `motion_backend.cpp:20`.
+verdict: holds as a compile-time declaration backed by the M0 disassembly receipt.
+confidence: high for call shape, medium for live invocation until the required M1 live proof runs.
+
+claim: the Lua capture object is protected/read-only and failures use `nil, "kind: reason"`.
+referent: `src/api/motion_lua.cpp:19-27,60-73,93-105`; `tools/kp_motiontest.cpp` tests `motion.forged_userdata_argerror` and `motion.lua_capture_surface`.
+checked: same 20/20 synthetic run.
+verdict: holds. The exact closed error prefixes are `unsupported`, `guard`, `chain`, `identity`, and `value` from `motion.cpp:22-25` and `motion_profiles.cpp:62-71`.
+confidence: high.
+
+claim: facing stays in `[0,360)` even when a near-360 double rounds upward as a float.
+referent: `src/api/motion.cpp:116-121`; `tools/kp_motiontest.cpp` test `motion.capture_reads_server_xyz_and_orientation`.
+checked: same 20/20 synthetic run, including the near-360 fixture assertion.
+verdict: holds.
+confidence: high.
+
+claim: `kp.motion`, `capabilities`, and `capture` do not duplicate an NWScript routine name.
+referent: proposed namespace in `fanout-lua-lifecycle-plan.md:93`; Lua registration at `motion_lua.cpp:101-104`.
+checked: a recursive JSON name extraction over `data/routines/k1.json` (1,848 name occurrences) and `k2.json` (2,082) intersected their case-folded names with `{motion,capabilities,capture}`; both intersections were empty.
+verdict: holds for the exposed routine/module names.
+confidence: high.
+
+claim: the seven motion hooksite rows are additive field rows and do not collide with camera rows.
+referent: `data/hooksites.toml:2354-2411`; the camera block ends at `:2352`.
+checked: `git diff --unified=0 -- data/hooksites.toml` shows the camera and motion blocks are both additions and has no removed line; `rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml` found each M1 name once.
+verdict: holds, with an attribution caveat: the file's +219 statistic must not be represented as M1-only work; only +58 lines are M1.
+confidence: high.
+
+claim: the binding material records two derivations rather than relying on a single uncorroborated source.
+referent: `data/adjudication/k1_gog_103_motion_bindings.json` citations and `motion-m0-rederivation.md` plus `motion-m0-verification.md`.
+checked: source inspection; the M0 verification explicitly says it independently re-derived every safe item at `motion-m0-verification.md:175-187`.
+verdict: holds for the stated METHOD-style two-derivation requirement.
+confidence: high.
+
+## Adversarial findings
+
+### F1 — FAIL: no engine-thread enforcement or binding, and no production integration
+
+`capture()` makes a direct engine call at `src/api/motion.cpp:93`. The module
+has no current-thread predicate, dispatcher, runtime-live predicate, or fault
+guard of its own. This matters because repository policy says engine calls are
+legal only on the game main thread: `src/harness/channel.hpp:5-8` and
+`src/harness/engine.hpp:12-15`. The eventual normal protection is architectural
+rather than present in this patch: Lua dispatch is executed from engine hook
+bodies (for example `src/runtime/hook_bodies.cpp:699+`), but none of the M1
+sources establishes or checks that precondition.
+
+More immediately, `rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp
+src/runtime/runtime.cmake tools/kp_namespacetest.cpp` returned no M1
+integration. `motion.cmake` itself says production sources belong in
+`runtime.cmake` (`src/api/motion.cmake:1-2`), but `CMakeLists.txt` does not
+include the fragment and the runtime never calls `bind_native`, `register_all`,
+or `unbind`. Thus the reviewed source can pass its standalone fixture while it
+is neither compiled into nor exposed by the actual runtime.
+
+This does not authorize touching the shared integration files: the plan makes
+I-M a serialized integration task (`fanout-lua-lifecycle-plan.md:165-170`). It
+does mean the submitted M1 behavior is incomplete and cannot claim an
+engine-thread guarantee.
+
+Required resolution owner: the serialized I-M integrator. It must add the
+motion production sources and lifecycle calls, register the API, and document
+the exact engine-thread gate (or make an explicit runtime assertion/dispatch
+that turns an off-thread request into `nil, "unsupported: ..."`). Then run the
+normal runtime-linked namespace test and the M1 live disposable-footlocker
+oracle from plan line 171 under the controller's lock.
+
+### F2 — contract mismatch: `capabilities().reads` is a string, not a list
+
+The implementation pushes one space-delimited literal at
+`src/api/motion_lua.cpp:82-84`. The writer report describes `reads` as “a list
+of field names.” A Lua caller receives `type(kp.motion.capabilities().reads) ==
+"string"`, not a table. The plan does not prescribe a representation, so this
+is not independently a safety failure; it is nevertheless a public-contract
+mismatch against the accompanying report/doc proposal. Resolve before public
+documentation: either return a fresh Lua array or describe it explicitly as a
+space-delimited string and add an assertion in `motion.lua_capture_surface`.
+
+### Non-finding: dangling/freed pointer and ID reuse
+
+The code cannot make arbitrary process memory safe once the engine getter has
+returned a pointer. It does minimize the window: every capture repeats all
+guards, traverses the current manager/server/internal/array chain before the
+call (`motion.cpp:83-93`), then validates the returned object’s vtable, type,
+and round-trip ID (`:94-101`) before fields, and obtains fields through the
+fallible reader (`:103-126`). The synthetic tests cover unmapped chain,
+vtable, field, and wrong-ID cases. This holds as a bounded defensive design;
+the race between a successful read and a concurrent free is unresolved without
+the engine-thread guarantee in F1. No live test currently proves ID reuse.
+
+## Writer grill-me check
+
+The writer’s weakest implied question is whether the direct getter is safely
+confined to the engine thread. That does not hold yet: the source evidence
+above shows neither a guard nor integration. The synthetic fixture proves
+ordering/refusal, not thread affinity. The single settling check is a
+runtime-linked test that exercises `kp.motion.capture` from the main hook
+dispatch and a deliberate off-thread/harness request that is rejected before
+the getter; then the controller performs the plan’s live footlocker oracle.
+
+## Verdict
+
+**Motion M1 verdict: FAIL.**
+
+The checked core, profile guards, Lua userdata, K1-GOG `thiscall` declaration,
+safe-list discipline, hooksite separation, and bounded synthetic/MingW checks
+are good. The result is not a shippable M1 surface until serialized I-M makes
+the feature part of the runtime and proves/enforces its engine-thread
+precondition. No live game/readback claim is made.
+
+## Re-run evidence
+
+* `review-probes-motion-m1/kp_motiontest`: **20/20 passed, 2,926 checks**;
+  synthetic memory only, exit 0. Saved as `rerun-kp_motiontest.txt`.
+* i686-w64-mingw32 compilation of the four M1 sources: **4/4 object files,
+  exit 0, no warnings**. Saved as `rerun-mingw.txt` and `mingw-rerun/*.o`.
+
+
+-- review file --
+10777 bytes 2026-09-27 13:27:15.365119234 -0500 /home/brunner56/kp-live-20260922/motion-m1-review.md
+
+-- worktree mutation check allowed paths --
+ M data/hooksites.toml
+?? data/adjudication/k1_gog_103_motion_bindings.json
+?? src/api/motion.cmake
+?? src/api/motion.cpp
+?? src/api/motion.hpp
+?? src/api/motion_backend.cpp
+?? src/api/motion_lua.cpp
+?? src/api/motion_profiles.cpp
+?? tools/kp_motiontest.cpp
+
+diff --git a//home/brunner56/kp-live-20260922/motion-m1-review.md b//home/brunner56/kp-live-20260922/motion-m1-review.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..bad48d50bccc782f5ca411cfb51dd9b1112ae6e2
+--- /dev/null
++++ b//home/brunner56/kp-live-20260922/motion-m1-review.md
+@@ -0,0 +1,167 @@
++# Motion M1 independent review — K1 GOG read-only placeable capture
++
++Date: 2026-09-27
++
++Scope reviewed: `kp.motion.capabilities()` / `kp.motion.capture(id)`, the nine
++M1 implementation/data files named in the task, the seven M1 hooksite rows,
++the M0 safe/keep-out receipts, and the M1 report. This review did not change
++the worktree, run Wine/a game, touch the live-game lock, or run an address
++generator. Scratch artifacts are under
++`/home/brunner56/kp-live-20260922/review-probes-motion-m1/`.
++
++## Resume receipt
++
++The prior writer left these M1 paths untracked: `src/api/motion.hpp`,
++`motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`,
++`motion.cmake`, `tools/kp_motiontest.cpp`, and
++`data/adjudication/k1_gog_103_motion_bindings.json`.  The only tracked allowed
++file is `data/hooksites.toml`; its total dirty diff is +219 lines because it
++also contains an earlier camera block. The M1 portion is the seven rows at
++`data/hooksites.toml:2354-2411` (+58 lines). No required review file existed
++at this path; `/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md`
++was a copy of the task prompt, not a partial review.
++
++The prior `kp_motiontest` binary and four MinGW objects existed in the mandated
++scratch directory. I re-ran them rather than trusting their timestamps.
++
++## Independent specification pass
++
++### Claims that hold
++
++claim: M1 uses only M0-safe data and leaves the M0 keep-out set out.
++referent: `motion-m0-verification.md:183-188` safe list; `src/api/motion_profiles.cpp:12-53`; `data/adjudication/k1_gog_103_motion_bindings.json:41`.
++checked: `rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json` found only the adjudication keep-out declaration, not implementation use.
++verdict: holds.
++confidence: high; an independent raw-image re-read would be needed to re-prove M0 itself, which is out of M1 review scope.
++
++claim: capture refuses unsupported images/ABIs, checks guards before the getter, fences identity after the getter, and never writes a partial `Capture`.
++referent: `src/api/motion.cpp:57-70` (bind), `:81-128` (capture); `tools/kp_motiontest.cpp` test names `guard_flip_refuses_before_call`, `chain_failure_refuses_before_call`, `wrong_vtable_refuses`, `id_roundtrip_mismatch_refuses`, and `unreadable_field_refuses`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c '/home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest <worktree>'`.
++verdict: holds in the synthetic fallible-reader fixture. The run reports 20/20 tests, 2926 checks.
++confidence: high for the tested checked core; no live address/ABI proof is implied.
++
++claim: valid `0xffffffff` is not treated as invalid, while `OBJECT_INVALID` is refused before the call.
++referent: `src/api/motion.cpp:11,83-84`; `tools/kp_motiontest.cpp` test `motion.accepts_client_id_0xffffffff` and `motion.invalid_object_id_refused_before_call`.
++checked: same 20/20 synthetic run.
++verdict: holds.
++confidence: high.
++
++claim: the native getter ABI is Win32 i386 `thiscall(CServerExoApp*, uint32_t)` with a one-argument callee cleanup (`ret 4`).
++referent: `motion-m0-verification.md:55-59`; `src/api/motion_backend.cpp:18-23`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c "cd <worktree> && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/$f.cpp -o /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/$f.o || exit 1; done"`; exit 0, no compiler output. The source declaration uses `__attribute__((thiscall))` at `motion_backend.cpp:20`.
++verdict: holds as a compile-time declaration backed by the M0 disassembly receipt.
++confidence: high for call shape, medium for live invocation until the required M1 live proof runs.
++
++claim: the Lua capture object is protected/read-only and failures use `nil, "kind: reason"`.
++referent: `src/api/motion_lua.cpp:19-27,60-73,93-105`; `tools/kp_motiontest.cpp` tests `motion.forged_userdata_argerror` and `motion.lua_capture_surface`.
++checked: same 20/20 synthetic run.
++verdict: holds. The exact closed error prefixes are `unsupported`, `guard`, `chain`, `identity`, and `value` from `motion.cpp:22-25` and `motion_profiles.cpp:62-71`.
++confidence: high.
++
++claim: facing stays in `[0,360)` even when a near-360 double rounds upward as a float.
++referent: `src/api/motion.cpp:116-121`; `tools/kp_motiontest.cpp` test `motion.capture_reads_server_xyz_and_orientation`.
++checked: same 20/20 synthetic run, including the near-360 fixture assertion.
++verdict: holds.
++confidence: high.
++
++claim: `kp.motion`, `capabilities`, and `capture` do not duplicate an NWScript routine name.
++referent: proposed namespace in `fanout-lua-lifecycle-plan.md:93`; Lua registration at `motion_lua.cpp:101-104`.
++checked: a recursive JSON name extraction over `data/routines/k1.json` (1,848 name occurrences) and `k2.json` (2,082) intersected their case-folded names with `{motion,capabilities,capture}`; both intersections were empty.
++verdict: holds for the exposed routine/module names.
++confidence: high.
++
++claim: the seven motion hooksite rows are additive field rows and do not collide with camera rows.
++referent: `data/hooksites.toml:2354-2411`; the camera block ends at `:2352`.
++checked: `git diff --unified=0 -- data/hooksites.toml` shows the camera and motion blocks are both additions and has no removed line; `rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml` found each M1 name once.
++verdict: holds, with an attribution caveat: the file's +219 statistic must not be represented as M1-only work; only +58 lines are M1.
++confidence: high.
++
++claim: the binding material records two derivations rather than relying on a single uncorroborated source.
++referent: `data/adjudication/k1_gog_103_motion_bindings.json` citations and `motion-m0-rederivation.md` plus `motion-m0-verification.md`.
++checked: source inspection; the M0 verification explicitly says it independently re-derived every safe item at `motion-m0-verification.md:175-187`.
++verdict: holds for the stated METHOD-style two-derivation requirement.
++confidence: high.
++
++## Adversarial findings
++
++### F1 — FAIL: no engine-thread enforcement or binding, and no production integration
++
++`capture()` makes a direct engine call at `src/api/motion.cpp:93`. The module
++has no current-thread predicate, dispatcher, runtime-live predicate, or fault
++guard of its own. This matters because repository policy says engine calls are
++legal only on the game main thread: `src/harness/channel.hpp:5-8` and
++`src/harness/engine.hpp:12-15`. The eventual normal protection is architectural
++rather than present in this patch: Lua dispatch is executed from engine hook
++bodies (for example `src/runtime/hook_bodies.cpp:699+`), but none of the M1
++sources establishes or checks that precondition.
++
++More immediately, `rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp
++src/runtime/runtime.cmake tools/kp_namespacetest.cpp` returned no M1
++integration. `motion.cmake` itself says production sources belong in
++`runtime.cmake` (`src/api/motion.cmake:1-2`), but `CMakeLists.txt` does not
++include the fragment and the runtime never calls `bind_native`, `register_all`,
++or `unbind`. Thus the reviewed source can pass its standalone fixture while it
++is neither compiled into nor exposed by the actual runtime.
++
++This does not authorize touching the shared integration files: the plan makes
++I-M a serialized integration task (`fanout-lua-lifecycle-plan.md:165-170`). It
++does mean the submitted M1 behavior is incomplete and cannot claim an
++engine-thread guarantee.
++
++Required resolution owner: the serialized I-M integrator. It must add the
++motion production sources and lifecycle calls, register the API, and document
++the exact engine-thread gate (or make an explicit runtime assertion/dispatch
++that turns an off-thread request into `nil, "unsupported: ..."`). Then run the
++normal runtime-linked namespace test and the M1 live disposable-footlocker
++oracle from plan line 171 under the controller's lock.
++
++### F2 — contract mismatch: `capabilities().reads` is a string, not a list
++
++The implementation pushes one space-delimited literal at
++`src/api/motion_lua.cpp:82-84`. The writer report describes `reads` as “a list
++of field names.” A Lua caller receives `type(kp.motion.capabilities().reads) ==
++"string"`, not a table. The plan does not prescribe a representation, so this
++is not independently a safety failure; it is nevertheless a public-contract
++mismatch against the accompanying report/doc proposal. Resolve before public
++documentation: either return a fresh Lua array or describe it explicitly as a
++space-delimited string and add an assertion in `motion.lua_capture_surface`.
++
++### Non-finding: dangling/freed pointer and ID reuse
++
++The code cannot make arbitrary process memory safe once the engine getter has
++returned a pointer. It does minimize the window: every capture repeats all
++guards, traverses the current manager/server/internal/array chain before the
++call (`motion.cpp:83-93`), then validates the returned object’s vtable, type,
++and round-trip ID (`:94-101`) before fields, and obtains fields through the
++fallible reader (`:103-126`). The synthetic tests cover unmapped chain,
++vtable, field, and wrong-ID cases. This holds as a bounded defensive design;
++the race between a successful read and a concurrent free is unresolved without
++the engine-thread guarantee in F1. No live test currently proves ID reuse.
++
++## Writer grill-me check
++
++The writer’s weakest implied question is whether the direct getter is safely
++confined to the engine thread. That does not hold yet: the source evidence
++above shows neither a guard nor integration. The synthetic fixture proves
++ordering/refusal, not thread affinity. The single settling check is a
++runtime-linked test that exercises `kp.motion.capture` from the main hook
++dispatch and a deliberate off-thread/harness request that is rejected before
++the getter; then the controller performs the plan’s live footlocker oracle.
++
++## Verdict
++
++**Motion M1 verdict: FAIL.**
++
++The checked core, profile guards, Lua userdata, K1-GOG `thiscall` declaration,
++safe-list discipline, hooksite separation, and bounded synthetic/MingW checks
++are good. The result is not a shippable M1 surface until serialized I-M makes
++the feature part of the runtime and proves/enforces its engine-thread
++precondition. No live game/readback claim is made.
++
++## Re-run evidence
++
++* `review-probes-motion-m1/kp_motiontest`: **20/20 passed, 2,926 checks**;
++  synthetic memory only, exit 0. Saved as `rerun-kp_motiontest.txt`.
++* i686-w64-mingw32 compilation of the four M1 sources: **4/4 object files,
++  exit 0, no warnings**. Saved as `rerun-mingw.txt` and `mingw-rerun/*.o`.
++
+
+codex
+**Motion M1 verdict: FAIL.**
+
+I resumed from the existing M1 work instead of restarting. The implementation and prior scratch artifacts were present; the required review file was not. The similarly named file under `codex-runs/` was just a copy of the task prompt, so I wrote the completed independent review to:
+
+[motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+
+The checked core is in good shape:
+
+- `kp_motiontest` re-run: **20/20 passing**, **2,926 checks** — synthetic/fallible-reader evidence only.
+- MinGW i686 compile re-run: **4/4 M1 sources compile cleanly**, no warnings.
+- Profile data stays within the M0 safe list; M0 keep-out offsets/symbols are not used.
+- Guard-before-call ordering, unsupported-image/ABI refusal, type/vtable/id fences, no-partial-output behavior, valid `0xffffffff`, protected userdata, `nil, "kind: reason"` failures, and `[0, 360)` facing are covered and held in the fixture.
+- The getter declaration matches the M0 evidence: Win32 i386 `thiscall(CServerExoApp*, uint32_t)`, one stack argument / `ret 4`.
+- `kp.motion`, `capabilities`, and `capture` do not collide with names in the K1/K2 NWScript routine data.
+- The seven M1 hooksite rows are additive and begin at [data/hooksites.toml](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/hooksites.toml:2354). The larger `+219` dirty diff also includes a pre-existing camera block; M1 accounts for only **+58 lines** there.
+
+The failure is real but localized: this M1 slice has neither production integration nor an explicit engine-thread gate.
+
+`capture()` directly invokes the engine getter at [motion.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/motion.cpp:93), but the new code does not prove or enforce that it is on the game’s main thread. In addition, no M1 source is yet in `runtime.cmake`, no runtime bind/register/unbind call exists, and no CMake inclusion makes `kp.motion` part of the actual runtime. The standalone test can therefore pass while the feature remains inaccessible in the shipped DLL.
+
+That integration is deliberately reserved for serialized I-M, so I did not touch shared runtime/CMake/namespace files. The I-M owner needs to wire the module in, state/enforce the thread-affinity contract, run the runtime-linked namespace test, and have the controller perform the plan’s disposable-footlocker live oracle under the live-game lock.
+
+I also recorded a smaller public-contract mismatch: `capabilities().reads` is currently one space-delimited Lua string, while the accompanying report describes it as a list. It should either become a fresh Lua array or be documented and tested as a string.
+
+Files created outside the worktree:
+
+- [motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-kp_motiontest.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-mingw.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/*.o`
+
+I did not modify the intentionally dirty worktree, stage, commit, push, run Wine/game/display tooling, touch the live-game lock, or signal any process.
+diff --git a//home/brunner56/kp-live-20260922/motion-m1-review.md b//home/brunner56/kp-live-20260922/motion-m1-review.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..bad48d50bccc782f5ca411cfb51dd9b1112ae6e2
+--- /dev/null
++++ b//home/brunner56/kp-live-20260922/motion-m1-review.md
+@@ -0,0 +1,167 @@
++# Motion M1 independent review — K1 GOG read-only placeable capture
++
++Date: 2026-09-27
++
++Scope reviewed: `kp.motion.capabilities()` / `kp.motion.capture(id)`, the nine
++M1 implementation/data files named in the task, the seven M1 hooksite rows,
++the M0 safe/keep-out receipts, and the M1 report. This review did not change
++the worktree, run Wine/a game, touch the live-game lock, or run an address
++generator. Scratch artifacts are under
++`/home/brunner56/kp-live-20260922/review-probes-motion-m1/`.
++
++## Resume receipt
++
++The prior writer left these M1 paths untracked: `src/api/motion.hpp`,
++`motion.cpp`, `motion_profiles.cpp`, `motion_backend.cpp`, `motion_lua.cpp`,
++`motion.cmake`, `tools/kp_motiontest.cpp`, and
++`data/adjudication/k1_gog_103_motion_bindings.json`.  The only tracked allowed
++file is `data/hooksites.toml`; its total dirty diff is +219 lines because it
++also contains an earlier camera block. The M1 portion is the seven rows at
++`data/hooksites.toml:2354-2411` (+58 lines). No required review file existed
++at this path; `/home/brunner56/kp-live-20260922/codex-runs/motion-m1-review.md`
++was a copy of the task prompt, not a partial review.
++
++The prior `kp_motiontest` binary and four MinGW objects existed in the mandated
++scratch directory. I re-ran them rather than trusting their timestamps.
++
++## Independent specification pass
++
++### Claims that hold
++
++claim: M1 uses only M0-safe data and leaves the M0 keep-out set out.
++referent: `motion-m0-verification.md:183-188` safe list; `src/api/motion_profiles.cpp:12-53`; `data/adjudication/k1_gog_103_motion_bindings.json:41`.
++checked: `rg -n '0x3a0|0x3c0|0x3d8|0x50dc40|0x50dfd0|0x52cce0|0x24' src/api/motion* data/adjudication/k1_gog_103_motion_bindings.json` found only the adjudication keep-out declaration, not implementation use.
++verdict: holds.
++confidence: high; an independent raw-image re-read would be needed to re-prove M0 itself, which is out of M1 review scope.
++
++claim: capture refuses unsupported images/ABIs, checks guards before the getter, fences identity after the getter, and never writes a partial `Capture`.
++referent: `src/api/motion.cpp:57-70` (bind), `:81-128` (capture); `tools/kp_motiontest.cpp` test names `guard_flip_refuses_before_call`, `chain_failure_refuses_before_call`, `wrong_vtable_refuses`, `id_roundtrip_mismatch_refuses`, and `unreadable_field_refuses`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c '/home/brunner56/kp-live-20260922/review-probes-motion-m1/kp_motiontest <worktree>'`.
++verdict: holds in the synthetic fallible-reader fixture. The run reports 20/20 tests, 2926 checks.
++confidence: high for the tested checked core; no live address/ABI proof is implied.
++
++claim: valid `0xffffffff` is not treated as invalid, while `OBJECT_INVALID` is refused before the call.
++referent: `src/api/motion.cpp:11,83-84`; `tools/kp_motiontest.cpp` test `motion.accepts_client_id_0xffffffff` and `motion.invalid_object_id_refused_before_call`.
++checked: same 20/20 synthetic run.
++verdict: holds.
++confidence: high.
++
++claim: the native getter ABI is Win32 i386 `thiscall(CServerExoApp*, uint32_t)` with a one-argument callee cleanup (`ret 4`).
++referent: `motion-m0-verification.md:55-59`; `src/api/motion_backend.cpp:18-23`.
++checked: `/home/brunner56/.local/bin/host-cmd sh -c "cd <worktree> && for f in motion motion_profiles motion_backend motion_lua; do i686-w64-mingw32-g++ -std=c++20 -Wall -Wextra -O2 -Isrc -Ithird_party/luajit/src -c src/api/$f.cpp -o /home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/$f.o || exit 1; done"`; exit 0, no compiler output. The source declaration uses `__attribute__((thiscall))` at `motion_backend.cpp:20`.
++verdict: holds as a compile-time declaration backed by the M0 disassembly receipt.
++confidence: high for call shape, medium for live invocation until the required M1 live proof runs.
++
++claim: the Lua capture object is protected/read-only and failures use `nil, "kind: reason"`.
++referent: `src/api/motion_lua.cpp:19-27,60-73,93-105`; `tools/kp_motiontest.cpp` tests `motion.forged_userdata_argerror` and `motion.lua_capture_surface`.
++checked: same 20/20 synthetic run.
++verdict: holds. The exact closed error prefixes are `unsupported`, `guard`, `chain`, `identity`, and `value` from `motion.cpp:22-25` and `motion_profiles.cpp:62-71`.
++confidence: high.
++
++claim: facing stays in `[0,360)` even when a near-360 double rounds upward as a float.
++referent: `src/api/motion.cpp:116-121`; `tools/kp_motiontest.cpp` test `motion.capture_reads_server_xyz_and_orientation`.
++checked: same 20/20 synthetic run, including the near-360 fixture assertion.
++verdict: holds.
++confidence: high.
++
++claim: `kp.motion`, `capabilities`, and `capture` do not duplicate an NWScript routine name.
++referent: proposed namespace in `fanout-lua-lifecycle-plan.md:93`; Lua registration at `motion_lua.cpp:101-104`.
++checked: a recursive JSON name extraction over `data/routines/k1.json` (1,848 name occurrences) and `k2.json` (2,082) intersected their case-folded names with `{motion,capabilities,capture}`; both intersections were empty.
++verdict: holds for the exposed routine/module names.
++confidence: high.
++
++claim: the seven motion hooksite rows are additive field rows and do not collide with camera rows.
++referent: `data/hooksites.toml:2354-2411`; the camera block ends at `:2352`.
++checked: `git diff --unified=0 -- data/hooksites.toml` shows the camera and motion blocks are both additions and has no removed line; `rg -n 'motion|server_object.area_id|placeable.aabb_registered' data/hooksites.toml` found each M1 name once.
++verdict: holds, with an attribution caveat: the file's +219 statistic must not be represented as M1-only work; only +58 lines are M1.
++confidence: high.
++
++claim: the binding material records two derivations rather than relying on a single uncorroborated source.
++referent: `data/adjudication/k1_gog_103_motion_bindings.json` citations and `motion-m0-rederivation.md` plus `motion-m0-verification.md`.
++checked: source inspection; the M0 verification explicitly says it independently re-derived every safe item at `motion-m0-verification.md:175-187`.
++verdict: holds for the stated METHOD-style two-derivation requirement.
++confidence: high.
++
++## Adversarial findings
++
++### F1 — FAIL: no engine-thread enforcement or binding, and no production integration
++
++`capture()` makes a direct engine call at `src/api/motion.cpp:93`. The module
++has no current-thread predicate, dispatcher, runtime-live predicate, or fault
++guard of its own. This matters because repository policy says engine calls are
++legal only on the game main thread: `src/harness/channel.hpp:5-8` and
++`src/harness/engine.hpp:12-15`. The eventual normal protection is architectural
++rather than present in this patch: Lua dispatch is executed from engine hook
++bodies (for example `src/runtime/hook_bodies.cpp:699+`), but none of the M1
++sources establishes or checks that precondition.
++
++More immediately, `rg -n 'motion' CMakeLists.txt src/runtime/runtime.cpp
++src/runtime/runtime.cmake tools/kp_namespacetest.cpp` returned no M1
++integration. `motion.cmake` itself says production sources belong in
++`runtime.cmake` (`src/api/motion.cmake:1-2`), but `CMakeLists.txt` does not
++include the fragment and the runtime never calls `bind_native`, `register_all`,
++or `unbind`. Thus the reviewed source can pass its standalone fixture while it
++is neither compiled into nor exposed by the actual runtime.
++
++This does not authorize touching the shared integration files: the plan makes
++I-M a serialized integration task (`fanout-lua-lifecycle-plan.md:165-170`). It
++does mean the submitted M1 behavior is incomplete and cannot claim an
++engine-thread guarantee.
++
++Required resolution owner: the serialized I-M integrator. It must add the
++motion production sources and lifecycle calls, register the API, and document
++the exact engine-thread gate (or make an explicit runtime assertion/dispatch
++that turns an off-thread request into `nil, "unsupported: ..."`). Then run the
++normal runtime-linked namespace test and the M1 live disposable-footlocker
++oracle from plan line 171 under the controller's lock.
++
++### F2 — contract mismatch: `capabilities().reads` is a string, not a list
++
++The implementation pushes one space-delimited literal at
++`src/api/motion_lua.cpp:82-84`. The writer report describes `reads` as “a list
++of field names.” A Lua caller receives `type(kp.motion.capabilities().reads) ==
++"string"`, not a table. The plan does not prescribe a representation, so this
++is not independently a safety failure; it is nevertheless a public-contract
++mismatch against the accompanying report/doc proposal. Resolve before public
++documentation: either return a fresh Lua array or describe it explicitly as a
++space-delimited string and add an assertion in `motion.lua_capture_surface`.
++
++### Non-finding: dangling/freed pointer and ID reuse
++
++The code cannot make arbitrary process memory safe once the engine getter has
++returned a pointer. It does minimize the window: every capture repeats all
++guards, traverses the current manager/server/internal/array chain before the
++call (`motion.cpp:83-93`), then validates the returned object’s vtable, type,
++and round-trip ID (`:94-101`) before fields, and obtains fields through the
++fallible reader (`:103-126`). The synthetic tests cover unmapped chain,
++vtable, field, and wrong-ID cases. This holds as a bounded defensive design;
++the race between a successful read and a concurrent free is unresolved without
++the engine-thread guarantee in F1. No live test currently proves ID reuse.
++
++## Writer grill-me check
++
++The writer’s weakest implied question is whether the direct getter is safely
++confined to the engine thread. That does not hold yet: the source evidence
++above shows neither a guard nor integration. The synthetic fixture proves
++ordering/refusal, not thread affinity. The single settling check is a
++runtime-linked test that exercises `kp.motion.capture` from the main hook
++dispatch and a deliberate off-thread/harness request that is rejected before
++the getter; then the controller performs the plan’s live footlocker oracle.
++
++## Verdict
++
++**Motion M1 verdict: FAIL.**
++
++The checked core, profile guards, Lua userdata, K1-GOG `thiscall` declaration,
++safe-list discipline, hooksite separation, and bounded synthetic/MingW checks
++are good. The result is not a shippable M1 surface until serialized I-M makes
++the feature part of the runtime and proves/enforces its engine-thread
++precondition. No live game/readback claim is made.
++
++## Re-run evidence
++
++* `review-probes-motion-m1/kp_motiontest`: **20/20 passed, 2,926 checks**;
++  synthetic memory only, exit 0. Saved as `rerun-kp_motiontest.txt`.
++* i686-w64-mingw32 compilation of the four M1 sources: **4/4 object files,
++  exit 0, no warnings**. Saved as `rerun-mingw.txt` and `mingw-rerun/*.o`.
++
+
+2026-09-27T18:27:48.494303Z ERROR rmcp::transport::streamable_http_client: fail to delete session: unexpected server response: DELETE returned HTTP 404 session_id="9bda7b15-eb46-4849-90f3-1365f26c9dfb"
+2026-09-27T18:27:49.288393Z ERROR codex_core::session: failed to record rollout items: thread 01a0e417-7f60-7b30-9737-08da36eec437 not found
+2026-09-27T18:27:49.288539Z ERROR codex_core::session: failed to record rollout items: thread 01a0e417-7f60-7b30-9737-08da36eec437 not found
+tokens used
+90,790
+**Motion M1 verdict: FAIL.**
+
+I resumed from the existing M1 work instead of restarting. The implementation and prior scratch artifacts were present; the required review file was not. The similarly named file under `codex-runs/` was just a copy of the task prompt, so I wrote the completed independent review to:
+
+[motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+
+The checked core is in good shape:
+
+- `kp_motiontest` re-run: **20/20 passing**, **2,926 checks** — synthetic/fallible-reader evidence only.
+- MinGW i686 compile re-run: **4/4 M1 sources compile cleanly**, no warnings.
+- Profile data stays within the M0 safe list; M0 keep-out offsets/symbols are not used.
+- Guard-before-call ordering, unsupported-image/ABI refusal, type/vtable/id fences, no-partial-output behavior, valid `0xffffffff`, protected userdata, `nil, "kind: reason"` failures, and `[0, 360)` facing are covered and held in the fixture.
+- The getter declaration matches the M0 evidence: Win32 i386 `thiscall(CServerExoApp*, uint32_t)`, one stack argument / `ret 4`.
+- `kp.motion`, `capabilities`, and `capture` do not collide with names in the K1/K2 NWScript routine data.
+- The seven M1 hooksite rows are additive and begin at [data/hooksites.toml](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/hooksites.toml:2354). The larger `+219` dirty diff also includes a pre-existing camera block; M1 accounts for only **+58 lines** there.
+
+The failure is real but localized: this M1 slice has neither production integration nor an explicit engine-thread gate.
+
+`capture()` directly invokes the engine getter at [motion.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/motion.cpp:93), but the new code does not prove or enforce that it is on the game’s main thread. In addition, no M1 source is yet in `runtime.cmake`, no runtime bind/register/unbind call exists, and no CMake inclusion makes `kp.motion` part of the actual runtime. The standalone test can therefore pass while the feature remains inaccessible in the shipped DLL.
+
+That integration is deliberately reserved for serialized I-M, so I did not touch shared runtime/CMake/namespace files. The I-M owner needs to wire the module in, state/enforce the thread-affinity contract, run the runtime-linked namespace test, and have the controller perform the plan’s disposable-footlocker live oracle under the live-game lock.
+
+I also recorded a smaller public-contract mismatch: `capabilities().reads` is currently one space-delimited Lua string, while the accompanying report describes it as a list. It should either become a fresh Lua array or be documented and tested as a string.
+
+Files created outside the worktree:
+
+- [motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-kp_motiontest.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-mingw.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/*.o`
+
+I did not modify the intentionally dirty worktree, stage, commit, push, run Wine/game/display tooling, touch the live-game lock, or signal any process.

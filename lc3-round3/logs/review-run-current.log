@@ -1,0 +1,45 @@
+PASS lifecycle.unload_one_raises_OnScriptUnload_once
+PASS lifecycle.unload_one_drops_timers
+PASS lifecycle.unload_one_drops_bound_handlers
+PASS lifecycle.reload_one_increments_generation_and_rebinds
+PASS lifecycle.old_unload_cannot_touch_new_bindings
+PASS lifecycle.deleted_file_unloads_on_poll
+PASS lifecycle.new_file_loads_on_poll
+PASS lifecycle.edit_inside_first_window_detected
+PASS lifecycle.duplicate_load_refused
+PASS lifecycle.failed_reload_keeps_running_generation
+    load error: a.lua: .../lc3-round3/tmp/review-current-lifecycle/failfirst/a.lua:1: '=' expected near 'is'
+PASS lifecycle.failed_first_load_is_FailedToLoad
+PASS lifecycle.quarantine_then_edit_recovers
+PASS lifecycle.state_closing_hook_once_per_close
+PASS lifecycle.request_from_own_callback_deferred
+PASS lifecycle.request_from_timer_deferred
+PASS lifecycle.unknown_name_result_error
+PASS lifecycle.priority_resort_after_reload
+PASS lifecycle.explicit_unload_survives_poll
+PASS lifecycle.load_request_for_new_file
+PASS lifecycle.service_runs_snapshot_only
+PASS lifecycle.sync_refused_while_dispatching
+PASS lifecycle.nested_dispatch_during_staging_skips_old
+PASS lifecycle.alias_of_held_script_refused
+NOTE  lifecycle.case_variant_request_refused: KP_CASEFOLD_DIR unset; case not run
+PASS lifecycle.delete_window_keeps_script
+PASS lifecycle.delete_then_recreate_same_mtime_promotes_generation
+PASS lifecycle.delete_and_recreate_between_polls_promotes_generation
+PASS lifecycle.empty_file_not_reloaded
+PASS lifecycle.request_queue_coalesced_and_bounded
+PASS lifecycle.nul_name_refused
+PASS lifecycle.queued_requests_discarded_by_load_all
+PASS lifecycle.symlink_outside_dir_refused
+31 case(s), 0 failed
+PASS scripts_api.list_shape
+PASS scripts_api.unload_request_then_service
+PASS scripts_api.self_unload_from_callback_safe
+PASS scripts_api.console_state_has_no_scriptname
+PASS scripts_api.scriptname_and_scriptdir_in_a_script
+PASS scripts_api.no_pascalcase_keys
+PASS scripts_api.bad_args_error_not_crash
+PASS scripts_api.unbound_host
+PASS scripts_api.names_are_not_nwscript_names
+PASS scripts_api.result_rejects_bad_ids
+10 case(s), 0 failed

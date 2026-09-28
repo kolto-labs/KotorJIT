@@ -1,0 +1,3 @@
+1 gate sha == disk sha: True | out existed at gate time: False | allow: () | markers passed: 21
+2 REFUSED: release scan of the finished ZIP found problems; nothing was written: kotorphasor-creative-harness/scripts/examples/cursed/10_rancor.lua (marker: line 1: /home/ | out2 exists: False
+3 raised RuntimeError | out3 exists: False

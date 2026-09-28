@@ -1,0 +1,4 @@
+rows 1215 own_uid_rows 785 launch_chain [1708, 21140, 3971018]
+forbidden [(2547167, 'wineserver', 'wineserver', ['wineserver']), (3970958, 'ffprobe', 'ffprobe', ['ffprobe', '-v'])]
+unreadable [(1843, 1000, '(sd-pam)', "exe: PermissionError: [Errno 13] Permission denied: '/proc/1843/exe'"), (3063, 1000, 'passless', "exe: PermissionError: [Errno 13] Permission denied: '/proc/3063/exe'"), (6093, 1000, 'kwin_wayland', "exe: PermissionError: [Errno 13] Permission denied: '/proc/6093/exe'"), (7427, 1000, 'polkit-kde-auth', "exe: PermissionError: [Errno 13] Permission denied: '/proc/7427/exe'"), (7430, 1000, 'ssh-agent', "exe: PermissionError: [Errno 13] Permission denied: '/proc/7430/exe'"), (2519017, 1000, 'ksystemstats_in', "exe: PermissionError: [Errno 13] Permission denied: '/proc/2519017/exe'"), (2519085, 1000, 'ksgrd_network_h', "exe: PermissionError: [Errno 13] Permission denied: '/proc/2519085/exe'")]
+other_uid_unreadable 0

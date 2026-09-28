@@ -1,0 +1,12 @@
+[09:59:36] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[09:59:36] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[09:59:36] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[09:59:36] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[09:59:36] runtime already current (7ebfc850dd23)
+[09:59:36] ini tuned: swkotor.ini (14 keys)
+[09:59:36] Xvfb up on :100 (pid 673417)
+[09:59:36] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[09:59:36] wineserver settled before launch
+[09:59:36] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[09:59:53] channel up on 127.0.0.1:43843: build k1_gog_103, 19 hooks, live=True
+[10:04:03] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-095936

@@ -1,0 +1,4 @@
+{
+  "error": "preflight: /tmp user quota is full (tmpfs  12769M  12769M  12769M           99377       0       0); Xvfb needs it for its lock file and keymap",
+  "game_staged": false
+}

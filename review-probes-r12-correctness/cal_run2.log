@@ -1,0 +1,16 @@
+done isodup_native_k7 157.2
+done isodup_native_k8 155.5
+done isodup_native_k9 153.8
+done isodup_native_k10 199.7
+done isodup_native_k11 196.7
+done isodup_native_k12 195.5
+done isodup_native_k13 88.6
+done isodup_fast4_k3 91.1
+done isodup_fast4_k4 92.9
+done isodup_fast4_k5 110.7
+done isodup_fast4_k6 102.9
+done clean_slowq 101.2
+done clean_fast4 96.9
+done clean_static 111.6
+done pingpong_native 81.5
+done cycle3_native 56.7

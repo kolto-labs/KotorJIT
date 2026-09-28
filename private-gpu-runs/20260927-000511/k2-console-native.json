@@ -1,0 +1,27 @@
+{
+  "label": "native",
+  "code": "local c=kp.model.capabilities(); if c.available then local s,e=kp.model.snapshot(K2PC); assert(s,e); return 'native snapshot',s.id,s.base,s.effective else return 'native unsupported',c.profile,c.abi end",
+  "request": 6,
+  "lines": [
+    {
+      "request": 6,
+      "kind": "input",
+      "text": "> local c=kp.model.capabilities(); if c.available then local s,e=kp.model.snapshot(K2PC); assert(s,e); return 'native snapshot',s.id,s.base,s.effective else return 'native unsupported',c.profile,c.abi end"
+    },
+    {
+      "request": 6,
+      "kind": "result",
+      "text": "string: native unsupported"
+    },
+    {
+      "request": 6,
+      "kind": "result",
+      "text": "string: unsupported"
+    },
+    {
+      "request": 6,
+      "kind": "result",
+      "text": "string: no verified host binding"
+    }
+  ]
+}

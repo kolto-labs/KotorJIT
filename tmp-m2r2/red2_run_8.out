@@ -1,0 +1,7 @@
+PASS engine_gate.unbound_refuses
+PASS engine_gate.bound_probe_true_allows
+PASS engine_gate.rebind_nullptr_refuses
+PASS engine_gate.other_thread_refused
+PASS engine_gate.concurrent_rebind_never_tears
+FAIL engine_gate.concurrent_two_writers_never_tear: line 114: torn=12846 of iters=3000000 binds
+5/6 tests passed, 18 checks

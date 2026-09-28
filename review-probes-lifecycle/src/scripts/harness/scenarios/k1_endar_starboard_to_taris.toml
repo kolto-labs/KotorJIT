@@ -1,0 +1,261 @@
+# Endar Spire starboard section (end_m01ab) from the endar_starboard checkpoint
+# to the Taris apartment (tar_m02af). Validated by full replay 2026-09-15.
+name = "k1 Endar: starboard to Taris (checkpoint replay)"
+target = "k1"
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_starboard"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+do = "move_to"
+tag = "end_door01"
+range = 1.5
+timeout = 180
+
+[[step]]
+label = "open end_door01 (its OnOpen is a cosmetic explosion)"
+do = "scripted_door_open"
+tag = "end_door01"
+timeout = 30
+
+[[step]]
+label = "the two soldiers; radius keeps the sealed Sith room out of it"
+do = "clear_room"
+radius = 14
+timeout = 180
+
+# The soldier-room footlocker holds the five computer spikes the console's
+# overload costs. The engine tags it "footlker"; GetObjectByTag is
+# case-insensitive, the world probe is not.
+[[step]]
+do = "move_to"
+tag = "footlker"
+range = 2.0
+timeout = 120
+
+[[step]]
+label = "open the footlocker"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+timeout = 20
+
+[[step]]
+wait = "phase"
+equals = "paused"
+timeout = 30
+
+[[step]]
+do = "take_all_container"
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local n=0; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do if nwscript.call('GetTag',it):gsub('%z','')=='k_computer_spike' then n=n+nwscript.call('GetItemStackSize',it) end; it=nwscript.call('GetNextItemInInventory',pc) end; return n>=5"
+equals = true
+poll = true
+timeout = 20
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.6
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_comp02"
+range = 2.5
+timeout = 120
+
+[[step]]
+label = "use the security console"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+timeout = 20
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+[[step]]
+do = "reply"
+pick = "View starboard transport module."
+timeout = 30
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+[[step]]
+label = "overload the transport module conduit: kills the five Sith, unlocks end_door05"
+do = "reply"
+pick = "[Computer] Overload power conduit. (5 spike(s))"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 6.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetGlobalNumber',\"END_SITH_DEAD\")>=5"
+equals = true
+poll = true
+timeout = 90
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetLocked',nwscript.call('GetObjectByTag',\"end_door05\",0))==0 and nwscript.call('GetLocked',nwscript.call('GetObjectByTag',\"end_door04\",0))==0"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door05"
+range = 1.5
+timeout = 120
+
+# Doors unlocked at runtime stall in the first phase of opening headless
+# (the client never delivers the animation-done callback); scripted_door_open
+# now commits the open state (door_commit_open) when the readback stays 0.
+[[step]]
+label = "open end_door05"
+do = "scripted_door_open"
+tag = "end_door05"
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door04"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open end_door04: its OnOpen clears the leftovers and has Carth start his conversation"
+do = "scripted_door_open"
+tag = "end_door04"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door04',0))"
+equals = 1
+poll = true
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_pod"
+range = 2.5
+timeout = 120
+
+[[step]]
+label = "use the escape pod"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+timeout = 20
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+# The pod launch and STUNT_00's vision cutscene run at real time: at 16x the
+# stunt's two scripted conversations (jc_00_vistaris, cut00_convers) restart
+# faster than they can be ended, and a warp issued mid-conversation is held.
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "launch: k_pend_pod01 -> StartNewModule(STUNT_00)"
+do = "reply"
+pick = "[Use the escape pod.]"
+timeout = 30
+
+[[step]]
+wait = "module"
+equals = "STUNT_00"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+# STUNT_00's vision cutscene (jc_00_vistaris, non-skippable, textless) ends
+# with k_ren_visionland -> StartNewModule(tar_m02af). Headless its VO-gated
+# nodes never finish, and StartNewModule from a script does nothing inside
+# the stunt module (it reports itself as module000). The ladder ends the
+# conversation (its abort rung), then the harness's own pending-move path
+# (`warp`, the setters ExecuteCommandStartNewModule uses) loads Taris.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 3.0
+timeout = 300
+
+[[step]]
+label = "leave the vision cutscene for Taris"
+do = "warp"
+module = "tar_m02af"
+
+[[step]]
+wait = "module"
+equals = "tar_m02af"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+[[step]]
+do = "speed"
+scale = 16.0
+
+# Taris: the apartment wake-up cutscene with Carth (tar_m02af).
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 400
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetJournalEntry','end_attack')"
+equals = 99
+poll = true
+timeout = 30
+
+[[step]]
+label = "checkpoint: Taris apartment (Endar Spire complete)"
+do = "save"
+slot = 5
+name = "taris_apartment"
+checkpoint = "taris_apartment"
+timeout = 240
+
+[[step]]
+do = "quit"

@@ -1,0 +1,17 @@
+....................E....................
+======================================================================
+ERROR: test_canonical_lock_capability_required_and_contention_preserves_node (__main__.SocketCleanupTests.test_canonical_lock_capability_required_and_contention_preserves_node)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_boot_repair_test.py", line 811, in test_canonical_lock_capability_required_and_contention_preserves_node
+    self.assertEqual(S.canonical_lock_guard()['fd'], owner.fileno())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/gamescope_socket.py", line 135, in canonical_lock_guard
+    raise RuntimeError('canonical live lock is not held by this controller')
+RuntimeError: canonical live lock is not held by this controller
+
+----------------------------------------------------------------------
+Ran 41 tests in 14.292s
+
+FAILED (errors=1)
+Current-host /proc/1/fd unreadable: True

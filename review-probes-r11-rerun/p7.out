@@ -1,0 +1,4 @@
+hardlink_during_probe: exit=1 error='canonical PTS re-probe cleanup failed: survived; surviving ffprobe pid=4242 start=12345; failure_id=3b58d1ff67324ff99144172d1ba1654b; cleanup_ledger_sha256=15b8688296e3c5fa8e9136b7a1386b369855f7c1f58d2889911c66d4473922a7; do not accept or export this run; retain this line, the ledger head, and the survivor PID/start out of band' records=1 clear=False pid_in_output=True
+  r11_stderr_survivor_pid=True stderr_head_event=['acceptance_failure']
+title_injection: status=verified size=[1024, 768] map=IsViewable border=0 origin=[0, 0]
+reuse_while_pidfd_held='cleanup PID identity changed while pidfd held' signals=0 ledger_unchanged=True

@@ -1,0 +1,30 @@
+{
+  "code": "wave=dofile(\"kotorphasor/scripts/model_scene.lua\").new{name=\"wave\",trigger=2,hold_ticks=90,spawn=true,resref=\"g_sithtroop01\",faction=2,forward=6,sides={-2,0,2},scales={{.4,2,.4},{2,.4,2},{1,1,1},{.4,2,.4},{2,.4,2},{1,1,1}}}; function demo_tick() wave:tick(); return wave.state~=\"complete\" and wave.state~=\"failed\" end; return wave.state",
+  "input": "real owned-window keyboard",
+  "expected_request": 1,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> wave=dofile(\"kotorphasor/scripts/model_scene.lua\").new{name=\"wave\",trigger=2,hold_ticks=90,spawn=true,resref=\"g_sithtroop01\",faction=2,forward=6,sides={-2,0,2},scales={{.4,2,.4},{2,.4,2},{1,1,1},{.4,2,.4},{2,.4,2},{1,1,1}}}; function demo_tick() wave:tick(); return wave.state~=\"complete\" and wave.state~=\"failed\" end; return wave.state"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "string: waiting"
+      }
+    ],
+    "submitted": 1,
+    "completed": 1,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 1504
+  }
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "resref": "plc_crate",
+    "key_type": 2002,
+    "bif_type": 2002,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 929612997,
+    "size": 38350
+  },
+  {
+    "resref": "plc_crate",
+    "key_type": 3008,
+    "bif_type": 3008,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 929651347,
+    "size": 16800
+  },
+  {
+    "resref": "plc_crate",
+    "key_type": 2053,
+    "bif_type": 2053,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 929668147,
+    "size": 248
+  },
+  {
+    "resref": "plc_footlker",
+    "key_type": 2002,
+    "bif_type": 2002,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 931418999,
+    "size": 19130
+  },
+  {
+    "resref": "plc_footlker",
+    "key_type": 3008,
+    "bif_type": 3008,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 931438129,
+    "size": 4928
+  },
+  {
+    "resref": "plc_footlker",
+    "key_type": 2053,
+    "bif_type": 2053,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/models.bif",
+    "offset": 931443057,
+    "size": 248
+  },
+  {
+    "resref": "plc_crate",
+    "key_type": 2044,
+    "bif_type": 2044,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/templates.bif",
+    "offset": 5736248,
+    "size": 1753
+  },
+  {
+    "resref": "plc_footlker",
+    "key_type": 2044,
+    "bif_type": 2044,
+    "bif": "/home/brunner56/krayt/tmp/k1_harness/data/templates.bif",
+    "offset": 5792611,
+    "size": 1911
+  }
+]

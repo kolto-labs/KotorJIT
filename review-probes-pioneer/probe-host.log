@@ -1,0 +1,17 @@
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kpharness_playback_8r6p_7uk/engine-620995560049132.log'
+PROBE C route-edit mid-job then raw stop ok=True: engine_scale_now=12.0 (prior 2.0) speed_after_job=12.0 op=execution_stopped last_error='PlaybackError: route changed while attached'
+PROBE D SIGTERM: owner_alive=False engine_scale_now=12.0 (prior 2.0) descriptor_left=True journal_op=running journal_active=1 status='ConnectionRefusedError: [Errno 111] Connection refused' reattach='ConnectionRefusedError: [Errno 111] Connection refused' journal_has_prior_speed=False
+PROBE E SIGINT: owner_alive=False engine_scale_now=2.0 (prior 2.0) descriptor_left=False journal_op=execution_stopped journal_active=None status='execution_stopped' reattach='reattach ok' journal_has_prior_speed=False
+PROBE F SIGKILL: owner_alive=False engine_scale_now=12.0 (prior 2.0) descriptor_left=True journal_op=running journal_active=1 status='ConnectionResetError: [Errno 104] Connection reset by peer' reattach='ConnectionRefusedError: [Errno 111] Connection refused' journal_has_prior_speed=False
+PROBE G play accepted job=508ceb3c state=queued
+PROBE G after journal chmod 644: status_op=execution_stopped stop_reply_op=stop_pending owner_alive_3s_after_stop=True descriptor=True
+PROBE I stop after uncertain: pre=uncertain final_op=execution_stopped final_world_uncertain=True
+PROBE J play-then-immediate-stop: final=execution_stopped boundary=0 mutations=[('lua', 'return true', None), ('speed', '', 16.0), ('speed', '', 2.0)]
+    raise RuntimeError('synthetic engine did not start')
+RuntimeError: synthetic engine did not start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+Ran 10 tests in 117.188s
+FAILED (errors=3)

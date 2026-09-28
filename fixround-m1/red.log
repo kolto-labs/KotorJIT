@@ -1,0 +1,139 @@
+FAIL decoder: immz table 66 48 05 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 05 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 05 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 05 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 05 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 05 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 0d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 0d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 0d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 0d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 0d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 0d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 15 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 15 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 15 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 15 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 15 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 15 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 1d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 1d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 1d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 1d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 1d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 1d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 25 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 25 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 25 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 25 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 25 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 25 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 2d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 2d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 2d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 2d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 2d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 2d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 35 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 35 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 35 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 35 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 35 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 35 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 3d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 3d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 3d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 3d 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 3d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 3d 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 a9 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 a9 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 a9 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 a9 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 a9 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 a9 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 68 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 48 68 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 68 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 68 11 12 13 14 -> len=5 want 7
+FAIL decoder: immz table, exact length 66 49 68 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 68 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 69 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 48 69 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 69 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 69 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 49 69 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 69 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 81 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 48 81 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 81 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 81 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 49 81 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 81 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 c7 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 48 c7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 c7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 c7 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 49 c7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 c7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 f7 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 48 f7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 f7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 f7 c0 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 49 f7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 f7 c0 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 48 f7 c8 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 48 f7 c8 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 48 f7 c8 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table 66 49 f7 c8 11 12 13 14 -> len=6 want 8
+FAIL decoder: immz table, exact length 66 49 f7 c8 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL decoder: immz table, one byte short refuses 66 49 f7 c8 11 12 13 14 15 16 17 18 19 1a 1b 1c 
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 90 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 66 90 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 0f 1f 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 0f 1f 40 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 0f 1f 44 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 66 0f 1f 44 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 0f 1f 80 00 00 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 66 2e 0f 1f 84 00 00 00 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses e8 01 02 03 04 66 66 2e 0f 1f 84 00 00 00 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 90 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 66 90 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 0f 1f 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 0f 1f 40 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 0f 1f 44 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 66 0f 1f 44 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 0f 1f 80 00 00 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 66 2e 0f 1f 84 00 00 00 00 00 Ok
+FAIL plan: call + NOP padding inside the window refuses ff 15 01 02 03 04 66 66 2e 0f 1f 84 00 00 00 00 00 Ok
+FAIL I2 dtor: trampoline recorded as leaked 
+FAIL I2 dtor: trampoline still mapped r-x ?
+FAIL I2: destructor after PatchClobbered keeps the trampoline child killed by signal 11
+FAIL I2 move: trampoline recorded as leaked 
+FAIL I2 move: trampoline still mapped r-x ?
+FAIL I2: move-assign after PatchClobbered keeps the trampoline child killed by signal 11
+FAIL I2 protect: trampoline recorded as leaked 
+FAIL I2 protect: trampoline still mapped r-x ?
+FAIL I2: destructor after ProtectFailed keeps the trampoline child killed by signal 11
+FAIL I3 install once: original bytes rolled back ff 25 00 00 00 00 00 49 40 00 00 00 00 00 01 f8 c9 
+FAIL I3 install once: page resealed r-x rw-p
+FAIL I3: install, restore refused once: rolled back and resealed child killed by signal 11
+FAIL I3 install always: original bytes rolled back ff 25 00 00 00 00 00 49 40 00 00 00 00 00 01 f8 c9 
+FAIL I3: install, restore always refused: original bytes, page left RW child exit 1
+FAIL I3 stuck: ProtectFailed but installed ProtectFailed mprotect RX refused (EACCES: SELinux execmod?)
+FAIL I3 stuck: trampoline kept 
+FAIL I3 stuck: uninstall recovers 
+FAIL I3 stuck: original bytes back ff 25 00 00 00 00 00 49 40 00 00 00 00 00 01 f8 c9 
+FAIL I3 stuck: page back to the recorded r-x rw-p
+FAIL I3: install, rollback also refused: patch live, still installed child killed by signal 11
+FAIL I3 uninstall once: refused, patch kept ProtectFailed 
+FAIL I3 uninstall once: page resealed r-x 
+FAIL I3: uninstall, restore refused once: patch rolled back, still installed child killed by signal 11
+FAIL I3 uninstall always: refused, patch bytes kept 
+FAIL I3 uninstall always: destroy leaks the trampoline ?
+FAIL I3: uninstall, restore always refused: patch rolled back, trampoline leaked on destroy child exit 1
+FAIL m4: r-- page restored as r-- r-xp
+FAIL m4: r-- after uninstall r-xp
+FAIL m4: mprotect's page refuses FlowEnds
+FAIL m4: hooking libc mprotect refuses child exit 1
+119 of 650 checks FAILED

@@ -1,0 +1,4 @@
+[100%] Built target kphasor
+[100%] Building CXX object CMakeFiles/kp_harnessdrain_test.dir/tools/kp_harnessdrain_test.cpp.o
+[100%] Linking CXX executable kp_harnessdrain_test
+[100%] Built target kp_harnessdrain_test

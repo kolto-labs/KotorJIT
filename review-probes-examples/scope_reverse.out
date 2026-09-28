@@ -1,0 +1,4 @@
+manifest reverted 82dab5ef expect 82dab5ef
+cursed.lua reverted bf393910 expect c8ec4edb
+cursed.lua reverted c8ec4edb expect c8ec4edb
+fixture reverted cb11cdf9 expect cb11cdf9

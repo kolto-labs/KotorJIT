@@ -1,0 +1,230 @@
+{
+  "code": "local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetStringLength','safe')==4); return 'rejected before VM mutation'",
+  "input": "real owned-window keyboard",
+  "expected_request": 18,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> 1 + 1"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "number: 2"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> return nil, false, 42, \"KotOR is live\""
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "nil: nil"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "boolean: false"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "string: KotOR is live"
+      },
+      {
+        "request": 3,
+        "kind": "input",
+        "text": "> print(\"hello\", 42); io.write(\"stdout\\n\"); io.stderr:write(\"stderr\\n\")"
+      },
+      {
+        "request": 3,
+        "kind": "stdout",
+        "text": "hello\t42\n"
+      },
+      {
+        "request": 3,
+        "kind": "stdout",
+        "text": "stdout\n"
+      },
+      {
+        "request": 3,
+        "kind": "stderr",
+        "text": "stderr\n"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "ok (no return values)"
+      },
+      {
+        "request": 4,
+        "kind": "input",
+        "text": "> error(\"intentional test\")"
+      },
+      {
+        "request": 4,
+        "kind": "error",
+        "text": "intentional test\nstack traceback:\n\t[builtin#19]: at 0x77f1a9b0"
+      },
+      {
+        "request": 5,
+        "kind": "input",
+        "text": "> 6 * 7"
+      },
+      {
+        "request": 5,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 6,
+        "kind": "input",
+        "text": "> demo_value = 23"
+      },
+      {
+        "request": 6,
+        "kind": "result",
+        "text": "ok (no return values)"
+      },
+      {
+        "request": 7,
+        "kind": "input",
+        "text": "> demo_value * 2"
+      },
+      {
+        "request": 7,
+        "kind": "result",
+        "text": "number: 46"
+      },
+      {
+        "request": 8,
+        "kind": "input",
+        "text": "> demo_value * 2"
+      },
+      {
+        "request": 8,
+        "kind": "result",
+        "text": "number: 46"
+      },
+      {
+        "request": 9,
+        "kind": "input",
+        "text": "> math.sqrt(81)"
+      },
+      {
+        "request": 9,
+        "kind": "result",
+        "text": "number: 9"
+      },
+      {
+        "request": 10,
+        "kind": "input",
+        "text": "> function console_double(x)\n  return x * 2\nend"
+      },
+      {
+        "request": 10,
+        "kind": "result",
+        "text": "ok (no return values)"
+      },
+      {
+        "request": 11,
+        "kind": "input",
+        "text": "> console_double(21)"
+      },
+      {
+        "request": 11,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 12,
+        "kind": "input",
+        "text": "> while true do end"
+      },
+      {
+        "request": 12,
+        "kind": "error",
+        "text": "console cancelled or instruction budget exhausted\nstack traceback:\n\tdevtools:1: in main chunk"
+      },
+      {
+        "request": 13,
+        "kind": "input",
+        "text": "> 21 * 2"
+      },
+      {
+        "request": 13,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 14,
+        "kind": "input",
+        "text": "> pc = nwscript.call(\"GetFirstPC\"); body = assert(kp.model.snapshot(pc)); return body.base"
+      },
+      {
+        "request": 14,
+        "kind": "result",
+        "text": "number: 1"
+      },
+      {
+        "request": 15,
+        "kind": "input",
+        "text": "> assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base"
+      },
+      {
+        "request": 15,
+        "kind": "result",
+        "text": "number: 0.34999999403953552"
+      },
+      {
+        "request": 16,
+        "kind": "input",
+        "text": "> assert(kp.model.restore(body)); return kp.model.snapshot(pc).base"
+      },
+      {
+        "request": 16,
+        "kind": "result",
+        "text": "number: 1"
+      },
+      {
+        "request": 17,
+        "kind": "input",
+        "text": "> local q=nwscript.call; local t=q('GetTag',q('GetItemInSlot',4,q('GetFirstPC'))); assert(#t>0 and not t:find(string.char(0),1,true)); assert(q('GetSubString','abcdef',1,3)=='bcd'); assert(q('GetStringLength','')==0); return 'native strings exact'"
+      },
+      {
+        "request": 17,
+        "kind": "result",
+        "text": "string: native strings exact"
+      },
+      {
+        "request": 18,
+        "kind": "input",
+        "text": "> local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetStringLength','safe')==4); return 'rejected before VM mutation'"
+      },
+      {
+        "request": 18,
+        "kind": "result",
+        "text": "string: rejected before VM mutation"
+      }
+    ],
+    "submitted": 18,
+    "completed": 18,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 1960
+  }
+}

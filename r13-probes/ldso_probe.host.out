@@ -1,0 +1,2 @@
+ldso_renamed_enc detected= True match= None comm= ld-linux-x86-64 exe= /usr/lib64/ld-linux-x86-64.so.2
+ldso_named_ffmpeg detected= True match= None comm= ld-linux-x86-64 exe= /usr/lib64/ld-linux-x86-64.so.2

@@ -1,0 +1,3 @@
+[kp:info] api: registered nwscript.call for 769 engine routines
+[kp:info] api: kp native facilities installed, 111 event constants
+PASS actual Runtime boot initializer, initial kp.scripts, unload callback, cleared host binding

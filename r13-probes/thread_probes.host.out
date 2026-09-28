@@ -1,0 +1,4 @@
+before: active_count 1 supervisor_thread_count 1
+with _thread: active_count 1 supervisor_thread_count 2
+a) threading.active_count()=1 os_threads=2
+b) handler_ran=2000/2000 mask_left_blocked_after_raise=0

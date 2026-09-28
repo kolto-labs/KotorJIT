@@ -1,0 +1,78 @@
+P0 nested dispatch while a new generation is staging
+  OBSERVE bind-variant: a state=Loaded gen=2 timers=1 L=0xf7ef61c8 last_error=-
+  OBSERVE nested dispatch reached old generation: old-tick-noop=0
+  OBSERVE reload ok=1 bound(OnSave)=1
+  OBSERVE OnSave after commit: called=1 errored=0 new-onsave=1 old-onsave=0
+  OBSERVE unbind-variant: a state=Loaded gen=2 timers=1 L=0xf7ef61c8 last_error=-
+  OBSERVE nested dispatch reached old generation: old-tick-noop=0
+  OBSERVE reload ok=1 bound(OnSave)=1
+  OBSERVE OnSave after commit: called=1 errored=0 new-onsave=1 old-onsave=0
+  OBSERVE control(no-op old OnTick): a state=Loaded gen=2 timers=1 L=0xf7ef61c8 last_error=-
+  OBSERVE nested dispatch reached old generation: old-tick-noop=0
+  OBSERVE reload ok=1 bound(OnSave)=1
+  OBSERVE OnSave after commit: called=1 errored=0 new-onsave=1 old-onsave=0
+P1 failed reload keeps timers
+  OBSERVE before: a state=Loaded gen=1 timers=2 L=0xf7f161c8 last_error=-
+  OBSERVE after-bad: a state=Loaded gen=1 timers=2 L=0xf7f161c8 last_error=set
+  OBSERVE global pending before=2 after=2 (staged timers must not leak)
+  OBSERVE fired str=1 fn=1 staged-fn=0
+  OBSERVE after-bad: a state=Loaded gen=1 timers=2 L=0xf7f161c8 last_error=set
+  OBSERVE global pending before=2 after=2 (staged timers must not leak)
+  OBSERVE fired str=1 fn=1 staged-fn=0
+P2 new top-level side effect vs old OnScriptUnload
+  OBSERVE after load flag=1
+  OBSERVE after-reload: a state=Loaded gen=2 timers=0 L=0xf7ef61c8 last_error=-
+  OBSERVE after reload flag=0 (the new generation set 2 at top level; old unload reset it)
+P3 delete window between polls (non-atomic save)
+  OBSERVE after-atomic-rename: a state=Loaded gen=2 timers=0 L=0xf7ef61c8 last_error=-
+  OBSERVE after-poll-in-window: a state=Loaded gen=2 timers=0 L=0xf7ef61c8 last_error=-
+  OBSERVE after-recreate-broken: a state=Loaded gen=2 timers=0 L=0xf7ef61c8 last_error=set
+  OBSERVE explicitly-unloaded: a state=Unloaded gen=3 timers=0 L=(nil) last_error=-
+  OBSERVE after-window-on-unloaded: a state=Unloaded gen=3 timers=0 L=(nil) last_error=-
+P4 truncate-then-write: poll sees an empty file
+  OBSERVE after-empty: a state=Loaded gen=1 timers=0 L=0xf7f161c8 last_error=-
+  OBSERVE handler after empty reload fired=1
+P5 mtime granularity, back-to-back writes, no explicit bump
+  OBSERVE 0/200 back-to-back rewrites left mtime unchanged
+  OBSERVE 0/50 immediate edits after load were missed by the poll
+P6 request storm
+  OBSERVE queue 20000 reloads: queued
+  OBSERVE pending_requests=1
+  OBSERVE after-storm: b state=Loaded gen=2 timers=0 L=0xf78cc1c8 last_error=-
+  OBSERVE one service_requests ran=1 in 9 ms (one game tick)
+  OBSERVE self-reload-after-5-services: s state=Loaded gen=1 timers=0 L=0xf7ef61c8 last_error=-
+  OBSERVE pending after 5 services=0
+P7 names: NUL, dot-forms, case
+    load error: link.lua: symlink resolves outside the script directory; not loaded
+  OBSERVE symlink out of dir loaded by load_all: notes=0 state=absent path=-
+  OBSERVE return kp.scripts.load('notlua\0x') -> ERROR 'notlua
+  OBSERVE return kp.scripts.load('.hidden') -> ERROR no script file /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-r2/probe-tmp3/p7/.hidden.lua
+  OBSERVE return kp.scripts.load('A') -> ERROR no script file /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-r2/probe-tmp3/p7/A.lua
+  OBSERVE return kp.scripts.load('a.') -> ERROR no script file /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-r2/probe-tmp3/p7/a..lua
+  OBSERVE return kp.scripts.load(' a') -> ERROR no script file /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-r2/probe-tmp3/p7/ a.lua
+  OBSERVE notlua ran=0; scripts held=1
+    held name=[a] path=[/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-r2/probe-tmp3/p7/a.lua] state=Loaded
+P7b alias duplicate
+  OBSERVE load('b') hard link to a.lua -> ERROR; equivalent=1
+  OBSERVE one tick ran the same file body 1 times
+P8 kp.scripts.result numeric edges
+  OBSERVE return type(kp.scripts.result(ID)) -> table
+  OBSERVE return type(kp.scripts.result(ID + 0.5)) -> nil
+  OBSERVE return type(kp.scripts.result(math.huge)) -> nil
+  OBSERVE return type(kp.scripts.result(0/0)) -> nil
+  OBSERVE return type(kp.scripts.result(2^64)) -> nil
+  OBSERVE return type(kp.scripts.result(-1)) -> nil
+P9 queue across load_all
+  OBSERVE after-load_all: a state=Loaded gen=1 timers=0 L=0xf7f161c8 last_error=-
+  OBSERVE pending after load_all=0
+  OBSERVE after-service: a state=Loaded gen=1 timers=0 L=0xf7f161c8 last_error=-
+P10 reentrancy
+  OBSERVE same tick: a-tick=1 b-tick=1 (b still ran this tick)
+  OBSERVE after-service-1: b state=Unloaded gen=1 timers=0 L=(nil) last_error=-
+  OBSERVE after-service-2 (b re-loaded itself from its own OnScriptUnload): b state=Loaded gen=2 timers=0 L=0xf7ef61c8 last_error=-
+  OBSERVE after-timer-quarantine: q state=Loaded gen=1 timers=0 L=0xf78dc1c8 last_error=-
+  OBSERVE after-dispatch-sweep: q state=Loaded gen=1 timers=0 L=0xf78dc1c8 last_error=-
+  OBSERVE after-service: q state=Loaded gen=2 timers=2 L=0xf78bc1c8 last_error=-
+P11 teardown order
+  OBSERVE list-err:kp.scripts.list: no script host is running
+created=134 closed=134 (must match)

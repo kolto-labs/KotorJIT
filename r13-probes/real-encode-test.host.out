@@ -1,0 +1,15 @@
+half_duplicate_30_to_60 {'animated-diagnostic-v2': ('failed', 0.5, ['capture_content_static', 'capture_content_sequence']), 'game-capture-v1': ('passed', 1.0, [])}
+one_in_ten_fresh {'animated-diagnostic-v2': ('failed', 0.0979, ['capture_content_static', 'capture_content_sequence']), 'game-capture-v1': ('passed', 0.8402, [])}
+slow_quarter_stepped {'animated-diagnostic-v2': ('passed', 1.0, []), 'game-capture-v1': ('passed', 1.0, [])}
+static_still {'animated-diagnostic-v2': ('failed', 0.0, ['capture_content_static', 'capture_content_sequence']), 'game-capture-v1': ('failed', 0.0, ['capture_content_static'])}
+textured_static {'animated-diagnostic-v2': ('failed', 0.0, ['capture_content_static', 'capture_content_sequence']), 'game-capture-v1': ('failed', 0.0, ['capture_content_static'])}
+blink_8x8 {'animated-diagnostic-v2': ('failed', 0.0, ['capture_content_static', 'capture_content_sequence']), 'game-capture-v1': ('passed', 0.0515, [])}
+full_animated_60 {'animated-diagnostic-v2': ('passed', 1.0, []), 'game-capture-v1': ('passed', 1.0, [])}
+two_frame_loop {'animated-diagnostic-v2': ('failed', 1.0, ['capture_content_sequence']), 'game-capture-v1': ('passed', 1.0, [])}
+three_frame_loop {'animated-diagnostic-v2': ('failed', 1.0, ['capture_content_sequence']), 'game-capture-v1': ('passed', 1.0, [])}
+step_dropped {'animated-diagnostic-v2': ('failed', 0.0, ['calibration_ambiguous', 'capture_content_sequence']), 'game-capture-v1': ('passed', 1.0, [])}
+.
+----------------------------------------------------------------------
+Ran 1 test in 115.164s
+
+OK

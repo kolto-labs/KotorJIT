@@ -1,0 +1,45 @@
+Completed the independent Round 2 re-review and wrote the consolidated report:
+
+[example-fixes-r2-review.md](/home/brunner56/kp-live-20260922/example-fixes-r2-review.md)
+
+**Example fixes round 2 verdict: FAIL**
+
+The original I1 defect is genuinely closed for the scenario it identified: a guarded party member or PC that is recreated under a new object ID is re-resolved and restored. The current validator rerun passed:
+
+```text
+PASS: 41 original syntax/host regression sources, 93 per-file cases;
+8 retired from public catalog; 0 live receipts attached;
+no public quality promotion
+```
+
+It produced [rerun-receipt.json](/home/brunner56/kp-live-20260922/review-probes-examples-r2/rerun-receipt.json), SHA-256:
+
+```text
+844474036690078fbd0d89675a4c4001780c29b846a22e6234d64303e7e712fc
+```
+
+Checks confirmed:
+
+- `40_chain_reaction.lua` is the expected Round 2 version: `24ad2057e6eb…`.
+- `70_doppelganger.lua` is still frozen at `5d9864b22241ff135d3bb0c1ecb3f2671af218b58cdf2f44eb7bc62c95f62c42`.
+- Validator counts are 93 total host cases, including 10 chain-reaction cases and 5 doppelganger cases.
+- Tag fallback cannot select a non-party NPC/boss because `GetObjectByTag` is accepted only when `IsObjectPartyMember` is true.
+- A pending party member hit again preserves the originally captured min-one-HP value rather than treating temporary protection (`1`) as its original state.
+- Restore retries are one-pass and non-looping; resolvable entries restore even when another entry remains pending.
+- Changed Lua uses `nwscript.call` for NWScript access and does not introduce direct routine-name duplicates.
+
+The blocking Important finding is the PC coexistence/swap boundary. The new code restores every entry marked as the original PC to whichever object `GetFirstPC` returns later; it does not verify that this is the same actor. The isolated host probe:
+
+[pc_swap_probe.lua](/home/brunner56/kp-live-20260922/review-probes-examples-r2/pc_swap_probe.lua)
+
+produced:
+
+```text
+old_pc=1 replacement_pc=0
+```
+
+That is: after guarding original PC object `1`, retaining it, and making `GetFirstPC` return valid replacement object `7`, module-load cleanup restored object `7` and left object `1` at min-one-HP `1`.
+
+This is definitive in the fixture model, but live impact remains unverified: the missing single settling check is a live K1 identity readback before and after an exact party-leader/control swap, to determine whether `GetFirstPC` can actually change while the old player object remains valid. No host-only result has been represented as live proof.
+
+I preserved the intentionally dirty worktree, wrote only the required Round 2 review and probe material under `/home/brunner56/kp-live-20260922/`, and did not run Wine, the game, capture tooling, or touch the live-game lock.

@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "save_loaded": false,
+  "error": "Command '['cp', '-a', '--reflink=auto', '/run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets/override', '/home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/steamassets/override']' died with <Signals.SIGTERM: 15>.",
+  "source_unchanged": true
+}

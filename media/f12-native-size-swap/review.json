@@ -1,0 +1,40 @@
+{
+  "source_run": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-124445",
+  "runtime_sha256": "db3f0734ef9d18207f39432bf93d984f514e60dee71e7ba170a333fb60af044d",
+  "route_steps_passed": 28,
+  "native_behavior": "Console-loaded Lua scene scheduled through existing timer, six native scale phases, original ratios and peaceful state checked, all owned actors removed; original actor set preserved.",
+  "visual_review": "Stable first-person camera; three full bodies visible, alternating tiny/giant then normal; no explosion or motion-sickness camera. Command visible at beginning; long setup excluded.",
+  "source_trim_seconds": [
+    15.5,
+    34.5
+  ],
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1024,
+        "height": 768,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "1139/19",
+        "duration": "19.000000",
+        "nb_frames": "1139"
+      }
+    ]
+  },
+  "cadence_sample": {
+    "frames": 300,
+    "unique": 300,
+    "adjacent_repeats": 0
+  },
+  "files": {
+    "f12-sith-size-swap-60fps.mp4": {
+      "bytes": 1773052,
+      "sha256": "4f5ee1cb4d25a411f8d1e610d432d03b795ae20ad034ee64b846c9be281348c2"
+    },
+    "f12-sith-size-swap-preview.gif": {
+      "bytes": 1940492,
+      "sha256": "39e86d70f8b4024955d3bf8f558794a453d33ef799b728e04641d30d570c6e13"
+    }
+  }
+}

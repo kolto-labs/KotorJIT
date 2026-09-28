@@ -1,0 +1,6 @@
+{
+  "previous_run": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100344-e6c09841",
+  "previous_launches": 0,
+  "correction": "audit device 34 is hexadecimal; Python st_dev decimal 52 equals 0x34",
+  "other_relaxations": false
+}

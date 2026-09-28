@@ -1,0 +1,35 @@
+	DLL Name: DINPUT8.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	005075f4  <none>  0000  DirectInput8Create
+--
+	DLL Name: dwmapi.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	005075fc  <none>  0003  DwmEnableBlurBehindWindow
+--
+	DLL Name: GDI32.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	0050760c  <none>  0052  CreateRectRgn
+--
+	DLL Name: KERNEL32.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	0050761c  <none>  0014  AddVectoredExceptionHandler
+--
+	DLL Name: msvcrt.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	005077ac  <none>  0014  _fstati64
+--
+	DLL Name: OPENGL32.DLL
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	005079c0  <none>  000b  glBindTexture
+--
+	DLL Name: SHELL32.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	00507a4c  <none>  0132  ShellExecuteW
+--
+	DLL Name: USER32.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	00507a54  <none>  0021  CallWindowProcA
+--
+	DLL Name: WS2_32.dll
+	vma:     Ordinal  Hint  Member-Name  Bound-To
+	00507acc  <none>  001f  WSACleanup

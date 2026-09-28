@@ -1,0 +1,33 @@
+{
+  "dll_sha256": "713aa3ac0b967a61089cf5f3a947fe102c8dd74aceccde6940d067630a0cca61",
+  "runs": [
+    {
+      "run": "20260922-133724",
+      "passed_steps": 26,
+      "total_steps": 26,
+      "source_unchanged": true,
+      "route_sha256": "d3bc3f8dce65592415fa2e6bfa306ccb70ea08b2152852bb07fa3db4f72e030b",
+      "report": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133724/report.json",
+      "video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133724/continuous.mp4"
+    },
+    {
+      "run": "20260922-133825",
+      "passed_steps": 39,
+      "total_steps": 39,
+      "source_unchanged": true,
+      "route_sha256": "a8cdeaa1b46d2c7899368b8dcf1750503c545ec1afdb6a8bdc76ba391e41238b",
+      "report": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133825/report.json",
+      "video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133825/continuous.mp4"
+    },
+    {
+      "run": "20260922-133930",
+      "passed_steps": 28,
+      "total_steps": 28,
+      "source_unchanged": true,
+      "route_sha256": "aa9b29c1402e6303369ca5bc0e1e2556847535be87b3a62a0430b50a5ebcff11",
+      "report": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133930/report.json",
+      "video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133930/continuous.mp4"
+    }
+  ],
+  "scope": "Win K1 GOG under Wine, physical F12 inputs; not Mac proof or complete product acceptance"
+}

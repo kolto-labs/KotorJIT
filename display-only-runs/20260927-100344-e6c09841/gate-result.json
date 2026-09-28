@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "access": false,
+    "cleanup_passed": false,
+    "driver_success": false,
+    "geometry": false,
+    "historical_quarantine": false,
+    "inherited_lock": false,
+    "lease_alive": false,
+    "lock_free": true,
+    "no_errors": false,
+    "no_game_wine_ffmpeg": false,
+    "one_launch": false,
+    "owned_pids_absent": false,
+    "pathname_cleanup": false,
+    "private_display_absent": false,
+    "protected_sockets": false,
+    "snapshot": false,
+    "subreaper": false
+  },
+  "errors": [
+    {
+      "message": "historical X1 identity no longer matches audited failed run",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/brunner56/kp-live-20260922/display-only-runs/20260927-100344-e6c09841/display_gate.py\", line 207, in supervisor\n    quarantine = quarantine_historical()\n  File \"/home/brunner56/kp-live-20260922/display-only-runs/20260927-100344-e6c09841/display_gate.py\", line 80, in quarantine_historical\n    raise RuntimeError('historical X1 identity no longer matches audited failed run')\nRuntimeError: historical X1 identity no longer matches audited failed run\n",
+      "type": "RuntimeError"
+    }
+  ],
+  "finished_utc": "2026-09-27T10:08:07.101023+00:00",
+  "launches": 0,
+  "lock_free_after": true,
+  "run": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100344-e6c09841",
+  "snapshot": "/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100344-e6c09841",
+  "started_utc": "2026-09-27T10:08:02.842499+00:00",
+  "verdict": "FAIL"
+}

@@ -1,0 +1,2 @@
+kp-resume-runtime-latch-probe: /home/brunner56/kp-live-20260922/resume-runtime-latch-probe.cpp:32: int main(): Assertion `winners.load() == 1' failed.
+timeout: the monitored command dumped core

@@ -1,0 +1,3 @@
+F1_print_newline with an [idle] forged banner: host_line='[running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-' problems=[]
+F3_error_text with an [idle] forged banner: host_line='[running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-' problems=[]
+F6_host_before_start with an [idle] forged banner: host_line=None problems=['host or gl line comes before the session start line']

@@ -1,0 +1,6 @@
+{
+  "run": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100344-e6c09841",
+  "snapshot": "/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-topology-20260927-100344-e6c09841",
+  "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness",
+  "lock": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock"
+}

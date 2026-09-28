@@ -1,0 +1,23 @@
+**Follow-up review verdict: PASS.**
+
+I resumed from the existing work rather than restarting:
+
+- Inspected the prior review, writer’s “Follow-up round,” dirty-worktree scope, source diffs, mtimes, and existing probe/build directories.
+- Preserved all unrelated dirty changes. I wrote only the requested review artifact: [lua-utilities-followup-review.md](/home/brunner56/kp-live-20260922/lua-utilities-followup-review.md).
+- Re-ran the current 32-bit binaries through the required host-only route:
+  - `kp_supporttest`: **49 ok, 0 FAIL, rc=0**
+  - `kp_vectortest`: **15 checks, 0 failures, rc=0**
+  - `kp_namespacetest`: **0 failures**
+
+The re-run specifically confirms:
+
+- Strict `_G.__index` lookup errors occur within `lua_pcall`, are attributed to the timer, cancel it, and do **not** panic the process.
+- An `__index` handler trying to remove its own timer is protected, produces the expected error, and leaves no stale scheduled timer.
+- Delay acceptance is finite and bounded to `0..4294967295` ms; NaN, infinities, negatives, and above-cap values reject cleanly. Existing callers are below the cap.
+- The 32-bit `-O2 -m32` route does not use fast-math. The volatile store/reload in vector scalar calculations makes overflow visible at Lua-number precision; scalar-overflow and normalization-underflow tests pass.
+- Prior U2 protections remain intact: exactly-once ref release, both close/finalizer orders, state-close guard, mutation-safe timer pumping, and namespace contract.
+- Two simultaneously live C callback functions receive distinct labels/budgets.
+
+One **Minor** residual is recorded: the C-function budget key uses the C closure object address (`lua_topointer`). That is sound for simultaneously live callbacks, but a future host-created C closure could, after collection and heap-address reuse, inherit an old callback’s budget record in the same script state. Lua scripts in the reviewed API cannot manufacture C closures, so I did not establish a current script-reachable failure. It does not flip this round’s verdict.
+
+I also started an isolated scratch rebuild in the mandated follow-up probe directory. Under the explicitly high I/O load it was still copying the LuaJIT source tree when the review concluded, so I have not counted it as new build proof. The re-run binaries are demonstrably newer than every reviewed source/test input.

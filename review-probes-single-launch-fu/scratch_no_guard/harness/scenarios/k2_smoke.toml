@@ -1,0 +1,31 @@
+# k2 smoke: the native ELF with libkphasor.so preloaded, same shape as the
+# K1 smoke minus `reply`. The save dir starts empty on this port; the
+# session seeds it from the store's cloud copies, whose folder names are
+# the store's, so the load picks the autosave by glob. Commands the K2
+# Linux build lacks answer `unsupported` and are recorded as skipped.
+name = "k2 native smoke: autosave to gameplay"
+target = "k2-native"
+
+[settings]
+load_timeout = 400
+shot_interval = 120
+
+[[step]]
+do = "load_save"
+dir = "*autosave*"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 400
+
+[[step]]
+do = "lua"
+code = "return nwscript.call('GetModuleName')"
+
+[[step]]
+screenshot = true
+label = "gameplay"
+
+[[step]]
+do = "quit"

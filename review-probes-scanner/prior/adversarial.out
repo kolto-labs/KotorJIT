@@ -1,0 +1,33 @@
+parent_symlink_fixed: REFUSED ValueError: source contains a symlink; review before packaging: docs/user
+parent_symlink_walked: REFUSED ValueError: source contains a symlink; review before packaging: scripts/examples
+hardlink: REFUSED ValueError: source is a hard link (2 names); review before packaging: scripts/examples/cursed/hl.lua
+case_variants: BUILT; leaked entries=[]; leaked bytes=[]; receipt names=[]
+binary_lua: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/evil.lua (magic: png; not UTF-8; NUL byte)
+utf16_lua: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/u16.lua (not UTF-8; NUL byte)
+markers: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/m.lua:1
+nested_private: BUILT; leaked entries=[]; leaked bytes=[]; receipt names=[b'/tmp/']
+backslash_name: REFUSED ValueError: unsafe name in source (backslash in name); review before packaging: 'scripts/examples/cursed/..\\..\\..\\..\\evil.lua'
+symlink_leaf: REFUSED ValueError: source contains a symlink; review before packaging: scripts/examples/cursed/ln.lua
+users_in_readme: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/README.md:1
+case_private_nested_examples: BUILT; leaked entries=[]; leaked bytes=[]; receipt names=[b'TMP', b'Research']
+case_private_in_closure: REFUSED ValueError: required Gamescope harness module is missing or linked: /home/brunner56/kp-live-20260922/review-probes-scanner/prior/adv/case_private_in_closure/src/scripts/harness/kpharness/Tmp.py
+lower_private_in_closure: REFUSED ValueError: required Gamescope harness module is missing or linked: /home/brunner56/kp-live-20260922/review-probes-scanner/prior/adv/lower_private_in_closure/src/scripts/harness/kpharness/tmp.py
+case_markers: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/cm.lua:1
+marker_name_file: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/20260927-102706-0523fa70.lua:0
+bom_home: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/bom.lua:1
+bom_then_png: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/bompng.lua (magic: png; not UTF-8; NUL byte)
+overlong_slash: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/ovl.lua (not UTF-8)
+cesu_surrogate: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/sur.lua (not UTF-8)
+zero_width_marker: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/zw.lua']; leaked bytes=[b'secretuser']; receipt names=[]
+fullwidth_marker: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/fw.lua']; leaked bytes=[b'secretuser']; receipt names=[]
+bom_gzip_ascii: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/bomgz.lua']; leaked bytes=[]; receipt names=[]
+pdf_ascii_after_comment: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/poly.lua']; leaked bytes=[b'%PDF-1.4']; receipt names=[]
+zip_appended_in_utf8: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/zpoly.lua (not UTF-8; NUL byte)
+base64_png_in_lua: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/b64.lua']; leaked bytes=[b'iVBORw0K']; receipt names=[]
+gff_after_newline: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/gffp.lua']; leaked bytes=[]; receipt names=[]
+nfc_nfd_twins: REFUSED ValueError: package names other systems cannot hold faithfully; review before packaging: 'scripts/examples/cursed/café.lua': collides with 1 other name(s) after NFC and case folding, 'scripts/examples/cursed/café.lua': collides with 1 other name(s) after NFC and case folding
+case_twins: REFUSED ValueError: package names other systems cannot hold faithfully; review before packaging: 'scripts/examples/cursed/Twin.lua': collides with 1 other name(s) after NFC and case folding, 'scripts/examples/cursed/twin.lua': collides with 1 other name(s) after NFC and case folding
+windows_reserved: REFUSED ValueError: package names other systems cannot hold faithfully; review before packaging: 'scripts/examples/cursed/CON.lua': Windows device name, 'scripts/examples/cursed/a:b.lua': Windows reserved character in name, 'scripts/examples/cursed/aux.lua': Windows device name, 'scripts/examples/cursed/q?.lua': Windows reserved character in name, 'scripts/examples/cursed/st*r.lua': Windows reserved character in name
+bidi_name: REFUSED ValueError: package names other systems cannot hold faithfully; review before packaging: 'scripts/examples/cursed/x\u202eaul.txt.lua': Unicode format character (such as a bidi control) in name
+dotdot_like: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/...lua', 'kotorphasor-creative-harness/scripts/examples/cursed/..lua']; leaked bytes=[]; receipt names=[]
+cleanup done: True

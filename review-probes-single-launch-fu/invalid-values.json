@@ -1,0 +1,72 @@
+{
+ "'0'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be in 1..5, got 0",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be in 1..5, got 0; nothing launched"
+  }
+ },
+ "'6'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be in 1..5, got 6",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be in 1..5, got 6; nothing launched"
+  }
+ },
+ "'-1'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '-1'",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '-1'; nothing launched"
+  }
+ },
+ "'1.0'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '1.0'",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '1.0'; nothing launched"
+  }
+ },
+ "' 1'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got ' 1'",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got ' 1'; nothing launched"
+  }
+ },
+ "''": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got ''",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got ''; nothing launched"
+  }
+ },
+ "'１'": {
+  "creative": {
+   "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '１'",
+   "events": [],
+   "files_created": []
+  },
+  "cli": {
+   "problem": "kpharness: KP_MAX_BOOT_ATTEMPTS must be an integer in 1..5, got '１'; nothing launched"
+  }
+ }
+}

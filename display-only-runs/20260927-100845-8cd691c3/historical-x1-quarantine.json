@@ -1,0 +1,67 @@
+{
+  "checks": {
+    "canonical_lock_held": true,
+    "lock_content_matches_leader": true,
+    "named_endpoint_rows": [],
+    "old_owned_pids_absent": true,
+    "original_socket_matches_audit": true
+  },
+  "entries": [
+    {
+      "after": {
+        "ctime_ns": 1790503732614151742,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231594,
+        "mode": 49645,
+        "mtime_ns": 1790501406951145127,
+        "size": 0,
+        "uid": 1000
+      },
+      "before": {
+        "ctime_ns": 1790501406951145127,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231594,
+        "mode": 49645,
+        "mtime_ns": 1790501406951145127,
+        "size": 0,
+        "uid": 1000
+      },
+      "kind": "socket",
+      "new_path": "/tmp/.X11-unix/.task7-quarantine-20260927-100845-8cd691c3-X1",
+      "old_path": "/tmp/.X11-unix/X1"
+    },
+    {
+      "after": {
+        "ctime_ns": 1790503732619151684,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231593,
+        "mode": 33060,
+        "mtime_ns": 1790501406951145127,
+        "size": 11,
+        "uid": 1000
+      },
+      "before": {
+        "ctime_ns": 1790501406951145127,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231593,
+        "mode": 33060,
+        "mtime_ns": 1790501406951145127,
+        "size": 11,
+        "uid": 1000
+      },
+      "kind": "lock",
+      "new_path": "/tmp/.task7-quarantine-20260927-100845-8cd691c3-X1-lock",
+      "old_path": "/tmp/.X1-lock",
+      "sha256": "7d74ab6254d1ef400efe783cc2619e516ecdc1c67b43a3403946686acd54ef92"
+    }
+  ],
+  "lock_content_hex": "2020202038313636313600",
+  "lock_content_pid": 816616,
+  "source_run": "20260927-092903-52fe911a",
+  "status": "quarantined",
+  "utc": "2026-09-27T10:08:52.610932+00:00"
+}

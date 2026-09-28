@@ -1,0 +1,11 @@
+prior_edit_reverted_after_staging -> REFUSED ValueError provenance mismatch: scripts/examples/cursed/10_rancor.lua
+edit_after_staging_left -> REFUSED ValueError source changed during the build; nothing was written: scripts/examples/cursed/10_rancor.lua
+edit_after_staging_reverted_before_reread -> BUILT shipped==overlay: True
+inode_replaced_during_read -> REFUSED ValueError source is a hard link (0 names); review before packaging: scripts/examples/cursed/10_rancor.lua
+symlink_swap_during_build -> flips=73 outcomes={'ValueError: source contains a symlink; review before packaging': 25} leaks=[]
+symlink_swap_identical_bytes_outside_only_file -> flips=109 outcomes={'ValueError: source contains a symlink; review before packaging': 21, 'ValueError: source path does not resolve to itself; review before packaging': 4} leaks=[]
+cleanup done: True
+
+real	0m23.836s
+user	0m0.803s
+sys	0m0.203s

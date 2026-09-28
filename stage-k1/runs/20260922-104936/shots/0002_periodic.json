@@ -1,0 +1,52 @@
+{
+ "phase": "gameplay",
+ "phase_detail": {
+  "server_mode": 2,
+  "loading_module": 0,
+  "area_not_ready": 0,
+  "input_class": 0,
+  "main_menu": 0,
+  "game_over": 0,
+  "pause": 0,
+  "controller_pause": 0,
+  "tutorial": 0,
+  "modal_count": 0,
+  "status_summary": 0,
+  "movie": 0,
+  "load_error": 0,
+  "move_pending": 0,
+  "timers_paused": 0,
+  "chargen": -1
+ },
+ "chargen_stage": "none",
+ "module": "END_M01AA",
+ "server_tick": 255,
+ "client_tick": 258,
+ "pc": {
+  "id": 2147483647,
+  "max_hp": 6,
+  "hp": 1,
+  "x": 46.619258880615234,
+  "y": 31.529172897338867,
+  "z": -1.274999976158142
+ },
+ "party": [
+  {
+   "id": 2147483647,
+   "tag": ""
+  },
+  {
+   "id": 309,
+   "tag": "end_trask\u0000"
+  }
+ ],
+ "dialog": null,
+ "globals_hash": "95e4b018fec5b5a1",
+ "journal_hash": "7d275fa007c0dfbe",
+ "counts": {
+  "globals": 1184,
+  "journal": 1
+ },
+ "live": true,
+ "poisoned": []
+}

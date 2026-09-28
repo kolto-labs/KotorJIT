@@ -1,0 +1,32 @@
+{
+  "canonical_lock": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock",
+  "disk_free": 23736446976,
+  "lock_acquired": true,
+  "minimum_free": 1073741824,
+  "processes": [
+    {
+      "argv": [
+        "/usr/bin/Xwayland",
+        ":0",
+        "-auth",
+        "<authority-path-redacted>",
+        "-listenfd",
+        "8",
+        "-listenfd",
+        "9",
+        "-displayfd",
+        "107",
+        "-wm",
+        "109",
+        "-rootless"
+      ],
+      "comm": "Xwayland",
+      "pgid": 6081,
+      "pid": 7277,
+      "ppid": 6093,
+      "sid": 6081,
+      "start": "15877",
+      "state": "S"
+    }
+  ]
+}

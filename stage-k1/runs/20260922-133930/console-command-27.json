@@ -1,0 +1,50 @@
+{
+  "code": "local value=908\nreturn value",
+  "input": "real owned-window keyboard",
+  "expected_request": 3,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> 2+2"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "number: 4"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> 900+7"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "number: 907"
+      },
+      {
+        "request": 3,
+        "kind": "input",
+        "text": "> local value=908\nreturn value"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "number: 908"
+      }
+    ],
+    "submitted": 3,
+    "completed": 3,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 1240
+  }
+}

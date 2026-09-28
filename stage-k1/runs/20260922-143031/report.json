@@ -1,0 +1,262 @@
+{
+ "scenario": "Object blaster fixture: borrowed single ranged-weapon baseline",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-143031",
+ "started": 1790105433.9740248,
+ "finished": 1790105479.3979824,
+ "seconds": 45.424,
+ "ok": false,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.056,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 3.041,
+   "detail": "phase=gameplay module=danm14aa server_tick=22 client_tick=27 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 22,
+    "client_tick": 27,
+    "pc": {
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "max_hp": 96,
+     "id": 2147483644,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.248,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.165,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.067,
+   "detail": "saved native log offset 6156"
+  },
+  {
+   "index": 6,
+   "step": "snapshot original equipment and existing area creatures",
+   "status": "ok",
+   "seconds": 0.085,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "do advance_ticks {\"ticks\": 120}",
+   "status": "ok",
+   "seconds": 2.287,
+   "detail": "observed server ticks 32 -> 154"
+  },
+  {
+   "index": 8,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.087,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 9,
+   "step": "do console_command {\"code\": \"blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 0.486,
+   "detail": "> blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true\nboolean: true"
+  },
+  {
+   "index": 10,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.201,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 11,
+   "step": "independent borrowed ranged weapon identity and one owned target",
+   "status": "ok",
+   "seconds": 0.076,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 12,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.094,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 13,
+   "step": "do console_command {\"code\": \"return blaster_fixture.fire()\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 0.255,
+   "detail": "> return blaster_fixture.fire()\nboolean: true"
+  },
+  {
+   "index": 14,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.106,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 15,
+   "step": "stock combat damages the disposable target",
+   "status": "ok",
+   "seconds": 4.192,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 16,
+   "step": "do advance_ticks {\"ticks\": 180, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 3.505,
+   "detail": "observed server ticks 383 -> 570"
+  },
+  {
+   "index": 17,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.099,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 18,
+   "step": "do console_command {\"code\": \"return blaster_fixture.cleanup()\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 0.242,
+   "detail": "> return blaster_fixture.cleanup()\nboolean: true"
+  },
+  {
+   "index": 19,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.088,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 20,
+   "step": "independent target deletion, equipment and exact inventory restoration",
+   "status": "failed",
+   "seconds": 30.037,
+   "detail": "assert_lua mismatch: expected true, got false",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 3079,
+    "client_tick": 3084,
+    "pc": {
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "id": 2147483644,
+     "max_hp": 96,
+     "hp": 96
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     },
+     {
+      "id": 494,
+      "tag": "bastila\u0000"
+     },
+     {
+      "id": 499,
+      "tag": "zaalbar\u0000"
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  }
+ ]
+}

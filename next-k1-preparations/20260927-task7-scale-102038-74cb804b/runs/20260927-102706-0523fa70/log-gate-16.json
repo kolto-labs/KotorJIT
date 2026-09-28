@@ -1,0 +1,9 @@
+{
+  "pattern": "\\[model-scene:task7scale\\] phase=",
+  "offset": 10022,
+  "lines": [
+    "[running] info: [script] [model-scene:task7scale] phase=1 actor=1 base=0.350 effective=0.350",
+    "[running] info: [script] [model-scene:task7scale] phase=2 actor=1 base=2.400 effective=2.400",
+    "[running] info: [script] [model-scene:task7scale] phase=3 actor=1 base=1.000 effective=1.000"
+  ]
+}

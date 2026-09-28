@@ -1,0 +1,473 @@
+EEEEEEEEEEEEEEEEEEEEEEEEF.E.EE.EEFEEE.E.EE
+======================================================================
+ERROR: test_client_plays_the_stepped_pattern_from_one_graph (kpharness_capture_diagnostic_test.PatternTests.test_client_plays_the_stepped_pattern_from_one_graph)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 262, in test_client_plays_the_stepped_pattern_from_one_graph
+    self.assertEqual(CD.PATTERN_GRAPH, f"testsrc2=size={CD.WIDTH}x{CD.HEIGHT}:rate={CD.FPS},{CD.PATTERN_STEP}")
+                     ^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.capture_diagnostic' has no attribute 'PATTERN_GRAPH'
+
+======================================================================
+ERROR: test_every_source_distance_inside_the_period_moves_the_whole_frame_a_level (kpharness_capture_diagnostic_test.PatternTests.test_every_source_distance_inside_the_period_moves_the_whole_frame_a_level)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 273, in test_every_source_distance_inside_the_period_moves_the_whole_frame_a_level
+    period = CD.PATTERN_PERIOD_FRAMES
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.capture_diagnostic' has no attribute 'PATTERN_PERIOD_FRAMES'
+
+======================================================================
+ERROR: test_a_receipt_cannot_claim_separation_the_artifact_does_not_show (kpharness_capture_diagnostic_test.CriteriaTests.test_a_receipt_cannot_claim_separation_the_artifact_does_not_show)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 449, in test_a_receipt_cannot_claim_separation_the_artifact_does_not_show
+    floor = D.CONTENT_POLICIES["animated-diagnostic-v2"]["distinct_noise_floor"]
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_complete_observation_passes_every_criterion (kpharness_capture_diagnostic_test.CriteriaTests.test_complete_observation_passes_every_criterion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 466, in test_complete_observation_passes_every_criterion
+    result = CD.evaluate(self.observation())
+                         ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_shm_fallback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='first_frame_admission')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='exact_geometry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='content_gate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='canonical_pts_binding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='rate_at_least_99_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='missing_or_dropped_at_most_half_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='maximum_gap_50ms')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='zero_ffmpeg_duplicates')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='cadence_evidence_recomputed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='cleanup_complete')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_owned_survivors')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='ledger_clear')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='protected_displays_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='media_sha256_recorded')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='snapshot_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_driver_error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (kpharness_capture_diagnostic_test.CriteriaTests.test_each_criterion_fails_independently) (criterion='acceptance_interval_matches_route')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 518, in test_each_criterion_fails_independently
+    value = copy.deepcopy(self.observation()); mutate(value)
+                          ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_guard_band_content_is_calibration_ambiguous_whatever_else_passes (kpharness_capture_diagnostic_test.CriteriaTests.test_guard_band_content_is_calibration_ambiguous_whatever_else_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 428, in test_guard_band_content_is_calibration_ambiguous_whatever_else_passes
+    floor = D.CONTENT_POLICIES["animated-diagnostic-v2"]["distinct_noise_floor"]
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_separated_stale_content_is_a_capture_failure (kpharness_capture_diagnostic_test.CriteriaTests.test_separated_stale_content_is_a_capture_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 443, in test_separated_stale_content_is_a_capture_failure
+    value = self.with_content_rows(self.observation(), self.rows(lambda index: 20.0 if index % 2 else 0.1))
+                                   ^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 397, in observation
+    cadence["content"] = B.fixture_content_block(run, media, R.sha256(media), cadence["probe_tool"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 197, in fixture_content_block
+    evaluation = D.evaluate_content(rows, canonical_pts, 1.0, 2.0, D.CONTENT_POLICIES[policy])
+                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_environment_redirected_private_lock_is_refused (kpharness_capture_diagnostic_test.ChildAuthorityTests.test_environment_redirected_private_lock_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 886, in test_environment_redirected_private_lock_is_refused
+    CD.verify_child_authority(config, repository_root=root)
+TypeError: verify_child_authority() got an unexpected keyword argument 'repository_root'
+
+======================================================================
+ERROR: test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock (kpharness_capture_diagnostic_test.ChildAuthorityTests.test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 862, in test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock
+    self.assertEqual(CD.verify_child_authority(config, repository_root=root)["fd"], held)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: verify_child_authority() got an unexpected keyword argument 'repository_root'
+
+======================================================================
+ERROR: test_snapshot_child_takes_its_root_from_the_verified_manifest (kpharness_capture_diagnostic_test.ChildAuthorityTests.test_snapshot_child_takes_its_root_from_the_verified_manifest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 897, in test_snapshot_child_takes_its_root_from_the_verified_manifest
+    self.assertEqual(G.trusted_repository_root(module), ROOT)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.gamescope_socket' has no attribute 'trusted_repository_root'
+
+======================================================================
+ERROR: test_exe_hashing_is_size_filtered_and_cached_by_inode (kpharness_capture_diagnostic_test.PreflightExeIdentityTests.test_exe_hashing_is_size_filtered_and_cached_by_inode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1033, in test_exe_hashing_is_size_filtered_and_cached_by_inode
+    with mock.patch.object(CD, "_exe_sha256", wraps=CD._exe_sha256) as digest:
+                                                    ^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.capture_diagnostic' has no attribute '_exe_sha256'
+
+======================================================================
+ERROR: test_renamed_copy_or_hard_link_of_a_configured_tool_is_detected_by_exe_sha256 (kpharness_capture_diagnostic_test.PreflightExeIdentityTests.test_renamed_copy_or_hard_link_of_a_configured_tool_is_detected_by_exe_sha256)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1017, in test_renamed_copy_or_hard_link_of_a_configured_tool_is_detected_by_exe_sha256
+    rows = CD.process_inventory(self.proc, tools=self.tools())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: process_inventory() got an unexpected keyword argument 'tools'
+
+======================================================================
+ERROR: test_black_check_uses_the_first_frame_at_the_acceptance_start (kpharness_gamescope_backend_test.ContentNoiseFloorTests.test_black_check_uses_the_first_frame_at_the_acceptance_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2457, in test_black_check_uses_the_first_frame_at_the_acceptance_start
+    result = self.evaluate(startup_black, DIAGNOSTIC)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2412, in evaluate
+    return D.evaluate_content(rows, PTS_601, start, end, D.CONTENT_POLICIES[policy])
+                                                         ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_calibration_shaped_clips_separate_duplicates_from_fresh_frames (kpharness_gamescope_backend_test.ContentNoiseFloorTests.test_calibration_shaped_clips_separate_duplicates_from_fresh_frames)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2442, in test_calibration_shaped_clips_separate_duplicates_from_fresh_frames
+    floor = D.CONTENT_POLICIES[DIAGNOSTIC]['distinct_noise_floor']
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_policy_floor_sits_inside_the_calibrated_gap_with_threefold_margin_on_both_sides (kpharness_gamescope_backend_test.ContentNoiseFloorTests.test_policy_floor_sits_inside_the_calibrated_gap_with_threefold_margin_on_both_sides)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2415, in test_policy_floor_sits_inside_the_calibrated_gap_with_threefold_margin_on_both_sides
+    policy = D.CONTENT_POLICIES[DIAGNOSTIC]
+             ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_diagnostic_result_records_a_fixed_histogram_and_the_guard_band (kpharness_gamescope_backend_test.ContentSeparationTests.test_diagnostic_result_records_a_fixed_histogram_and_the_guard_band)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2495, in test_diagnostic_result_records_a_fixed_histogram_and_the_guard_band
+    result = self.evaluate(encoded_rows(fresh=lambda i: i % 2 == 0))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2487, in evaluate
+    return D.evaluate_content(rows, PTS_601, 1.0, 9.0, D.CONTENT_POLICIES[policy])
+                                                       ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_stuck_and_half_duplicate_captures_are_separated_and_blame_capture (kpharness_gamescope_backend_test.ContentSeparationTests.test_stuck_and_half_duplicate_captures_are_separated_and_blame_capture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2535, in test_stuck_and_half_duplicate_captures_are_separated_and_blame_capture
+    stuck = self.evaluate(encoded_rows(fresh=lambda i: False))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2487, in evaluate
+    return D.evaluate_content(rows, PTS_601, 1.0, 9.0, D.CONTENT_POLICIES[policy])
+                                                       ~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+ERROR: test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame (kpharness_gamescope_backend_test.ContentSeparationTests.test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2512, in test_values_inside_the_guard_band_are_calibration_ambiguous_never_pass_or_capture_blame
+    low, high = self.band()
+                ^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_gamescope_backend_test.py", line 2490, in band
+    policy = D.CONTENT_POLICIES[DIAGNOSTIC]
+             ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'animated-diagnostic-v2'
+
+======================================================================
+FAIL: test_admitted_child_pins_the_trusted_root_for_every_later_lock_check (kpharness_capture_diagnostic_test.ChildAuthorityTests.test_admitted_child_pins_the_trusted_root_for_every_later_lock_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 919, in test_admitted_child_pins_the_trusted_root_for_every_later_lock_check
+    self.assertEqual(seen["root"], str(ROOT))
+AssertionError: '/elsewhere' != '/run/media/brunner56/MyBook/Workspaces/Kot[39 chars]tion'
+- /elsewhere
++ /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+
+
+======================================================================
+FAIL: test_supervisor_refuses_a_renamed_tool_copy_before_any_launch (kpharness_capture_diagnostic_test.PreflightExeIdentityTests.test_supervisor_refuses_a_renamed_tool_copy_before_any_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1044, in test_supervisor_refuses_a_renamed_tool_copy_before_any_launch
+    deps.spawn_child.assert_not_called()
+  File "/usr/lib/python3.12/unittest/mock.py", line 905, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'mock' to not have been called. Called 1 times.
+Calls: [call(['/usr/bin/python3.12', '-I', '-S', '-B', '-c', 'import runpy,sys;sys.dont_write_bytecode=True;sys.path.insert(0,\'/tmp/tmpv99fwuyp/snapshot/runtime\');runpy.run_module("kpharness.capture_diagnostic",run_name="__main__")', '--child', '/tmp/tmpv99fwuyp/runs/20260927-185402-121568c1/diagnostic-config.json'], cwd='/tmp/tmpv99fwuyp/snapshot', env={'SENTRY-TRACE': '6a247c5c3bc34d788068f7a71e4183b2-9123a5e027a7199f', 'IMSETTINGS_INTEGRATE_DESKTOP': 'yes', 'SHELL': 'bash', 'COREPACK_ENABLE_AUTO_PIN': '0', 'SESSION_MANAGER': '[REDACTED]', 'XDG_CONFIG_DIRS': '/home/brunner56/.config/kdedefaults:/etc/xdg:/usr/share/kde-settings/kde-profile/default/xdg', 'CLAUDE_CODE_CHILD_SESSION': '1', 'CLAUDE_CODE_EMIT_TOOL_USE_SUMMARIES': 'false', 'CLAUDE_PREVIEW_CLASSIFIER_FLOOR': '1', 'XDG_SESSION_PATH': '[REDACTED]', 'CLAUDE_CODE_ENABLE_ASK_USER_QUESTION_TOOL': 'true', 'NVM_INC': '/home/brunner56/.nvm/versions/node/v26.3.0/include/node', 'HISTCONTROL': 'ignoredups', 'XDG_MENU_PREFIX': 'plasma-', 'AI_AGENT': 'claude-code_2-1-280_agent', 'CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING': 'true', 'HISTSIZE': '1000', 'HOSTNAME': 'BodenPC', 'ICEAUTHORITY': '[REDACTED]', 'CLAUDE_CODE_SESSION_ID': '[REDACTED]', 'JAVA_HOME': '/home/brunner56/.local/opt/jdk/current', 'CLAUDE_PID': '2634968', 'SSH_AUTH_SOCK': '[REDACTED]', 'XDG_DATA_HOME': '/home/brunner56/.local/share', 'CLAUDE_EFFORT': 'medium', 'XDG_CONFIG_HOME': '/home/brunner56/.config', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CLAUDE_CODE_REPORT_FINDINGS': '1', 'DESKTOP_SESSION': '[REDACTED]', 'DISTROBOX_ENTER_PATH': '/usr/bin/distrobox-enter', 'ELECTRON_PA_APP_NAME': 'Claude', 'GDK_CORE_DEVICE_EVENTS': '1', 'LMOD_DIR': '/usr/share/lmod/lmod/libexec', 'EDITOR': '/usr/bin/nano', 'CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH': '1', 'PWD': '/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation', 'CLAUDE_CODE_EAGER_FLUSH': '1', 'LOGNAME': 'brunner56', 'XDG_SESSION_DESKTOP': 'KDE', 'XDG_SESSION_TYPE': '[REDACTED]', 'QTLIB': '/usr/lib64/qt-3.3/lib', 'MODULESHOME': '/usr/share/lmod/lmod', 'MANPATH': ':/home/brunner56/.nvm/versions/node/v26.3.0/share/man::/usr/share/lmod/lmod/share/man', 'MESA_VK_WSI_PRESENT_MODE': 'immediate', 'CLAUDE_CODE_MESSAGING_SOCKET': '/run/user/1000/cc-socks/2634968.sock', 'SYSTEMD_EXEC_PID': '4125432', 'XAUTHORITY': '[REDACTED]', 'NoDefaultCurrentDirectoryInExePath': '1', 'container': 'podman', 'CLAUDECODE': '1', 'XKB_DEFAULT_MODEL': 'pc105', 'HOME': '/home/brunner56', 'CLAUDE_AGENT_SDK_VERSION': '0.3.280', 'SSH_ASKPASS': '/usr/bin/ksshaskpass', 'LANG': 'en_US.UTF-8', 'LS_COLORS': '', 'XDG_CURRENT_DESKTOP': 'KDE', 'CLAUDE_CODE_SESSION_ATTENDED': '1', 'CLAUDE_CODE_HOST_SESSION_ID': '[REDACTED]', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/plasma-plasmashell.service/memory.pressure', 'WAYLAND_DISPLAY': 'wayland-0', 'LMOD_SETTARG_FULL_SUPPORT': 'no', 'CLAUDE_CODE_DISABLE_CRON': '', '__lmod_sh_dbg': "'x'", 'CLAUDE_CODE_DISABLE_TERMINAL_TITLE': '1', 'INVOCATION_ID': '61df2941846e477b8bf473dd9cd7a204', 'ANTHROPIC_BASE_URL': 'https://api.anthropic.com', 'LMOD_VERSION': '9.1.1', 'CLAUDE_CODE_OAUTH_SCOPES': '[REDACTED]', 'MANAGERPID': '1708', 'QTINC': '/usr/lib64/qt-3.3/include', 'IMSETTINGS_MODULE': 'none', 'CHROME_DESKTOP': 'com.anthropic.Claude.desktop', 'PULSE_LATENCY_MSEC': '60', 'CONTAINER_ID': 'ubuntu-dev', 'KDE_SESSION_UID': '1000', 'PROTON_USE_WINED3D': '0', 'EGL_PLATFORM': 'wayland', 'XDG_CACHE_HOME': '/home/brunner56/.cache', 'INFOPATH': '/home/linuxbrew/.linuxbrew/share/info:/home/linuxbrew/.linuxbrew/share/info:', 'MODULEPATH_ROOT': '/usr/share/modulefiles', 'NVM_DIR': '/home/brunner56/.nvm', 'MOZ_GMP_PATH': '/usr/lib64/mozilla/plugins/gmp-gmpopenh264/system-installed', 'XKB_DEFAULT_LAYOUT': 'us', 'XDG_SESSION_CLASS': 'user', 'LMOD_PKG': '/usr/share/lmod/lmod', 'ANDROID_HOME': '/home/brunner56/Android/Sdk', 'TERM': 'dumb', 'LESSOPEN': '||/usr/bin/lesspipe.sh %s', 'USER': 'brunner56', 'SDL_VIDEODRIVER': 'wayland', 'GHIDRA_INSTALL_DIR': '/home/brunner56/.local/opt/ghidra/current', 'QT_WAYLAND_RECONNECT': '1', 'KDE_SESSION_VERSION': '6', 'PAM_KWALLET5_LOGIN': '/run/user/1000/kwallet5.socket', 'DISPLAY': ':0', 'LMOD_ROOT': '/usr/share/lmod', 'SHLVL': '2', 'NVM_CD_FLAGS': '', 'BASH_ENV': '/usr/share/lmod/lmod/init/bash', 'GIT_EDITOR': 'true', 'LMOD_sys': 'Linux', 'XDG_SESSION_ID': '3', 'VKD3D_SWAPCHAIN_LATENCY_FRAMES': '1', 'MANAGERPIDFDID': '28769', 'USE_LOCAL_OAUTH': '', 'WINEDEBUG': '-all', 'TERMINFO_DIRS': '/usr/share/terminfo:/run/host/usr/share/terminfo', 'XDG_STATE_HOME': '/home/brunner56/.local/state', 'FC_FONTATIONS': '1', 'DISABLE_AUTOUPDATER': '1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'QTDIR': '/usr/lib64/qt-3.3', 'CLAUDE_CODE_ENTRYPOINT': 'claude-desktop', 'MCP_SERVER_CONNECTION_BATCH_SIZE': '8', 'DEBUGINFOD_URLS': 'ima:enforcing https://debuginfod.fedoraproject.org/ ima:ignore ', 'DBUS_SYSTEM_BUS_ADDRESS': 'unix:path=/run/host/run/dbus/system_bus_socket', 'NODE_USE_SYSTEM_CA': '1', 'API_TIMEOUT_MS': '900000', 'DOCKER_HOST': 'unix:///run/user/1000/podman/podman.sock', 'BUN_INSTALL': '/home/brunner56/.bun', 'DEBUGINFOD_IMA_CERT_PATH': '/etc/keys/ima:', 'DXVK_CONFIG': 'dxgi.maxFrameLatency=1;d3d9.maxFrameLatency=1;dxgi.syncInterval=0;d3d9.presentInterval=0', 'KDEDIRS': '/usr', 'PROTON_ENABLE_WAYLAND': '1', 'MCP_CONNECTION_NONBLOCKING': 'true', 'JOURNAL_STREAM': '10:520732448', 'XDG_DATA_DIRS': '/home/brunner56/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'GDK_BACKEND': 'wayland', 'KDE_FULL_SESSION': 'true', 'CLAUDE_CODE_EXECPATH': '/home/brunner56/.config/Claude/claude-code/2.1.280/claude', 'PATH': '/home/brunner56/.bun/bin:/home/brunner56/.local/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/brunner56/.local/share/gem/ruby/4.0.0/bin:/home/brunner56/.local/share/gem/ruby/4.0.0/bin:/home/brunner56/.bun/bin:/home/brunner56/.local/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/brunner56/.local/bin:/home/brunner56/.local/share/../bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.cargo/bin:/home/brunner56/.local/opt/ghidra/current:/home/brunner56/.local/opt/jdk/current/bin:/home/brunner56/.opencode/bin:/home/brunner56/.local/bin:/home/brunner56/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/usr/lib64/qt-3.3/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/bin:/var/lib/snapd/snap/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.corridor/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.lmstudio/bin:/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.nvm/versions/node/v20.20.2/bin:/home/brunner56/.nvm/versions/node/v22.22.3/bin:/home/brunner56/.nvm/versions/node/v24.15.0/bin:/home/brunner56/.nvm/versions/node/v24.21.0/bin:/home/brunner56/.nvm/versions/node/v26.10.0/bin:/home/brunner56/go/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_011VrAwzVfXk6ccJFRCVPb41/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_014AH5hoCLbfMtN3eRfR7BYD/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_0155zZVATbJU3jHUmPP9NvMC/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_0166qiQqhgmKzXvuQGEvdRdw/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_017zncz89kmhdPgdpZQZm5Dj/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_019iPNgSpqW7kdNT72VAaUud/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01FTLa86dhbVJ3HB1LdHdhN7/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01GGVzv6vXnEiYqATQVsubdH/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01GjdKQx9o9xZp3FJs53hFFV/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01HjnQwYWPokcJcu9cRYzTbg/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01LFhefzHyLd2gnEZfUr2Nwe/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01MFEgnUaF7pHjbNwmfzjCYc/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01UWNpa6bBq8PZzGmTDJPMZW/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01XV45mGq79uCir6Rg2d9D8t/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01XXJmxLXPEhPMmnxmrgntNw/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01YBNfaNwQztYsnUydt8m47G/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/skills-plugin/6acf881b-ac25-4e97-87c4-1b92fb083cf9/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/bin:/home/brunner56/.claude/plugins/cache/compound-engineering-plugin/compound-engineering/3.23.4/bin:/home/brunner56/.claude/skills/humanize/bin:/home/brunner56/.claude/skills/humanizer/bin', 'MODULEPATH': '/etc/modulefiles:/usr/share/modulefiles:/usr/share/modulefiles/Linux:/usr/share/modulefiles/Core:/usr/share/lmod/lmod/modulefiles/Core', 'DBUS_SESSION_BUS_ADDRESS': '[REDACTED]', 'LMOD_CMD': '/usr/share/lmod/lmod/libexec/lmod', 'KDE_APPLICATIONS_AS_SCOPE': '1', 'NVM_BIN': '/home/brunner56/.nvm/versions/node/v26.3.0/bin', 'MAIL': '/var/spool/mail/brunner56', 'CLAUDE_CODE_DESKTOP_APP_VERSION': '2.7032.0', 'BAGGAGE': 'sentry-environment=production,sentry-release=Claude%402.7032.0,sentry-public_key=2f98127cbffe4740b1f767a2de77d23b,sentry-trace_id=6a247c5c3bc34d788068f7a71e4183b2,sentry-org_id=1158394', 'DISABLE_MICROCOMPACT': '1', 'OLDPWD': '/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation', 'CODEX_GITHUB_PERSONAL_ACCESS_TOKEN': '[REDACTED]', 'USE_STAGING_OAUTH': '', 'CLAUDE_CODE_MESSAGING_TOKEN': '[REDACTED]', '_': '/usr/bin/timeout', 'KP_GAMESCOPE_REPO_ROOT': '/'}, pass_fds=(3, 4), start_new_session=True, stdout=<_io.BufferedWriter name='/tmp/tmpv99fwuyp/runs/20260927-185402-121568c1/driver.log'>, stderr=-2)].
+
+----------------------------------------------------------------------
+Ran 25 tests in 108.166s
+
+FAILED (failures=2, errors=35)

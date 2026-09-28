@@ -1,0 +1,6 @@
+[kp:info] api: kp native facilities installed, 111 event constants
+[kp:info] api: registered nwscript.call for 769 engine routines
+FAIL: [string "..."]:37: missing kp.scripts
+FAIL: [string "..."]:37: missing kp.scripts
+namespace contract: 2 failure(s)
+rc=1

@@ -1,0 +1,4 @@
+second build refused: output folder already exists; choose a new one: out
+out unchanged: True files 28
+dangling symlink out refused: output folder already exists; choose a new one: dangling | target created: False
+cleanup done: True

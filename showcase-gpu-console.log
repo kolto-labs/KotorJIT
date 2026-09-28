@@ -1,0 +1,94 @@
+[10:56:26] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[10:56:26] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[10:56:26] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[10:56:26] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[10:56:26] runtime already current (7ebfc850dd23)
+[10:56:27] ini tuned: swkotor.ini (14 keys)
+[10:56:27] Owned GPU display ready :1
+[10:56:27] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[10:56:27] wineserver settled before launch
+[10:56:27] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[10:56:41] channel up on 127.0.0.1:51309: build k1_gog_103, 19 hooks, live=True
+Capturing owned game window ('0xc00004', 'Star Wars: Knights of the Old Republic', '800', '600')
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE", "timeout": 180}
+  ok (0.0s) load_save '000001 - AUTOSAVE' issued
+step 2: wait module {"equals": "danm14aa", "timeout": 180}
+screenshot -> 0001_periodic.png
+  ok (1.2s) phase=loading module=danm14aa server_tick=5 client_tick=10 pc=(0.0,0.0,0.0) hp=96/96
+step 3: wait phase {"equals": "gameplay", "timeout": 180}
+  ok (1.7s) phase=gameplay module=danm14aa server_tick=36 client_tick=41 pc=(105.7,96.5,1.0) hp=96/96
+step 4: do clear_auto_pause
+  ok (0.0s) clear_auto_pause ok
+step 5: real conscious Bastila party precondition
+  ok (0.0s) assert_lua == true
+step 6: do await_log {"pattern": "\\[arrival\\] dan", "minimum": 1, "timeout": 120}
+  ok (0.4s) native log matched 1 lines
+step 7: Dantooine arrival text inspection
+screenshot -> 0002_Dantooine_arrival_text_inspection.png
+  ok (0.1s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626/shots/0002_Dantooine_arrival_text_inspection.png
+step 8: do mark_log
+  ok (0.0s) saved native log offset 6958
+step 9: meditation actual engine hook gives every member an active attack-effect delta
+  ok (0.0s) assert_lua == true
+step 10: independent active attack-effect counts increased on every party member
+  ok (0.0s) assert_lua == true
+step 11: do await_log {"pattern": "\\[meditation\\] round \\d+: steadied [23] of the party", "minimum": 1, "timeout": 120}
+  ok (0.0s) native log matched 1 lines
+step 12: meditation suppresses repeated attacked hook until end-of-round
+  ok (0.0s) assert_lua == true
+step 13: temporary meditation effect expires to baseline
+  ok (6.3s) assert_lua == true
+step 14: do mark_log
+  ok (0.0s) saved native log offset 7391
+step 15: establish alignment baseline20
+  ok (0.0s) assert_lua == true
+step 16: do advance_ticks {"ticks": 200, "timeout": 180}
+  ok (3.4s) observed server ticks 626 -> 833
+step 17: do mark_log
+  ok (0.0s) saved native log offset 7531
+step 18: cross alignment decade20 to35
+  ok (0.0s) assert_lua == true
+step 19: do await_log {"pattern": "\\[conscience\\] \\+15, now 35", "minimum": 1, "timeout": 120, "maximum": 1}
+  ok (1.0s) native log matched 1 lines
+step 20: Alignment text inspection
+screenshot -> 0003_Alignment_text_inspection.png
+  ok (0.2s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626/shots/0003_Alignment_text_inspection.png
+step 21: do mark_log
+  ok (0.0s) saved native log offset 7632
+step 22: same-decade alignment change35 to36
+  ok (0.0s) assert_lua == true
+step 23: do advance_ticks {"ticks": 200, "timeout": 180}
+  ok (3.0s) observed server ticks 913 -> 1126
+step 24: do await_log {"pattern": "\\[conscience\\]", "minimum": 0, "timeout": 120, "maximum": 0}
+  ok (0.0s) native log matched 0 lines
+step 25: do mark_log
+  ok (0.0s) saved native log offset 7712
+step 26: wounded Bastila real low HP and stock damage hook
+  ok (0.0s) assert_lua == true
+step 27: do await_log {"pattern": "\\[wounded\\] .*bastila.*below 35%", "minimum": 1, "timeout": 120, "maximum": 1}
+  ok (0.0s) native log matched 1 lines
+step 28: repeat wounded hook still same low HP
+  ok (0.0s) assert_lua == true
+step 29: do await_log {"pattern": "\\[wounded\\] .*bastila.*below 35%", "minimum": 1, "timeout": 120, "maximum": 1}
+  ok (0.0s) native log matched 1 lines
+step 30: Wounded text inspection
+screenshot -> 0004_Wounded_text_inspection.png
+  ok (0.1s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626/shots/0004_Wounded_text_inspection.png
+step 31: do mark_log
+  ok (0.0s) saved native log offset 7775
+step 32: do lua {"code": "nwscript.call(\"StartNewModule\",\"danm13\",\"\"); return true", "timeout": 60}
+  ok (0.0s) lua -> {"values": [true]}
+step 33: wait module {"equals": "danm13", "timeout": 180}
+  ok (0.7s) phase=loading module=danm13 server_tick=1152 client_tick=1157 pc=(0.0,0.0,0.0) hp=96/96
+step 34: wait phase_any {"equals": ["gameplay", "dialog", "paused"], "timeout": 180}
+  ok (3.2s) phase=gameplay module=danm13 server_tick=1262 client_tick=1267 pc=(187.3,74.3,12.6) hp=96/96
+step 35: do advance_dialog {"until": "gameplay", "timeout": 120}
+  ok (0.1s) advance_dialog reached 'gameplay' after 0 picks
+step 36: do advance_ticks {"ticks": 60, "timeout": 120}
+  ok (1.1s) observed server ticks 1267 -> 1330
+step 37: do await_log {"pattern": "\\[arrival\\] dan", "minimum": 0, "timeout": 120, "maximum": 0}
+  failed (0.0s) too many matching native log lines: 1
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626/report.json
+{"ok": false, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626"}
+[10:57:05] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-105626

@@ -1,0 +1,53 @@
+Completed the resumed creative-packaging fix round without restarting or disturbing unrelated dirty work.
+
+The prior agent’s implementation and partial report were already complete through the second-pass addendum. I inspected the report, the allowed-path mtimes, the reviewer scratch/probe directory, and the dirty worktree before continuing. I retained the existing fixes and made no additional source-code changes.
+
+I appended the resume-verification receipt to [creative-packaging-p0-p4-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/creative-packaging-p0-p4-report.md).
+
+Validation rerun in the worktree, with `PYTHONDONTWRITEBYTECODE=1`:
+
+| Suite | Count | Result |
+|---|---:|---|
+| `tools/creative_host_check_test.py` | 13 | OK |
+| `tools/kpharness_commit_inputs_test.py` | 12 | OK |
+| `tools/kpharness_export_verify_test.py` | 17 | OK |
+| `tools/package_creative_harness_test.py` | 35 | OK |
+| **Total** | **77** | **OK** |
+
+The 35 package tests include the I-1–I-4 adversarial cases, M-1/M-2 protections, and release-ZIP scanner coverage. The other three suites cover M-3–M-9.
+
+I also reran the new scanner read-only against both candidate ZIPs:
+
+- 20260927 K1/K2 GOG preview: `/home/brunner56/kp-release-20260927/kotorphasor-k1-k2-gog-console-preview.zip`
+  - SHA-256: `0388d0806c74c0ad158f7d120165a5d530798c14fbbaa1674b8c6c759ce867c9`
+  - Result: `ok=false`, `markers=16`, `unchanged=true`.
+
+- 20260922 K1 GOG preview: `/home/brunner56/kp-release-20260922/kotorphasor-k1-gog-console-preview.zip`
+  - SHA-256: `de14c1261e0e1b0e0aec124c8676f8e40ec696b47a258d9e1b0adc97af677131`
+  - Result: `ok=false`, `markers=16`, `unchanged=true`.
+
+The second archive’s correct location is `kp-release-20260922`; the initially implied `kp-live-20260922` path does not contain that ZIP.
+
+Both scans reproduce the known release blockers:
+
+- `/home/` build-path markers in `kphasor.dll`;
+- private `.superpowers` paths in `packaging-receipt.json`;
+- `data/research/phasor_structs.json` inside `source.tar.gz`;
+- absolute-path and run-ID markers in source comments;
+- the embedded `minilua` ELF in the source tarball;
+- additionally for the 20260922 candidate, a local `live-acceptance.json` run-directory path and a `fields.hpp` run-ID marker.
+
+Those release-builder/archive defects are outside the explicitly allowed files, so I did not change, rebuild, or publish either artifact. The scanner verifies the input archives were unchanged.
+
+Files established by the prior fix round and retained:
+
+- [package_creative_harness.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness.py)
+- [package_creative_harness_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/package_creative_harness_test.py)
+- [creative_host_check.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/creative_host_check.py)
+- [creative_host_check_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/creative_host_check_test.py)
+- [commit_inputs.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/commit_inputs.py)
+- [export_verify.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/export_verify.py)
+- [scan_release_zip.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/scan_release_zip.py)
+- [creative-harness.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/user/creative-harness.md)
+
+Incomplete, honestly: I began replaying the standalone reviewer probe scripts, but their scratch-directory cleanup exceeded the environment’s command-output window before producing a fresh complete probe transcript. Their final prior outputs remain preserved in `review-probes-packaging/fixround/` and are recorded in the report: 9/11 adversarial cases refused, 2 safely built without leakage, and the race probe refused with a provenance mismatch. The full focused regression suite that directly covers those behaviors did complete: **77/77 passing**.

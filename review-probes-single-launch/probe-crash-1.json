@@ -1,0 +1,30 @@
+{
+ "raised": "BootFailure",
+ "reason": "crash",
+ "launch_count": 1,
+ "max_boot_attempts": 1,
+ "evidence_path": "/tmp/kp_probe_ynbb74wn/stage/runs/20260927-182728/boot-attempts.json",
+ "mode": "crash",
+ "env": "1",
+ "elapsed": 1.6,
+ "game_launch_popens": 1,
+ "wineserver_k_calls": 1,
+ "evidence_exists_after_teardown": true,
+ "session_json_exists": false,
+ "evidence": {
+  "max_boot_attempts": 1,
+  "max_boot_attempts_source": "env",
+  "launch_count": 1,
+  "outcome": "failed",
+  "attempts": [
+   {
+    "attempt": 1,
+    "outcome": "failed",
+    "reason": "crash",
+    "detail": "swkotor.exe is not running (launcher_rc=0)",
+    "started": 1790551648.5190136,
+    "ended": 1790551649.5897095
+   }
+  ]
+ }
+}

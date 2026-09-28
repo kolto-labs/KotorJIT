@@ -1,0 +1,33 @@
+-- A: healthy subscriber gets events (control)
+    sub: {"id":1,"ok":true,"result":{"subscribed":true,"seq":0}}
+    sub: eof=0
+    A: {"event":"r2.control","tick":1,"seq":1}
+    A: eof=0
+  [PASS] A healthy subscriber receives event, stays open
+-- B: subscribed client sends bad line; event already in ring and events pushed every tick
+    sub: {"id":1,"ok":true,"result":{"subscribed":true,"seq":1}}
+    sub: eof=0
+    B: {"event":"r2.before_bad","tick":2,"seq":2}
+    B: {"event":"r2.after_bad","tick":3,"seq":3}
+    B: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+    B: eof=1
+  [PASS] B exactly one error line
+  [PASS] B the error is the last line (nothing follows it)
+  [PASS] B connection closed
+-- C: fresh client after a condemn is not poisoned; subscribes, gets events and replies
+    sub: {"id":1,"ok":true,"result":{"subscribed":true,"seq":5}}
+    sub: eof=0
+    C: {"event":"r2.fresh","tick":4,"seq":6}
+    C: {"id":7,"ok":true,"result":{"subscribed":true,"seq":6}}
+    C: eof=0
+  [PASS] C fresh client gets event
+  [PASS] C fresh client gets reply
+  [PASS] C fresh client stays open
+-- D: good request then bad line in one send: good reply + error, then EOF
+    D: {"id":9,"ok":true,"result":{"subscribed":true,"seq":6}}
+    D: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+    D: eof=1
+  [PASS] D good reply before bad line delivered
+  [PASS] D request after bad line not answered
+  [PASS] D exactly two lines then EOF
+0 failure(s)

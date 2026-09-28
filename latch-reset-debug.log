@@ -1,0 +1,1329 @@
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <ima:enforcing>
+  <https://debuginfod.fedoraproject.org/>
+  <ima:ignore>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0x804a0d0
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+[New Thread 0xf7542b40 (LWP 780129)]
+[Switching to Thread 0xf7542b40 (LWP 780129)]
+RESET thread=2
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0xf7c7fb43 in kp::runtime::Runtime::start (this=0xf7ee1aa0 <kp::runtime::Runtime::instance()::r>, cfg=...) at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:843
+#2  0xf7c9eea4 in (anonymous namespace)::run_startup () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp:42
+#3  0xf7c9ef50 in (anonymous namespace)::worker () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp:92
+[Switching to Thread 0xf7546440 (LWP 780113)]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780130)]
+[New Thread 0xf62fdb40 (LWP 780131)]
+[Thread 0xf62fdb40 (LWP 780131) exited]
+[Thread 0xf6afeb40 (LWP 780130) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780132)]
+[Switching to Thread 0xf7542b40 (LWP 780129)]
+RESET thread=2
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0xf7c7fe4b in kp::runtime::Runtime::start (this=0xf7ee1aa0 <kp::runtime::Runtime::instance()::r>, cfg=...) at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:880
+#2  0xf7c9eea4 in (anonymous namespace)::run_startup () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp:42
+#3  0xf7c9ef50 in (anonymous namespace)::worker () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/dllmain.cpp:92
+[Thread 0xf7542b40 (LWP 780129) exited]
+[New Thread 0xf6afeb40 (LWP 780133)]
+[Thread 0xf6afeb40 (LWP 780133) exited]
+[Thread 0xf62fdb40 (LWP 780132) exited]
+[Switching to Thread 0xf7546440 (LWP 780113)]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780134)]
+[New Thread 0xf62fdb40 (LWP 780135)]
+[Thread 0xf62fdb40 (LWP 780135) exited]
+[Thread 0xf6afeb40 (LWP 780134) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780136)]
+[New Thread 0xf6afeb40 (LWP 780137)]
+[Thread 0xf6afeb40 (LWP 780137) exited]
+[Thread 0xf62fdb40 (LWP 780136) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780138)]
+[New Thread 0xf62fdb40 (LWP 780139)]
+[Thread 0xf62fdb40 (LWP 780139) exited]
+[Thread 0xf6afeb40 (LWP 780138) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780140)]
+[New Thread 0xf6afeb40 (LWP 780141)]
+[Thread 0xf6afeb40 (LWP 780141) exited]
+[Thread 0xf62fdb40 (LWP 780140) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780142)]
+[New Thread 0xf62fdb40 (LWP 780143)]
+[Thread 0xf6afeb40 (LWP 780142) exited]
+[Thread 0xf62fdb40 (LWP 780143) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780144)]
+[New Thread 0xf6afeb40 (LWP 780145)]
+[Thread 0xf6afeb40 (LWP 780145) exited]
+[Thread 0xf62fdb40 (LWP 780144) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780146)]
+[New Thread 0xf62fdb40 (LWP 780147)]
+[Thread 0xf6afeb40 (LWP 780146) exited]
+[Thread 0xf62fdb40 (LWP 780147) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780148)]
+[New Thread 0xf6afeb40 (LWP 780149)]
+[Thread 0xf6afeb40 (LWP 780149) exited]
+[Thread 0xf62fdb40 (LWP 780148) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780150)]
+[New Thread 0xf62fdb40 (LWP 780151)]
+[Thread 0xf62fdb40 (LWP 780151) exited]
+[Thread 0xf6afeb40 (LWP 780150) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780152)]
+[New Thread 0xf6afeb40 (LWP 780153)]
+[Thread 0xf6afeb40 (LWP 780153) exited]
+[Thread 0xf62fdb40 (LWP 780152) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780154)]
+[New Thread 0xf62fdb40 (LWP 780155)]
+[Thread 0xf62fdb40 (LWP 780155) exited]
+[Thread 0xf6afeb40 (LWP 780154) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780156)]
+[New Thread 0xf6afeb40 (LWP 780157)]
+[Thread 0xf6afeb40 (LWP 780157) exited]
+[Thread 0xf62fdb40 (LWP 780156) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780158)]
+[New Thread 0xf62fdb40 (LWP 780160)]
+[Thread 0xf6afeb40 (LWP 780158) exited]
+[Thread 0xf62fdb40 (LWP 780160) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780161)]
+[New Thread 0xf6afeb40 (LWP 780162)]
+[Thread 0xf6afeb40 (LWP 780162) exited]
+[Thread 0xf62fdb40 (LWP 780161) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780163)]
+[New Thread 0xf62fdb40 (LWP 780164)]
+[Thread 0xf62fdb40 (LWP 780164) exited]
+[Thread 0xf6afeb40 (LWP 780163) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780165)]
+[New Thread 0xf6afeb40 (LWP 780166)]
+[Thread 0xf6afeb40 (LWP 780166) exited]
+[Thread 0xf62fdb40 (LWP 780165) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780167)]
+[New Thread 0xf62fdb40 (LWP 780168)]
+[Thread 0xf62fdb40 (LWP 780168) exited]
+[Thread 0xf6afeb40 (LWP 780167) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780169)]
+[New Thread 0xf6afeb40 (LWP 780170)]
+[Thread 0xf6afeb40 (LWP 780170) exited]
+[Thread 0xf62fdb40 (LWP 780169) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780171)]
+[New Thread 0xf62fdb40 (LWP 780172)]
+[Thread 0xf62fdb40 (LWP 780172) exited]
+[Thread 0xf6afeb40 (LWP 780171) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780173)]
+[New Thread 0xf6afeb40 (LWP 780174)]
+[Thread 0xf6afeb40 (LWP 780174) exited]
+[Thread 0xf62fdb40 (LWP 780173) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780175)]
+[New Thread 0xf62fdb40 (LWP 780176)]
+[Thread 0xf62fdb40 (LWP 780176) exited]
+[Thread 0xf6afeb40 (LWP 780175) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780177)]
+[New Thread 0xf6afeb40 (LWP 780178)]
+[Thread 0xf6afeb40 (LWP 780178) exited]
+[Thread 0xf62fdb40 (LWP 780177) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780179)]
+[New Thread 0xf62fdb40 (LWP 780180)]
+[Thread 0xf6afeb40 (LWP 780179) exited]
+[Thread 0xf62fdb40 (LWP 780180) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780181)]
+[New Thread 0xf6afeb40 (LWP 780182)]
+[Thread 0xf6afeb40 (LWP 780182) exited]
+[Thread 0xf62fdb40 (LWP 780181) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780183)]
+[New Thread 0xf62fdb40 (LWP 780184)]
+[Thread 0xf62fdb40 (LWP 780184) exited]
+[Thread 0xf6afeb40 (LWP 780183) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780185)]
+[New Thread 0xf6afeb40 (LWP 780186)]
+[Thread 0xf62fdb40 (LWP 780185) exited]
+[Thread 0xf6afeb40 (LWP 780186) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780187)]
+[New Thread 0xf62fdb40 (LWP 780188)]
+[Thread 0xf62fdb40 (LWP 780188) exited]
+[Thread 0xf6afeb40 (LWP 780187) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780189)]
+[New Thread 0xf6afeb40 (LWP 780190)]
+[Thread 0xf6afeb40 (LWP 780190) exited]
+[Thread 0xf62fdb40 (LWP 780189) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780191)]
+[New Thread 0xf62fdb40 (LWP 780192)]
+[Thread 0xf62fdb40 (LWP 780192) exited]
+[Thread 0xf6afeb40 (LWP 780191) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780193)]
+[New Thread 0xf6afeb40 (LWP 780194)]
+[Thread 0xf62fdb40 (LWP 780193) exited]
+[Thread 0xf6afeb40 (LWP 780194) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780195)]
+[New Thread 0xf62fdb40 (LWP 780196)]
+[Thread 0xf62fdb40 (LWP 780196) exited]
+[Thread 0xf6afeb40 (LWP 780195) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780197)]
+[New Thread 0xf6afeb40 (LWP 780198)]
+[Thread 0xf62fdb40 (LWP 780197) exited]
+[Thread 0xf6afeb40 (LWP 780198) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780199)]
+[New Thread 0xf62fdb40 (LWP 780200)]
+[Thread 0xf6afeb40 (LWP 780199) exited]
+[Thread 0xf62fdb40 (LWP 780200) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780201)]
+[New Thread 0xf6afeb40 (LWP 780202)]
+[Thread 0xf6afeb40 (LWP 780202) exited]
+[Thread 0xf62fdb40 (LWP 780201) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780203)]
+[New Thread 0xf62fdb40 (LWP 780204)]
+[Thread 0xf62fdb40 (LWP 780204) exited]
+[Thread 0xf6afeb40 (LWP 780203) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780205)]
+[New Thread 0xf6afeb40 (LWP 780206)]
+[Thread 0xf6afeb40 (LWP 780206) exited]
+[Thread 0xf62fdb40 (LWP 780205) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780207)]
+[New Thread 0xf62fdb40 (LWP 780208)]
+[Thread 0xf6afeb40 (LWP 780207) exited]
+[Thread 0xf62fdb40 (LWP 780208) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780209)]
+[New Thread 0xf6afeb40 (LWP 780210)]
+[Thread 0xf6afeb40 (LWP 780210) exited]
+[Thread 0xf62fdb40 (LWP 780209) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780211)]
+[New Thread 0xf62fdb40 (LWP 780212)]
+[Thread 0xf62fdb40 (LWP 780212) exited]
+[Thread 0xf6afeb40 (LWP 780211) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780213)]
+[New Thread 0xf6afeb40 (LWP 780214)]
+[Thread 0xf6afeb40 (LWP 780214) exited]
+[Thread 0xf62fdb40 (LWP 780213) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780215)]
+[New Thread 0xf62fdb40 (LWP 780216)]
+[Thread 0xf62fdb40 (LWP 780216) exited]
+[Thread 0xf6afeb40 (LWP 780215) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780217)]
+[New Thread 0xf6afeb40 (LWP 780218)]
+[Thread 0xf6afeb40 (LWP 780218) exited]
+[Thread 0xf62fdb40 (LWP 780217) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780219)]
+[New Thread 0xf62fdb40 (LWP 780220)]
+[Thread 0xf62fdb40 (LWP 780220) exited]
+[Thread 0xf6afeb40 (LWP 780219) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780221)]
+[New Thread 0xf6afeb40 (LWP 780222)]
+[Thread 0xf6afeb40 (LWP 780222) exited]
+[Thread 0xf62fdb40 (LWP 780221) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780223)]
+[New Thread 0xf62fdb40 (LWP 780224)]
+[Thread 0xf62fdb40 (LWP 780224) exited]
+[Thread 0xf6afeb40 (LWP 780223) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780225)]
+[New Thread 0xf6afeb40 (LWP 780226)]
+[Thread 0xf6afeb40 (LWP 780226) exited]
+[Thread 0xf62fdb40 (LWP 780225) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780227)]
+[New Thread 0xf62fdb40 (LWP 780228)]
+[Thread 0xf62fdb40 (LWP 780228) exited]
+[Thread 0xf6afeb40 (LWP 780227) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780229)]
+[New Thread 0xf6afeb40 (LWP 780230)]
+[Thread 0xf62fdb40 (LWP 780229) exited]
+[Thread 0xf6afeb40 (LWP 780230) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780231)]
+[New Thread 0xf62fdb40 (LWP 780232)]
+[Thread 0xf62fdb40 (LWP 780232) exited]
+[Thread 0xf6afeb40 (LWP 780231) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780233)]
+[New Thread 0xf6afeb40 (LWP 780234)]
+[Thread 0xf6afeb40 (LWP 780234) exited]
+[Thread 0xf62fdb40 (LWP 780233) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780235)]
+[New Thread 0xf62fdb40 (LWP 780236)]
+[Thread 0xf6afeb40 (LWP 780235) exited]
+[Thread 0xf62fdb40 (LWP 780236) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780237)]
+[New Thread 0xf6afeb40 (LWP 780238)]
+[Thread 0xf6afeb40 (LWP 780238) exited]
+[Thread 0xf62fdb40 (LWP 780237) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780239)]
+[New Thread 0xf62fdb40 (LWP 780240)]
+[Thread 0xf62fdb40 (LWP 780240) exited]
+[Thread 0xf6afeb40 (LWP 780239) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780241)]
+[New Thread 0xf6afeb40 (LWP 780242)]
+[Thread 0xf6afeb40 (LWP 780242) exited]
+[Thread 0xf62fdb40 (LWP 780241) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780243)]
+[New Thread 0xf62fdb40 (LWP 780244)]
+[Thread 0xf62fdb40 (LWP 780244) exited]
+[Thread 0xf6afeb40 (LWP 780243) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780245)]
+[New Thread 0xf6afeb40 (LWP 780246)]
+[Thread 0xf6afeb40 (LWP 780246) exited]
+[Thread 0xf62fdb40 (LWP 780245) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780247)]
+[New Thread 0xf62fdb40 (LWP 780248)]
+[Thread 0xf62fdb40 (LWP 780248) exited]
+[Thread 0xf6afeb40 (LWP 780247) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780249)]
+[New Thread 0xf6afeb40 (LWP 780250)]
+[Thread 0xf6afeb40 (LWP 780250) exited]
+[Thread 0xf62fdb40 (LWP 780249) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780251)]
+[New Thread 0xf62fdb40 (LWP 780252)]
+[Thread 0xf62fdb40 (LWP 780252) exited]
+[Thread 0xf6afeb40 (LWP 780251) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780253)]
+[New Thread 0xf6afeb40 (LWP 780254)]
+[Thread 0xf6afeb40 (LWP 780254) exited]
+[Thread 0xf62fdb40 (LWP 780253) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780255)]
+[New Thread 0xf62fdb40 (LWP 780256)]
+[Thread 0xf62fdb40 (LWP 780256) exited]
+[Thread 0xf6afeb40 (LWP 780255) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780257)]
+[New Thread 0xf6afeb40 (LWP 780258)]
+[Thread 0xf62fdb40 (LWP 780257) exited]
+[Thread 0xf6afeb40 (LWP 780258) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780259)]
+[New Thread 0xf62fdb40 (LWP 780260)]
+[Thread 0xf62fdb40 (LWP 780260) exited]
+[Thread 0xf6afeb40 (LWP 780259) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780261)]
+[New Thread 0xf6afeb40 (LWP 780262)]
+[Thread 0xf6afeb40 (LWP 780262) exited]
+[Thread 0xf62fdb40 (LWP 780261) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780263)]
+[New Thread 0xf62fdb40 (LWP 780264)]
+[Thread 0xf62fdb40 (LWP 780264) exited]
+[Thread 0xf6afeb40 (LWP 780263) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780265)]
+[New Thread 0xf6afeb40 (LWP 780266)]
+[Thread 0xf6afeb40 (LWP 780266) exited]
+[Thread 0xf62fdb40 (LWP 780265) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780267)]
+[New Thread 0xf62fdb40 (LWP 780268)]
+[Thread 0xf6afeb40 (LWP 780267) exited]
+[Thread 0xf62fdb40 (LWP 780268) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780269)]
+[New Thread 0xf6afeb40 (LWP 780270)]
+[Thread 0xf6afeb40 (LWP 780270) exited]
+[Thread 0xf62fdb40 (LWP 780269) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780271)]
+[New Thread 0xf62fdb40 (LWP 780272)]
+[Thread 0xf62fdb40 (LWP 780272) exited]
+[Thread 0xf6afeb40 (LWP 780271) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780273)]
+[New Thread 0xf6afeb40 (LWP 780274)]
+[Thread 0xf6afeb40 (LWP 780274) exited]
+[Thread 0xf62fdb40 (LWP 780273) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780275)]
+[New Thread 0xf62fdb40 (LWP 780276)]
+[Thread 0xf62fdb40 (LWP 780276) exited]
+[Thread 0xf6afeb40 (LWP 780275) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780277)]
+[New Thread 0xf6afeb40 (LWP 780278)]
+[Thread 0xf6afeb40 (LWP 780278) exited]
+[Thread 0xf62fdb40 (LWP 780277) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780279)]
+[New Thread 0xf62fdb40 (LWP 780280)]
+[Thread 0xf62fdb40 (LWP 780280) exited]
+[Thread 0xf6afeb40 (LWP 780279) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780281)]
+[New Thread 0xf6afeb40 (LWP 780282)]
+[Thread 0xf6afeb40 (LWP 780282) exited]
+[Thread 0xf62fdb40 (LWP 780281) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780283)]
+[New Thread 0xf62fdb40 (LWP 780284)]
+[Thread 0xf62fdb40 (LWP 780284) exited]
+[Thread 0xf6afeb40 (LWP 780283) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780285)]
+[New Thread 0xf6afeb40 (LWP 780286)]
+[Thread 0xf6afeb40 (LWP 780286) exited]
+[Thread 0xf62fdb40 (LWP 780285) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780287)]
+[New Thread 0xf62fdb40 (LWP 780288)]
+[Thread 0xf62fdb40 (LWP 780288) exited]
+[Thread 0xf6afeb40 (LWP 780287) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780289)]
+[New Thread 0xf6afeb40 (LWP 780290)]
+[Thread 0xf6afeb40 (LWP 780290) exited]
+[Thread 0xf62fdb40 (LWP 780289) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780291)]
+[New Thread 0xf62fdb40 (LWP 780292)]
+[Thread 0xf62fdb40 (LWP 780292) exited]
+[Thread 0xf6afeb40 (LWP 780291) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780293)]
+[New Thread 0xf6afeb40 (LWP 780294)]
+[Thread 0xf6afeb40 (LWP 780294) exited]
+[Thread 0xf62fdb40 (LWP 780293) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780295)]
+[New Thread 0xf62fdb40 (LWP 780296)]
+[Thread 0xf62fdb40 (LWP 780296) exited]
+[Thread 0xf6afeb40 (LWP 780295) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780297)]
+[New Thread 0xf6afeb40 (LWP 780298)]
+[Thread 0xf62fdb40 (LWP 780297) exited]
+[Thread 0xf6afeb40 (LWP 780298) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780299)]
+[New Thread 0xf62fdb40 (LWP 780300)]
+[Thread 0xf62fdb40 (LWP 780300) exited]
+[Thread 0xf6afeb40 (LWP 780299) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780301)]
+[New Thread 0xf6afeb40 (LWP 780302)]
+[Thread 0xf62fdb40 (LWP 780301) exited]
+[Thread 0xf6afeb40 (LWP 780302) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780303)]
+[New Thread 0xf62fdb40 (LWP 780304)]
+[Thread 0xf62fdb40 (LWP 780304) exited]
+[Thread 0xf6afeb40 (LWP 780303) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780305)]
+[New Thread 0xf6afeb40 (LWP 780306)]
+[Thread 0xf62fdb40 (LWP 780305) exited]
+[Thread 0xf6afeb40 (LWP 780306) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780307)]
+[New Thread 0xf62fdb40 (LWP 780308)]
+[Thread 0xf6afeb40 (LWP 780307) exited]
+[Thread 0xf62fdb40 (LWP 780308) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780309)]
+[New Thread 0xf6afeb40 (LWP 780310)]
+[Thread 0xf6afeb40 (LWP 780310) exited]
+[Thread 0xf62fdb40 (LWP 780309) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780311)]
+[New Thread 0xf62fdb40 (LWP 780312)]
+[Thread 0xf62fdb40 (LWP 780312) exited]
+[Thread 0xf6afeb40 (LWP 780311) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780313)]
+[New Thread 0xf6afeb40 (LWP 780314)]
+[Thread 0xf6afeb40 (LWP 780314) exited]
+[Thread 0xf62fdb40 (LWP 780313) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780315)]
+[New Thread 0xf62fdb40 (LWP 780316)]
+[Thread 0xf62fdb40 (LWP 780316) exited]
+[Thread 0xf6afeb40 (LWP 780315) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780317)]
+[New Thread 0xf6afeb40 (LWP 780318)]
+[Thread 0xf6afeb40 (LWP 780318) exited]
+[Thread 0xf62fdb40 (LWP 780317) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780319)]
+[New Thread 0xf62fdb40 (LWP 780320)]
+[Thread 0xf62fdb40 (LWP 780320) exited]
+[Thread 0xf6afeb40 (LWP 780319) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780321)]
+[New Thread 0xf6afeb40 (LWP 780322)]
+[Thread 0xf6afeb40 (LWP 780322) exited]
+[Thread 0xf62fdb40 (LWP 780321) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780323)]
+[New Thread 0xf62fdb40 (LWP 780324)]
+[Thread 0xf62fdb40 (LWP 780324) exited]
+[Thread 0xf6afeb40 (LWP 780323) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780325)]
+[New Thread 0xf6afeb40 (LWP 780326)]
+[Thread 0xf6afeb40 (LWP 780326) exited]
+[Thread 0xf62fdb40 (LWP 780325) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf6afeb40 (LWP 780327)]
+[New Thread 0xf62fdb40 (LWP 780328)]
+[Thread 0xf62fdb40 (LWP 780328) exited]
+[Thread 0xf6afeb40 (LWP 780327) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a355 in main ()
+[New Thread 0xf62fdb40 (LWP 780329)]
+[New Thread 0xf6afeb40 (LWP 780330)]
+[Thread 0xf6afeb40 (LWP 780330) exited]
+[Thread 0xf62fdb40 (LWP 780329) exited]
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a628 in main ()
+RESET thread=1
+#0  kp::runtime::reset_engine_thread () at /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/runtime.cpp:209
+#1  0x0804a673 in main ()
+PASS runtime exact-owner latch: 100 simultaneous two-thread races, stable owner/refusal, reset/relatch
+[Inferior 1 (process 780113) exited normally]

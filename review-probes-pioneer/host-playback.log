@@ -1,0 +1,64 @@
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3700996 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3703112 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3704505 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3704904 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3705425 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3706318 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3706981 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3707743 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3709272 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3711698 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3712394 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3712819 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3713163 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... /home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 3713569 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 117.408s
+
+OK

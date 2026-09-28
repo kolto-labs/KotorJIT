@@ -1,0 +1,3 @@
+supervisor_exit=1 errors=['interrupted before launch: SIGINT'] launches=1 child_returncode=None owned_survivors=[]
+child_alive_after_supervisor_exit=True owned_started_after_supervisor_exit=['display:gamescope', 'client']
+unsupervised_child_completed_run=True its_cleanup_steps=['recorder', 'source_process', 'display'] result_file_rewritten=False

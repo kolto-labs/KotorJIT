@@ -1,0 +1,7 @@
+  OBSERVE casefold lookup: exists(10_COVER.lua)=1
+  OBSERVE after load_all: 1 script(s): [10_cover 10_cover.lua]
+  OBSERVE request 10_COVER -> ERROR '10_COVER' is already loaded as '10_cover'; use reload
+  OBSERVE request NEWFILE -> OK 
+  OBSERVE after service: 2 script(s): [10_cover 10_cover.lua] [newfile newfile.lua]
+  OBSERVE after hot-reload poll: 2 script(s): [10_cover 10_cover.lua] [newfile newfile.lua]
+  OBSERVE one OnTick ran 2 handler bodies from 2 files on disk

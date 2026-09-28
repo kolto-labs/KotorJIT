@@ -1,0 +1,4 @@
+supervisor_exit=1 errors=['interrupted: SIGINT'] launches=1 child_returncode=1 owned_survivors=[]
+child_alive_after_supervisor_exit=False owned_started_after_supervisor_exit=[]
+unsupervised_child_completed_run=True its_cleanup_steps=[] result_file_rewritten=False
+exit=0

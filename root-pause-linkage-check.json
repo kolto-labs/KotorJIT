@@ -1,0 +1,28 @@
+{
+  "verified_manifests": {
+    "actual-linkage-manifest.sha256": 18,
+    "onfail-linkage-manifest.sha256": 18
+  },
+  "cases": [
+    {
+      "binary": "actual_finish_fixture",
+      "returncode": 0,
+      "output": "actual GameAdapter::step_load_completion -> finish_load call path: PASS\n"
+    },
+    {
+      "binary": "actual_finish_fixture_expectation_mutant",
+      "returncode": -6,
+      "output": "actual_finish_fixture_expectation_mutant: /home/brunner56/kp-live-20260922/pl5-review-scratch/actual_finish_fixture_expectation_mutant.cpp:17: int main(): Assertion `!adapter.pause_machine_.loading()' failed.\n"
+    },
+    {
+      "binary": "onfail_fixture",
+      "returncode": 0,
+      "output": "actual GameAdapter::load_save -> on_fail call path: PASS\n"
+    },
+    {
+      "binary": "onfail_mutant_fixture",
+      "returncode": -6,
+      "output": "onfail_mutant_fixture: /home/brunner56/kp-live-20260922/pl5-review-scratch/onfail_mutant_fixture.cpp:70: int main(): Assertion `!a.pause_machine_.loading()' failed.\n"
+    }
+  ]
+}

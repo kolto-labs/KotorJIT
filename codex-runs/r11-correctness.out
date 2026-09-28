@@ -1,0 +1,36 @@
+Round 11 correctness review is complete and recorded as **FAIL**.
+
+I appended the required single section to [task7-capture-cadence-fix-review.md](/home/brunner56/kp-live-20260922/task7-capture-cadence-fix-review.md:1286), ending exactly:
+
+> Round 11 correctness verdict: FAIL
+
+Findings retained:
+
+- **1 Critical — R11-C1:** the fixed `animated-diagnostic-v1` noise floor of **1.2** is invalid across the required slower-pattern calibration set. The independently labelled, fully fresh `testsrc2` slow-quarter stream (`rate=240,setpts=4*PTS,fps=60`) has no duplicate source frames but reaches only **0.1186** distinct ratio under the production gate; fresh DIF falls to **0.8421**, below the 1.2 cutoff. This makes a failed diagnostic ambiguous between bad capture and bad calibration.
+- **2 Important:**
+  - A signal in the post-fork/pre-`Popen`-return window can leave an already-started child unregistered, bypassing the intended ordered cleanup path.
+  - The pipe token plus lock check prevents accidental child entry but does not establish a non-forgeable parent-authority boundary against a same-UID process that can create its own token/config/commitments while holding the lock.
+
+Earlier counterexamples were re-run and preserved:
+
+- `rerun_probe_r11.out` — P0–P8: positive acceptance, rollback and forged-ledger failures, recovery/PID identity cases, malformed-ledger rejection, serialized appends, and log-deletion/hard-link survivor retention.
+- `rerun_probe_r10.out` — same current API-compatible regression family.
+- `rerun_replay_r0_r7.out` — prior rounds’ receipt mutations; all remain `ready=False` except the pre-existing documented `r0_terminal_drop_999` case.
+
+Artifacts:
+
+- Review verdict: [task7-capture-cadence-fix-review.md](/home/brunner56/kp-live-20260922/task7-capture-cadence-fix-review.md:1286)
+- Re-run probe output: [rerun_probe_r11.out](/home/brunner56/kp-live-20260922/review-probes-r11-correctness/rerun_probe_r11.out)
+- Earlier-round replay output: [rerun_replay_r0_r7.out](/home/brunner56/kp-live-20260922/review-probes-r11-correctness/rerun_replay_r0_r7.out)
+- Calibration referent: [cal_summary.out](/home/brunner56/kp-live-20260922/review-probes-r11-correctness/cal_summary.out)
+
+Counts: **1 Critical, 2 Important, 0 source files edited**. I edited only the requested append-only review report and created reviewer probe receipts under the designated R11 probe directory.
+
+Incomplete, stated honestly:
+
+- I did not rerun the orchestrator’s full 246-test container+host suite; its **246/246** result remains writer-reported evidence, not a fresh reviewer execution.
+- A late host recalibration invocation on the heavily loaded MyBook mount did not return a new printable receipt. The Critical finding therefore relies on the already completed calibration’s source-frame hashes plus production FFprobe/gate output, which directly establishes the fault.
+- `git status` completed earlier and confirmed the intentionally dirty tree; the final bounded status capture timed out after 12 seconds, so no clean-tree claim is made.
+- No Wine, game, Gamescope, Xvfb/Xwayland, mpv, x11grab, live-game lock access, or process signaling was performed.
+
+**Diagnostic authorization remains NOT AUTHORIZED** until the Critical calibration defect and both Important launch/authority defects are repaired and re-reviewed.

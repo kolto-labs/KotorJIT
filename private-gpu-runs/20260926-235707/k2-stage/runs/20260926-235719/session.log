@@ -1,0 +1,7 @@
+[23:57:20] target k2-wine: data /run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets
+[23:57:20] staged tree /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage (new)
+[23:57:20] executable /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/steamassets/swkotor2.exe
+[23:57:20] saved original binkw32.dll -> binkw32_real.dll
+[23:57:20] runtime installed from /home/brunner56/kp-release-20260922/build
+[23:57:20] ini tuned: swkotor2.ini (14 keys)
+[23:58:57] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/runs/20260926-235719

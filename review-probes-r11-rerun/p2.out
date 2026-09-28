@@ -1,0 +1,16 @@
+inside_direct=refused
+relative_inside=refused
+dotdot_into_run=refused
+via_dir_symlink_into_run=refused
+lexical_dotdot_through_symlink=refused
+outside_through_link_in_run=accepted
+run_dir_itself=refused
+outside_plain=accepted
+run_given_via_symlink_log_inside=refused
+log_vanished_during_probe: exit=1 stdout_error='canonical PTS re-probe cleanup failed: survived; surviving ffprobe pid=4242 start=12345; failure_id=c3b3cf497dc34f859cc601e26350e992; cleanup_ledger_sha256=16ae7846823ee80a4f967e85fae51fd201b12fbf8c009617f341bef61a695949; do not accept or export this run; retain this line, the ledger head, and the survivor PID/start out of band'
+  survivor_mentioned_in_output=True
+  r11_stderr_heads=1 stderr_survivor=[(4242, '12345', True, 'cleanup commitment log is missing; create it outside the run directory')]
+  ledger_records_after=1 gate_clear_with_same_head=False
+  reaccept_after_unrecorded_survivor: exit=1 ok=False
+  r11_gate_clear_with_new_stderr_head=False
+concurrent_same_head_appends=['ok', 'refused', 'refused', 'refused'] records=1 logged_failures=1 log_head_matches_file=True

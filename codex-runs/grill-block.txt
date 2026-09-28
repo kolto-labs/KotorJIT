@@ -1,0 +1,4 @@
+AGENT-TO-AGENT GRILL HANDSHAKE (grill-me, soft-curious, used between spawns)
+- If you are a WRITER: end your report with a "Grill me" section: the 3–5 short why / how-come / is-there-a-reason questions a skeptical reviewer would most likely ask about your change (the places you are least sure of), each followed by your answer with a referent (command+output, file:line, test name) or "unverified". Put your weakest answer first.
+- If you are a REVIEWER: first read the writer's "Grill me" section (after forming your own independent view per rule 1). Attack the weakest answered question first; for each one say "that holds" with the referent, or ask one narrower question and check it yourself. Add your own grill questions the writer missed. Curious, not cross-exam: aim at the claim, never the agent.
+- Either role: when you hand off, list the one question you could not settle and what single check would settle it.

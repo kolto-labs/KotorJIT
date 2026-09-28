@@ -1,0 +1,14 @@
+[
+  {
+    "path": "/home/brunner56/kp-live-20260922/projectile-research/blaster_fixture.lua",
+    "backup": "/home/brunner56/kp-live-20260922/projectile-research/blaster_fixture.lua.before-borrow-20260922-142856",
+    "before": "9800637560e3eeaa6f26462de9f5e9506ae3541010bb03a71fa1d835f5a0b031",
+    "after": "a9a0b3394aea170178e54fa0e2d3f6dba4bdeb35e4cc7243e7b4b438a1b1e153"
+  },
+  {
+    "path": "/home/brunner56/kp-live-20260922/projectile-research/blaster-fixture-baseline.toml",
+    "backup": "/home/brunner56/kp-live-20260922/projectile-research/blaster-fixture-baseline.toml.before-borrow-20260922-142856",
+    "before": "3dcfd4a2324f35b89b08c6fed25e68b374ac89a90de5b93057bf725c80b7529a",
+    "after": "054e429a2b0426b01d8835a51ddbd081d0c50a913c9d3450e895f627d641d9e8"
+  }
+]

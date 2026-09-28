@@ -1,0 +1,63 @@
+Resumed the existing W1 fix round without restarting or duplicating the prior review. The completed implementation was retained; I only appended the requested continuation section to the existing report.
+
+Status: W1 is implemented and source-reviewed, with the important acceptance boundary intact: this is not native-Windows runtime proof yet.
+
+What is present and verified from the retained work:
+
+- Installer hardening in [Install-KotorPhasor.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/install/windows/Install-KotorPhasor.ps1):
+  - Manifest entries reject rooted paths, empty/null values, `.`/`..` components, and paths resolving outside the game directory.
+  - `backup_dir` must exactly match `kotorphasor\backup\<UTC timestamp>`.
+  - All manifest/path validation happens before uninstall’s delete/restore pass.
+  - Uninstall is two-pass: it validates every file first, then mutates only if the whole plan is safe.
+  - It restores `binkw32.dll` before removing the real-Bink fallback and verifies the fallback hash against the recorded original.
+  - It copies only the selected build’s address table.
+  - It includes process-only execution-policy and `Unblock-File` guidance.
+
+- Native receipt hardening in [windows-native-receipt.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/receipts/windows-native-receipt.ps1) and [platform_receipt_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py):
+  - Receipts default to `%LOCALAPPDATA%\KotorPhasor\receipts`.
+  - The current log session is selected from the last KotorPhasor start banner.
+  - Exactly one anchored `kp-session` start, host, and GL line is required, all with the same 128-bit session ID.
+  - Parsed receipt host/OS/overlay/GL fields are cross-checked against those exact log lines.
+  - Wine, Mesa/Linux drivers, llvmpipe/software renderers, Wine GL names, and explicit module-snapshot failures are rejected as native evidence.
+  - The user documentation correctly states that Wine detection is one supporting signal, not conclusive proof.
+
+- Runtime evidence in [overlay.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/overlay.cpp) and [platform_win32.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_win32.cpp):
+  - Host and GL lines are emitted once at the intended lifecycle points and bypass the normal script log sink.
+  - Session anchoring is present.
+  - The host report covers the Wine export, Windows version, and overlay module scan.
+  - Discord (`discordhook*`) and RTSS (`rtsshooks*`) module names are included.
+  - Snapshot failure is explicit rather than silently represented as no overlays.
+  - Long overlay lists report omitted entries instead of silently truncating.
+
+- Profile consistency coverage in [platform_profile_consistency_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py) includes all projectile profiles and alternate runtime-alias forms.
+
+- User-facing instructions are in [windows-native-install.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/user/windows-native-install.md).
+
+Checks:
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/native_pass.json`
+  - Passed: `VALID native receipt`.
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/wine_yes.json`
+  - Rejected as intended:
+    - runtime line reports `wine=yes`;
+    - top-level `host.wine` is also unacceptable for a native receipt.
+
+- The retained report records the last completed full checks as:
+  - installer behavior: **7 tests green**
+  - profile consistency: **23 tests green**
+  - prior MinGW cross-build: green, zero warnings in the touched objects; import inspection reported no `psapi` dependency.
+
+- I attempted to rerun both complete Python suites. The receipt run advanced through its existing skipped/passing progress, and the consistency run began its real-tree test, but this mounted worktree is currently saturated and stalled before either produced a fresh unittest summary. I have not represented partial progress as a successful rerun.
+
+- I did not run Wine, a game, Gamescope/X, capture software, or touch the live-game lock. No real game installation was touched.
+
+The requested continuation entry is now appended in [platform-w0-w1-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md).
+
+Incomplete, honestly:
+
+- No real native Windows run has happened in this continuation or the retained work. The actual host/GL evidence lines, Windows registry/CIM behavior, and PowerShell 5.1 runtime behavior still require a physical native-Windows W2 run.
+- Full re-run summaries for the 7-test installer and 23-test consistency suites could not be freshly reproduced under the present mount/I/O pressure.
+- The K1 GOG and K2 original Bink hashes remain intentionally fail-closed unless supplied via `-TrustBinkSha256`, as documented.
+- The two Python tests remain manual checks; no CMake registration was made because the task forbade modifying CMake.
+

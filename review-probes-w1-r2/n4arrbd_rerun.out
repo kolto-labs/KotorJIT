@@ -1,0 +1,4 @@
+ 129 |          throw "manifest $What is null or empty"
+     | manifest backup_dir is null or empty
+ 129 |          throw "manifest $What is null or empty"
+     | manifest backup_dir is null or empty

@@ -1,0 +1,5 @@
+[  4%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/output.cpp.o[0m
+[  8%] [1m[32mLinking CXX shared library libkphasor.so[0m
+[ 96%] Built target kphasor
+[ 96%] [1m[32mLinking CXX executable kp_namespacetest[0m
+[100%] Built target kp_namespacetest

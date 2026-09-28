@@ -1,0 +1,10 @@
+{
+  "kphasor.dll": {
+    "source": "/home/brunner56/kp-validation-20260922-build/kphasor-projectile-visual2.dll",
+    "sha256": "165f00008e8633173127de990668f6f93906e461fe96c94833f47a45fff55b9c"
+  },
+  "binkw32.dll": {
+    "source": "/home/brunner56/kp-live-20260922/frozen-console-inputround2/binkw32.dll",
+    "sha256": "df66b7b368acda9c03c8d5bb3146e4a8138c512f67b5f42209cbdbd10d18be01"
+  }
+}

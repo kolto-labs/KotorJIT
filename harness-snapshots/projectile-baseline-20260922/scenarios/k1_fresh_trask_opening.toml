@@ -1,0 +1,75 @@
+# Fresh Endar opening: route solely by engine dialogue and world state.
+name = "k1 fresh Endar: authored Trask opening reply"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 90
+
+[[step]]
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "new_game"
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "class"
+timeout = 45
+
+[[step]]
+do = "chargen_select_class"
+index = 0
+
+[[step]]
+wait = "chargen_stage"
+equals = "route"
+timeout = 45
+
+[[step]]
+do = "chargen_begin_play"
+timeout = 45
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog"]
+timeout = 300
+
+[[step]]
+wait = "module"
+equals = "end_m01aa"
+timeout = 90
+
+[[step]]
+wait = "global"
+name = "End_TraskTalk"
+equals = 1
+timeout = 120
+
+[[step]]
+wait = "dialog"
+timeout = 120
+
+[[step]]
+do = "reply"
+pick = "Who are you?"
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 57
+timeout = 60
+
+[[step]]
+do = "sleep"
+seconds = 3
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local d=nwscript.call('GetObjectByTag','end_door01',0); if nwscript.call('GetIsObjectValid',d)~=1 then error('Trask door unavailable') end; if nwscript.call('GetIsOpen',d)~=0 or nwscript.call('GetLocked',d)~=1 then error('Trask reply did not close and lock door') end; return {door=d,open=nwscript.call('GetIsOpen',d),locked=nwscript.call('GetLocked',d)}"
+
+[[step]]
+do = "quit"

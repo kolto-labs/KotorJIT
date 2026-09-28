@@ -1,0 +1,140 @@
+{
+  "code": "math.sqr",
+  "input": "real owned-window keyboard",
+  "expected_request": 9,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> 1 + 1"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "number: 2"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> return nil, false, 42, \"KotOR is live\""
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "nil: nil"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "boolean: false"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "string: KotOR is live"
+      },
+      {
+        "request": 3,
+        "kind": "input",
+        "text": "> print(\"hello\", 42); io.write(\"stdout\\n\"); io.stderr:write(\"stderr\\n\")"
+      },
+      {
+        "request": 3,
+        "kind": "stdout",
+        "text": "hello\t42\n"
+      },
+      {
+        "request": 3,
+        "kind": "stdout",
+        "text": "stdout\n"
+      },
+      {
+        "request": 3,
+        "kind": "stderr",
+        "text": "stderr\n"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "ok (no return values)"
+      },
+      {
+        "request": 4,
+        "kind": "input",
+        "text": "> error(\"intentional test\")"
+      },
+      {
+        "request": 4,
+        "kind": "error",
+        "text": "intentional test\nstack traceback:\n\t[builtin#19]: at 0x77f1a2b0"
+      },
+      {
+        "request": 5,
+        "kind": "input",
+        "text": "> 6 * 7"
+      },
+      {
+        "request": 5,
+        "kind": "result",
+        "text": "number: 42"
+      },
+      {
+        "request": 6,
+        "kind": "input",
+        "text": "> demo_value = 23"
+      },
+      {
+        "request": 6,
+        "kind": "result",
+        "text": "ok (no return values)"
+      },
+      {
+        "request": 7,
+        "kind": "input",
+        "text": "> demo_value * 2"
+      },
+      {
+        "request": 7,
+        "kind": "result",
+        "text": "number: 46"
+      },
+      {
+        "request": 8,
+        "kind": "input",
+        "text": "> demo_value * 2"
+      },
+      {
+        "request": 8,
+        "kind": "result",
+        "text": "number: 46"
+      },
+      {
+        "request": 9,
+        "kind": "input",
+        "text": "> math.sqrt(81)"
+      },
+      {
+        "request": 9,
+        "kind": "result",
+        "text": "number: 9"
+      }
+    ],
+    "submitted": 9,
+    "completed": 9,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 986
+  }
+}

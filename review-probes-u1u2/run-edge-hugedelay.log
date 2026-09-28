@@ -1,0 +1,3 @@
+    [E1] registertimer(math.huge) accepted=1 pending=1
+    [E1] fired within 200ms=1
+    [E1] removetimer(1e30/inf/nan) returned without raising

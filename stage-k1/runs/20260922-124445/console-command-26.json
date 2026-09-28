@@ -1,0 +1,55 @@
+{
+  "code": "return wave.state, wave.phase",
+  "input": "real owned-window keyboard",
+  "expected_request": 3,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> wave=dofile(\"kotorphasor/scripts/model_scene.lua\").new{name=\"wave\",trigger=2,hold_ticks=90,spawn=true,resref=\"g_sithtroop01\",faction=2,forward=6,sides={-2,0,2},scales={{.4,2,.4},{2,.4,2},{1,1,1},{.4,2,.4},{2,.4,2},{1,1,1}}}; function demo_tick() wave:tick(); return wave.state~=\"complete\" and wave.state~=\"failed\" end; return wave.state"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "string: waiting"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> clock=kp.registertimer(16,\"demo_tick\"); nwscript.call(\"SetLocalNumber\",nwscript.call(\"GetFirstPC\"),5,2); return clock>0"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "boolean: true"
+      },
+      {
+        "request": 3,
+        "kind": "input",
+        "text": "> return wave.state, wave.phase"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "string: complete"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "number: 6"
+      }
+    ],
+    "submitted": 3,
+    "completed": 3,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 3888
+  }
+}

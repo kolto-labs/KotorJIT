@@ -1,0 +1,8 @@
+{
+  "artifacts": {
+    "kphasor.dll": "fd8e069a1ff5a7b489f32a6492222f396f85e7b74539deb56228395b297dfac2",
+    "binkw32.dll": "1b25f37125237aefb67271533f88c48dcf07ddd37bf180743a3b0dfa2ff729d9"
+  },
+  "exe_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "table_sha256": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2"
+}

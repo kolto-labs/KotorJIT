@@ -1,0 +1,2 @@
+verdict= calibration_ambiguous | failed criteria= ['acceptance_interval_matches_route', 'cadence_evidence_recomputed', 'canonical_pts_binding', 'cleanup_complete', 'content_gate', 'exact_geometry', 'first_frame_admission', 'ledger_clear', 'maximum_gap_50ms', 'media_sha256_recorded', 'missing_or_dropped_at_most_half_percent', 'no_driver_error', 'no_owned_survivors', 'no_shm_fallback', 'protected_displays_unchanged', 'rate_at_least_99_percent', 'snapshot_unchanged', 'zero_ffmpeg_duplicates']
+same observation, separated -> FAIL

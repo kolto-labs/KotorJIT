@@ -1,0 +1,26 @@
+# red: chain cases on reviewed bytes 74c0ca1a (/tmp/kp-chain-r4-old-74c0ca1a.lua) with current cursed.lua
+74c0ca1ac5ddfef52e83c1338315135d62a0fd6d77736848b4afa44e73fff6e4  /tmp/kp-chain-r4-old-74c0ca1a.lua
+34ec0977597dcd01eccd3cb1c5dfa2d38d9d488f0cf6713d687ebb4fc24fc9aa  tools/tests/examples/cursed.lua
+PASS	arming, eligible target, requests and duplicate guard
+PASS	conversation invalid and distant or party exclusions
+PASS	transient inner PC failure allows retry
+PASS	party min-one-HP guard restores each prior flag after settle, transition and unload
+PASS	unreadable prior min-one-HP flag leaves that party member untouched
+PASS	module load re-resolves a guarded party member whose object ID changed
+PASS	module load re-resolves the guarded PC through GetFirstPC when its object ID changed
+PASS	module load restores the original PC while it is still valid; a new GetFirstPC object is left alone
+PASS	a PC swap onto another guarded member restores both objects to their own priors
+PASS	a gone PC is never resolved onto another member this script guarded under its own ID
+PASS	a member that cannot be re-resolved is recorded and retried; every resolvable guard is still cleared
+FAIL	R3-1: two PC entries recreated after a load each go back to their own creature	tools/tests/examples/cursed.lua:297: the original PC kept min-one-HP 1 after its restore was consumed
+FAIL	R3-2: a PC recreated under an ID the script used before a load is restored, and its stuck flag never becomes a prior	tools/tests/examples/cursed.lua:309: PC under a recycled ID left at min-one-HP 1 after the load
+FAIL	R3-3: a companion recreated under a recycled ID after a load is restored by tag	tools/tests/examples/cursed.lua:326: assertion failed!
+FAIL	R3-5: after a load, a valid stored ID with the same tag that is not a party member is not the companion	tools/tests/examples/cursed.lua:336: SetMinOneHP reached a non-party creature under the old ID
+PASS	a non-party creature with the companion tag is never taken for the companion; the entry stays pending
+FAIL	R3-4: unload restores everyone it can find and names each creature it cannot, with the console fix	tools/tests/examples/cursed.lua:354: unresolved entry dropped silently at unload
+FAIL	an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC	tools/tests/examples/cursed.lua:365: a pre-load ID was trusted after the load
+FAIL	two entries that resolve to one creature after a load give an unknown prior, restored to 0 and logged	tools/tests/examples/cursed.lua:379: ambiguous creature not set to the default
+FAIL	an untagged member that cannot be found after a load keeps its first prior when a blast reaches it again	tools/tests/examples/cursed.lua:386: assertion failed!
+PASS	frag VFX is unreachable when blast deaths arrive after the hook returns
+PASS	frag VFX is reached only if a death script re-enters during the damage call
+exit=0

@@ -1,0 +1,15 @@
+[100%] Built target kphasor
+[ 95%] Built target kphasor
+[100%] Built target kp_namespacetest
+[ 91%] Built target kphasor
+[100%] Built target kp_motiontest
+[100%] Built target kp_enginegatetest
+[ 95%] Built target kphasor
+[100%] Linking CXX executable kp_vectortest
+[100%] Built target kp_vectortest
+[ 87%] Built target kphasor
+[100%] Built target kp_lifecycletest
+[ 84%] Built target kphasor
+[100%] Built target kp_scriptsapitest
+[100%] Built target kp_harnesstest
+build_rc=0

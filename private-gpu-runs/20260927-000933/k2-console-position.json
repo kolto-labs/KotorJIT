@@ -1,0 +1,27 @@
+{
+  "label": "position",
+  "code": "local p=nwscript.call('GetPosition',K2PC); assert(type(p.x)=='number' and type(p.y)=='number' and type(p.z)=='number'); return p.x,p.y,p.z",
+  "request": 5,
+  "lines": [
+    {
+      "request": 5,
+      "kind": "input",
+      "text": "> local p=nwscript.call('GetPosition',K2PC); assert(type(p.x)=='number' and type(p.y)=='number' and type(p.z)=='number'); return p.x,p.y,p.z"
+    },
+    {
+      "request": 5,
+      "kind": "result",
+      "text": "number: -38.947803497314453"
+    },
+    {
+      "request": 5,
+      "kind": "result",
+      "text": "number: 176.14630126953125"
+    },
+    {
+      "request": 5,
+      "kind": "result",
+      "text": "number: 16"
+    }
+  ]
+}

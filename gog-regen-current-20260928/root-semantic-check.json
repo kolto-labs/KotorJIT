@@ -1,0 +1,17 @@
+{
+  "sha256": "5749fbf0b3f90b71296319fd5bebf94aca7f2bfd5f27d110934eaaa1089ecbf3",
+  "added": [
+    "placeable.aabb_registered",
+    "placeable.quaternion_raw_order_unverified",
+    "server_object.area_id",
+    "server_object.client_push_gate_unverified",
+    "server_object.dirty_bits",
+    "server_object.orientation",
+    "server_object.position"
+  ],
+  "changed_existing": [
+    "server_object.set_position"
+  ],
+  "removed": [],
+  "existing_binding_values_preserved": true
+}

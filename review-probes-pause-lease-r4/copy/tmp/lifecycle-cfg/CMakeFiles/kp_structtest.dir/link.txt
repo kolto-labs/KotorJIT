@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O3 -DNDEBUG -no-pie -m32 -Wl,--dependency-file=CMakeFiles/kp_structtest.dir/link.d CMakeFiles/kp_structtest.dir/tools/kp_structtest.cpp.o -o kp_structtest  libkp_structs.a libkp_hooks.a luajit32/src/libluajit.a -lm -ldl

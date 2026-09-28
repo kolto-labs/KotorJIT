@@ -1,0 +1,12 @@
+split_mid {"reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "executed": ["play"]}
+split_before_nl {"reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "executed": ["play"]}
+pipelined {"reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "executed": ["play"]}
+split_plus_pipelined {"reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "executed": ["play"]}
+partial_then_fin {"reply": "{\"ok\": false, \"error\": \"invalid control message\"}\n", "executed": []}
+trickle_no_newline {"reply": "{\"ok\": false, \"error\": \"invalid control message\"}\n", "refused_after_s": 1.01, "process_cpu_s": 0.008, "executed": []}
+trickle_full_line {"reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "wall_s": 0.51, "process_cpu_s": 0.01, "bytes": 92, "executed": ["play"]}
+slow_past_deadline {"reply": "{\"ok\": false, \"error\": \"invalid control message\"}\n", "reply_at_s": 1.001, "executed": []}
+idle_no_bytes {"reply": "{\"ok\": false, \"error\": \"invalid control message\"}\n", "refused_after_s": 1.001, "process_cpu_s": 0.003}
+short_recv_fake {"returned": "b'{\"op\": \"play\", \"token\": \"tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt\"}\\n'"}
+limit_exact {"sent": 65536, "reply": "{\"ok\": true, \"result\": {\"op\": \"x\"}}\n", "executed": ["x"]}
+limit_plus1 {"sent": 65537, "reply": "{\"ok\": false, \"error\": \"invalid control message\"}\n", "executed": []}

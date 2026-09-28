@@ -1,0 +1,11 @@
+{
+  "prep": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b",
+  "root": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation",
+  "source": "/home/brunner56/krayt/tmp/k1_harness",
+  "build": "/home/brunner56/kp-console-protocol-20260927/build",
+  "helper": "/home/brunner56/kp-live-20260922/frozen-model-393f68d/model_scene.lua",
+  "brief": "/home/brunner56/kp-live-20260922/task7-next-k1-run-brief.md",
+  "snapshot": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/harness-snapshot",
+  "route": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/physical-native-scale.toml",
+  "lock": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock"
+}

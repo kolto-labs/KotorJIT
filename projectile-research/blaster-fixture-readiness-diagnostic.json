@@ -1,0 +1,6 @@
+{
+  "backup": "/home/brunner56/kp-live-20260922/projectile-research/blaster_fixture.before-readiness-diagnostic-20260922-142207.lua",
+  "before_sha256": "16844122644690a27847c9541c138df81a3aa8476d73e81df19b81ffd7554c75",
+  "after_sha256": "314cc9aa861ca2256508fe973820a1e00534523726dbea7f00c2adbec08a8357",
+  "guard_unchanged": true
+}

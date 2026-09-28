@@ -1,0 +1,14 @@
+Test project /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-cfg
+    Start 30: kp_lifecycletest
+1/2 Test #30: kp_lifecycletest .................   Passed   11.99 sec
+    Start 31: kp_scriptsapitest
+2/2 Test #31: kp_scriptsapitest ................   Passed    2.49 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+lifecycle    =  14.48 sec*proc (2 tests)
+offline      =  14.48 sec*proc (2 tests)
+
+Total Test time (real) =  16.00 sec
+ctest-rc=0

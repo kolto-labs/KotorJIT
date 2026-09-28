@@ -1,0 +1,12 @@
+[
+  {
+    "source": {
+      "path": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70/sources/model_scene.lua",
+      "sha256": "07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e"
+    },
+    "deployed": {
+      "path": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/stage-k1/kotorphasor/scripts/model_scene.lua",
+      "sha256": "07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e"
+    }
+  }
+]

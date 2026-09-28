@@ -1,0 +1,14 @@
+[03:14:33] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[03:14:33] staged tree /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-gamescope-creative-console-stage (new)
+[03:14:33]   copied writable dir Saves
+[03:14:33]   copied writable dir Temp
+[03:14:33]   copied writable dir currentgame
+[03:14:33]   copied writable dir futuregame
+[03:14:33]   copied writable dir gameinprogress
+[03:14:33]   copied writable dir kotorphasor
+[03:14:33]   copied writable dir logs
+[03:14:33] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[03:14:43] executable /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-gamescope-creative-console-stage/swkotor.exe
+[03:14:43] runtime installed from /home/brunner56/kp-console-protocol-20260927/build
+[03:14:43] ini tuned: swkotor.ini (14 keys)
+[03:14:56] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-081255-56942ef0

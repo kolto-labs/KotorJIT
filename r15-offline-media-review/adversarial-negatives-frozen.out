@@ -1,0 +1,9 @@
+test_single_large_source_gap_is_rejected_even_under_total_drop_budget (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_single_large_source_gap_is_rejected_even_under_total_drop_budget) ... ok
+test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio) ... ok
+test_separated_stale_content_is_a_capture_failure (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_separated_stale_content_is_a_capture_failure) ... ok
+test_a_content_sequence_failure_is_a_fail_even_when_separation_is_ambiguous (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_a_content_sequence_failure_is_a_fail_even_when_separation_is_ambiguous) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.265s
+
+OK

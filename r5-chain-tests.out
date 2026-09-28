@@ -1,0 +1,17 @@
+cursed.lua 56165e59420a chain 9152960ef3c0
+PASS	arming, eligible target, requests and duplicate guard
+PASS	conversation invalid and distant or party exclusions
+PASS	transient inner PC failure allows retry
+PASS	static: the script never names a min-one-HP routine, reaches NWScript only through nwscript.call and has no Lua name that is an NWScript routine
+PASS	hostiles chain; the PC, a tagged member and an untagged member are never hit and their flags are never read or set
+PASS	after a module load: a member re-created under a new ID is left out, an old party ID now on a hostile is hit, and a recycled corpse ID detonates again
+PASS	a leader swap changes nothing: GetFirstPC and party membership each keep a creature out on their own
+PASS	within one module, membership and control are read again at every blast: a member who left is hit, a hostile who joined and a new member are spared, a former leader is hit
+PASS	tags decide nothing: a hostile with a companion tag is hit, a member with a hostile tag and an untagged hostile are judged by membership
+PASS	a death during a module transition does nothing; the next armed death blasts again with the party still left out
+PASS	unload mid-chain leaves nothing to put back
+PASS	OnAreaEnter takes from_save_game: an in-module enter disarms and keeps the detonated set; a save-game enter empties it
+PASS	party answers: an error or an unknown answer keeps a creature out and stops its detonation; a false answer means not in the party
+PASS	frag VFX is unreachable when blast deaths arrive after the hook returns
+PASS	frag VFX is reached only if a death script re-enters during the damage call
+TOTAL pass=15 fail=0

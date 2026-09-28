@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O2 -g -DNDEBUG -m32 -Wl,--dependency-file=CMakeFiles/kp_imagetool.dir/link.d CMakeFiles/kp_imagetool.dir/tools/kp_imagetool.cpp.o -o kp_imagetool  libkp_image.a

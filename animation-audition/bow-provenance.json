@@ -1,0 +1,7 @@
+{
+  "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/animation-memory/two_actor_freeze.lua",
+  "source_sha256": "f146855a7411f157014d0b3354807fdb955fef1694bd075160879b04ab911a30",
+  "transformation": "literal animation clip dance -> bow",
+  "diagnostic_script_sha256": "5ee06e00d7faf2b6a576a4630f1f6856c0da5474acfccb1f9e7fa63a8b1f7da0",
+  "scope": "bounded visible-track audition, not a new shipped example"
+}

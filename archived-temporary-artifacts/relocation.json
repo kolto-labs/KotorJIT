@@ -1,0 +1,44 @@
+[
+  {
+    "original": "/tmp/kp-model-before-sentinel-test",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-model-before-sentinel-test",
+    "bytes": 787752,
+    "sha256": "348d5e0c6451c23b198d01abfbcf05b4b417c7d2c743ccf37326c48dc8fc25b2"
+  },
+  {
+    "original": "/tmp/kp-animation-tracks.json",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-animation-tracks.json",
+    "bytes": 190398,
+    "sha256": "ea71ace19e23d2237cf731128f19aeed84d4ccf577fb72a35a9f12c324c814b9"
+  },
+  {
+    "original": "/tmp/kp-task3-rereview-receipt.json",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-task3-rereview-receipt.json",
+    "bytes": 85855,
+    "sha256": "3d67783b6009340d403256bfd7b5e1ad2d5a5fe5283741656a1f10aea7227e34"
+  },
+  {
+    "original": "/tmp/kp-task3-review-receipt.json",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-task3-review-receipt.json",
+    "bytes": 58701,
+    "sha256": "a763ea652f6b6c2c6b2eb64f57cd69dd43193b1f29364700ff1ec83eecc353de"
+  },
+  {
+    "original": "/tmp/kp-task4-review-package",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-task4-review-package",
+    "bytes": 61014,
+    "sha256": "a103780a5d1e90402d5f668d35c90ef1baf3b788724758768ebd36cf0fdefbf8"
+  },
+  {
+    "original": "/tmp/kp-native-motion-disassembly.txt",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-native-motion-disassembly.txt",
+    "bytes": 59638,
+    "sha256": "a19eedbb92662674ad644a5510cf1162509d96e51817560d963c7b86b10e9d7b"
+  },
+  {
+    "original": "/tmp/kp-camera-win-k1-disassembly.txt",
+    "retained": "/home/brunner56/kp-live-20260922/archived-temporary-artifacts/kp-camera-win-k1-disassembly.txt",
+    "bytes": 29664,
+    "sha256": "ab03477e69e1de6bf03a0a5d1b9db90bd9e164c54103d0d75f9c82f79e98964c"
+  }
+]

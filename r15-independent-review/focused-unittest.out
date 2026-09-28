@@ -1,0 +1,9 @@
+test_within_policy_source_drop_keeps_level_and_index_gates_green (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_within_policy_source_drop_keeps_level_and_index_gates_green) ... ok
+test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_sustained_delta_two_is_rejected_by_accumulated_source_drop_ratio) ... ok
+test_single_large_source_gap_is_rejected_even_under_total_drop_budget (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_single_large_source_gap_is_rejected_even_under_total_drop_budget) ... ok
+test_pure_duplicate_and_duplicate_then_single_skip_within_policy_pass (tools.kpharness_capture_diagnostic_test.CriteriaTests.test_pure_duplicate_and_duplicate_then_single_skip_within_policy_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.181s
+
+OK

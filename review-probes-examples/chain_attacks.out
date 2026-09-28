@@ -1,0 +1,9 @@
+BREAKS	A1 module load with new party IDs restores flag	new-id bastila min_one_hp=1 (prior was 0); SetMinOneHP calls=2
+HOLDS 	A2 failed restore is retried at the next disarm (f:arm calls OnModuleLoad)	GetMinOneHP reads=2
+HOLDS 	A3 unload during pending timer	flag after unload=0, extra SetMinOneHP from late timer=0
+HOLDS 	A4 re-entrant detonation keeps original prior	reads=1 final=0 timers=2
+HOLDS 	A5 nested generations: only last timer restores	gens=1,2 mid=1
+HOLDS 	A6 boolean-false prior treated as unreadable	SetMinOneHP=0 (party member excluded when bridge returns false)
+HOLDS 	A7 party gets floor(40/3)=13	amounts=40,13
+HOLDS 	A8 OnAreaEnter by any object disarms+restores	armed after non-PC OnAreaEnter=0 (pre-existing behaviour, not new)
+exit=0

@@ -1,0 +1,71 @@
+/usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'p/a.lua'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+markers 21 identities 4 git identities 3
+tar_uname_user                             FLAGGED tar owner:uname is the build user
+tar_uname_user_uppercase                   FLAGGED tar owner:uname is the build user
+tar_gname_git_email_local                  FLAGGED tar owner:gname is the build user
+tar_numeric_only_uid1000                   FLAGGED tar owner:uid 1000 gid 1000 (nonzero)
+tar_root_0_0 (clean control)               ok (NOT FLAGGED)
+tar_blank_0_0 (clean control)              ok (NOT FLAGGED)
+tar_other_account_bob                      FLAGGED tar owner:uname names an account
+tar_ustar_huge_uid_base256                 FLAGGED tar owner:uid 1099511627776 gid 0 (nonzero)
+tar_pax_member_uname_override              FLAGGED tar owner:uname is the build user; tar header:line 1: user name
+tar_pax_member_uid_override                FLAGGED tar owner:uid 1000 gid 0 (nonzero)
+tar_pax_xattr_marker                       FLAGGED tar header:line 1: /home/
+tar_pax_comment_identity                   FLAGGED tar header:line 1: user name
+tar_pax_GLOBAL_comment_marker              FLAGGED tar header:line 1: /home/
+tar_pax_GLOBAL_uname                       FLAGGED tar owner:uname is the build user; tar header:line 1: user name
+tar_gnu_longname_marker                    FLAGGED marker in name:kp-live; private folder:kp-live-x
+tar_ustar_prefix_marker                    FLAGGED marker in name:user name
+tar_gnu_longlink_symlink_target            FLAGGED symlink:link entry
+tar_nested_tar_in_targz_owner              FLAGGED unreadable archive:Compressed file ended before the end-of-stream mar; magic:magic: gzip
+tar_in_xz_owner                            FLAGGED tar owner:uname is the build user
+nested_4_deep (depth limit)                FLAGGED unscanned archive:nested too deep; magic:magic: zip
+tar_member_after_EOF_zeros                 ok (NOT FLAGGED)
+tar_member_after_invalid_header            ok (NOT FLAGGED)
+zip_gap_before_central_dir                 ok (NOT FLAGGED)
+zip_trailing_after_eocd                    ok (NOT FLAGGED)
+zip_deflate_slack_bytes                    ok (NOT FLAGGED)
+zip_nul_in_name_tail_marker                ok (NOT FLAGGED)
+zip_extra_5855_uid                         ok (NOT FLAGGED)
+zip_extra_7875_uid                         FLAGGED zip owner:uid 1000 gid 1000 (nonzero)
+zip_extra_000d_pkware_unix                 ok (NOT FLAGGED)
+zip_exact_duplicate_names                  ok (NOT FLAGGED)
+zip_file_vs_implicit_folder_case           ok (NOT FLAGGED)
+zip_file_vs_folder_same                    ok (NOT FLAGGED)
+allow_star_vs_encrypted                    FLAGGED encrypted:encrypted entry; its content was not scanned
+allow_star_vs_7z                           FLAGGED unscanned archive:7z content was not opened
+allow_star_vs_zst_suffix                   FLAGGED unscanned archive:compressed content was not opened
+allow_star_vs_zstd_magic_as_dll            FLAGGED unscanned archive:zstd content was not opened
+allow_star_vs_unreadable_gz                FLAGGED unreadable archive:Compressed file ended before the end-of-stream mar
+allow_star_vs_zip_as_dll_with_marker       FLAGGED marker:line 1: /home/
+allow_star_hides_png_media (by design)     ok (NOT FLAGGED)
+allow_star_vs_heldback_codecaves           FLAGGED excluded file:data/codecaves.toml is held back pending an owner 
+bom_elf_bin                                FLAGGED magic:magic: elf
+double_bom_elf_bin                         ok (NOT FLAGGED)
+bom_png_in_lua                             FLAGGED magic:magic: png; not UTF-8:not UTF-8
+utf16le_nobom_log_marker                   ok (NOT FLAGGED)
+utf16le_bom_log_marker                     FLAGGED marker:line 0: utf-16 /home/
+utf16le_nobom_dat_identity                 ok (NOT FLAGGED)
+utf16be_nobom_dat_marker                   ok (NOT FLAGGED)
+pe_small_all_utf8_valid_wide_marker        FLAGGED magic:magic: pe/dos
+utf32_marker_bin                           ok (NOT FLAGGED)
+upper_HOME_other_user                      ok (NOT FLAGGED)
+upper_HOME_build_user                      FLAGGED marker:line 1: user name
+Users_lower_mac                            FLAGGED marker:line 1: /Users/
+D_drive_users                              ok (NOT FLAGGED)
+imgui_PageDown/Home/End (fp control)       ok (NOT FLAGGED)
+run_id_runs_shape                          FLAGGED marker:line 1: run id
+run_id_8hex_upper                          FLAGGED marker:line 1: run id
+run_id_bare_stamp (fp control)             ok (NOT FLAGGED)
+run_id_runs_windows_sep                    ok (NOT FLAGGED)
+identity_email_full                        FLAGGED marker:line 1: user name
+identity_git_name                          FLAGGED marker:line 1: user name
+identity_underscore                        FLAGGED marker:line 1: user name
+data_research_nested (docs ok?)            ok (NOT FLAGGED)
+data_research                              FLAGGED private folder:research
+nested_tmp_not_root                        ok (NOT FLAGGED)
+root_tmp                                   FLAGGED private folder:tmp
+root_tmp_no_topfolder                      FLAGGED private folder:tmp
+heldback_events_draft_case                 FLAGGED excluded file:data/events.draft.toml is held back pending an own
+heldback_in_nested_targz                   FLAGGED excluded file:data/codecaves.toml is held back pending an owner 

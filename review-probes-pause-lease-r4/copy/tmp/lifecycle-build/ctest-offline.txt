@@ -1,0 +1,10 @@
+Test project /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-cfg
+      Start  1: kpharness_offline_test
+ 1/19 Test  #1: kpharness_offline_test .............   Passed  155.24 sec
+      Start  2: kpharness_world_test
+ 2/19 Test  #2: kpharness_world_test ...............   Passed  182.71 sec
+      Start  3: kpharness_creative_test
+ 3/19 Test  #3: kpharness_creative_test ............   Passed   65.11 sec
+      Start  4: kpharness_physical_console_test
+ 4/19 Test  #4: kpharness_physical_console_test ....   Passed  237.42 sec
+      Start  5: kpharness_gamescope_backend_test

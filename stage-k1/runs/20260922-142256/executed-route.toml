@@ -1,0 +1,87 @@
+name = "Object blaster fixture: unmodified pistol baseline"
+target = "k1"
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 45
+load_timeout = 600
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+timeout = 600
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+[[step]]
+do = "clear_auto_pause"
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+[[step]]
+do = "mark_log"
+[[step]]
+do = "assert_lua"
+label = "snapshot original equipment and existing area creatures"
+code = "local q=nwscript.call; p=q('GetFirstPC'); oldright=q('GetItemInSlot',4,p); oldleft=q('GetItemInSlot',5,p); oldmin=q('GetMinOneHP',p); existing={}; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do existing[o]=true; o=q('GetNextObjectInArea',q('GetArea',p),1) end; q('SetCameraMode',p,2); q('SetCameraFacing',q('GetFacing',p)); return q('GetIsInCombat',p)==0"
+equals = true
+[[step]]
+do = "advance_ticks"
+ticks = 120
+[[step]]
+do = "console_open"
+open = true
+[[step]]
+do = "console_command"
+code = "blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+contains = ["boolean: true"]
+[[step]]
+do = "console_open"
+open = false
+[[step]]
+do = "assert_lua"
+label = "independent equipped pistol and one owned target"
+code = "local q=nwscript.call; local gun=q('GetItemInSlot',4,p); if q('GetIsObjectValid',gun)~=1 or q('GetBaseItemType',gun)~=12 then return false end; local n=0; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do if not existing[o] then n=n+1; target=o end; o=q('GetNextObjectInArea',q('GetArea',p),1) end; if n~=1 then return false end; baselinehp=q('GetCurrentHitPoints',target); return q('GetMinOneHP',target)==1 and q('GetIsObjectValid',q('GetItemInSlot',5,p))==0"
+equals = true
+poll = true
+[[step]]
+do = "console_open"
+open = true
+[[step]]
+do = "console_command"
+code = "return blaster_fixture.fire()"
+contains = ["boolean: true"]
+[[step]]
+do = "console_open"
+open = false
+[[step]]
+do = "assert_lua"
+label = "stock combat damages the disposable target"
+code = "local q=nwscript.call; return q('GetIsObjectValid',target)==1 and q('GetCurrentHitPoints',target)<baselinehp and q('GetIsDead',target)==0"
+equals = true
+poll = true
+timeout = 45
+[[step]]
+do = "advance_ticks"
+ticks = 180
+timeout = 30
+[[step]]
+do = "console_open"
+open = true
+[[step]]
+do = "console_command"
+code = "return blaster_fixture.cleanup()"
+contains = ["boolean: true"]
+[[step]]
+do = "console_open"
+open = false
+[[step]]
+do = "assert_lua"
+label = "independent target deletion and original equipment restoration"
+code = "local q=nwscript.call; return q('GetIsObjectValid',target)==0 and q('GetItemInSlot',4,p)==oldright and q('GetItemInSlot',5,p)==oldleft and q('GetMinOneHP',p)==oldmin"
+equals = true
+poll = true
+[[step]]
+do = "advance_ticks"
+ticks = 90

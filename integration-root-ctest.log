@@ -1,0 +1,31 @@
+Test project /tmp/lifecycle-cfg
+      Start 12: kp_routinetest
+ 1/10 Test #12: kp_routinetest ...................   Passed    0.04 sec
+      Start 15: kp_supporttest
+ 2/10 Test #15: kp_supporttest ...................   Passed    0.15 sec
+      Start 16: kp_namespacetest.k1
+ 3/10 Test #16: kp_namespacetest.k1 ..............   Passed    0.25 sec
+      Start 17: kp_namespacetest.k2
+ 4/10 Test #17: kp_namespacetest.k2 ..............   Passed    0.01 sec
+      Start 18: kp_vectortest
+ 5/10 Test #18: kp_vectortest ....................   Passed    0.02 sec
+      Start 20: kp_enginegatetest
+ 6/10 Test #20: kp_enginegatetest ................   Passed    1.96 sec
+      Start 21: kp_harnesstest
+ 7/10 Test #21: kp_harnesstest ...................   Passed    1.76 sec
+      Start 33: kp_lifecycletest
+ 8/10 Test #33: kp_lifecycletest .................   Passed    0.40 sec
+      Start 34: kp_scriptsapitest
+ 9/10 Test #34: kp_scriptsapitest ................   Passed    2.35 sec
+      Start 37: kp_consoleprotocoltest
+10/10 Test #37: kp_consoleprotocoltest ...........   Passed    0.27 sec
+
+100% tests passed, 0 tests failed out of 10
+
+Label Time Summary:
+devtools     =   0.27 sec*proc (1 test)
+lifecycle    =   2.74 sec*proc (2 tests)
+motion       =   1.96 sec*proc (1 test)
+offline      =   4.98 sec*proc (4 tests)
+
+Total Test time (real) =   7.91 sec

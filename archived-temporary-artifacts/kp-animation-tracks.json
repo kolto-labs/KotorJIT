@@ -1,0 +1,7646 @@
+{
+  "fixture_sha": "e2e30b21dbc0903bde844b4c0d6d180560e9a4611a29b11139aada70db9fd4bd",
+  "super_sha": "3c67f81220b988db36d76209c0f3496883d146dff8caf72c4ff064a8ed674faa",
+  "fixture_nodes": [
+    "N_SithSoldier",
+    "impact_bolt",
+    "head",
+    "RArm",
+    "LArm",
+    "torso",
+    "handconjure",
+    "FreeLookHook",
+    "camerahook",
+    "LightsaberHook",
+    "headconjure",
+    "DeflectHook",
+    "cutscenedummy",
+    "rootdummy",
+    "torso_g",
+    "torsoUpr_g",
+    "Impact",
+    "necklwr_g",
+    "neck_g",
+    "Hturn_g",
+    "head_g",
+    "talkdummy",
+    "headhook",
+    "lcollar_dum",
+    "lcollar_g",
+    "lbicep_g",
+    "LbicepL_g",
+    "Lforearm_g",
+    "Lhand_g",
+    "LbFngrB_g",
+    "LbFngrT_g",
+    "LThumbB_g",
+    "LThumbT_g",
+    "LdFngrB_g",
+    "LdFngrT_g",
+    "LcFngrB_g",
+    "LcFngrT_g",
+    "LaFngrB_g",
+    "LaFngrT_g",
+    "lhand",
+    "lforearm",
+    "rcollar_dum",
+    "rcollar_g",
+    "rbicep_g",
+    "RbicepL_g",
+    "Rforearm_g",
+    "Rhand_g",
+    "RThumbB_g",
+    "RThumbT_g",
+    "RaFngrB_g",
+    "RaFngrT_g",
+    "RbFngrB_g",
+    "RbFngrT_g",
+    "RcFngrB_g",
+    "RcFngrT_g",
+    "RdFngrB_g",
+    "RdFngrT_g",
+    "rhand",
+    "pelvis_g",
+    "rthigh_g",
+    "rshin_g",
+    "rfoot_g",
+    "rfootT_g",
+    "lthigh_g",
+    "lshin_g",
+    "lfoot_g",
+    "lfootT_g"
+  ],
+  "clips": {
+    "salute": {
+      "duration": 1.63332998752594,
+      "root_model": "S_Male02",
+      "nodes": [
+        {
+          "name": "S_Male02",
+          "name_index": 0,
+          "other_index": 0,
+          "offset": 183047,
+          "tracks": [],
+          "matches_fixture": false
+        },
+        {
+          "name": "cutscenedummy",
+          "name_index": 1,
+          "other_index": 0,
+          "offset": 183131,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rootdummy",
+          "name_index": 2,
+          "other_index": 0,
+          "offset": 183215,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 13,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.13781942629778485
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "torso_g",
+          "name_index": 14,
+          "other_index": 0,
+          "offset": 187099,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.9999988201388637
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lRobe1_g",
+          "name_index": 88,
+          "other_index": 0,
+          "offset": 202851,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 29.62212755341264
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe2_g",
+          "name_index": 89,
+          "other_index": 0,
+          "offset": 202935,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 39.056304658567996
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe3_g",
+          "name_index": 90,
+          "other_index": 0,
+          "offset": 203019,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 58.61191484431378
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe1_g",
+          "name_index": 85,
+          "other_index": 0,
+          "offset": 201775,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 20.40678034711993
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe2_g",
+          "name_index": 86,
+          "other_index": 0,
+          "offset": 201859,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 46.81339746281534
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe3_g",
+          "name_index": 87,
+          "other_index": 0,
+          "offset": 201943,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 71.52159850793147
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe1_g",
+          "name_index": 82,
+          "other_index": 0,
+          "offset": 200699,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 44.600418301459456
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe2_g",
+          "name_index": 83,
+          "other_index": 0,
+          "offset": 200783,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 52.12390745473597
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe3_g",
+          "name_index": 84,
+          "other_index": 0,
+          "offset": 200867,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 93.53678258565536
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "torsoUpr_g",
+          "name_index": 15,
+          "other_index": 0,
+          "offset": 187195,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 11.000222681081679
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "necklwr_g",
+          "name_index": 58,
+          "other_index": 0,
+          "offset": 195275,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "neck_g",
+          "name_index": 59,
+          "other_index": 0,
+          "offset": 195359,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "hturn_g",
+          "name_index": 60,
+          "other_index": 0,
+          "offset": 195443,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "head_g",
+          "name_index": 61,
+          "other_index": 0,
+          "offset": 195527,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 8.077741800661256
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rns_g",
+          "name_index": 80,
+          "other_index": 0,
+          "offset": 200043,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 2.999986463692039e-07
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.006695093260766926
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lns_g",
+          "name_index": 79,
+          "other_index": 0,
+          "offset": 199791,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.414193783328467e-07
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0066721538112466654
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_mdbrw_g",
+          "name_index": 78,
+          "other_index": 0,
+          "offset": 199519,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0006664001310401722
+            },
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0004021591080843706
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rbrw_g",
+          "name_index": 77,
+          "other_index": 0,
+          "offset": 199227,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.017170056373134877
+            },
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 3.9962701869185246
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lbrw_g",
+          "name_index": 76,
+          "other_index": 0,
+          "offset": 198935,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.013553346236685937
+            },
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 3.9961556611662226
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_llweye_g",
+          "name_index": 75,
+          "other_index": 0,
+          "offset": 198663,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0026160001713086754
+            },
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0004026228509262763
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rlweye_g",
+          "name_index": 74,
+          "other_index": 0,
+          "offset": 198391,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.002616100244516319
+            },
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0004026228509262763
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRlid",
+          "name_index": 73,
+          "other_index": 0,
+          "offset": 198195,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.4037461553266405
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRA",
+          "name_index": 72,
+          "other_index": 0,
+          "offset": 197999,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 6.707590067472509
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLlid",
+          "name_index": 71,
+          "other_index": 0,
+          "offset": 197803,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.36619450798801695
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLA",
+          "name_index": 70,
+          "other_index": 0,
+          "offset": 197607,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 6.707590067472509
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "talkdummy",
+          "name_index": 62,
+          "other_index": 0,
+          "offset": 195655,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_jaw_g",
+          "name_index": 66,
+          "other_index": 0,
+          "offset": 196507,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.0444615944561849e-07
+            },
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 3.9619974869237176
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_tonguetip_g",
+          "name_index": 69,
+          "other_index": 0,
+          "offset": 197103,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.8632483807028386e-05
+            },
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 4.991126986598364
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Llm_g",
+          "name_index": 68,
+          "other_index": 0,
+          "offset": 196851,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0016982000198488135
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Rlm_g",
+          "name_index": 67,
+          "other_index": 0,
+          "offset": 196599,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0016983000117772075
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rmc_g",
+          "name_index": 65,
+          "other_index": 0,
+          "offset": 196255,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0038098999126375964
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lmc_g",
+          "name_index": 64,
+          "other_index": 0,
+          "offset": 196003,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.00380990003485449
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.00011459665254113222
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_um_g",
+          "name_index": 63,
+          "other_index": 0,
+          "offset": 195751,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.003339200202196587
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "Impact",
+          "name_index": 57,
+          "other_index": 0,
+          "offset": 195139,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_dum",
+          "name_index": 36,
+          "other_index": 0,
+          "offset": 191467,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_g",
+          "name_index": 37,
+          "other_index": 0,
+          "offset": 191551,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 3.0000064088708474
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicep_g",
+          "name_index": 38,
+          "other_index": 0,
+          "offset": 191635,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 13.802309248864123
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicepL_g",
+          "name_index": 39,
+          "other_index": 0,
+          "offset": 191719,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lforearm_g",
+          "name_index": 40,
+          "other_index": 0,
+          "offset": 191803,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.4080795695456205e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lSleeve1_g",
+          "name_index": 54,
+          "other_index": 0,
+          "offset": 194023,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 42.91178800845293
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lSleeve2_g",
+          "name_index": 55,
+          "other_index": 0,
+          "offset": 194107,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 32.31993171266769
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lhand_g",
+          "name_index": 42,
+          "other_index": 0,
+          "offset": 191891,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 31.105789932933558
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lhand",
+          "name_index": 53,
+          "other_index": 0,
+          "offset": 193695,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 19,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.4142135788997326e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbB_g",
+          "name_index": 51,
+          "other_index": 0,
+          "offset": 193379,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 15.199395653367013
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbT_g",
+          "name_index": 52,
+          "other_index": 0,
+          "offset": 193463,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrB_g",
+          "name_index": 49,
+          "other_index": 0,
+          "offset": 193063,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 11.101483977832444
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrT_g",
+          "name_index": 50,
+          "other_index": 0,
+          "offset": 193147,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 2.9575586669421963e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrB_g",
+          "name_index": 47,
+          "other_index": 0,
+          "offset": 192707,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 7.825279674765088
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrT_g",
+          "name_index": 48,
+          "other_index": 0,
+          "offset": 192791,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 10.500025857252796
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrB_g",
+          "name_index": 45,
+          "other_index": 0,
+          "offset": 192351,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 7.158795234336395
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrT_g",
+          "name_index": 46,
+          "other_index": 0,
+          "offset": 192435,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 25.999908440660846
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrB_g",
+          "name_index": 43,
+          "other_index": 0,
+          "offset": 191995,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 6.000044266261785
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrT_g",
+          "name_index": 44,
+          "other_index": 0,
+          "offset": 192079,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 27.000073621575794
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_dum",
+          "name_index": 16,
+          "other_index": 0,
+          "offset": 187291,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_g",
+          "name_index": 17,
+          "other_index": 0,
+          "offset": 187375,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 34.00308378914408
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicep_g",
+          "name_index": 18,
+          "other_index": 0,
+          "offset": 187459,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 67.97706494424735
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicepL_g",
+          "name_index": 19,
+          "other_index": 0,
+          "offset": 187543,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 12.314482967486201
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rforearm_g",
+          "name_index": 20,
+          "other_index": 0,
+          "offset": 187627,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 126.54373265436962
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rSleeve1_g",
+          "name_index": 34,
+          "other_index": 0,
+          "offset": 189911,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 62.19365646443379
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rSleeve2_g",
+          "name_index": 35,
+          "other_index": 0,
+          "offset": 189995,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 71.57506065178352
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rhand_g",
+          "name_index": 21,
+          "other_index": 0,
+          "offset": 187715,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 42.917894320266434
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rhand",
+          "name_index": 32,
+          "other_index": 0,
+          "offset": 189559,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbB_g",
+          "name_index": 30,
+          "other_index": 0,
+          "offset": 189243,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 44.63366576174944
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbT_g",
+          "name_index": 31,
+          "other_index": 0,
+          "offset": 189327,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrB_g",
+          "name_index": 28,
+          "other_index": 0,
+          "offset": 188887,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 30.727292982364816
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrT_g",
+          "name_index": 29,
+          "other_index": 0,
+          "offset": 188971,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 30.908796431657816
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrB_g",
+          "name_index": 26,
+          "other_index": 0,
+          "offset": 188531,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 36.7274018591852
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrT_g",
+          "name_index": 27,
+          "other_index": 0,
+          "offset": 188615,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 34.90861794558169
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrB_g",
+          "name_index": 24,
+          "other_index": 0,
+          "offset": 188175,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 38.22736750324958
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrT_g",
+          "name_index": 25,
+          "other_index": 0,
+          "offset": 188259,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 42.908826110938506
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrB_g",
+          "name_index": 22,
+          "other_index": 0,
+          "offset": 187819,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 34.22741571707189
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrT_g",
+          "name_index": 23,
+          "other_index": 0,
+          "offset": 187903,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 33.40918862579462
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "pelvis_g",
+          "name_index": 3,
+          "other_index": 0,
+          "offset": 183303,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 10.294752224227336
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "fRobe1_g",
+          "name_index": 12,
+          "other_index": 0,
+          "offset": 186287,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 29.389465979606236
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "fRobe2_g",
+          "name_index": 13,
+          "other_index": 0,
+          "offset": 186371,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 45.62277852844467
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rthigh_g",
+          "name_index": 8,
+          "other_index": 0,
+          "offset": 184791,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 15,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 22.18823224591388
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rshin_g",
+          "name_index": 9,
+          "other_index": 0,
+          "offset": 184875,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 15,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 30.905614234336593
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfoot_g",
+          "name_index": 10,
+          "other_index": 0,
+          "offset": 184959,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 15,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 25.01543701359591
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfootT_g",
+          "name_index": 11,
+          "other_index": 0,
+          "offset": 185043,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 12.019647948537223
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lthigh_g",
+          "name_index": 4,
+          "other_index": 0,
+          "offset": 183395,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 23.674556963639304
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lshin_g",
+          "name_index": 5,
+          "other_index": 0,
+          "offset": 183479,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 34.02428007321989
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfoot_g",
+          "name_index": 6,
+          "other_index": 0,
+          "offset": 183563,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 16.060739672467157
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfootT_g",
+          "name_index": 7,
+          "other_index": 0,
+          "offset": 183647,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.63332998752594,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        }
+      ]
+    },
+    "victory": {
+      "duration": 1.3333300352096558,
+      "root_model": "S_Male02",
+      "nodes": [
+        {
+          "name": "S_Male02",
+          "name_index": 0,
+          "other_index": 0,
+          "offset": 204555,
+          "tracks": [],
+          "matches_fixture": false
+        },
+        {
+          "name": "cutscenedummy",
+          "name_index": 1,
+          "other_index": 0,
+          "offset": 204639,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rootdummy",
+          "name_index": 2,
+          "other_index": 0,
+          "offset": 204723,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 9,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.08736731816452856
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "torso_g",
+          "name_index": 14,
+          "other_index": 0,
+          "offset": 208047,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 10.960484856501935
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lRobe1_g",
+          "name_index": 88,
+          "other_index": 0,
+          "offset": 223799,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 55.694706608702774
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe2_g",
+          "name_index": 89,
+          "other_index": 0,
+          "offset": 223883,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 81.52149253607804
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe3_g",
+          "name_index": 90,
+          "other_index": 0,
+          "offset": 223967,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 71.99438911630344
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe1_g",
+          "name_index": 85,
+          "other_index": 0,
+          "offset": 222903,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 17.29302217569828
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe2_g",
+          "name_index": 86,
+          "other_index": 0,
+          "offset": 222987,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 51.472091715737804
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe3_g",
+          "name_index": 87,
+          "other_index": 0,
+          "offset": 223071,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 40.199969138871154
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe1_g",
+          "name_index": 82,
+          "other_index": 0,
+          "offset": 222007,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 17.66364124713571
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe2_g",
+          "name_index": 83,
+          "other_index": 0,
+          "offset": 222091,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 58.619046503582055
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe3_g",
+          "name_index": 84,
+          "other_index": 0,
+          "offset": 222175,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 84.289960298999
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "torsoUpr_g",
+          "name_index": 15,
+          "other_index": 0,
+          "offset": 208143,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 29.446201060000895
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "necklwr_g",
+          "name_index": 58,
+          "other_index": 0,
+          "offset": 216863,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "neck_g",
+          "name_index": 59,
+          "other_index": 0,
+          "offset": 216947,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 21.750000880009857
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "hturn_g",
+          "name_index": 60,
+          "other_index": 0,
+          "offset": 217031,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "head_g",
+          "name_index": 61,
+          "other_index": 0,
+          "offset": 217115,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 31.13974701038347
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rns_g",
+          "name_index": 80,
+          "other_index": 0,
+          "offset": 221283,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 2.2360814450749462e-07
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lns_g",
+          "name_index": 79,
+          "other_index": 0,
+          "offset": 221047,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.004754501910816131
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_mdbrw_g",
+          "name_index": 78,
+          "other_index": 0,
+          "offset": 220811,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0020003007994659635
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rbrw_g",
+          "name_index": 77,
+          "other_index": 0,
+          "offset": 220555,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.031210424198574435
+            },
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 3.9964675118955304
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lbrw_g",
+          "name_index": 76,
+          "other_index": 0,
+          "offset": 220299,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.034889630096144764
+            },
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 3.99645054277919
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_llweye_g",
+          "name_index": 75,
+          "other_index": 0,
+          "offset": 220047,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.007659100302700816
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rlweye_g",
+          "name_index": 74,
+          "other_index": 0,
+          "offset": 219795,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.007659200369168088
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRlid",
+          "name_index": 73,
+          "other_index": 0,
+          "offset": 219619,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.42281420197786646
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRA",
+          "name_index": 72,
+          "other_index": 0,
+          "offset": 219443,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 14.29994885279113
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLlid",
+          "name_index": 71,
+          "other_index": 0,
+          "offset": 219267,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.42616597032836107
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLA",
+          "name_index": 70,
+          "other_index": 0,
+          "offset": 219091,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 14.29994885279113
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "talkdummy",
+          "name_index": 62,
+          "other_index": 0,
+          "offset": 217243,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_jaw_g",
+          "name_index": 66,
+          "other_index": 0,
+          "offset": 218095,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.0237675628908694e-07
+            },
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 10.566458697847722
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_tonguetip_g",
+          "name_index": 69,
+          "other_index": 0,
+          "offset": 218691,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 5.000128070966494e-07
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Llm_g",
+          "name_index": 68,
+          "other_index": 0,
+          "offset": 218439,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.010566011308619087
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Rlm_g",
+          "name_index": 67,
+          "other_index": 0,
+          "offset": 218187,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.010565950561221662
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rmc_g",
+          "name_index": 65,
+          "other_index": 0,
+          "offset": 217843,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.008541144784186485
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lmc_g",
+          "name_index": 64,
+          "other_index": 0,
+          "offset": 217591,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.008540804077778743
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_um_g",
+          "name_index": 63,
+          "other_index": 0,
+          "offset": 217339,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.006358650228131474
+            },
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "Impact",
+          "name_index": 57,
+          "other_index": 0,
+          "offset": 216727,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_dum",
+          "name_index": 36,
+          "other_index": 0,
+          "offset": 212595,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_g",
+          "name_index": 37,
+          "other_index": 0,
+          "offset": 212679,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 15.199462710178217
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicep_g",
+          "name_index": 38,
+          "other_index": 0,
+          "offset": 212763,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 36.81593610548208
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicepL_g",
+          "name_index": 39,
+          "other_index": 0,
+          "offset": 212847,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 6.3270471979982235
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lforearm_g",
+          "name_index": 40,
+          "other_index": 0,
+          "offset": 212931,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 63.23651479826581
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lSleeve1_g",
+          "name_index": 54,
+          "other_index": 0,
+          "offset": 215431,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 50.91126329719519
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lSleeve2_g",
+          "name_index": 55,
+          "other_index": 0,
+          "offset": 215515,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 44.485941251395936
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lhand_g",
+          "name_index": 42,
+          "other_index": 0,
+          "offset": 213019,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 27.476452910333656
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lhand",
+          "name_index": 53,
+          "other_index": 0,
+          "offset": 215063,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 19,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbB_g",
+          "name_index": 51,
+          "other_index": 0,
+          "offset": 214667,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 32.286133953454154
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbT_g",
+          "name_index": 52,
+          "other_index": 0,
+          "offset": 214751,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 74.10095139816352
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrB_g",
+          "name_index": 49,
+          "other_index": 0,
+          "offset": 214291,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 73.0837302621356
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrT_g",
+          "name_index": 50,
+          "other_index": 0,
+          "offset": 214375,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 2.647637527806448
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrB_g",
+          "name_index": 47,
+          "other_index": 0,
+          "offset": 213895,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 65.17646913379775
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrT_g",
+          "name_index": 48,
+          "other_index": 0,
+          "offset": 213979,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 12.601064149567897
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrB_g",
+          "name_index": 45,
+          "other_index": 0,
+          "offset": 213519,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 46.60219096947358
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrT_g",
+          "name_index": 46,
+          "other_index": 0,
+          "offset": 213603,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 2.8327017346617156
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrB_g",
+          "name_index": 43,
+          "other_index": 0,
+          "offset": 213123,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 43.505039409499375
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrT_g",
+          "name_index": 44,
+          "other_index": 0,
+          "offset": 213207,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 6.601618998876072
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_dum",
+          "name_index": 16,
+          "other_index": 0,
+          "offset": 208239,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.6555285230907e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_g",
+          "name_index": 17,
+          "other_index": 0,
+          "offset": 208323,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 12.500181594317624
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicep_g",
+          "name_index": 18,
+          "other_index": 0,
+          "offset": 208407,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 17,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 128.91280962387245
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicepL_g",
+          "name_index": 19,
+          "other_index": 0,
+          "offset": 208491,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 17,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 3.295771653844499
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rforearm_g",
+          "name_index": 20,
+          "other_index": 0,
+          "offset": 208575,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 17,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 109.36384973980532
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rSleeve1_g",
+          "name_index": 34,
+          "other_index": 0,
+          "offset": 210719,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 80.79679127380325
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rSleeve2_g",
+          "name_index": 35,
+          "other_index": 0,
+          "offset": 210803,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 73.06993420171548
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rhand_g",
+          "name_index": 21,
+          "other_index": 0,
+          "offset": 208663,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 60.355052574434524
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rhand",
+          "name_index": 32,
+          "other_index": 0,
+          "offset": 210347,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 8.128355575023838e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbB_g",
+          "name_index": 30,
+          "other_index": 0,
+          "offset": 210031,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00017741243805743514
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbT_g",
+          "name_index": 31,
+          "other_index": 0,
+          "offset": 210115,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 1.916717082078121e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrB_g",
+          "name_index": 28,
+          "other_index": 0,
+          "offset": 209715,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00011425265158506093
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrT_g",
+          "name_index": 29,
+          "other_index": 0,
+          "offset": 209799,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0001426083144457013
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrB_g",
+          "name_index": 26,
+          "other_index": 0,
+          "offset": 209399,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00018521182305926193
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrT_g",
+          "name_index": 27,
+          "other_index": 0,
+          "offset": 209483,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00012089868945321925
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrB_g",
+          "name_index": 24,
+          "other_index": 0,
+          "offset": 209083,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00016695586766764207
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrT_g",
+          "name_index": 25,
+          "other_index": 0,
+          "offset": 209167,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0005794324670761043
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrB_g",
+          "name_index": 22,
+          "other_index": 0,
+          "offset": 208767,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.00026058424899186923
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrT_g",
+          "name_index": 23,
+          "other_index": 0,
+          "offset": 208851,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0002797825487749269
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "pelvis_g",
+          "name_index": 3,
+          "other_index": 0,
+          "offset": 204811,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 8.017753138087663
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "fRobe1_g",
+          "name_index": 12,
+          "other_index": 0,
+          "offset": 207335,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 24.95052241293792
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "fRobe2_g",
+          "name_index": 13,
+          "other_index": 0,
+          "offset": 207419,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 43.06405447734435
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rthigh_g",
+          "name_index": 8,
+          "other_index": 0,
+          "offset": 206079,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 20.143282973898295
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rshin_g",
+          "name_index": 9,
+          "other_index": 0,
+          "offset": 206163,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 41.528805217325804
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfoot_g",
+          "name_index": 10,
+          "other_index": 0,
+          "offset": 206247,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 37.50177436698759
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfootT_g",
+          "name_index": 11,
+          "other_index": 0,
+          "offset": 206331,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 10.500182234937327
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lthigh_g",
+          "name_index": 4,
+          "other_index": 0,
+          "offset": 204903,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 12.790852887524292
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lshin_g",
+          "name_index": 5,
+          "other_index": 0,
+          "offset": 204987,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 21.9290964178279
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfoot_g",
+          "name_index": 6,
+          "other_index": 0,
+          "offset": 205071,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 12,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 13.478746347733281
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfootT_g",
+          "name_index": 7,
+          "other_index": 0,
+          "offset": 205155,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.3333300352096558,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        }
+      ]
+    },
+    "bow": {
+      "duration": 1.966670036315918,
+      "root_model": "S_Male02",
+      "nodes": [
+        {
+          "name": "S_Male02",
+          "name_index": 0,
+          "other_index": 0,
+          "offset": 290303,
+          "tracks": [],
+          "matches_fixture": false
+        },
+        {
+          "name": "cutscenedummy",
+          "name_index": 1,
+          "other_index": 0,
+          "offset": 290387,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rootdummy",
+          "name_index": 2,
+          "other_index": 0,
+          "offset": 290471,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 5,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.11345923324028526
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "torso_g",
+          "name_index": 14,
+          "other_index": 0,
+          "offset": 293975,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 65.3469791574373
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lRobe1_g",
+          "name_index": 88,
+          "other_index": 0,
+          "offset": 309635,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 38.27412971448324
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe2_g",
+          "name_index": 89,
+          "other_index": 0,
+          "offset": 309719,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 61.30187765714914
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe3_g",
+          "name_index": 90,
+          "other_index": 0,
+          "offset": 309803,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 40.045382685386855
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe1_g",
+          "name_index": 85,
+          "other_index": 0,
+          "offset": 307939,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 37.65988600823679
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe2_g",
+          "name_index": 86,
+          "other_index": 0,
+          "offset": 308023,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 55.70365555971908
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe3_g",
+          "name_index": 87,
+          "other_index": 0,
+          "offset": 308107,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 42.26961183684487
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe1_g",
+          "name_index": 82,
+          "other_index": 0,
+          "offset": 306243,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 24.481469736261293
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe2_g",
+          "name_index": 83,
+          "other_index": 0,
+          "offset": 306327,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 53.1570988227214
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe3_g",
+          "name_index": 84,
+          "other_index": 0,
+          "offset": 306411,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 75.32766741598226
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "torsoUpr_g",
+          "name_index": 15,
+          "other_index": 0,
+          "offset": 294071,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 25.018349566834935
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "necklwr_g",
+          "name_index": 58,
+          "other_index": 0,
+          "offset": 302091,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "neck_g",
+          "name_index": 59,
+          "other_index": 0,
+          "offset": 302175,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 28.749990861574915
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "hturn_g",
+          "name_index": 60,
+          "other_index": 0,
+          "offset": 302259,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "head_g",
+          "name_index": 61,
+          "other_index": 0,
+          "offset": 302343,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 36.13785965384425
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rns_g",
+          "name_index": 80,
+          "other_index": 0,
+          "offset": 305691,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lns_g",
+          "name_index": 79,
+          "other_index": 0,
+          "offset": 305507,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_mdbrw_g",
+          "name_index": 78,
+          "other_index": 0,
+          "offset": 305323,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rbrw_g",
+          "name_index": 77,
+          "other_index": 0,
+          "offset": 305123,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.00563890472960296
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lbrw_g",
+          "name_index": 76,
+          "other_index": 0,
+          "offset": 304923,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.009024300192522827
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_llweye_g",
+          "name_index": 75,
+          "other_index": 0,
+          "offset": 304707,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.003830899911681832
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rlweye_g",
+          "name_index": 74,
+          "other_index": 0,
+          "offset": 304491,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 4,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.003830800033861893
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRlid",
+          "name_index": 73,
+          "other_index": 0,
+          "offset": 304315,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 34.88756137159514
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRA",
+          "name_index": 72,
+          "other_index": 0,
+          "offset": 304179,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLlid",
+          "name_index": 71,
+          "other_index": 0,
+          "offset": 304003,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 34.925171317081166
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLA",
+          "name_index": 70,
+          "other_index": 0,
+          "offset": 303867,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "talkdummy",
+          "name_index": 62,
+          "other_index": 0,
+          "offset": 302471,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_jaw_g",
+          "name_index": 66,
+          "other_index": 0,
+          "offset": 303119,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_tonguetip_g",
+          "name_index": 69,
+          "other_index": 0,
+          "offset": 303579,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Llm_g",
+          "name_index": 68,
+          "other_index": 0,
+          "offset": 303395,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Rlm_g",
+          "name_index": 67,
+          "other_index": 0,
+          "offset": 303211,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rmc_g",
+          "name_index": 65,
+          "other_index": 0,
+          "offset": 302935,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lmc_g",
+          "name_index": 64,
+          "other_index": 0,
+          "offset": 302751,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_um_g",
+          "name_index": 63,
+          "other_index": 0,
+          "offset": 302567,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "Impact",
+          "name_index": 57,
+          "other_index": 0,
+          "offset": 301955,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_dum",
+          "name_index": 36,
+          "other_index": 0,
+          "offset": 297923,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_g",
+          "name_index": 37,
+          "other_index": 0,
+          "offset": 298007,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 3.535381468554335
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicep_g",
+          "name_index": 38,
+          "other_index": 0,
+          "offset": 298091,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 68.56021837968113
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicepL_g",
+          "name_index": 39,
+          "other_index": 0,
+          "offset": 298175,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 19.999967956667234
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lforearm_g",
+          "name_index": 40,
+          "other_index": 0,
+          "offset": 298259,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 94.5411615937663
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lSleeve1_g",
+          "name_index": 54,
+          "other_index": 0,
+          "offset": 300199,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 125.94864908595679
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lSleeve2_g",
+          "name_index": 55,
+          "other_index": 0,
+          "offset": 300283,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 97.49486568236235
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lhand_g",
+          "name_index": 42,
+          "other_index": 0,
+          "offset": 298347,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 79.97951695653877
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lhand",
+          "name_index": 53,
+          "other_index": 0,
+          "offset": 299831,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 19,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbB_g",
+          "name_index": 51,
+          "other_index": 0,
+          "offset": 299555,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbT_g",
+          "name_index": 52,
+          "other_index": 0,
+          "offset": 299639,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrB_g",
+          "name_index": 49,
+          "other_index": 0,
+          "offset": 299279,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrT_g",
+          "name_index": 50,
+          "other_index": 0,
+          "offset": 299363,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrB_g",
+          "name_index": 47,
+          "other_index": 0,
+          "offset": 299003,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrT_g",
+          "name_index": 48,
+          "other_index": 0,
+          "offset": 299087,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrB_g",
+          "name_index": 45,
+          "other_index": 0,
+          "offset": 298727,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrT_g",
+          "name_index": 46,
+          "other_index": 0,
+          "offset": 298811,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrB_g",
+          "name_index": 43,
+          "other_index": 0,
+          "offset": 298451,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrT_g",
+          "name_index": 44,
+          "other_index": 0,
+          "offset": 298535,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_dum",
+          "name_index": 16,
+          "other_index": 0,
+          "offset": 294167,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_g",
+          "name_index": 17,
+          "other_index": 0,
+          "offset": 294251,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicep_g",
+          "name_index": 18,
+          "other_index": 0,
+          "offset": 294335,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 45.11541940012993
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicepL_g",
+          "name_index": 19,
+          "other_index": 0,
+          "offset": 294419,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 51.249815930076906
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rforearm_g",
+          "name_index": 20,
+          "other_index": 0,
+          "offset": 294503,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 84.18554985757785
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rSleeve1_g",
+          "name_index": 34,
+          "other_index": 0,
+          "offset": 296307,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 44.81070957302353
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rSleeve2_g",
+          "name_index": 35,
+          "other_index": 0,
+          "offset": 296391,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 63.65243674880589
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rhand_g",
+          "name_index": 21,
+          "other_index": 0,
+          "offset": 294591,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 45.957941726577204
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rhand",
+          "name_index": 32,
+          "other_index": 0,
+          "offset": 296075,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbB_g",
+          "name_index": 30,
+          "other_index": 0,
+          "offset": 295799,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbT_g",
+          "name_index": 31,
+          "other_index": 0,
+          "offset": 295883,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrB_g",
+          "name_index": 28,
+          "other_index": 0,
+          "offset": 295523,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrT_g",
+          "name_index": 29,
+          "other_index": 0,
+          "offset": 295607,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrB_g",
+          "name_index": 26,
+          "other_index": 0,
+          "offset": 295247,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrT_g",
+          "name_index": 27,
+          "other_index": 0,
+          "offset": 295331,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrB_g",
+          "name_index": 24,
+          "other_index": 0,
+          "offset": 294971,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrT_g",
+          "name_index": 25,
+          "other_index": 0,
+          "offset": 295055,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrB_g",
+          "name_index": 22,
+          "other_index": 0,
+          "offset": 294695,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrT_g",
+          "name_index": 23,
+          "other_index": 0,
+          "offset": 294779,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "pelvis_g",
+          "name_index": 3,
+          "other_index": 0,
+          "offset": 290559,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 28.091806332148156
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "fRobe1_g",
+          "name_index": 12,
+          "other_index": 0,
+          "offset": 292723,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 24,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 55.94547119723995
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "fRobe2_g",
+          "name_index": 13,
+          "other_index": 0,
+          "offset": 292807,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 23,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 32.195457741018586
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rthigh_g",
+          "name_index": 8,
+          "other_index": 0,
+          "offset": 291687,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 53.383422927886585
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rshin_g",
+          "name_index": 9,
+          "other_index": 0,
+          "offset": 291771,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 48.13896786333644
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfoot_g",
+          "name_index": 10,
+          "other_index": 0,
+          "offset": 291855,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 24.607536715612678
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfootT_g",
+          "name_index": 11,
+          "other_index": 0,
+          "offset": 291939,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lthigh_g",
+          "name_index": 4,
+          "other_index": 0,
+          "offset": 290651,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 57.620120957078704
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lshin_g",
+          "name_index": 5,
+          "other_index": 0,
+          "offset": 290735,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 54.60167385146771
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfoot_g",
+          "name_index": 6,
+          "other_index": 0,
+          "offset": 290819,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 24.989301316206348
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfootT_g",
+          "name_index": 7,
+          "other_index": 0,
+          "offset": 290903,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.966670036315918,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        }
+      ]
+    },
+    "dance": {
+      "duration": 2.0666699409484863,
+      "root_model": "S_Male02",
+      "nodes": [
+        {
+          "name": "S_Male02",
+          "name_index": 0,
+          "other_index": 0,
+          "offset": 1016459,
+          "tracks": [],
+          "matches_fixture": false
+        },
+        {
+          "name": "cutscenedummy",
+          "name_index": 1,
+          "other_index": 0,
+          "offset": 1016543,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rootdummy",
+          "name_index": 2,
+          "other_index": 0,
+          "offset": 1016627,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 9,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0646305382447139
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 8.196227004015476e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "torso_g",
+          "name_index": 14,
+          "other_index": 0,
+          "offset": 1019791,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 26.93266624153639
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lRobe1_g",
+          "name_index": 88,
+          "other_index": 0,
+          "offset": 1033491,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe2_g",
+          "name_index": 89,
+          "other_index": 0,
+          "offset": 1033575,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe3_g",
+          "name_index": 90,
+          "other_index": 0,
+          "offset": 1033659,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe1_g",
+          "name_index": 85,
+          "other_index": 0,
+          "offset": 1033075,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe2_g",
+          "name_index": 86,
+          "other_index": 0,
+          "offset": 1033159,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.3004292747236516e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe3_g",
+          "name_index": 87,
+          "other_index": 0,
+          "offset": 1033243,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 5.740000927206007e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe1_g",
+          "name_index": 82,
+          "other_index": 0,
+          "offset": 1032659,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe2_g",
+          "name_index": 83,
+          "other_index": 0,
+          "offset": 1032743,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe3_g",
+          "name_index": 84,
+          "other_index": 0,
+          "offset": 1032827,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 8.189109132934075e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "torsoUpr_g",
+          "name_index": 15,
+          "other_index": 0,
+          "offset": 1019887,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 28.39909337203468
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "necklwr_g",
+          "name_index": 58,
+          "other_index": 0,
+          "offset": 1028407,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "neck_g",
+          "name_index": 59,
+          "other_index": 0,
+          "offset": 1028491,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 9.392688821813296
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "hturn_g",
+          "name_index": 60,
+          "other_index": 0,
+          "offset": 1028575,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "head_g",
+          "name_index": 61,
+          "other_index": 0,
+          "offset": 1028659,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 22.52645467692134
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rns_g",
+          "name_index": 80,
+          "other_index": 0,
+          "offset": 1031991,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 3.9999940781854093e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 3.3460956626430084e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lns_g",
+          "name_index": 79,
+          "other_index": 0,
+          "offset": 1031807,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 2.00001522898674e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 3.2800912365570115e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_mdbrw_g",
+          "name_index": 78,
+          "other_index": 0,
+          "offset": 1031607,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0014678000725282317
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 3.4150945850063755e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rbrw_g",
+          "name_index": 77,
+          "other_index": 0,
+          "offset": 1031407,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0022018002459701486
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 5.915117333884393e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lbrw_g",
+          "name_index": 76,
+          "other_index": 0,
+          "offset": 1031207,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0022018002550536235
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 8.706816964856284e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_llweye_g",
+          "name_index": 75,
+          "other_index": 0,
+          "offset": 1031007,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0014680000158293406
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.7075472925031877e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rlweye_g",
+          "name_index": 74,
+          "other_index": 0,
+          "offset": 1030807,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 3,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0014678000313406029
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRlid",
+          "name_index": 73,
+          "other_index": 0,
+          "offset": 1030651,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.0647234486852128
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRA",
+          "name_index": 72,
+          "other_index": 0,
+          "offset": 1030495,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 20.00000844717719
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLlid",
+          "name_index": 71,
+          "other_index": 0,
+          "offset": 1030339,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.0647234486824741
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLA",
+          "name_index": 70,
+          "other_index": 0,
+          "offset": 1030183,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 20.00000844717719
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "talkdummy",
+          "name_index": 62,
+          "other_index": 0,
+          "offset": 1028787,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_jaw_g",
+          "name_index": 66,
+          "other_index": 0,
+          "offset": 1029435,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.019803983613788e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 3.440612458546887e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_tonguetip_g",
+          "name_index": 69,
+          "other_index": 0,
+          "offset": 1029895,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.00045750983928e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 2.9575586669421963e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Llm_g",
+          "name_index": 68,
+          "other_index": 0,
+          "offset": 1029711,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_Rlm_g",
+          "name_index": 67,
+          "other_index": 0,
+          "offset": 1029527,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_rmc_g",
+          "name_index": 65,
+          "other_index": 0,
+          "offset": 1029251,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 9.988434612751007e-08
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lmc_g",
+          "name_index": 64,
+          "other_index": 0,
+          "offset": 1029067,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_um_g",
+          "name_index": 63,
+          "other_index": 0,
+          "offset": 1028883,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.3999999737279722e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 6.808811373694188e-05
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "Impact",
+          "name_index": 57,
+          "other_index": 0,
+          "offset": 1028271,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_dum",
+          "name_index": 36,
+          "other_index": 0,
+          "offset": 1024079,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 40.379049630765856
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_g",
+          "name_index": 37,
+          "other_index": 0,
+          "offset": 1024163,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 14.222923137276691
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicep_g",
+          "name_index": 38,
+          "other_index": 0,
+          "offset": 1024247,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 26.555020891446166
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicepL_g",
+          "name_index": 39,
+          "other_index": 0,
+          "offset": 1024331,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 5.430678116104214
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lforearm_g",
+          "name_index": 40,
+          "other_index": 0,
+          "offset": 1024415,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 28.698013522895074
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lSleeve1_g",
+          "name_index": 54,
+          "other_index": 0,
+          "offset": 1026615,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 69.8815134879753
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lSleeve2_g",
+          "name_index": 55,
+          "other_index": 0,
+          "offset": 1026699,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 68.31801608247468
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lhand_g",
+          "name_index": 42,
+          "other_index": 0,
+          "offset": 1024503,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 61.025197409370556
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lhand",
+          "name_index": 53,
+          "other_index": 0,
+          "offset": 1026187,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 19,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 2.999999981767587e-08
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.1581149199548747e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbB_g",
+          "name_index": 51,
+          "other_index": 0,
+          "offset": 1025871,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00037432303227152153
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbT_g",
+          "name_index": 52,
+          "other_index": 0,
+          "offset": 1025955,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0005751646902357722
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrB_g",
+          "name_index": 49,
+          "other_index": 0,
+          "offset": 1025555,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0003555267647397427
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrT_g",
+          "name_index": 50,
+          "other_index": 0,
+          "offset": 1025639,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 4.234579577742075e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrB_g",
+          "name_index": 47,
+          "other_index": 0,
+          "offset": 1025239,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0002478121211315916
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrT_g",
+          "name_index": 48,
+          "other_index": 0,
+          "offset": 1025323,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00024751780035369526
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrB_g",
+          "name_index": 45,
+          "other_index": 0,
+          "offset": 1024923,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00024755902632750984
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrT_g",
+          "name_index": 46,
+          "other_index": 0,
+          "offset": 1025007,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.0001844467261259742
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrB_g",
+          "name_index": 43,
+          "other_index": 0,
+          "offset": 1024607,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00010654055201956787
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrT_g",
+          "name_index": 44,
+          "other_index": 0,
+          "offset": 1024691,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00030788929128424894
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_dum",
+          "name_index": 16,
+          "other_index": 0,
+          "offset": 1019983,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 32.9999636249398
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_g",
+          "name_index": 17,
+          "other_index": 0,
+          "offset": 1020067,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 38.987849525476285
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicep_g",
+          "name_index": 18,
+          "other_index": 0,
+          "offset": 1020151,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 13,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 21.354930466083
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicepL_g",
+          "name_index": 19,
+          "other_index": 0,
+          "offset": 1020235,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 1.7665379715985934
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rforearm_g",
+          "name_index": 20,
+          "other_index": 0,
+          "offset": 1020319,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 23.815340364384596
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rSleeve1_g",
+          "name_index": 34,
+          "other_index": 0,
+          "offset": 1022283,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 54.446137994899786
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rSleeve2_g",
+          "name_index": 35,
+          "other_index": 0,
+          "offset": 1022367,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 48.05699194849026
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rhand_g",
+          "name_index": 21,
+          "other_index": 0,
+          "offset": 1020407,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 45.865878694216285
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbB_g",
+          "name_index": 30,
+          "other_index": 0,
+          "offset": 1021771,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 4.173622202888797
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbT_g",
+          "name_index": 31,
+          "other_index": 0,
+          "offset": 1021855,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 6.775053219390957
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrB_g",
+          "name_index": 28,
+          "other_index": 0,
+          "offset": 1021455,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 15.419522548975046
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrT_g",
+          "name_index": 29,
+          "other_index": 0,
+          "offset": 1021539,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 19.45134675048582
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrB_g",
+          "name_index": 26,
+          "other_index": 0,
+          "offset": 1021139,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 7.91945759021811
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrT_g",
+          "name_index": 27,
+          "other_index": 0,
+          "offset": 1021223,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 17.322803881087086
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrB_g",
+          "name_index": 24,
+          "other_index": 0,
+          "offset": 1020823,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 11.709662037683637
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrT_g",
+          "name_index": 25,
+          "other_index": 0,
+          "offset": 1020907,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 15.870926543633347
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrB_g",
+          "name_index": 22,
+          "other_index": 0,
+          "offset": 1020507,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 12.000032053459902
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrT_g",
+          "name_index": 23,
+          "other_index": 0,
+          "offset": 1020591,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 12.967754972848914
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "pelvis_g",
+          "name_index": 3,
+          "other_index": 0,
+          "offset": 1016715,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 30.63332337565029
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "fRobe1_g",
+          "name_index": 12,
+          "other_index": 0,
+          "offset": 1018799,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 28.021487505737163
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "fRobe2_g",
+          "name_index": 13,
+          "other_index": 0,
+          "offset": 1018883,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 16,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 42.12569961116327
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rthigh_g",
+          "name_index": 8,
+          "other_index": 0,
+          "offset": 1017803,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 20.19089767515681
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rshin_g",
+          "name_index": 9,
+          "other_index": 0,
+          "offset": 1017887,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 28.454979216004514
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfoot_g",
+          "name_index": 10,
+          "other_index": 0,
+          "offset": 1017971,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 16.195875983868863
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfootT_g",
+          "name_index": 11,
+          "other_index": 0,
+          "offset": 1018055,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 2.656320193396619e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lthigh_g",
+          "name_index": 4,
+          "other_index": 0,
+          "offset": 1016807,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 28.521098886967216
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lshin_g",
+          "name_index": 5,
+          "other_index": 0,
+          "offset": 1016891,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 18.555247855756985
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfoot_g",
+          "name_index": 6,
+          "other_index": 0,
+          "offset": 1016975,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 17.332455991666638
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfootT_g",
+          "name_index": 7,
+          "other_index": 0,
+          "offset": 1017059,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 2.0666699409484863,
+              "amplitude": 0.00011646423915323121
+            }
+          ],
+          "matches_fixture": true
+        }
+      ]
+    },
+    "dance1": {
+      "duration": 1.6666699647903442,
+      "root_model": "S_Male02",
+      "nodes": [
+        {
+          "name": "S_Male02",
+          "name_index": 0,
+          "other_index": 0,
+          "offset": 1034451,
+          "tracks": [],
+          "matches_fixture": false
+        },
+        {
+          "name": "cutscenedummy",
+          "name_index": 1,
+          "other_index": 0,
+          "offset": 1034535,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rootdummy",
+          "name_index": 2,
+          "other_index": 0,
+          "offset": 1034619,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 10,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.1155240136800089
+            },
+            {
+              "type": 20,
+              "keys": 6,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 16.000076123653795
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "torso_g",
+          "name_index": 14,
+          "other_index": 0,
+          "offset": 1037483,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 31.58824235328435
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lRobe1_g",
+          "name_index": 88,
+          "other_index": 0,
+          "offset": 1047759,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.5044565560037679
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe2_g",
+          "name_index": 89,
+          "other_index": 0,
+          "offset": 1047843,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 34.09728877886141
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lRobe3_g",
+          "name_index": 90,
+          "other_index": 0,
+          "offset": 1047927,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 49.69719285021508
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe1_g",
+          "name_index": 85,
+          "other_index": 0,
+          "offset": 1047343,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 8.068873643344931
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe2_g",
+          "name_index": 86,
+          "other_index": 0,
+          "offset": 1047427,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 19.153670052287328
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rRobe3_g",
+          "name_index": 87,
+          "other_index": 0,
+          "offset": 1047511,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 26.73054896528383
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe1_g",
+          "name_index": 82,
+          "other_index": 0,
+          "offset": 1046927,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 5.698116965139696
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe2_g",
+          "name_index": 83,
+          "other_index": 0,
+          "offset": 1047011,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 17.15510182668898
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "mRobe3_g",
+          "name_index": 84,
+          "other_index": 0,
+          "offset": 1047095,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 22.378710884754533
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "torsoUpr_g",
+          "name_index": 15,
+          "other_index": 0,
+          "offset": 1037579,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 27.249210338650823
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "necklwr_g",
+          "name_index": 58,
+          "other_index": 0,
+          "offset": 1045139,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "neck_g",
+          "name_index": 59,
+          "other_index": 0,
+          "offset": 1045223,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 10.500175172312545
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "hturn_g",
+          "name_index": 60,
+          "other_index": 0,
+          "offset": 1045307,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "head_g",
+          "name_index": 61,
+          "other_index": 0,
+          "offset": 1045391,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 37.6895136413544
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rbrw_g",
+          "name_index": 77,
+          "other_index": 0,
+          "offset": 1046235,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 9.96515154838562e-08
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lbrw_g",
+          "name_index": 76,
+          "other_index": 0,
+          "offset": 1046107,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 2.0023435354232788e-07
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeRlid",
+          "name_index": 73,
+          "other_index": 0,
+          "offset": 1045971,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "eyeLlid",
+          "name_index": 71,
+          "other_index": 0,
+          "offset": 1045835,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 2.4148365394514667e-06
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "talkdummy",
+          "name_index": 62,
+          "other_index": 0,
+          "offset": 1045491,
+          "tracks": [],
+          "matches_fixture": true
+        },
+        {
+          "name": "f_rmc_g",
+          "name_index": 65,
+          "other_index": 0,
+          "offset": 1045707,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 9.988434612751007e-08
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "f_lmc_g",
+          "name_index": 64,
+          "other_index": 0,
+          "offset": 1045579,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 3,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "Impact",
+          "name_index": 57,
+          "other_index": 0,
+          "offset": 1045003,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_dum",
+          "name_index": 36,
+          "other_index": 0,
+          "offset": 1041291,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 5,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 16.05444944558397
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lcollar_g",
+          "name_index": 37,
+          "other_index": 0,
+          "offset": 1041375,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 20.81581209015523
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicep_g",
+          "name_index": 38,
+          "other_index": 0,
+          "offset": 1041459,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 43.834190635186474
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lbicepL_g",
+          "name_index": 39,
+          "other_index": 0,
+          "offset": 1041543,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 3.585984310202619
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lforearm_g",
+          "name_index": 40,
+          "other_index": 0,
+          "offset": 1041627,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 25.56947407421403
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lSleeve1_g",
+          "name_index": 54,
+          "other_index": 0,
+          "offset": 1043807,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 2.1557983887488534
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lSleeve2_g",
+          "name_index": 55,
+          "other_index": 0,
+          "offset": 1043891,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 16.43828299207464
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "lhand_g",
+          "name_index": 42,
+          "other_index": 0,
+          "offset": 1041715,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 70.87375393447847
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lhand",
+          "name_index": 53,
+          "other_index": 0,
+          "offset": 1043399,
+          "tracks": [
+            {
+              "type": 8,
+              "keys": 2,
+              "cols": 19,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 1.0049875736797174e-07
+            },
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 8.365239156607494e-06
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbB_g",
+          "name_index": 51,
+          "other_index": 0,
+          "offset": 1043083,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00014406276058777796
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LThumbT_g",
+          "name_index": 52,
+          "other_index": 0,
+          "offset": 1043167,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.0005381185680064574
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrB_g",
+          "name_index": 49,
+          "other_index": 0,
+          "offset": 1042767,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00015490757609940977
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LdFngrT_g",
+          "name_index": 50,
+          "other_index": 0,
+          "offset": 1042851,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00013217783775944686
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrB_g",
+          "name_index": 47,
+          "other_index": 0,
+          "offset": 1042451,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00018091945039264831
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LcFngrT_g",
+          "name_index": 48,
+          "other_index": 0,
+          "offset": 1042535,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.0001695552331115027
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrB_g",
+          "name_index": 45,
+          "other_index": 0,
+          "offset": 1042135,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00018473104941457743
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LbFngrT_g",
+          "name_index": 46,
+          "other_index": 0,
+          "offset": 1042219,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00020462801053586333
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrB_g",
+          "name_index": 43,
+          "other_index": 0,
+          "offset": 1041819,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 7.116601536131273e-05
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "LaFngrT_g",
+          "name_index": 44,
+          "other_index": 0,
+          "offset": 1041903,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.033329963684082,
+              "amplitude": 0.00026201254658551697
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_dum",
+          "name_index": 16,
+          "other_index": 0,
+          "offset": 1037675,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rcollar_g",
+          "name_index": 17,
+          "other_index": 0,
+          "offset": 1037759,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 7,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 15.566941811905727
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicep_g",
+          "name_index": 18,
+          "other_index": 0,
+          "offset": 1037843,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 52.021022730606674
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rbicepL_g",
+          "name_index": 19,
+          "other_index": 0,
+          "offset": 1037927,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 10,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.5918200109895253
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rforearm_g",
+          "name_index": 20,
+          "other_index": 0,
+          "offset": 1038011,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 9,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 48.355856266654946
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rSleeve1_g",
+          "name_index": 34,
+          "other_index": 0,
+          "offset": 1040155,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 14.360322457361313
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rSleeve2_g",
+          "name_index": 35,
+          "other_index": 0,
+          "offset": 1040239,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 10.544767808141515
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rhand_g",
+          "name_index": 21,
+          "other_index": 0,
+          "offset": 1038099,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 51.35370485934572
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbB_g",
+          "name_index": 30,
+          "other_index": 0,
+          "offset": 1039623,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 18.645903405535766
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RThumbT_g",
+          "name_index": 31,
+          "other_index": 0,
+          "offset": 1039707,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 32.48726234529789
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrB_g",
+          "name_index": 28,
+          "other_index": 0,
+          "offset": 1039267,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 14.664591149999744
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RaFngrT_g",
+          "name_index": 29,
+          "other_index": 0,
+          "offset": 1039351,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 14.127722619218192
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrB_g",
+          "name_index": 26,
+          "other_index": 0,
+          "offset": 1038911,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 27.900202417091325
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RbFngrT_g",
+          "name_index": 27,
+          "other_index": 0,
+          "offset": 1038995,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 11.127716201453188
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrB_g",
+          "name_index": 24,
+          "other_index": 0,
+          "offset": 1038555,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 24.91395822651213
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RcFngrT_g",
+          "name_index": 25,
+          "other_index": 0,
+          "offset": 1038639,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 14.627915671843446
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrB_g",
+          "name_index": 22,
+          "other_index": 0,
+          "offset": 1038199,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 17.83815082493309
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "RdFngrT_g",
+          "name_index": 23,
+          "other_index": 0,
+          "offset": 1038283,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 4,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 2.718111975045993
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "pelvis_g",
+          "name_index": 3,
+          "other_index": 0,
+          "offset": 1034707,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 8,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 23.31169065367056
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "fRobe1_g",
+          "name_index": 12,
+          "other_index": 0,
+          "offset": 1037031,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 6.066833483472698
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "fRobe2_g",
+          "name_index": 13,
+          "other_index": 0,
+          "offset": 1037115,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 2,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 14.288759478286396
+            }
+          ],
+          "matches_fixture": false
+        },
+        {
+          "name": "rthigh_g",
+          "name_index": 8,
+          "other_index": 0,
+          "offset": 1035915,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 28.164491901160243
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rshin_g",
+          "name_index": 9,
+          "other_index": 0,
+          "offset": 1035999,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 41.17527733626599
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfoot_g",
+          "name_index": 10,
+          "other_index": 0,
+          "offset": 1036083,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 32.62447558844311
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "rfootT_g",
+          "name_index": 11,
+          "other_index": 0,
+          "offset": 1036167,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.00019610792233724163
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lthigh_g",
+          "name_index": 4,
+          "other_index": 0,
+          "offset": 1034799,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 40.468832471426246
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lshin_g",
+          "name_index": 5,
+          "other_index": 0,
+          "offset": 1034883,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 53.51145303008655
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfoot_g",
+          "name_index": 6,
+          "other_index": 0,
+          "offset": 1034967,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 11,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 52.876589639217585
+            }
+          ],
+          "matches_fixture": true
+        },
+        {
+          "name": "lfootT_g",
+          "name_index": 7,
+          "other_index": 0,
+          "offset": 1035051,
+          "tracks": [
+            {
+              "type": 20,
+              "keys": 3,
+              "cols": 4,
+              "first": 0.0,
+              "last": 1.6666699647903442,
+              "amplitude": 0.0
+            }
+          ],
+          "matches_fixture": true
+        }
+      ]
+    }
+  }
+}

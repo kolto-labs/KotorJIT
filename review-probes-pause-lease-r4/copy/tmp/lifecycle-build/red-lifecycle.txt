@@ -1,0 +1,100 @@
+FAIL lifecycle.unload_one_raises_OnScriptUnload_once
+     - unload_one(a) succeeds: 
+     - a is Unloaded
+     - a's state is closed
+     - OnScriptUnload ran once before teardown
+FAIL lifecycle.unload_one_drops_timers
+     - unload_one(a): 
+     - the timer is gone
+FAIL lifecycle.unload_one_drops_bound_handlers
+     - unload_one(a): 
+     - binding dropped
+     - OnTick no longer reaches a
+FAIL lifecycle.reload_one_increments_generation_and_rebinds
+     - generation 1 after first load
+     - reload_one(a): 
+     - generation 2 after reload
+     - old OnScriptUnload and new OnScriptLoad each ran once
+     - unload of old precedes load of new
+     - new chunk body runs before old OnScriptUnload (compile-before-close)
+     - top-level binding from the new chunk is live, old one is gone
+FAIL lifecycle.deleted_file_unloads_on_poll
+     - a is gone from the host
+     - a got OnScriptUnload once
+     - b untouched
+     - a second poll does nothing more
+FAIL lifecycle.new_file_loads_on_poll
+     - b loaded, gen 1
+     - a not reloaded
+     - b not reloaded by an idle poll
+FAIL lifecycle.edit_inside_first_window_detected
+     - poll reports a reload
+     - a is on generation 2
+     - a runs the edited body
+FAIL lifecycle.duplicate_load_refused
+     - load_path of a held path refused
+     - error says already loaded: 
+     - load_one of a held path refused
+     - an equivalent spelling of the path is refused
+     - still one script
+     - a was not reloaded by the refusal
+FAIL lifecycle.failed_reload_keeps_running_generation
+     - the failure is reported [syntax]
+     - generation unchanged [syntax]
+     - last_load_error is kept [syntax]
+     - a is still Loaded [runtime]
+     - a still runs the same state [runtime]
+     - generation unchanged [runtime]
+     - last_load_error is kept [runtime]
+     - old generation was not told to unload [runtime]
+     - old handler still fires [runtime]
+     - fixing the file reloads it
+    load error: a.lua: ...validation/tmp/lifecycle-build/scratch-l/failfirst/a.lua:1: '=' expected near 'is'
+FAIL lifecycle.failed_first_load_is_FailedToLoad
+     - an edit to a FailedToLoad script loads it
+FAIL lifecycle.quarantine_then_edit_recovers
+     - edit brings a back
+     - error history cleared
+     - fixed handler runs
+FAIL lifecycle.state_closing_hook_once_per_close
+     - 5 states created, saw 2
+     - 4 states closed so far, saw 0
+     - every created state was closed exactly once
+     - each close matched an open state, and no state closed twice
+     - no state left open
+FAIL lifecycle.request_from_own_callback_deferred
+     - request is pending
+     - one request queued
+     - service runs it
+     - a unloaded by service
+     - result is ok
+     - OnScriptUnload once
+FAIL lifecycle.request_from_timer_deferred
+     - no reload happened inside the timer
+     - service runs it
+     - reloaded at service time
+     - result ok with generation 2
+FAIL lifecycle.unknown_name_result_error
+     - unload of unknown name is an error
+     - load of a path-like name is an error
+     - empty name is an error
+FAIL lifecycle.priority_resort_after_reload
+     - b first after reload_one raises its priority
+FAIL lifecycle.explicit_unload_survives_poll
+     - hot reload leaves an explicitly unloaded script alone
+     - load request brings it back as generation 2
+     - load ok
+     - load of a loaded script is an error
+     - an unloaded script whose file is deleted is dropped
+FAIL lifecycle.load_request_for_new_file
+     - b loaded by request
+     - result carries generation 1
+     - b got OnScriptLoad
+FAIL lifecycle.service_runs_snapshot_only
+     - service ran only what was queued before it started
+     - the request a's OnScriptLoad made waits
+FAIL lifecycle.sync_refused_while_dispatching
+     - a untouched
+     - the queued request is still there
+20 case(s), 20 failed
+rc=1

@@ -1,0 +1,373 @@
+{
+  "ok": true,
+  "save_loaded": true,
+  "status": {
+    "version": "0.1.0",
+    "build": "k2_gog_aspyr",
+    "game": "K2",
+    "phase": "running",
+    "live": true,
+    "vm_bound": false,
+    "poisoned": [],
+    "hooks": 19,
+    "client_tick": 3,
+    "server_tick": 0,
+    "pid": 284,
+    "uptime_ms": 3940,
+    "scripts": 0,
+    "adapter": "k2",
+    "missing_sites": [
+      "appmgr.client",
+      "appmgr.reentrant_server_stats",
+      "client.get_paused_by_combat",
+      "client.set_paused_by_combat",
+      "client.get_auto_paused",
+      "client.set_auto_paused",
+      "msg.unlock_object",
+      "client.player_creature_id",
+      "module.name",
+      "server.pause_state",
+      "stats.continue_message_processing",
+      "stats.load_game_error",
+      "gui.tutorial_box",
+      "gui.messagebox_callback",
+      "gui.messagebox_callback_context",
+      "gui.messagebox_callback_arg",
+      "gui.modal_data",
+      "gui.modal_size",
+      "gui.party_selection_vtable",
+      "gui.initialized",
+      "gui.party_selection_selected_count",
+      "gui.party_selection_mode",
+      "gui.party_selection_entry0_flags",
+      "menu.newgame_button",
+      "menu.ready",
+      "gui.panel_bit_flags",
+      "gui.control_active",
+      "gui.panels_data",
+      "gui.panels_size",
+      "chargen.class_controls",
+      "chargen.class_control",
+      "chargen.main_route_panel",
+      "chargen.main_quick_panel",
+      "chargen.child_main_panel",
+      "chargen.main_visible_panel",
+      "client.movie_player",
+      "movie.internal",
+      "movie.playing",
+      "dialog.node_strref",
+      "timer.paused",
+      "gvt.table",
+      "gvt.identifiers",
+      "gvt.identifier",
+      "gvt.identifier_type_index",
+      "gvt.bools",
+      "gvt.numbers",
+      "gvt.strings",
+      "gvt.boolean_count",
+      "gvt.number_count",
+      "gvt.string_count",
+      "app.get_party_table",
+      "party.table",
+      "client_party.count",
+      "client_party.member",
+      "client_party.member_id",
+      "creature.inventory",
+      "item.id",
+      "item.possessor",
+      "object.type",
+      "door.locked",
+      "door.lockable",
+      "door.open_state",
+      "creature.stats",
+      "stats.experience"
+    ],
+    "events_seq": 0
+  },
+  "load_reply": {
+    "dir": "000013 - game12"
+  },
+  "last_state": {
+    "phase": "gameplay",
+    "phase_detail": {
+      "server_mode": 2,
+      "loading_module": 0,
+      "area_not_ready": 0,
+      "input_class": 0,
+      "main_menu": 1,
+      "game_over": 0,
+      "pause": -1,
+      "controller_pause": 0,
+      "tutorial": -1,
+      "modal_count": -1,
+      "status_summary": -1,
+      "movie": 0,
+      "load_error": -1,
+      "move_pending": 0,
+      "timers_paused": -1,
+      "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "",
+    "server_tick": 115,
+    "client_tick": 119,
+    "pc": {
+      "max_hp": 241,
+      "id": 2147483646,
+      "x": -38.94780349731445,
+      "y": 176.14630126953125,
+      "z": 16,
+      "hp": 241
+    },
+    "party": [
+      {
+        "id": 2147483646,
+        "tag": ""
+      },
+      {
+        "id": 1155,
+        "tag": "atton"
+      }
+    ],
+    "dialog": null,
+    "globals_hash": null,
+    "journal_hash": null,
+    "counts": {
+      "globals": 0,
+      "journal": 0
+    },
+    "live": true,
+    "poisoned": []
+  },
+  "last_status": {
+    "version": "0.1.0",
+    "build": "k2_gog_aspyr",
+    "game": "K2",
+    "phase": "running",
+    "live": true,
+    "vm_bound": true,
+    "poisoned": [],
+    "hooks": 19,
+    "client_tick": 120,
+    "server_tick": 116,
+    "pid": 284,
+    "uptime_ms": 11340,
+    "scripts": 0,
+    "adapter": "k2",
+    "missing_sites": [
+      "appmgr.client",
+      "appmgr.reentrant_server_stats",
+      "client.get_paused_by_combat",
+      "client.set_paused_by_combat",
+      "client.get_auto_paused",
+      "client.set_auto_paused",
+      "msg.unlock_object",
+      "client.player_creature_id",
+      "module.name",
+      "server.pause_state",
+      "stats.continue_message_processing",
+      "stats.load_game_error",
+      "gui.tutorial_box",
+      "gui.messagebox_callback",
+      "gui.messagebox_callback_context",
+      "gui.messagebox_callback_arg",
+      "gui.modal_data",
+      "gui.modal_size",
+      "gui.party_selection_vtable",
+      "gui.initialized",
+      "gui.party_selection_selected_count",
+      "gui.party_selection_mode",
+      "gui.party_selection_entry0_flags",
+      "menu.newgame_button",
+      "menu.ready",
+      "gui.panel_bit_flags",
+      "gui.control_active",
+      "gui.panels_data",
+      "gui.panels_size",
+      "chargen.class_controls",
+      "chargen.class_control",
+      "chargen.main_route_panel",
+      "chargen.main_quick_panel",
+      "chargen.child_main_panel",
+      "chargen.main_visible_panel",
+      "client.movie_player",
+      "movie.internal",
+      "movie.playing",
+      "dialog.node_strref",
+      "timer.paused",
+      "gvt.table",
+      "gvt.identifiers",
+      "gvt.identifier",
+      "gvt.identifier_type_index",
+      "gvt.bools",
+      "gvt.numbers",
+      "gvt.strings",
+      "gvt.boolean_count",
+      "gvt.number_count",
+      "gvt.string_count",
+      "app.get_party_table",
+      "party.table",
+      "client_party.count",
+      "client_party.member",
+      "client_party.member_id",
+      "creature.inventory",
+      "item.id",
+      "item.possessor",
+      "object.type",
+      "door.locked",
+      "door.lockable",
+      "door.open_state",
+      "creature.stats",
+      "stats.experience"
+    ],
+    "events_seq": 1934
+  },
+  "commands": [
+    {
+      "label": "arithmetic",
+      "code": "1 + 1",
+      "request": 1,
+      "lines": [
+        {
+          "request": 1,
+          "kind": "input",
+          "text": "> 1 + 1"
+        },
+        {
+          "request": 1,
+          "kind": "result",
+          "text": "number: 2"
+        }
+      ]
+    },
+    {
+      "label": "pc",
+      "code": "K2PC=nwscript.call('GetFirstPC'); assert(nwscript.call('GetIsObjectValid',K2PC)==1); return K2PC",
+      "request": 2,
+      "lines": [
+        {
+          "request": 2,
+          "kind": "input",
+          "text": "> K2PC=nwscript.call('GetFirstPC'); assert(nwscript.call('GetIsObjectValid',K2PC)==1); return K2PC"
+        },
+        {
+          "request": 2,
+          "kind": "result",
+          "text": "number: 2147483646"
+        }
+      ]
+    },
+    {
+      "label": "tag",
+      "code": "local s=nwscript.call('GetTag',K2PC); assert(type(s)=='string' and not s:find(string.char(0),1,true)); return s,#s",
+      "request": 3,
+      "lines": [
+        {
+          "request": 3,
+          "kind": "input",
+          "text": "> local s=nwscript.call('GetTag',K2PC); assert(type(s)=='string' and not s:find(string.char(0),1,true)); return s,#s"
+        },
+        {
+          "request": 3,
+          "kind": "result",
+          "text": "string: "
+        },
+        {
+          "request": 3,
+          "kind": "result",
+          "text": "number: 0"
+        }
+      ]
+    },
+    {
+      "label": "position",
+      "code": "local p=nwscript.call('GetPosition',K2PC); assert(type(p.x)=='number' and type(p.y)=='number' and type(p.z)=='number'); return p.x,p.y,p.z",
+      "request": 4,
+      "lines": [
+        {
+          "request": 4,
+          "kind": "input",
+          "text": "> local p=nwscript.call('GetPosition',K2PC); assert(type(p.x)=='number' and type(p.y)=='number' and type(p.z)=='number'); return p.x,p.y,p.z"
+        },
+        {
+          "request": 4,
+          "kind": "result",
+          "text": "number: -38.947803497314453"
+        },
+        {
+          "request": 4,
+          "kind": "result",
+          "text": "number: 176.14630126953125"
+        },
+        {
+          "request": 4,
+          "kind": "result",
+          "text": "number: 16"
+        }
+      ]
+    },
+    {
+      "label": "hp",
+      "code": "local hp=nwscript.call('GetCurrentHitPoints',K2PC); assert(type(hp)=='number'); return hp",
+      "request": 5,
+      "lines": [
+        {
+          "request": 5,
+          "kind": "input",
+          "text": "> local hp=nwscript.call('GetCurrentHitPoints',K2PC); assert(type(hp)=='number'); return hp"
+        },
+        {
+          "request": 5,
+          "kind": "result",
+          "text": "number: 241"
+        }
+      ]
+    },
+    {
+      "label": "native",
+      "code": "local c=kp.model.capabilities(); if c.available then local s,e=kp.model.snapshot(K2PC); assert(s,e); return 'native snapshot',s.id,s.base,s.effective else return 'native unsupported',c.profile,c.abi end",
+      "request": 6,
+      "lines": [
+        {
+          "request": 6,
+          "kind": "input",
+          "text": "> local c=kp.model.capabilities(); if c.available then local s,e=kp.model.snapshot(K2PC); assert(s,e); return 'native snapshot',s.id,s.base,s.effective else return 'native unsupported',c.profile,c.abi end"
+        },
+        {
+          "request": 6,
+          "kind": "result",
+          "text": "string: native unsupported"
+        },
+        {
+          "request": 6,
+          "kind": "result",
+          "text": "string: unsupported"
+        },
+        {
+          "request": 6,
+          "kind": "result",
+          "text": "string: no verified host binding"
+        }
+      ]
+    },
+    {
+      "label": "bridge_recovery",
+      "code": "6 * 7",
+      "request": 7,
+      "lines": [
+        {
+          "request": 7,
+          "kind": "input",
+          "text": "> 6 * 7"
+        },
+        {
+          "request": 7,
+          "kind": "result",
+          "text": "number: 42"
+        }
+      ]
+    }
+  ],
+  "save_source_unchanged": true,
+  "source_unchanged": true
+}

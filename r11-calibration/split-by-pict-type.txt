@@ -1,0 +1,9 @@
+{"testsrc2_30_to_60": {"dup_P": {"n": 360, "max": [0.179698, 217], "at_index": 217}, "fresh_I": {"n": 2, "min": [4.42965, 500], "at_index": 500}, "fresh_P": {"n": 357, "min": [3.09352, 98], "at_index": 98}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_20_to_60": {"dup_I": {"n": 2, "max": [0.537359, 250], "at_index": 250}, "dup_P": {"n": 478, "max": [0.311396, 212], "at_index": 212}, "fresh_P": {"n": 239, "min": [3.86589, 99], "at_index": 99}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_6_to_60": {"dup_P": {"n": 648, "max": [0.331126, 213], "at_index": 213}, "fresh_I": {"n": 2, "min": [5.50972, 500], "at_index": 500}, "fresh_P": {"n": 69, "min": [4.19654, 100], "at_index": 100}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_59_to_60": {"dup_P": {"n": 12, "max": [0.30481, 630], "at_index": 630}, "fresh_I": {"n": 2, "min": [2.92612, 500], "at_index": 500}, "fresh_P": {"n": 705, "min": [1.89108, 97], "at_index": 97}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_15_to_60": {"dup_I": {"n": 1, "max": [0.479986, 250], "at_index": 250}, "dup_P": {"n": 539, "max": [0.156077, 361], "at_index": 361}, "fresh_I": {"n": 1, "min": [5.41496, 500], "at_index": 500}, "fresh_P": {"n": 178, "min": [3.92828, 92], "at_index": 92}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_45_to_60": {"dup_I": {"n": 1, "max": [0.759644, 250], "at_index": 250}, "dup_P": {"n": 179, "max": [0.206248, 366], "at_index": 366}, "fresh_I": {"n": 1, "min": [3.44545, 500], "at_index": 500}, "fresh_P": {"n": 538, "min": [2.29505, 97], "at_index": 97}}, "I_frame_indices": [0, 250, 500]}
+{"testsrc2_60": {"fresh_I": {"n": 2, "min": [2.99803, 500], "at_index": 500}, "fresh_P": {"n": 717, "min": [1.89066, 98], "at_index": 98}}, "I_frame_indices": [0, 250, 500]}
+{"dup_max_by_pict_type": {"I": 0.759644, "P": 0.331126}, "dup_count_by_pict_type": {"I": 4, "P": 2216}}
+exit=0

@@ -1,0 +1,322 @@
+{
+  "canonical_lock_free": true,
+  "checks": {
+    "build_manifest": true,
+    "historical_quarantines_unchanged": true,
+    "inputs_exact": true,
+    "lock_free": true,
+    "memory_available_4GiB": true,
+    "no_conflicting_workload": true,
+    "no_display_reuse": true,
+    "storage_available_10GiB": true,
+    "swap_available_1GiB": true,
+    "tools": true
+  },
+  "conflicting_processes": [],
+  "free_bytes": 33562882048,
+  "inputs": {
+    "/home/brunner56/kp-console-protocol-20260927/build/binkw32.dll": {
+      "actual": "1b25f37125237aefb67271533f88c48dcf07ddd37bf180743a3b0dfa2ff729d9",
+      "expected": "1b25f37125237aefb67271533f88c48dcf07ddd37bf180743a3b0dfa2ff729d9"
+    },
+    "/home/brunner56/kp-console-protocol-20260927/build/kphasor.dll": {
+      "actual": "fd8e069a1ff5a7b489f32a6492222f396f85e7b74539deb56228395b297dfac2",
+      "expected": "fd8e069a1ff5a7b489f32a6492222f396f85e7b74539deb56228395b297dfac2"
+    },
+    "/home/brunner56/kp-console-protocol-20260927/source/data/addresses/k1_gog_103.json": {
+      "actual": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2",
+      "expected": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2"
+    },
+    "/home/brunner56/kp-console-protocol-20260927/source/data/addresses/k1_steam_103_unpacked.json": {
+      "actual": "541c5c3e7890406ce08d2959ed90cd3a97eee8974ceff6d34ae8522ccb7182c5",
+      "expected": "541c5c3e7890406ce08d2959ed90cd3a97eee8974ceff6d34ae8522ccb7182c5"
+    },
+    "/home/brunner56/kp-live-20260922/frozen-model-393f68d/model_scene.lua": {
+      "actual": "07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e",
+      "expected": "07c533c28bb588507b473918b90abdb1a440d6099083155e7a86cfff32584a0e"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/Saves/000001 - AUTOSAVE/GLOBALVARS.res": {
+      "actual": "fcdab52917af2125e7349609ad1a8b11f2f07f13705f48fb1298bd6cf7828e07",
+      "expected": "fcdab52917af2125e7349609ad1a8b11f2f07f13705f48fb1298bd6cf7828e07"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/Saves/000001 - AUTOSAVE/PARTYTABLE.res": {
+      "actual": "f380d0217e2db39d105b6851cd2fce4b48258291e68c654d822e4694820a2477",
+      "expected": "f380d0217e2db39d105b6851cd2fce4b48258291e68c654d822e4694820a2477"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/Saves/000001 - AUTOSAVE/SAVEGAME.sav": {
+      "actual": "d879c65a63144a8668c1b7c566cb47fb3d66af3da0721d486701d4b2ace95bae",
+      "expected": "d879c65a63144a8668c1b7c566cb47fb3d66af3da0721d486701d4b2ace95bae"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/Saves/000001 - AUTOSAVE/pifo.ifo": {
+      "actual": "a181c82c1a8d74d79344df5c8e99d9b277517f5fc048eccca39e82bea1b14676",
+      "expected": "a181c82c1a8d74d79344df5c8e99d9b277517f5fc048eccca39e82bea1b14676"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/Saves/000001 - AUTOSAVE/savenfo.res": {
+      "actual": "d4d04f597d279266ebcd2ceb8a1917524f68e0dac780994eba6280e0b24b4c39",
+      "expected": "d4d04f597d279266ebcd2ceb8a1917524f68e0dac780994eba6280e0b24b4c39"
+    },
+    "/home/brunner56/krayt/tmp/k1_harness/swkotor.exe": {
+      "actual": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+      "expected": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435"
+    },
+    "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_gog_103.json": {
+      "actual": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2",
+      "expected": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2"
+    },
+    "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_steam_103_unpacked.json": {
+      "actual": "541c5c3e7890406ce08d2959ed90cd3a97eee8974ceff6d34ae8522ccb7182c5",
+      "expected": "541c5c3e7890406ce08d2959ed90cd3a97eee8974ceff6d34ae8522ccb7182c5"
+    }
+  },
+  "launches": 0,
+  "memory": {
+    "Active": 13332635648,
+    "Active(anon)": 12131229696,
+    "Active(file)": 1201405952,
+    "AnonHugePages": 0,
+    "AnonPages": 15716335616,
+    "Balloon": 0,
+    "Bounce": 0,
+    "Buffers": 1747664896,
+    "Cached": 5243404288,
+    "CmaFree": 0,
+    "CmaTotal": 0,
+    "CommitLimit": 62906507264,
+    "Committed_AS": 141006630912,
+    "DirectMap1G": 0,
+    "DirectMap2M": 1455423488,
+    "DirectMap4k": 32736260096,
+    "Dirty": 53489664,
+    "FileHugePages": 239075328,
+    "FilePmdMapped": 0,
+    "GPUActive": 635408384,
+    "GPUReclaim": 2097152,
+    "HardwareCorrupted": 0,
+    "HugePages_Free": 0,
+    "HugePages_Rsvd": 0,
+    "HugePages_Surp": 0,
+    "HugePages_Total": 0,
+    "Hugepagesize": 2097152,
+    "Hugetlb": 0,
+    "Inactive": 9433554944,
+    "Inactive(anon)": 3894091776,
+    "Inactive(file)": 5539463168,
+    "KReclaimable": 1095884800,
+    "KernelStack": 102612992,
+    "Mapped": 1579520000,
+    "MemAvailable": 8474755072,
+    "MemFree": 3120640000,
+    "MemTotal": 33471234048,
+    "Mlocked": 18927616,
+    "NFS_Unstable": 0,
+    "PageTables": 592248832,
+    "Percpu": 19218432,
+    "SReclaimable": 1095884800,
+    "SUnreclaim": 1250197504,
+    "SecPageTables": 2105344,
+    "Shmem": 251179008,
+    "ShmemHugePages": 0,
+    "ShmemPmdMapped": 0,
+    "Slab": 2346082304,
+    "SwapCached": 84787200,
+    "SwapFree": 9297371136,
+    "SwapTotal": 46170890240,
+    "Unaccepted": 0,
+    "Unevictable": 19054592,
+    "VmallocChunk": 0,
+    "VmallocTotal": 35184372087808,
+    "VmallocUsed": 261582848,
+    "Writeback": 0,
+    "WritebackTmp": 0,
+    "Zswap": 3427577856,
+    "Zswapped": 8792821760
+  },
+  "processes": [
+    {
+      "argv": [
+        "Xvfb",
+        ":1008869546",
+        "-screen",
+        "0",
+        "800x680x24"
+      ],
+      "name": "Xvfb",
+      "pgid": 2672,
+      "pid": 2789,
+      "ppid": 2672,
+      "sid": 2672,
+      "start": "3618",
+      "state": "S"
+    },
+    {
+      "argv": [
+        "/usr/bin/Xwayland",
+        ":0",
+        "-auth",
+        "<authority-path-redacted>",
+        "-listenfd",
+        "8",
+        "-listenfd",
+        "9",
+        "-displayfd",
+        "107",
+        "-wm",
+        "109",
+        "-rootless"
+      ],
+      "name": "Xwayland",
+      "pgid": 6081,
+      "pid": 7277,
+      "ppid": 6093,
+      "sid": 6081,
+      "start": "15877",
+      "state": "S"
+    },
+    {
+      "argv": [
+        "Xvfb",
+        ":100",
+        "-screen",
+        "0",
+        "1024x768x24",
+        "-nolisten",
+        "tcp"
+      ],
+      "name": "Xvfb",
+      "pgid": 1433656,
+      "pid": 1433656,
+      "ppid": 1708,
+      "sid": 1433656,
+      "start": "20483937",
+      "state": "S"
+    },
+    {
+      "argv": [
+        "/usr/bin/Xvfb",
+        ":94",
+        "-screen",
+        "0",
+        "1280x800x24",
+        "-nolisten",
+        "tcp",
+        "-noreset"
+      ],
+      "name": "Xvfb",
+      "pgid": 3567254,
+      "pid": 3567254,
+      "ppid": 1708,
+      "sid": 3567254,
+      "start": "57882332",
+      "state": "R"
+    }
+  ],
+  "protected": {
+    "/tmp/.X11-unix/.task7-quarantine-20260927-100845-8cd691c3-X1": {
+      "identity": {
+        "ctime_ns": 1790503732614151742,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231594,
+        "mode": 49645,
+        "mtime_ns": 1790501406951145127,
+        "size": 0,
+        "uid": 1000
+      }
+    },
+    "/tmp/.X11-unix/X0": {
+      "identity": {
+        "ctime_ns": 1789906006698893482,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 123,
+        "mode": 49645,
+        "mtime_ns": 1789906006698893482,
+        "size": 0,
+        "uid": 1000
+      },
+      "rows": [
+        "000000000709bf78: 00000003 00000000 00000000 0001 03 557386172 @/tmp/.X11-unix/X0",
+        "0000000023b32643: 00000003 00000000 00000000 0001 03 382016189 @/tmp/.X11-unix/X0",
+        "0000000025a24faa: 00000003 00000000 00000000 0001 03 557292820 @/tmp/.X11-unix/X0",
+        "0000000031634062: 00000003 00000000 00000000 0001 03 512342655 @/tmp/.X11-unix/X0",
+        "00000000387d49ff: 00000003 00000000 00000000 0001 03 382027976 @/tmp/.X11-unix/X0",
+        "000000003b26c270: 00000003 00000000 00000000 0001 03 557292823 @/tmp/.X11-unix/X0",
+        "00000000542b1ac6: 00000003 00000000 00000000 0001 03 56873 @/tmp/.X11-unix/X0",
+        "0000000057340252: 00000003 00000000 00000000 0001 03 382027982 @/tmp/.X11-unix/X0",
+        "000000006fe52eb9: 00000003 00000000 00000000 0001 03 557292298 @/tmp/.X11-unix/X0",
+        "000000007189680e: 00000003 00000000 00000000 0001 03 557337802 @/tmp/.X11-unix/X0",
+        "0000000076708c63: 00000003 00000000 00000000 0001 03 557292822 @/tmp/.X11-unix/X0",
+        "000000009c0b1904: 00000003 00000000 00000000 0001 03 58921 @/tmp/.X11-unix/X0",
+        "00000000a01cad5c: 00000003 00000000 00000000 0001 03 73326 @/tmp/.X11-unix/X0",
+        "00000000b106d431: 00000003 00000000 00000000 0001 03 59914 @/tmp/.X11-unix/X0",
+        "00000000d298dbf4: 00000002 00000000 00010000 0001 01 51783 @/tmp/.X11-unix/X0",
+        "00000000d79bd63a: 00000003 00000000 00000000 0001 03 61999 @/tmp/.X11-unix/X0",
+        "00000000d7d5f872: 00000003 00000000 00000000 0001 03 59051 @/tmp/.X11-unix/X0",
+        "00000000e179e365: 00000003 00000000 00000000 0001 03 58209 @/tmp/.X11-unix/X0",
+        "00000000e8f81b36: 00000002 00000000 00010000 0001 01 51782 /tmp/.X11-unix/X0",
+        "00000000efb29dac: 00000003 00000000 00000000 0001 03 382027975 @/tmp/.X11-unix/X0"
+      ]
+    },
+    "/tmp/.X11-unix/X100": {
+      "identity": {
+        "ctime_ns": 1790110738184165132,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 905457,
+        "mode": 49663,
+        "mtime_ns": 1790110738184165132,
+        "size": 0,
+        "uid": 1000
+      },
+      "rows": [
+        "00000000d163bd6b: 00000002 00000000 00010000 0001 01 408605562 @/tmp/.X11-unix/X100",
+        "00000000dbda99ae: 00000002 00000000 00010000 0001 01 408605563 /tmp/.X11-unix/X100"
+      ]
+    },
+    "/tmp/.X11-unix/X94": {
+      "identity": {
+        "ctime_ns": 1790484722137973835,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 941784,
+        "mode": 49663,
+        "mtime_ns": 1790484722137973835,
+        "size": 0,
+        "uid": 1000
+      },
+      "rows": [
+        "0000000027d9fcd7: 00000002 00000000 00010000 0001 01 512908621 /tmp/.X11-unix/X94",
+        "000000005cd905c6: 00000002 00000000 00010000 0001 01 512908620 @/tmp/.X11-unix/X94",
+        "00000000b64a6626: 00000003 00000000 00000000 0001 03 568551101 @/tmp/.X11-unix/X94",
+        "00000000d532fa19: 00000003 00000000 00000000 0001 03 568551103 @/tmp/.X11-unix/X94"
+      ]
+    },
+    "/tmp/.task7-quarantine-20260927-100845-8cd691c3-X1-lock": {
+      "identity": {
+        "ctime_ns": 1790503732619151684,
+        "dev": 52,
+        "gid": 1000,
+        "ino": 1231593,
+        "mode": 33060,
+        "mtime_ns": 1790501406951145127,
+        "size": 11,
+        "uid": 1000
+      },
+      "sha256": "7d74ab6254d1ef400efe783cc2619e516ecdc1c67b43a3403946686acd54ef92"
+    }
+  },
+  "status": "passed",
+  "tools": {
+    "Xwayland": "/usr/bin/Xwayland",
+    "ffmpeg": "/home/brunner56/.local/bin/ffmpeg",
+    "ffprobe": "/home/linuxbrew/.linuxbrew/bin/ffprobe",
+    "gamescope": "/usr/bin/gamescope",
+    "glxinfo": "/usr/bin/glxinfo",
+    "wine": "/usr/bin/wine",
+    "wineserver": "/usr/bin/wineserver",
+    "xdotool": "/usr/bin/xdotool",
+    "xprop": "/usr/bin/xprop",
+    "xwininfo": "/usr/bin/xwininfo"
+  },
+  "utc": "2026-09-27T10:23:12.422355+00:00"
+}

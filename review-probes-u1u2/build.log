@@ -1,0 +1,209 @@
+[  3%] [1m[34mbuilding LuaJIT for native 32-bit Linux[0m
+==== Building LuaJIT 2.1 ====
+HOSTCC    host/minilua.o
+HOSTCC    host/buildvm_asm.o
+HOSTCC    host/buildvm_peobj.o
+HOSTCC    host/buildvm_lib.o
+HOSTCC    host/buildvm_fold.o
+CC        lj_assert.o
+CC        lj_gc.o
+CC        lj_char.o
+CC        lj_obj.o
+CC        lj_buf.o
+CC        lj_str.o
+CC        lj_tab.o
+CC        lj_func.o
+CC        lj_udata.o
+CC        lj_meta.o
+CC        lj_debug.o
+CC        lj_prng.o
+CC        lj_vmevent.o
+CC        lj_vmmath.o
+CC        lj_strscan.o
+CC        lj_strfmt.o
+CC        lj_strfmt_num.o
+CC        lj_serialize.o
+CC        lj_api.o
+CC        lj_lex.o
+CC        lj_parse.o
+CC        lj_bcread.o
+CC        lj_bcwrite.o
+CC        lj_load.o
+CC        lj_ir.o
+CC        lj_opt_mem.o
+CC        lj_opt_narrow.o
+CC        lj_opt_dce.o
+CC        lj_opt_loop.o
+CC        lj_opt_split.o
+CC        lj_opt_sink.o
+CC        lj_mcode.o
+CC        lj_snap.o
+CC        lj_asm.o
+CC        lj_trace.o
+CC        lj_gdbjit.o
+CC        lj_ctype.o
+CC        lj_cconv.o
+CC        lj_ccall.o
+CC        lj_cdata.o
+CC        lj_ccallback.o
+CC        lj_carith.o
+CC        lj_clib.o
+CC        lj_cparse.o
+CC        lj_lib.o
+CC        lj_alloc.o
+CC        lib_aux.o
+CC        lib_package.o
+CC        lib_init.o
+HOSTLINK  host/minilua
+DYNASM    host/buildvm_arch.h
+VERSION   luajit.h
+CC        lj_profile.o
+CC        lj_state.o
+CC        luajit.o
+HOSTCC    host/buildvm.o
+HOSTLINK  host/buildvm
+BUILDVM   lj_ffdef.h
+BUILDVM   lj_bcdef.h
+BUILDVM   lj_folddef.h
+BUILDVM   lj_recdef.h
+BUILDVM   lj_libdef.h
+BUILDVM   jit/vmdef.lua
+BUILDVM   lj_vm.S
+CC        lj_err.o
+CC        lj_dispatch.o
+CC        lj_crecord.o
+CC        lj_ffrecord.o
+CC        lib_base.o
+CC        lj_record.o
+CC        lib_math.o
+CC        lib_bit.o
+CC        lib_string.o
+CC        lib_table.o
+CC        lib_io.o
+CC        lib_os.o
+CC        lib_debug.o
+CC        lib_jit.o
+CC        lib_ffi.o
+CC        lib_buffer.o
+ASM       lj_vm.o
+CC        lj_bc.o
+CC        lj_opt_fold.o
+AR        libluajit.a
+LINK      luajit
+OK        Successfully built LuaJIT
+==== Successfully built LuaJIT 2.1 ====
+[  7%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o[0m
+[  7%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/devtools/console.cpp.o[0m
+[ 10%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o[0m
+[ 10%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/lua/host.cpp.o[0m
+[ 10%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o[0m
+[  7%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o[0m
+[ 10%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/runtime/fault_guard.cpp.o[0m
+[ 14%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/multiplayer/transport.cpp.o[0m
+[ 14%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/lua/value.cpp.o[0m
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/src/runtime/hook_bodies.cpp: In function ‘void* kp::runtime::{anonymous}::client_area_get_server_area_body(void*)’:
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/src/runtime/hook_bodies.cpp:568:11: warning: variable ‘area’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  568 |     void* area = orig != nullptr ? orig(self) : nullptr;
+      |           ^~~~
+[ 17%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/events/dispatch.cpp.o[0m
+[ 17%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/events/table.cpp.o[0m
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/src/runtime/hook_bodies.cpp: In function ‘int kp::runtime::{anonymous}::run_script_body(void*, CExoString*, uint32_t, int)’:
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/src/runtime/hook_bodies.cpp:737:15: warning: variable ‘rc’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  737 |     const int rc = orig(self, name, object_id, has_object);
+      |               ^~
+[ 17%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/events/situation.cpp.o[0m
+[ 21%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/routines.cpp.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/events/payload.cpp.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/enginestruct.cpp.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/structs.cpp.o[0m
+[ 28%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/memory.cpp.o[0m
+[ 28%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/entity.cpp.o[0m
+[ 32%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/projectiles.cpp.o[0m
+[ 32%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/projectiles_profile.cpp.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/projectiles_native.cpp.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/model.cpp.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/projectiles_lua.cpp.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/model_backend.cpp.o[0m
+[ 39%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/model_profiles.cpp.o[0m
+[ 42%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/model_lua.cpp.o[0m
+[ 42%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/animation.cpp.o[0m
+[ 42%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/animation_profiles.cpp.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/animation_backend.cpp.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/animation_lua.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/output.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/timers.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/vector.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/strings.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/api/compat.cpp.o[0m
+[ 57%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/sha256.cpp.o[0m
+[ 57%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/loaded_image.cpp.o[0m
+[ 60%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/pe_elf.cpp.o[0m
+[ 60%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/macho.cpp.o[0m
+[ 64%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/parse.cpp.o[0m
+[ 64%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/classify.cpp.o[0m
+[ 64%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/build_table.cpp.o[0m
+[ 67%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/image/load.cpp.o[0m
+[ 67%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/hooks/trampoline.cpp.o[0m
+[ 71%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/hooks/registry.cpp.o[0m
+[ 71%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/platform/platform.cpp.o[0m
+[ 71%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/platform/platform_linux.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/channel.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/commands.cpp.o[0m
+[ 78%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/console_protocol.cpp.o[0m
+[ 78%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/json.cpp.o[0m
+[ 82%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/ring.cpp.o[0m
+[ 82%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/engine_k1.cpp.o[0m
+[ 82%] [32mBuilding CXX object CMakeFiles/kphasor.dir/src/harness/engine_k2.cpp.o[0m
+[ 85%] [1m[32mLinking CXX shared library libkphasor.so[0m
+[ 85%] Built target kphasor
+[ 89%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/lua/host.cpp.o[0m
+[ 92%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/tools/kp_supporttest.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/api/output.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/api/strings.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/api/timers.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/lua/value.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/api/vector.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform.cpp.o[0m
+[100%] [32mBuilding CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform_linux.cpp.o[0m
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp: In function ‘void {anonymous}::function_timer_cases(const std::filesystem::__cxx11::path&)’:
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp:503:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  503 |     lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                            ^
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp:503:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp: In function ‘int main(int, char**)’:
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp:662:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  662 |     lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                                ^
+/home/brunner56/kp-live-20260922/review-probes-u1u2/src/tools/kp_supporttest.cpp:662:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+[100%] [1m[32mLinking CXX executable kp_supporttest[0m
+[100%] Built target kp_supporttest
+[ 96%] Built target kphasor
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_vectortest.dir/src/api/vector.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_vectortest.dir/tools/kp_vectortest.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_vectortest[0m
+[100%] Built target kp_vectortest
+[ 96%] Built target kphasor
+[100%] [32mBuilding CXX object CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_namespacetest[0m
+[100%] Built target kp_namespacetest
+[ 96%] Built target kphasor
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_routinetest[0m
+[100%] Built target kp_routinetest
+[ 85%] Built target kphasor
+[ 85%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/tools/kp_reviewprobe.cpp.o[0m
+[ 89%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/api/strings.cpp.o[0m
+[ 85%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/api/timers.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/api/vector.cpp.o[0m
+[ 89%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/api/output.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/platform/platform.cpp.o[0m
+[ 92%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/lua/host.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/lua/value.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/kp_reviewprobe.dir/src/platform/platform_linux.cpp.o[0m
+[100%] [1m[32mLinking CXX executable kp_reviewprobe[0m
+[100%] Built target kp_reviewprobe
+[  0%] [1m[34mi686-w64-mingw32-g++ output.cpp[0m
+[  0%] [1m[34mi686-w64-mingw32-g++ timers.cpp[0m
+[100%] [1m[34mi686-w64-mingw32-g++ strings.cpp[0m
+[100%] [1m[34mi686-w64-mingw32-g++ vector.cpp[0m
+[100%] Built target support_win32

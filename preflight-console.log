@@ -1,0 +1,37 @@
+[09:45:27] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[09:45:27] staged tree /home/brunner56/kp-live-20260922/stage-k1 (new)
+[09:45:27]   copied writable dir Saves
+[09:45:27]   copied writable dir Temp
+[09:45:27]   copied writable dir currentgame
+[09:45:27]   copied writable dir futuregame
+[09:45:27]   copied writable dir gameinprogress
+[09:45:27]   copied writable dir kotorphasor
+[09:45:27]   copied writable dir logs
+[09:45:27] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[09:45:27] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[09:45:27] runtime installed from /home/brunner56/kp-validation-20260922-build
+[09:45:27] ini tuned: swkotor.ini (14 keys)
+[09:45:43] Xvfb up on :100 (pid 641516)
+[09:45:43] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[09:45:43] wineserver settled before launch
+[09:45:43] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[09:45:59] channel up on 127.0.0.1:36477: build k1_gog_103, 19 hooks, live=True
+execution: game speed 16x
+step 1: do load_save {"dir": "000001 - AUTOSAVE"}
+  ok (1.4s) load_save '000001 - AUTOSAVE' issued
+step 2: wait module {"equals": "danm14aa", "timeout": 180}
+screenshot -> 0001_periodic.png
+  ok (8.8s) phase=loading module=danm14aa server_tick=4 client_tick=8
+step 3: wait phase {"equals": "gameplay", "timeout": 120}
+  ok (26.7s) phase=gameplay module=danm14aa server_tick=7 client_tick=11 pc=(105.7,96.5,1.0) hp=96/96
+step 4: Bastila is a valid conscious active party member
+  ok (15.8s) assert_lua == true
+step 5: dantooine-party-preflight
+screenshot -> 0002_dantooine-party-preflight.png
+  ok (0.6s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527/shots/0002_dantooine-party-preflight.png
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527/report.json
+{
+  "ok": true,
+  "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527"
+}
+[09:46:55] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-094527

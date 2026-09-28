@@ -1,0 +1,22 @@
+{
+  "label": "npc_tag",
+  "code": "local npc=nwscript.call('GetPartyMemberByIndex',1); assert(nwscript.call('GetIsObjectValid',npc)==1); local t=nwscript.call('GetTag',npc); assert(t=='atton' and #t==5); return t,#t",
+  "request": 4,
+  "lines": [
+    {
+      "request": 4,
+      "kind": "input",
+      "text": "> local npc=nwscript.call('GetPartyMemberByIndex',1); assert(nwscript.call('GetIsObjectValid',npc)==1); local t=nwscript.call('GetTag',npc); assert(t=='atton' and #t==5); return t,#t"
+    },
+    {
+      "request": 4,
+      "kind": "result",
+      "text": "string: atton"
+    },
+    {
+      "request": 4,
+      "kind": "result",
+      "text": "number: 5"
+    }
+  ]
+}

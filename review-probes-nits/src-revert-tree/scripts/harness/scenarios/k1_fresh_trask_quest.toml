@@ -1,0 +1,914 @@
+# Fresh Endar opening: route solely by engine dialogue and world state.
+name = "k1 fresh Endar: complete Trask attack instruction"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 90
+# Chargen builds six character previews on the game thread; on a loaded
+# host that exceeds the 20s hang default without being a hang.
+hang_seconds = 90
+# Trask's tutorial barks: every entry whose reply 0 links to a k_pend_time01
+# terminator and whose reply 1 loops back, enumerated from end_trask01.dlg.
+# Entry 73 shares the shape but its reply 0 sets end_attack, so the route
+# chooses that one itself rather than letting it be answered automatically.
+authored_barks = [37, 48, 50, 53]
+
+[[step]]
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "new_game"
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "class"
+timeout = 45
+
+[[step]]
+do = "chargen_select_class"
+index = 0
+
+[[step]]
+wait = "chargen_stage"
+equals = "route"
+timeout = 45
+
+[[step]]
+do = "chargen_begin_play"
+timeout = 45
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog"]
+timeout = 300
+
+[[step]]
+wait = "module"
+equals = "end_m01aa"
+timeout = 90
+
+[[step]]
+wait = "global"
+name = "End_TraskTalk"
+equals = 1
+timeout = 120
+
+[[step]]
+wait = "dialog"
+timeout = 120
+
+[[step]]
+do = "reply"
+pick = "Who are you?"
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 57
+timeout = 60
+
+[[step]]
+wait = "dialog_entry"
+equals = 58
+timeout = 60
+
+[[step]]
+wait = "dialog"
+timeout = 60
+
+# E58 local row 0 is pinned by the DLG resource to R79 -> E61.
+[[step]]
+do = "reply"
+pick = 0
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 61
+timeout = 60
+
+# E61 → R80 → E62 and the class-specific branch are authored automatic nodes.
+# The live class-0 run reaches E65, whose first engine-visible response is
+# R90 → E73.  This is still an ordinary player dialogue choice, not an
+# automatic continuation, so wait for the live reply table and choose it by
+# its engine-resolved text.
+[[step]]
+wait = "dialog_entry"
+equals = 65
+timeout = 60
+
+[[step]]
+wait = "dialog"
+timeout = 60
+
+[[step]]
+do = "reply"
+pick = "Okay, let's go help Bastila!"
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 73
+timeout = 120
+
+# E73 local row 0 is pinned by the DLG resource to terminal R92
+# (end_attack, entry 1); the other row loops to E51.
+[[step]]
+wait = "dialog"
+timeout = 60
+
+[[step]]
+do = "reply"
+pick = 0
+
+[[step]]
+wait = "journal"
+tag = "end_attack"
+equals = 1
+timeout = 120
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local d=nwscript.call('GetObjectByTag','end_door01',0); if nwscript.call('GetIsObjectValid',d)~=1 then error('Trask door unavailable') end; if nwscript.call('GetIsOpen',d)~=0 or nwscript.call('GetLocked',d)~=1 then error('Trask dialogue did not leave door closed and locked') end; return {door=d,open=nwscript.call('GetIsOpen',d),locked=nwscript.call('GetLocked',d)}"
+
+# interaction_range is the engine's own parking distance, not a chosen bound:
+# end_locker01 has a collision footprint, so ActionMoveToObject stops the PC
+# 1.79 units from the placeable origin and cannot get closer. Measured live in
+# tmp/k1_harness/runs/20260915-071620 with the PC idle and out of combat.
+[[step]]
+label = "open the authored end_locker01"
+do = "placeable_transaction"
+module = "end_m01aa"
+type = 64
+tag = "end_locker01"
+position = [10.795940399169922, 21.870288848876953, -1.1049995422363281]
+position_tolerance = 0.25
+interaction_range = 2.5
+pre_open = false
+# One world probe costs 7-8s live and one bark dismissal about 5s, so a 60s
+# budget bought only ~7 observations and never caught a bark-free frame.
+timeout = 240
+
+[[step]]
+do = "take_all_container"
+timeout = 30
+
+[[step]]
+wait = "dialog"
+timeout = 120
+
+# Taking the locker loot resumes Trask on the equip-tutorial barks, which the
+# authored_barks policy answers as they appear.
+[[step]]
+do = "lua"
+timeout = 30
+code = "return {trask_dlg=nwscript.call('GetGlobalNumber','END_TRASK_DLG'), attack=nwscript.call('GetGlobalNumber','END_ATTACK')}"
+
+# END_TRASK_DLG is 3 here. Showing and hiding the native equipment GUI runs
+# k_pend_screenchg with GetSubScreenID()==1, which queues event 200 on Trask;
+# k_pend_trask_d sees the starting clothes in slot 1, advances END_TRASK_DLG to
+# 4 and resumes the authored conversation. Nothing is written by hand.
+[[step]]
+do = "lua"
+timeout = 30
+code = "local pc=nwscript.call('GetFirstPC'); local out={}; for slot=0,11 do local it=nwscript.call('GetItemInSlot',slot,pc); if nwscript.call('GetIsObjectValid',it)==1 then out['slot'..slot]=nwscript.call('GetTag',it) end end; local inv={}; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do inv[#inv+1]=nwscript.call('GetTag',it)..'#'..tostring(it); it=nwscript.call('GetNextItemInInventory',pc) end; out.inventory=table.concat(inv,','); return out"
+
+# The equip tutorial is the point of this beat: k_pend_trask_d looks for a
+# valid item in slot 1, 4 or 5 and Trask nags until one is there. A fresh PC
+# has every slot empty, so the locker's short sword goes in the right-weapon
+# slot before the screen transition runs.
+[[step]]
+do = "equip_item"
+tag = "g_w_shortswrd01"
+slot = 4
+timeout = 60
+
+# Each transition waits for real gameplay first, skipping the VO-gated
+# automatic nodes Trask starts, so the authored callback runs against a
+# settled state instead of a race.
+[[step]]
+do = "equipment_screen"
+visible = true
+timeout = 120
+
+[[step]]
+do = "equipment_screen"
+visible = false
+timeout = 120
+
+[[step]]
+wait = "global"
+name = "END_TRASK_DLG"
+equals = 4
+timeout = 90
+
+# Entries 44->45 are auto-forward single-reply nodes whose exact index races the
+# harness (44 may already be 45 when a wait fires). Advance by picking the first
+# active reply on each waiting node until the party-selection modal (paused)
+# appears -- gated on the phase boundary, not a transient entry index.
+[[step]]
+do = "advance_dialog"
+until = "paused"
+timeout = 120
+
+# Accepting the party panel synchronously establishes authored dialog entry 43
+# (the door node), confirmed live.
+[[step]]
+do = "accept_party_selection"
+timeout = 60
+
+# Entry 43 is the authored "follow me" node. Advance it to gameplay (its first
+# active reply, "Okay.", ends the node). The authored door-open (k_pend_traskdl40,
+# Entry 54) is gated on End_TraskTalk==0, which traskinc has already incremented
+# past, so that node no longer roots. Decompilation shows its entire effect is
+# AssignCommand(end_door01, ActionOpenDoor(end_door01)) with no SetLocked -- a
+# scripted open that bypasses the player-facing lock. Replicate exactly that
+# authored engine call on the valid locked door, then confirm it opened.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "open authored end_door01"
+do = "scripted_door_open"
+tag = "end_door01"
+timeout = 30
+
+# CHECKPOINT ENDPOINT (2026-09-15): fresh game -> Trask opening -> end_attack=1
+# -> locker open + take-all -> equip -> equipment screen (END_TRASK_DLG 3->4) ->
+# advance_dialog to party modal -> accept -> advance_dialog past Entry 43 ->
+# end_door01 open via the authored self-command pattern. State-gated and
+# reproducible; confirmed this is a clean, saveable, non-paused idle state
+# (bisected against the door02 issue below).
+[[step]]
+label = "checkpoint at first door open"
+do = "save"
+slot = 1
+name = "endar_first_door"
+checkpoint = "endar_first_door"
+timeout = 120
+
+# end_door02: scripted-only, same pattern as end_door01. Its OnOpen
+# (k_pend_door18) fires a cinematic DLG with ActionJumpToLocation to room3.
+# The DLG is not authored Skippable; VO nodes hang on waiting_on_sound in
+# headless mode. dialog_clear_sound_wait clears the transient send_pending
+# flag (CSWSObject+0x48) to simulate sound playback completing, letting the
+# dialog advance naturally through all nodes with scripted effects intact.
+# Unlike the earlier CSWSDialog::Skippable write (reverted for save
+# corruption), send_pending is a runtime field never serialized to saves.
+# Verified: save taken after this write loads cleanly.
+[[step]]
+label = "open authored end_door02"
+do = "scripted_door_open"
+tag = "end_door02"
+timeout = 30
+
+# The door02 cutscene leaves phase=paused with auto-pause on enemy sighted.
+# advance_dialog reaches "paused" (dialog completes), then clear_auto_pause
+# writes 0 to server.pause_state to reach gameplay.
+# The cutscene ends on a tutorial popup (no autopause since the ini disables
+# it); the dialog ladder dismisses popups and summaries and holds for the
+# gameplay boundary.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 6.0
+timeout = 180
+
+# CHECKPOINT ENDPOINT (2026-09-15): room3 entry, 6 hostile Sith soldiers,
+# party at ~(45,17), END_ROOM3_DEAD=0. Verified save/reload clean.
+[[step]]
+label = "checkpoint at room3"
+do = "save"
+slot = 3
+name = "endar_room3"
+checkpoint = "endar_room3"
+timeout = 120
+
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM3_DEAD"
+until_value = 2
+radius = 40
+timeout = 180
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 90
+
+[[step]]
+label = "open authored end_door05"
+do = "scripted_door_open"
+tag = "end_door05"
+timeout = 30
+
+# door10_cut2 opens by self-command like the others. Its OnOpen
+# (k_pend_room5_02) requires IsObjectPartyMember(GetLastOpenedBy()), which
+# the self-command cannot satisfy; the only non-cosmetic thing it does is
+# SignalEvent(area, UserDefined 20) two seconds later, so the route signals
+# that itself. The area handler (k_pend_area02 case 20) has Trask start the
+# cutscene conversation whose scripts make end_cut2_sith1/2/4 hostile.
+# Two end_gensith patrol the corridor past door05; they sometimes stand in
+# the path without engaging. Clear them before the walk.
+[[step]]
+do = "clear_room"
+radius = 30
+timeout = 120
+
+# Corridor loot the route used to walk past (kq: end_m01aa placeables):
+# metalbox (41.6,55.7) holds a medpac and credits; footlker (48.9,60.9)
+# holds class-4 armor, a long sword and two frag grenades. Engine tags are
+# lowercase and several placeables share a tag, so the Lua picks the nearest
+# stocked one; ActionTakeItem empties it without the container GUI (the PC
+# cannot path to a wall-flush placeable, so ActionInteractObject is dropped).
+# The containers sit against the corridor walls, so a move-to-object gets no
+# path; walk to the corridor beside each and let ActionInteractObject close in.
+[[step]]
+do = "move_to"
+position = [43.0, 55.7, -1.275]
+range = 1.0
+timeout = 120
+
+[[step]]
+label = "take everything from the nearest stocked metalbox (ActionTakeItem; no container GUI needed)"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+timeout = 20
+
+[[step]]
+do = "move_to"
+position = [47.3, 60.9, -1.275]
+range = 1.0
+timeout = 120
+
+[[step]]
+label = "take everything from the nearest stocked footlker (ActionTakeItem; no container GUI needed)"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local a,s=false,false; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do local t=nwscript.call('GetTag',it):gsub('%z',''); if t=='g_a_class4001' then a=true end; if t=='g_w_lngswrd01' then s=true end; it=nwscript.call('GetNextItemInInventory',pc) end; return a and s"
+equals = true
+poll = true
+timeout = 20
+
+# INVENTORY_SLOT_BODY = 1, INVENTORY_SLOT_RIGHTWEAPON = 4.
+[[step]]
+do = "equip_item"
+tag = "g_a_class4001"
+slot = 1
+timeout = 60
+
+[[step]]
+do = "equip_item"
+tag = "g_w_lngswrd01"
+slot = 4
+timeout = 60
+
+[[step]]
+do = "move_to"
+tag = "end_door10_cut2"
+range = 1.5
+timeout = 90
+
+[[step]]
+label = "open authored end_door10_cut2"
+do = "scripted_door_open"
+tag = "end_door10_cut2"
+timeout = 30
+
+# The ambush cutscene (k_pend_cut2_1..3) pauses its conversation around
+# scripted explosions; like the sacrifice beat it gets real time.
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "fire the room5 ambush (area UserDefined 20)"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); nwscript.call('SignalEvent',nwscript.call('GetArea',pc), nwscript.call('EventUserDefined',20)); return 1"
+timeout = 20
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 6.0
+timeout = 300
+
+[[step]]
+do = "speed"
+scale = 16.0
+
+# k_pend_sith2_d on end_cut2_sith1/2/4 counts END_ROOM5_DEAD; at 3 it
+# unlocks end_door16.
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM5_DEAD"
+until_value = 3
+radius = 50
+timeout = 240
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetLocked',nwscript.call('GetObjectByTag','end_door16',0))"
+equals = 0
+poll = true
+timeout = 20
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door16"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open authored end_door16"
+do = "scripted_door_open"
+tag = "end_door16"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 180
+
+# end_cut04 (the door16 cutscene) ends with k_pend_room5_03: SetPartyLeader(PC)
+# and k_pman_npcstart on Trask, undoing the k_pman_npcstop the area handler
+# ran. Running the authored restart again is idempotent, so the route does
+# not depend on which node the cutscene ended on.
+[[step]]
+label = "restart Trask's party AI"
+do = "run_script"
+script = "k_pman_npcstart"
+tag = "end_trask"
+timeout = 20
+
+# end_cut04's k_pend_reinfrc03 node creates end_reinforce1/2 at their _1
+# waypoints; k_pend_cut30 (end_jedicut's UserDefined 10) makes them hostile.
+# Both are re-run only when their effect is missing, so a cutscene that
+# already did the work is not doubled.
+[[step]]
+label = "ensure the corridor reinforcements exist and are hostile"
+do = "lua"
+code = "local j=nwscript.call('GetObjectByTag','end_jedicut',0); local done=nwscript.call('GetGlobalNumber','END_ROOM8_DEAD')>=2; local a=nwscript.call('GetObjectByTag','end_reinforce1',0); local b=nwscript.call('GetObjectByTag','end_reinforce2',0); if not done and nwscript.call('GetIsObjectValid',a)~=1 and nwscript.call('GetIsObjectValid',b)~=1 then nwscript.call('ExecuteScript','k_pend_reinfrc03', j) end; if not done then nwscript.call('SignalEvent',j, nwscript.call('EventUserDefined',10)) end; return 1"
+timeout = 20
+
+# Either the pair is up and hostile, or the party already killed them (a
+# restarted Trask engages them on sight) and END_ROOM8_DEAD says so.
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local n=nwscript.call('GetGlobalNumber','END_ROOM8_DEAD'); for _,t in ipairs({'end_reinforce1','end_reinforce2'}) do local o=nwscript.call('GetObjectByTag',t,0); if nwscript.call('GetIsObjectValid',o)==1 and nwscript.call('GetIsDead',o)~=1 and nwscript.call('GetIsEnemy',o,pc)==1 then n=n+1 end end; return n>=2"
+equals = true
+poll = true
+timeout = 30
+
+# k_pend_reinfrc08/09 (their UserDefined) count END_ROOM8_DEAD.
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM8_DEAD"
+until_value = 2
+radius = 60
+timeout = 240
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 90
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+# end_door08 (the bridge) is locked with no player-side open in headless
+# mode; its OnFailToOpen k_pend_door20 is the authored path: with
+# END_ROOM8_DEAD >= 2 it spawns the bridge Sith, unlocks and opens itself,
+# sets TraskState 31 and removes the placeholder Carth.
+[[step]]
+do = "move_to"
+tag = "end_door08"
+range = 2.0
+timeout = 120
+
+[[step]]
+label = "open the bridge door through its own OnFailToOpen"
+do = "run_script"
+script = "k_pend_door20"
+tag = "end_door08"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door08',0))"
+equals = 1
+poll = true
+timeout = 30
+
+# The two SithSoldiers (k_pend_room7_01) charge the door; END_ROOM7_DEAD >= 2
+# is the bridge cleared. Trask talks afterwards and the XP summary pops.
+[[step]]
+do = "clear_room"
+until_global = "END_ROOM7_DEAD"
+until_value = 2
+radius = 40
+timeout = 240
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.5
+timeout = 30
+
+# The bridge fight leaves the PC past 1000 XP; the harness's auto_levelup
+# is the character screen's own Auto Level Up (CSWSCreatureStats::AutoLevelup).
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetXP',nwscript.call('GetFirstPC')) >= 1000"
+equals = true
+poll = true
+timeout = 20
+
+[[step]]
+label = "level up to 2"
+do = "auto_levelup"
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetHitDice',nwscript.call('GetFirstPC'))"
+equals = 2
+poll = true
+timeout = 20
+
+# end_door15's OnFailToOpen k_pend_door15 needs END_ROOM7_DEAD >= 2 and a
+# level-2 PC; it unlocks and opens the door itself (else it starts Trask's
+# end_levelup talk).
+[[step]]
+do = "move_to"
+tag = "end_door15"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open end_door15 through its own OnFailToOpen"
+do = "run_script"
+script = "k_pend_door15"
+tag = "end_door15"
+timeout = 20
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door15',0))"
+equals = 1
+poll = true
+timeout = 30
+
+# end_door19's OnOpen (k_pend_traskdie1) is Trask's sacrifice cutscene: it
+# jumps the PC to wp_pc_final, removes Trask from the party and closes the
+# door behind him.
+[[step]]
+do = "move_to"
+tag = "end_door19"
+range = 1.5
+timeout = 120
+
+# k_pend_traskdie1's chain (trasknkd, cut32, resume2, cut14, cut01, cut26,
+# cut23, cut02, cut27, cut24, cut25) pauses and resumes the conversation on
+# DelayCommands; at 16x it dies after resume2 with Trask still in the party.
+# It ran to completion at 1x, so the cutscene gets real time.
+[[step]]
+do = "speed"
+scale = 1.0
+
+# No door readback here: the OnOpen cutscene takes the door (and closes it
+# behind Trask) before it ever reads open, and its VO-gated nodes need the
+# dialog ladder driving from the first moment. Gate on the cutscene starting.
+[[step]]
+label = "open end_door19: Trask holds off Bandon"
+do = "lua"
+code = "local d=nwscript.call('GetObjectByTag','end_door19',0); nwscript.with_caller(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
+timeout = 20
+
+# The cutscene raises the XP summary and a tutorial popup as it begins;
+# advance_dialog dismisses those and drives the VO-gated nodes. `hold` keeps
+# it driving through the brief gameplay flash before the conversation opens.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetPartyMemberCount')"
+equals = 1
+poll = true
+timeout = 60
+
+[[step]]
+do = "speed"
+scale = 16.0
+
+# end_door10 (47,120) is the transition to end_m01ab at waypoint from_01a;
+# StartNewModule is the call the door's own transition makes.
+[[step]]
+label = "take the transition to the starboard section"
+do = "lua"
+code = "nwscript.call('StartNewModule','end_m01ab','from_01a'); return 1"
+timeout = 20
+
+[[step]]
+wait = "module"
+equals = "end_m01ab"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+# Carth's comlink call greets the arrival; it is an ordinary dialog.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 180
+
+# CHECKPOINT ENDPOINT: starboard section entry (end_m01ab, from_01a), Trask
+# gone, party = PC alone.
+[[step]]
+label = "checkpoint at starboard entry"
+do = "save"
+slot = 4
+name = "endar_starboard"
+checkpoint = "endar_starboard"
+timeout = 120
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+do = "move_to"
+tag = "end_door01"
+range = 1.5
+timeout = 180
+
+[[step]]
+label = "open end_door01 (its OnOpen is a cosmetic explosion)"
+do = "scripted_door_open"
+tag = "end_door01"
+timeout = 30
+
+[[step]]
+label = "the two soldiers; radius keeps the sealed Sith room out of it"
+do = "clear_room"
+radius = 14
+timeout = 180
+
+# The soldier-room footlocker holds the five computer spikes the console's
+# overload costs. The engine tags it "footlker"; GetObjectByTag is
+# case-insensitive, the world probe is not.
+[[step]]
+do = "move_to"
+tag = "footlker"
+range = 2.0
+timeout = 120
+
+[[step]]
+label = "open the footlocker"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+timeout = 20
+
+[[step]]
+wait = "phase"
+equals = "paused"
+timeout = 30
+
+[[step]]
+do = "take_all_container"
+timeout = 30
+
+[[step]]
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local n=0; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do if nwscript.call('GetTag',it):gsub('%z','')=='k_computer_spike' then n=n+nwscript.call('GetItemStackSize',it) end; it=nwscript.call('GetNextItemInInventory',pc) end; return n>=5"
+equals = true
+poll = true
+timeout = 20
+
+[[step]]
+label = "heal if hurt"
+do = "use_item"
+tag = "g_i_medeqpmnt01"
+if_hp_below = 0.6
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_comp02"
+range = 2.5
+timeout = 120
+
+[[step]]
+label = "use the security console"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+timeout = 20
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+[[step]]
+do = "reply"
+pick = "View starboard transport module."
+timeout = 30
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+[[step]]
+label = "overload the transport module conduit: kills the five Sith, unlocks end_door05"
+do = "reply"
+pick = "[Computer] Overload power conduit. (5 spike(s))"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 6.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetGlobalNumber',\"END_SITH_DEAD\")>=5"
+equals = true
+poll = true
+timeout = 90
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetLocked',nwscript.call('GetObjectByTag',\"end_door05\",0))==0 and nwscript.call('GetLocked',nwscript.call('GetObjectByTag',\"end_door04\",0))==0"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door05"
+range = 1.5
+timeout = 120
+
+# Doors unlocked at runtime stall in the first phase of opening headless
+# (the client never delivers the animation-done callback); scripted_door_open
+# now commits the open state (door_commit_open) when the readback stays 0.
+[[step]]
+label = "open end_door05"
+do = "scripted_door_open"
+tag = "end_door05"
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_door04"
+range = 1.5
+timeout = 120
+
+[[step]]
+label = "open end_door04: its OnOpen clears the leftovers and has Carth start his conversation"
+do = "scripted_door_open"
+tag = "end_door04"
+timeout = 30
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 300
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetIsOpen',nwscript.call('GetObjectByTag','end_door04',0))"
+equals = 1
+poll = true
+timeout = 30
+
+[[step]]
+do = "move_to"
+tag = "end_pod"
+range = 2.5
+timeout = 120
+
+[[step]]
+label = "use the escape pod"
+do = "lua"
+code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+timeout = 20
+
+[[step]]
+wait = "dialog"
+timeout = 30
+
+# The pod launch and STUNT_00's vision cutscene run at real time: at 16x the
+# stunt's two scripted conversations (jc_00_vistaris, cut00_convers) restart
+# faster than they can be ended, and a warp issued mid-conversation is held.
+[[step]]
+do = "speed"
+scale = 1.0
+
+[[step]]
+label = "launch: k_pend_pod01 -> StartNewModule(STUNT_00)"
+do = "reply"
+pick = "[Use the escape pod.]"
+timeout = 30
+
+[[step]]
+wait = "module"
+equals = "STUNT_00"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+# STUNT_00's vision cutscene (jc_00_vistaris, non-skippable, textless) ends
+# with k_ren_visionland -> StartNewModule(tar_m02af). Headless its VO-gated
+# nodes never finish, and StartNewModule from a script does nothing inside
+# the stunt module (it reports itself as module000). The ladder ends the
+# conversation (its abort rung), then the harness's own pending-move path
+# (`warp`, the setters ExecuteCommandStartNewModule uses) loads Taris.
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 3.0
+timeout = 300
+
+[[step]]
+label = "leave the vision cutscene for Taris"
+do = "warp"
+module = "tar_m02af"
+
+[[step]]
+wait = "module"
+equals = "tar_m02af"
+timeout = 300
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog", "paused"]
+timeout = 300
+
+[[step]]
+do = "speed"
+scale = 16.0
+
+# Taris: the apartment wake-up cutscene with Carth (tar_m02af).
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+hold = 8.0
+timeout = 400
+
+[[step]]
+do = "assert_lua"
+code = "return nwscript.call('GetJournalEntry','end_attack')"
+equals = 99
+poll = true
+timeout = 30
+
+[[step]]
+label = "checkpoint: Taris apartment (Endar Spire complete)"
+do = "save"
+slot = 5
+name = "taris_apartment"
+checkpoint = "taris_apartment"
+timeout = 240
+
+[[step]]
+do = "quit"

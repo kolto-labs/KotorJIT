@@ -1,0 +1,5 @@
+Ran 2 tests in 31.743s
+OK
+PROBE G play accepted job=e5e58653 state=queued
+PROBE G after journal chmod 644: status_op=execution_stopped stop_reply_op=stop_pending owner_alive_3s_after_stop=True descriptor=True
+PROBE H unauth replies=['control authentication failed', 'control authentication failed', 'pop expected at most 1 argument, got 2', 'control authentication failed'] still_attached=True status_with_one_hog=TimeoutError after 2.00s

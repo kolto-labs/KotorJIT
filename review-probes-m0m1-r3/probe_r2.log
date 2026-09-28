@@ -1,0 +1,16 @@
+pagesize=4096
+PASS  I2 dtor after foreign chain: trampoline kept, chained call works, leak counted
+PASS  I2 move-assign after chain; reused Detour installs+uninstalls cleanly, no extra leak
+PASS  I2 move-construct from installed: source inert, one uninstall, no leak
+    status=ProtectFailed detail=mprotect RW refused; nothing written errno-path
+PASS  real kernel: RW refused on MAP_SHARED O_RDONLY r-x file mapping -> nothing written, no page left behind
+    raw mprotect(2 pages, RW) = -1 errno=13 page0=rw-p page1=r-xs
+    status=ProtectFailed detail=mprotect RW refused; nothing written page0=r-xp page1=r-xs
+PASS  real kernel PARTIAL mprotect over two VMAs (anon r-x | shared-RO file r-x): page0 resealed, nothing written
+    status=ProtectFailed detail=mprotect restore refused (EACCES: SELinux execmod?); previous bytes rolled back but the page is left RW, not executable page0=r-xp page1=rw-p
+PASS  seam two-page: restore refused on page1 only -> rolled back; page0 r-x, page1 rw, not installed
+    status=ProtectFailed installed=1 detail=mprotect restore refused (EACCES: SELinux execmod?) and rollback refused; new bytes left in place and the page left RW, not executable page0=rw-p page1=rw-p
+PASS  seam two-page: restore AND second RW refused on page1 -> patch live, installed; page0 state?
+    retry on the dead page: NotExecutable, page=rw-p
+PASS  seam: exec ALWAYS refused on install (g_mode=1 refuses every PROT_EXEC on the page) -> page left rw-; retry install on the dead page
+ALL PROBES PASS (0 failing)

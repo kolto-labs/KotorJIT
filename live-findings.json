@@ -1,0 +1,10 @@
+{
+  "scope": "Current live and controlled reproductions, not an all-example pass receipt",
+  "findings": [
+    {"id":"event-watermark-delay","kind":"harness","status":"fixed-and-live-rechecked","evidence":"103534 meditation active-effect delta and expiry passed after replacing64eventdrains withonewatermark"},
+    {"id":"wounded-padded-tag","kind":"example","status":"fixed-and-live-rechecked","commit":"1bb1714","evidence":"105626 steps26-29 passed with fullBastilawarning and duplicate suppression"},
+    {"id":"doppel-original-appearance","kind":"example","status":"open","evidence":"104259 PCrow136→21 and allcopiedSithrow21; doppel-state-repro.lua fails statefuloriginalappearance expectation","limit":"Existingroutepassedcountergates but failed documented original-player-face behavior"},
+    {"id":"combined-save-claim","kind":"composition","status":"isolated-cause","evidence":"105626 sixshowcase run persisted sharedOnSaveblob0 fromhigherpriorityAhto; arrivalexpectedownprefixdan and replayed onmoduletransition","next":"Validate arrival alone; sharedOnSavearbitration is not per-script persistence"},
+    {"id":"software-capture-quality","kind":"harness-media","status":"prototype-fixed","evidence":"GPUGamescope owneddisplay AMDaccelerated;110018peacefulrave11stepspassed and2013frames33.56sec requested60fps dup0drop1","limit":"ProductionGPUadapter and finalvisualreview stillrequired; encodedfpsdoesnotproveallframesaredistinct"}
+  ]
+}

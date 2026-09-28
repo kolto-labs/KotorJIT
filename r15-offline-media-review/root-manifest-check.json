@@ -1,0 +1,52 @@
+[
+  {
+    "name": "drift_pair8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "duplicate8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "fast4_8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "half_frozen_bottom8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "half_frozen_bottom8_true.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "healthy34.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "healthy8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "single_skip8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "slowq8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  },
+  {
+    "name": "static8.mp4",
+    "hash_matches": true,
+    "size_matches": true
+  }
+]

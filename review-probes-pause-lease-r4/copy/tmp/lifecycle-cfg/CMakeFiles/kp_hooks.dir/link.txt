@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_hooks.a CMakeFiles/kp_hooks.dir/src/hooks/trampoline.cpp.o CMakeFiles/kp_hooks.dir/src/hooks/registry.cpp.o CMakeFiles/kp_hooks.dir/src/platform/platform.cpp.o CMakeFiles/kp_hooks.dir/src/platform/platform_linux.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_hooks.a

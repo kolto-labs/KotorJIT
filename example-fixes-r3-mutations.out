@@ -1,0 +1,11 @@
+== oldlogic
+FAIL	module load restores the original PC while it is still valid; a new GetFirstPC object is left alone	tools/tests/examples/cursed.lua:232: original PC left at min-one-HP 1
+FAIL	a PC swap onto another guarded member restores both objects to their own priors	tools/tests/examples/cursed.lua:243: original PC left at min-one-HP 1
+FAIL	a gone PC is never resolved onto another member this script guarded under its own ID	tools/tests/examples/cursed.lua:253: the gone PC's prior was written onto a guarded member (first pass)
+== mut-pcfirst
+FAIL	module load restores the original PC while it is still valid; a new GetFirstPC object is left alone	tools/tests/examples/cursed.lua:232: original PC left at min-one-HP 1
+FAIL	a PC swap onto another guarded member restores both objects to their own priors	tools/tests/examples/cursed.lua:243: original PC left at min-one-HP 1
+== mut-noclaim
+FAIL	a gone PC is never resolved onto another member this script guarded under its own ID	tools/tests/examples/cursed.lua:253: the gone PC's prior was written onto a guarded member (first pass)
+== mut-liveonly
+FAIL	a gone PC is never resolved onto another member this script guarded under its own ID	tools/tests/examples/cursed.lua:253: the gone PC's prior was written onto a guarded member (second pass)

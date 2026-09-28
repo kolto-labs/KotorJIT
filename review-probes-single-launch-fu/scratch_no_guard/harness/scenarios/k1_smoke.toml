@@ -1,0 +1,34 @@
+# k1 smoke: boot, status, load the shipped autosave, reach gameplay, read
+# state, take one frame, quit. Boot and `status` happen before the first
+# step: the runner does not start until the channel reports a K1 build.
+name = "k1 smoke: autosave to gameplay"
+target = "k1"
+
+[settings]
+load_timeout = 300
+shot_interval = 120
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+wait = "module"
+equals = "end_m01aa"
+timeout = 60
+
+[[step]]
+do = "lua"
+code = "return nwscript.call('GetModuleName')"
+
+[[step]]
+screenshot = true
+label = "gameplay"
+
+[[step]]
+do = "quit"

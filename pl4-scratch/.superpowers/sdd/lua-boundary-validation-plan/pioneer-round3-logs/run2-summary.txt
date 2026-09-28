@@ -1,0 +1,50 @@
+=== container-rerun kpharness_playback_test 2026-09-27T13:56:18-05:00
+rc=0 2026-09-27T13:58:18-05:00
+Ran 34 tests in 119.081s
+
+OK
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== host kpharness_playback_test 2026-09-27T13:58:18-05:00
+rc=1 2026-09-27T14:00:46-05:00
+Ran 34 tests in 146.510s
+
+FAILED (errors=1)
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== host kpharness_pioneer_policy_test 2026-09-27T14:00:47-05:00
+rc=0 2026-09-27T14:00:56-05:00
+Ran 21 tests in 0.147s
+
+OK
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== host kpharness_offline_test 2026-09-27T14:00:57-05:00
+rc=0 2026-09-27T14:05:11-05:00
+[14:04:57] staged tree /tmp/kpharness_stage_v6bde878/bad_resource (new)
+[14:04:57]   copied writable dir Saves
+...........1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== host kpharness_creative_test 2026-09-27T14:05:11-05:00
+rc=0 2026-09-27T14:07:03-05:00
+Ran 33 tests in 24.185s
+
+OK
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+=== container probe 2026-09-27T14:07:03-05:00
+rc=1
+PROBE J play-then-immediate-stop: final=execution_stopped boundary=0 mutations=[]
+PROBE K descriptor 0644: client stop -> PlaybackError: playback sidecar must be owned by this user with mode600; after raw stop owner_alive=False descriptor_left=False
+PROBE L two concurrent attaches: [('ok', 'fc3a8360'), ('ok', 'fc3a8360')]; live_owner_procs=1 engine_connections=1
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+1712691 /usr/bin/python3 -m kpharness.playback --serve /tmp/kpharness_playback_d20hi10h/route.toml
+=== host probe 2026-09-27T14:08:19-05:00
+rc=1
+Ran 12 tests in 81.699s
+
+FAILED (errors=1)
+1177583 bash -c source /home/brunner56/.claude/shell-snapshots/snapshot-bash-1790518997896-fkjefn.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'f=/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt; tail -n +1 -F $f 2>/dev/null | grep --line-buffered -E "^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve"' < /dev/null && pwd -P >| /tmp/claude-e559-cwd
+1177585 ugrep -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl --line-buffered -E ^===|^rc=|Ran |OK|FAILED|kpharness.playback --serve
+ALLDONE

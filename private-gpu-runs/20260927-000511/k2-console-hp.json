@@ -1,0 +1,17 @@
+{
+  "label": "hp",
+  "code": "local hp=nwscript.call('GetCurrentHitPoints',K2PC); assert(type(hp)=='number'); return hp",
+  "request": 5,
+  "lines": [
+    {
+      "request": 5,
+      "kind": "input",
+      "text": "> local hp=nwscript.call('GetCurrentHitPoints',K2PC); assert(type(hp)=='number'); return hp"
+    },
+    {
+      "request": 5,
+      "kind": "result",
+      "text": "number: 241"
+    }
+  ]
+}

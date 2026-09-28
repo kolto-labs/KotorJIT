@@ -1,0 +1,11 @@
+[00:05:13] target k2-wine: data /run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets
+[00:05:13] staged tree /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage (new)
+[00:05:13] executable /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage/steamassets/swkotor2.exe
+[00:05:13] saved original binkw32.dll -> binkw32_real.dll
+[00:05:13] runtime installed from /home/brunner56/kp-release-20260922/build
+[00:05:13] ini tuned: swkotor2.ini (14 keys)
+[00:05:14] Owned GPU display ready :0
+[00:05:14] settling wine prefix (wineboot -i)
+[00:05:40] launching: bwrap --die-with-parent --ro-bind / / --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/runtime/kpharness/wine-707082d76b92ce6c /tmp --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage/steamassets /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage/steamassets --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-prefix /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-prefix --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor2.exe (cwd /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage/steamassets)
+[00:05:45] channel up on 127.0.0.1:53429: build k2_gog_aspyr, 19 hooks, live=True
+[00:05:56] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-000511/k2-stage/runs/20260927-000513

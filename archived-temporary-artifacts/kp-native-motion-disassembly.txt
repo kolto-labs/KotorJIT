@@ -1,0 +1,1290 @@
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+004ae7a0 <.data>:
+  4ae7a0:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  4ae7a3:	e9 28 31 00 00       	jmp    0x4b18d0
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+004b18d0 <.data>:
+  4b18d0:	51                   	push   ecx
+  4b18d1:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+  4b18d5:	8b 89 5c 00 01 00    	mov    ecx,DWORD PTR [ecx+0x1005c]
+  4b18db:	8d 44 24 00          	lea    eax,[esp+0x0]
+  4b18df:	50                   	push   eax
+  4b18e0:	52                   	push   edx
+  4b18e1:	c7 44 24 08 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+  4b18e8:	00 
+  4b18e9:	e8 42 69 02 00       	call   0x4d8230
+  4b18ee:	3a 05 6c 66 74 00    	cmp    al,BYTE PTR ds:0x74666c
+  4b18f4:	75 1c                	jne    0x4b1912
+  4b18f6:	8b 4c 24 00          	mov    ecx,DWORD PTR [esp+0x0]
+  4b18fa:	85 c9                	test   ecx,ecx
+  4b18fc:	74 14                	je     0x4b1912
+  4b18fe:	8a 41 08             	mov    al,BYTE PTR [ecx+0x8]
+  4b1901:	3a 05 38 66 74 00    	cmp    al,BYTE PTR ds:0x746638
+  4b1907:	75 09                	jne    0x4b1912
+  4b1909:	8b 11                	mov    edx,DWORD PTR [ecx]
+  4b190b:	ff 52 48             	call   DWORD PTR [edx+0x48]
+  4b190e:	59                   	pop    ecx
+  4b190f:	c2 04 00             	ret    0x4
+  4b1912:	33 c0                	xor    eax,eax
+  4b1914:	59                   	pop    ecx
+  4b1915:	c2 04 00             	ret    0x4
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+004cd1a0 <.data>:
+  4cd1a0:	53                   	push   ebx
+  4cd1a1:	8b 5c 24 08          	mov    ebx,DWORD PTR [esp+0x8]
+  4cd1a5:	56                   	push   esi
+  4cd1a6:	57                   	push   edi
+  4cd1a7:	8b f1                	mov    esi,ecx
+  4cd1a9:	8d be 90 00 00 00    	lea    edi,[esi+0x90]
+  4cd1af:	53                   	push   ebx
+  4cd1b0:	57                   	push   edi
+  4cd1b1:	e8 ca d7 fd ff       	call   0x4aa980
+  4cd1b6:	83 c4 08             	add    esp,0x8
+  4cd1b9:	85 c0                	test   eax,eax
+  4cd1bb:	75 7c                	jne    0x4cd239
+  4cd1bd:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
+  4cd1c1:	55                   	push   ebp
+  4cd1c2:	33 ed                	xor    ebp,ebp
+  4cd1c4:	3b c5                	cmp    eax,ebp
+  4cd1c6:	75 07                	jne    0x4cd1cf
+  4cd1c8:	83 8e fc 01 00 00 02 	or     DWORD PTR [esi+0x1fc],0x2
+  4cd1cf:	a1 fc 39 7a 00       	mov    eax,ds:0x7a39fc
+  4cd1d4:	89 6c 24 14          	mov    DWORD PTR [esp+0x14],ebp
+  4cd1d8:	8b 48 08             	mov    ecx,DWORD PTR [eax+0x8]
+  4cd1db:	e8 90 1b fe ff       	call   0x4aed70
+  4cd1e0:	8b 96 8c 00 00 00    	mov    edx,DWORD PTR [esi+0x8c]
+  4cd1e6:	8d 4c 24 14          	lea    ecx,[esp+0x14]
+  4cd1ea:	51                   	push   ecx
+  4cd1eb:	52                   	push   edx
+  4cd1ec:	8b c8                	mov    ecx,eax
+  4cd1ee:	e8 3d b0 00 00       	call   0x4d8230
+  4cd1f3:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
+  4cd1f7:	3b cd                	cmp    ecx,ebp
+  4cd1f9:	74 07                	je     0x4cd202
+  4cd1fb:	8b 01                	mov    eax,DWORD PTR [ecx]
+  4cd1fd:	ff 50 28             	call   DWORD PTR [eax+0x28]
+  4cd200:	8b e8                	mov    ebp,eax
+  4cd202:	8b 0b                	mov    ecx,DWORD PTR [ebx]
+  4cd204:	89 0f                	mov    DWORD PTR [edi],ecx
+  4cd206:	8b 53 04             	mov    edx,DWORD PTR [ebx+0x4]
+  4cd209:	89 57 04             	mov    DWORD PTR [edi+0x4],edx
+  4cd20c:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+  4cd20f:	89 47 08             	mov    DWORD PTR [edi+0x8],eax
+  4cd212:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+  4cd216:	85 c0                	test   eax,eax
+  4cd218:	74 1e                	je     0x4cd238
+  4cd21a:	8b 16                	mov    edx,DWORD PTR [esi]
+  4cd21c:	8b ce                	mov    ecx,esi
+  4cd21e:	ff 52 30             	call   DWORD PTR [edx+0x30]
+  4cd221:	85 c0                	test   eax,eax
+  4cd223:	74 07                	je     0x4cd22c
+  4cd225:	8b 06                	mov    eax,DWORD PTR [esi]
+  4cd227:	8b ce                	mov    ecx,esi
+  4cd229:	ff 50 30             	call   DWORD PTR [eax+0x30]
+  4cd22c:	85 ed                	test   ebp,ebp
+  4cd22e:	74 08                	je     0x4cd238
+  4cd230:	56                   	push   esi
+  4cd231:	8b cd                	mov    ecx,ebp
+  4cd233:	e8 a8 9d 03 00       	call   0x506fe0
+  4cd238:	5d                   	pop    ebp
+  4cd239:	5f                   	pop    edi
+  4cd23a:	5e                   	pop    esi
+  4cd23b:	5b                   	pop    ebx
+  4cd23c:	c2 10 00             	ret    0x10
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+005ed5f0 <.data>:
+  5ed5f0:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  5ed5f3:	e9 c8 3c 00 00       	jmp    0x5f12c0
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+005f12c0 <.data>:
+  5f12c0:	51                   	push   ecx
+  5f12c1:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+  5f12c5:	8b 49 14             	mov    ecx,DWORD PTR [ecx+0x14]
+  5f12c8:	8d 44 24 00          	lea    eax,[esp+0x0]
+  5f12cc:	50                   	push   eax
+  5f12cd:	52                   	push   edx
+  5f12ce:	c7 44 24 08 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+  5f12d5:	00 
+  5f12d6:	e8 55 6f ee ff       	call   0x4d8230
+  5f12db:	3a 05 6c 66 74 00    	cmp    al,BYTE PTR ds:0x74666c
+  5f12e1:	75 1c                	jne    0x5f12ff
+  5f12e3:	8b 4c 24 00          	mov    ecx,DWORD PTR [esp+0x0]
+  5f12e7:	85 c9                	test   ecx,ecx
+  5f12e9:	74 14                	je     0x5f12ff
+  5f12eb:	8a 41 08             	mov    al,BYTE PTR [ecx+0x8]
+  5f12ee:	3a 05 38 66 74 00    	cmp    al,BYTE PTR ds:0x746638
+  5f12f4:	75 09                	jne    0x5f12ff
+  5f12f6:	8b 11                	mov    edx,DWORD PTR [ecx]
+  5f12f8:	ff 52 4c             	call   DWORD PTR [edx+0x4c]
+  5f12fb:	59                   	pop    ecx
+  5f12fc:	c2 04 00             	ret    0x4
+  5f12ff:	33 c0                	xor    eax,eax
+  5f1301:	59                   	pop    ecx
+  5f1302:	c2 04 00             	ret    0x4
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+005eda50 <.data>:
+  5eda50:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  5eda53:	e9 68 50 00 00       	jmp    0x5f2ac0
+  5eda58:	90                   	nop
+  5eda59:	90                   	nop
+  5eda5a:	90                   	nop
+  5eda5b:	90                   	nop
+  5eda5c:	90                   	nop
+  5eda5d:	90                   	nop
+  5eda5e:	90                   	nop
+  5eda5f:	90                   	nop
+  5eda60:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  5eda63:	e9 78 26 03 00       	jmp    0x6200e0
+  5eda68:	90                   	nop
+  5eda69:	90                   	nop
+  5eda6a:	90                   	nop
+  5eda6b:	90                   	nop
+  5eda6c:	90                   	nop
+  5eda6d:	90                   	nop
+  5eda6e:	90                   	nop
+  5eda6f:	90                   	nop
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0063f340 <.data>:
+  63f340:	56                   	push   esi
+  63f341:	8b f1                	mov    esi,ecx
+  63f343:	57                   	push   edi
+  63f344:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
+  63f348:	8b cf                	mov    ecx,edi
+  63f34a:	8b 11                	mov    edx,DWORD PTR [ecx]
+  63f34c:	8d 46 24             	lea    eax,[esi+0x24]
+  63f34f:	89 10                	mov    DWORD PTR [eax],edx
+  63f351:	8b 51 04             	mov    edx,DWORD PTR [ecx+0x4]
+  63f354:	89 50 04             	mov    DWORD PTR [eax+0x4],edx
+  63f357:	8b 49 08             	mov    ecx,DWORD PTR [ecx+0x8]
+  63f35a:	89 48 08             	mov    DWORD PTR [eax+0x8],ecx
+  63f35d:	a1 5c 39 83 00       	mov    eax,ds:0x83395c
+  63f362:	85 c0                	test   eax,eax
+  63f364:	74 07                	je     0x63f36d
+  63f366:	8b 16                	mov    edx,DWORD PTR [esi]
+  63f368:	8b ce                	mov    ecx,esi
+  63f36a:	ff 52 2c             	call   DWORD PTR [edx+0x2c]
+  63f36d:	8a 46 08             	mov    al,BYTE PTR [esi+0x8]
+  63f370:	8a 0d 38 66 74 00    	mov    cl,BYTE PTR ds:0x746638
+  63f376:	3a c1                	cmp    al,cl
+  63f378:	74 14                	je     0x63f38e
+  63f37a:	3a 05 39 66 74 00    	cmp    al,BYTE PTR ds:0x746639
+  63f380:	74 08                	je     0x63f38a
+  63f382:	3a 05 35 66 74 00    	cmp    al,BYTE PTR ds:0x746635
+  63f388:	75 53                	jne    0x63f3dd
+  63f38a:	3a c1                	cmp    al,cl
+  63f38c:	75 26                	jne    0x63f3b4
+  63f38e:	8b 06                	mov    eax,DWORD PTR [esi]
+  63f390:	8b ce                	mov    ecx,esi
+  63f392:	ff 50 4c             	call   DWORD PTR [eax+0x4c]
+  63f395:	8b c8                	mov    ecx,eax
+  63f397:	e8 64 3a 04 00       	call   0x682e00
+  63f39c:	85 c0                	test   eax,eax
+  63f39e:	74 14                	je     0x63f3b4
+  63f3a0:	8b 88 40 04 00 00    	mov    ecx,DWORD PTR [eax+0x440]
+  63f3a6:	85 c9                	test   ecx,ecx
+  63f3a8:	74 0a                	je     0x63f3b4
+  63f3aa:	8b 88 44 04 00 00    	mov    ecx,DWORD PTR [eax+0x444]
+  63f3b0:	85 c9                	test   ecx,ecx
+  63f3b2:	74 29                	je     0x63f3dd
+  63f3b4:	8b 4e 20             	mov    ecx,DWORD PTR [esi+0x20]
+  63f3b7:	85 c9                	test   ecx,ecx
+  63f3b9:	74 22                	je     0x63f3dd
+  63f3bb:	57                   	push   edi
+  63f3bc:	e8 1f 61 fc ff       	call   0x6054e0
+  63f3c1:	85 c0                	test   eax,eax
+  63f3c3:	74 18                	je     0x63f3dd
+  63f3c5:	6a 01                	push   0x1
+  63f3c7:	8b ce                	mov    ecx,esi
+  63f3c9:	e8 52 ee ff ff       	call   0x63e220
+  63f3ce:	6a 00                	push   0x0
+  63f3d0:	6a 00                	push   0x0
+  63f3d2:	6a 00                	push   0x0
+  63f3d4:	6a 01                	push   0x1
+  63f3d6:	8b ce                	mov    ecx,esi
+  63f3d8:	e8 83 da ff ff       	call   0x63ce60
+  63f3dd:	8b 4e 68             	mov    ecx,DWORD PTR [esi+0x68]
+  63f3e0:	85 c9                	test   ecx,ecx
+  63f3e2:	74 0d                	je     0x63f3f1
+  63f3e4:	8b 46 50             	mov    eax,DWORD PTR [esi+0x50]
+  63f3e7:	85 c0                	test   eax,eax
+  63f3e9:	75 06                	jne    0x63f3f1
+  63f3eb:	8b 11                	mov    edx,DWORD PTR [ecx]
+  63f3ed:	57                   	push   edi
+  63f3ee:	ff 52 68             	call   DWORD PTR [edx+0x68]
+  63f3f1:	8b 06                	mov    eax,DWORD PTR [esi]
+  63f3f3:	8b ce                	mov    ecx,esi
+  63f3f5:	ff 90 90 00 00 00    	call   DWORD PTR [eax+0x90]
+  63f3fb:	5f                   	pop    edi
+  63f3fc:	5e                   	pop    esi
+  63f3fd:	c2 04 00             	ret    0x4
+
+BINARY 8 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+004b1cb0 <.data>:
+  4b1cb0:	51                   	push   ecx
+  4b1cb1:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+  4b1cb5:	8b 89 5c 00 01 00    	mov    ecx,DWORD PTR [ecx+0x1005c]
+  4b1cbb:	8d 44 24 00          	lea    eax,[esp+0x0]
+  4b1cbf:	50                   	push   eax
+  4b1cc0:	52                   	push   edx
+  4b1cc1:	c7 44 24 08 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+  4b1cc8:	00 
+  4b1cc9:	e8 62 65 02 00       	call   0x4d8230
+  4b1cce:	3a 05 6c 66 74 00    	cmp    al,BYTE PTR ds:0x74666c
+  4b1cd4:	75 3e                	jne    0x4b1d14
+  4b1cd6:	8b 4c 24 00          	mov    ecx,DWORD PTR [esp+0x0]
+  4b1cda:	85 c9                	test   ecx,ecx
+  4b1cdc:	74 36                	je     0x4b1d14
+  4b1cde:	8a 41 08             	mov    al,BYTE PTR [ecx+0x8]
+  4b1ce1:	3a 05 34 66 74 00    	cmp    al,BYTE PTR ds:0x746634
+  4b1ce7:	75 2b                	jne    0x4b1d14
+  4b1ce9:	8b 11                	mov    edx,DWORD PTR [ecx]
+  4b1ceb:	56                   	push   esi
+  4b1cec:	ff 52 30             	call   DWORD PTR [edx+0x30]
+  4b1cef:	8b f0                	mov    esi,eax
+  4b1cf1:	85 f6                	test   esi,esi
+  4b1cf3:	74 1e                	je     0x4b1d13
+  4b1cf5:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+  4b1cf9:	6a 00                	push   0x0
+  4b1cfb:	6a 01                	push   0x1
+  4b1cfd:	6a 01                	push   0x1
+  4b1cff:	50                   	push   eax
+  4b1d00:	8b ce                	mov    ecx,esi
+  4b1d02:	e8 99 b4 01 00       	call   0x4cd1a0
+  4b1d07:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
+  4b1d0b:	51                   	push   ecx
+  4b1d0c:	8b ce                	mov    ecx,esi
+  4b1d0e:	e8 5d b4 01 00       	call   0x4cd170
+  4b1d13:	5e                   	pop    esi
+  4b1d14:	59                   	pop    ecx
+  4b1d15:	c2 0c 00             	ret    0xc
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+002c40ea <.data>:
+  2c40ea:	55                   	push   ebp
+  2c40eb:	89 e5                	mov    ebp,esp
+  2c40ed:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  2c40f0:	8b 40 04             	mov    eax,DWORD PTR [eax+0x4]
+  2c40f3:	89 45 08             	mov    DWORD PTR [ebp+0x8],eax
+  2c40f6:	5d                   	pop    ebp
+  2c40f7:	e9 ac 21 00 00       	jmp    0x2c62a8
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+002c62a8 <.data>:
+  2c62a8:	55                   	push   ebp
+  2c62a9:	89 e5                	mov    ebp,esp
+  2c62ab:	83 ec 28             	sub    esp,0x28
+  2c62ae:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+  2c62b5:	8d 45 f4             	lea    eax,[ebp-0xc]
+  2c62b8:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
+  2c62bc:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  2c62bf:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  2c62c3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  2c62c6:	8b 80 5c 00 01 00    	mov    eax,DWORD PTR [eax+0x1005c]
+  2c62cc:	89 04 24             	mov    DWORD PTR [esp],eax
+  2c62cf:	e8 44 07 d8 ff       	call   0x46a18
+  2c62d4:	8b 15 4c 52 59 00    	mov    edx,DWORD PTR ds:0x59524c
+  2c62da:	38 02                	cmp    BYTE PTR [edx],al
+  2c62dc:	75 1e                	jne    0x2c62fc
+  2c62de:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+  2c62e1:	85 d2                	test   edx,edx
+  2c62e3:	74 17                	je     0x2c62fc
+  2c62e5:	a1 9c 51 59 00       	mov    eax,ds:0x59519c
+  2c62ea:	0f b6 00             	movzx  eax,BYTE PTR [eax]
+  2c62ed:	3a 42 08             	cmp    al,BYTE PTR [edx+0x8]
+  2c62f0:	75 0a                	jne    0x2c62fc
+  2c62f2:	8b 02                	mov    eax,DWORD PTR [edx]
+  2c62f4:	89 14 24             	mov    DWORD PTR [esp],edx
+  2c62f7:	ff 50 4c             	call   DWORD PTR [eax+0x4c]
+  2c62fa:	eb 02                	jmp    0x2c62fe
+  2c62fc:	31 c0                	xor    eax,eax
+  2c62fe:	c9                   	leave
+  2c62ff:	c3                   	ret
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0025dfa0 <.data>:
+  25dfa0:	55                   	push   ebp
+  25dfa1:	89 e5                	mov    ebp,esp
+  25dfa3:	57                   	push   edi
+  25dfa4:	56                   	push   esi
+  25dfa5:	53                   	push   ebx
+  25dfa6:	83 ec 1c             	sub    esp,0x1c
+  25dfa9:	8b 5d 08             	mov    ebx,DWORD PTR [ebp+0x8]
+  25dfac:	8b 75 0c             	mov    esi,DWORD PTR [ebp+0xc]
+  25dfaf:	89 74 24 04          	mov    DWORD PTR [esp+0x4],esi
+  25dfb3:	8d 83 90 00 00 00    	lea    eax,[ebx+0x90]
+  25dfb9:	89 04 24             	mov    DWORD PTR [esp],eax
+  25dfbc:	e8 8b 4e 14 00       	call   0x3a2e4c
+  25dfc1:	85 c0                	test   eax,eax
+  25dfc3:	75 5d                	jne    0x25e022
+  25dfc5:	8b 7d 18             	mov    edi,DWORD PTR [ebp+0x18]
+  25dfc8:	85 ff                	test   edi,edi
+  25dfca:	75 07                	jne    0x25dfd3
+  25dfcc:	83 8b fc 01 00 00 02 	or     DWORD PTR [ebx+0x1fc],0x2
+  25dfd3:	89 1c 24             	mov    DWORD PTR [esp],ebx
+  25dfd6:	e8 47 8d ff ff       	call   0x256d22
+  25dfdb:	89 c7                	mov    edi,eax
+  25dfdd:	8b 06                	mov    eax,DWORD PTR [esi]
+  25dfdf:	89 83 90 00 00 00    	mov    DWORD PTR [ebx+0x90],eax
+  25dfe5:	8b 46 04             	mov    eax,DWORD PTR [esi+0x4]
+  25dfe8:	89 83 94 00 00 00    	mov    DWORD PTR [ebx+0x94],eax
+  25dfee:	8b 46 08             	mov    eax,DWORD PTR [esi+0x8]
+  25dff1:	89 83 98 00 00 00    	mov    DWORD PTR [ebx+0x98],eax
+  25dff7:	8b 4d 10             	mov    ecx,DWORD PTR [ebp+0x10]
+  25dffa:	85 c9                	test   ecx,ecx
+  25dffc:	74 24                	je     0x25e022
+  25dffe:	8b 03                	mov    eax,DWORD PTR [ebx]
+  25e000:	89 1c 24             	mov    DWORD PTR [esp],ebx
+  25e003:	ff 50 34             	call   DWORD PTR [eax+0x34]
+  25e006:	85 c0                	test   eax,eax
+  25e008:	74 08                	je     0x25e012
+  25e00a:	8b 03                	mov    eax,DWORD PTR [ebx]
+  25e00c:	89 1c 24             	mov    DWORD PTR [esp],ebx
+  25e00f:	ff 50 34             	call   DWORD PTR [eax+0x34]
+  25e012:	85 ff                	test   edi,edi
+  25e014:	74 0c                	je     0x25e022
+  25e016:	89 5c 24 04          	mov    DWORD PTR [esp+0x4],ebx
+  25e01a:	89 3c 24             	mov    DWORD PTR [esp],edi
+  25e01d:	e8 d8 b7 f3 ff       	call   0x1997fa
+  25e022:	83 c4 1c             	add    esp,0x1c
+  25e025:	5b                   	pop    ebx
+  25e026:	5e                   	pop    esi
+  25e027:	5f                   	pop    edi
+  25e028:	5d                   	pop    ebp
+  25e029:	c3                   	ret
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0001e5ea <.data>:
+   1e5ea:	55                   	push   ebp
+   1e5eb:	89 e5                	mov    ebp,esp
+   1e5ed:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+   1e5f0:	8b 40 04             	mov    eax,DWORD PTR [eax+0x4]
+   1e5f3:	89 45 08             	mov    DWORD PTR [ebp+0x8],eax
+   1e5f6:	5d                   	pop    ebp
+   1e5f7:	e9 ca 3e 00 00       	jmp    0x224c6
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000224c6 <.data>:
+   224c6:	55                   	push   ebp
+   224c7:	89 e5                	mov    ebp,esp
+   224c9:	83 ec 28             	sub    esp,0x28
+   224cc:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+   224d3:	8d 45 f4             	lea    eax,[ebp-0xc]
+   224d6:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
+   224da:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+   224dd:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+   224e1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+   224e4:	8b 40 14             	mov    eax,DWORD PTR [eax+0x14]
+   224e7:	89 04 24             	mov    DWORD PTR [esp],eax
+   224ea:	e8 29 45 02 00       	call   0x46a18
+   224ef:	8b 15 4c 52 59 00    	mov    edx,DWORD PTR ds:0x59524c
+   224f5:	38 02                	cmp    BYTE PTR [edx],al
+   224f7:	75 1e                	jne    0x22517
+   224f9:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+   224fc:	85 d2                	test   edx,edx
+   224fe:	74 17                	je     0x22517
+   22500:	a1 9c 51 59 00       	mov    eax,ds:0x59519c
+   22505:	0f b6 00             	movzx  eax,BYTE PTR [eax]
+   22508:	3a 42 08             	cmp    al,BYTE PTR [edx+0x8]
+   2250b:	75 0a                	jne    0x22517
+   2250d:	8b 02                	mov    eax,DWORD PTR [edx]
+   2250f:	89 14 24             	mov    DWORD PTR [esp],edx
+   22512:	ff 50 50             	call   DWORD PTR [eax+0x50]
+   22515:	eb 02                	jmp    0x22519
+   22517:	31 c0                	xor    eax,eax
+   22519:	c9                   	leave
+   2251a:	c3                   	ret
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0001eac0 <.data>:
+   1eac0:	55                   	push   ebp
+   1eac1:	89 e5                	mov    ebp,esp
+   1eac3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+   1eac6:	8b 40 04             	mov    eax,DWORD PTR [eax+0x4]
+   1eac9:	89 45 08             	mov    DWORD PTR [ebp+0x8],eax
+   1eacc:	5d                   	pop    ebp
+   1eacd:	e9 4e 11 00 00       	jmp    0x1fc20
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000c218c <.data>:
+   c218c:	55                   	push   ebp
+   c218d:	89 e5                	mov    ebp,esp
+   c218f:	56                   	push   esi
+   c2190:	53                   	push   ebx
+   c2191:	83 ec 20             	sub    esp,0x20
+   c2194:	8b 5d 08             	mov    ebx,DWORD PTR [ebp+0x8]
+   c2197:	8b 75 0c             	mov    esi,DWORD PTR [ebp+0xc]
+   c219a:	8b 06                	mov    eax,DWORD PTR [esi]
+   c219c:	89 43 24             	mov    DWORD PTR [ebx+0x24],eax
+   c219f:	8b 46 04             	mov    eax,DWORD PTR [esi+0x4]
+   c21a2:	89 43 28             	mov    DWORD PTR [ebx+0x28],eax
+   c21a5:	8b 46 08             	mov    eax,DWORD PTR [esi+0x8]
+   c21a8:	89 43 2c             	mov    DWORD PTR [ebx+0x2c],eax
+   c21ab:	8b 0d 20 09 48 00    	mov    ecx,DWORD PTR ds:0x480920
+   c21b1:	85 c9                	test   ecx,ecx
+   c21b3:	74 08                	je     0xc21bd
+   c21b5:	8b 03                	mov    eax,DWORD PTR [ebx]
+   c21b7:	89 1c 24             	mov    DWORD PTR [esp],ebx
+   c21ba:	ff 50 30             	call   DWORD PTR [eax+0x30]
+   c21bd:	0f b6 53 08          	movzx  edx,BYTE PTR [ebx+0x8]
+   c21c1:	a1 9c 51 59 00       	mov    eax,ds:0x59519c
+   c21c6:	0f b6 00             	movzx  eax,BYTE PTR [eax]
+   c21c9:	39 c2                	cmp    edx,eax
+   c21cb:	74 1a                	je     0xc21e7
+   c21cd:	a1 78 51 59 00       	mov    eax,ds:0x595178
+   c21d2:	0f b6 00             	movzx  eax,BYTE PTR [eax]
+   c21d5:	39 c2                	cmp    edx,eax
+   c21d7:	74 36                	je     0xc220f
+   c21d9:	a1 94 51 59 00       	mov    eax,ds:0x595194
+   c21de:	0f b6 00             	movzx  eax,BYTE PTR [eax]
+   c21e1:	39 c2                	cmp    edx,eax
+   c21e3:	75 79                	jne    0xc225e
+   c21e5:	eb 28                	jmp    0xc220f
+   c21e7:	8b 03                	mov    eax,DWORD PTR [ebx]
+   c21e9:	89 1c 24             	mov    DWORD PTR [esp],ebx
+   c21ec:	ff 50 50             	call   DWORD PTR [eax+0x50]
+   c21ef:	89 04 24             	mov    DWORD PTR [esp],eax
+   c21f2:	e8 4d 10 00 00       	call   0xc3244
+   c21f7:	85 c0                	test   eax,eax
+   c21f9:	74 14                	je     0xc220f
+   c21fb:	8b 90 40 04 00 00    	mov    edx,DWORD PTR [eax+0x440]
+   c2201:	85 d2                	test   edx,edx
+   c2203:	74 0a                	je     0xc220f
+   c2205:	8b 80 44 04 00 00    	mov    eax,DWORD PTR [eax+0x444]
+   c220b:	85 c0                	test   eax,eax
+   c220d:	74 4f                	je     0xc225e
+   c220f:	8b 43 20             	mov    eax,DWORD PTR [ebx+0x20]
+   c2212:	85 c0                	test   eax,eax
+   c2214:	74 48                	je     0xc225e
+   c2216:	89 74 24 04          	mov    DWORD PTR [esp+0x4],esi
+   c221a:	89 04 24             	mov    DWORD PTR [esp],eax
+   c221d:	e8 a6 03 fa ff       	call   0x625c8
+   c2222:	85 c0                	test   eax,eax
+   c2224:	74 38                	je     0xc225e
+   c2226:	c7 44 24 04 01 00 00 	mov    DWORD PTR [esp+0x4],0x1
+   c222d:	00 
+   c222e:	89 1c 24             	mov    DWORD PTR [esp],ebx
+   c2231:	e8 40 fc ff ff       	call   0xc1e76
+   c2236:	c7 44 24 10 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
+   c223d:	00 
+   c223e:	c7 44 24 0c 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
+   c2245:	00 
+   c2246:	c7 44 24 08 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+   c224d:	00 
+   c224e:	c7 44 24 04 01 00 00 	mov    DWORD PTR [esp+0x4],0x1
+   c2255:	00 
+   c2256:	89 1c 24             	mov    DWORD PTR [esp],ebx
+   c2259:	e8 12 e5 ff ff       	call   0xc0770
+   c225e:	8b 53 68             	mov    edx,DWORD PTR [ebx+0x68]
+   c2261:	85 d2                	test   edx,edx
+   c2263:	74 13                	je     0xc2278
+   c2265:	8b 4b 50             	mov    ecx,DWORD PTR [ebx+0x50]
+   c2268:	85 c9                	test   ecx,ecx
+   c226a:	75 0c                	jne    0xc2278
+   c226c:	8b 02                	mov    eax,DWORD PTR [edx]
+   c226e:	89 74 24 04          	mov    DWORD PTR [esp+0x4],esi
+   c2272:	89 14 24             	mov    DWORD PTR [esp],edx
+   c2275:	ff 50 6c             	call   DWORD PTR [eax+0x6c]
+   c2278:	8b 03                	mov    eax,DWORD PTR [ebx]
+   c227a:	89 5d 08             	mov    DWORD PTR [ebp+0x8],ebx
+   c227d:	8b 88 94 00 00 00    	mov    ecx,DWORD PTR [eax+0x94]
+   c2283:	83 c4 20             	add    esp,0x20
+   c2286:	5b                   	pop    ebx
+   c2287:	5e                   	pop    esi
+   c2288:	5d                   	pop    ebp
+   c2289:	ff e1                	jmp    ecx
+
+BINARY 5 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_mac_swkotor.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+002c60da <.data>:
+  2c60da:	55                   	push   ebp
+  2c60db:	89 e5                	mov    ebp,esp
+  2c60dd:	57                   	push   edi
+  2c60de:	56                   	push   esi
+  2c60df:	53                   	push   ebx
+  2c60e0:	83 ec 2c             	sub    esp,0x2c
+  2c60e3:	8b 75 10             	mov    esi,DWORD PTR [ebp+0x10]
+  2c60e6:	8b 7d 14             	mov    edi,DWORD PTR [ebp+0x14]
+  2c60e9:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  2c60ec:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  2c60f0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  2c60f3:	89 04 24             	mov    DWORD PTR [esp],eax
+  2c60f6:	e8 5d ff ff ff       	call   0x2c6058
+  2c60fb:	89 c3                	mov    ebx,eax
+  2c60fd:	85 c0                	test   eax,eax
+  2c60ff:	74 36                	je     0x2c6137
+  2c6101:	c7 44 24 10 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
+  2c6108:	00 
+  2c6109:	c7 44 24 0c 01 00 00 	mov    DWORD PTR [esp+0xc],0x1
+  2c6110:	00 
+  2c6111:	c7 44 24 08 01 00 00 	mov    DWORD PTR [esp+0x8],0x1
+  2c6118:	00 
+  2c6119:	89 74 24 04          	mov    DWORD PTR [esp+0x4],esi
+  2c611d:	89 04 24             	mov    DWORD PTR [esp],eax
+  2c6120:	e8 7b 7e f9 ff       	call   0x25dfa0
+  2c6125:	89 7d 0c             	mov    DWORD PTR [ebp+0xc],edi
+  2c6128:	89 5d 08             	mov    DWORD PTR [ebp+0x8],ebx
+  2c612b:	83 c4 2c             	add    esp,0x2c
+  2c612e:	5b                   	pop    ebx
+  2c612f:	5e                   	pop    esi
+  2c6130:	5f                   	pop    edi
+  2c6131:	5d                   	pop    ebp
+  2c6132:	e9 3d 7e f9 ff       	jmp    0x25df74
+  2c6137:	83 c4 2c             	add    esp,0x2c
+  2c613a:	5b                   	pop    ebx
+  2c613b:	5e                   	pop    esi
+  2c613c:	5f                   	pop    edi
+  2c613d:	5d                   	pop    ebp
+  2c613e:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00323cee <.data>:
+  323cee:	55                   	push   ebp
+  323cef:	89 e5                	mov    ebp,esp
+  323cf1:	83 ec 08             	sub    esp,0x8
+  323cf4:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  323cf7:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  323cfa:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  323cfd:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  323d01:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  323d04:	e8 f1 61 07 00       	call   0x399efa
+  323d09:	83 c4 08             	add    esp,0x8
+  323d0c:	5d                   	pop    ebp
+  323d0d:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00399efa <.data>:
+  399efa:	55                   	push   ebp
+  399efb:	89 e5                	mov    ebp,esp
+  399efd:	56                   	push   esi
+  399efe:	83 ec 14             	sub    esp,0x14
+  399f01:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  399f04:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  399f07:	c7 45 f8 00 00 00 00 	mov    DWORD PTR [ebp-0x8],0x0
+  399f0e:	8b 89 5c 00 01 00    	mov    ecx,DWORD PTR [ecx+0x1005c]
+  399f14:	8d 55 f8             	lea    edx,[ebp-0x8]
+  399f17:	89 54 24 08          	mov    DWORD PTR [esp+0x8],edx
+  399f1b:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  399f1f:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  399f22:	e8 21 84 de ff       	call   0x182348
+  399f27:	88 c1                	mov    cl,al
+  399f29:	8b 15 04 ca 55 00    	mov    edx,DWORD PTR ds:0x55ca04
+  399f2f:	31 c0                	xor    eax,eax
+  399f31:	0f b6 12             	movzx  edx,BYTE PTR [edx]
+  399f34:	0f b6 c9             	movzx  ecx,cl
+  399f37:	39 d1                	cmp    ecx,edx
+  399f39:	75 20                	jne    0x399f5b
+  399f3b:	8b 4d f8             	mov    ecx,DWORD PTR [ebp-0x8]
+  399f3e:	85 c9                	test   ecx,ecx
+  399f40:	74 19                	je     0x399f5b
+  399f42:	8b 15 e0 c9 55 00    	mov    edx,DWORD PTR ds:0x55c9e0
+  399f48:	0f b6 12             	movzx  edx,BYTE PTR [edx]
+  399f4b:	0f b6 71 08          	movzx  esi,BYTE PTR [ecx+0x8]
+  399f4f:	39 d6                	cmp    esi,edx
+  399f51:	75 08                	jne    0x399f5b
+  399f53:	8b 01                	mov    eax,DWORD PTR [ecx]
+  399f55:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  399f58:	ff 50 4c             	call   DWORD PTR [eax+0x4c]
+  399f5b:	83 c4 14             	add    esp,0x14
+  399f5e:	5e                   	pop    esi
+  399f5f:	5d                   	pop    ebp
+  399f60:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+003dfabe <.data>:
+  3dfabe:	55                   	push   ebp
+  3dfabf:	89 e5                	mov    ebp,esp
+  3dfac1:	53                   	push   ebx
+  3dfac2:	57                   	push   edi
+  3dfac3:	56                   	push   esi
+  3dfac4:	83 ec 0c             	sub    esp,0xc
+  3dfac7:	8b 5d 0c             	mov    ebx,DWORD PTR [ebp+0xc]
+  3dfaca:	8b 7d 08             	mov    edi,DWORD PTR [ebp+0x8]
+  3dfacd:	8d b7 94 00 00 00    	lea    esi,[edi+0x94]
+  3dfad3:	89 5c 24 04          	mov    DWORD PTR [esp+0x4],ebx
+  3dfad7:	89 34 24             	mov    DWORD PTR [esp],esi
+  3dfada:	e8 49 40 f3 ff       	call   0x313b28
+  3dfadf:	85 c0                	test   eax,eax
+  3dfae1:	75 50                	jne    0x3dfb33
+  3dfae3:	8b 45 18             	mov    eax,DWORD PTR [ebp+0x18]
+  3dfae6:	85 c0                	test   eax,eax
+  3dfae8:	75 07                	jne    0x3dfaf1
+  3dfaea:	80 8f 24 02 00 00 02 	or     BYTE PTR [edi+0x224],0x2
+  3dfaf1:	89 3c 24             	mov    DWORD PTR [esp],edi
+  3dfaf4:	e8 43 3c 00 00       	call   0x3e373c
+  3dfaf9:	8b 4b 08             	mov    ecx,DWORD PTR [ebx+0x8]
+  3dfafc:	89 4e 08             	mov    DWORD PTR [esi+0x8],ecx
+  3dfaff:	f2 0f 10 03          	movsd  xmm0,QWORD PTR [ebx]
+  3dfb03:	f2 0f 11 06          	movsd  QWORD PTR [esi],xmm0
+  3dfb07:	83 7d 10 00          	cmp    DWORD PTR [ebp+0x10],0x0
+  3dfb0b:	74 26                	je     0x3dfb33
+  3dfb0d:	89 c6                	mov    esi,eax
+  3dfb0f:	8b 07                	mov    eax,DWORD PTR [edi]
+  3dfb11:	89 3c 24             	mov    DWORD PTR [esp],edi
+  3dfb14:	ff 50 34             	call   DWORD PTR [eax+0x34]
+  3dfb17:	85 c0                	test   eax,eax
+  3dfb19:	74 08                	je     0x3dfb23
+  3dfb1b:	8b 07                	mov    eax,DWORD PTR [edi]
+  3dfb1d:	89 3c 24             	mov    DWORD PTR [esp],edi
+  3dfb20:	ff 50 34             	call   DWORD PTR [eax+0x34]
+  3dfb23:	85 f6                	test   esi,esi
+  3dfb25:	74 0c                	je     0x3dfb33
+  3dfb27:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+  3dfb2b:	89 34 24             	mov    DWORD PTR [esp],esi
+  3dfb2e:	e8 0d 97 03 00       	call   0x419240
+  3dfb33:	83 c4 0c             	add    esp,0xc
+  3dfb36:	5e                   	pop    esi
+  3dfb37:	5f                   	pop    edi
+  3dfb38:	5b                   	pop    ebx
+  3dfb39:	5d                   	pop    ebp
+  3dfb3a:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+001c03d0 <.data>:
+  1c03d0:	55                   	push   ebp
+  1c03d1:	89 e5                	mov    ebp,esp
+  1c03d3:	83 ec 08             	sub    esp,0x8
+  1c03d6:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  1c03d9:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  1c03dc:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  1c03df:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  1c03e3:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  1c03e6:	e8 77 a7 fd ff       	call   0x19ab62
+  1c03eb:	83 c4 08             	add    esp,0x8
+  1c03ee:	5d                   	pop    ebp
+  1c03ef:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0019ab62 <.data>:
+  19ab62:	55                   	push   ebp
+  19ab63:	89 e5                	mov    ebp,esp
+  19ab65:	56                   	push   esi
+  19ab66:	83 ec 14             	sub    esp,0x14
+  19ab69:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  19ab6c:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  19ab6f:	c7 45 f8 00 00 00 00 	mov    DWORD PTR [ebp-0x8],0x0
+  19ab76:	8b 49 14             	mov    ecx,DWORD PTR [ecx+0x14]
+  19ab79:	8d 55 f8             	lea    edx,[ebp-0x8]
+  19ab7c:	89 54 24 08          	mov    DWORD PTR [esp+0x8],edx
+  19ab80:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  19ab84:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  19ab87:	e8 bc 77 fe ff       	call   0x182348
+  19ab8c:	88 c1                	mov    cl,al
+  19ab8e:	8b 15 04 ca 55 00    	mov    edx,DWORD PTR ds:0x55ca04
+  19ab94:	31 c0                	xor    eax,eax
+  19ab96:	0f b6 12             	movzx  edx,BYTE PTR [edx]
+  19ab99:	0f b6 c9             	movzx  ecx,cl
+  19ab9c:	39 d1                	cmp    ecx,edx
+  19ab9e:	75 20                	jne    0x19abc0
+  19aba0:	8b 4d f8             	mov    ecx,DWORD PTR [ebp-0x8]
+  19aba3:	85 c9                	test   ecx,ecx
+  19aba5:	74 19                	je     0x19abc0
+  19aba7:	8b 15 e0 c9 55 00    	mov    edx,DWORD PTR ds:0x55c9e0
+  19abad:	0f b6 12             	movzx  edx,BYTE PTR [edx]
+  19abb0:	0f b6 71 08          	movzx  esi,BYTE PTR [ecx+0x8]
+  19abb4:	39 d6                	cmp    esi,edx
+  19abb6:	75 08                	jne    0x19abc0
+  19abb8:	8b 01                	mov    eax,DWORD PTR [ecx]
+  19abba:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  19abbd:	ff 50 50             	call   DWORD PTR [eax+0x50]
+  19abc0:	83 c4 14             	add    esp,0x14
+  19abc3:	5e                   	pop    esi
+  19abc4:	5d                   	pop    ebp
+  19abc5:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+001c0ade <.data>:
+  1c0ade:	55                   	push   ebp
+  1c0adf:	89 e5                	mov    ebp,esp
+  1c0ae1:	83 ec 08             	sub    esp,0x8
+  1c0ae4:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+  1c0ae7:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  1c0aea:	8b 49 04             	mov    ecx,DWORD PTR [ecx+0x4]
+  1c0aed:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  1c0af1:	89 0c 24             	mov    DWORD PTR [esp],ecx
+  1c0af4:	e8 97 2d fe ff       	call   0x1a3890
+  1c0af9:	83 c4 08             	add    esp,0x8
+  1c0afc:	5d                   	pop    ebp
+  1c0afd:	c3                   	ret
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0022cbf0 <.data>:
+  22cbf0:	55                   	push   ebp
+  22cbf1:	89 e5                	mov    ebp,esp
+  22cbf3:	53                   	push   ebx
+  22cbf4:	57                   	push   edi
+  22cbf5:	56                   	push   esi
+  22cbf6:	83 ec 1c             	sub    esp,0x1c
+  22cbf9:	8b 7d 0c             	mov    edi,DWORD PTR [ebp+0xc]
+  22cbfc:	8b 75 08             	mov    esi,DWORD PTR [ebp+0x8]
+  22cbff:	8b 47 08             	mov    eax,DWORD PTR [edi+0x8]
+  22cc02:	89 46 2c             	mov    DWORD PTR [esi+0x2c],eax
+  22cc05:	f2 0f 10 07          	movsd  xmm0,QWORD PTR [edi]
+  22cc09:	f2 0f 11 46 24       	movsd  QWORD PTR [esi+0x24],xmm0
+  22cc0e:	81 3d 40 bf 5e 00 00 	cmp    DWORD PTR ds:0x5ebf40,0x0
+  22cc15:	00 00 00 
+  22cc18:	74 08                	je     0x22cc22
+  22cc1a:	8b 06                	mov    eax,DWORD PTR [esi]
+  22cc1c:	89 34 24             	mov    DWORD PTR [esp],esi
+  22cc1f:	ff 50 30             	call   DWORD PTR [eax+0x30]
+  22cc22:	0f b6 46 08          	movzx  eax,BYTE PTR [esi+0x8]
+  22cc26:	8b 0d e0 c9 55 00    	mov    ecx,DWORD PTR ds:0x55c9e0
+  22cc2c:	0f b6 09             	movzx  ecx,BYTE PTR [ecx]
+  22cc2f:	39 c8                	cmp    eax,ecx
+  22cc31:	74 1d                	je     0x22cc50
+  22cc33:	8b 15 c4 c9 55 00    	mov    edx,DWORD PTR ds:0x55c9c4
+  22cc39:	0f b6 1a             	movzx  ebx,BYTE PTR [edx]
+  22cc3c:	0f b6 d0             	movzx  edx,al
+  22cc3f:	39 da                	cmp    edx,ebx
+  22cc41:	74 0d                	je     0x22cc50
+  22cc43:	8b 1d c8 c9 55 00    	mov    ebx,DWORD PTR ds:0x55c9c8
+  22cc49:	0f b6 1b             	movzx  ebx,BYTE PTR [ebx]
+  22cc4c:	39 da                	cmp    edx,ebx
+  22cc4e:	75 7f                	jne    0x22cccf
+  22cc50:	0f b6 c9             	movzx  ecx,cl
+  22cc53:	0f b6 c0             	movzx  eax,al
+  22cc56:	39 c8                	cmp    eax,ecx
+  22cc58:	75 26                	jne    0x22cc80
+  22cc5a:	8b 06                	mov    eax,DWORD PTR [esi]
+  22cc5c:	89 34 24             	mov    DWORD PTR [esp],esi
+  22cc5f:	ff 50 50             	call   DWORD PTR [eax+0x50]
+  22cc62:	89 04 24             	mov    DWORD PTR [esp],eax
+  22cc65:	e8 58 e3 fe ff       	call   0x21afc2
+  22cc6a:	85 c0                	test   eax,eax
+  22cc6c:	74 12                	je     0x22cc80
+  22cc6e:	83 b8 98 04 00 00 00 	cmp    DWORD PTR [eax+0x498],0x0
+  22cc75:	74 09                	je     0x22cc80
+  22cc77:	83 b8 9c 04 00 00 00 	cmp    DWORD PTR [eax+0x49c],0x0
+  22cc7e:	74 4f                	je     0x22cccf
+  22cc80:	8b 46 20             	mov    eax,DWORD PTR [esi+0x20]
+  22cc83:	85 c0                	test   eax,eax
+  22cc85:	74 48                	je     0x22cccf
+  22cc87:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+  22cc8b:	89 04 24             	mov    DWORD PTR [esp],eax
+  22cc8e:	e8 fd 34 04 00       	call   0x270190
+  22cc93:	85 c0                	test   eax,eax
+  22cc95:	74 38                	je     0x22cccf
+  22cc97:	89 34 24             	mov    DWORD PTR [esp],esi
+  22cc9a:	c7 44 24 04 01 00 00 	mov    DWORD PTR [esp+0x4],0x1
+  22cca1:	00 
+  22cca2:	e8 51 00 00 00       	call   0x22ccf8
+  22cca7:	89 34 24             	mov    DWORD PTR [esp],esi
+  22ccaa:	c7 44 24 10 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
+  22ccb1:	00 
+  22ccb2:	c7 44 24 0c 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
+  22ccb9:	00 
+  22ccba:	c7 44 24 08 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+  22ccc1:	00 
+  22ccc2:	c7 44 24 04 01 00 00 	mov    DWORD PTR [esp+0x4],0x1
+  22ccc9:	00 
+  22ccca:	e8 a5 01 00 00       	call   0x22ce74
+  22cccf:	8b 46 68             	mov    eax,DWORD PTR [esi+0x68]
+  22ccd2:	85 c0                	test   eax,eax
+  22ccd4:	74 12                	je     0x22cce8
+  22ccd6:	83 7e 50 00          	cmp    DWORD PTR [esi+0x50],0x0
+  22ccda:	75 0c                	jne    0x22cce8
+  22ccdc:	8b 08                	mov    ecx,DWORD PTR [eax]
+  22ccde:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+  22cce2:	89 04 24             	mov    DWORD PTR [esp],eax
+  22cce5:	ff 51 6c             	call   DWORD PTR [ecx+0x6c]
+  22cce8:	8b 06                	mov    eax,DWORD PTR [esi]
+  22ccea:	83 c4 1c             	add    esp,0x1c
+  22cced:	5e                   	pop    esi
+  22ccee:	5f                   	pop    edi
+  22ccef:	5b                   	pop    ebx
+  22ccf0:	5d                   	pop    ebp
+  22ccf1:	ff a0 94 00 00 00    	jmp    DWORD PTR [eax+0x94]
+
+BINARY 19 /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_mac_swkotor2.app/artifacts/raw_image
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+0039aa96 <.data>:
+  39aa96:	55                   	push   ebp
+  39aa97:	89 e5                	mov    ebp,esp
+  39aa99:	57                   	push   edi
+  39aa9a:	56                   	push   esi
+  39aa9b:	83 ec 20             	sub    esp,0x20
+  39aa9e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  39aaa1:	8b 4d 0c             	mov    ecx,DWORD PTR [ebp+0xc]
+  39aaa4:	89 4c 24 04          	mov    DWORD PTR [esp+0x4],ecx
+  39aaa8:	89 04 24             	mov    DWORD PTR [esp],eax
+  39aaab:	e8 ca f2 ff ff       	call   0x399d7a
+  39aab0:	89 c6                	mov    esi,eax
+  39aab2:	85 f6                	test   esi,esi
+  39aab4:	74 36                	je     0x39aaec
+  39aab6:	8b 7d 14             	mov    edi,DWORD PTR [ebp+0x14]
+  39aab9:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+  39aabc:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+  39aac0:	89 34 24             	mov    DWORD PTR [esp],esi
+  39aac3:	c7 44 24 10 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
+  39aaca:	00 
+  39aacb:	c7 44 24 0c 01 00 00 	mov    DWORD PTR [esp+0xc],0x1
+  39aad2:	00 
+  39aad3:	c7 44 24 08 01 00 00 	mov    DWORD PTR [esp+0x8],0x1
+  39aada:	00 
+  39aadb:	e8 de 4f 04 00       	call   0x3dfabe
+  39aae0:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+  39aae4:	89 34 24             	mov    DWORD PTR [esp],esi
+  39aae7:	e8 50 50 04 00       	call   0x3dfb3c
+  39aaec:	83 c4 20             	add    esp,0x20
+  39aaef:	5e                   	pop    esi
+  39aaf0:	5f                   	pop    edi
+  39aaf1:	5d                   	pop    ebp
+  39aaf2:	c3                   	ret
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00000001002f9d3e <.data>:
+   1002f9d3e:	55                   	push   rbp
+   1002f9d3f:	48 89 e5             	mov    rbp,rsp
+   1002f9d42:	48 8b 7f 08          	mov    rdi,QWORD PTR [rdi+0x8]
+   1002f9d46:	5d                   	pop    rbp
+   1002f9d47:	e9 a0 16 07 00       	jmp    0x10036b3ec
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000000010036b3ec <.data>:
+   10036b3ec:	55                   	push   rbp
+   10036b3ed:	48 89 e5             	mov    rbp,rsp
+   10036b3f0:	48 83 ec 10          	sub    rsp,0x10
+   10036b3f4:	48 c7 45 f8 00 00 00 	mov    QWORD PTR [rbp-0x8],0x0
+   10036b3fb:	00 
+   10036b3fc:	48 8b bf 98 00 01 00 	mov    rdi,QWORD PTR [rdi+0x10098]
+   10036b403:	48 8d 55 f8          	lea    rdx,[rbp-0x8]
+   10036b407:	e8 08 bd df ff       	call   0x100167114
+   10036b40c:	88 c1                	mov    cl,al
+   10036b40e:	48 8d 15 9f a3 19 00 	lea    rdx,[rip+0x19a39f]        # 0x1005057b4
+   10036b415:	31 c0                	xor    eax,eax
+   10036b417:	0f b6 c9             	movzx  ecx,cl
+   10036b41a:	0f b6 12             	movzx  edx,BYTE PTR [rdx]
+   10036b41d:	39 d1                	cmp    ecx,edx
+   10036b41f:	75 26                	jne    0x10036b447
+   10036b421:	48 8b 7d f8          	mov    rdi,QWORD PTR [rbp-0x8]
+   10036b425:	48 85 ff             	test   rdi,rdi
+   10036b428:	74 1d                	je     0x10036b447
+   10036b42a:	48 8d 0d 5f a3 19 00 	lea    rcx,[rip+0x19a35f]        # 0x100505790
+   10036b431:	31 c0                	xor    eax,eax
+   10036b433:	0f b6 09             	movzx  ecx,BYTE PTR [rcx]
+   10036b436:	0f b6 57 10          	movzx  edx,BYTE PTR [rdi+0x10]
+   10036b43a:	39 ca                	cmp    edx,ecx
+   10036b43c:	75 09                	jne    0x10036b447
+   10036b43e:	48 8b 07             	mov    rax,QWORD PTR [rdi]
+   10036b441:	ff 90 98 00 00 00    	call   QWORD PTR [rax+0x98]
+   10036b447:	48 83 c4 10          	add    rsp,0x10
+   10036b44b:	5d                   	pop    rbp
+   10036b44c:	c3                   	ret
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00000001003ae1dc <.data>:
+   1003ae1dc:	55                   	push   rbp
+   1003ae1dd:	48 89 e5             	mov    rbp,rsp
+   1003ae1e0:	41 57                	push   r15
+   1003ae1e2:	41 56                	push   r14
+   1003ae1e4:	41 55                	push   r13
+   1003ae1e6:	41 54                	push   r12
+   1003ae1e8:	53                   	push   rbx
+   1003ae1e9:	50                   	push   rax
+   1003ae1ea:	45 89 c6             	mov    r14d,r8d
+   1003ae1ed:	41 89 d7             	mov    r15d,edx
+   1003ae1f0:	49 89 f5             	mov    r13,rsi
+   1003ae1f3:	49 89 fc             	mov    r12,rdi
+   1003ae1f6:	49 8d 9c 24 d8 00 00 	lea    rbx,[r12+0xd8]
+   1003ae1fd:	00 
+   1003ae1fe:	48 89 df             	mov    rdi,rbx
+   1003ae201:	e8 a8 c5 f3 ff       	call   0x1002ea7ae
+   1003ae206:	85 c0                	test   eax,eax
+   1003ae208:	75 63                	jne    0x1003ae26d
+   1003ae20a:	45 85 f6             	test   r14d,r14d
+   1003ae20d:	75 09                	jne    0x1003ae218
+   1003ae20f:	41 80 8c 24 e4 02 00 	or     BYTE PTR [r12+0x2e4],0x2
+   1003ae216:	00 02 
+   1003ae218:	4c 89 e7             	mov    rdi,r12
+   1003ae21b:	e8 c6 3b 00 00       	call   0x1003b1de6
+   1003ae220:	49 89 c6             	mov    r14,rax
+   1003ae223:	41 8b 45 08          	mov    eax,DWORD PTR [r13+0x8]
+   1003ae227:	89 43 08             	mov    DWORD PTR [rbx+0x8],eax
+   1003ae22a:	49 8b 45 00          	mov    rax,QWORD PTR [r13+0x0]
+   1003ae22e:	48 89 03             	mov    QWORD PTR [rbx],rax
+   1003ae231:	45 85 ff             	test   r15d,r15d
+   1003ae234:	74 37                	je     0x1003ae26d
+   1003ae236:	49 8b 04 24          	mov    rax,QWORD PTR [r12]
+   1003ae23a:	4c 89 e7             	mov    rdi,r12
+   1003ae23d:	ff 50 68             	call   QWORD PTR [rax+0x68]
+   1003ae240:	48 85 c0             	test   rax,rax
+   1003ae243:	74 0a                	je     0x1003ae24f
+   1003ae245:	49 8b 04 24          	mov    rax,QWORD PTR [r12]
+   1003ae249:	4c 89 e7             	mov    rdi,r12
+   1003ae24c:	ff 50 68             	call   QWORD PTR [rax+0x68]
+   1003ae24f:	4d 85 f6             	test   r14,r14
+   1003ae252:	74 19                	je     0x1003ae26d
+   1003ae254:	4c 89 f7             	mov    rdi,r14
+   1003ae257:	4c 89 e6             	mov    rsi,r12
+   1003ae25a:	48 83 c4 08          	add    rsp,0x8
+   1003ae25e:	5b                   	pop    rbx
+   1003ae25f:	41 5c                	pop    r12
+   1003ae261:	41 5d                	pop    r13
+   1003ae263:	41 5e                	pop    r14
+   1003ae265:	41 5f                	pop    r15
+   1003ae267:	5d                   	pop    rbp
+   1003ae268:	e9 0d 6b 03 00       	jmp    0x1003e4d7a
+   1003ae26d:	48 83 c4 08          	add    rsp,0x8
+   1003ae271:	5b                   	pop    rbx
+   1003ae272:	41 5c                	pop    r12
+   1003ae274:	41 5d                	pop    r13
+   1003ae276:	41 5e                	pop    r14
+   1003ae278:	41 5f                	pop    r15
+   1003ae27a:	5d                   	pop    rbp
+   1003ae27b:	c3                   	ret
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00000001001a33e6 <.data>:
+   1001a33e6:	55                   	push   rbp
+   1001a33e7:	48 89 e5             	mov    rbp,rsp
+   1001a33ea:	48 8b 7f 08          	mov    rdi,QWORD PTR [rdi+0x8]
+   1001a33ee:	5d                   	pop    rbp
+   1001a33ef:	e9 64 b0 fd ff       	jmp    0x10017e458
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000000010017e458 <.data>:
+   10017e458:	55                   	push   rbp
+   10017e459:	48 89 e5             	mov    rbp,rsp
+   10017e45c:	48 83 ec 10          	sub    rsp,0x10
+   10017e460:	48 c7 45 f8 00 00 00 	mov    QWORD PTR [rbp-0x8],0x0
+   10017e467:	00 
+   10017e468:	48 8b 7f 28          	mov    rdi,QWORD PTR [rdi+0x28]
+   10017e46c:	48 8d 55 f8          	lea    rdx,[rbp-0x8]
+   10017e470:	e8 9f 8c fe ff       	call   0x100167114
+   10017e475:	88 c1                	mov    cl,al
+   10017e477:	48 8d 15 36 73 38 00 	lea    rdx,[rip+0x387336]        # 0x1005057b4
+   10017e47e:	31 c0                	xor    eax,eax
+   10017e480:	0f b6 c9             	movzx  ecx,cl
+   10017e483:	0f b6 12             	movzx  edx,BYTE PTR [rdx]
+   10017e486:	39 d1                	cmp    ecx,edx
+   10017e488:	75 26                	jne    0x10017e4b0
+   10017e48a:	48 8b 7d f8          	mov    rdi,QWORD PTR [rbp-0x8]
+   10017e48e:	48 85 ff             	test   rdi,rdi
+   10017e491:	74 1d                	je     0x10017e4b0
+   10017e493:	48 8d 0d f6 72 38 00 	lea    rcx,[rip+0x3872f6]        # 0x100505790
+   10017e49a:	31 c0                	xor    eax,eax
+   10017e49c:	0f b6 09             	movzx  ecx,BYTE PTR [rcx]
+   10017e49f:	0f b6 57 10          	movzx  edx,BYTE PTR [rdi+0x10]
+   10017e4a3:	39 ca                	cmp    edx,ecx
+   10017e4a5:	75 09                	jne    0x10017e4b0
+   10017e4a7:	48 8b 07             	mov    rax,QWORD PTR [rdi]
+   10017e4aa:	ff 90 a0 00 00 00    	call   QWORD PTR [rax+0xa0]
+   10017e4b0:	48 83 c4 10          	add    rsp,0x10
+   10017e4b4:	5d                   	pop    rbp
+   10017e4b5:	c3                   	ret
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+00000001001a37d8 <.data>:
+   1001a37d8:	55                   	push   rbp
+   1001a37d9:	48 89 e5             	mov    rbp,rsp
+   1001a37dc:	48 8b 7f 08          	mov    rdi,QWORD PTR [rdi+0x8]
+   1001a37e0:	5d                   	pop    rbp
+   1001a37e1:	e9 b8 41 fe ff       	jmp    0x10018799e
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000000010020b75e <.data>:
+   10020b75e:	55                   	push   rbp
+   10020b75f:	48 89 e5             	mov    rbp,rsp
+   10020b762:	41 56                	push   r14
+   10020b764:	53                   	push   rbx
+   10020b765:	49 89 f6             	mov    r14,rsi
+   10020b768:	48 89 fb             	mov    rbx,rdi
+   10020b76b:	41 8b 46 08          	mov    eax,DWORD PTR [r14+0x8]
+   10020b76f:	89 43 40             	mov    DWORD PTR [rbx+0x40],eax
+   10020b772:	49 8b 06             	mov    rax,QWORD PTR [r14]
+   10020b775:	48 89 43 38          	mov    QWORD PTR [rbx+0x38],rax
+   10020b779:	83 3d 48 42 3c 00 00 	cmp    DWORD PTR [rip+0x3c4248],0x0        # 0x1005cf9c8
+   10020b780:	74 09                	je     0x10020b78b
+   10020b782:	48 8b 03             	mov    rax,QWORD PTR [rbx]
+   10020b785:	48 89 df             	mov    rdi,rbx
+   10020b788:	ff 50 60             	call   QWORD PTR [rax+0x60]
+   10020b78b:	0f b6 43 10          	movzx  eax,BYTE PTR [rbx+0x10]
+   10020b78f:	48 8d 0d fa 9f 2f 00 	lea    rcx,[rip+0x2f9ffa]        # 0x100505790
+   10020b796:	0f b6 09             	movzx  ecx,BYTE PTR [rcx]
+   10020b799:	39 c8                	cmp    eax,ecx
+   10020b79b:	74 1f                	je     0x10020b7bc
+   10020b79d:	48 8d 15 ed 9f 2f 00 	lea    rdx,[rip+0x2f9fed]        # 0x100505791
+   10020b7a4:	0f b6 32             	movzx  esi,BYTE PTR [rdx]
+   10020b7a7:	0f b6 d0             	movzx  edx,al
+   10020b7aa:	39 f2                	cmp    edx,esi
+   10020b7ac:	74 0e                	je     0x10020b7bc
+   10020b7ae:	48 8d 35 d8 9f 2f 00 	lea    rsi,[rip+0x2f9fd8]        # 0x10050578d
+   10020b7b5:	0f b6 36             	movzx  esi,BYTE PTR [rsi]
+   10020b7b8:	39 f2                	cmp    edx,esi
+   10020b7ba:	75 6b                	jne    0x10020b827
+   10020b7bc:	0f b6 c9             	movzx  ecx,cl
+   10020b7bf:	0f b6 c0             	movzx  eax,al
+   10020b7c2:	39 c8                	cmp    eax,ecx
+   10020b7c4:	75 2b                	jne    0x10020b7f1
+   10020b7c6:	48 8b 03             	mov    rax,QWORD PTR [rbx]
+   10020b7c9:	48 89 df             	mov    rdi,rbx
+   10020b7cc:	ff 90 a0 00 00 00    	call   QWORD PTR [rax+0xa0]
+   10020b7d2:	48 89 c7             	mov    rdi,rax
+   10020b7d5:	e8 cc e8 fe ff       	call   0x1001fa0a6
+   10020b7da:	48 85 c0             	test   rax,rax
+   10020b7dd:	74 12                	je     0x10020b7f1
+   10020b7df:	83 b8 58 06 00 00 00 	cmp    DWORD PTR [rax+0x658],0x0
+   10020b7e6:	74 09                	je     0x10020b7f1
+   10020b7e8:	83 b8 5c 06 00 00 00 	cmp    DWORD PTR [rax+0x65c],0x0
+   10020b7ef:	74 36                	je     0x10020b827
+   10020b7f1:	48 8b 7b 30          	mov    rdi,QWORD PTR [rbx+0x30]
+   10020b7f5:	48 85 ff             	test   rdi,rdi
+   10020b7f8:	74 2d                	je     0x10020b827
+   10020b7fa:	4c 89 f6             	mov    rsi,r14
+   10020b7fd:	e8 de fb 03 00       	call   0x10024b3e0
+   10020b802:	85 c0                	test   eax,eax
+   10020b804:	74 21                	je     0x10020b827
+   10020b806:	be 01 00 00 00       	mov    esi,0x1
+   10020b80b:	48 89 df             	mov    rdi,rbx
+   10020b80e:	e8 43 00 00 00       	call   0x10020b856
+   10020b813:	be 01 00 00 00       	mov    esi,0x1
+   10020b818:	31 d2                	xor    edx,edx
+   10020b81a:	31 c9                	xor    ecx,ecx
+   10020b81c:	45 31 c0             	xor    r8d,r8d
+   10020b81f:	48 89 df             	mov    rdi,rbx
+   10020b822:	e8 b1 01 00 00       	call   0x10020b9d8
+   10020b827:	48 8b bb 80 00 00 00 	mov    rdi,QWORD PTR [rbx+0x80]
+   10020b82e:	48 85 ff             	test   rdi,rdi
+   10020b831:	74 12                	je     0x10020b845
+   10020b833:	83 7b 64 00          	cmp    DWORD PTR [rbx+0x64],0x0
+   10020b837:	75 0c                	jne    0x10020b845
+   10020b839:	48 8b 07             	mov    rax,QWORD PTR [rdi]
+   10020b83c:	4c 89 f6             	mov    rsi,r14
+   10020b83f:	ff 90 d8 00 00 00    	call   QWORD PTR [rax+0xd8]
+   10020b845:	48 8b 03             	mov    rax,QWORD PTR [rbx]
+   10020b848:	48 89 df             	mov    rdi,rbx
+   10020b84b:	5b                   	pop    rbx
+   10020b84c:	41 5e                	pop    r14
+   10020b84e:	5d                   	pop    rbp
+   10020b84f:	ff a0 28 01 00 00    	jmp    QWORD PTR [rax+0x128]
+
+BINARY 83 /run/media/brunner56/MyBook/Workspaces/ai-projects/AgentDecompile/target/imports/2026-09-08-nwn-kotor/slices/1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77/KOTOR2sub.x86_64
+
+/proc/self/fd/5:     file format binary
+
+
+Disassembly of section .data:
+
+000000010036c00a <.data>:
+   10036c00a:	55                   	push   rbp
+   10036c00b:	48 89 e5             	mov    rbp,rsp
+   10036c00e:	41 57                	push   r15
+   10036c010:	41 56                	push   r14
+   10036c012:	53                   	push   rbx
+   10036c013:	50                   	push   rax
+   10036c014:	49 89 ce             	mov    r14,rcx
+   10036c017:	49 89 d7             	mov    r15,rdx
+   10036c01a:	e8 55 f2 ff ff       	call   0x10036b274
+   10036c01f:	48 89 c3             	mov    rbx,rax
+   10036c022:	48 85 db             	test   rbx,rbx
+   10036c025:	74 2d                	je     0x10036c054
+   10036c027:	ba 01 00 00 00       	mov    edx,0x1
+   10036c02c:	b9 01 00 00 00       	mov    ecx,0x1
+   10036c031:	45 31 c0             	xor    r8d,r8d
+   10036c034:	48 89 df             	mov    rdi,rbx
+   10036c037:	4c 89 fe             	mov    rsi,r15
+   10036c03a:	e8 9d 21 04 00       	call   0x1003ae1dc
+   10036c03f:	48 89 df             	mov    rdi,rbx
+   10036c042:	4c 89 f6             	mov    rsi,r14
+   10036c045:	48 83 c4 08          	add    rsp,0x8
+   10036c049:	5b                   	pop    rbx
+   10036c04a:	41 5e                	pop    r14
+   10036c04c:	41 5f                	pop    r15
+   10036c04e:	5d                   	pop    rbp
+   10036c04f:	e9 28 22 04 00       	jmp    0x1003ae27c
+   10036c054:	48 83 c4 08          	add    rsp,0x8
+   10036c058:	5b                   	pop    rbx
+   10036c059:	41 5e                	pop    r14
+   10036c05b:	41 5f                	pop    r15
+   10036c05d:	5d                   	pop    rbp
+   10036c05e:	c3                   	ret

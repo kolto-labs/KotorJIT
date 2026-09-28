@@ -1,0 +1,13 @@
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /home/brunner56/.local/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /home/brunner56/.local/bin/python3.14 (found suitable version "3.14.5", minimum required is "3.11") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (30.7s)
+-- Generating done (0.3s)
+-- Build files have been written to: /home/brunner56/kp-live-20260922/tmp-nits/build-nits-a

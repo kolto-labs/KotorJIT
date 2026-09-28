@@ -1,0 +1,38 @@
+**Status: completed independent H0 security review — verdict FAIL.**
+
+The request-intake hardening itself is materially verified:
+
+- Real `commands.cpp` drain/condemn path was rerun against real loopback sockets with engine calls stubbed: **94 PASS / 0 FAIL**.
+- The probe covered browser-style HTTP POST bodies in a single write and across batches, malformed/non-object JSON, BOM/whitespace, CRLF, long lines, WebSocket upgrade, HTTP/2 preface, pipelining, stale requests, and fresh connections.
+- Remaining queued requests from a condemned client and stale requests from a disconnected client did not execute in that real-drain probe.
+- Current source SHA-256 values matched the scratch probe’s saved source hashes, so the rerun exercised the reviewed revision.
+- The pre-H0 snapshots show the unrelated uncommitted K2 protocol and load-completion hunks in `commands.cpp` and `kp_harnesstest.cpp` remain byte-preserved.
+
+However, the required property that **replies to condemned clients are dropped** does not hold.
+
+`Channel::push_reply()` checks only whether the generation is still current; it does not reject a condemned generation. The listener then pulls those replies before its condemned-client send-and-close branch. I wrote and ran a narrow 32-bit Channel API probe against the current `channel.o`; after `condemn(gen)`, a queued reply was received by the condemned client:
+
+```text
+{"error":"first"}
+{"secret":"post-condemn reply"}
+```
+
+This affects real production paths: `drain()` calls `stream_events()` after condemnation, and event/deferred-completion code uses `push_reply()`. A subscriber or pending asynchronous operation can therefore receive an extra frame/reply after the bad-request error.
+
+The minimal remedy is to make `push_reply()` reject non-admitted clients—e.g. `if (!admit(client)) return;`—while retaining the current drain ordering that queues the one error reply before calling `condemn()`. It needs a regression test for a post-condemn reply, plus preferably a real-command subscribed-event case.
+
+I also assessed the follow-ups:
+
+- A token is useful defense in depth, but does not substitute for H0. Prefer a 256-bit token stored in a 0600 user-private file and compared in constant time; an environment-only secret is exposed to same-UID readers through process environment inheritance/inspection.
+- Removing `os`/`io` only from the devtools console cannot secure the raw harness because `cmd_lua` uses a full Lua state that opens standard libraries. Removing all `io` would also break the console’s existing output routing. This is a separately scoped reduction-of-blast-radius question, not an H0 fix.
+
+The completed report is at [h0-harness-hardening-review.md](/home/brunner56/kp-live-20260922/h0-harness-hardening-review.md:1).
+
+Files created only in permitted review locations:
+
+- [h0-harness-hardening-review.md](/home/brunner56/kp-live-20260922/h0-harness-hardening-review.md:1) — final review report, including claim blocks and the required verdict.
+- [condemned_reply_probe.cpp](/home/brunner56/kp-live-20260922/review-probes-h0/condemned_reply_probe.cpp:1) — scratch reproduction source.
+- `review-probes-h0/condemned_reply_probe` — scratch 32-bit reproduction binary.
+- `review-probes-h0/resume-real-drain.txt` — fresh real-drain rerun receipt.
+
+No worktree files were edited, staged, committed, reset, or stashed.

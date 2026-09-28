@@ -1,0 +1,14 @@
+findings 26 counts {'magic': 1, 'marker': 24, 'private folder': 1} markers 26
+accepted present 5 of 5
+blocking 21
+9 ('kotorphasor-preview/kphasor.dll', 'marker', '/home/')
+2 ('source.tar.gz!source/.gitignore', 'marker', '/tmp/')
+1 ('source.tar.gz!source/scripts/harness/harness_paths.sh', 'marker', '/tmp/')
+1 ('source.tar.gz!source/scripts/harness/scenarios/k1_fresh_trask_quest.toml', 'marker', 'run id')
+1 ('source.tar.gz!source/third_party/luajit/doc/install.html', 'marker', '/tmp/')
+1 ('source.tar.gz!source/third_party/luajit/src/lib_os.c', 'marker', '/tmp/')
+2 ('source.tar.gz!source/third_party/luajit/src/lj_trace.c', 'marker', '/tmp/')
+2 ('source.tar.gz!source/tools/kp_hooktool.cpp', 'marker', '/tmp/')
+1 ('source.tar.gz!source/tools/kp_namespacetest.cpp', 'marker', '/tmp/')
+1 ('source.tar.gz!source/tools/tests/examples/evidence_test.py', 'marker', '/tmp/')
+tar members 603 owners Counter({('', '', 0, 0): 603}) mtimes {1790467200}

@@ -1,0 +1,12 @@
+236M	/tmp/modsync-validation-reference-20260927-5813
+239M	/tmp/skip-imports-pxya7kbe
+274M	/tmp/modsync-install-progress-task1
+289M	/tmp/modsync-task1b-proof-whg3rfzj
+336M	/tmp/f20-probe
+369M	/tmp/modsync-rust-validation-task2
+633M	/tmp/modsync-review-target-72c3b86
+818M	/tmp/p2p-privacy-probe
+936M	/tmp/modsync-target-dedup
+1.3G	/tmp/modsync-target-integ
+1.6G	/tmp/modsync-target-texture
+1.7G	/tmp/modsync-target-prof

@@ -1,0 +1,76 @@
+PASS lifecycle.unload_one_raises_OnScriptUnload_once
+PASS lifecycle.unload_one_drops_timers
+PASS lifecycle.unload_one_drops_bound_handlers
+PASS lifecycle.reload_one_increments_generation_and_rebinds
+PASS lifecycle.old_unload_cannot_touch_new_bindings
+FAIL lifecycle.deleted_file_unloads_on_poll
+     - one poll of absence is not yet a delete
+PASS lifecycle.new_file_loads_on_poll
+PASS lifecycle.edit_inside_first_window_detected
+PASS lifecycle.duplicate_load_refused
+PASS lifecycle.failed_reload_keeps_running_generation
+    load error: a.lua: ...y-validation/tmp/lifecycle-r2/scratch-cf/failfirst/a.lua:1: '=' expected near 'is'
+PASS lifecycle.failed_first_load_is_FailedToLoad
+PASS lifecycle.quarantine_then_edit_recovers
+PASS lifecycle.state_closing_hook_once_per_close
+PASS lifecycle.request_from_own_callback_deferred
+PASS lifecycle.request_from_timer_deferred
+PASS lifecycle.unknown_name_result_error
+PASS lifecycle.priority_resort_after_reload
+PASS lifecycle.explicit_unload_survives_poll
+PASS lifecycle.load_request_for_new_file
+PASS lifecycle.service_runs_snapshot_only
+PASS lifecycle.sync_refused_while_dispatching
+FAIL lifecycle.nested_dispatch_during_staging_skips_old
+     - the old generation got no event while the new chunk ran [bind]
+     - OnSave reaches the new handler, called=0 [bind]
+     - the old generation got no event while the new chunk ran [unbind]
+     - the new generation holds its own OnSave binding [unbind]
+     - OnSave reaches the new handler, called=0 [unbind]
+     - the old generation got no event while the new chunk ran [noop]
+FAIL lifecycle.alias_of_held_script_refused
+     - load of an alias of a held file is an error
+     - one script held, saw 2
+     - one tick runs the body once, saw 2
+FAIL lifecycle.case_variant_request_refused
+     - load of a case variant of a held script is an error
+     - the new script is held under its on-disk spelling
+     - 2 files on disk, 4 held
+     - one tick runs each file once, saw 4 bodies
+FAIL lifecycle.delete_window_keeps_script
+     - one poll inside the window keeps a running
+     - no OnScriptUnload inside the window
+     - a broken rewrite after the window keeps the running generation (R1)
+     - the old handler still fires
+     - an explicit unload survives the window
+FAIL lifecycle.empty_file_not_reloaded
+     - an empty file does not replace generation 1
+     - the handler still fires
+     - the finished write reloads
+     - an empty new file is not loaded yet
+FAIL lifecycle.request_queue_coalesced_and_bounded
+     - a repeat of a pending request returns its id
+     - 1000 reloads of b coalesce to 1, saw 1002
+     - b reloaded once
+     - a self-reload from OnScriptLoad is refused
+     - s does not reload every service, gen=7
+     - the queue holds at most 64, saw 101
+     - an overflowing request fails at once
+     - one service runs at most 16, ran 101
+     - the rest wait, saw 1
+     - leftovers run before requests made after them
+     - a later request still waits its turn
+FAIL lifecycle.nul_name_refused
+     - load('notlua\0x') is an error
+     - the file without .lua did not run
+     - nothing was added
+FAIL lifecycle.queued_requests_discarded_by_load_all
+     - load_all emptied the queue
+     - the old request reads as an error, not nil
+     - the reloaded a is still loaded
+FAIL lifecycle.symlink_outside_dir_refused
+     - the escaping symlink is not loaded
+     - a prefix-sibling symlink is not loaded
+     - both refusals are reported, saw 0
+30 case(s), 10 failed
+rc=1

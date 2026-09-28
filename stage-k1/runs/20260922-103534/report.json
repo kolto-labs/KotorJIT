@@ -1,0 +1,291 @@
+{
+ "scenario": "Current showcase example live predicates",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534",
+ "started": 1790091350.9838078,
+ "finished": 1790091592.3377485,
+ "seconds": 241.354,
+ "ok": false,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 2.045,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait module {\"equals\": \"danm14aa\", \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 8.569,
+   "detail": "phase=loading module=danm14aa server_tick=4 client_tick=7",
+   "state": {
+    "phase": "loading",
+    "phase_detail": {
+     "server_mode": 1,
+     "loading_module": 0,
+     "area_not_ready": 1,
+     "input_class": 0,
+     "main_menu": 1,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": -1,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 3,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 4,
+    "client_tick": 7,
+    "pc": null,
+    "party": null,
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 23.463,
+   "detail": "phase=gameplay module=danm14aa server_tick=7 client_tick=10 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 1,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 7,
+    "client_tick": 10,
+    "pc": {
+     "hp": 96,
+     "max_hp": 96,
+     "id": 2147483644,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576
+    },
+    "party": [
+     {
+      "tag": "",
+      "id": 2147483644
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 4,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 6.542,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 5,
+   "step": "real conscious Bastila party precondition",
+   "status": "ok",
+   "seconds": 0.587,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 6,
+   "step": "do await_log {\"pattern\": \"\\\\[arrival\\\\] dan\", \"minimum\": 1, \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 4.755,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 7,
+   "step": "Dantooine arrival text inspection",
+   "status": "ok",
+   "seconds": 0.422,
+   "detail": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534/shots/0002_Dantooine_arrival_text_inspection.png"
+  },
+  {
+   "index": 8,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.114,
+   "detail": "saved native log offset 8877"
+  },
+  {
+   "index": 9,
+   "step": "meditation actual engine hook gives every member an active attack-effect delta",
+   "status": "ok",
+   "seconds": 0.283,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 10,
+   "step": "independent active attack-effect counts increased on every party member",
+   "status": "ok",
+   "seconds": 0.293,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 11,
+   "step": "do await_log {\"pattern\": \"\\\\[meditation\\\\] round \\\\d+: steadied [23] of the party\", \"minimum\": 1, \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.129,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 12,
+   "step": "meditation suppresses repeated attacked hook until end-of-round",
+   "status": "ok",
+   "seconds": 0.322,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 13,
+   "step": "temporary meditation effect expires to baseline",
+   "status": "ok",
+   "seconds": 5.752,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 14,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.19,
+   "detail": "saved native log offset 9399"
+  },
+  {
+   "index": 15,
+   "step": "establish alignment baseline20",
+   "status": "ok",
+   "seconds": 0.438,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 16,
+   "step": "do advance_ticks {\"ticks\": 200, \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 28.291,
+   "detail": "observed server ticks 103 -> 303"
+  },
+  {
+   "index": 17,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.138,
+   "detail": "saved native log offset 10081"
+  },
+  {
+   "index": 18,
+   "step": "cross alignment decade20 to35",
+   "status": "ok",
+   "seconds": 0.268,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 19,
+   "step": "do await_log {\"pattern\": \"\\\\[conscience\\\\] \\\\+15, now 35\", \"minimum\": 1, \"timeout\": 120, \"maximum\": 1}",
+   "status": "ok",
+   "seconds": 8.418,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 20,
+   "step": "Alignment text inspection",
+   "status": "ok",
+   "seconds": 0.465,
+   "detail": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534/shots/0003_Alignment_text_inspection.png"
+  },
+  {
+   "index": 21,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.023,
+   "detail": "saved native log offset 10191"
+  },
+  {
+   "index": 22,
+   "step": "same-decade alignment change35 to36",
+   "status": "ok",
+   "seconds": 0.234,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 23,
+   "step": "do advance_ticks {\"ticks\": 200, \"timeout\": 180}",
+   "status": "ok",
+   "seconds": 28.639,
+   "detail": "observed server ticks 368 -> 568"
+  },
+  {
+   "index": 24,
+   "step": "do await_log {\"pattern\": \"\\\\[conscience\\\\]\", \"minimum\": 0, \"timeout\": 120, \"maximum\": 0}",
+   "status": "ok",
+   "seconds": 0.151,
+   "detail": "native log matched 0 lines"
+  },
+  {
+   "index": 25,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.168,
+   "detail": "saved native log offset 10763"
+  },
+  {
+   "index": 26,
+   "step": "wounded Bastila real low HP and stock damage hook",
+   "status": "ok",
+   "seconds": 0.318,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 27,
+   "step": "do await_log {\"pattern\": \"\\\\[wounded\\\\] .*bastila.*below 35%\", \"minimum\": 1, \"timeout\": 120, \"maximum\": 1}",
+   "status": "failed",
+   "seconds": 120.336,
+   "detail": "native log predicate not reached: \\[wounded\\] .*bastila.*below 35%"
+  }
+ ]
+}

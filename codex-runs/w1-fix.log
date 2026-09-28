@@ -1,0 +1,3234 @@
+2026-09-27T18:02:25.614312Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 39)
+2026-09-27T18:02:28.402201Z ERROR codex_core::session::session: failed to load skill /home/brunner56/.agents/skills/canvas/SKILL.md: missing field `description`
+2026-09-27T18:02:32.337315Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.cloudflare.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-09-27T18:02:32.514060Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://idiolect.app/.well-known/oauth-protected-resource/api/mcp\"" })
+2026-09-27T18:02:43.575227Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 39)
+2026-09-27T18:02:46.780316Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 39)
+OpenAI Codex v0.154.0
+--------
+workdir: /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+model: gpt-5.6-terra
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: low
+reasoning summaries: detailed
+session id: 01a0e408-1812-73c3-a8d1-5364b991f46a
+--------
+user
+RESUME, DO NOT RESTART. A previous agent was doing exactly this task and was stopped mid-way at the user's request (model switch). Before doing anything new: inspect what it already produced — its output/report/review file if one exists (it may be partial), files it was allowed to edit (git diff --stat and mtimes in the worktree), and its scratch/probe dirs. Keep completed work that verifies; re-run its last checks; continue from where it stopped. Do not duplicate completed sections; if a partial section exists in an append-only review file, finish it rather than adding a second one. The previous agent's last status line is given below.
+
+GLOBAL RULES: Worktree (cwd) /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation is intentionally dirty with other writers' work — preserve every unrelated change; never git reset/stash/staging/commit/push; never edit the canonical checkout. Never run Wine, a game, Gamescope, Xvfb/Xwayland, mpv, or x11grab capture; never touch /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock; never signal processes you did not start. Host-only tools (ffprobe, 32-bit binaries, pwsh, gamescope) via /home/brunner56/.local/bin/host-cmd sh -c '...'. Never run whole-worktree `git diff --check` (>12 min). The disk and CPU are heavily loaded: prefer incremental builds in your own scratch dir. Lua-native APIs are kp.*; NWScript only via nwscript.call; Lua must not duplicate NWScript names. End with a final message: status, counts, files, and anything incomplete marked honestly.
+
+PREVIOUS AGENT LAST STATUS: Installer is green (7 tests), and consistency is green (23 tests) with the drift report unchanged. Checking build warnings and the DLL import list.
+
+TASK:
+SOLE WRITER, platform W1 fix round. Review to fix: /home/brunner56/kp-live-20260922/platform-w0-w1-review.md (uninstall path trust; receipt Wine detection spoofable; validator lacks field-vs-line cross-checks; Minors). Probes /home/brunner56/kp-live-20260922/review-probes-w0w1/ (tamper.sh, t9.sh, receipt_probe.py) as red-first regressions. Allowed: scripts/install/windows/Install-KotorPhasor.ps1, scripts/receipts/windows-native-receipt.ps1, tools/platform_receipt_test.py, tools/platform_profile_consistency_test.py, tools/fixtures/platform-receipts/*, src/platform/platform_win32.cpp, src/devtools/overlay.cpp (only session-id/anchoring of host/GL log lines), a new docs/user/ install note. Requirements: manifest path confinement (reject rooted, '..', null/empty backup_dir; exact backup_dir pattern; resolved paths under game folder before any delete), undo before proxy copy, hash-verified binkw32_real.dll fallback, copy only detected build's table, receipt default to user-writable location, execution-policy/Unblock-File guidance; native-only anchored host/GL lines with per-session id, current-session-only parsing, single host line, field-vs-line cross-checks, reject Mesa/llvmpipe/radeonsi/Wine GL as native, honest doc that Wine detection is one signal; Minors (Discord/RTSS overlay names, ARM64 translation or doc, explicit failed snapshot, no silent truncation, F12 warning text, consistency test all projectile profiles/alias forms). MinGW cross-build check. Append "Fix round" to /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md. Never touch a real game install.
+
+
+AGENT-TO-AGENT PROTOCOL (prove-the-effort)
+
+1. Independent first. Form your own answer from the evidence before you read
+   any other agent's answer. Then read theirs. (Same-model agents that read
+   each other first converge on a confident wrong answer.)
+
+2. Claims carry referents. Every claim you make to another agent names the
+   thing that shows it: a command and its output, a file:line, a test name,
+   a number with its source, a worked example. A claim with none is marked
+   `unverified` by you, not discovered by them.
+
+3. Be skeptical once, then narrower, then stop. When a claim reaches you
+   without a referent: ask for the one thing that would settle it. If the
+   answer is still a principle ("best practice", "should work", "it's
+   designed that way"), ask narrower once. After two asks with no new
+   referent, mark the claim `unresolved` and move on. Never ask "are you
+   sure?". it is not a question and it flips answers without evidence.
+
+4. Defend by re-deriving, not by folding. When your claim is challenged,
+   go back to the evidence and re-derive; if it still holds, say so with
+   the referent and your confidence. Do not apologise and switch because
+   someone pushed. Do not restate the same claim a second time without a
+   new referent either. that is the signal to stop.
+
+5. Concede in under five words when a referent lands. "you're right",
+   "fair", "that holds". Then take the next claim.
+
+6. Compromise means the option that wins on the named criterion, not the
+   midpoint. Before arguing, both sides write the criterion the decision
+   turns on (latency, lines touched, blast radius, reversibility, what the
+   user asked for) and the measurement or example that would decide it.
+   Run the check if it can be run here. If both options hold, take the one
+   that is cheaper to reverse. If neither side can produce a referent inside
+   the round cap, hand both positions and the missing referent to a judge
+   that argued neither side, or to the user, with one line each.
+
+7. Null move is legal. If the other agent's claim survives your one
+   question, say "that holds" and stop. Do not manufacture a flaw.
+
+8. Round cap three. Ask, ask narrower, verdict. A judge reads both orders
+   and writes its evidence before its verdict; it never shares a backbone
+   with an arguer when that can be arranged.
+
+9. Aim at the claim, never the agent. Short turns. A hard line gets a
+   laugh, not a paragraph. Three short messages beat one wall of text.
+
+10. Report in this shape, one block per claim:
+    claim: <verbatim>
+    referent: <what showed it, or "none">
+    checked: <command / file:line / "not checkable here">
+    verdict: holds | does not hold | unresolved
+    confidence: <low | medium | high> and what would change it
+
+2026-09-27T18:03:25.153180Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.cloudflare.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-09-27T18:03:25.241612Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://idiolect.app/.well-known/oauth-protected-resource/api/mcp\"" })
+warning: Exceeded skills context budget. All skill descriptions were removed and 94 additional skills were not included in the model-visible skills list.
+hook: SessionStart
+hook: SessionStart Completed
+codex
+I’ll resume from the existing artifacts rather than redoing the review: first I’m locating the partial report, current diff/mtimes, and probe state, then I’ll rerun the prior agent’s final checks before addressing anything still uncovered.
+exec
+/usr/bin/bash -lc 'pwd && git status --short && git diff --stat && report=.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md; if [ -f "$report" ]; then echo '"'--- report tail ---'; tail -n 120 \""'$report"; else echo '"'REPORT MISSING'; fi && echo '--- recent allowed files ---' && find scripts/install/windows/Install-KotorPhasor.ps1 scripts/receipts/windows-native-receipt.ps1 tools/platform_receipt_test.py tools/platform_profile_consistency_test.py tools/fixtures/platform-receipts src/platform/platform_win32.cpp src/devtools/overlay.cpp docs/user -type f -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null | sort -r | head -n 80 && echo '--- probe inventory ---' && find /home/brunner56/kp-live-20260922/review-probes-w0w1 -maxdepth 2 -type f -printf '%TY-%Tm-%Td %TH:%TM %p\\n' 2>/dev/null | sort -r" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+exec
+/usr/bin/bash -lc 'git status --short; git diff --stat; test -f .superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md && tail -n 100 .superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md || true' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Testing command response with timeout**
+exec
+/usr/bin/bash -lc 'timeout 20s git -c core.fsmonitor=false status --short --untracked-files=no; timeout 20s git diff --stat -- scripts/install/windows/Install-KotorPhasor.ps1 scripts/receipts/windows-native-receipt.ps1 tools/platform_receipt_test.py tools/platform_profile_consistency_test.py src/platform/platform_win32.cpp src/devtools/overlay.cpp docs/user; timeout 10s tail -n 100 .superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 18902ms:
+ M CMakeLists.txt
+ M data/addresses/k1_gog_103.json
+ M data/addresses/k1_steam_103.json
+ M data/addresses/k1_steam_103_unpacked.json
+ M data/addresses/k2_gog_aspyr.json
+ M data/adjudication/k1_steam_103_unpacked_harness_bindings.json
+ M data/adjudication/k2_gog_aspyr_harness_bindings.json
+ M data/hooksites.toml
+ M docs/creative-runner.md
+ M docs/devtools-protocol.md
+ M docs/lua-api.md
+ M docs/pioneer-authoring.md
+ M docs/research/native-animation-sites.md
+ M docs/user/api-status.md
+ M scripts/examples/coverage/10_cover.lua
+ M scripts/examples/cursed/100_item_airstrike.lua
+ M scripts/examples/cursed/40_chain_reaction.lua
+ M scripts/examples/cursed/70_doppelganger.lua
+ M scripts/examples/cursed/README.md
+ M scripts/examples/multiplayer/10_avatar_sync_test.lua
+ M scripts/harness/kpharness/cli.py
+ M scripts/harness/kpharness/creative.py
+ M scripts/harness/kpharness/creative_steps.py
+ M scripts/harness/kpharness/creative_wine.py
+ M scripts/harness/kpharness/discover.py
+ M scripts/harness/kpharness/pioneer.py
+ M scripts/harness/kpharness/recording.py
+ M scripts/harness/kpharness/scenario.py
+ M scripts/harness/kpharness/session.py
+ M scripts/harness/kpharness/waits.py
+ M scripts/harness/scenarios/cursed/70_doppelganger.toml
+ M src/api/routines.cpp
+ M src/api/timers.cpp
+ M src/api/timers.hpp
+ M src/devtools/overlay.cpp
+ M src/harness/channel.cpp
+ M src/harness/channel.hpp
+ M src/harness/commands.cpp
+ M src/harness/engine_k1.cpp
+ M src/harness/fields.hpp
+ M src/harness/harness.cmake
+ M src/hooks/hooks.cmake
+ M src/hooks/registry.cpp
+ M src/lua/host.cpp
+ M src/lua/host.hpp
+ M src/lua/luahost.cmake
+ M src/platform/platform.hpp
+ M src/platform/platform_win32.cpp
+ M src/runtime/runtime.cmake
+ M src/runtime/runtime.cpp
+ M tools/gen_event_glue.py
+ M tools/kp_harnesstest.cpp
+ M tools/kp_hooktool.cpp
+ M tools/kp_imagetool.cpp
+ M tools/kp_routinetest.cpp
+ M tools/kp_supporttest.cpp
+ M tools/kpharness_creative_test.py
+ M tools/kpharness_pioneer_policy_test.py
+ M tools/tests/examples/cursed.lua
+ M tools/tests/examples/fixture.lua
+ M tools/tests/examples/manifest.json
+ M tools/tests/examples/probes_coverage.lua
+ docs/user/api-status.md         |   2 +
+ src/devtools/overlay.cpp        |  76 +++++++++++++++++++++++++
+ src/platform/platform_win32.cpp | 119 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 197 insertions(+)
+   - `data/addresses/k2_steam_aspyr.json` has a different note, sets `summary.installable: true`, and resolves 39/256 sites.
+
+   builds.inc is stale. The owner is the later `--all` regen, which comes after `k2_gog_aspyr.json` is committed.
+3. Info only, not drift: the BUILDS rows `k1_amazongames`, `k2_steam_linux`, `k2_win_cd_10` and `k2_win_cd_10b` have no address JSON, so they emit no BuildRecord. Source: `--report`.
+
+The ledger fails in both directions. A new drift fails `test_no_unexpected_drift`. A pinned drift that has been fixed fails `test_known_drift_ledger_is_not_stale`.
+
+## W1: host identity, overlay log, installer, receipt
+
+### C++
+`host_identity()` gathers three facts:
+- **Wine:** `GetProcAddress(ntdll, "wine_get_version") != nullptr`. When Wine is present, its version string is also recorded.
+- **OS version:** RtlGetVersion major, minor and build. The return value is typed `LONG`, so it does not need `NTSTATUS` under LEAN_AND_MEAN.
+- **Overlays:** loaded modules found through Toolhelp32. These are kernel32 calls, so no new psapi import is needed. Names that match `galaxy*`, `*overlay*` or `nvspcap*` are recorded as lowercase ASCII base names only, with no paths.
+
+Log line format: `host: wine=<yes|no> wine_version=<v|-> os=<M.m.b> overlays=<a,b|->`. Spaces, tabs and commas inside the wine version or a module name become `_`, so each value stays one token.
+
+At ImGui init, overlay.cpp logs that line once, plus `gl: vendor="…" renderer="…" version="…"`, with `glGetString` null-guarded. Both go through `platform::log`. `Runtime::start` routes that into kotorphasor.log (`runtime.cpp:756`).
+
+**Windows cross build: done.** The host MinGW is reached through `~/.local/bin/host-cmd`. The `cmake`/`ninja` wrappers use it.
+- Configure: `cmake -S . -B /tmp/kp-w1-build -G Ninja` found `KP_MINGW_CXX=/usr/lib64/ccache/i686-w64-mingw32-g++` (GCC 16.1.1 Fedora MinGW).
+- Build: `ninja hooks_win32 kphasor_dll binkw32` → `[63/63] i686-w64-mingw32-g++ kphasor.dll`.
+- The touched objects were rebuilt with `-Wall -Wextra`: `[1/5] platform_win32.cpp`, `[2/5] overlay.cpp`, `[5/5] kphasor.dll`, with zero warnings.
+- `i686-w64-mingw32-objdump -p kphasor.dll` lists the imports DINPUT8, dwmapi, GDI32, KERNEL32, msvcrt, OPENGL32, SHELL32, USER32 and WS2_32. There is no psapi import.
+- `strings` finds `wine_get_version`, `RtlGetVersion`, the `host:` format and the `gl: vendor=` format in kphasor.dll.
+
+**Linux: not broken.** `ninja kp_hooktool libkphasor.so` → `[72/72] Linking CXX executable kp_hooktool`. The only warnings are pre-existing `-Wclobbered` warnings in `hook_bodies.cpp:568,737`.
+
+The repo runs no Windows-side tests under Wine (`grep -i wine` in the cmake files finds comments only), so none were run.
+
+### Installer (`Install-KotorPhasor.ps1`)
+The exe allowlist is at :51:
+- `k1_gog_103` (`9c10e045…`)
+- `k1_steam_103` (`34e6d971…`)
+- `k2_gog_aspyr` (`777bee23…`)
+
+Two builds are excluded on purpose:
+- `_unpacked` is a harness artifact.
+- `k2_steam_aspyr` is excluded because of drift item 2.
+
+The Bink allowlist holds one sha, `2d0ae23a…` (375808 bytes), taken from the K1 **Steam** original at `tmp/k1_harness/binkw32_real.dll`. No `binkw32.dll` exists next to the GOG reference images; I searched the four generator reference directories. So the GOG K1 Bink is unverified: if it differs, the first K1 GOG install refuses and prints the exact `-TrustBinkSha256` value to pass. The K2 Bink sha is also unknown, so K2 fails closed unless the user passes `-TrustBinkSha256 <exact sha>`, which is recorded in the manifest.
+
+Install checks everything first, then acts:
+1. Refuses an unknown exe, an unknown `binkw32.dll`, or an unknown or mismatched `binkw32_real.dll`.
+2. Probes that the game folder is writable.
+3. Copies the original Bink (never moves it) to a backup and verifies the copy's hash.
+4. Copies the proxy in last.
+5. Writes `kotorphasor/install-manifest.json` with every file's hash.
+6. On any error, runs the undo steps in reverse.
+
+Uninstall has two passes (:135). Pass 1 verifies every hash and changes nothing. If any file differs, it refuses and removes nothing. Pass 2 removes only files it verified and restores Bink only from a verified backup. Re-running after a partial uninstall is safe.
+
+Parse check (the pwsh on the host is 7.3.12): `[scriptblock]::Create(...)` plus `Parser::ParseFile` → `PARSE_OK errors=0` for both scripts.
+
+I also ran the installer under pwsh 7 in a temp game folder (`/tmp/kp-w1-install`, deleted afterwards). It held an allowlisted exe copied from the local reference image, the K1 retail Bink, and the freshly built proxy and DLL. Results:
+- Install, then Status: all entries `ok`. A second install is refused with "already installed".
+- Uninstall with one table edited by the user: `uninstall refused, nothing removed`, and a hash diff showed `UNCHANGED_AFTER_REFUSAL`.
+- After restoring the table, uninstall gives `restored original binkw32.dll` and `GAME_FILES_RESTORED`. The user's `kotorphasor/scripts/mine.lua` is kept.
+- Unknown exe, unknown Bink and unknown `binkw32_real.dll` are each refused with the folder `UNTOUCHED`.
+- An unreadable address JSON mid-transaction gives `install failed and was rolled back` and `UNTOUCHED_AFTER_ROLLBACK`.
+- `-TrustBinkSha256` installs, and the manifest records the override.
+
+This first run caught a real bug. The first uninstall had been single-pass, so it removed files before it found the changed one. That is now fixed and re-verified.
+
+### Receipt script and schema test
+The receipt script collects:
+- OS product, version, build and UBR from the registry.
+- CPU arch and name. Translation is `x86-on-arm64-emulation` on ARM64.
+- The exe, container and slice sha (identical for a PE) and the build.
+- The shas of kphasor.dll, the proxy, the real Bink and the manifest.
+- The log sha and size, plus the parsed `host:` and `gl:` lines. The wine value comes from the runtime's line, not from PowerShell.
+- The F12 result (`pass|fail|not-run`), recorded as `physical-keyboard`, `attested_by=user`.
+
+`tools/platform_receipt_test.py` has 25 tests. Validation reads receipts as `utf-8-sig`, because Windows PowerShell 5.1 `Set-Content -Encoding UTF8` writes a BOM, and `json.loads('\ufeff{}')` fails with "Unexpected UTF-8 BOM". `test_bom_prefixed_receipt_validates` covers this. The receipt script now writes BOM-less UTF-8 through `[IO.File]::WriteAllText` after resolving the full path.
+- `Receipts` (15 tests) covers the synthetic fixtures:
+  - `native_pass` is valid and closes a cell.
+  - `native_f12_fail` is valid but does not close one.
+  - `native_arm64_emulated` is valid.
+  - These are rejected: `wine_yes`, `wine_disagrees_with_log` (top level says no, log says yes), `no_host_line`, `missing_field`, `bad_sha`, `unknown_exe`, `f12_not_run`, `software_renderer` (llvmpipe) and `os_build_disagrees`.
+  - `test_wine_rule_is_load_bearing` shows the log-line rule is what rejects the disagreeing fixture.
+- `ScriptContracts` (10 tests) checks:
+  - The PS1 emits every required key.
+  - The PS1 regexes equal the Python ones.
+  - The C++ `host:` and `gl:` format strings produce lines those regexes parse.
+  - The overlay logs exactly once, after `ImGui_ImplOpenGL2_Init`.
+  - The installer's exe allowlist is exactly BuildRecord sha→alias.
+  - The installer contains its transaction and owned-only markers.
+  - The scripts use no PowerShell 7-only syntax.
+
+Red run: against the `HEAD` versions of `platform_win32.cpp` and `overlay.cpp`, `ScriptContracts` gives `FAILED (failures=2, errors=2)`. The failing tests are `test_cpp_gl_line_matches_regex`, `test_cpp_host_line_matches_regex`, `test_host_identity_detects_wine_by_export` and `test_overlay_logs_once_at_imgui_init`. The green run gives `Ran 25 tests ... OK`.
+
+`python3 tools/platform_receipt_test.py --validate <receipt.json>` runs as a CLI: `native_pass` → `VALID native receipt` rc=0; `wine_yes` → 2 REJECT lines, rc=1.
+
+## Proof boundary
+
+- **No native Windows receipt exists yet.** Nothing here ran on Windows. `host_identity()` has not executed on any machine, native or Wine. The `host:`/`gl:` lines have never been seen in a real kotorphasor.log. Closing that needs W2: the user runs the installer and receipt script on a real Windows PC with a GPU.
+- The PowerShell scripts were parsed and exercised with pwsh 7.3.12 on Linux. They were not run under Windows PowerShell 5.1. Registry and CIM calls in the receipt script need Windows, so the script has not been executed at all.
+- The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+- The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+- The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
+
+**Inspecting git changes and test results**
+codex
+The prior report is substantial and already records the core implementation and its red/green regressions. I’ve confirmed the worktree is broadly dirty from other writers; the only tracked changes in this review’s allowed C++ scope are the platform/overlay edits. I’m now rerunning the reported installer, receipt, consistency, and cross-build evidence, then I’ll inspect the specific fixes for any remaining W1 gaps.
+exec
+/usr/bin/bash -lc "timeout 30s python3 tools/platform_receipt_test.py; timeout 30s python3 tools/platform_profile_consistency_test.py; timeout 30s find /home/brunner56/kp-live-20260922/review-probes-w0w1 -maxdepth 2 -type f -printf '%p\\n' | sort; timeout 30s git diff -- src/platform/platform_win32.cpp src/devtools/overlay.cpp; timeout 30s git ls-files --others --exclude-standard -- scripts/install/windows scripts/receipts tools/platform_receipt_test.py tools/platform_profile_consistency_test.py tools/fixtures/platform-receipts docs/user" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Testing process output with unbuffered mode**
+exec
+/usr/bin/bash -lc 'timeout 120s python3 tools/platform_receipt_test.py' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 103373ms:
+ M CMakeLists.txt
+ M data/addresses/k1_gog_103.json
+ M data/addresses/k1_steam_103.json
+ M data/addresses/k1_steam_103_unpacked.json
+ M data/addresses/k2_gog_aspyr.json
+ M data/adjudication/k1_steam_103_unpacked_harness_bindings.json
+ M data/adjudication/k2_gog_aspyr_harness_bindings.json
+ M data/hooksites.toml
+ M docs/creative-runner.md
+ M docs/devtools-protocol.md
+ M docs/lua-api.md
+ M docs/pioneer-authoring.md
+ M docs/research/native-animation-sites.md
+ M docs/user/api-status.md
+ M scripts/examples/coverage/10_cover.lua
+ M scripts/examples/cursed/100_item_airstrike.lua
+ M scripts/examples/cursed/40_chain_reaction.lua
+ M scripts/examples/cursed/70_doppelganger.lua
+ M scripts/examples/cursed/README.md
+ M scripts/examples/multiplayer/10_avatar_sync_test.lua
+ M scripts/harness/kpharness/cli.py
+ M scripts/harness/kpharness/creative.py
+ M scripts/harness/kpharness/creative_steps.py
+ M scripts/harness/kpharness/creative_wine.py
+ M scripts/harness/kpharness/discover.py
+ M scripts/harness/kpharness/pioneer.py
+ M scripts/harness/kpharness/recording.py
+ M scripts/harness/kpharness/scenario.py
+ M scripts/harness/kpharness/session.py
+ M scripts/harness/kpharness/waits.py
+ M scripts/harness/scenarios/cursed/70_doppelganger.toml
+ M src/api/routines.cpp
+ M src/api/timers.cpp
+ M src/api/timers.hpp
+ M src/devtools/overlay.cpp
+ M src/harness/channel.cpp
+ M src/harness/channel.hpp
+ M src/harness/commands.cpp
+ M src/harness/engine_k1.cpp
+ M src/harness/fields.hpp
+ M src/harness/harness.cmake
+ M src/hooks/hooks.cmake
+ M src/hooks/registry.cpp
+ M src/lua/host.cpp
+ M src/lua/host.hpp
+ M src/lua/luahost.cmake
+ M src/platform/platform.hpp
+ M src/platform/platform_win32.cpp
+ M src/runtime/runtime.cmake
+ M src/runtime/runtime.cpp
+ M tools/gen_event_glue.py
+ M tools/kp_harnesstest.cpp
+ M tools/kp_hooktool.cpp
+ M tools/kp_imagetool.cpp
+ M tools/kp_routinetest.cpp
+ M tools/kp_supporttest.cpp
+ M tools/kpharness_creative_test.py
+ M tools/kpharness_pioneer_policy_test.py
+ M tools/tests/examples/cursed.lua
+ M tools/tests/examples/fixture.lua
+ M tools/tests/examples/manifest.json
+ M tools/tests/examples/probes_coverage.lua
+?? data/adjudication/k1_gog_103_camera_bindings.json
+?? data/adjudication/k1_gog_103_motion_bindings.json
+?? docs/capability-cells.md
+?? docs/example-behavior-ledger.md
+?? docs/original41-live-evidence-audit.md
+?? docs/projectiles.md
+?? docs/release-platform-status.md
+?? docs/research/object-blaster-feasibility.md
+?? docs/user-directive-audit.md
+?? docs/user/creative-harness.md
+?? docs/user/windows-native-install.md
+?? scripts/harness/kpharness/capture_diagnostic.py
+?? scripts/harness/kpharness/commit_inputs.py
+?? scripts/harness/kpharness/console_protocol.py
+?? scripts/harness/kpharness/console_steps.py
+?? scripts/harness/kpharness/creative_accept.py
+?? scripts/harness/kpharness/creative_export.py
+?? scripts/harness/kpharness/display_backends.py
+?? scripts/harness/kpharness/export_verify.py
+?? scripts/harness/kpharness/gamescope_processes.py
+?? scripts/harness/kpharness/gamescope_snapshot.py
+?? scripts/harness/kpharness/gamescope_socket.py
+?? scripts/harness/kpharness/gamescope_xwayland.py
+?? scripts/harness/kpharness/owned_x11.py
+?? scripts/harness/kpharness/physical_console.py
+?? scripts/harness/kpharness/playback.py
+?? scripts/install/
+?? scripts/receipts/
+?? src/api/camera.cmake
+?? src/api/camera.cpp
+?? src/api/camera.hpp
+?? src/api/camera_backend.cpp
+?? src/api/camera_lua.cpp
+?? src/api/camera_profiles.cpp
+?? src/api/motion.cmake
+?? src/api/motion.cpp
+?? src/api/motion.hpp
+?? src/api/motion_backend.cpp
+?? src/api/motion_lua.cpp
+?? src/api/motion_profiles.cpp
+?? src/api/projectiles.cpp
+?? src/api/projectiles.hpp
+?? src/api/projectiles_entry.cpp
+?? src/api/projectiles_entry.hpp
+?? src/api/projectiles_lua.cpp
+?? src/api/projectiles_native.cpp
+?? src/api/projectiles_patch.hpp
+?? src/api/projectiles_profile.cpp
+?? src/api/projectiles_profile.hpp
+?? src/api/scripts_lua.cpp
+?? src/api/scripts_lua.hpp
+?? src/api/vector.cmake
+?? src/api/vector.cpp
+?? src/api/vector.hpp
+?? src/harness/console_protocol.cpp
+?? src/harness/console_protocol.hpp
+?? src/hooks/x64/
+?? src/image/macho.cpp
+?? src/image/macho.hpp
+?? src/lua/lifecycle.cmake
+?? tools/address_table_layout_test.py
+?? tools/camera_profile_consistency_test.py
+?? tools/creative_host_check.py
+?? tools/creative_host_check_test.py
+?? tools/fixtures/
+?? tools/kp_cameratest.cpp
+?? tools/kp_consoleprotocoltest.cpp
+?? tools/kp_hooktool_x64.cpp
+?? tools/kp_imagetool_macho_test.py
+?? tools/kp_lifecycletest.cpp
+?? tools/kp_machotest.cpp
+?? tools/kp_motiontest.cpp
+?? tools/kp_projectilestest.cpp
+?? tools/kp_scriptsapitest.cpp
+?? tools/kp_vectortest.cpp
+?? tools/kpharness_capture_diagnostic_test.py
+?? tools/kpharness_commit_inputs_test.py
+?? tools/kpharness_export_verify_test.py
+?? tools/kpharness_gamescope_backend_test.py
+?? tools/kpharness_gamescope_boot_repair_test.py
+?? tools/kpharness_physical_console_test.py
+?? tools/kpharness_playback_test.py
+?? tools/package_creative_harness.py
+?? tools/package_creative_harness_test.py
+?? tools/platform_profile_consistency_test.py
+?? tools/platform_receipt_test.py
+?? tools/scan_release_zip.py
+?? tools/tests/camera_backend_fixture.hpp
+ CMakeLists.txt                                     |   30 +-
+ data/addresses/k1_gog_103.json                     |  321 ++++-
+ data/addresses/k1_steam_103.json                   |  220 +++-
+ data/addresses/k1_steam_103_unpacked.json          |  220 +++-
+ data/addresses/k2_gog_aspyr.json                   |   27 +-
+ .../k1_steam_103_unpacked_harness_bindings.json    |   34 +-
+ .../k2_gog_aspyr_harness_bindings.json             |   29 +-
+ data/hooksites.toml                                |  219 ++++
+ docs/creative-runner.md                            |  638 +++++++++-
+ docs/devtools-protocol.md                          |   35 +-
+ docs/lua-api.md                                    |   32 +
+ docs/pioneer-authoring.md                          |  145 ++-
+ docs/research/native-animation-sites.md            |    2 +-
+ docs/user/api-status.md                            |    2 +
+ scripts/examples/coverage/10_cover.lua             |    9 +-
+ scripts/examples/cursed/100_item_airstrike.lua     |   15 +-
+ scripts/examples/cursed/40_chain_reaction.lua      |  123 +-
+ scripts/examples/cursed/70_doppelganger.lua        |  284 +++--
+ scripts/examples/cursed/README.md                  |    6 +-
+ .../examples/multiplayer/10_avatar_sync_test.lua   |   28 +-
+ scripts/harness/kpharness/cli.py                   |  218 +++-
+ scripts/harness/kpharness/creative.py              |  175 ++-
+ scripts/harness/kpharness/creative_steps.py        |   25 +-
+ scripts/harness/kpharness/creative_wine.py         |  119 +-
+ scripts/harness/kpharness/discover.py              |    3 +-
+ scripts/harness/kpharness/pioneer.py               |  195 +--
+ scripts/harness/kpharness/recording.py             | 1286 +++++++++++++++++++-
+ scripts/harness/kpharness/scenario.py              |   25 +-
+ scripts/harness/kpharness/session.py               |   67 +
+ scripts/harness/kpharness/waits.py                 |   14 +-
+ .../harness/scenarios/cursed/70_doppelganger.toml  |   70 +-
+ src/api/routines.cpp                               |   40 +-
+ src/api/timers.cpp                                 |  120 +-
+ src/api/timers.hpp                                 |   54 +-
+ src/devtools/overlay.cpp                           |   76 ++
+ src/harness/channel.cpp                            |   34 +
+ src/harness/channel.hpp                            |   38 +
+ src/harness/commands.cpp                           |   41 +-
+ src/harness/engine_k1.cpp                          |   42 +-
+ src/harness/fields.hpp                             |   28 +-
+ src/harness/harness.cmake                          |    1 +
+ src/hooks/hooks.cmake                              |   19 +
+ src/hooks/registry.cpp                             |   16 +-
+ src/lua/host.cpp                                   |  382 +++++-
+ src/lua/host.hpp                                   |  108 +-
+ src/lua/luahost.cmake                              |    3 +
+ src/platform/platform.hpp                          |   26 +
+ src/platform/platform_win32.cpp                    |  119 ++
+ src/runtime/runtime.cmake                          |    9 +
+ src/runtime/runtime.cpp                            |   12 +
+ tools/gen_event_glue.py                            |   36 +
+ tools/kp_harnesstest.cpp                           |  352 +++++-
+ tools/kp_hooktool.cpp                              |   30 +
+ tools/kp_imagetool.cpp                             |   61 +-
+ tools/kp_routinetest.cpp                           |   82 +-
+ tools/kp_supporttest.cpp                           |  448 +++++++
+ tools/kpharness_creative_test.py                   |  123 +-
+ tools/kpharness_pioneer_policy_test.py             |   11 +
+ tools/tests/examples/cursed.lua                    |  173 ++-
+ tools/tests/examples/fixture.lua                   |  102 +-
+ tools/tests/examples/manifest.json                 |   21 +-
+ tools/tests/examples/probes_coverage.lua           |    6 +
+ 62 files changed, 6699 insertions(+), 530 deletions(-)
+   - `data/addresses/k2_steam_aspyr.json` has a different note, sets `summary.installable: true`, and resolves 39/256 sites.
+
+   builds.inc is stale. The owner is the later `--all` regen, which comes after `k2_gog_aspyr.json` is committed.
+3. Info only, not drift: the BUILDS rows `k1_amazongames`, `k2_steam_linux`, `k2_win_cd_10` and `k2_win_cd_10b` have no address JSON, so they emit no BuildRecord. Source: `--report`.
+
+The ledger fails in both directions. A new drift fails `test_no_unexpected_drift`. A pinned drift that has been fixed fails `test_known_drift_ledger_is_not_stale`.
+
+## W1: host identity, overlay log, installer, receipt
+
+### C++
+`host_identity()` gathers three facts:
+- **Wine:** `GetProcAddress(ntdll, "wine_get_version") != nullptr`. When Wine is present, its version string is also recorded.
+- **OS version:** RtlGetVersion major, minor and build. The return value is typed `LONG`, so it does not need `NTSTATUS` under LEAN_AND_MEAN.
+- **Overlays:** loaded modules found through Toolhelp32. These are kernel32 calls, so no new psapi import is needed. Names that match `galaxy*`, `*overlay*` or `nvspcap*` are recorded as lowercase ASCII base names only, with no paths.
+
+Log line format: `host: wine=<yes|no> wine_version=<v|-> os=<M.m.b> overlays=<a,b|->`. Spaces, tabs and commas inside the wine version or a module name become `_`, so each value stays one token.
+
+At ImGui init, overlay.cpp logs that line once, plus `gl: vendor="…" renderer="…" version="…"`, with `glGetString` null-guarded. Both go through `platform::log`. `Runtime::start` routes that into kotorphasor.log (`runtime.cpp:756`).
+
+**Windows cross build: done.** The host MinGW is reached through `~/.local/bin/host-cmd`. The `cmake`/`ninja` wrappers use it.
+- Configure: `cmake -S . -B /tmp/kp-w1-build -G Ninja` found `KP_MINGW_CXX=/usr/lib64/ccache/i686-w64-mingw32-g++` (GCC 16.1.1 Fedora MinGW).
+- Build: `ninja hooks_win32 kphasor_dll binkw32` → `[63/63] i686-w64-mingw32-g++ kphasor.dll`.
+- The touched objects were rebuilt with `-Wall -Wextra`: `[1/5] platform_win32.cpp`, `[2/5] overlay.cpp`, `[5/5] kphasor.dll`, with zero warnings.
+- `i686-w64-mingw32-objdump -p kphasor.dll` lists the imports DINPUT8, dwmapi, GDI32, KERNEL32, msvcrt, OPENGL32, SHELL32, USER32 and WS2_32. There is no psapi import.
+- `strings` finds `wine_get_version`, `RtlGetVersion`, the `host:` format and the `gl: vendor=` format in kphasor.dll.
+
+**Linux: not broken.** `ninja kp_hooktool libkphasor.so` → `[72/72] Linking CXX executable kp_hooktool`. The only warnings are pre-existing `-Wclobbered` warnings in `hook_bodies.cpp:568,737`.
+
+The repo runs no Windows-side tests under Wine (`grep -i wine` in the cmake files finds comments only), so none were run.
+
+### Installer (`Install-KotorPhasor.ps1`)
+The exe allowlist is at :51:
+- `k1_gog_103` (`9c10e045…`)
+- `k1_steam_103` (`34e6d971…`)
+- `k2_gog_aspyr` (`777bee23…`)
+
+Two builds are excluded on purpose:
+- `_unpacked` is a harness artifact.
+- `k2_steam_aspyr` is excluded because of drift item 2.
+
+The Bink allowlist holds one sha, `2d0ae23a…` (375808 bytes), taken from the K1 **Steam** original at `tmp/k1_harness/binkw32_real.dll`. No `binkw32.dll` exists next to the GOG reference images; I searched the four generator reference directories. So the GOG K1 Bink is unverified: if it differs, the first K1 GOG install refuses and prints the exact `-TrustBinkSha256` value to pass. The K2 Bink sha is also unknown, so K2 fails closed unless the user passes `-TrustBinkSha256 <exact sha>`, which is recorded in the manifest.
+
+Install checks everything first, then acts:
+1. Refuses an unknown exe, an unknown `binkw32.dll`, or an unknown or mismatched `binkw32_real.dll`.
+2. Probes that the game folder is writable.
+3. Copies the original Bink (never moves it) to a backup and verifies the copy's hash.
+4. Copies the proxy in last.
+5. Writes `kotorphasor/install-manifest.json` with every file's hash.
+6. On any error, runs the undo steps in reverse.
+
+Uninstall has two passes (:135). Pass 1 verifies every hash and changes nothing. If any file differs, it refuses and removes nothing. Pass 2 removes only files it verified and restores Bink only from a verified backup. Re-running after a partial uninstall is safe.
+
+Parse check (the pwsh on the host is 7.3.12): `[scriptblock]::Create(...)` plus `Parser::ParseFile` → `PARSE_OK errors=0` for both scripts.
+
+I also ran the installer under pwsh 7 in a temp game folder (`/tmp/kp-w1-install`, deleted afterwards). It held an allowlisted exe copied from the local reference image, the K1 retail Bink, and the freshly built proxy and DLL. Results:
+- Install, then Status: all entries `ok`. A second install is refused with "already installed".
+- Uninstall with one table edited by the user: `uninstall refused, nothing removed`, and a hash diff showed `UNCHANGED_AFTER_REFUSAL`.
+- After restoring the table, uninstall gives `restored original binkw32.dll` and `GAME_FILES_RESTORED`. The user's `kotorphasor/scripts/mine.lua` is kept.
+- Unknown exe, unknown Bink and unknown `binkw32_real.dll` are each refused with the folder `UNTOUCHED`.
+- An unreadable address JSON mid-transaction gives `install failed and was rolled back` and `UNTOUCHED_AFTER_ROLLBACK`.
+- `-TrustBinkSha256` installs, and the manifest records the override.
+
+This first run caught a real bug. The first uninstall had been single-pass, so it removed files before it found the changed one. That is now fixed and re-verified.
+
+### Receipt script and schema test
+The receipt script collects:
+- OS product, version, build and UBR from the registry.
+- CPU arch and name. Translation is `x86-on-arm64-emulation` on ARM64.
+- The exe, container and slice sha (identical for a PE) and the build.
+- The shas of kphasor.dll, the proxy, the real Bink and the manifest.
+- The log sha and size, plus the parsed `host:` and `gl:` lines. The wine value comes from the runtime's line, not from PowerShell.
+- The F12 result (`pass|fail|not-run`), recorded as `physical-keyboard`, `attested_by=user`.
+
+`tools/platform_receipt_test.py` has 25 tests. Validation reads receipts as `utf-8-sig`, because Windows PowerShell 5.1 `Set-Content -Encoding UTF8` writes a BOM, and `json.loads('\ufeff{}')` fails with "Unexpected UTF-8 BOM". `test_bom_prefixed_receipt_validates` covers this. The receipt script now writes BOM-less UTF-8 through `[IO.File]::WriteAllText` after resolving the full path.
+- `Receipts` (15 tests) covers the synthetic fixtures:
+  - `native_pass` is valid and closes a cell.
+  - `native_f12_fail` is valid but does not close one.
+  - `native_arm64_emulated` is valid.
+  - These are rejected: `wine_yes`, `wine_disagrees_with_log` (top level says no, log says yes), `no_host_line`, `missing_field`, `bad_sha`, `unknown_exe`, `f12_not_run`, `software_renderer` (llvmpipe) and `os_build_disagrees`.
+  - `test_wine_rule_is_load_bearing` shows the log-line rule is what rejects the disagreeing fixture.
+- `ScriptContracts` (10 tests) checks:
+  - The PS1 emits every required key.
+  - The PS1 regexes equal the Python ones.
+  - The C++ `host:` and `gl:` format strings produce lines those regexes parse.
+  - The overlay logs exactly once, after `ImGui_ImplOpenGL2_Init`.
+  - The installer's exe allowlist is exactly BuildRecord sha→alias.
+  - The installer contains its transaction and owned-only markers.
+  - The scripts use no PowerShell 7-only syntax.
+
+Red run: against the `HEAD` versions of `platform_win32.cpp` and `overlay.cpp`, `ScriptContracts` gives `FAILED (failures=2, errors=2)`. The failing tests are `test_cpp_gl_line_matches_regex`, `test_cpp_host_line_matches_regex`, `test_host_identity_detects_wine_by_export` and `test_overlay_logs_once_at_imgui_init`. The green run gives `Ran 25 tests ... OK`.
+
+`python3 tools/platform_receipt_test.py --validate <receipt.json>` runs as a CLI: `native_pass` → `VALID native receipt` rc=0; `wine_yes` → 2 REJECT lines, rc=1.
+
+## Proof boundary
+
+- **No native Windows receipt exists yet.** Nothing here ran on Windows. `host_identity()` has not executed on any machine, native or Wine. The `host:`/`gl:` lines have never been seen in a real kotorphasor.log. Closing that needs W2: the user runs the installer and receipt script on a real Windows PC with a GPU.
+- The PowerShell scripts were parsed and exercised with pwsh 7.3.12 on Linux. They were not run under Windows PowerShell 5.1. Registry and CIM calls in the receipt script need Windows, so the script has not been executed at all.
+- The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+- The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+- The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
+
+ succeeded in 124632ms:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ M CMakeLists.txt
+ M data/addresses/k1_gog_103.json
+ M data/addresses/k1_steam_103.json
+ M data/addresses/k1_steam_103_unpacked.json
+ M data/addresses/k2_gog_aspyr.json
+ M data/adjudication/k1_steam_103_unpacked_harness_bindings.json
+ M data/adjudication/k2_gog_aspyr_harness_bindings.json
+ M data/hooksites.toml
+ M docs/creative-runner.md
+ M docs/devtools-protocol.md
+ M docs/lua-api.md
+ M docs/pioneer-authoring.md
+ M docs/research/native-animation-sites.md
+ M docs/user/api-status.md
+ M scripts/examples/coverage/10_cover.lua
+ M scripts/examples/cursed/100_item_airstrike.lua
+ M scripts/examples/cursed/40_chain_reaction.lua
+ M scripts/examples/cursed/70_doppelganger.lua
+ M scripts/examples/cursed/README.md
+ M scripts/examples/multiplayer/10_avatar_sync_test.lua
+ M scripts/harness/kpharness/cli.py
+ M scripts/harness/kpharness/creative.py
+ M scripts/harness/kpharness/creative_steps.py
+ M scripts/harness/kpharness/creative_wine.py
+ M scripts/harness/kpharness/discover.py
+ M scripts/harness/kpharness/pioneer.py
+ M scripts/harness/kpharness/recording.py
+ M scripts/harness/kpharness/scenario.py
+ M scripts/harness/kpharness/session.py
+ M scripts/harness/kpharness/waits.py
+ M scripts/harness/scenarios/cursed/70_doppelganger.toml
+ M src/api/routines.cpp
+ M src/api/timers.cpp
+ M src/api/timers.hpp
+ M src/devtools/overlay.cpp
+ M src/harness/channel.cpp
+ M src/harness/channel.hpp
+ M src/harness/commands.cpp
+ M src/harness/engine_k1.cpp
+ M src/harness/fields.hpp
+ M src/harness/harness.cmake
+ M src/hooks/hooks.cmake
+ M src/hooks/registry.cpp
+ M src/lua/host.cpp
+ M src/lua/host.hpp
+ M src/lua/luahost.cmake
+ M src/platform/platform.hpp
+ M src/platform/platform_win32.cpp
+ M src/runtime/runtime.cmake
+ M src/runtime/runtime.cpp
+ M tools/gen_event_glue.py
+ M tools/kp_harnesstest.cpp
+ M tools/kp_hooktool.cpp
+ M tools/kp_imagetool.cpp
+ M tools/kp_routinetest.cpp
+ M tools/kp_supporttest.cpp
+ M tools/kpharness_creative_test.py
+ M tools/kpharness_pioneer_policy_test.py
+ M tools/tests/examples/cursed.lua
+ M tools/tests/examples/fixture.lua
+ M tools/tests/examples/manifest.json
+ M tools/tests/examples/probes_coverage.lua
+?? data/adjudication/k1_gog_103_camera_bindings.json
+?? data/adjudication/k1_gog_103_motion_bindings.json
+?? docs/capability-cells.md
+?? docs/example-behavior-ledger.md
+?? docs/original41-live-evidence-audit.md
+?? docs/projectiles.md
+?? docs/release-platform-status.md
+?? docs/research/object-blaster-feasibility.md
+?? docs/user-directive-audit.md
+?? docs/user/creative-harness.md
+?? docs/user/windows-native-install.md
+?? scripts/harness/kpharness/capture_diagnostic.py
+?? scripts/harness/kpharness/commit_inputs.py
+?? scripts/harness/kpharness/console_protocol.py
+?? scripts/harness/kpharness/console_steps.py
+?? scripts/harness/kpharness/creative_accept.py
+?? scripts/harness/kpharness/creative_export.py
+?? scripts/harness/kpharness/display_backends.py
+?? scripts/harness/kpharness/export_verify.py
+?? scripts/harness/kpharness/gamescope_processes.py
+?? scripts/harness/kpharness/gamescope_snapshot.py
+?? scripts/harness/kpharness/gamescope_socket.py
+?? scripts/harness/kpharness/gamescope_xwayland.py
+?? scripts/harness/kpharness/owned_x11.py
+?? scripts/harness/kpharness/physical_console.py
+?? scripts/harness/kpharness/playback.py
+?? scripts/install/
+?? scripts/receipts/
+?? src/api/camera.cmake
+?? src/api/camera.cpp
+?? src/api/camera.hpp
+?? src/api/camera_backend.cpp
+?? src/api/camera_lua.cpp
+?? src/api/camera_profiles.cpp
+?? src/api/motion.cmake
+?? src/api/motion.cpp
+?? src/api/motion.hpp
+?? src/api/motion_backend.cpp
+?? src/api/motion_lua.cpp
+?? src/api/motion_profiles.cpp
+?? src/api/projectiles.cpp
+?? src/api/projectiles.hpp
+?? src/api/projectiles_entry.cpp
+?? src/api/projectiles_entry.hpp
+?? src/api/projectiles_lua.cpp
+?? src/api/projectiles_native.cpp
+?? src/api/projectiles_patch.hpp
+?? src/api/projectiles_profile.cpp
+?? src/api/projectiles_profile.hpp
+?? src/api/scripts_lua.cpp
+?? src/api/scripts_lua.hpp
+?? src/api/vector.cmake
+?? src/api/vector.cpp
+?? src/api/vector.hpp
+?? src/harness/console_protocol.cpp
+?? src/harness/console_protocol.hpp
+?? src/hooks/x64/
+?? src/image/macho.cpp
+?? src/image/macho.hpp
+?? src/lua/lifecycle.cmake
+?? tools/address_table_layout_test.py
+?? tools/camera_profile_consistency_test.py
+?? tools/creative_host_check.py
+?? tools/creative_host_check_test.py
+?? tools/fixtures/
+?? tools/kp_cameratest.cpp
+?? tools/kp_consoleprotocoltest.cpp
+?? tools/kp_hooktool_x64.cpp
+?? tools/kp_imagetool_macho_test.py
+?? tools/kp_lifecycletest.cpp
+?? tools/kp_machotest.cpp
+?? tools/kp_motiontest.cpp
+?? tools/kp_projectilestest.cpp
+?? tools/kp_scriptsapitest.cpp
+?? tools/kp_vectortest.cpp
+?? tools/kpharness_capture_diagnostic_test.py
+?? tools/kpharness_commit_inputs_test.py
+?? tools/kpharness_export_verify_test.py
+?? tools/kpharness_gamescope_backend_test.py
+?? tools/kpharness_gamescope_boot_repair_test.py
+?? tools/kpharness_physical_console_test.py
+?? tools/kpharness_playback_test.py
+?? tools/package_creative_harness.py
+?? tools/package_creative_harness_test.py
+?? tools/platform_profile_consistency_test.py
+?? tools/platform_receipt_test.py
+?? tools/scan_release_zip.py
+?? tools/tests/camera_backend_fixture.hpp
+ CMakeLists.txt                                     |   30 +-
+ data/addresses/k1_gog_103.json                     |  321 ++++-
+ data/addresses/k1_steam_103.json                   |  220 +++-
+ data/addresses/k1_steam_103_unpacked.json          |  220 +++-
+ data/addresses/k2_gog_aspyr.json                   |   27 +-
+ .../k1_steam_103_unpacked_harness_bindings.json    |   34 +-
+ .../k2_gog_aspyr_harness_bindings.json             |   29 +-
+ data/hooksites.toml                                |  219 ++++
+ docs/creative-runner.md                            |  638 +++++++++-
+ docs/devtools-protocol.md                          |   35 +-
+ docs/lua-api.md                                    |   32 +
+ docs/pioneer-authoring.md                          |  145 ++-
+ docs/research/native-animation-sites.md            |    2 +-
+ docs/user/api-status.md                            |    2 +
+ scripts/examples/coverage/10_cover.lua             |    9 +-
+ scripts/examples/cursed/100_item_airstrike.lua     |   15 +-
+ scripts/examples/cursed/40_chain_reaction.lua      |  123 +-
+ scripts/examples/cursed/70_doppelganger.lua        |  284 +++--
+ scripts/examples/cursed/README.md                  |    6 +-
+ .../examples/multiplayer/10_avatar_sync_test.lua   |   28 +-
+ scripts/harness/kpharness/cli.py                   |  218 +++-
+ scripts/harness/kpharness/creative.py              |  175 ++-
+ scripts/harness/kpharness/creative_steps.py        |   25 +-
+ scripts/harness/kpharness/creative_wine.py         |  119 +-
+ scripts/harness/kpharness/discover.py              |    3 +-
+ scripts/harness/kpharness/pioneer.py               |  195 +--
+ scripts/harness/kpharness/recording.py             | 1286 +++++++++++++++++++-
+ scripts/harness/kpharness/scenario.py              |   25 +-
+ scripts/harness/kpharness/session.py               |   67 +
+ scripts/harness/kpharness/waits.py                 |   14 +-
+ .../harness/scenarios/cursed/70_doppelganger.toml  |   70 +-
+ src/api/routines.cpp                               |   40 +-
+ src/api/timers.cpp                                 |  120 +-
+ src/api/timers.hpp                                 |   54 +-
+ src/devtools/overlay.cpp                           |   76 ++
+ src/harness/channel.cpp                            |   34 +
+ src/harness/channel.hpp                            |   38 +
+ src/harness/commands.cpp                           |   41 +-
+ src/harness/engine_k1.cpp                          |   42 +-
+ src/harness/fields.hpp                             |   28 +-
+ src/harness/harness.cmake                          |    1 +
+ src/hooks/hooks.cmake                              |   19 +
+ src/hooks/registry.cpp                             |   16 +-
+ src/lua/host.cpp                                   |  382 +++++-
+ src/lua/host.hpp                                   |  108 +-
+ src/lua/luahost.cmake                              |    3 +
+ src/platform/platform.hpp                          |   26 +
+ src/platform/platform_win32.cpp                    |  119 ++
+ src/runtime/runtime.cmake                          |    9 +
+ src/runtime/runtime.cpp                            |   12 +
+ tools/gen_event_glue.py                            |   36 +
+ tools/kp_harnesstest.cpp                           |  352 +++++-
+ tools/kp_hooktool.cpp                              |   30 +
+ tools/kp_imagetool.cpp                             |   61 +-
+ tools/kp_routinetest.cpp                           |   82 +-
+ tools/kp_supporttest.cpp                           |  448 +++++++
+ tools/kpharness_creative_test.py                   |  123 +-
+ tools/kpharness_pioneer_policy_test.py             |   11 +
+ tools/tests/examples/cursed.lua                    |  173 ++-
+ tools/tests/examples/fixture.lua                   |  102 +-
+ tools/tests/examples/manifest.json                 |   21 +-
+ tools/tests/examples/probes_coverage.lua           |    6 +
+ 62 files changed, 6699 insertions(+), 530 deletions(-)
+--- report tail ---
+  note-mismatch k2_steam_aspyr ...
+  profile-sha-unregistered model:macos-k1-i386: aa628373...
+  profile-sha-unregistered model:macos-k2-i386: f14f285b...
+  profile-sha-unregistered model:macos-k2-x86_64: 469067c4...
+FAILED (failures=1)
+```
+Green run: `PYTHONDONTWRITEBYTECODE=1 python3 tools/platform_profile_consistency_test.py` gives `Ran 20 tests ... OK`.
+
+### Drift found (real, not fixed; pinned in KNOWN_DRIFT)
+
+Each pin is a (kind, subject, exact detail) triple, and the detail includes the offending sha or note hash.
+
+1. **Mac profile shas have no generator entry.** Three Mac model profiles in `src/api/model_profiles.cpp:5,9,13` bind exact shas:
+   - `macos-k1-i386` binds `aa628373…`
+   - `macos-k2-i386` binds `f14f285b…`
+   - `macos-k2-x86_64` binds `469067c4…`
+
+   Neither the generator's static_only `k1_mac` nor `k2_mac` row carries a sha256; both carry md5 only. No `k2_mac_x86_64` row exists. The owner is M0, which adds the static-only Mac entries.
+2. **k2_steam_aspyr is "not installable" in one file and installable in the other.** The note hashes are json `70ca14da…` and builds.inc `1e8a73ae…`.
+   - The builds.inc note says "Not installable until that work is done."
+   - `data/addresses/k2_steam_aspyr.json` has a different note, sets `summary.installable: true`, and resolves 39/256 sites.
+
+   builds.inc is stale. The owner is the later `--all` regen, which comes after `k2_gog_aspyr.json` is committed.
+3. Info only, not drift: the BUILDS rows `k1_amazongames`, `k2_steam_linux`, `k2_win_cd_10` and `k2_win_cd_10b` have no address JSON, so they emit no BuildRecord. Source: `--report`.
+
+The ledger fails in both directions. A new drift fails `test_no_unexpected_drift`. A pinned drift that has been fixed fails `test_known_drift_ledger_is_not_stale`.
+
+## W1: host identity, overlay log, installer, receipt
+
+### C++
+`host_identity()` gathers three facts:
+- **Wine:** `GetProcAddress(ntdll, "wine_get_version") != nullptr`. When Wine is present, its version string is also recorded.
+- **OS version:** RtlGetVersion major, minor and build. The return value is typed `LONG`, so it does not need `NTSTATUS` under LEAN_AND_MEAN.
+- **Overlays:** loaded modules found through Toolhelp32. These are kernel32 calls, so no new psapi import is needed. Names that match `galaxy*`, `*overlay*` or `nvspcap*` are recorded as lowercase ASCII base names only, with no paths.
+
+Log line format: `host: wine=<yes|no> wine_version=<v|-> os=<M.m.b> overlays=<a,b|->`. Spaces, tabs and commas inside the wine version or a module name become `_`, so each value stays one token.
+
+At ImGui init, overlay.cpp logs that line once, plus `gl: vendor="…" renderer="…" version="…"`, with `glGetString` null-guarded. Both go through `platform::log`. `Runtime::start` routes that into kotorphasor.log (`runtime.cpp:756`).
+
+**Windows cross build: done.** The host MinGW is reached through `~/.local/bin/host-cmd`. The `cmake`/`ninja` wrappers use it.
+- Configure: `cmake -S . -B /tmp/kp-w1-build -G Ninja` found `KP_MINGW_CXX=/usr/lib64/ccache/i686-w64-mingw32-g++` (GCC 16.1.1 Fedora MinGW).
+- Build: `ninja hooks_win32 kphasor_dll binkw32` → `[63/63] i686-w64-mingw32-g++ kphasor.dll`.
+- The touched objects were rebuilt with `-Wall -Wextra`: `[1/5] platform_win32.cpp`, `[2/5] overlay.cpp`, `[5/5] kphasor.dll`, with zero warnings.
+- `i686-w64-mingw32-objdump -p kphasor.dll` lists the imports DINPUT8, dwmapi, GDI32, KERNEL32, msvcrt, OPENGL32, SHELL32, USER32 and WS2_32. There is no psapi import.
+- `strings` finds `wine_get_version`, `RtlGetVersion`, the `host:` format and the `gl: vendor=` format in kphasor.dll.
+
+**Linux: not broken.** `ninja kp_hooktool libkphasor.so` → `[72/72] Linking CXX executable kp_hooktool`. The only warnings are pre-existing `-Wclobbered` warnings in `hook_bodies.cpp:568,737`.
+
+The repo runs no Windows-side tests under Wine (`grep -i wine` in the cmake files finds comments only), so none were run.
+
+### Installer (`Install-KotorPhasor.ps1`)
+The exe allowlist is at :51:
+- `k1_gog_103` (`9c10e045…`)
+- `k1_steam_103` (`34e6d971…`)
+- `k2_gog_aspyr` (`777bee23…`)
+
+Two builds are excluded on purpose:
+- `_unpacked` is a harness artifact.
+- `k2_steam_aspyr` is excluded because of drift item 2.
+
+The Bink allowlist holds one sha, `2d0ae23a…` (375808 bytes), taken from the K1 **Steam** original at `tmp/k1_harness/binkw32_real.dll`. No `binkw32.dll` exists next to the GOG reference images; I searched the four generator reference directories. So the GOG K1 Bink is unverified: if it differs, the first K1 GOG install refuses and prints the exact `-TrustBinkSha256` value to pass. The K2 Bink sha is also unknown, so K2 fails closed unless the user passes `-TrustBinkSha256 <exact sha>`, which is recorded in the manifest.
+
+Install checks everything first, then acts:
+1. Refuses an unknown exe, an unknown `binkw32.dll`, or an unknown or mismatched `binkw32_real.dll`.
+2. Probes that the game folder is writable.
+3. Copies the original Bink (never moves it) to a backup and verifies the copy's hash.
+4. Copies the proxy in last.
+5. Writes `kotorphasor/install-manifest.json` with every file's hash.
+6. On any error, runs the undo steps in reverse.
+
+Uninstall has two passes (:135). Pass 1 verifies every hash and changes nothing. If any file differs, it refuses and removes nothing. Pass 2 removes only files it verified and restores Bink only from a verified backup. Re-running after a partial uninstall is safe.
+
+Parse check (the pwsh on the host is 7.3.12): `[scriptblock]::Create(...)` plus `Parser::ParseFile` → `PARSE_OK errors=0` for both scripts.
+
+I also ran the installer under pwsh 7 in a temp game folder (`/tmp/kp-w1-install`, deleted afterwards). It held an allowlisted exe copied from the local reference image, the K1 retail Bink, and the freshly built proxy and DLL. Results:
+- Install, then Status: all entries `ok`. A second install is refused with "already installed".
+- Uninstall with one table edited by the user: `uninstall refused, nothing removed`, and a hash diff showed `UNCHANGED_AFTER_REFUSAL`.
+- After restoring the table, uninstall gives `restored original binkw32.dll` and `GAME_FILES_RESTORED`. The user's `kotorphasor/scripts/mine.lua` is kept.
+- Unknown exe, unknown Bink and unknown `binkw32_real.dll` are each refused with the folder `UNTOUCHED`.
+- An unreadable address JSON mid-transaction gives `install failed and was rolled back` and `UNTOUCHED_AFTER_ROLLBACK`.
+- `-TrustBinkSha256` installs, and the manifest records the override.
+
+This first run caught a real bug. The first uninstall had been single-pass, so it removed files before it found the changed one. That is now fixed and re-verified.
+
+### Receipt script and schema test
+The receipt script collects:
+- OS product, version, build and UBR from the registry.
+- CPU arch and name. Translation is `x86-on-arm64-emulation` on ARM64.
+- The exe, container and slice sha (identical for a PE) and the build.
+- The shas of kphasor.dll, the proxy, the real Bink and the manifest.
+- The log sha and size, plus the parsed `host:` and `gl:` lines. The wine value comes from the runtime's line, not from PowerShell.
+- The F12 result (`pass|fail|not-run`), recorded as `physical-keyboard`, `attested_by=user`.
+
+`tools/platform_receipt_test.py` has 25 tests. Validation reads receipts as `utf-8-sig`, because Windows PowerShell 5.1 `Set-Content -Encoding UTF8` writes a BOM, and `json.loads('\ufeff{}')` fails with "Unexpected UTF-8 BOM". `test_bom_prefixed_receipt_validates` covers this. The receipt script now writes BOM-less UTF-8 through `[IO.File]::WriteAllText` after resolving the full path.
+- `Receipts` (15 tests) covers the synthetic fixtures:
+  - `native_pass` is valid and closes a cell.
+  - `native_f12_fail` is valid but does not close one.
+  - `native_arm64_emulated` is valid.
+  - These are rejected: `wine_yes`, `wine_disagrees_with_log` (top level says no, log says yes), `no_host_line`, `missing_field`, `bad_sha`, `unknown_exe`, `f12_not_run`, `software_renderer` (llvmpipe) and `os_build_disagrees`.
+  - `test_wine_rule_is_load_bearing` shows the log-line rule is what rejects the disagreeing fixture.
+- `ScriptContracts` (10 tests) checks:
+  - The PS1 emits every required key.
+  - The PS1 regexes equal the Python ones.
+  - The C++ `host:` and `gl:` format strings produce lines those regexes parse.
+  - The overlay logs exactly once, after `ImGui_ImplOpenGL2_Init`.
+  - The installer's exe allowlist is exactly BuildRecord sha→alias.
+  - The installer contains its transaction and owned-only markers.
+  - The scripts use no PowerShell 7-only syntax.
+
+Red run: against the `HEAD` versions of `platform_win32.cpp` and `overlay.cpp`, `ScriptContracts` gives `FAILED (failures=2, errors=2)`. The failing tests are `test_cpp_gl_line_matches_regex`, `test_cpp_host_line_matches_regex`, `test_host_identity_detects_wine_by_export` and `test_overlay_logs_once_at_imgui_init`. The green run gives `Ran 25 tests ... OK`.
+
+`python3 tools/platform_receipt_test.py --validate <receipt.json>` runs as a CLI: `native_pass` → `VALID native receipt` rc=0; `wine_yes` → 2 REJECT lines, rc=1.
+
+## Proof boundary
+
+- **No native Windows receipt exists yet.** Nothing here ran on Windows. `host_identity()` has not executed on any machine, native or Wine. The `host:`/`gl:` lines have never been seen in a real kotorphasor.log. Closing that needs W2: the user runs the installer and receipt script on a real Windows PC with a GPU.
+- The PowerShell scripts were parsed and exercised with pwsh 7.3.12 on Linux. They were not run under Windows PowerShell 5.1. Registry and CIM calls in the receipt script need Windows, so the script has not been executed at all.
+- The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+- The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+- The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
+--- recent allowed files ---
+2026-09-27 12:51 src/platform/platform_win32.cpp
+2026-09-27 12:51 src/devtools/overlay.cpp
+2026-09-27 12:50 tools/platform_profile_consistency_test.py
+2026-09-27 12:50 docs/user/windows-native-install.md
+2026-09-27 12:48 tools/platform_receipt_test.py
+2026-09-27 12:47 scripts/receipts/windows-native-receipt.ps1
+2026-09-27 12:46 docs/user/creative-harness.md
+2026-09-27 12:45 tools/fixtures/platform-receipts/wine_yes.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/wine_registry_yes.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/wine_disagrees_with_log.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/unknown_exe.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/two_host_tokens.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/stale_prior_session.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/spoofed_later_host_line.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/software_renderer.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/session_id_mismatch.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/overlay_snapshot_failed.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/os_build_disagrees.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/no_host_line.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/native_pass.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/native_f12_fail.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/native_arm64_emulated.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/missing_field.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/mesa_renderer.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/stale_prior_session.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/spoofed_later_host.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/session_id_mismatch.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/no_banner.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/native_pass.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/logs/cr_split_host.log
+2026-09-27 12:45 tools/fixtures/platform-receipts/host_fields_disagree.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/gl_line_disagrees.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/forged_for_spoofed_log.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/f12_not_run.json
+2026-09-27 12:45 tools/fixtures/platform-receipts/bad_sha.json
+2026-09-27 12:43 scripts/install/windows/Install-KotorPhasor.ps1
+2026-09-27 11:48 docs/user/api-status.md
+2026-09-22 08:56 docs/user/scripts.md
+2026-09-17 05:26 docs/user/harness.md
+2026-09-17 04:57 docs/user/codecaves.md
+2026-09-17 04:57 docs/user/README.md
+2026-09-01 21:07 docs/user/install.md
+--- probe inventory ---
+2026-09-27 12:06 /home/brunner56/kp-live-20260922/review-probes-w0w1/t9.out
+2026-09-27 12:05 /home/brunner56/kp-live-20260922/review-probes-w0w1/t9.sh
+2026-09-27 12:05 /home/brunner56/kp-live-20260922/review-probes-w0w1/synthetic.log
+2026-09-27 12:05 /home/brunner56/kp-live-20260922/review-probes-w0w1/lastmatch.ps1
+2026-09-27 12:04 /home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.out
+2026-09-27 11:59 /home/brunner56/kp-live-20260922/review-probes-w0w1/joinpath.ps1
+2026-09-27 11:58 /home/brunner56/kp-live-20260922/review-probes-w0w1/receipt_probe.py
+2026-09-27 11:56 /home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.sh
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/src/kphasor.dll
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/src/binkw32.dll
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/mkgame.sh
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/fake_exe.bin
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/fake_bink.bin
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/addr/other.json
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/addr/k1_gog_103.json
+2026-09-27 11:54 /home/brunner56/kp-live-20260922/review-probes-w0w1/Install-probe.ps1
+
+ succeeded in 56879ms:
+ssssssss.............................
+----------------------------------------------------------------------
+Ran 23 tests in 5.521s
+
+OK
+/home/brunner56/kp-live-20260922/review-probes-w0w1/Install-probe.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/addr/k1_gog_103.json
+/home/brunner56/kp-live-20260922/review-probes-w0w1/addr/other.json
+/home/brunner56/kp-live-20260922/review-probes-w0w1/fake_bink.bin
+/home/brunner56/kp-live-20260922/review-probes-w0w1/fake_exe.bin
+/home/brunner56/kp-live-20260922/review-probes-w0w1/joinpath.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/lastmatch.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/mkgame.sh
+/home/brunner56/kp-live-20260922/review-probes-w0w1/receipt_probe.py
+/home/brunner56/kp-live-20260922/review-probes-w0w1/src/binkw32.dll
+/home/brunner56/kp-live-20260922/review-probes-w0w1/src/kphasor.dll
+/home/brunner56/kp-live-20260922/review-probes-w0w1/synthetic.log
+/home/brunner56/kp-live-20260922/review-probes-w0w1/t9.out
+/home/brunner56/kp-live-20260922/review-probes-w0w1/t9.sh
+/home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.out
+/home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.sh
+diff --git a/src/devtools/overlay.cpp b/src/devtools/overlay.cpp
+index 4259127..66c85c7 100644
+--- a/src/devtools/overlay.cpp
++++ b/src/devtools/overlay.cpp
+@@ -6,6 +6,8 @@
+ #include "backends/imgui_impl_opengl2.h"
+ #include "backends/imgui_impl_win32.h"
+ #include "imgui.h"
++#include "platform/platform.hpp"
++#include "runtime/runtime.hpp"
+ #include <GL/gl.h>
+ #include <algorithm>
+ #include <array>
+@@ -462,6 +464,78 @@ void draw() {
+   if (active)
+     active(previous_active);
+ }
++// Receipt evidence lines. They go straight to Runtime::log, not through
++// platform::log, so they come out as "[<phase>] kp-session=<id> ..." with no
++// "<level>:" token. Everything a script can log (print, kp.diagnostic) passes
++// through the platform sink and gets that token, so a script cannot produce
++// a line of this shape through the log API. The id is 128 random bits, fresh
++// per process: it ties the host and gl lines to the "start" line written when
++// the overlay attaches, and lets the receipt refuse lines from another run.
++// It is not a secret (the log is readable); scripts/receipts and
++// tools/platform_receipt_test.py treat these lines as evidence, not proof.
++const char *session_id() {
++  static char id[33] = {};
++  if (id[0])
++    return id;
++  unsigned char bytes[16] = {};
++  bool random = false;
++  // RtlGenRandom (advapi32!SystemFunction036), looked up at run time so the
++  // DLL gains no import. advapi32 is already loaded in any GUI process.
++  using GenRandom = BOOLEAN(WINAPI *)(PVOID, ULONG);
++  if (HMODULE advapi = LoadLibraryA("advapi32.dll")) {
++    FARPROC address = GetProcAddress(advapi, "SystemFunction036");
++    GenRandom gen = nullptr;
++    static_assert(sizeof gen == sizeof address);
++    std::memcpy(&gen, &address, sizeof gen);
++    random = gen && gen(bytes, sizeof bytes);
++  }
++  if (!random) {
++    // Fallback: distinct per run, not unpredictable. Good enough to tell two
++    // sessions apart, which is all the receipt uses it for.
++    LARGE_INTEGER counter{};
++    QueryPerformanceCounter(&counter);
++    FILETIME now{};
++    GetSystemTimeAsFileTime(&now);
++    unsigned long long seed[4] = {
++        static_cast<unsigned long long>(counter.QuadPart),
++        (static_cast<unsigned long long>(now.dwHighDateTime) << 32) | now.dwLowDateTime,
++        GetCurrentProcessId(), reinterpret_cast<std::uintptr_t>(&counter)};
++    unsigned long long x = 0x9e3779b97f4a7c15ull;
++    for (int i = 0; i < 16; ++i) {
++      x += seed[i % 4] + 0x9e3779b97f4a7c15ull;
++      unsigned long long z = x;
++      z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ull;
++      z = (z ^ (z >> 27)) * 0x94d049bb133111ebull;
++      bytes[i] = static_cast<unsigned char>(z ^ (z >> 31));
++    }
++  }
++  static const char hex[] = "0123456789abcdef";
++  for (int i = 0; i < 16; ++i) {
++    id[2 * i] = hex[bytes[i] >> 4];
++    id[2 * i + 1] = hex[bytes[i] & 15];
++  }
++  return id;
++}
++// Once, when the overlay attaches (first overlay_tick). Always before the
++// host and gl lines, which need a rendered frame.
++void log_session_start() {
++  runtime::Runtime::instance().log("kp-session=%s start", session_id());
++}
++// Once, at ImGui init, on the render thread with the game's context current:
++// the facts a native-Windows receipt needs. Fixed keys;
++// scripts/receipts/windows-native-receipt.ps1 parses both lines.
++void log_host_and_gl() {
++  char host[512];
++  platform::format_host_identity(platform::host_identity(), host, sizeof host);
++  runtime::Runtime::instance().log("kp-session=%s %s", session_id(), host);
++  auto text = [](GLenum name) {
++    const GLubyte *v = glGetString(name);
++    return v ? reinterpret_cast<const char *>(v) : "?";
++  };
++  runtime::Runtime::instance().log(
++      "kp-session=%s gl: vendor=\"%s\" renderer=\"%s\" version=\"%s\"",
++      session_id(), text(GL_VENDOR), text(GL_RENDERER), text(GL_VERSION));
++}
+ BOOL WINAPI swap(HDC dc) {
+   static thread_local bool inside = false;
+   // Once attached, closed frames chain directly to the game's presentation.
+@@ -480,6 +554,7 @@ BOOL WINAPI swap(HDC dc) {
+         ImGui::StyleColorsDark();
+         ImGui_ImplWin32_Init(window);
+         ImGui_ImplOpenGL2_Init();
++        log_host_and_gl();
+         previous = reinterpret_cast<WNDPROC>(SetWindowLongPtr(
+             window, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndproc)));
+         console().output("system",
+@@ -506,6 +581,7 @@ void overlay_tick() {
+   if (attempted)
+     return;
+   attempted = true;
++  log_session_start();
+   attach_input();
+   auto *base = reinterpret_cast<unsigned char *>(GetModuleHandle(nullptr));
+   auto *dos = reinterpret_cast<IMAGE_DOS_HEADER *>(base);
+diff --git a/src/platform/platform_win32.cpp b/src/platform/platform_win32.cpp
+index cb719fa..353299f 100644
+--- a/src/platform/platform_win32.cpp
++++ b/src/platform/platform_win32.cpp
+@@ -8,12 +8,15 @@
+ 
+ #include "platform/platform.hpp"
+ 
++#include <cctype>
++#include <cstdio>
+ #include <cstring>
+ 
+ #ifndef WIN32_LEAN_AND_MEAN
+ #define WIN32_LEAN_AND_MEAN
+ #endif
+ #include <windows.h>
++#include <tlhelp32.h>
+ 
+ namespace kp::platform {
+ namespace {
+@@ -27,6 +30,42 @@ DWORD to_prot(Protect p) {
+     return PAGE_READONLY;
+ }
+ 
++// GetProcAddress hands back FARPROC; copy the bits into the real signature
++// rather than casting between function types (-Wcast-function-type).
++template <class Function>
++Function proc(HMODULE module, const char* name) {
++    FARPROC address = module ? ::GetProcAddress(module, name) : nullptr;
++    Function result = nullptr;
++    static_assert(sizeof(result) == sizeof(address));
++    std::memcpy(&result, &address, sizeof(result));
++    return result;
++}
++
++// Lowercase ASCII base name of a wide module name. Non-ASCII becomes '?':
++// the match patterns are ASCII and the log line should stay ASCII too.
++void base_name(const wchar_t* in, char* out, std::size_t len) {
++    std::size_t n = 0;
++    for (; *in && n + 1 < len; ++in) {
++        const wchar_t c = *in;
++        char ch = c < 128 ? static_cast<char>(std::tolower(static_cast<int>(c))) : '?';
++        // Space-delimited log line, comma-separated list: keep each name one token.
++        if (ch == ' ' || ch == '\t' || ch == ',') ch = '_';
++        out[n++] = ch;
++    }
++    out[n] = '\0';
++}
++
++// GOG Galaxy (galaxy*), Steam and other *overlay*, NVIDIA capture (nvspcap*),
++// Discord's hook (discordhook*.dll) and RivaTuner Statistics Server
++// (rtsshooks*.dll). Discord's current hook is not named *overlay*.
++bool is_overlay(const char* name) {
++    return std::strncmp(name, "galaxy", 6) == 0 ||
++           std::strstr(name, "overlay") != nullptr ||
++           std::strncmp(name, "nvspcap", 7) == 0 ||
++           std::strncmp(name, "discordhook", 11) == 0 ||
++           std::strncmp(name, "rtsshooks", 9) == 0;
++}
++
+ }  // namespace
+ 
+ bool set_protection(void* addr, std::size_t len, Protect p) {
+@@ -96,4 +135,84 @@ std::uintptr_t module_base(const char* name) {
+     return reinterpret_cast<std::uintptr_t>(h);
+ }
+ 
++HostIdentity host_identity() {
++    HostIdentity id;
++    HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
++
++    using WineVersion = const char*(__cdecl*)();
++    if (auto wine = proc<WineVersion>(ntdll, "wine_get_version")) {
++        id.wine = true;
++        const char* v = wine();
++        std::snprintf(id.wine_version, sizeof id.wine_version, "%s", v ? v : "?");
++        // The log line is space-delimited; keep this one token.
++        for (char* c = id.wine_version; *c; ++c)
++            if (*c == ' ' || *c == '\t' || *c == ',') *c = '_';
++    }
++
++    // LONG, not NTSTATUS: the latter is not declared under WIN32_LEAN_AND_MEAN.
++    using RtlGetVersion = LONG(WINAPI*)(OSVERSIONINFOW*);
++    if (auto get = proc<RtlGetVersion>(ntdll, "RtlGetVersion")) {
++        OSVERSIONINFOW info{};
++        info.dwOSVersionInfoSize = sizeof info;
++        if (get(&info) == 0) {
++            id.os_major = info.dwMajorVersion;
++            id.os_minor = info.dwMinorVersion;
++            id.os_build = info.dwBuildNumber;
++        }
++    }
++
++    // Toolhelp rather than EnumProcessModules: it lives in kernel32, so the DLL
++    // gains no psapi import. The snapshot can fail transiently with
++    // ERROR_BAD_LENGTH while another thread loads a module; retry a few times.
++    // A failed scan is written out as "snapshot-failed:<error>", never as an
++    // empty list, so a receipt cannot read it as "no overlays".
++    HANDLE snap = INVALID_HANDLE_VALUE;
++    DWORD snap_error = 0;
++    for (int attempt = 0; attempt < 4; ++attempt) {
++        snap = ::CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId());
++        if (snap != INVALID_HANDLE_VALUE) break;
++        snap_error = ::GetLastError();
++        if (snap_error != ERROR_BAD_LENGTH) break;
++        ::Sleep(1);
++    }
++    if (snap == INVALID_HANDLE_VALUE) {
++        std::snprintf(id.overlays, sizeof id.overlays, "snapshot-failed:%lu",
++                      static_cast<unsigned long>(snap_error));
++        return id;
++    }
++    // Names that do not fit are counted, not cut: the list ends with
++    // ",+<n>_more" instead of a truncated name. Room for that suffix is kept.
++    constexpr std::size_t kSuffixRoom = 24;   // ",+4294967295_more" and NUL
++    const std::size_t limit = sizeof id.overlays - kSuffixRoom;
++    std::size_t used = 0;
++    unsigned omitted = 0;
++    MODULEENTRY32W entry{};
++    entry.dwSize = sizeof entry;
++    for (BOOL ok = ::Module32FirstW(snap, &entry); ok; ok = ::Module32NextW(snap, &entry)) {
++        char name[MAX_MODULE_NAME32 + 1];
++        base_name(entry.szModule, name, sizeof name);
++        if (!is_overlay(name)) continue;
++        const std::size_t need = std::strlen(name) + (used ? 1 : 0);
++        if (omitted || used + need >= limit) {
++            ++omitted;
++            continue;
++        }
++        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s%s", used ? "," : "", name);
++        used += need;
++    }
++    ::CloseHandle(snap);
++    if (omitted)
++        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s+%u_more",
++                      used ? "," : "", omitted);
++    return id;
++}
++
++void format_host_identity(const HostIdentity& id, char* out, std::size_t len) {
++    if (!out || len == 0) return;
++    std::snprintf(out, len, "host: wine=%s wine_version=%s os=%lu.%lu.%lu overlays=%s",
++                  id.wine ? "yes" : "no", id.wine_version[0] ? id.wine_version : "-",
++                  id.os_major, id.os_minor, id.os_build,
++                  id.overlays[0] ? id.overlays : "-");
++}
++
+ }  // namespace kp::platform
+docs/user/creative-harness.md
+docs/user/windows-native-install.md
+scripts/install/windows/Install-KotorPhasor.ps1
+scripts/receipts/windows-native-receipt.ps1
+tools/fixtures/platform-receipts/bad_sha.json
+tools/fixtures/platform-receipts/f12_not_run.json
+tools/fixtures/platform-receipts/forged_for_spoofed_log.json
+tools/fixtures/platform-receipts/gl_line_disagrees.json
+tools/fixtures/platform-receipts/host_fields_disagree.json
+tools/fixtures/platform-receipts/logs/cr_split_host.log
+tools/fixtures/platform-receipts/logs/native_pass.log
+tools/fixtures/platform-receipts/logs/no_banner.log
+tools/fixtures/platform-receipts/logs/session_id_mismatch.log
+tools/fixtures/platform-receipts/logs/spoofed_later_host.log
+tools/fixtures/platform-receipts/logs/stale_prior_session.log
+tools/fixtures/platform-receipts/mesa_renderer.json
+tools/fixtures/platform-receipts/missing_field.json
+tools/fixtures/platform-receipts/native_arm64_emulated.json
+tools/fixtures/platform-receipts/native_f12_fail.json
+tools/fixtures/platform-receipts/native_pass.json
+tools/fixtures/platform-receipts/no_host_line.json
+tools/fixtures/platform-receipts/os_build_disagrees.json
+tools/fixtures/platform-receipts/overlay_snapshot_failed.json
+tools/fixtures/platform-receipts/session_id_mismatch.json
+tools/fixtures/platform-receipts/software_renderer.json
+tools/fixtures/platform-receipts/spoofed_later_host_line.json
+tools/fixtures/platform-receipts/stale_prior_session.json
+tools/fixtures/platform-receipts/two_host_tokens.json
+tools/fixtures/platform-receipts/unknown_exe.json
+tools/fixtures/platform-receipts/wine_disagrees_with_log.json
+tools/fixtures/platform-receipts/wine_registry_yes.json
+tools/fixtures/platform-receipts/wine_yes.json
+tools/platform_profile_consistency_test.py
+tools/platform_receipt_test.py
+
+**Investigating process handling limitations**
+exec
+/usr/bin/bash -lc "ps -eo pid,etime,stat,cmd | rg 'platform_receipt_test|platform_profile_consistency_test|python3 tools/platform' || true; stat -c '%y %n' scripts/install/windows/Install-KotorPhasor.ps1 scripts/receipts/windows-native-receipt.ps1 tools/platform_receipt_test.py tools/platform_profile_consistency_test.py 2>/dev/null; find /home/brunner56/kp-live-20260922/review-probes-w0w1 -maxdepth 2 -type f -printf '%p\\n' | sort" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Investigating hung shell and I/O blockage**
+ succeeded in 14110ms:
+ 518523       00:50 S<s  timeout 120s python3 tools/platform_receipt_test.py
+ 523668       00:38 D<   python3 tools/platform_receipt_test.py
+ 531220       00:12 S<s  /usr/bin/bash -lc ps -eo pid,etime,stat,cmd | rg 'platform_receipt_test|platform_profile_consistency_test|python3 tools/platform' || true; stat -c '%y %n' scripts/install/windows/Install-KotorPhasor.ps1 scripts/receipts/windows-native-receipt.ps1 tools/platform_receipt_test.py tools/platform_profile_consistency_test.py 2>/dev/null; find /home/brunner56/kp-live-20260922/review-probes-w0w1 -maxdepth 2 -type f -printf '%p\n' | sort
+ 535797       00:00 S<   rg platform_receipt_test|platform_profile_consistency_test|python3 tools/platform
+2026-09-27 12:43:25.929311286 -0500 scripts/install/windows/Install-KotorPhasor.ps1
+2026-09-27 12:47:28.784511876 -0500 scripts/receipts/windows-native-receipt.ps1
+2026-09-27 12:48:45.665364997 -0500 tools/platform_receipt_test.py
+2026-09-27 12:50:57.730112703 -0500 tools/platform_profile_consistency_test.py
+/home/brunner56/kp-live-20260922/review-probes-w0w1/Install-probe.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/addr/k1_gog_103.json
+/home/brunner56/kp-live-20260922/review-probes-w0w1/addr/other.json
+/home/brunner56/kp-live-20260922/review-probes-w0w1/fake_bink.bin
+/home/brunner56/kp-live-20260922/review-probes-w0w1/fake_exe.bin
+/home/brunner56/kp-live-20260922/review-probes-w0w1/joinpath.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/lastmatch.ps1
+/home/brunner56/kp-live-20260922/review-probes-w0w1/mkgame.sh
+/home/brunner56/kp-live-20260922/review-probes-w0w1/receipt_probe.py
+/home/brunner56/kp-live-20260922/review-probes-w0w1/src/binkw32.dll
+/home/brunner56/kp-live-20260922/review-probes-w0w1/src/kphasor.dll
+/home/brunner56/kp-live-20260922/review-probes-w0w1/synthetic.log
+/home/brunner56/kp-live-20260922/review-probes-w0w1/t9.out
+/home/brunner56/kp-live-20260922/review-probes-w0w1/t9.sh
+/home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.out
+/home/brunner56/kp-live-20260922/review-probes-w0w1/tamper.sh
+
+codex
+The rerun is currently I/O-bound before completion (the receipt suite reached its skipped cases and 33 passing-progress markers, but the mounted worktree stalled before its summary). I’m leaving no background work behind; I’ll use bounded reads and the existing probe artifacts to separate a transient mount/load issue from an actual regression, and will state any check that cannot complete.
+**Investigating host-cmd wrapper limitations**
+exec
+/usr/bin/bash -lc "timeout 15s sed -n '1,280p' tools/platform_receipt_test.py; timeout 15s sed -n '1,300p' scripts/install/windows/Install-KotorPhasor.ps1; timeout 15s sed -n '1,260p' scripts/receipts/windows-native-receipt.ps1" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 10964ms:
+#!/usr/bin/env python3
+"""Schema and contract test for native-Windows KotorPhasor receipts.
+
+A receipt is what closes a native platform cell (plan: fan-out F section 3):
+OS/build, CPU/translation, container+slice sha, DLL/proxy sha, log hash and
+the physical F12 result. Wine never closes a native cell, so a receipt whose
+runtime log line says wine=yes is rejected as a native receipt, whatever its
+top-level fields claim.
+
+Everything here is offline and synthetic: fixtures in
+tools/fixtures/platform-receipts/ carry no retail bytes (exe shas are the
+public BuildRecord identities; DLL and log shas are filler).
+
+Since CI has no Windows PowerShell, the test also pins the text contracts the
+PowerShell scripts depend on: the receipt script emits every key the validator
+requires, its log regexes match the lines the C++ actually formats, and the
+installer's exe allowlist names only BuildRecord shas.
+
+    python3 tools/platform_receipt_test.py                  # run tests
+    python3 tools/platform_receipt_test.py --validate r.json   # check one receipt
+    python3 tools/platform_receipt_test.py --validate r.json --log kotorphasor.log
+
+The installer and parser-parity tests run the real PowerShell under pwsh and
+skip without it. From a container, set KP_PWSH="host-cmd pwsh"; KP_SCRATCH
+picks where their synthetic game folders go.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tools/fixtures/platform-receipts"
+RECEIPT_PS1 = ROOT / "scripts/receipts/windows-native-receipt.ps1"
+INSTALL_PS1 = ROOT / "scripts/install/windows/Install-KotorPhasor.ps1"
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+
+SCHEMA = "kotorphasor.native-receipt/v1"
+REQUIRED = {
+    "os": ["family", "product", "version", "build"],
+    "cpu": ["arch", "translation"],
+    "host": ["wine", "wine_version", "log_os", "overlays", "wine_registry"],
+    "game": ["exe_name", "exe_sha256", "container_sha256", "slice_sha256"],
+    "runtime": ["kphasor_dll_sha256", "proxy_binkw32_sha256", "real_binkw32_sha256"],
+    "gl": ["vendor", "renderer", "version"],
+    "log": ["sha256", "bytes", "session_start_line", "session_id", "host_line", "gl_line",
+            "session_marker_lines", "host_like_lines", "gl_like_lines", "problems"],
+    "f12": ["result", "method", "attested_by"],
+}
+SHA_FIELDS = [("game", "exe_sha256"), ("game", "container_sha256"), ("game", "slice_sha256"),
+              ("runtime", "kphasor_dll_sha256"), ("runtime", "proxy_binkw32_sha256"),
+              ("runtime", "real_binkw32_sha256"), ("log", "sha256")]
+
+# kotorphasor.log line shapes. Every line is "[<phase>] <body>" (Runtime::log).
+# Lines that come through the platform sink, which is everything a Lua script
+# can log (print, kp.diagnostic), read "[<phase>] <level>: <body>". The
+# kp-session lines are written by overlay.cpp straight to Runtime::log, so they
+# have no level token. The patterns match a whole line (fullmatch here,
+# ^...$ with -cmatch in the PS1); test_receipt_regexes_match_python pins them.
+BANNER_RE = r"\[[a-z-]+\] KotorPhasor \S+ starting \([a-z-]+ role\)"
+SESSION_RE = r"\[[a-z-]+\] kp-session=([0-9a-f]{32}) start"
+HOST_RE = (r"\[[a-z-]+\] kp-session=([0-9a-f]{32}) host: wine=(yes|no) wine_version=(\S+)"
+           r" os=(\d+)\.(\d+)\.(\d+) overlays=(\S+)")
+GL_RE = r'\[[a-z-]+\] kp-session=([0-9a-f]{32}) gl: vendor="([^"]*)" renderer="([^"]*)" version="([^"]*)"'
+# Substrings that make a line count as a claim of each kind, anchored or not.
+# A script that prints "host: wine=no" adds a second host-like line to the
+# session, and a session with more than one is refused.
+MARKER, HOST_LIKE, GL_LIKE = "kp-session=", "host: wine=", "gl: vendor="
+# A VM without GPU passthrough is not acceptance (plan section 3).
+SOFTWARE_RENDERERS = ("llvmpipe", "softpipe", "lavapipe", "microsoft basic render driver",
+                      "gdi generic", "swiftshader")
+# GL vendor/renderer text that native Windows drivers do not report: Mesa and
+# its Linux drivers (what Wine passes through on Linux), Wine itself, macOS
+# GL, and VM adapters. The version string is not checked: Microsoft's OpenGL
+# compatibility layer on ARM64 Windows is Mesa-based and says so there.
+NON_NATIVE_GL = ("mesa", "radeonsi", "r600", "zink", "virgl", "nouveau", "crocus", "gallium",
+                 "panfrost", "freedreno", "asahi", "svga3d", "vmware", "virtualbox", "wine",
+                 "opengl engine", "apple")
+LINUX_DRM = re.compile(r"\bdrm \d")    # "(..., DRM 3.57, 6.10.6)" in Mesa renderers
+
+
+def split_log_lines(text: str) -> list[str]:
+    """Lines as PowerShell Get-Content yields them: split on CRLF, CR or LF."""
+    lines = re.split(r"\r\n|\r|\n", text)
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def session_evidence(lines: list[str]) -> dict:
+    """What windows-native-receipt.ps1 Get-SessionEvidence records under log.
+
+    The current session is everything after the last runtime start banner.
+    Inside it there must be exactly one kp-session start line, one host-like
+    line and one gl-like line; every kp-session line must be one of the three
+    anchored shapes and carry the start line's id; start comes first. A line
+    is only reported when those rules hold, so a spoofed, doubled or stale
+    line leaves host_line or gl_line null.
+    """
+    ev = {"session_start_line": None, "session_id": None, "host_line": None, "gl_line": None,
+          "session_marker_lines": 0, "host_like_lines": 0, "gl_like_lines": 0, "problems": []}
+    problems = ev["problems"]
+    start = None
+    for i, line in enumerate(lines):
+        if re.fullmatch(BANNER_RE, line):
+            start = i
+    if start is None:
+        problems.append("no KotorPhasor start banner in the log")
+        return ev
+    ev["session_start_line"] = lines[start]
+    session = lines[start + 1:]
+    starts, hosts, gls, ids = [], [], [], set()
+    for i, line in enumerate(session):
+        if MARKER in line:
+            ev["session_marker_lines"] += 1
+            m = (re.fullmatch(SESSION_RE, line) or re.fullmatch(HOST_RE, line)
+                 or re.fullmatch(GL_RE, line))
+            if m is None:
+                problems.append(f"session line {i + 1} mentions kp-session= but is not a runtime line")
+            else:
+                ids.add(m.group(1))
+            if re.fullmatch(SESSION_RE, line):
+                starts.append((i, line))
+        if HOST_LIKE in line:
+            ev["host_like_lines"] += 1
+            hosts.append((i, line))
+        if GL_LIKE in line:
+            ev["gl_like_lines"] += 1
+            gls.append((i, line))
+    if len(starts) != 1:
+        problems.append(f"{len(starts)} kp-session start lines in the current session, want 1")
+    if len(ids) > 1:
+        problems.append(f"{len(ids)} different session ids in the current session")
+    if len(hosts) != 1:
+        problems.append(f"{len(hosts)} host lines in the current session, want 1")
+    if len(gls) != 1:
+        problems.append(f"{len(gls)} gl lines in the current session, want 1")
+    if problems:
+        return ev
+    (s_i, s_line), (h_i, h_line), (g_i, g_line) = starts[0], hosts[0], gls[0]
+    if not re.fullmatch(HOST_RE, h_line):
+        problems.append("the host line is not in the runtime's anchored format")
+    if not re.fullmatch(GL_RE, g_line):
+        problems.append("the gl line is not in the runtime's anchored format")
+    if not (s_i < h_i and s_i < g_i):
+        problems.append("host or gl line comes before the session start line")
+    if problems:
+        return ev
+    ev["session_id"] = re.fullmatch(SESSION_RE, s_line).group(1)
+    ev["host_line"], ev["gl_line"] = h_line, g_line
+    return ev
+
+
+def build_record_shas() -> dict[str, str]:
+    text = (ROOT / "src/generated/builds.inc").read_text()
+    body = text.split("static const BuildRecord kBuilds[] = {", 1)[1]
+    return {sha: alias for alias, sha in
+            re.findall(r'\{\s*"(\w+)",\s*"([0-9a-f]{64})",', body)}
+
+
+def validate(r: dict, records: dict[str, str] | None = None, log_bytes: bytes | None = None) -> list[str]:
+    """Reasons this is not a valid native-Windows receipt; empty when valid.
+
+    With log_bytes (the kotorphasor.log the receipt names), the log section is
+    re-derived from the log itself and must match; without it the validator
+    can only check the receipt against the lines it quotes.
+    """
+    records = build_record_shas() if records is None else records
+    errs: list[str] = []
+    if r.get("schema") != SCHEMA:
+        errs.append(f"schema is {r.get('schema')!r}, want {SCHEMA!r}")
+    if r.get("kind") != "windows-native":
+        errs.append(f"kind is {r.get('kind')!r}, want 'windows-native'")
+    for section, keys in REQUIRED.items():
+        sec = r.get(section)
+        if not isinstance(sec, dict):
+            errs.append(f"missing section {section}")
+            continue
+        for k in keys:
+            if k not in sec:
+                errs.append(f"missing {section}.{k}")
+    if errs:
+        return errs
+
+    for section, k in SHA_FIELDS:
+        v = r[section][k]
+        if not isinstance(v, str) or not HEX64.match(v):
+            errs.append(f"{section}.{k} is not a lowercase sha256: {v!r}")
+
+    if r["os"]["family"] != "windows":
+        errs.append(f"os.family is {r['os']['family']!r}")
+
+    log, host, gl = r["log"], r["host"], r["gl"]
+    if log_bytes is not None:
+        if hashlib.sha256(log_bytes).hexdigest() != log["sha256"]:
+            errs.append("log.sha256 does not match the log given")
+        if len(log_bytes) != log["bytes"]:
+            errs.append(f"log.bytes {log['bytes']} does not match the log given ({len(log_bytes)})")
+        derived = session_evidence(split_log_lines(log_bytes.decode("utf-8", "replace")))
+        for k, v in derived.items():
+            if log.get(k) != v:
+                errs.append(f"log.{k} {log.get(k)!r} does not match the log, which gives {v!r}")
+
+    # The current session: one start, one host, one gl line, one id.
+    if log["problems"]:
+        for p in log["problems"]:
+            errs.append(f"log: {p}")
+    for k, want in (("session_marker_lines", 3), ("host_like_lines", 1), ("gl_like_lines", 1)):
+        if log[k] != want:
+            errs.append(f"log.{k} is {log[k]!r}, want {want}: a line was added, doubled or lost")
+    sid = log["session_id"]
+    if not (isinstance(sid, str) and re.fullmatch(r"[0-9a-f]{32}", sid)):
+        errs.append(f"log.session_id {sid!r} is not a 32-hex runtime session id")
+    if not (isinstance(log["session_start_line"], str) and re.fullmatch(BANNER_RE, log["session_start_line"])):
+        errs.append("log.session_start_line is not the runtime start banner")
+
+    # Wine: every derived field must equal the anchored runtime line it came from.
+    line = log["host_line"]
+    m = re.fullmatch(HOST_RE, line) if isinstance(line, str) else None
+    if m is None:
+        errs.append("log.host_line missing or not in the runtime's anchored format; runtime never reported its host")
+    else:
+        if m.group(1) != sid:
+            errs.append(f"log.host_line session {m.group(1)} is not log.session_id")
+        if m.group(2) != "no":
+            errs.append("runtime log says wine=yes: a Wine run never closes a native cell")
+        if host["wine"] != m.group(2):
+            errs.append(f"host.wine={host['wine']!r} disagrees with log line wine={m.group(2)}")
+        if host["wine_version"] != m.group(3):
+            errs.append(f"host.wine_version {host['wine_version']!r} disagrees with log line {m.group(3)!r}")
+        log_os = f"{m.group(4)}.{m.group(5)}.{m.group(6)}"
+        if host["log_os"] != log_os:
+            errs.append(f"host.log_os {host['log_os']!r} disagrees with log line os={log_os}")
+        if host["overlays"] != m.group(7):
+            errs.append(f"host.overlays {host['overlays']!r} disagrees with log line overlays={m.group(7)}")
+        if str(r["os"]["build"]) != m.group(6):
+            errs.append(f"os.build {r['os']['build']} disagrees with RtlGetVersion build {m.group(6)} in log")
+        if m.group(2) == "no" and m.group(3) != "-":
+            errs.append(f"log line says wine=no but wine_version={m.group(3)}")
+        if m.group(7).startswith("snapshot-failed"):
+            errs.append(f"overlay scan failed ({m.group(7)}); the module list is unknown, run again")
+    if host["wine"] != "no":
+        errs.append(f"host.wine is {host['wine']!r}, a native receipt needs 'no'")
+    if host["wine_registry"] == "yes":
+        errs.append("HKLM\\Software\\Wine exists: the receipt ran inside a Wine prefix")
+
+    g = r["game"]
+    if g["exe_sha256"] not in records:
+        errs.append(f"game.exe_sha256 {g['exe_sha256']} is not a BuildRecord")
+    elif g.get("build") not in (None, records[g["exe_sha256"]]):
+        errs.append(f"game.build {g['build']!r} disagrees with BuildRecord {records[g['exe_sha256']]!r}")
+    # A PE is one image: container and slice are the exe.
+    if not (g["container_sha256"] == g["slice_sha256"] == g["exe_sha256"]):
+        errs.append("PE container/slice sha must equal exe sha")
+
+    # GL: the fields must equal the anchored line, and the line must look native.
+    gm = re.fullmatch(GL_RE, log["gl_line"]) if isinstance(log["gl_line"], str) else None
+    if gm is None:
+        errs.append("log.gl_line missing or not in the runtime's anchored format; the overlay never initialised")
+    else:
+        if gm.group(1) != sid:
+            errs.append(f"log.gl_line session {gm.group(1)} is not log.session_id")
+        for i, k in enumerate(("vendor", "renderer", "version"), start=2):
+            if gl[k] != gm.group(i):
+                errs.append(f"gl.{k} {gl[k]!r} disagrees with log line {gm.group(i)!r}")
+        vendor, renderer = gm.group(2).lower(), gm.group(3).lower()
+        if not renderer:
+            errs.append("gl renderer empty; the overlay never initialised")
+        elif any(s in renderer for s in SOFTWARE_RENDERERS):
+            errs.append(f"software renderer {gm.group(3)!r}: not a real GPU run")
+        for field, text in (("vendor", vendor), ("renderer", renderer)):
+<#
+.SYNOPSIS
+Install KotorPhasor into a native Windows game folder, or take it back out.
+
+.DESCRIPTION
+The Windows twin of scripts/install_to_game.sh, with stricter rules because a
+native install has no Wine prefix to throw away.
+
+Install refuses unless the game executable is on the exe allowlist and the
+game's binkw32.dll is on the Bink allowlist. It copies the original Bink to a
+backup and to binkw32_real.dll, then drops in the proxy, kphasor.dll and the
+address tables. Every file it writes is recorded in
+kotorphasor\install-manifest.json with its hash. If any step fails, the steps
+already done are undone in reverse order.
+
+Uninstall reads that manifest. Before it touches anything, it checks every path
+in it: no rooted path, no '.' or '..' segment, nothing that resolves outside the
+game folder, only the file names this script writes, and a backup folder named
+exactly kotorphasor\backup\<timestamp>. A manifest that fails any check is
+refused and nothing is removed. It removes a file only when the file still has
+the hash we wrote. It restores binkw32.dll from the backup, or from
+binkw32_real.dll if the backup is gone, and only when that copy's hash matches
+the recorded original. Scripts, logs and anything else you added stay put.
+
+Targets Windows PowerShell 5.1, which every supported Windows ships.
+
+RUNNING IT
+Windows blocks unsigned scripts by default, and marks downloaded files as
+coming from the internet. Allow this one PowerShell window to run scripts, then
+unblock the downloaded files:
+
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    Get-ChildItem -Recurse .\scripts, .\build | Unblock-File
+
+-Scope Process lasts only until you close that window. It changes no system
+setting. Install into Program Files needs an elevated window ("Run as
+administrator"). See docs\user\windows-native-install.md.
+
+.EXAMPLE
+.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
+.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
+#>
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $true)][string]$GameDir,
+    [ValidateSet('Install', 'Uninstall', 'Status')][string]$Action = 'Install',
+    # Folder holding kphasor.dll and the proxy binkw32.dll.
+    [string]$SourceDir = '',
+    # Folder holding the per-build address tables (data\addresses in the repo).
+    [string]$AddressDir = '',
+    # A Bink hash you vouch for that is not on the allowlist (K2's Bink is not
+    # recorded yet). Must be the exact SHA-256; it is written to the manifest.
+    [string]$TrustBinkSha256 = ''
+)
+
+Set-StrictMode -Version 2.0
+$ErrorActionPreference = 'Stop'
+
+$ManifestSchema = 'kotorphasor.install-manifest/v1'
+
+# Game executables KotorPhasor has an installable address table for. Values are
+# BuildRecord aliases from src\generated\builds.inc; the Python contract test
+# (tools\platform_receipt_test.py) fails if a hash here is not a BuildRecord.
+# k1_steam_103_unpacked is a harness artifact, not something a player runs.
+# k2_steam_aspyr is left out: its builds.inc note and its address table
+# disagree about whether it is installable.
+$ExeAllowlist = @{
+    '9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435' = 'k1_gog_103'
+    '34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88' = 'k1_steam_103'
+    '777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914' = 'k2_gog_aspyr'
+}
+
+# Original RAD Game Tools binkw32.dll builds, by where they were hashed. The
+# one entry today is the K1 Steam install's original (tmp/k1_harness). The GOG
+# K1 and K2 Bink builds have not been hashed; if they differ, install refuses
+# and names the -TrustBinkSha256 value to pass.
+$BinkAllowlist = @{
+    '2d0ae23a6175dc7b635c402a5e7e9542e923c0d1c376a8c5ef876ca0d5959d23' = 'K1 Steam original binkw32.dll (375808 bytes)'
+}
+
+function Get-Sha256([string]$Path) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
+function Test-OurProxy([string]$Path) {
+    # Our proxy is small and names kphasor.dll; the real Bink is ~370 KB of codec.
+    $item = Get-Item -LiteralPath $Path
+    if ($item.Length -ge 200000) { return $false }
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $text = [System.Text.Encoding]::ASCII.GetString($bytes)
+    return $text.Contains('kphasor.dll')
+}
+
+function Test-KnownBink([string]$Sha) {
+    if ($BinkAllowlist.ContainsKey($Sha)) { return $true }
+    if ($TrustBinkSha256 -and ($Sha -eq $TrustBinkSha256.ToLowerInvariant())) { return $true }
+    return $false
+}
+
+function Find-GameExe([string]$Dir) {
+    foreach ($name in @('swkotor.exe', 'swkotor2.exe')) {
+        $p = Join-Path $Dir $name
+        if (Test-Path -LiteralPath $p -PathType Leaf) { return $p }
+    }
+    return $null
+}
+
+function Get-Field($Object, [string]$Name) {
+    # StrictMode 2 throws on a missing property; a manifest may lack one.
+    if ($null -eq $Object) { return $null }
+    $prop = $Object.PSObject.Properties[$Name]
+    if ($null -eq $prop) { return $null }
+    return $prop.Value
+}
+
+# The backup folder this script creates, and nothing else.
+$BackupDirPattern = '^kotorphasor[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z$'
+# The files this script creates. A manifest naming anything else is not ours.
+$CreatedPattern = '^(binkw32_real\.dll|kphasor\.dll|kotorphasor[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)$'
+
+function Resolve-Owned([object]$Rel, [string]$What) {
+    # One manifest path to one absolute path strictly inside the game folder,
+    # or a throw. Checked on both separators: '..\x' is one file name to
+    # PowerShell on Linux but a traversal on Windows.
+    if (($null -eq $Rel) -or -not ($Rel -is [string]) -or ($Rel.Length -eq 0)) {
+        throw "manifest $What is null or empty"
+    }
+    if (($Rel -match '^[\\/]') -or ($Rel -match ':')) {
+        throw "manifest $What '$Rel' is rooted or names a drive or stream"
+    }
+    foreach ($seg in ($Rel -split '[\\/]')) {
+        # Windows drops trailing dots and spaces from a name, so '.. ' is '..'.
+        if (($seg.Trim() -eq '') -or ($seg -match '^[. ]+$') -or ($seg -match '[. ]$')) {
+            throw "manifest $What '$Rel' has an empty, '.' or '..' segment"
+        }
+    }
+    $full = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($GameDir, $Rel))
+    if (-not $full.StartsWith($GameRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "manifest $What '$Rel' resolves outside the game folder"
+    }
+    return $full
+}
+
+function Assert-Manifest($m) {
+    # Every path in the manifest, checked before anything is read or removed.
+    $bd = Get-Field $m 'backup_dir'
+    if (($null -eq $bd) -or -not ($bd -is [string]) -or ($bd -notmatch $BackupDirPattern)) {
+        throw "manifest backup_dir '$bd' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed"
+    }
+    [void](Resolve-Owned $bd 'backup_dir')
+    $files = @(Get-Field $m 'files')
+    if ($files.Count -eq 0) { throw 'manifest lists no files; refusing, nothing removed' }
+    $replaced = 0
+    foreach ($f in $files) {
+        $path = Get-Field $f 'path'
+        [void](Resolve-Owned $path 'file path')
+        $action = Get-Field $f 'action'
+        if ((Get-Field $f 'sha256') -notmatch '^[0-9a-f]{64}$') { throw "manifest entry '$path' has no sha256" }
+        if ($action -eq 'created') {
+            if ($path -notmatch $CreatedPattern) { throw "manifest entry '$path' is not a file this script creates" }
+        } elseif ($action -eq 'replaced') {
+            $replaced++
+            if ($path -ne 'binkw32.dll') { throw "manifest replaced entry '$path' is not binkw32.dll" }
+            if ((Get-Field $f 'original_sha256') -notmatch '^[0-9a-f]{64}$') { throw 'manifest binkw32.dll entry has no original_sha256' }
+            $backup = Get-Field $f 'backup'
+            [void](Resolve-Owned $backup 'backup file')
+            $want = ($bd -replace '/', '\') + '\binkw32.dll'
+            if (($backup -replace '/', '\') -ne $want) { throw "manifest backup file '$backup' is not inside backup_dir" }
+        } else {
+            throw "manifest entry '$path' has unknown action '$action'"
+        }
+    }
+    if ($replaced -gt 1) { throw 'manifest replaces binkw32.dll more than once' }
+}
+
+function Read-Manifest([string]$Path) {
+    $m = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+    if ((Get-Field $m 'schema') -ne $ManifestSchema) { throw "unknown manifest schema '$(Get-Field $m 'schema')' in $Path" }
+    Assert-Manifest $m
+    return $m
+}
+
+$GameDir = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $GameDir).Path)
+# Every path this script deletes must start with this, compared ignoring case.
+$GameRoot = $GameDir.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
+$Proxy = Join-Path $GameDir 'binkw32.dll'
+$Real = Join-Path $GameDir 'binkw32_real.dll'
+$OwnDir = Join-Path $GameDir 'kotorphasor'
+$ManifestPath = Join-Path $OwnDir 'install-manifest.json'
+
+if ($TrustBinkSha256 -and ($TrustBinkSha256 -notmatch '^[0-9a-fA-F]{64}$')) {
+    throw '-TrustBinkSha256 must be a 64-character SHA-256 hex string'
+}
+
+# --------------------------------------------------------------------------
+if ($Action -eq 'Status') {
+    if (Test-Path -LiteralPath $ManifestPath) {
+        $m = Read-Manifest $ManifestPath
+        # pwsh 7 turns ISO strings into DateTime on the way in; print the string.
+        $at = $m.installed_at
+        if ($at -is [DateTime]) { $at = $at.ToUniversalTime().ToString('o') }
+        Write-Output "installed ($($m.game.build), since $at)"
+        foreach ($f in $m.files) {
+            $p = Resolve-Owned $f.path 'file path'
+            $state = 'missing'
+            if (Test-Path -LiteralPath $p -PathType Leaf) {
+                if ((Get-Sha256 $p) -eq $f.sha256) { $state = 'ok' } else { $state = 'changed' }
+            }
+            Write-Output ("  {0,-8} {1}" -f $state, $f.path)
+        }
+    } elseif ((Test-Path -LiteralPath $Proxy) -and (Test-OurProxy $Proxy)) {
+        Write-Output 'proxy present but no manifest: installed by another tool; not managed here'
+    } else {
+        Write-Output 'not installed'
+    }
+    return
+}
+
+# --------------------------------------------------------------------------
+if ($Action -eq 'Uninstall') {
+    if (-not (Test-Path -LiteralPath $ManifestPath)) {
+        throw "no $ManifestPath; nothing this script installed is here, so nothing is removed"
+    }
+    try { $m = Read-Manifest $ManifestPath }
+    catch { throw "uninstall refused, nothing removed; manifest kept: $($_.Exception.Message)" }
+    $files = @($m.files)
+    [array]::Reverse($files)
+
+    # Pass 1 decides everything and touches nothing. One changed file means
+    # nothing is removed, so a refused uninstall leaves a coherent install.
+    # Read-Manifest has already refused any path that is rooted, has a '.' or
+    # '..' segment, or resolves outside the game folder.
+    $kept = New-Object System.Collections.ArrayList
+    $plan = New-Object System.Collections.ArrayList
+    foreach ($f in $files) {
+        $p = Resolve-Owned $f.path 'file path'
+        $replaced = ($f.action -eq 'replaced')
+        if (-not (Test-Path -LiteralPath $p -PathType Leaf)) {
+            if ($replaced) {
+                Write-Warning "$($f.path) is missing; restore it from $($f.backup)"
+                [void]$kept.Add($f.path)
+            }
+            continue
+        }
+        $sha = Get-Sha256 $p
+        if ($replaced -and ($sha -eq $f.original_sha256)) { continue }  # already restored
+        if ($sha -ne $f.sha256) {
+            Write-Warning "$($f.path) changed since install; left in place"
+            [void]$kept.Add($f.path)
+            continue
+        }
+        $source = $null
+        if ($replaced) {
+            # The backup first; binkw32_real.dll is the same original, so it
+            # serves when the backup is gone, if its hash still matches.
+            $backup = Resolve-Owned $f.backup 'backup file'
+            if ((Test-Path -LiteralPath $backup -PathType Leaf) -and ((Get-Sha256 $backup) -eq $f.original_sha256)) {
+                $source = $backup
+            } elseif ((Test-Path -LiteralPath $Real -PathType Leaf) -and ((Get-Sha256 $Real) -eq $f.original_sha256)) {
+                Write-Warning "backup $($f.backup) missing or changed; restoring $($f.path) from binkw32_real.dll, which matches the recorded original"
+                $source = $Real
+            } else {
+                Write-Warning "neither backup $($f.backup) nor binkw32_real.dll matches the recorded original; $($f.path) left in place"
+                [void]$kept.Add($f.path)
+                continue
+            }
+        }
+        [void]$plan.Add(@{ entry = $f; full = $p; source = $source })
+    }
+    if ($kept.Count -gt 0) {
+        throw "uninstall refused, nothing removed; manifest kept. Files: $($kept -join ', ')"
+    }
+
+    # Pass 2 acts on exactly what pass 1 verified.
+    # Files are in reverse install order, so binkw32.dll is restored before
+    # binkw32_real.dll (the fallback source) is removed.
+    foreach ($step in $plan) {
+        if ($step.entry.action -eq 'replaced') {
+            Copy-Item -LiteralPath $step.source -Destination $step.full -Force
+            Write-Output "restored original $($step.entry.path)"
+        } else {
+            Remove-Item -LiteralPath $step.full -Force
+        }
+    }
+    # Our own bookkeeping, only once every game file is back. backup_dir was
+    # checked against kotorphasor\backup\<timestamp> and resolved inside the
+    # game folder before pass 1.
+    $backupDir = Resolve-Owned $m.backup_dir 'backup_dir'
+    if (Test-Path -LiteralPath $backupDir -PathType Container) { Remove-Item -LiteralPath $backupDir -Recurse -Force }
+    $backupParent = Join-Path $OwnDir 'backup'
+    if ((Test-Path -LiteralPath $backupParent) -and -not (Get-ChildItem -LiteralPath $backupParent -Force)) {
+        Remove-Item -LiteralPath $backupParent -Force
+    }
+    $addr = Join-Path $OwnDir 'addresses'
+    if ((Test-Path -LiteralPath $addr) -and -not (Get-ChildItem -LiteralPath $addr -Force)) {
+        Remove-Item -LiteralPath $addr -Force
+    }
+    Remove-Item -LiteralPath $ManifestPath -Force
+    Write-Output 'uninstalled (scripts and logs left in place)'
+<#
+.SYNOPSIS
+Write a native-Windows KotorPhasor receipt after one physical F12 test.
+
+.DESCRIPTION
+Run this on the Windows PC where you just played, after you:
+  1. installed with scripts\install\windows\Install-KotorPhasor.ps1,
+  2. started the game from its own launcher or exe (not Wine, not a VM),
+  3. pressed F12 on the physical keyboard in game and saw the Lua console or not,
+  4. quit the game.
+
+The script reads the game folder and kotorphasor.log. It records the OS build,
+the CPU and any x86 translation, the exe sha, the proxy and DLL shas, the log
+hash, the runtime's own host and GL lines, and the F12 result you report.
+
+The F12 result is your word: the script cannot see the screen.
+
+What the log lines are worth. KotorPhasor appends one block per game start
+to kotorphasor.log. The receipt reads only the newest block, which starts
+at the last "KotorPhasor <version> starting" line. In that block, the runtime
+writes one "kp-session=<id> start" line when its overlay attaches. On the first
+rendered frame it adds one host line and one gl line with the same random id.
+These lines skip the log sink that scripts write through. So a script's
+print or kp.diagnostic output cannot take their exact shape, and it is not
+matched. A block with a second host or gl line, a line from another run, or a
+line in any other shape is refused.
+
+This is supporting evidence, not proof:
+  - A script can still write to kotorphasor.log with Lua's io library, or
+    split a line with an embedded newline. The runtime does not stop that yet.
+  - Wine is detected by one signal: ntdll exports wine_get_version only under
+    Wine. Some patched Wine builds hide that export. The OS build cannot help,
+    because Wine reports whatever Windows version its prefix is set to. The
+    receipt also records whether HKLM\Software\Wine exists. The validator
+    refuses Mesa, Linux driver and macOS GL names. A Wine run on a vendor
+    driver whose GL strings match Windows can still pass.
+  - tools\platform_receipt_test.py --validate checks the receipt against the
+    lines it quotes. Add --log kotorphasor.log to re-check against the log.
+
+RUNNING IT
+Windows blocks unsigned scripts by default. Allow this one PowerShell window
+to run scripts, then unblock the downloaded file:
+
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    Unblock-File .\scripts\receipts\windows-native-receipt.ps1
+
+-Scope Process lasts only until you close that window. It changes no system
+setting. The receipt is written under %LOCALAPPDATA%\KotorPhasor\receipts
+unless you pass -OutFile. That folder needs no admin rights, even when the
+game is in Program Files.
+
+Targets Windows PowerShell 5.1.
+
+.EXAMPLE
+.\windows-native-receipt.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -F12Result pass
+#>
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $true)][string]$GameDir,
+    [Parameter(Mandatory = $true)][ValidateSet('pass', 'fail', 'not-run')][string]$F12Result,
+    [string]$OutFile = ''
+)
+
+Set-StrictMode -Version 2.0
+$ErrorActionPreference = 'Stop'
+
+function Get-Sha256OrNull([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
+# --- BEGIN session parser ------------------------------------------------------
+# tools\platform_receipt_test.py session_evidence() is the same logic in
+# Python; its parity test dot-sources this block and compares the two on the
+# fixture logs. Change both or neither.
+# Line shapes: src\devtools\overlay.cpp writes the kp-session lines through
+# Runtime::log ("[<phase>] <body>"); script output always carries
+# "[<phase>] <level>: ". -cmatch: case-sensitive, whole line.
+$BannerPattern = '^\[[a-z-]+\] KotorPhasor \S+ starting \([a-z-]+ role\)$'
+$SessionPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) start$'
+$HostPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) host: wine=(yes|no) wine_version=(\S+) os=(\d+)\.(\d+)\.(\d+) overlays=(\S+)$'
+$GlPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) gl: vendor="([^"]*)" renderer="([^"]*)" version="([^"]*)"$'
+
+function Get-SessionEvidence([string[]]$Lines) {
+    $ev = [ordered]@{
+        session_start_line = $null; session_id = $null; host_line = $null; gl_line = $null
+        session_marker_lines = 0; host_like_lines = 0; gl_like_lines = 0; problems = @()
+    }
+    $problems = New-Object System.Collections.ArrayList
+    $all = @($Lines | Where-Object { $null -ne $_ })
+    $start = -1
+    for ($i = 0; $i -lt $all.Count; $i++) { if ($all[$i] -cmatch $BannerPattern) { $start = $i } }
+    if ($start -lt 0) {
+        [void]$problems.Add('no KotorPhasor start banner in the log')
+        $ev.problems = $problems.ToArray()
+        return $ev
+    }
+    $ev.session_start_line = $all[$start]
+    $starts = New-Object System.Collections.ArrayList
+    $hosts = New-Object System.Collections.ArrayList
+    $gls = New-Object System.Collections.ArrayList
+    $ids = New-Object System.Collections.ArrayList
+    $n = 0
+    for ($i = $start + 1; $i -lt $all.Count; $i++) {
+        $n++
+        $line = $all[$i]
+        if ($line.Contains('kp-session=')) {
+            $ev.session_marker_lines++
+            $id = $null
+            if ($line -cmatch $SessionPattern) { $id = $Matches[1]; [void]$starts.Add(@{ n = $n; line = $line }) }
+            elseif ($line -cmatch $HostPattern) { $id = $Matches[1] }
+            elseif ($line -cmatch $GlPattern) { $id = $Matches[1] }
+            if ($null -eq $id) { [void]$problems.Add("session line $n mentions kp-session= but is not a runtime line") }
+            elseif (-not $ids.Contains($id)) { [void]$ids.Add($id) }
+        }
+        if ($line.Contains('host: wine=')) { $ev.host_like_lines++; [void]$hosts.Add(@{ n = $n; line = $line }) }
+        if ($line.Contains('gl: vendor=')) { $ev.gl_like_lines++; [void]$gls.Add(@{ n = $n; line = $line }) }
+    }
+    if ($starts.Count -ne 1) { [void]$problems.Add("$($starts.Count) kp-session start lines in the current session, want 1") }
+    if ($ids.Count -gt 1) { [void]$problems.Add("$($ids.Count) different session ids in the current session") }
+    if ($hosts.Count -ne 1) { [void]$problems.Add("$($hosts.Count) host lines in the current session, want 1") }
+    if ($gls.Count -ne 1) { [void]$problems.Add("$($gls.Count) gl lines in the current session, want 1") }
+    if ($problems.Count -eq 0) {
+        if (-not ($hosts[0].line -cmatch $HostPattern)) { [void]$problems.Add("the host line is not in the runtime's anchored format") }
+        if (-not ($gls[0].line -cmatch $GlPattern)) { [void]$problems.Add("the gl line is not in the runtime's anchored format") }
+        if (-not (($starts[0].n -lt $hosts[0].n) -and ($starts[0].n -lt $gls[0].n))) {
+            [void]$problems.Add('host or gl line comes before the session start line')
+        }
+    }
+    if ($problems.Count -eq 0) {
+        [void]($starts[0].line -cmatch $SessionPattern)
+        $ev.session_id = $Matches[1]
+        $ev.host_line = $hosts[0].line
+        $ev.gl_line = $gls[0].line
+    }
+    $ev.problems = $problems.ToArray()
+    return $ev
+}
+# --- END session parser --------------------------------------------------------
+
+$GameDir = (Resolve-Path -LiteralPath $GameDir).Path
+if (-not $OutFile) {
+    # Not the game folder: under Program Files that write fails without
+    # elevation, after all the work is done.
+    $base = $env:LOCALAPPDATA
+    if (-not $base) { $base = [System.IO.Path]::GetTempPath() }
+    $dir = [System.IO.Path]::Combine($base, 'KotorPhasor', 'receipts')
+    [void][System.IO.Directory]::CreateDirectory($dir)
+    $OutFile = Join-Path $dir ('kotorphasor-receipt-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ') + '.json')
+}
+
+# --- OS -------------------------------------------------------------------
+$cv = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+$ubr = $null
+if ($cv.PSObject.Properties.Name -contains 'UBR') { $ubr = [string]$cv.UBR }
+$displayVersion = $null
+if ($cv.PSObject.Properties.Name -contains 'DisplayVersion') { $displayVersion = [string]$cv.DisplayVersion }
+$osv = [Environment]::OSVersion.Version
+$os = [ordered]@{
+    family          = 'windows'
+    product         = [string]$cv.ProductName
+    display_version = $displayVersion
+    version         = "$($osv.Major).$($osv.Minor)"
+    build           = [string]$cv.CurrentBuildNumber
+    ubr             = $ubr
+}
+# A second Wine signal, independent of the runtime's: every Wine prefix has
+# this key. It only means something when this script runs in the same prefix.
+$wineRegistry = 'no'
+if (Test-Path -LiteralPath 'HKLM:\Software\Wine') { $wineRegistry = 'yes' }
+
+# --- CPU and translation --------------------------------------------------
+# The game is 32-bit x86. On x64 Windows it runs under WOW64 with no
+# translation; on ARM64 Windows it runs under x86 emulation, which a receipt
+# must say out loud. IsWow64Process2 reports the real machine even when this
+# PowerShell is itself an emulated x64 process, where PROCESSOR_ARCHITECTURE
+# says AMD64. It needs Windows 10 1709 or later; older systems fall back to
+# Win32_Processor, then the environment.
+$osArch = $env:PROCESSOR_ARCHITECTURE
+if ($env:PROCESSOR_ARCHITEW6432) { $osArch = $env:PROCESSOR_ARCHITEW6432 }
+$detectedBy = 'environment'
+$cpuName = $null
+$cpuArchCode = $null
+try {
+    $proc = Get-CimInstance -ClassName Win32_Processor | Select-Object -First 1
+    $cpuName = $proc.Name
+    $cpuArchCode = $proc.Architecture
+} catch { $cpuName = $null }
+$nativeMachine = $null
+try {
+    Add-Type -Namespace KotorPhasorReceipt -Name Native -ErrorAction Stop -MemberDefinition @'
+[System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool IsWow64Process2(System.IntPtr process, out ushort processMachine, out ushort nativeMachine);
+[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+public static extern System.IntPtr GetCurrentProcess();
+'@
+    [UInt16]$processMachine = 0
+    [UInt16]$machine = 0
+    if ([KotorPhasorReceipt.Native]::IsWow64Process2([KotorPhasorReceipt.Native]::GetCurrentProcess(), [ref]$processMachine, [ref]$machine)) {
+        $nativeMachine = $machine
+    }
+} catch { $nativeMachine = $null }
+if ($null -ne $nativeMachine) {
+    $detectedBy = 'IsWow64Process2'
+    switch ([int]$nativeMachine) {
+        0xAA64 { $osArch = 'ARM64' }
+        0x8664 { $osArch = 'AMD64' }
+        0x014C { $osArch = 'x86' }
+        default { $osArch = ('machine-0x{0:X4}' -f [int]$nativeMachine) }
+    }
+} elseif ($cpuArchCode -eq 12) {
+    $detectedBy = 'Win32_Processor'
+    $osArch = 'ARM64'
+}
+$translation = 'none'
+if ($osArch -eq 'ARM64') { $translation = 'x86-on-arm64-emulation' }
+$cpu = [ordered]@{ arch = $osArch; name = $cpuName; translation = $translation; detected_by = $detectedBy }
+
+# --- game and runtime files ------------------------------------------------
+$exe = $null
+foreach ($n in @('swkotor.exe', 'swkotor2.exe')) {
+    $p = Join-Path $GameDir $n
+    if (Test-Path -LiteralPath $p -PathType Leaf) { $exe = $p; break }
+}
+if (-not $exe) { throw "no swkotor.exe or swkotor2.exe in $GameDir" }
+$exeSha = Get-Sha256OrNull $exe
+$manifestPath = [System.IO.Path]::Combine($GameDir, 'kotorphasor', 'install-manifest.json')
+$build = $null
+if (Test-Path -LiteralPath $manifestPath) { $build = (Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json).game.build }
+$game = [ordered]@{
+    exe_name         = (Split-Path -Leaf $exe)
+    exe_sha256       = $exeSha
+    # A PE is a single image: container and slice are the same bytes. The
+    # fields exist so a Mac receipt (fat container, one slice) fits the schema.
+    container_sha256 = $exeSha
+    slice_sha256     = $exeSha
+    build            = $build
+}
+$runtime = [ordered]@{
+    kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kphasor.dll')
+    proxy_binkw32_sha256    = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
+    real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32_real.dll')
+    install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+}
+
+# --- the runtime's own view --------------------------------------------------
+$logPath = Join-Path $GameDir 'kotorphasor.log'
+if (-not (Test-Path -LiteralPath $logPath -PathType Leaf)) { throw "no kotorphasor.log in $GameDir; did the game start with KotorPhasor?" }
+$ev = Get-SessionEvidence (Get-Content -LiteralPath $logPath)
+$hostInfo = [ordered]@{ wine = $null; wine_version = $null; log_os = $null; overlays = $null; wine_registry = $wineRegistry }
+if ($ev.host_line -and ($ev.host_line -cmatch $HostPattern)) {
+    $hostInfo.wine = $Matches[2]
+    $hostInfo.wine_version = $Matches[3]
+    $hostInfo.log_os = "$($Matches[4]).$($Matches[5]).$($Matches[6])"
+    $hostInfo.overlays = $Matches[7]
+}
+$gl = [ordered]@{ vendor = $null; renderer = $null; version = $null }
+if ($ev.gl_line -and ($ev.gl_line -cmatch $GlPattern)) {
+    $gl.vendor = $Matches[2]; $gl.renderer = $Matches[3]; $gl.version = $Matches[4]
+}
+
+**Investigating PowerShell subprocess timeout**
+**Analyzing test output and skip counts**
+exec
+/usr/bin/bash -lc "timeout 30s rg -n \"class |def test_|KP_PWSH|unittest.main\" tools/platform_receipt_test.py tools/platform_profile_consistency_test.py; timeout 30s /home/brunner56/.local/bin/host-cmd sh -c 'pwsh -NoProfile -Command \"[scriptblock]::Create((Get-Content -LiteralPath scripts/install/windows/Install-KotorPhasor.ps1 -Raw)) | Out-Null; [scriptblock]::Create((Get-Content -LiteralPath scripts/receipts/windows-native-receipt.ps1 -Raw)) | Out-Null; \\\"PARSE_OK\\\"\"'" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Inspecting git diff and planning patch application**
+exec
+/usr/bin/bash -lc "timeout 20s git diff -- src/platform/platform_win32.cpp src/devtools/overlay.cpp; timeout 20s sed -n '300,480p' tools/platform_profile_consistency_test.py; timeout 20s find tools/fixtures/platform-receipts -maxdepth 1 -type f -printf '%f\\n' | sort; timeout 20s find docs/user -maxdepth 1 -type f -name '*windows*' -printf '%p\\n'" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ exited 124 in 40535ms:
+tools/platform_receipt_test.py:24:skip without it. From a container, set KP_PWSH="host-cmd pwsh"; KP_SCRATCH
+tools/platform_receipt_test.py:309:class Receipts(unittest.TestCase):
+tools/platform_receipt_test.py:315:    def test_native_pass_is_valid_and_closes(self):
+tools/platform_receipt_test.py:320:    def test_native_pass_matches_its_log(self):
+tools/platform_receipt_test.py:327:    def test_native_fail_is_valid_but_does_not_close(self):
+tools/platform_receipt_test.py:332:    def test_arm64_emulation_is_valid_and_says_so(self):
+tools/platform_receipt_test.py:337:    def test_wine_yes_rejected_as_native(self):
+tools/platform_receipt_test.py:341:    def test_top_level_no_cannot_override_log_yes(self):
+tools/platform_receipt_test.py:347:    def test_wine_rule_is_load_bearing(self):
+tools/platform_receipt_test.py:355:    def test_wine_registry_rejected(self):
+tools/platform_receipt_test.py:358:    def test_missing_host_line_rejected(self):
+tools/platform_receipt_test.py:361:    def test_missing_field_rejected(self):
+tools/platform_receipt_test.py:364:    def test_bad_sha_rejected(self):
+tools/platform_receipt_test.py:367:    def test_unknown_exe_rejected(self):
+tools/platform_receipt_test.py:370:    def test_f12_not_run_rejected(self):
+tools/platform_receipt_test.py:373:    def test_software_renderer_rejected(self):
+tools/platform_receipt_test.py:376:    def test_os_build_must_match_runtime(self):
+tools/platform_receipt_test.py:381:    def test_spoofed_later_host_line_rejected(self):
+tools/platform_receipt_test.py:388:    def test_spoofed_log_never_yields_a_wine_no_line(self):
+tools/platform_receipt_test.py:393:    def test_forged_receipt_caught_against_its_log(self):
+tools/platform_receipt_test.py:399:    def test_stale_prior_session_rejected(self):
+tools/platform_receipt_test.py:407:    def test_session_id_mismatch_rejected(self):
+tools/platform_receipt_test.py:410:    def test_cr_injected_line_counts_twice(self):
+tools/platform_receipt_test.py:415:    def test_log_without_banner_rejected(self):
+tools/platform_receipt_test.py:419:    def test_two_host_tokens_on_one_line_rejected(self):
+tools/platform_receipt_test.py:422:    def test_unanchored_script_line_is_not_a_host_line(self):
+tools/platform_receipt_test.py:432:    def test_gl_fields_must_equal_gl_line(self):
+tools/platform_receipt_test.py:435:    def test_host_fields_must_equal_host_line(self):
+tools/platform_receipt_test.py:439:    def test_mesa_renderer_rejected_as_native(self):
+tools/platform_receipt_test.py:445:    def test_non_native_gl_names(self):
+tools/platform_receipt_test.py:462:    def test_native_gpu_names_pass(self):
+tools/platform_receipt_test.py:475:    def test_overlay_snapshot_failure_rejected(self):
+tools/platform_receipt_test.py:478:    def test_bom_prefixed_receipt_validates(self):
+tools/platform_receipt_test.py:489:    def test_cli_log_option(self):
+tools/platform_receipt_test.py:500:    def test_fixtures_carry_no_unknown_shas(self):
+tools/platform_receipt_test.py:512:class ScriptContracts(unittest.TestCase):
+tools/platform_receipt_test.py:519:    def test_receipt_script_emits_every_required_key(self):
+tools/platform_receipt_test.py:528:    def test_receipt_regexes_match_python(self):
+tools/platform_receipt_test.py:542:    def test_cpp_session_host_gl_lines_match_anchored_regexes(self):
+tools/platform_receipt_test.py:563:    def test_session_lines_bypass_the_script_log_sink(self):
+tools/platform_receipt_test.py:576:    def test_overlay_logs_once_at_imgui_init(self):
+tools/platform_receipt_test.py:588:    def test_host_identity_detects_wine_by_export(self):
+tools/platform_receipt_test.py:595:    def test_overlay_list_failure_and_overflow_are_explicit(self):
+tools/platform_receipt_test.py:601:    def test_installer_exe_allowlist_is_build_records(self):
+tools/platform_receipt_test.py:611:    def test_installer_bink_allowlist_is_hex(self):
+tools/platform_receipt_test.py:618:    def test_installer_is_transactional_and_owned_only(self):
+tools/platform_receipt_test.py:629:    def test_installer_registers_proxy_undo_before_copy(self):
+tools/platform_receipt_test.py:634:    def test_scripts_explain_execution_policy(self):
+tools/platform_receipt_test.py:640:    def test_receipt_default_output_is_not_the_game_folder(self):
+tools/platform_receipt_test.py:644:    def test_scripts_avoid_powershell7_only_syntax(self):
+tools/platform_receipt_test.py:652:class ReceiptParserParity(unittest.TestCase):
+tools/platform_receipt_test.py:655:    def test_ps1_parser_matches_python(self):
+tools/platform_receipt_test.py:658:            self.skipTest("no pwsh on PATH and KP_PWSH unset")
+tools/platform_receipt_test.py:687:    """KP_PWSH (e.g. "host-cmd pwsh" from a container), else pwsh on PATH."""
+tools/platform_receipt_test.py:688:    env = os.environ.get("KP_PWSH")
+tools/platform_receipt_test.py:699:class InstallerBehaviour(unittest.TestCase):
+tools/platform_receipt_test.py:717:            self.skipTest("no pwsh on PATH and KP_PWSH unset")
+tools/platform_receipt_test.py:785:    def test_backup_dir_tampering_refused_nothing_deleted(self):
+tools/platform_receipt_test.py:800:    def test_file_path_tampering_refused_nothing_deleted(self):
+tools/platform_receipt_test.py:813:    def test_backup_file_tampering_refused_nothing_deleted(self):
+tools/platform_receipt_test.py:826:    def test_install_status_uninstall_round_trip(self):
+tools/platform_receipt_test.py:844:    def test_missing_backup_falls_back_to_verified_real_dll(self):
+tools/platform_receipt_test.py:856:    def test_missing_backup_and_changed_real_dll_refused(self):
+tools/platform_receipt_test.py:865:    def test_status_refuses_tampered_manifest(self):
+tools/platform_receipt_test.py:886:    unittest.main()
+tools/platform_profile_consistency_test.py:306:class RealTree(unittest.TestCase):
+tools/platform_profile_consistency_test.py:307:    def test_parsers_see_the_whole_tree(self):
+tools/platform_profile_consistency_test.py:316:    def test_no_unexpected_drift(self):
+tools/platform_profile_consistency_test.py:322:    def test_known_drift_ledger_is_not_stale(self):
+tools/platform_profile_consistency_test.py:328:class SyntheticDrift(unittest.TestCase):
+tools/platform_profile_consistency_test.py:343:    def test_copy_matches_real_tree(self):
+tools/platform_profile_consistency_test.py:346:    def test_pinned_subject_with_new_value_is_new_drift(self):
+tools/platform_profile_consistency_test.py:352:    def test_model_profile_sha_not_a_build(self):
+tools/platform_profile_consistency_test.py:357:    def test_projectile_profile_sha_not_a_build(self):
+tools/platform_profile_consistency_test.py:361:    def test_static_only_mac_sha_clears_profile(self):
+tools/platform_profile_consistency_test.py:369:    def test_mac_sha_on_non_static_row_does_not_clear(self):
+tools/platform_profile_consistency_test.py:379:    def test_json_sha_drift(self):
+tools/platform_profile_consistency_test.py:385:    def test_reference_sha_is_not_the_identity(self):
+tools/platform_profile_consistency_test.py:391:    def test_known_text_drift(self):
+tools/platform_profile_consistency_test.py:397:    def test_image_base_drift(self):
+tools/platform_profile_consistency_test.py:403:    def test_missing_table(self):
+tools/platform_profile_consistency_test.py:407:    def test_runtime_alias_unknown(self):
+tools/platform_profile_consistency_test.py:412:    def test_runtime_alias_other_forms(self):
+tools/platform_profile_consistency_test.py:423:    def test_every_projectile_profile_is_read(self):
+tools/platform_profile_consistency_test.py:433:    def test_projectile_profile_array_form(self):
+tools/platform_profile_consistency_test.py:440:    def test_static_only_emitted(self):
+tools/platform_profile_consistency_test.py:446:    def test_record_missing_from_generator(self):
+tools/platform_profile_consistency_test.py:450:    def test_animation_profile_without_model_twin(self):
+tools/platform_profile_consistency_test.py:454:    def test_profile_array_count(self):
+tools/platform_profile_consistency_test.py:459:    def test_unparsed_build_record(self):
+tools/platform_profile_consistency_test.py:478:    unittest.main()
+
+ exited 124 in 132816ms:
+ssssssss..............................................
+ succeeded in 18936ms:
+diff --git a/src/devtools/overlay.cpp b/src/devtools/overlay.cpp
+index 4259127..66c85c7 100644
+--- a/src/devtools/overlay.cpp
++++ b/src/devtools/overlay.cpp
+@@ -6,6 +6,8 @@
+ #include "backends/imgui_impl_opengl2.h"
+ #include "backends/imgui_impl_win32.h"
+ #include "imgui.h"
++#include "platform/platform.hpp"
++#include "runtime/runtime.hpp"
+ #include <GL/gl.h>
+ #include <algorithm>
+ #include <array>
+@@ -462,6 +464,78 @@ void draw() {
+   if (active)
+     active(previous_active);
+ }
++// Receipt evidence lines. They go straight to Runtime::log, not through
++// platform::log, so they come out as "[<phase>] kp-session=<id> ..." with no
++// "<level>:" token. Everything a script can log (print, kp.diagnostic) passes
++// through the platform sink and gets that token, so a script cannot produce
++// a line of this shape through the log API. The id is 128 random bits, fresh
++// per process: it ties the host and gl lines to the "start" line written when
++// the overlay attaches, and lets the receipt refuse lines from another run.
++// It is not a secret (the log is readable); scripts/receipts and
++// tools/platform_receipt_test.py treat these lines as evidence, not proof.
++const char *session_id() {
++  static char id[33] = {};
++  if (id[0])
++    return id;
++  unsigned char bytes[16] = {};
++  bool random = false;
++  // RtlGenRandom (advapi32!SystemFunction036), looked up at run time so the
++  // DLL gains no import. advapi32 is already loaded in any GUI process.
++  using GenRandom = BOOLEAN(WINAPI *)(PVOID, ULONG);
++  if (HMODULE advapi = LoadLibraryA("advapi32.dll")) {
++    FARPROC address = GetProcAddress(advapi, "SystemFunction036");
++    GenRandom gen = nullptr;
++    static_assert(sizeof gen == sizeof address);
++    std::memcpy(&gen, &address, sizeof gen);
++    random = gen && gen(bytes, sizeof bytes);
++  }
++  if (!random) {
++    // Fallback: distinct per run, not unpredictable. Good enough to tell two
++    // sessions apart, which is all the receipt uses it for.
++    LARGE_INTEGER counter{};
++    QueryPerformanceCounter(&counter);
++    FILETIME now{};
++    GetSystemTimeAsFileTime(&now);
++    unsigned long long seed[4] = {
++        static_cast<unsigned long long>(counter.QuadPart),
++        (static_cast<unsigned long long>(now.dwHighDateTime) << 32) | now.dwLowDateTime,
++        GetCurrentProcessId(), reinterpret_cast<std::uintptr_t>(&counter)};
++    unsigned long long x = 0x9e3779b97f4a7c15ull;
++    for (int i = 0; i < 16; ++i) {
++      x += seed[i % 4] + 0x9e3779b97f4a7c15ull;
++      unsigned long long z = x;
++      z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ull;
++      z = (z ^ (z >> 27)) * 0x94d049bb133111ebull;
++      bytes[i] = static_cast<unsigned char>(z ^ (z >> 31));
++    }
++  }
++  static const char hex[] = "0123456789abcdef";
++  for (int i = 0; i < 16; ++i) {
++    id[2 * i] = hex[bytes[i] >> 4];
++    id[2 * i + 1] = hex[bytes[i] & 15];
++  }
++  return id;
++}
++// Once, when the overlay attaches (first overlay_tick). Always before the
++// host and gl lines, which need a rendered frame.
++void log_session_start() {
++  runtime::Runtime::instance().log("kp-session=%s start", session_id());
++}
++// Once, at ImGui init, on the render thread with the game's context current:
++// the facts a native-Windows receipt needs. Fixed keys;
++// scripts/receipts/windows-native-receipt.ps1 parses both lines.
++void log_host_and_gl() {
++  char host[512];
++  platform::format_host_identity(platform::host_identity(), host, sizeof host);
++  runtime::Runtime::instance().log("kp-session=%s %s", session_id(), host);
++  auto text = [](GLenum name) {
++    const GLubyte *v = glGetString(name);
++    return v ? reinterpret_cast<const char *>(v) : "?";
++  };
++  runtime::Runtime::instance().log(
++      "kp-session=%s gl: vendor=\"%s\" renderer=\"%s\" version=\"%s\"",
++      session_id(), text(GL_VENDOR), text(GL_RENDERER), text(GL_VERSION));
++}
+ BOOL WINAPI swap(HDC dc) {
+   static thread_local bool inside = false;
+   // Once attached, closed frames chain directly to the game's presentation.
+@@ -480,6 +554,7 @@ BOOL WINAPI swap(HDC dc) {
+         ImGui::StyleColorsDark();
+         ImGui_ImplWin32_Init(window);
+         ImGui_ImplOpenGL2_Init();
++        log_host_and_gl();
+         previous = reinterpret_cast<WNDPROC>(SetWindowLongPtr(
+             window, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndproc)));
+         console().output("system",
+@@ -506,6 +581,7 @@ void overlay_tick() {
+   if (attempted)
+     return;
+   attempted = true;
++  log_session_start();
+   attach_input();
+   auto *base = reinterpret_cast<unsigned char *>(GetModuleHandle(nullptr));
+   auto *dos = reinterpret_cast<IMAGE_DOS_HEADER *>(base);
+diff --git a/src/platform/platform_win32.cpp b/src/platform/platform_win32.cpp
+index cb719fa..353299f 100644
+--- a/src/platform/platform_win32.cpp
++++ b/src/platform/platform_win32.cpp
+@@ -8,12 +8,15 @@
+ 
+ #include "platform/platform.hpp"
+ 
++#include <cctype>
++#include <cstdio>
+ #include <cstring>
+ 
+ #ifndef WIN32_LEAN_AND_MEAN
+ #define WIN32_LEAN_AND_MEAN
+ #endif
+ #include <windows.h>
++#include <tlhelp32.h>
+ 
+ namespace kp::platform {
+ namespace {
+@@ -27,6 +30,42 @@ DWORD to_prot(Protect p) {
+     return PAGE_READONLY;
+ }
+ 
++// GetProcAddress hands back FARPROC; copy the bits into the real signature
++// rather than casting between function types (-Wcast-function-type).
++template <class Function>
++Function proc(HMODULE module, const char* name) {
++    FARPROC address = module ? ::GetProcAddress(module, name) : nullptr;
++    Function result = nullptr;
++    static_assert(sizeof(result) == sizeof(address));
++    std::memcpy(&result, &address, sizeof(result));
++    return result;
++}
++
++// Lowercase ASCII base name of a wide module name. Non-ASCII becomes '?':
++// the match patterns are ASCII and the log line should stay ASCII too.
++void base_name(const wchar_t* in, char* out, std::size_t len) {
++    std::size_t n = 0;
++    for (; *in && n + 1 < len; ++in) {
++        const wchar_t c = *in;
++        char ch = c < 128 ? static_cast<char>(std::tolower(static_cast<int>(c))) : '?';
++        // Space-delimited log line, comma-separated list: keep each name one token.
++        if (ch == ' ' || ch == '\t' || ch == ',') ch = '_';
++        out[n++] = ch;
++    }
++    out[n] = '\0';
++}
++
++// GOG Galaxy (galaxy*), Steam and other *overlay*, NVIDIA capture (nvspcap*),
++// Discord's hook (discordhook*.dll) and RivaTuner Statistics Server
++// (rtsshooks*.dll). Discord's current hook is not named *overlay*.
++bool is_overlay(const char* name) {
++    return std::strncmp(name, "galaxy", 6) == 0 ||
++           std::strstr(name, "overlay") != nullptr ||
++           std::strncmp(name, "nvspcap", 7) == 0 ||
++           std::strncmp(name, "discordhook", 11) == 0 ||
++           std::strncmp(name, "rtsshooks", 9) == 0;
++}
++
+ }  // namespace
+ 
+ bool set_protection(void* addr, std::size_t len, Protect p) {
+@@ -96,4 +135,84 @@ std::uintptr_t module_base(const char* name) {
+     return reinterpret_cast<std::uintptr_t>(h);
+ }
+ 
++HostIdentity host_identity() {
++    HostIdentity id;
++    HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
++
++    using WineVersion = const char*(__cdecl*)();
++    if (auto wine = proc<WineVersion>(ntdll, "wine_get_version")) {
++        id.wine = true;
++        const char* v = wine();
++        std::snprintf(id.wine_version, sizeof id.wine_version, "%s", v ? v : "?");
++        // The log line is space-delimited; keep this one token.
++        for (char* c = id.wine_version; *c; ++c)
++            if (*c == ' ' || *c == '\t' || *c == ',') *c = '_';
++    }
++
++    // LONG, not NTSTATUS: the latter is not declared under WIN32_LEAN_AND_MEAN.
++    using RtlGetVersion = LONG(WINAPI*)(OSVERSIONINFOW*);
++    if (auto get = proc<RtlGetVersion>(ntdll, "RtlGetVersion")) {
++        OSVERSIONINFOW info{};
++        info.dwOSVersionInfoSize = sizeof info;
++        if (get(&info) == 0) {
++            id.os_major = info.dwMajorVersion;
++            id.os_minor = info.dwMinorVersion;
++            id.os_build = info.dwBuildNumber;
++        }
++    }
++
++    // Toolhelp rather than EnumProcessModules: it lives in kernel32, so the DLL
++    // gains no psapi import. The snapshot can fail transiently with
++    // ERROR_BAD_LENGTH while another thread loads a module; retry a few times.
++    // A failed scan is written out as "snapshot-failed:<error>", never as an
++    // empty list, so a receipt cannot read it as "no overlays".
++    HANDLE snap = INVALID_HANDLE_VALUE;
++    DWORD snap_error = 0;
++    for (int attempt = 0; attempt < 4; ++attempt) {
++        snap = ::CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId());
++        if (snap != INVALID_HANDLE_VALUE) break;
++        snap_error = ::GetLastError();
++        if (snap_error != ERROR_BAD_LENGTH) break;
++        ::Sleep(1);
++    }
++    if (snap == INVALID_HANDLE_VALUE) {
++        std::snprintf(id.overlays, sizeof id.overlays, "snapshot-failed:%lu",
++                      static_cast<unsigned long>(snap_error));
++        return id;
++    }
++    // Names that do not fit are counted, not cut: the list ends with
++    // ",+<n>_more" instead of a truncated name. Room for that suffix is kept.
++    constexpr std::size_t kSuffixRoom = 24;   // ",+4294967295_more" and NUL
++    const std::size_t limit = sizeof id.overlays - kSuffixRoom;
++    std::size_t used = 0;
++    unsigned omitted = 0;
++    MODULEENTRY32W entry{};
++    entry.dwSize = sizeof entry;
++    for (BOOL ok = ::Module32FirstW(snap, &entry); ok; ok = ::Module32NextW(snap, &entry)) {
++        char name[MAX_MODULE_NAME32 + 1];
++        base_name(entry.szModule, name, sizeof name);
++        if (!is_overlay(name)) continue;
++        const std::size_t need = std::strlen(name) + (used ? 1 : 0);
++        if (omitted || used + need >= limit) {
++            ++omitted;
++            continue;
++        }
++        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s%s", used ? "," : "", name);
++        used += need;
++    }
++    ::CloseHandle(snap);
++    if (omitted)
++        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s+%u_more",
++                      used ? "," : "", omitted);
++    return id;
++}
++
++void format_host_identity(const HostIdentity& id, char* out, std::size_t len) {
++    if (!out || len == 0) return;
++    std::snprintf(out, len, "host: wine=%s wine_version=%s os=%lu.%lu.%lu overlays=%s",
++                  id.wine ? "yes" : "no", id.wine_version[0] ? id.wine_version : "-",
++                  id.os_major, id.os_minor, id.os_build,
++                  id.overlays[0] ? id.overlays : "-");
++}
++
+ }  // namespace kp::platform
+def _edit(path: Path, old: str, new: str) -> None:
+    text = path.read_text()
+    assert old in text, f"fixture anchor {old!r} not in {path.name}"
+    path.write_text(text.replace(old, new, 1))
+
+
+class RealTree(unittest.TestCase):
+    def test_parsers_see_the_whole_tree(self):
+        inc = parse_builds_inc((ROOT / "src/generated/builds.inc").read_text())
+        raw = inc.pop("__raw_count__")
+        self.assertGreaterEqual(len(inc), 1)
+        self.assertEqual(raw, len(inc), "a BuildRecord block did not parse")
+        _, model = parse_model_profiles((ROOT / "src/api/model_profiles.cpp").read_text())
+        self.assertGreaterEqual(len(model), 1)
+        self.assertTrue(parse_runtime_aliases((ROOT / "src/runtime/runtime.cpp").read_text()))
+
+    def test_no_unexpected_drift(self):
+        found = check(ROOT)
+        unexpected = [x for x in found if x not in KNOWN_DRIFT]
+        self.assertEqual(unexpected, [], "new identity drift:\n" +
+                         "\n".join(f"  {k} {s}: {d}" for k, s, d in unexpected))
+
+    def test_known_drift_ledger_is_not_stale(self):
+        present = set(check(ROOT))
+        stale = sorted(set(KNOWN_DRIFT) - present)
+        self.assertEqual(stale, [], "drift pinned in KNOWN_DRIFT is gone; remove it")
+
+
+class SyntheticDrift(unittest.TestCase):
+    """Each drift class, injected into a copy of the tree, must be flagged."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        _copy_tree(self.root)
+        self.baseline = {(k, s) for k, s, _ in check(self.root)}
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def new(self) -> set[tuple[str, str]]:
+        return {(k, s) for k, s, _ in check(self.root)} - self.baseline
+
+    def test_copy_matches_real_tree(self):
+        self.assertEqual(self.baseline, {(k, s) for k, s, _ in check(ROOT)})
+
+    def test_pinned_subject_with_new_value_is_new_drift(self):
+        _edit(self.root / "src/api/model_profiles.cpp",
+              '"macos-k1-i386", "aa6283', '"macos-k1-i386", "bb6283')
+        found = check(self.root)
+        self.assertTrue(any(x[1] == "model:macos-k1-i386" and x not in KNOWN_DRIFT for x in found))
+
+    def test_model_profile_sha_not_a_build(self):
+        _edit(self.root / "src/api/model_profiles.cpp",
+              '"windows-k1-gog", "9c10e045', '"windows-k1-gog", "0c10e045')
+        self.assertIn(("profile-sha-unregistered", "model:windows-k1-gog"), self.new())
+
+    def test_projectile_profile_sha_not_a_build(self):
+        _edit(self.root / "src/api/projectiles_profile.cpp", '"9c10e045', '"1c10e045')
+        self.assertIn(("profile-sha-unregistered", "projectiles:windows-k1-gog-i386"), self.new())
+
+    def test_static_only_mac_sha_clears_profile(self):
+        _edit(self.root / "tools/gen_address_tables.py",
+              '"symbol_source": "K1__k1_mac_swkotor.app",',
+              '"symbol_source": "K1__k1_mac_swkotor.app", "sha256": '
+              '"aa6283733d3c738d11d12453f77dfc6b7e87f95326a07ee97daab1a37734b032",')
+        gone = self.baseline - {(k, s) for k, s, _ in check(self.root)}
+        self.assertIn(("profile-sha-unregistered", "model:macos-k1-i386"), gone)
+
+    def test_mac_sha_on_non_static_row_does_not_clear(self):
+        _edit(self.root / "tools/gen_address_tables.py",
+              '"code_sections": ["__text"], "static_only": True, "reject_cross_placed": True,\n'
+              '        "note": "32-bit K1 Mac',
+              '"code_sections": ["__text"], "reject_cross_placed": True, "sha256": '
+              '"aa6283733d3c738d11d12453f77dfc6b7e87f95326a07ee97daab1a37734b032",\n'
+              '        "note": "32-bit K1 Mac')
+        self.assertIn(("profile-sha-unregistered", "model:macos-k1-i386"),
+                      {(k, s) for k, s, _ in check(self.root)})
+
+    def test_json_sha_drift(self):
+        p = self.root / "data/addresses/k1_steam_103.json"
+        j = json.loads(p.read_text()); j["identity"]["sha256"] = "0" * 64
+        p.write_text(json.dumps(j))
+        self.assertIn(("sha256-mismatch", "k1_steam_103"), self.new())
+
+    def test_reference_sha_is_not_the_identity(self):
+        # k1_steam_103's reference_sha256 is its unpacked twin by design.
+        j = json.loads((self.root / "data/addresses/k1_steam_103.json").read_text())
+        self.assertNotEqual(j["reference_sha256"], j["identity"]["sha256"])
+        self.assertNotIn("sha256-mismatch", {k for k, s in self.baseline if s == "k1_steam_103"})
+
+    def test_known_text_drift(self):
+        p = self.root / "data/addresses/k1_gog_103.json"
+        j = json.loads(p.read_text()); j["known_text"][0]["sha256"] = "1" * 64
+        p.write_text(json.dumps(j))
+        self.assertIn(("known_text-mismatch", "k1_gog_103"), self.new())
+
+    def test_image_base_drift(self):
+        p = self.root / "data/addresses/k2_gog_aspyr.json"
+        j = json.loads(p.read_text()); j["image_base"] = 0x10000
+        p.write_text(json.dumps(j))
+        self.assertIn(("image_base-mismatch", "k2_gog_aspyr"), self.new())
+
+    def test_missing_table(self):
+        (self.root / "data/addresses/k1_gog_103.json").unlink()
+        self.assertIn(("record-without-table", "k1_gog_103"), self.new())
+
+    def test_runtime_alias_unknown(self):
+        _edit(self.root / "src/runtime/runtime.cpp",
+              'build_ == "k2_steam_aspyr"', 'build_ == "k2_steam_aspyr_v2"')
+        self.assertIn(("runtime-alias-unknown", "k2_steam_aspyr_v2"), self.new())
+
+    def test_runtime_alias_other_forms(self):
+        # Reversed operands, !=, and the build() accessor are the same gate.
+        for i, form in enumerate(('"k9_rev_%d" == build_', 'build_ != "k9_ne_%d"',
+                                  'build() == "k9_acc_%d"', '"k9_racc_%d" != build()')):
+            alias = re.search(r'"(\w+)"', form % i).group(1)
+            with self.subTest(form):
+                _edit(self.root / "src/runtime/runtime.cpp",
+                      'const bool k1_receipt = build_ == "k1_gog_103" &&',
+                      'const bool k1_receipt = build_ == "k1_gog_103" && (%s) &&' % (form % i))
+                self.assertIn(("runtime-alias-unknown", alias), self.new())
+
+    def test_every_projectile_profile_is_read(self):
+        # A second profile, declared a different way, is still checked.
+        _edit(self.root / "src/api/projectiles_profile.cpp",
+              "const Profile &profile() {",
+              'static const Profile q = {\n    "%s", "windows-k9-extra-i386", 0x400000};\n'
+              "const Profile &profile() {" % ("5" * 63 + "4"))
+        self.assertIn(("profile-sha-unregistered", "projectiles:windows-k9-extra-i386"), self.new())
+        self.assertIn("windows-k1-gog-i386", parse_projectiles_profile(
+            (self.root / "src/api/projectiles_profile.cpp").read_text()))
+
+    def test_projectile_profile_array_form(self):
+        _edit(self.root / "src/api/projectiles_profile.cpp",
+              "const Profile &profile() {",
+              'static const std::array<Profile, 1> more{{\n  {"windows-k9-arr-i386", "%s"}}};\n'
+              "const Profile &profile() {" % ("6" * 63 + "4"))
+        self.assertIn(("profile-sha-unregistered", "projectiles:windows-k9-arr-i386"), self.new())
+
+    def test_static_only_emitted(self):
+        _edit(self.root / "tools/gen_address_tables.py",
+              '"code_sections": [".text"],\n    },\n    "k2_steam_linux"',
+              '"code_sections": [".text"], "static_only": True,\n    },\n    "k2_steam_linux"')
+        self.assertIn(("static-only-emitted", "k1_gog_103"), self.new())
+
+    def test_record_missing_from_generator(self):
+        _edit(self.root / "tools/gen_address_tables.py", '"k2_gog_aspyr": {', '"k2_gog_aspyr_old": {')
+        self.assertIn(("record-not-in-generator", "k2_gog_aspyr"), self.new())
+
+    def test_animation_profile_without_model_twin(self):
+        _edit(self.root / "src/api/animation_profiles.cpp", '{"windows-k1-gog",', '{"windows-k2-gog",')
+        self.assertIn(("animation-model-id-mismatch", "animation"), self.new())
+
+    def test_profile_array_count(self):
+        _edit(self.root / "src/api/model_profiles.cpp",
+              "const std::array<Profile,4>& profiles() {", "const std::array<Profile,5>& profiles() {")
+        self.assertIn(("profile-count-mismatch", "model"), self.new())
+
+    def test_unparsed_build_record(self):
+        _edit(self.root / "src/generated/builds.inc", "Format::Pe32, 0x00400000, false,\n        0, \"\", \"\",\n        kText_k1_gog_103",
+              "Format::Pe32, 0x00400000, maybe,\n        0, \"\", \"\",\n        kText_k1_gog_103")
+        self.assertIn(("builds-inc-unparsed", "builds.inc"), self.new())
+
+
+def report() -> int:
+    found = check(ROOT)
+    for k, s, d in found:
+        tag = f"KNOWN ({KNOWN_DRIFT[(k, s, d)]})" if (k, s, d) in KNOWN_DRIFT else "NEW"
+        print(f"{tag:>8} {k} {s}: {d}")
+    for a in informational(ROOT):
+        print(f"    INFO generator row {a}: no address JSON, emits no BuildRecord")
+    return 1 if any(x not in KNOWN_DRIFT for x in found) else 0
+
+
+if __name__ == "__main__":
+    if "--report" in sys.argv:
+        sys.exit(report())
+    unittest.main()
+bad_sha.json
+f12_not_run.json
+forged_for_spoofed_log.json
+gl_line_disagrees.json
+host_fields_disagree.json
+mesa_renderer.json
+missing_field.json
+native_arm64_emulated.json
+native_f12_fail.json
+native_pass.json
+no_host_line.json
+os_build_disagrees.json
+overlay_snapshot_failed.json
+session_id_mismatch.json
+software_renderer.json
+spoofed_later_host_line.json
+stale_prior_session.json
+two_host_tokens.json
+unknown_exe.json
+wine_disagrees_with_log.json
+wine_registry_yes.json
+wine_yes.json
+docs/user/windows-native-install.md
+
+**Planning native-only test rerun**
+exec
+/usr/bin/bash -lc 'timeout 45s python3 -m unittest tools.platform_profile_consistency_test.RealTree -v; timeout 45s env KP_PWSH=/definitely-not-present python3 -m unittest tools.platform_receipt_test.Receipts tools.platform_receipt_test.ScriptContracts -v' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+**Planning patch application and test inspection**
+exec
+/usr/bin/bash -lc "timeout 15s tail -n 30 .superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md; timeout 15s sed -n '1,240p' docs/user/windows-native-install.md; timeout 15s git diff --numstat -- src/platform/platform_win32.cpp src/devtools/overlay.cpp" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ exited 124 in 26416ms:
+- The log sha and size, plus the parsed `host:` and `gl:` lines. The wine value comes from the runtime's line, not from PowerShell.
+- The F12 result (`pass|fail|not-run`), recorded as `physical-keyboard`, `attested_by=user`.
+
+`tools/platform_receipt_test.py` has 25 tests. Validation reads receipts as `utf-8-sig`, because Windows PowerShell 5.1 `Set-Content -Encoding UTF8` writes a BOM, and `json.loads('\ufeff{}')` fails with "Unexpected UTF-8 BOM". `test_bom_prefixed_receipt_validates` covers this. The receipt script now writes BOM-less UTF-8 through `[IO.File]::WriteAllText` after resolving the full path.
+- `Receipts` (15 tests) covers the synthetic fixtures:
+  - `native_pass` is valid and closes a cell.
+  - `native_f12_fail` is valid but does not close one.
+  - `native_arm64_emulated` is valid.
+  - These are rejected: `wine_yes`, `wine_disagrees_with_log` (top level says no, log says yes), `no_host_line`, `missing_field`, `bad_sha`, `unknown_exe`, `f12_not_run`, `software_renderer` (llvmpipe) and `os_build_disagrees`.
+  - `test_wine_rule_is_load_bearing` shows the log-line rule is what rejects the disagreeing fixture.
+- `ScriptContracts` (10 tests) checks:
+  - The PS1 emits every required key.
+  - The PS1 regexes equal the Python ones.
+  - The C++ `host:` and `gl:` format strings produce lines those regexes parse.
+  - The overlay logs exactly once, after `ImGui_ImplOpenGL2_Init`.
+  - The installer's exe allowlist is exactly BuildRecord sha→alias.
+  - The installer contains its transaction and owned-only markers.
+  - The scripts use no PowerShell 7-only syntax.
+
+Red run: against the `HEAD` versions of `platform_win32.cpp` and `overlay.cpp`, `ScriptContracts` gives `FAILED (failures=2, errors=2)`. The failing tests are `test_cpp_gl_line_matches_regex`, `test_cpp_host_line_matches_regex`, `test_host_identity_detects_wine_by_export` and `test_overlay_logs_once_at_imgui_init`. The green run gives `Ran 25 tests ... OK`.
+
+`python3 tools/platform_receipt_test.py --validate <receipt.json>` runs as a CLI: `native_pass` → `VALID native receipt` rc=0; `wine_yes` → 2 REJECT lines, rc=1.
+
+## Proof boundary
+
+- **No native Windows receipt exists yet.** Nothing here ran on Windows. `host_identity()` has not executed on any machine, native or Wine. The `host:`/`gl:` lines have never been seen in a real kotorphasor.log. Closing that needs W2: the user runs the installer and receipt script on a real Windows PC with a GPU.
+- The PowerShell scripts were parsed and exercised with pwsh 7.3.12 on Linux. They were not run under Windows PowerShell 5.1. Registry and CIM calls in the receipt script need Windows, so the script has not been executed at all.
+- The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+- The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+- The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
+# Install on Windows (PowerShell)
+
+This page covers the two PowerShell scripts for a native Windows install:
+
+- `scripts\install\windows\Install-KotorPhasor.ps1` installs or removes KotorPhasor.
+- `scripts\receipts\windows-native-receipt.ps1` writes a receipt after one test run.
+
+The Linux and Wine flow is in [install.md](install.md).
+
+## Let PowerShell run the scripts
+
+Windows blocks unsigned scripts by default. It also marks downloaded files as coming from the internet. Open PowerShell in the KotorPhasor folder and run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+Get-ChildItem -Recurse .\scripts, .\build | Unblock-File
+```
+
+`-Scope Process` lasts until you close that window. It does not change any system setting.
+
+If the game is under `Program Files`, open PowerShell with "Run as administrator".
+
+## Install, check, remove
+
+```powershell
+.\scripts\install\windows\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\scripts\install\windows\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
+.\scripts\install\windows\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
+```
+
+Install refuses a game exe or `binkw32.dll` it does not recognise. It copies only the address table for your build.
+
+Uninstall reads `kotorphasor\install-manifest.json`. It refuses the whole manifest, and removes nothing, if any path in it:
+
+- is rooted
+- has a `.` or `..` part
+- points outside the game folder
+- names a file the installer never writes
+
+It restores `binkw32.dll` from the backup. If the backup is gone, it uses `binkw32_real.dll`, but only when that file still matches the original. Your scripts and `kotorphasor.log` stay.
+
+## Write a receipt
+
+Start the game, reach the main menu, press F12 on the keyboard, then quit. Then run:
+
+```powershell
+.\scripts\receipts\windows-native-receipt.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -F12Result pass
+```
+
+Use `fail` if the console did not open. The receipt goes to `%LOCALAPPDATA%\KotorPhasor\receipts\` unless you pass `-OutFile`.
+
+Check it, with the log, on any machine with Python:
+
+```sh
+python3 tools/platform_receipt_test.py --validate receipt.json --log kotorphasor.log
+```
+
+## What a receipt shows
+
+A receipt is supporting evidence that a run was native Windows. It is not proof.
+
+- It reads only the newest game start in `kotorphasor.log`. It needs exactly one host line and one GL line there, written by the runtime with that run's random id.
+- Wine shows up through one runtime signal: an ntdll export only Wine has. Some patched Wine builds hide it. The receipt also checks for the `HKLM\Software\Wine` registry key, which only helps when the receipt script runs inside that same Wine prefix.
+- GL names from Mesa, Linux drivers, macOS or VM adapters are refused. A Wine run on an NVIDIA driver reports the same GL names as Windows, so it can still pass.
+- A Lua script can write to `kotorphasor.log` with Lua's `io` library. It can also add a line by printing text with a line break in it. Until the runtime blocks that, a script could fake these lines.
+
+**Planning final append fix**
+codex
+The source-level review confirms the requested hardening is present: manifest confinement is enforced before uninstall deletion; fallback restoration re-hashes the source; the receipt parser requires a single current-session start/host/GL set and cross-checks every parsed field; Mesa/Wine/Linux-driver GL identifiers and explicit snapshot failure are rejected. The Windows install note is present and accurately calls Wine detection supporting evidence, not proof. I’m adding only the requested continuation marker to the existing report—no duplicate review section.
+apply patch
+patch: completed
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+diff --git a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+index 20f34d887f86d2b994bc67e0aeeed06127047a81..10e17263e22a435220ef19b06117a5f5f725fc31
+--- a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
++++ b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+@@ -155,3 +155,12 @@
+ - The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+ - The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+ - The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
++
++## Fix round
++
++Continuation review: retained the completed W1 implementation and report rather
++than duplicating it. The bounded re-check reached the receipt suite's existing
++passing cases, but this heavily loaded mounted worktree stalled before a new
++unittest summary; the prior green installer (7) and consistency (23) receipts
++remain the last completed full runs. No Windows, Wine, game, capture, or live
++lock activity was performed in this continuation.
+
+diff --git a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+index 20f34d887f86d2b994bc67e0aeeed06127047a81..10e17263e22a435220ef19b06117a5f5f725fc31
+--- a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
++++ b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+@@ -155,3 +155,12 @@
+ - The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+ - The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+ - The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
++
++## Fix round
++
++Continuation review: retained the completed W1 implementation and report rather
++than duplicating it. The bounded re-check reached the receipt suite's existing
++passing cases, but this heavily loaded mounted worktree stalled before a new
++unittest summary; the prior green installer (7) and consistency (23) receipts
++remain the last completed full runs. No Windows, Wine, game, capture, or live
++lock activity was performed in this continuation.
+
+**Verifying build and test counts**
+**Investigating compile issues and test invocation**
+exec
+/usr/bin/bash -lc 'timeout 20s python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/native_pass.json; timeout 20s python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/wine_yes.json; timeout 20s tail -n 12 .superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md' in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ exited 124 in 100975ms:
+test_known_drift_ledger_is_not_stale (tools.platform_profile_consistency_test.RealTree.test_known_drift_ledger_is_not_stale) ... ok
+test_no_unexpected_drift (tools.platform_profile_consistency_test.RealTree.test_no_unexpected_drift) ... test_arm64_emulation_is_valid_and_says_so (tools.platform_receipt_test.Receipts.test_arm64_emulation_is_valid_and_says_so) ... ok
+test_bad_sha_rejected (tools.platform_receipt_test.Receipts.test_bad_sha_rejected) ... ok
+test_bom_prefixed_receipt_validates (tools.platform_receipt_test.Receipts.test_bom_prefixed_receipt_validates) ... ok
+test_cli_log_option (tools.platform_receipt_test.Receipts.test_cli_log_option) ... ok
+test_cr_injected_line_counts_twice (tools.platform_receipt_test.Receipts.test_cr_injected_line_counts_twice) ... ok
+test_f12_not_run_rejected (tools.platform_receipt_test.Receipts.test_f12_not_run_rejected) ... ok
+test_fixtures_carry_no_unknown_shas (tools.platform_receipt_test.Receipts.test_fixtures_carry_no_unknown_shas) ... ok
+test_forged_receipt_caught_against_its_log (tools.platform_receipt_test.Receipts.test_forged_receipt_caught_against_its_log) ... ok
+test_gl_fields_must_equal_gl_line (tools.platform_receipt_test.Receipts.test_gl_fields_must_equal_gl_line) ... ok
+test_host_fields_must_equal_host_line (tools.platform_receipt_test.Receipts.test_host_fields_must_equal_host_line) ... ok
+test_log_without_banner_rejected (tools.platform_receipt_test.Receipts.test_log_without_banner_rejected) ... ok
+test_mesa_renderer_rejected_as_native (tools.platform_receipt_test.Receipts.test_mesa_renderer_rejected_as_native) ... ok
+test_missing_field_rejected (tools.platform_receipt_test.Receipts.test_missing_field_rejected) ... ok
+test_missing_host_line_rejected (tools.platform_receipt_test.Receipts.test_missing_host_line_rejected) ... ok
+test_native_fail_is_valid_but_does_not_close (tools.platform_receipt_test.Receipts.test_native_fail_is_valid_but_does_not_close) ... ok
+test_native_gpu_names_pass (tools.platform_receipt_test.Receipts.test_native_gpu_names_pass) ... ok
+test_native_pass_is_valid_and_closes (tools.platform_receipt_test.Receipts.test_native_pass_is_valid_and_closes) ... ok
+test_native_pass_matches_its_log (tools.platform_receipt_test.Receipts.test_native_pass_matches_its_log) ... ok
+test_non_native_gl_names (tools.platform_receipt_test.Receipts.test_non_native_gl_names) ... ok
+test_os_build_must_match_runtime (tools.platform_receipt_test.Receipts.test_os_build_must_match_runtime) ... ok
+test_overlay_snapshot_failure_rejected (tools.platform_receipt_test.Receipts.test_overlay_snapshot_failure_rejected) ... ok
+test_session_id_mismatch_rejected (tools.platform_receipt_test.Receipts.test_session_id_mismatch_rejected) ... ok
+test_software_renderer_rejected (tools.platform_receipt_test.Receipts.test_software_renderer_rejected) ... ok
+test_spoofed_later_host_line_rejected (tools.platform_receipt_test.Receipts.test_spoofed_later_host_line_rejected) ... ok
+test_spoofed_log_never_yields_a_wine_no_line (tools.platform_receipt_test.Receipts.test_spoofed_log_never_yields_a_wine_no_line) ... ok
+test_stale_prior_session_rejected (tools.platform_receipt_test.Receipts.test_stale_prior_session_rejected) ... ok
+test_top_level_no_cannot_override_log_yes (tools.platform_receipt_test.Receipts.test_top_level_no_cannot_override_log_yes) ... ok
+test_two_host_tokens_on_one_line_rejected (tools.platform_receipt_test.Receipts.test_two_host_tokens_on_one_line_rejected) ... ok
+test_unanchored_script_line_is_not_a_host_line (tools.platform_receipt_test.Receipts.test_unanchored_script_line_is_not_a_host_line) ... ok
+test_unknown_exe_rejected (tools.platform_receipt_test.Receipts.test_unknown_exe_rejected) ... ok
+test_wine_registry_rejected (tools.platform_receipt_test.Receipts.test_wine_registry_rejected) ... ok
+test_wine_rule_is_load_bearing (tools.platform_receipt_test.Receipts.test_wine_rule_is_load_bearing) ... ok
+test_wine_yes_rejected_as_native (tools.platform_receipt_test.Receipts.test_wine_yes_rejected_as_native) ... ok
+test_cpp_session_host_gl_lines_match_anchored_regexes (tools.platform_receipt_test.ScriptContracts.test_cpp_session_host_gl_lines_match_anchored_regexes) ... 
+ succeeded in 19130ms:
+VALID native receipt
+REJECT runtime log says wine=yes: a Wine run never closes a native cell
+REJECT host.wine is 'yes', a native receipt needs 'no'
+2 problem(s)
+- The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+- The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+- The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
+
+## Fix round
+
+Continuation review: retained the completed W1 implementation and report rather
+than duplicating it. The bounded re-check reached the receipt suite's existing
+passing cases, but this heavily loaded mounted worktree stalled before a new
+unittest summary; the prior green installer (7) and consistency (23) receipts
+remain the last completed full runs. No Windows, Wine, game, capture, or live
+lock activity was performed in this continuation.
+
+diff --git a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+index 20f34d887f86d2b994bc67e0aeeed06127047a81..10e17263e22a435220ef19b06117a5f5f725fc31
+--- a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
++++ b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+@@ -155,3 +155,12 @@
+ - The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+ - The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+ - The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
++
++## Fix round
++
++Continuation review: retained the completed W1 implementation and report rather
++than duplicating it. The bounded re-check reached the receipt suite's existing
++passing cases, but this heavily loaded mounted worktree stalled before a new
++unittest summary; the prior green installer (7) and consistency (23) receipts
++remain the last completed full runs. No Windows, Wine, game, capture, or live
++lock activity was performed in this continuation.
+
+**Verifying gitignore impact on file tracking**
+**Planning memory summary extraction**
+codex
+A fast executable spot check now confirms the validator accepts `native_pass.json` and rejects `wine_yes.json` for both its runtime line and top-level field. The complete Python suites remain incomplete only because the mount is saturated during their re-run; I’m recording that boundary explicitly rather than treating progress output as a pass.
+exec
+/usr/bin/bash -lc "timeout 15s rg -n -i -C 2 'KotorPhasor|platform.*receipt|lua.*boundary|live-game.lock' /home/brunner56/.codex/memories/MEMORY.md | head -n 100" in /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation
+ succeeded in 12653ms:
+88-- Symptom: mounted-volume `ls`, `git`, `find`, Cargo, or install search times out/enters uninterruptible I/O -> use bounded commands and timeouts, and do not infer a missing source/install/`chitin.key` from the timeout. No Steam-install regeneration, per-unused reverse-chain audit, engine-code citation, or full typed-edge implementation was completed. [Task 2]
+89-
+90:# Task Group: KotorPhasor merge-ready integration and CI billing boundary
+91-
+92:scope: Review progress, safely integrate intended KotorPhasor product work from a dirty checkout, and distinguish local validation from external CI and full multiplayer proof.
+93:applies_to: cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor; reuse_rule=commit/branch/CI state is time-specific; dirty-worktree isolation and proof boundaries are reusable
+94-
+95-## Task 1: Create and push clean main integration while retaining the dirty checkout, outcome local success; CI blocked
+--
+97-### rollout_summary_files
+98-
+99:- rollout_summaries/2026-09-20T04-51-06-NBXM-kotorphasor_merge_ready_integration_and_ci_billing_blocker.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/19/rollout-2026-09-19T23-51-07-01a0bd27-5651-7f72-8f6f-190bc6def196.jsonl, updated_at=2026-09-20T05:22:08+00:00, thread_id=01a0bd27-5651-7f72-8f6f-190bc6def196, main pushed; Actions blocked before checkout by account billing)
+100-
+101-### keywords
+--
+110-## Reusable knowledge
+111-
+112:- `47df55a727f987f810015914a3bbe46eb6ed311c` was pushed to `main`; GCC and Clang release builds each passed 16 CTest checks, all 41 examples passed `luac -p`, and `python3 tools/nwscript_boundary_test.py` checked 275 active files with zero covered receiver paths. These are local/offline gates, not general multiplayer proof. [Task 1]
+113:- Engine routines use `nwscript.call(name, ...)`; KotorPhasor-owned native functions use `kp.*`. The loopback transport is identity-bound, bounded, sequence-checked, and only a selected movement/position slice. [Task 1]
+114-
+115-## Failures and how to do differently
+--
+216-- Symptom: target self-test cannot be verified -> `dist/Lens-0.1.0-x86_64.AppImage` was absent from both checked workspace roots. Locate/build it first, then run `QT_QPA_PLATFORM=offscreen timeout 30 dist/Lens-0.1.0-x86_64.AppImage --self-test`; do not claim that end-to-end check passed from the shell repair. [Task 1]
+217-
+218:# Task Group: KotorPhasor Lua example validation, harness concurrency, and recovery safety
+219-
+220-scope: Validate documented Lua behavior and demos with live evidence while automatically parallelizing only independent host checks; retain one owner for K1/live/recovery resources.
+221:applies_to: cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor; reuse_rule=re-check the dirty checkout, current session/locks, `/proc/meminfo`, and corpus-worker ownership before edits or launches
+222-
+223-## Task 1: Validate 41 Lua examples and record known-functional demos, outcome partial
+--
+225-### rollout_summary_files
+226-
+227:- rollout_summaries/2026-09-16T17-21-32-OcNu-kotorphasor_lua_validation_and_bounded_test_concurrency.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/16/rollout-2026-09-16T12-21-32-01a0ab3c-efc3-74a0-96b0-b4afe3f194bc.jsonl, updated_at=2026-09-22T14:06:42+00:00, thread_id=01a0ab3c-efc3-74a0-96b0-b4afe3f194bc, static checks passed; live validation blocked by stale ownership and uninterruptible I/O)
+228-
+229-### keywords
+230-
+231:- KotorPhasor, Lua examples, luac -p, CTest, tmp/example_validation.md, kpharness, busy: another client is connected, swkotor.exe D<l, wineboot -i, dantooine_party, record_showcase.sh
+232-
+233-## Task 2: Wire bounded automatic host-only concurrency, outcome success
+--
+235-### rollout_summary_files
+236-
+237:- rollout_summaries/2026-09-16T17-21-32-OcNu-kotorphasor_lua_validation_and_bounded_test_concurrency.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/16/rollout-2026-09-16T12-21-32-01a0ab3c-efc3-74a0-96b0-b4afe3f194bc.jsonl, updated_at=2026-09-22T14:06:42+00:00, thread_id=01a0ab3c-efc3-74a0-96b0-b4afe3f194bc, KP_FAST_JOBS verified for host-only tests)
+238-
+239-### keywords
+240-
+241:- KP_FAST_JOBS, gameplay_tests/run_all.sh, live-game.lock, docs/harness-driver.md, bash -n, positive integer, deterministic logs, verify-byteexact, SwapFree
+242-
+243-## User preferences
+--
+252-- `30_battle_meditation` needs `dantooine_party`/Game37 with Bastila; its oracle is `[meditation] round <n>: steadied <m> of the party`. Other release oracles are `[conscience] +<delta>, now <value>` and `[arrival] dan`/`[arrival] man`. Recorder flow is `demo_play.sh` / `record_showcase.sh` / `record.sh`; retain output in `tmp/demos/` only after oracle detection. [Task 1]
+253-- `scripts/harness/drive_k1_console.sh` must skip `wineboot -i` when `$WINEPREFIX/system.reg` exists, matching `live_session.sh`; the unconditional initializer hung before KOTOR launched. Existing session state was genuine/advancing, but Endar could not prove meditation because Bastila was absent. [Task 1]
+254:- `scripts/harness/gameplay_tests/run_all.sh` runs host-only checks concurrently with `KP_FAST_JOBS` (default 3), validates a positive integer, preserves per-test logs/status, and prints deterministic order. `KP_FAST_JOBS=2 ...` passed 2/2; `KP_FAST_JOBS=0 ...` exits 2. Live checks remain serialized by `tmp/harness-locks/live-game.lock`. [Task 2]
+255-- Recovery policy remains separate: preflight memory/swap/scratch/lock state, one active target/compiler by default, durable checkpoints/receipts, a progress watchdog, local NVMe scratch, and no automatic duplicate launch. [Task 2]
+256-
+--
+370-- A public directory should provide discovery/expiring registration and advertise endpoint, name, occupancy, version/content identity, and password-required indicator. Join authentication happens separately; never list a password or reusable password hash. OpenSpy provisioning for a new namespace was not verified; EOS needs credentials. [Task 1]
+371-- The investigated ZIP reports 24,242 functions but only 1,562 byte-exact recovered-C functions; 22,680 are original-byte fallbacks. Since `whole_image_relink.py` begins with `bytearray(target)`, an equal whole-image hash proves placement, not a source-only rebuild. Keep the 4,042,752-byte corpus image distinct from the 4,395,008-byte NVMe target by SHA-256. [Task 2]
+372:- Gate delivery in order: genuine source-built dependency closure, one real cross-process client, two independently controlled clients, then browser integration and each requested gameplay mode. Existing KotorPhasor local hooks/party-leader or direct-UDP examples do not establish replication. [Task 2]
+373-
+374-## Failures and how to do differently
+--
+551-- Symptom: `gh workflow run` cannot dispatch a workflow only on a non-default branch -> use a narrowly scoped branch `push` trigger or merge it first. Never select an unfiltered “latest” run; reject zero or multiple narrow matches. A dependency reachable locally may still be unavailable to a fresh runner: use a reachable immutable ref or vendor the exact implementation when authorized. [Task 3]
+552-
+553:# Task Group: KotorPhasor semantic nonvisual TAS, Endar route evidence, and live-proof discipline
+554-
+555-scope: Advance K1/K2 route automation through semantic engine state and authored-route predicates; use this for live harness work, TAS research, and evidence acceptance.
+556:applies_to: cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor; reuse_rule=re-check game build, save state, hook coverage, and route artifacts; exact live receipts and temporary paths are time-specific
+557-
+558-## Task 1: Research semantic nonvisual control and validate K1 live primitives, outcome partial but live control established
+--
+560-### rollout_summary_files
+561-
+562:- rollout_summaries/2026-09-10T00-18-46-PSbq-kotorphasor_nonvisual_tas_endar_spire_live_proof_partial.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/10/rollout-2026-09-10T00-25-47-01a088ae-66c0-7560-952c-541d93d1f774_01a089c7-7ca9-7f33-b386-6b4022c4a3a7.jsonl, updated_at=2026-09-16T09:17:36+00:00, thread_id=01a088ae-66c0-7560-952c-541d93d1f774, semantic K1 control and bounded combat established; no full route/video proof)
+563-
+564-### keywords
+--
+570-### rollout_summary_files
+571-
+572:- rollout_summaries/2026-09-10T00-18-46-PSbq-kotorphasor_nonvisual_tas_endar_spire_live_proof_partial.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/10/rollout-2026-09-10T00-25-47-01a088ae-66c0-7560-952c-541d93d1f774_01a089c7-7ca9-7f33-b386-6b4022c4a3a7.jsonl, updated_at=2026-09-16T09:17:36+00:00, thread_id=01a088ae-66c0-7560-952c-541d93d1f774, authored locker path and tutorial/escape-pod boundaries; no full Endar/K2/video proof)
+573-
+574-### keywords
+--
+580-### rollout_summary_files
+581-
+582:- rollout_summaries/2026-09-10T19-28-56-TXYM-rewrite_phasor_git_history_and_publish_github.md (cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor, rollout_path=/home/brunner56/.codex/sessions/2026/09/10/rollout-2026-09-10T14-28-56-01a08ccb-6c93-7512-b76b-9cef0e0190dc.jsonl, updated_at=2026-09-08T23:21:52+00:00, thread_id=01a08ccb-6c93-7512-b76b-9cef0e0190dc, rendered command output redacted)
+583-
+584-### keywords
+--
+840-- Symptom: a Rust test returns references from an array literal -> `E0716` temporary-borrow failure; bind the arrays locally. Symptom: generated fixture has no `.json` suffix -> `unsupported instruction format: ...`; format detection is extension-based, so retain the extension or add an explicit override. Honor the declared Rust 1.85 MSRV: replace `usize::is_multiple_of` with `%` and run Clippy with warnings denied. [Task 2]
+841-
+842:# Task Group: KotorPhasor legal offline CTest tier and decompile-history cleanup
+843-
+844-scope: Maintain the no-game default test tier and IP/data boundary; finish history cleanup only with independently verified rewritten history.
+845:applies_to: cwd=/run/media/brunner56/MyBook/Workspaces/KotorPhasor; reuse_rule=re-check current main/CI and whether history was rewritten before any cleanup claim; offline test architecture is reusable
+846-
+847-## Task 1: Add deterministic offline tests, clean tracked Ghidra artifacts, and audit the uncompleted history purge, outcome partial
+--
+849-### rollout_summary_files
+
+diff --git a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+index 20f34d887f86d2b994bc67e0aeeed06127047a81..10e17263e22a435220ef19b06117a5f5f725fc31
+--- a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
++++ b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+@@ -155,3 +155,12 @@
+ - The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+ - The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+ - The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
++
++## Fix round
++
++Continuation review: retained the completed W1 implementation and report rather
++than duplicating it. The bounded re-check reached the receipt suite's existing
++passing cases, but this heavily loaded mounted worktree stalled before a new
++unittest summary; the prior green installer (7) and consistency (23) receipts
++remain the last completed full runs. No Windows, Wine, game, capture, or live
++lock activity was performed in this continuation.
+
+**Planning memory usage citation details**
+**Reviewing file report consistency and counts**
+codex
+Resumed the existing W1 fix round without restarting or duplicating the prior review. The completed implementation was retained; I only appended the requested continuation section to the existing report.
+
+Status: W1 is implemented and source-reviewed, with the important acceptance boundary intact: this is not native-Windows runtime proof yet.
+
+What is present and verified from the retained work:
+
+- Installer hardening in [Install-KotorPhasor.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/install/windows/Install-KotorPhasor.ps1):
+  - Manifest entries reject rooted paths, empty/null values, `.`/`..` components, and paths resolving outside the game directory.
+  - `backup_dir` must exactly match `kotorphasor\backup\<UTC timestamp>`.
+  - All manifest/path validation happens before uninstall’s delete/restore pass.
+  - Uninstall is two-pass: it validates every file first, then mutates only if the whole plan is safe.
+  - It restores `binkw32.dll` before removing the real-Bink fallback and verifies the fallback hash against the recorded original.
+  - It copies only the selected build’s address table.
+  - It includes process-only execution-policy and `Unblock-File` guidance.
+
+- Native receipt hardening in [windows-native-receipt.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/receipts/windows-native-receipt.ps1) and [platform_receipt_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py):
+  - Receipts default to `%LOCALAPPDATA%\KotorPhasor\receipts`.
+  - The current log session is selected from the last KotorPhasor start banner.
+  - Exactly one anchored `kp-session` start, host, and GL line is required, all with the same 128-bit session ID.
+  - Parsed receipt host/OS/overlay/GL fields are cross-checked against those exact log lines.
+  - Wine, Mesa/Linux drivers, llvmpipe/software renderers, Wine GL names, and explicit module-snapshot failures are rejected as native evidence.
+  - The user documentation correctly states that Wine detection is one supporting signal, not conclusive proof.
+
+- Runtime evidence in [overlay.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/overlay.cpp) and [platform_win32.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_win32.cpp):
+  - Host and GL lines are emitted once at the intended lifecycle points and bypass the normal script log sink.
+  - Session anchoring is present.
+  - The host report covers the Wine export, Windows version, and overlay module scan.
+  - Discord (`discordhook*`) and RTSS (`rtsshooks*`) module names are included.
+  - Snapshot failure is explicit rather than silently represented as no overlays.
+  - Long overlay lists report omitted entries instead of silently truncating.
+
+- Profile consistency coverage in [platform_profile_consistency_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py) includes all projectile profiles and alternate runtime-alias forms.
+
+- User-facing instructions are in [windows-native-install.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/user/windows-native-install.md).
+
+Checks:
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/native_pass.json`
+  - Passed: `VALID native receipt`.
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/wine_yes.json`
+  - Rejected as intended:
+    - runtime line reports `wine=yes`;
+    - top-level `host.wine` is also unacceptable for a native receipt.
+
+- The retained report records the last completed full checks as:
+  - installer behavior: **7 tests green**
+  - profile consistency: **23 tests green**
+  - prior MinGW cross-build: green, zero warnings in the touched objects; import inspection reported no `psapi` dependency.
+
+- I attempted to rerun both complete Python suites. The receipt run advanced through its existing skipped/passing progress, and the consistency run began its real-tree test, but this mounted worktree is currently saturated and stalled before either produced a fresh unittest summary. I have not represented partial progress as a successful rerun.
+
+- I did not run Wine, a game, Gamescope/X, capture software, or touch the live-game lock. No real game installation was touched.
+
+The requested continuation entry is now appended in [platform-w0-w1-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md).
+
+Incomplete, honestly:
+
+- No real native Windows run has happened in this continuation or the retained work. The actual host/GL evidence lines, Windows registry/CIM behavior, and PowerShell 5.1 runtime behavior still require a physical native-Windows W2 run.
+- Full re-run summaries for the 7-test installer and 23-test consistency suites could not be freshly reproduced under the present mount/I/O pressure.
+- The K1 GOG and K2 original Bink hashes remain intentionally fail-closed unless supplied via `-TrustBinkSha256`, as documented.
+- The two Python tests remain manual checks; no CMake registration was made because the task forbade modifying CMake.
+
+
+diff --git a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+index 20f34d887f86d2b994bc67e0aeeed06127047a81..10e17263e22a435220ef19b06117a5f5f725fc31
+--- a/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
++++ b/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md
+@@ -155,3 +155,12 @@
+ - The overlay-name match (`galaxy*`, `*overlay*`, `nvspcap*`) is checked as source text only. It has not been observed against a live module list.
+ - The GOG K1 Bink and the K2 Bink shas are unrecorded. K2, and K1 GOG if its Bink differs from Steam's, needs `-TrustBinkSha256` until someone hashes the intact GOG `binkw32.dll`.
+ - The `CMakeLists.txt`/ctest registration of the two Python tests is not done, because CMake is forbidden. They run by hand as shown above.
++
++## Fix round
++
++Continuation review: retained the completed W1 implementation and report rather
++than duplicating it. The bounded re-check reached the receipt suite's existing
++passing cases, but this heavily loaded mounted worktree stalled before a new
++unittest summary; the prior green installer (7) and consistency (23) receipts
++remain the last completed full runs. No Windows, Wine, game, capture, or live
++lock activity was performed in this continuation.
+
+2026-09-27T18:18:39.440183Z ERROR rmcp::transport::streamable_http_client: fail to delete session: unexpected server response: DELETE returned HTTP 404 session_id="eb0abc23-6512-435a-8019-0a9d633ec646"
+tokens used
+71,888
+Resumed the existing W1 fix round without restarting or duplicating the prior review. The completed implementation was retained; I only appended the requested continuation section to the existing report.
+
+Status: W1 is implemented and source-reviewed, with the important acceptance boundary intact: this is not native-Windows runtime proof yet.
+
+What is present and verified from the retained work:
+
+- Installer hardening in [Install-KotorPhasor.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/install/windows/Install-KotorPhasor.ps1):
+  - Manifest entries reject rooted paths, empty/null values, `.`/`..` components, and paths resolving outside the game directory.
+  - `backup_dir` must exactly match `kotorphasor\backup\<UTC timestamp>`.
+  - All manifest/path validation happens before uninstall’s delete/restore pass.
+  - Uninstall is two-pass: it validates every file first, then mutates only if the whole plan is safe.
+  - It restores `binkw32.dll` before removing the real-Bink fallback and verifies the fallback hash against the recorded original.
+  - It copies only the selected build’s address table.
+  - It includes process-only execution-policy and `Unblock-File` guidance.
+
+- Native receipt hardening in [windows-native-receipt.ps1](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/receipts/windows-native-receipt.ps1) and [platform_receipt_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_receipt_test.py):
+  - Receipts default to `%LOCALAPPDATA%\KotorPhasor\receipts`.
+  - The current log session is selected from the last KotorPhasor start banner.
+  - Exactly one anchored `kp-session` start, host, and GL line is required, all with the same 128-bit session ID.
+  - Parsed receipt host/OS/overlay/GL fields are cross-checked against those exact log lines.
+  - Wine, Mesa/Linux drivers, llvmpipe/software renderers, Wine GL names, and explicit module-snapshot failures are rejected as native evidence.
+  - The user documentation correctly states that Wine detection is one supporting signal, not conclusive proof.
+
+- Runtime evidence in [overlay.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/devtools/overlay.cpp) and [platform_win32.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/platform/platform_win32.cpp):
+  - Host and GL lines are emitted once at the intended lifecycle points and bypass the normal script log sink.
+  - Session anchoring is present.
+  - The host report covers the Wine export, Windows version, and overlay module scan.
+  - Discord (`discordhook*`) and RTSS (`rtsshooks*`) module names are included.
+  - Snapshot failure is explicit rather than silently represented as no overlays.
+  - Long overlay lists report omitted entries instead of silently truncating.
+
+- Profile consistency coverage in [platform_profile_consistency_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/platform_profile_consistency_test.py) includes all projectile profiles and alternate runtime-alias forms.
+
+- User-facing instructions are in [windows-native-install.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/user/windows-native-install.md).
+
+Checks:
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/native_pass.json`
+  - Passed: `VALID native receipt`.
+
+- `python3 tools/platform_receipt_test.py --validate tools/fixtures/platform-receipts/wine_yes.json`
+  - Rejected as intended:
+    - runtime line reports `wine=yes`;
+    - top-level `host.wine` is also unacceptable for a native receipt.
+
+- The retained report records the last completed full checks as:
+  - installer behavior: **7 tests green**
+  - profile consistency: **23 tests green**
+  - prior MinGW cross-build: green, zero warnings in the touched objects; import inspection reported no `psapi` dependency.
+
+- I attempted to rerun both complete Python suites. The receipt run advanced through its existing skipped/passing progress, and the consistency run began its real-tree test, but this mounted worktree is currently saturated and stalled before either produced a fresh unittest summary. I have not represented partial progress as a successful rerun.
+
+- I did not run Wine, a game, Gamescope/X, capture software, or touch the live-game lock. No real game installation was touched.
+
+The requested continuation entry is now appended in [platform-w0-w1-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/platform-w0-w1-report.md).
+
+Incomplete, honestly:
+
+- No real native Windows run has happened in this continuation or the retained work. The actual host/GL evidence lines, Windows registry/CIM behavior, and PowerShell 5.1 runtime behavior still require a physical native-Windows W2 run.
+- Full re-run summaries for the 7-test installer and 23-test consistency suites could not be freshly reproduced under the present mount/I/O pressure.
+- The K1 GOG and K2 original Bink hashes remain intentionally fail-closed unless supplied via `-TrustBinkSha256`, as documented.
+- The two Python tests remain manual checks; no CMake registration was made because the task forbade modifying CMake.
+
+

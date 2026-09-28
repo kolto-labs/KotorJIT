@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_image.a CMakeFiles/kp_image.dir/src/image/sha256.cpp.o CMakeFiles/kp_image.dir/src/image/loaded_image.cpp.o CMakeFiles/kp_image.dir/src/image/pe_elf.cpp.o CMakeFiles/kp_image.dir/src/image/macho.cpp.o CMakeFiles/kp_image.dir/src/image/parse.cpp.o CMakeFiles/kp_image.dir/src/image/classify.cpp.o CMakeFiles/kp_image.dir/src/image/build_table.cpp.o CMakeFiles/kp_image.dir/src/image/load.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_image.a

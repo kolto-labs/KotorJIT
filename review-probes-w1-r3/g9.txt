@@ -1,0 +1,2 @@
+117:- `host-cmd env KP_SCRATCH=…/review-probes-w1-r3/scratch python3 tools/platform_receipt_test.py` → `Ran 65 tests in 603.627s` / `OK` (no `skipped=`), rc=0 (`unit_receipt.out`). pwsh 7.3.12 was on PATH, so the installer and parser-parity tests ran.
+165:W1 round 3 verdict: PASS

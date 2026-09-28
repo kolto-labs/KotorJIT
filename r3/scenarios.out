@@ -1,0 +1,6 @@
+S1 misuse (autopaused, lease, scoped recovery, release): physical=0 tool-absent=0 intent=0 ToolUnpauseSuppressed=1
+S2 bracket after raw clear (game intent 1): verify=external_mutation held-after-bracket=1; after release physical=0 intent=0 tool-absent=0 ToolUnpauseSuppressed=1
+S3 bracket after raw clear (game intent 0): verify=external_mutation held-after-bracket=1; after release physical=0 intent=0 tool-absent=0 ToolUnpauseSuppressed=1
+S4 = S2 then game Pause while held: physical=1 intent=1 tool-absent=1
+S5 legal (autopaused, lease, game-path recovery, bracket, release): physical=0 unpause_calls=1 tool-absent=0
+rc=0

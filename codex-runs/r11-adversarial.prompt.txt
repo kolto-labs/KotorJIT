@@ -1,0 +1,62 @@
+RESUME, DO NOT RESTART. A previous agent was doing exactly this task and was stopped mid-way at the user's request (model switch). Before doing anything new: inspect what it already produced — its output/report/review file if one exists (it may be partial), files it was allowed to edit (git diff --stat and mtimes in the worktree), and its scratch/probe dirs. Keep completed work that verifies; re-run its last checks; continue from where it stopped. Do not duplicate completed sections; if a partial section exists in an append-only review file, finish it rather than adding a second one. The previous agent's last status line is given below.
+
+GLOBAL RULES: Worktree (cwd) /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation is intentionally dirty with other writers' work — preserve every unrelated change; never git reset/stash/staging/commit/push; never edit the canonical checkout. Never run Wine, a game, Gamescope, Xvfb/Xwayland, mpv, or x11grab capture; never touch /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock; never signal processes you did not start. Host-only tools (ffprobe, 32-bit binaries, pwsh, gamescope) via /home/brunner56/.local/bin/host-cmd sh -c '...'. Never run whole-worktree `git diff --check` (>12 min). The disk and CPU are heavily loaded: prefer incremental builds in your own scratch dir. Lua-native APIs are kp.*; NWScript only via nwscript.call; Lua must not duplicate NWScript names. End with a final message: status, counts, files, and anything incomplete marked honestly.
+
+PREVIOUS AGENT LAST STATUS: none recorded (was mid-review)
+
+TASK:
+Independent ADVERSARIAL reviewer, capture-cadence ROUND 11. Read-only on source; append/finish "## Round 11 verdict" in /home/brunner56/kp-live-20260922/task7-capture-cadence-adversarial-review.md; probes under /home/brunner56/kp-live-20260922/review-probes-r11-adversarial/ (reuse your round-10 p1–p9 in /home/brunner56/kp-live-20260922/review-probes-r10-adversarial/). Synthetic lavfi encodes and dummy process trees allowed. Spec /home/brunner56/kp-live-20260922/task7-capture-cadence-round-11-brief.md; report /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/ta[REDACTED].md. Attack: log vanish/hardlink during probe; SIGINT/SIGHUP/SIGTERM/repeated signals during each cleanup phase; --child token forgery/replay; preflight evasions (renamed/wrapped ffmpeg, exe-only-unreadable foreign process, other uids; foreign wineserver must refuse, never kill); lock fd inheritance; stale clips that beat the 1.2 floor (dithered duplicates, alternating frames, tiny moving region, other testsrc2 sizes/rates) and fresh clips that fail it; first-frame black at interval start vs fade; survivor sidecar recovery; 1,576 s run limit / 1,442 s cleanup holding the lock; ffprobe deadline abuse. Read companion correctness review only after your verdict. End "Round 11 adversarial verdict: PASS|FAIL".
+
+
+AGENT-TO-AGENT PROTOCOL (prove-the-effort)
+
+1. Independent first. Form your own answer from the evidence before you read
+   any other agent's answer. Then read theirs. (Same-model agents that read
+   each other first converge on a confident wrong answer.)
+
+2. Claims carry referents. Every claim you make to another agent names the
+   thing that shows it: a command and its output, a file:line, a test name,
+   a number with its source, a worked example. A claim with none is marked
+   `unverified` by you, not discovered by them.
+
+3. Be skeptical once, then narrower, then stop. When a claim reaches you
+   without a referent: ask for the one thing that would settle it. If the
+   answer is still a principle ("best practice", "should work", "it's
+   designed that way"), ask narrower once. After two asks with no new
+   referent, mark the claim `unresolved` and move on. Never ask "are you
+   sure?". it is not a question and it flips answers without evidence.
+
+4. Defend by re-deriving, not by folding. When your claim is challenged,
+   go back to the evidence and re-derive; if it still holds, say so with
+   the referent and your confidence. Do not apologise and switch because
+   someone pushed. Do not restate the same claim a second time without a
+   new referent either. that is the signal to stop.
+
+5. Concede in under five words when a referent lands. "you're right",
+   "fair", "that holds". Then take the next claim.
+
+6. Compromise means the option that wins on the named criterion, not the
+   midpoint. Before arguing, both sides write the criterion the decision
+   turns on (latency, lines touched, blast radius, reversibility, what the
+   user asked for) and the measurement or example that would decide it.
+   Run the check if it can be run here. If both options hold, take the one
+   that is cheaper to reverse. If neither side can produce a referent inside
+   the round cap, hand both positions and the missing referent to a judge
+   that argued neither side, or to the user, with one line each.
+
+7. Null move is legal. If the other agent's claim survives your one
+   question, say "that holds" and stop. Do not manufacture a flaw.
+
+8. Round cap three. Ask, ask narrower, verdict. A judge reads both orders
+   and writes its evidence before its verdict; it never shares a backbone
+   with an arguer when that can be arranged.
+
+9. Aim at the claim, never the agent. Short turns. A hard line gets a
+   laugh, not a paragraph. Three short messages beat one wall of text.
+
+10. Report in this shape, one block per claim:
+    claim: <verbatim>
+    referent: <what showed it, or "none">
+    checked: <command / file:line / "not checkable here">
+    verdict: holds | does not hold | unresolved
+    confidence: <low | medium | high> and what would change it

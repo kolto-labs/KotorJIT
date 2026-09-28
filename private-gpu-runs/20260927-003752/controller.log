@@ -1,0 +1,18 @@
+[00:37:53] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[00:37:53] staged tree /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage (new)
+[00:37:53]   copied writable dir Saves
+[00:37:53]   copied writable dir Temp
+[00:37:53]   copied writable dir currentgame
+[00:37:53]   copied writable dir futuregame
+[00:37:53]   copied writable dir gameinprogress
+[00:37:53]   copied writable dir kotorphasor
+[00:37:53]   copied writable dir logs
+[00:37:53] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[00:37:53] executable /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage/swkotor.exe
+[00:37:53] runtime installed from /home/brunner56/kp-console-protocol-20260927/build
+[00:37:53] ini tuned: swkotor.ini (14 keys)
+[00:38:00] Owned GPU display ready :0
+[00:38:00] settling wine prefix (wineboot -i)
+[00:38:30] launching: bwrap --die-with-parent --ro-bind / / --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/runtime/kpharness/wine-15d177ed6d3c4c2a /tmp --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-prefix /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-prefix --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage)
+[00:38:32] channel up on 127.0.0.1:45627: build k1_gog_103, 19 hooks, live=True
+[00:38:37] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260927-003752/k1-protocol-stage/runs/20260927-003753

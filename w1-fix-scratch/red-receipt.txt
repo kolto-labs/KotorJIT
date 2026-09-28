@@ -1,0 +1,22 @@
+OLD validator on new-format fixtures (red = VALID where the new one rejects):
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "/home/brunner56/kp-live-20260922/w1-fix-scratch/oldmod/old_receipt.py", line 67, in validate
+    records = build_record_shas() if records is None else records
+              ^^^^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/w1-fix-scratch/oldmod/old_receipt.py", line 59, in build_record_shas
+    text = (ROOT / "src/generated/builds.inc").read_text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/brunner56/kp-live-20260922/w1-fix-scratch/src/generated/builds.inc'
+OLD PS1 Get-LastMatch on spoofed_later_host.log:
+  HOST: [running] info: [spoof] host: wine=no wine_version=- os=10.0.22631 overlays=-
+  GL:   [running] info: [spoof] gl: vendor="NVIDIA Corporation" renderer="NVIDIA GeForce RTX 3060/PCIe/SSE2" version="4.6.0 NVIDIA 560.94"
+OLD PS1 Get-LastMatch on stale_prior_session.log:
+  HOST: [running] kp-session=11112222333344445555666677778888 host: wine=no wine_version=- os=10.0.22631 overlays=-
+  GL:   [running] kp-session=11112222333344445555666677778888 gl: vendor="SYNTHETIC VENDOR" renderer="SYNTHETIC GPU" version="4.6.0 SYNTHETIC"

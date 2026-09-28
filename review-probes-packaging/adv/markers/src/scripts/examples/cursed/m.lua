@@ -1,0 +1,1 @@
+-- brunner56 ~/kp-live-20260922 /mnt/x /tmp/kp /root/x C:\\Users\\bob .superpowers/sdd

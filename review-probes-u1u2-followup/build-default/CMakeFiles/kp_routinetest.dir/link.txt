@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O2 -g -DNDEBUG -m32 -Wl,--dependency-file=CMakeFiles/kp_routinetest.dir/link.d CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o -o kp_routinetest  -Wl,-rpath,/home/brunner56/kp-live-20260922/review-probes-u1u2-followup/build-default libkphasor.so luajit32/src/libluajit.a -lm -ldl

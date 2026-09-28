@@ -1,0 +1,4 @@
+FAIL: [string "..."]:37: missing kp.scripts
+FAIL: [string "..."]:37: missing kp.scripts
+namespace contract: 2 failure(s)
+rc=1

@@ -1,0 +1,17 @@
+{
+  "label": "pc",
+  "code": "K2PC=nwscript.call('GetFirstPC'); assert(nwscript.call('GetIsObjectValid',K2PC)==1); return K2PC",
+  "request": 2,
+  "lines": [
+    {
+      "request": 2,
+      "kind": "input",
+      "text": "> K2PC=nwscript.call('GetFirstPC'); assert(nwscript.call('GetIsObjectValid',K2PC)==1); return K2PC"
+    },
+    {
+      "request": 2,
+      "kind": "result",
+      "text": "number: 2147483646"
+    }
+  ]
+}

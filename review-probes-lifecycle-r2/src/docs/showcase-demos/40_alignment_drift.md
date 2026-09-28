@@ -1,0 +1,34 @@
+# 40_alignment_drift
+
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua`
+**Hook:** `OnTick` (samples every **180** ticks; wall time depends on runtime tick rate)
+**Save:** `pick_save.sh any`
+
+## Success oracle
+
+```text
+[conscience] +<delta>, now <value>
+```
+
+## Queue sequence
+
+1. Optional: `lua exec print(nwscript.call('GetGoodEvilValue', nwscript.call('GetFirstPC')))`
+2. `lua exec nwscript.call('AdjustAlignment', nwscript.call('GetFirstPC'), 2, 30)`: shift **toward light** by 30
+3. `#sleep 90` (two tick samples)
+4. If no `[conscience]`: `AdjustAlignment(..., 1, 30)` toward dark + `#sleep 90`
+
+Uses `GetGoodEvilValue`, not `GetAlignmentGoodEvil`. Crossing a **decade**
+boundary (e.g. 58→80) is required.
+
+## Notes
+
+No warp or combat needed. Primary path is engine `AdjustAlignment`; dialogue
+alignment shifts are optional for manual discovery.
+
+## Recording
+
+Short walk clicks after alignment line for visible gameplay in mp4.

@@ -1,0 +1,32 @@
+  v1.top: ERR unsupported: only a loaded script can move placeables
+  v1.load: OK moved
+  v2.top: ERR unsupported: only a loaded script can move placeables
+  v1.unload.relocate: ERR unsupported: only a loaded script can move placeables
+  v1.unload.restore: OK 1.5
+  v2.load: OK moved
+  v2.tick: OK moved
+PASS A v1 chunk top level refused (staged)
+PASS A v1 OnScriptLoad moves (loaded)
+PASS A old gen OnScriptUnload during reload: relocate refused (staged)
+PASS A old gen OnScriptUnload during reload: restore allowed
+PASS A v2 chunk top level refused (staged)
+PASS A v2 OnScriptLoad moves (object free again)
+PASS A v2 OnTick moves onward
+  after case A host destroyed: owner_of(42)=2 ledger=1
+PASS A orphan remains after host teardown (documented M3 gap)
+  b1.load: OK moved
+  b2.load: ERR owned: object is moved by another script
+  b2.restore: ERR not_owner: object is not moved by this script
+PASS B v1 load moves
+PASS B v2 (same script, new generation) refused as owned: orphan lock
+PASS B v2 cannot restore the orphan either
+  c2.top: ERR unsupported: only a loaded script can move placeables
+  reload ok=0 err=...-live-20260922/review-probes-motion-m2/hostdirs/c/zz.lua:7: boom
+stack traceback:
+	[C]: in function 'error'
+	...-live-20260922/review-probes-motion-m2/hostdirs/c/zz.lua:7: in main chunk
+PASS C failed reload leaves staged()==false
+  c1.tick: OK moved
+PASS C failed chunk top level refused (staged at the time)
+PASS C running generation still writes after failed reload
+0 failure(s)

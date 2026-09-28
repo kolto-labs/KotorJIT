@@ -1,0 +1,591 @@
+[
+  {
+    "path": "scripts/demos/animation-memory/two_actor_freeze.lua",
+    "lines": 134,
+    "routines": [],
+    "kp_references": [
+      "kp.animation.capabilities",
+      "kp.animation.cue",
+      "kp.animation.inspect",
+      "kp.model.identify",
+      "kp.model.matches",
+      "kp.model.snapshot",
+      "kp.print"
+    ],
+    "events": [
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/demos/model-memory/model_scene.lua",
+    "lines": 171,
+    "routines": [
+      "ChangeToStandardFaction",
+      "CreateObject",
+      "DestroyObject",
+      "GetArea",
+      "GetFacing",
+      "GetIsInCombat",
+      "GetIsInConversation",
+      "GetIsObjectValid",
+      "GetLocalNumber",
+      "GetModuleFileName",
+      "GetPosition",
+      "GetStandardFaction",
+      "Location",
+      "SetCommandable",
+      "SetLocalNumber"
+    ],
+    "kp_references": [
+      "kp.model",
+      "kp.model.capabilities",
+      "kp.model.identify",
+      "kp.model.matches",
+      "kp.model.resize",
+      "kp.model.restore",
+      "kp.model.snapshot",
+      "kp.print"
+    ],
+    "events": []
+  },
+  {
+    "path": "scripts/demos/model-memory/npc_wave.lua",
+    "lines": 11,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/demos/model-memory/player_scale.lua",
+    "lines": 9,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/demos/object-blaster/object_blaster.lua",
+    "lines": 263,
+    "routines": [],
+    "kp_references": [
+      "kp.events.OnCreatureAttacked",
+      "kp.events.OnCreatureDamaged",
+      "kp.events.register",
+      "kp.events.unregister",
+      "kp.print",
+      "kp.projectiles"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureAttacked",
+      "OnCreatureDamaged",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnRunScriptDone",
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/10_abstain_nil.lua",
+    "lines": 13,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/20_abstain_badstring.lua",
+    "lines": 12,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/25_claims_via_string.lua",
+    "lines": 11,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/30_claims_false.lua",
+    "lines": 9,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/40_too_late.lua",
+    "lines": 10,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/arbitration/50_number_two_is_false.lua",
+    "lines": 12,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/coverage/10_cover.lua",
+    "lines": 128,
+    "routines": [],
+    "kp_references": [
+      "kp.print",
+      "kp.speed"
+    ],
+    "events": [
+      "OnConsoleCommand"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/100_item_airstrike.lua",
+    "lines": 127,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnModuleAcquireItem",
+      "OnModuleLoad",
+      "OnModulePlayerLevelUp",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/10_rancor_roulette.lua",
+    "lines": 163,
+    "routines": [],
+    "kp_references": [
+      "kp.print",
+      "kp.registertimer"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureAttacked",
+      "OnCreaturePerception",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/20_fus_ro_dah.lua",
+    "lines": 130,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureAttacked",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/30_necromancer.lua",
+    "lines": 153,
+    "routines": [],
+    "kp_references": [
+      "kp.print",
+      "kp.registertimer"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureDeath",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/40_chain_reaction.lua",
+    "lines": 168,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureDeath",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/70_doppelganger.lua",
+    "lines": 222,
+    "routines": [
+      "ApplyEffectToObject",
+      "RemoveEffect",
+      "SetGlobalFadeIn",
+      "SetGlobalFadeOut"
+    ],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnCreatureAttacked",
+      "OnModuleLoad",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/80_loot_pinata.lua",
+    "lines": 118,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnModuleLoad",
+      "OnRunScript",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/cursed/90_bullet_time.lua",
+    "lines": 92,
+    "routines": [],
+    "kp_references": [
+      "kp.game_speed",
+      "kp.print",
+      "kp.registertimer",
+      "kp.speed"
+    ],
+    "events": [
+      "OnCreatureAttacked",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/edge_fallback/all_abstain.lua",
+    "lines": 5,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript",
+      "OnScriptEvent"
+    ]
+  },
+  {
+    "path": "scripts/examples/edge_number_two/50_number_two_is_false.lua",
+    "lines": 12,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnRunScript"
+    ]
+  },
+  {
+    "path": "scripts/examples/edge_quarantine/always_errors.lua",
+    "lines": 5,
+    "routines": [],
+    "kp_references": [],
+    "events": [
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/harness/100_module_transition.lua",
+    "lines": 27,
+    "routines": [
+      "GetDistanceBetween",
+      "GetFirstPC",
+      "GetIsObjectValid",
+      "GetModuleName",
+      "GetObjectByTag",
+      "GetPartyMemberCount",
+      "StartNewModule"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/10_world_probe.lua",
+    "lines": 56,
+    "routines": [
+      "GetArea",
+      "GetCommandable",
+      "GetCurrentAction",
+      "GetCurrentHitPoints",
+      "GetDistanceBetween",
+      "GetFirstObjectInArea",
+      "GetFirstPC",
+      "GetGlobalNumber",
+      "GetIsDead",
+      "GetIsEnemy",
+      "GetIsInCombat",
+      "GetIsObjectValid",
+      "GetMaxHitPoints",
+      "GetNextObjectInArea",
+      "GetPosition",
+      "GetTag",
+      "IsObjectPartyMember"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/110_loot_container.lua",
+    "lines": 41,
+    "routines": [
+      "ActionTakeItem",
+      "ClearAllActions",
+      "GetArea",
+      "GetDistanceBetween",
+      "GetFirstItemInInventory",
+      "GetFirstObjectInArea",
+      "GetFirstPC",
+      "GetIsObjectValid",
+      "GetNextItemInInventory",
+      "GetNextObjectInArea",
+      "GetTag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/20_dialog_state.lua",
+    "lines": 29,
+    "routines": [
+      "GetCurrentAction",
+      "GetDistanceBetween",
+      "GetFirstPC",
+      "GetIsConversationActive",
+      "GetIsInConversation",
+      "GetIsObjectValid",
+      "GetLastSpeaker",
+      "GetObjectByTag",
+      "GetPCSpeaker",
+      "GetTag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/30_move_to.lua",
+    "lines": 30,
+    "routines": [
+      "ActionMoveToLocation",
+      "ActionMoveToObject",
+      "ClearAllActions",
+      "GetDistanceBetween",
+      "GetFirstPC",
+      "GetIsObjectValid",
+      "GetObjectByTag",
+      "GetPosition",
+      "Location",
+      "Vector"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/40_attack_nearest.lua",
+    "lines": 38,
+    "routines": [
+      "ActionAttack",
+      "ClearAllActions",
+      "GetArea",
+      "GetCurrentAction",
+      "GetCurrentHitPoints",
+      "GetDistanceBetween",
+      "GetFirstObjectInArea",
+      "GetFirstPC",
+      "GetIsDead",
+      "GetIsEnemy",
+      "GetIsObjectValid",
+      "GetNextObjectInArea",
+      "GetTag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/50_doors.lua",
+    "lines": 40,
+    "routines": [
+      "ActionOpenDoor",
+      "GetDistanceBetween",
+      "GetFirstPC",
+      "GetIsDoorActionPossible",
+      "GetIsObjectValid",
+      "GetIsOpen",
+      "GetLockKeyRequired",
+      "GetLocked",
+      "GetObjectByTag",
+      "GetPlotFlag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/60_area_dump.lua",
+    "lines": 34,
+    "routines": [
+      "GetArea",
+      "GetCurrentAction",
+      "GetCurrentHitPoints",
+      "GetDistanceBetween",
+      "GetFirstObjectInArea",
+      "GetFirstPC",
+      "GetIsDead",
+      "GetIsEnemy",
+      "GetIsObjectValid",
+      "GetIsOpen",
+      "GetLocked",
+      "GetName",
+      "GetNextObjectInArea",
+      "GetPosition",
+      "GetTag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/70_pc_status.lua",
+    "lines": 38,
+    "routines": [
+      "GetCommandable",
+      "GetCurrentAction",
+      "GetCurrentHitPoints",
+      "GetEffectType",
+      "GetFirstEffect",
+      "GetFirstItemInInventory",
+      "GetFirstPC",
+      "GetIsDead",
+      "GetIsEffectValid",
+      "GetIsInCombat",
+      "GetIsObjectValid",
+      "GetItemInSlot",
+      "GetMaxHitPoints",
+      "GetNextEffect",
+      "GetNextItemInInventory",
+      "GetTag"
+    ],
+    "kp_references": [],
+    "events": []
+  },
+  {
+    "path": "scripts/examples/harness/80_signal_event.lua",
+    "lines": 27,
+    "routines": [
+      "EventUserDefined",
+      "GetArea",
+      "GetFirstPC",
+      "GetIsObjectValid",
+      "GetObjectByTag",
+      "SignalEvent"
+    ],
+    "kp_references": [],
+    "events": [
+      "OnOpen"
+    ]
+  },
+  {
+    "path": "scripts/examples/harness/90_run_script.lua",
+    "lines": 31,
+    "routines": [
+      "ExecuteScript",
+      "GetFirstPC",
+      "GetIsObjectValid",
+      "GetObjectByTag"
+    ],
+    "kp_references": [],
+    "events": [
+      "OnFailToOpen"
+    ]
+  },
+  {
+    "path": "scripts/examples/multiplayer/10_avatar_sync.lua",
+    "lines": 747,
+    "routines": [],
+    "kp_references": [
+      "kp.gamedir",
+      "kp.print",
+      "kp.time"
+    ],
+    "events": [
+      "OnScriptLoad",
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/multiplayer/10_avatar_sync_test.lua",
+    "lines": 427,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnScriptLoad",
+      "OnScriptUnload",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/probe/00_probe.lua",
+    "lines": 57,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnAreaEnter",
+      "OnConsoleCommand",
+      "OnCreatureAttacked",
+      "OnCreatureDeath",
+      "OnCreatureEndCombatRound",
+      "OnCreatureSpawn",
+      "OnLoad",
+      "OnModuleHeartbeat",
+      "OnModuleLoad",
+      "OnModulePlayerEnter",
+      "OnModuleStart",
+      "OnRunScript",
+      "OnSave",
+      "OnScriptLoad",
+      "OnTick"
+    ]
+  },
+  {
+    "path": "scripts/examples/probe/10_position_trace.lua",
+    "lines": 33,
+    "routines": [],
+    "kp_references": [
+      "kp.print"
+    ],
+    "events": [
+      "OnTick"
+    ]
+  }
+]

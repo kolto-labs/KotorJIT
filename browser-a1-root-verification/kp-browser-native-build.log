@@ -1,0 +1,14 @@
+[  0%] Building CXX object CMakeFiles/kp_harnesstest.dir/tools/kp_harnesstest.cpp.o
+[  0%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/channel.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/json.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/ring.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/platform/platform.cpp.o
+[100%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/platform/platform_linux.cpp.o
+[100%] Linking CXX executable kp_harnesstest
+[100%] Built target kp_harnesstest
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/tools/kp_consoleprotocoltest.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/console_protocol.cpp.o
+[ 50%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/json.cpp.o
+[100%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/devtools/console.cpp.o
+[100%] Linking CXX executable kp_consoleprotocoltest
+[100%] Built target kp_consoleprotocoltest

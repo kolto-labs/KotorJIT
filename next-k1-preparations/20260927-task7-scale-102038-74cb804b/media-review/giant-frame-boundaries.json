@@ -1,0 +1,42 @@
+{
+  "roi": [
+    450,
+    40,
+    100,
+    100
+  ],
+  "threshold_mean_luma_lt": 45,
+  "sample_range": [
+    205,
+    221
+  ],
+  "frames": 887,
+  "giant_ranges": [
+    {
+      "first_pts": 211.8,
+      "last_pts": 218.016667,
+      "min_mean": 12.2886,
+      "max_mean": 13.0572,
+      "first_following_non_giant_pts": 218.033333
+    }
+  ],
+  "classified_by": "dark enlarged cloak occupying fixed top-center ROI; visually crosschecked contact sheets",
+  "sample_means_by_second": {
+    "205": 86.4061,
+    "206": 84.9204,
+    "207": 83.0391,
+    "208": 82.0497,
+    "209": 80.2608,
+    "210": 79.8213,
+    "211": 81.4643,
+    "212": 12.7253,
+    "213": 13.0477,
+    "214": 12.6238,
+    "215": 12.6372,
+    "216": 12.4255,
+    "217": 12.5734,
+    "218": 12.3089,
+    "219": 83.0477,
+    "220": 82.4383
+  }
+}

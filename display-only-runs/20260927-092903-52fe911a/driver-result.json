@@ -1,0 +1,116 @@
+{
+  "boot_error": {
+    "message": "process is outside the owned process group/ancestry",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/brunner56/kp-live-20260922/display-only-runs/20260927-092903-52fe911a/display_gate.py\", line 57, in child\n    lease.start()\n    ~~~~~~~~~~~^^\n  File \"/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-20260927-092903-52fe911a/runtime/kpharness/gamescope_xwayland.py\", line 285, in start\n    self.xwayland_access = self._xwayland_verifier(display, self.owner, self.pgid, self.session_id)\n                           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-20260927-092903-52fe911a/runtime/kpharness/gamescope_processes.py\", line 104, in verify_private_xwayland\n    chain = verify_ancestry(pid, owner, pgid, sid, reader)\n  File \"/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-20260927-092903-52fe911a/runtime/kpharness/gamescope_processes.py\", line 31, in verify_ancestry\n    raise RuntimeError('process is outside the owned process group/ancestry')\nRuntimeError: process is outside the owned process group/ancestry\n",
+    "type": "RuntimeError"
+  },
+  "boot_passed": false,
+  "cleanup_attempts": [
+    {
+      "attempt": 1,
+      "status": "passed"
+    }
+  ],
+  "cleanup_attempts_before_finally": [
+    {
+      "attempt": 1,
+      "status": "passed"
+    }
+  ],
+  "cleanup_error": null,
+  "evidence_error": null,
+  "flags": {
+    "dont_write_bytecode": true,
+    "isolated": 1,
+    "no_site": 1
+  },
+  "interpreter": "/usr/bin/python3.14",
+  "known_members": [
+    {
+      "pid": 816785,
+      "start": "59550878"
+    },
+    {
+      "pid": 816616,
+      "start": "59550695"
+    },
+    {
+      "pid": 816722,
+      "start": "59550819"
+    },
+    {
+      "pid": 816778,
+      "start": "59550869"
+    },
+    {
+      "pid": 816853,
+      "start": "59550962"
+    },
+    {
+      "pid": 816854,
+      "start": "59550962"
+    }
+  ],
+  "leader_returncode": -6,
+  "lease_after_close": {
+    "command": [
+      "gamescope",
+      "--backend",
+      "headless",
+      "-w",
+      "1024",
+      "-h",
+      "768",
+      "-W",
+      "1024",
+      "-H",
+      "768",
+      "-r",
+      "60",
+      "--",
+      "/usr/bin/python3.14",
+      "-I",
+      "-S",
+      "-B",
+      "-c",
+      "import runpy,sys;sys.path.insert(0,'/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-20260927-092903-52fe911a/runtime');runpy.run_module('kpharness.gamescope_xwayland',run_name='__main__')",
+      "--ready-child",
+      "/home/brunner56/kp-live-20260922/display-only-runs/20260927-092903-52fe911a/gamescope-6c3bf82d44a749c193d8318c4e5cdddd.ready.json"
+    ],
+    "forensic_lease_evidence": {
+      "path": "/home/brunner56/kp-live-20260922/display-only-runs/20260927-092903-52fe911a/gamescope-lease.json",
+      "retained": true
+    },
+    "kind": "gamescope-xwayland",
+    "lease_id": "gamescope-6c3bf82d44a749c193d8318c4e5cdddd",
+    "owner": {
+      "gamescope": {
+        "pid": 816616,
+        "start": "59550695"
+      },
+      "ready_child": null
+    },
+    "process_group": {
+      "child_descends_from_gamescope": false,
+      "pgid": 816616,
+      "session": 816616
+    },
+    "readiness": {
+      "elapsed_seconds": 0.0,
+      "status": "pending"
+    },
+    "renderer": null,
+    "requested_geometry": [
+      1024,
+      768
+    ],
+    "x11": {
+      "access": null,
+      "display": null,
+      "xauthority_mode": "unverified",
+      "xauthority_present": false
+    }
+  },
+  "lease_closed": true,
+  "module": "/home/brunner56/kp-live-20260922/harness-snapshots/task7-display-only-20260927-092903-52fe911a/runtime/kpharness/gamescope_xwayland.py"
+}

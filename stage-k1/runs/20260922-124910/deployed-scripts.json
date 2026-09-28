@@ -1,0 +1,7 @@
+{
+  "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/animation-memory/two_actor_freeze.lua": {
+    "sha256": "f146855a7411f157014d0b3354807fdb955fef1694bd075160879b04ab911a30",
+    "mode": "console-only",
+    "path": "kotorphasor/console-examples/two_actor_freeze.lua"
+  }
+}

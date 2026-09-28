@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O3 -DNDEBUG -m32 -Wl,--dependency-file=CMakeFiles/kp_routinetest.dir/link.d CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o -o kp_routinetest  -Wl,-rpath,/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-cfg libkphasor.so luajit32/src/libluajit.a -lm -ldl

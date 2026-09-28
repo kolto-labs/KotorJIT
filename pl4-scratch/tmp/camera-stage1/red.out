@@ -1,0 +1,32 @@
+[100%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera.cpp.o
+[100%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_profiles.cpp.o
+[100%] Linking CXX executable kp_cameratest
+[100%] Built target kp_cameratest
+line 101: c.raw_28[0]==.1f&&c.raw_28[3]==.4f&&c.raw_38[0]==10.f&&c.raw_38[2]==12.f&&c.raw_50[1]==21.f
+kp_cameratest_rc=1
+test_image_bytes (__main__.CameraConsistency.test_image_bytes) ... ok
+test_lua_names_are_not_routines (__main__.CameraConsistency.test_lua_names_are_not_routines) ... ok
+test_overlay_records_guards_and_derivations (__main__.CameraConsistency.test_overlay_records_guards_and_derivations) ... ok
+test_profile_parsed (__main__.CameraConsistency.test_profile_parsed) ... ok
+test_table_matches_profile (__main__.CameraConsistency.test_table_matches_profile) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.182s
+
+OK
+aces/KotorPhasor/.worktrees/lua-boundary-validation/tools/camera_profile_consistency_test.py", line 137, in test_lua_names_are_not_routines
+    self.assertEqual(sorted(exported), ["capabilities", "snapshot"])
+AssertionError: Lists differ: [] != ['capabilities', 'snapshot']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'capabilities'
+
+- []
++ ['capabilities', 'snapshot']
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.645s
+
+FAILED (failures=1)
+consistency_rc=1

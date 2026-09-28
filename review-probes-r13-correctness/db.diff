@@ -1,0 +1,183 @@
+--- /home/brunner56/kp-live-20260922/r13-baseline/display_backends.py	2026-09-27 18:17:21.862081205 -0500
++++ scripts/harness/kpharness/display_backends.py	2026-09-27 18:44:48.158591821 -0500
+@@ -33,19 +33,27 @@
+ # ``distinct_noise_floor``. The master is lossy (libx264 ultrafast crf 28), so
+ # a repeated source frame decodes with small nonzero DIF.
+ #
+-# The diagnostic floor is calibrated (round 12) on the diagnostic's own pattern,
++# The diagnostic floor is calibrated on the diagnostic's own pattern,
+ # ``capture_diagnostic.PATTERN_GRAPH``: testsrc2 with a per-frame full-frame
+ # luma step, so every fresh frame moves the whole frame by at least one level
+ # whatever the testsrc2 speed. Synthetic encodes at 1024x768 through the
+-# recorder's exact codec, read by the production probes (17 families, 7,825
+-# duplicate and 10,518 fresh frames): duplicate max 1.0167 (an I-frame
+-# duplicate), fresh min 15.2818. The floor 3.9 leaves 3.84x above the largest
+-# duplicate and 3.92x below the smallest fresh frame
++# recorder's exact codec, read by the production probes. The round 12
++# correctness review (47 families, duplicates forced onto every x264 I-frame at
++# every level) measured duplicate max 1.2414 and fresh min 14.887. The floor 3.9
++# is 3.14x the largest duplicate and 3.82x below the smallest fresh frame
+ # (docs/creative-runner.md, the content gate). ``separation_factor`` makes that
+ # margin a runtime check: any acceptance frame inside
+-# (floor / factor, floor * factor) means the populations are not cleanly
+-# separated, and the verdict is ``calibration_ambiguous``, never pass and never
+-# a capture failure.
++# (floor / factor, floor * factor) = (1.95, 7.8) means the populations are not
++# cleanly separated, and the content result is ``calibration_ambiguous``.
++#
++# The level keys make the content gate check the pattern itself, not only the
++# size of each difference (round 13). Each acceptance frame's brightness level
++# is decoded from its yavg, and every fresh frame must step ``level_step``
++# levels (mod ``level_period``) from the previous one; a duplicate repeats the
++# level. Decoding is scale-free: it uses only the order of the levels, so
++# another capture path's luma scale cannot fail it. ``level_resolution_factor``
++# is how much larger the smallest gap between decoded levels must be than the
++# largest gap inside a level.
+ #
+ # The game policy is unchanged. Its floor 0 is NOT calibrated: its 5% minimum
+ # is a weak liveness check, and its ratio is an upper bound on real change
+@@ -56,11 +64,14 @@
+         "distinct_noise_floor": 0.0}),
+     "animated-diagnostic-v2": MappingProxyType({
+         "id": "animated-diagnostic-v2", "black_luma_max": 24, "minimum_distinct_ratio": .99,
+-        "distinct_noise_floor": 3.9, "separation_factor": 3.0}),
++        "distinct_noise_floor": 3.9, "separation_factor": 2.0,
++        "level_period": 7, "level_step": 3, "level_resolution_factor": 1.9}),
+ })
+ # Fixed lower bin edges of the per-frame max-DIF histogram (last bin is open).
+ # Fixed, so a recomputation from the hashed artifact yields the same histogram.
+ CONTENT_HISTOGRAM_EDGES = (0.0, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0)
++# Level-sequence violations kept verbatim; the total is always counted.
++MAX_RECORDED_LEVEL_VIOLATIONS = 64
+ MAX_CONTENT_BYTES = 64 * 1024 * 1024
+ _WINDOW_ID = re.compile(r"^0x[1-9a-f][0-9a-f]*$")
+ _DISPLAY_SCREEN_ZERO = re.compile(r"^:([0-9]+)(?:\.0)?$")
+@@ -270,10 +281,105 @@
+                         "guard band around the noise floor" % (result["separation"]["inside_band"], expected))
+     elif expected == 0 or changed == 0 or ratio < policy["minimum_distinct_ratio"]:
+         failures.append("capture_content_static: distinct-frame ratio is below the policy minimum")
++    if "level_period" in policy:
++        # Independent of the noise floor: a sequence failure is never excused as ambiguous.
++        sequence = content_level_sequence([frames[index]["yavg"] for index in selected], values,
++                                          [canonical_pts[index] for index in selected], selected, policy)
++        result["level_sequence"] = sequence
++        if sequence["status"] != "passed":
++            failures.append("capture_content_sequence: " + sequence["reason"])
+     result["status"] = "passed" if not failures else "failed"
+     return result
+ 
+ 
++def decode_levels(values, period: int) -> dict:
++    """Rank-decode yavg values into ``period`` brightness levels, split at the ``period - 1`` largest gaps.
++
++    Only the order of the levels is used (a brighter level has a larger yavg), never
++    their luma scale. ``minimum_level_gap`` is the smallest split gap, and
++    ``maximum_within_level_gap`` the largest gap left inside a level.
++    """
++    ordered = sorted(values)
++    if len(ordered) < period:
++        return {"thresholds": None, "centers": None, "minimum_level_gap": None,
++                "maximum_within_level_gap": None, "resolution": None}
++    gaps = [(ordered[index + 1] - ordered[index], index) for index in range(len(ordered) - 1)]
++    chosen = sorted(gaps, key=lambda item: (-item[0], item[1]))[:period - 1]
++    cuts = sorted(index for _, index in chosen)
++    cut_set = set(cuts)
++    thresholds = [(ordered[index] + ordered[index + 1]) / 2 for index in cuts]
++    groups, begin = [], 0
++    for index in cuts:
++        groups.append(ordered[begin:index + 1]); begin = index + 1
++    groups.append(ordered[begin:])
++    centers = [(group[(len(group) - 1) // 2] + group[len(group) // 2]) / 2 for group in groups]
++    level_gap = min(gap for gap, _ in chosen)
++    within = max((gap for gap, index in gaps if index not in cut_set), default=0.0)
++    return {"thresholds": thresholds, "centers": centers, "minimum_level_gap": level_gap,
++            "maximum_within_level_gap": within,
++            "resolution": (level_gap / within) if within > 0 else None}
++
++
++def content_level_sequence(yavg, values, pts, indices, policy) -> dict:
++    """Pattern check: each fresh acceptance frame steps +``level_step`` levels (mod ``level_period``).
++
++    ``yavg`` and ``pts`` cover the acceptance frames; ``values[k]`` is the max DIF of
++    acceptance frame ``k + 1`` against frame ``k``. A frame is fresh when its level
++    steps and a duplicate when the level repeats. Any other step is a violation. So
++    is a clearly fresh difference (at or above floor * separation_factor) without a
++    step, or a clearly duplicate difference (at or below floor / separation_factor)
++    with one. Differences inside the guard band are left to the separation rule.
++    """
++    period, step = policy["level_period"], policy["level_step"]
++    factor = policy["level_resolution_factor"]
++    floor, separation = policy["distinct_noise_floor"], policy["separation_factor"]
++    low, high = floor / separation, floor * separation
++    half = period // 2
++    ladder = decode_levels(yavg, period)
++    ladder["resolved"] = bool(ladder["minimum_level_gap"] is not None and ladder["minimum_level_gap"] > 0
++                              and ladder["minimum_level_gap"] >= factor * ladder["maximum_within_level_gap"])
++    result = {"rule": "every fresh acceptance frame steps +%d levels (mod %d) from the previous frame; "
++                      "a duplicate repeats the level" % (step, period),
++              "method": "yavg-rank-largest-gaps-v1", "period": period, "step": step,
++              "resolution_factor": factor, "ladder": ladder, "level_histogram": None,
++              "steps": 0, "repeats": 0, "violation_count": 0, "violations": [],
++              "status": "failed", "reason": None}
++    if ladder["thresholds"] is None:
++        result["reason"] = ("%d acceptance frames cannot decode %d brightness levels" % (len(yavg), period))
++        return result
++    levels = [sum(1 for threshold in ladder["thresholds"] if value > threshold) - half for value in yavg]
++    result["level_histogram"] = [{"level": level, "count": levels.count(level)}
++                                 for level in range(-half, period - half)]
++    violations = []
++    for position in range(1, len(levels)):
++        delta = (levels[position] - levels[position - 1]) % period
++        difference = values[position - 1]
++        if delta == step and difference > low:
++            result["steps"] += 1
++            continue
++        if delta == 0 and difference < high:
++            result["repeats"] += 1
++            continue
++        kind = ("step" if delta not in (0, step) else
++                "fresh_difference_without_step" if delta == 0 else "duplicate_difference_with_step")
++        violations.append({"index": indices[position], "pts_seconds": pts[position],
++                           "previous_level": levels[position - 1], "level": levels[position],
++                           "step": delta, "difference": difference, "kind": kind})
++    result["violation_count"] = len(violations)
++    result["violations"] = violations[:MAX_RECORDED_LEVEL_VIOLATIONS]
++    if not ladder["resolved"]:
++        result["reason"] = ("acceptance frames do not decode to %d separated brightness levels "
++                            "(level gap / within-level gap %s, need %s)"
++                            % (period, "undefined" if ladder["resolution"] is None
++                               else "%.3f" % ladder["resolution"], factor))
++    elif violations:
++        result["reason"] = ("%d of %d acceptance frames break the +%d level step (mod %d)"
++                            % (len(violations), len(levels) - 1, step, period))
++    else:
++        result["status"] = "passed"
++    return result
++
++
+ def content_separation(values, floor, factor) -> dict:
+     """Bimodality rule: every value must lie at or below floor/factor or at or above floor*factor.
+ 
+@@ -632,7 +738,12 @@
+     return parsed
+ 
+ 
+-def _cadence_evidence_passed(cadence, capture, media, route) -> bool:
++def _cadence_evidence_passed(cadence, capture, media, route, *, content_aside: bool = False) -> bool:
++    """Recompute the cadence verdict from the hashed evidence.
++
++    ``content_aside`` skips only the bound content gate. The capture diagnostic uses it
++    to tell a cadence fault from a content result (callers also clear content failures).
++    """
+     try:
+         thresholds = cadence['thresholds']; acceptance = cadence['acceptance_interval']
+         canonical = _canonical_pts(cadence.get('pts_artifact'), media, cadence.get('probe_tool'))
+@@ -840,7 +951,7 @@
+                 'ffmpeg_duplicates': 'whole_capture'}
+             and not cadence.get('failures')
+             # No cadence verdict passes without the bound content gate.
+-            and _content_evidence_passed(cadence, media, canonical, interval))
++            and (content_aside or _content_evidence_passed(cadence, media, canonical, interval)))
+     except (KeyError, TypeError, ValueError, StopIteration, ZeroDivisionError):
+         return False
+ 

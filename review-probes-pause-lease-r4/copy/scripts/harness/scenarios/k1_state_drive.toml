@@ -1,0 +1,32 @@
+# K1 state drive: exercise gameplay mutations through the engine/Lua bridge.
+name = "k1 gameplay state drive"
+target = "k1"
+
+[settings]
+load_timeout = 300
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "set_global"
+name = "KPH_TEST_STATE"
+value = 1
+type = "boolean"
+
+[[step]]
+do = "lua"
+code = "local p=nwscript.call('GetFirstPC'); local before=nwscript.call('GetGoodEvilValue',p); local xp0=nwscript.call('GetXP',p); nwscript.call('AdjustAlignment',p, 2, 30); nwscript.call('GiveXPToCreature',p, 25); local a=nwscript.call('GetGoodEvilValue',p); local x=nwscript.call('GetXP',p); assert(a==before+30, 'alignment mutation was not readable'); assert(x==xp0+25, 'xp mutation was not readable'); return {alignment_before=before, alignment=a, xp_before=xp0, xp=x}"
+
+[[step]]
+screenshot = true
+label = "state-driven-gameplay"
+
+[[step]]
+do = "quit"

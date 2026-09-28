@@ -1,0 +1,3816 @@
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <ima:enforcing>
+  <https://debuginfod.fedoraproject.org/>
+  <ima:ignore>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0x804a030
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+thread=1 token=0 owner=0
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+[Switching to Thread 0xf62fdb40 (LWP 773725)]
+thread=4 token=2 owner=2
+[Switching to Thread 0xf6afeb40 (LWP 773717)]
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+thread=3 token=3 owner=2
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=2
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+[Switching to Thread 0xf62fdb40 (LWP 774214)]
+thread=5 token=5 owner=4
+thread=5 token=5 owner=4
+[Switching to Thread 0xf6afeb40 (LWP 774223)]
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+thread=6 token=4 owner=4
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=4
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+[Switching to Thread 0xf6afeb40 (LWP 775538)]
+thread=7 token=7 owner=6
+[Switching to Thread 0xf62fdb40 (LWP 775540)]
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+thread=8 token=6 owner=6
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=6
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+[Switching to Thread 0xf6afeb40 (LWP 776248)]
+thread=10 token=9 owner=8
+thread=10 token=9 owner=8
+[Switching to Thread 0xf62fdb40 (LWP 776242)]
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+thread=9 token=8 owner=8
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=8
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+[Switching to Thread 0xf6afeb40 (LWP 776434)]
+thread=11 token=11 owner=10
+[Switching to Thread 0xf62fdb40 (LWP 776435)]
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+thread=12 token=10 owner=10
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=10
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+[Switching to Thread 0xf62fdb40 (LWP 776504)]
+thread=13 token=13 owner=12
+[Switching to Thread 0xf6afeb40 (LWP 776505)]
+thread=14 token=12 owner=12
+thread=14 token=12 owner=12
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=12
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+thread=16 token=15 owner=15
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+[Switching to Thread 0xf62fdb40 (LWP 776521)]
+thread=16 token=15 owner=15
+[Switching to Thread 0xf6afeb40 (LWP 776520)]
+thread=15 token=14 owner=15
+thread=15 token=14 owner=15
+thread=15 token=14 owner=15
+thread=15 token=14 owner=15
+thread=15 token=14 owner=15
+thread=15 token=14 owner=15
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=15
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+thread=17 token=17 owner=16
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf6afeb40 (LWP 776610)]
+thread=18 token=16 owner=16
+[Switching to Thread 0xf62fdb40 (LWP 776609)]
+thread=17 token=17 owner=16
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=16
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+[Switching to Thread 0xf6afeb40 (LWP 776681)]
+thread=19 token=19 owner=18
+[Switching to Thread 0xf62fdb40 (LWP 776682)]
+thread=20 token=18 owner=18
+thread=20 token=18 owner=18
+thread=20 token=18 owner=18
+thread=20 token=18 owner=18
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=18
+thread=1 token=1 owner=0
+thread=1 token=1 owner=1
+thread=1 token=1 owner=0
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf7546440 (LWP 773253)]
+thread=1 token=1 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+thread=21 token=20 owner=20
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+[Switching to Thread 0xf62fdb40 (LWP 776687)]
+thread=21 token=20 owner=20
+[Switching to Thread 0xf6afeb40 (LWP 776688)]
+thread=22 token=21 owner=20
+Warning:
+Cannot insert breakpoint 1: SIGTERM
+
+/home/brunner56/kp-live-20260922/latch-debug.gdb:10: Error in sourced command file:
+Command aborted.

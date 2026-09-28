@@ -1,0 +1,137 @@
+[23:49:27] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[23:49:27] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[23:49:27] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[23:49:27] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[23:49:27] runtime installed from /home/brunner56/kp-release-20260922/build
+[23:49:27] ini tuned: swkotor.ini (14 keys)
+[23:49:28] Owned GPU display ready :0
+[23:49:28] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[23:49:28] wineserver settled before launch
+[23:49:28] launching: bwrap --die-with-parent --ro-bind / / --bind /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-234926/runtime/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[23:49:35] channel up on 127.0.0.1:38109: build k1_gog_103, 19 hooks, live=True
+Capturing owned game window ('0xc00004', 'Star Wars: Knights of the Old Republic', '1024', '768')
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE"}
+  ok (0.1s) load_save '000001 - AUTOSAVE' issued
+step 2: wait phase {"equals": "gameplay"}
+screenshot -> 0001_periodic.png
+  ok (4.7s) phase=gameplay module=danm14aa server_tick=9 client_tick=17 pc=(105.7,96.5,1.0) hp=96/96
+step 3: do clear_auto_pause
+  ok (1.1s) clear_auto_pause ok
+step 4: do mark_log
+  ok (0.0s) saved native log offset 6156
+step 5: do advance_ticks {"ticks": 120, "timeout": 30}
+  ok (4.6s) observed server ticks 14 -> 137
+step 6: do lua {"code": "console_pc=nwscript.call('GetFirstPC'); console_before=nwscript.call('GetPosition',console_pc); return console_before"}
+  ok (0.1s) lua -> {"values": [{"x": 105.67625427246094, "y": 96.4639663696289, "z": 0.9961421489715576}]}
+step 7: do owned_input {"action": "keydown", "key": "w"}
+  ok (0.3s) sent keydown to owned game window 0xc00004
+step 8: do advance_ticks {"ticks": 30, "timeout": 15}
+  ok (1.2s) observed server ticks 143 -> 174
+step 9: do owned_input {"action": "keyup", "key": "w"}
+  ok (0.1s) sent keyup to owned game window 0xc00004
+step 10: do advance_ticks {"ticks": 90, "timeout": 15}
+  ok (1.8s) observed server ticks 181 -> 280
+step 11: game movement input works before opening overlay
+  ok (0.1s) assert_lua == true
+step 12: do console_open {"open": true}
+  ok (0.1s) F12 overlay open=True
+step 13: do owned_input {"action": "keydown", "key": "w"}
+  ok (0.1s) sent keydown to owned game window 0xc00004
+step 14: do advance_ticks {"ticks": 30, "timeout": 15}
+  ok (0.8s) observed server ticks 290 -> 325
+step 15: do owned_input {"action": "keyup", "key": "w"}
+  ok (0.1s) sent keyup to owned game window 0xc00004
+step 16: do console_command {"code": "1 + 1", "contains": ["number: 2"]}
+  ok (0.1s) > 1 + 1
+number: 2
+step 17: do console_command {"code": "return nil, false, 42, \"KotOR is live\"", "contains": ["nil: nil", "boolean: false", "number: 42", "KotOR is live"]}
+  ok (0.3s) > return nil, false, 42, "KotOR is live"
+nil: nil
+boolean: false
+number: 42
+string: KotOR is live
+step 18: do console_command {"code": "print(\"hello\", 42); io.write(\"stdout\\n\"); io.stderr:write(\"stderr\\n\")", "contains": ["hello", "stdout", "stderr"]}
+  ok (0.4s) > print("hello", 42); io.write("stdout\n"); io.stderr:write("stderr\n")
+hello	42
+
+stdout
+
+stderr
+
+ok (no return values)
+step 19: do console_command {"code": "error(\"intentional test\")", "contains": ["intentional test", "stack traceback"], "kind": "error", "allow_error": true}
+  ok (0.3s) > error("intentional test")
+intentional test
+stack traceback:
+	[builtin#19]: at 0x77f1a7b0
+step 20: do console_command {"code": "6 * 7", "contains": ["number: 42"]}
+  ok (0.1s) > 6 * 7
+number: 42
+step 21: do console_command {"code": "demo_value = 23", "contains": ["no return values"]}
+  ok (0.1s) > demo_value = 23
+ok (no return values)
+step 22: do console_command {"code": "demo_value * 2", "contains": ["number: 46"]}
+  ok (0.1s) > demo_value * 2
+number: 46
+step 23: real keyboard history recall
+  ok (0.1s) > demo_value * 2
+number: 46
+step 24: real keyboard Tab completion
+  ok (0.2s) > math.sqrt(81)
+number: 9
+step 25: real Ctrl+Enter multiline definition
+  ok (0.3s) > function console_double(x)
+  return x * 2
+end
+ok (no return values)
+step 26: do console_command {"code": "console_double(21)", "contains": ["number: 42"]}
+  ok (0.2s) > console_double(21)
+number: 42
+step 27: do console_command {"code": "while true do end", "contains": ["budget"], "kind": "error", "allow_error": true}
+  ok (0.2s) > while true do end
+console cancelled or instruction budget exhausted
+stack traceback:
+	devtools:1: in main chunk
+step 28: do console_command {"code": "21 * 2", "contains": ["number: 42"]}
+  ok (0.1s) > 21 * 2
+number: 42
+step 29: do console_command {"code": "pc = nwscript.call(\"GetFirstPC\"); body = assert(kp.model.snapshot(pc)); return body.base", "contains": ["number: 1"]}
+  ok (0.3s) > pc = nwscript.call("GetFirstPC"); body = assert(kp.model.snapshot(pc)); return body.base
+number: 1
+step 30: typing game key bindings did not move PC
+  ok (0.0s) assert_lua == true
+step 31: do console_command {"code": "assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base", "contains": ["0.35"]}
+  ok (0.2s) > assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base
+number: 0.34999999403953552
+step 32: independent native scale readback from typed console command
+  ok (0.0s) assert_lua == true
+step 33: do console_open {"open": false}
+  ok (0.0s) F12 overlay open=False
+step 34: do advance_ticks {"ticks": 180, "timeout": 30}
+  ok (3.2s) observed server ticks 554 -> 738
+step 35: do console_open {"open": true}
+  ok (0.1s) F12 overlay open=True
+step 36: do console_command {"code": "assert(kp.model.restore(body)); return kp.model.snapshot(pc).base", "contains": ["number: 1"]}
+  ok (0.5s) > assert(kp.model.restore(body)); return kp.model.snapshot(pc).base
+number: 1
+step 37: do assert_lua {"code": "return math.abs(kp.model.snapshot(console_pc).base-1)<0.001", "equals": true}
+  ok (0.1s) assert_lua == true
+step 38: do console_open {"open": false}
+  ok (0.1s) F12 overlay open=False
+step 39: do advance_ticks {"ticks": 90, "timeout": 30}
+  ok (2.5s) observed server ticks 769 -> 864
+step 40: do console_open {"open": true}
+  ok (0.1s) F12 overlay open=True
+step 41: do console_command {"code": "local q=nwscript.call; local t=q('GetTag',q('GetItemInSlot',4,q('GetFirstPC'))); assert(#t>0 and not t:find(string.char(0),1,true)); assert(q('GetSubString','abcdef',1,3)=='bcd'); assert(q('GetStringLength','')==0); return 'native strings exact'", "contains": ["native strings exact"]}
+  ok (1.0s) > local q=nwscript.call; local t=q('GetTag',q('GetItemInSlot',4,q('GetFirstPC'))); assert(#t>0 and not t:find(string.char(0),1,true)); assert(q('GetSubString','
+step 42: do console_command {"code": "local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetStringLength','safe')==4); return 'rejected before VM mutation'", "contains": ["rejected before VM mutation"]}
+  ok (1.1s) > local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetString
+step 43: do console_open {"open": false}
+  ok (0.1s) F12 overlay open=False
+step 44: do assert_lua {"code": "local q=nwscript.call; return q('GetSubString','abcdef',1,3)=='bcd' and q('GetStringLength','after')==5", "equals": true}
+  ok (0.0s) assert_lua == true
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260926-234927/report.json
+{"ok": true, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260926-234927"}
+[23:50:03] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260926-234927
+Continuous capture retained; explicit native-behavior visual review required before showcase export

@@ -1,0 +1,167 @@
+scratch scripts written to /tmp/kp_supporttest
+
+=== strings =====================================================
+tokenizestring(str, delims) -- empty fields dropped
+  ("a,b,c", ",")                     -> 3: [a] [b] [c]
+  ("a,,b", ",")                      -> 2: [a] [b]
+  (",,a,,", ",")                     -> 1: [a]
+  ("a:b,c", ",:")                    -> 3: [a] [b] [c]
+  ("10.1.2.3/24", "/")               -> 2: [10.1.2.3] [24]
+  ("", ",")                          -> 0:
+  (",,,", ",")                       -> 0:
+  ("abc", "")                        -> 1: [abc]
+
+tokenizecmdstring(line) -- quotes hold a token together
+  give "plot armour" 1               -> 3: [give] [plot armour] [1]
+    spaced   out                     -> 2: [spaced] [out]
+  say "" done                        -> 3: [say] [] [done]
+  say "a  b" "c"                     -> 3: [say] [a  b] [c]
+  open "unterminated                 -> 2: [open] [unterminated]
+  say a"b                            -> 2: [say] [a"b]
+  (empty line)                       -> 0:
+  tab\tseparated                     -> 2: [tab] [separated]
+
+=== host ========================================================
+loaded 5 script(s), error budget 3
+registered kp.diagnostic/console/feedback, registertimer/removetimer, tokenizestring/tokenizecmdstring on 5 state(s)
+
+=== output ======================================================
+console is unbound, so console text goes to the log:
+  [10_timers] ids once=1 repeat=2 removed=3
+  [20_remove_inside] four ignored removes: none, nil, unknown, another script's id
+  [log:info] log line, default level
+  [log:warn] two lines
+  [log:warn] in one call
+  [log:info] [console] console line
+  [50_output] console reached the console surface: false
+  [log:info] [feedback] feedback with no routines registered
+  [50_output] feedback reached the engine: false
+  [log:info] [feedback] feedback with no bridge
+  feedback without nwscript.call explicitly reports fallback           ok
+
+now with the console writer bound, as the do_console detour would:
+  [log:info] log line, default level
+  [log:warn] two lines
+  [log:warn] in one call
+  [console] console line
+  [50_output] console reached the console surface: true
+  [log:info] [feedback] feedback with no routines registered
+  [50_output] feedback reached the engine: false
+
+and with a stand-in nwscript.call bridge installed:
+  stand-in nwscript.call installs without Lua errors                   ok
+  [50_output] SendMessageToPC(17, "hello from the routine path")
+  [50_output] AurPostString("top left", 0, 1, 2.5)
+  feedback routes exact routine names and arguments through nwscript.call ok
+  [log:info] [feedback] fallback GetFirstPC
+  GetFirstPC bridge error is protected and returns false               ok
+  GetFirstPC bridge error emits its exact fallback log                 ok
+  [log:info] [feedback] fallback SendMessageToPC
+  SendMessageToPC bridge error is protected and returns false          ok
+  SendMessageToPC bridge error emits its exact fallback log            ok
+  [log:info] [feedback] fallback AurPostString
+  AurPostString bridge error is protected and returns false            ok
+  AurPostString bridge error emits its exact fallback log              ok
+
+=== timers ======================================================
+pending after registration: 8
+driving pump() from t=0 to t=1000 in 50 ms steps
+  [10_timers] on_once     count=1 data.tag=payload
+  [log:error] timer 'on_boom': /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/30_throws.lua:11: in function </tmp/kp_supporttest/30_throws.lua:10>
+  t=100 fired 2
+  [log:error] timer 'on_self': /tmp/kp_supporttest/20_remove_inside.lua:13: attempt to remove timer 4 within its own callback; return false from the callback instead
+stack traceback:
+	[C]: in function 'removetimer'
+	/tmp/kp_supporttest/20_remove_inside.lua:13: in function </tmp/kp_supporttest/20_remove_inside.lua:12>
+  t=150 fired 1
+  [log:error] timer 'on_boom': /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/30_throws.lua:11: in function </tmp/kp_supporttest/30_throws.lua:10>
+  t=200 fired 1
+  [10_timers] on_repeat   count=1 (renews while count < 3)
+  t=250 fired 1
+  [log:error] timer 'on_boom': /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/30_throws.lua:11: in function </tmp/kp_supporttest/30_throws.lua:10>
+  t=300 fired 1
+  [10_timers] on_repeat   count=2 (renews while count < 3)
+  t=500 fired 1
+  [10_timers] on_repeat   count=3 (renews while count < 3)
+  t=750 fired 1
+total callbacks run: 8, still pending: 2
+
+=== quarantine ==================================================
+  20_remove_inside   loaded       errors=1 pending timers=0
+      [on_self] /tmp/kp_supporttest/20_remove_inside.lua:13: attempt to remove timer 4 within its own callback; return false from the callback instead
+  30_throws          QUARANTINED  errors=3 pending timers=1
+      [on_boom] /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+      [on_boom] /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+      [on_boom] /tmp/kp_supporttest/30_throws.lua:11: deliberate failure
+  30_throws had four timers on a callback that always throws.
+  Three errors reached the budget, so the fourth never ran.
+
+=== state lifetime ==============================================
+pending before unload_all: 2
+pending after  unload_all: 0
+  Nothing called forget_state. Each state carries a finalised
+  sentinel, so lua_close drops that state's timers on the way out.
+
+=== function timers =============================================
+  function-timer scripts loaded                                        ok
+  timers.bad_callback_rejected: number/table callback raises           ok
+  timers.bad_callback_rejected: nothing scheduled                      ok
+  timers.function_callback_fires: registers                            ok
+  timers.function_callback_fires: 3 firings, id/count/data, upvalue kept ok
+  timers.function_callback_fires: stops when it returns false          ok
+  timers.string_callback_unchanged: registers                          ok
+  timers.string_callback_unchanged: late lookup, count, data           ok
+  timers.string_callback_unchanged: stops                              ok
+  timers.function_ref_released_on_complete: registers                  ok
+  timers.function_ref_released_on_complete: control, held while pending ok
+  timers.function_ref_released_on_complete: collected after completion ok
+  timers.function_ref_released_on_cancel: registers                    ok
+  timers.function_ref_released_on_cancel: control, held while pending  ok
+  timers.function_ref_released_on_cancel: removetimer                  ok
+  timers.function_ref_released_on_cancel: collected after removetimer  ok
+  timers.function_ref_released_on_error: registers                     ok
+  timers.function_ref_released_on_error: control, held while pending   ok
+  [log:error] timer 'function /tmp/kp_supporttest/fn/60_fn.lua:7': /tmp/kp_supporttest/fn/60_fn.lua:42: fn boom
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/fn/60_fn.lua:42: in function </tmp/kp_supporttest/fn/60_fn.lua:42>
+  timers.function_ref_released_on_error: collected after the throw     ok
+  timers.function_error_isolated: one error recorded, script still loaded ok
+  timers.function_error_isolated: error names a function callback and its message ok
+    recorded callback label: function /tmp/kp_supporttest/fn/60_fn.lua:7
+  timers.function_error_isolated: healthy timers on the same pump still ran ok
+  timers.function_error_isolated: the throwing timer is cancelled      ok
+  timers.function_ref_released_once: no registry slot freed twice      ok
+  timers.function_error_budget: registers four                         ok
+  [log:error] timer 'function /tmp/kp_supporttest/fn/70_fn_throws.lua:5': /tmp/kp_supporttest/fn/70_fn_throws.lua:5: closure failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/fn/70_fn_throws.lua:5: in function </tmp/kp_supporttest/fn/70_fn_throws.lua:5>
+  [log:error] timer 'function /tmp/kp_supporttest/fn/70_fn_throws.lua:5': /tmp/kp_supporttest/fn/70_fn_throws.lua:5: closure failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/fn/70_fn_throws.lua:5: in function </tmp/kp_supporttest/fn/70_fn_throws.lua:5>
+  [log:error] timer 'function /tmp/kp_supporttest/fn/70_fn_throws.lua:5': /tmp/kp_supporttest/fn/70_fn_throws.lua:5: closure failure
+stack traceback:
+	[C]: in function 'error'
+	/tmp/kp_supporttest/fn/70_fn_throws.lua:5: in function </tmp/kp_supporttest/fn/70_fn_throws.lua:5>
+  timers.function_error_budget: quarantined after 3, fourth never ran  ok
+  timers.function_ref_released_on_state_close: registers               ok
+  timers.function_ref_released_on_state_close: one timer pending before close ok
+  [log:info] [close] late fn=true name=true 
+  [log:info] [close] early fn=false name=false kp.registertimer: this script's state is closing
+  timers.function_ref_released_on_state_close: a finaliser after the sentinel is refused ok
+  timers.function_ref_released_on_state_close: a finaliser before the sentinel also ran ok
+  timers.function_ref_released_on_state_close: none left, including finaliser registrations ok
+  timers.function_ref_released_on_state_close: a later pump runs nothing of the closed state ok
+  function timers: pending back to baseline                            ok
+  all timers are gone after state teardown                             ok

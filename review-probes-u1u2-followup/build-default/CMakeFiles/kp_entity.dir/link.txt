@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_entity.a CMakeFiles/kp_entity.dir/src/api/entity.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_entity.a

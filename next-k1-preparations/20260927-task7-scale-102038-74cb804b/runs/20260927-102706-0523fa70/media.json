@@ -1,0 +1,50 @@
+{
+  "source_video": {
+    "path": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70/continuous.mp4",
+    "sha256": "53831eb032b9d154766d67a762c92f22de57bac1291ab841db829ed161ac14c5"
+  },
+  "source_geometry": {
+    "duration_seconds": 234.666667,
+    "width": 1024,
+    "height": 768,
+    "encoded_average_frame_rate": "19179/352",
+    "encoded_nominal_frame_rate": "60/1",
+    "encoded_frame_count": "12786",
+    "render_cadence": "unvalidated; encoded frames may repeat the same game frame"
+  },
+  "start_seconds": 206.11726061801892,
+  "duration_seconds": 10.0,
+  "selection": "first creative native-log marker",
+  "marker": {
+    "line": "[running] info: [script] [model-scene:task7scale] phase=1 actor=1 base=0.350 effective=0.350",
+    "detected_monotonic": 599361.424446232,
+    "capture_seconds": 207.11726061801892,
+    "selection_clock": "monotonic log detection, 100ms poll; capture startup latency not calibrated"
+  },
+  "visual_review_required": true,
+  "artifacts": {
+    "representative.mp4": {
+      "path": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70/representative.mp4",
+      "sha256": "678ecf6f5d3aef2ba518f774a537dffe14d6d7d8f272fc38279978e46b85c366",
+      "duration_seconds": 10.0,
+      "width": 640,
+      "height": 480,
+      "encoded_average_frame_rate": "264/5",
+      "encoded_nominal_frame_rate": "60/1",
+      "encoded_frame_count": "528",
+      "render_cadence": "unvalidated; encoded frames may repeat the same game frame"
+    },
+    "representative.gif": {
+      "path": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70/representative.gif",
+      "sha256": "0f530e5f7194096e3454beeb943be54589903b35e78b62a9fa9727bc1e62aa21",
+      "duration_seconds": 10.01,
+      "width": 480,
+      "height": 360,
+      "encoded_average_frame_rate": "25/3",
+      "encoded_nominal_frame_rate": "8/1",
+      "encoded_frame_count": "80",
+      "render_cadence": "unvalidated; encoded frames may repeat the same game frame"
+    }
+  },
+  "scope": "route/media completion only; does not certify all example live obligations"
+}

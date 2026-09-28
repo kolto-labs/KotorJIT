@@ -1,0 +1,29 @@
+....E....................................................
+======================================================================
+ERROR: test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock (__main__.ChildAuthorityTests.test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/capture_diagnostic.py", line 596, in verify_child_authority
+    held = lock_guard()
+           ^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/capture_diagnostic.py", line 594, in lock_guard
+    return held_lock_descriptor(lock_fd, trusted_lock_path(repository_root))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/gamescope_socket.py", line 106, in held_lock_descriptor
+    raise RuntimeError('canonical lock descriptor does not hold the exclusive lock')
+RuntimeError: canonical lock descriptor does not hold the exclusive lock
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 993, in test_production_check_admits_only_the_passed_descriptor_holding_the_trusted_lock
+    self.assertEqual(CD.verify_child_authority(config, repository_root=root)["fd"], held)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/capture_diagnostic.py", line 598, in verify_child_authority
+    raise DiagnosticRefused(f'child does not hold the canonical lock: {error}') from error
+kpharness.capture_diagnostic.DiagnosticRefused: child does not hold the canonical lock: canonical lock descriptor does not hold the exclusive lock
+
+----------------------------------------------------------------------
+Ran 57 tests in 72.122s
+
+FAILED (errors=1)

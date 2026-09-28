@@ -1,0 +1,6 @@
+PASS engine_gate.unbound_refuses
+PASS engine_gate.bound_probe_true_allows
+PASS engine_gate.rebind_nullptr_refuses
+PASS engine_gate.other_thread_refused
+PASS engine_gate.concurrent_rebind_never_tears
+5/5 tests passed, 18 checks

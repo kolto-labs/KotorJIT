@@ -1,0 +1,10 @@
+{
+  "status": "behavior_passed_presentation_rejected",
+  "route_steps": 18,
+  "runtime_sha256": "463e1ab0e7f223854dbe2a234e8488b539d9c074d12e04c806acf90770d26d0e",
+  "model_scene_commit": "393f68d",
+  "source_preserved": true,
+  "observed": "Player same-model base/effective scale readbacks for six phases and original restoration; visible small/large/normal player.",
+  "presentation_limit": "Giant player extends above frame; not accepted as final showcase. Camera stationary after owned-pointer centering/button release, stiff chase mode2 and180tick settle (combined change; cause not isolated).",
+  "platform": "Windows K1 GOG under Linux Wine, not Mac gameplay"
+}

@@ -1,0 +1,17 @@
+{
+  "label": "arithmetic",
+  "code": "1 + 1",
+  "request": 1,
+  "lines": [
+    {
+      "request": 1,
+      "kind": "input",
+      "text": "> 1 + 1"
+    },
+    {
+      "request": 1,
+      "kind": "result",
+      "text": "number: 2"
+    }
+  ]
+}

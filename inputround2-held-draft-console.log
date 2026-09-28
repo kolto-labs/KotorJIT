@@ -1,0 +1,78 @@
+[13:39:38] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[13:39:38] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[13:39:38] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[13:39:38] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[13:39:38] runtime already current (27077224b72a)
+[13:39:38] ini tuned: swkotor.ini (14 keys)
+[13:39:39] Owned GPU display ready :1
+[13:39:39] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[13:39:39] wineserver settled before launch
+[13:39:39] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[13:40:03] channel up on 127.0.0.1:34535: build k1_gog_103, 19 hooks, live=True
+Capturing owned game window ('0xe00004', 'Star Wars: Knights of the Old Republic', '1024', '768')
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE"}
+  ok (0.1s) load_save '000001 - AUTOSAVE' issued
+step 2: wait phase {"equals": "gameplay"}
+screenshot -> 0001_periodic.png
+  ok (8.9s) phase=gameplay module=danm14aa server_tick=8 client_tick=11 pc=(105.7,96.5,1.0) hp=96/96
+step 3: do clear_auto_pause
+  ok (1.8s) clear_auto_pause ok
+step 4: do mark_log
+  ok (0.3s) saved native log offset 6156
+step 5: do advance_ticks {"ticks": 120}
+  ok (5.2s) observed server ticks 13 -> 139
+step 6: do lua {"code": "p=nwscript.call('GetFirstPC'); start=nwscript.call('GetPosition',p); return start"}
+  ok (0.0s) lua -> {"values": [{"x": 105.67625427246094, "y": 96.4639663696289, "z": 0.9961421489715576}]}
+step 7: do owned_input {"action": "keydown", "key": "s"}
+  ok (0.1s) sent keydown to owned game window 0xe00004
+step 8: do advance_ticks {"ticks": 30}
+  ok (1.2s) observed server ticks 145 -> 183
+step 9: held backwards key moves PC before overlay
+  ok (0.1s) assert_lua == true
+step 10: do console_open {"open": true}
+  ok (0.3s) F12 overlay open=True
+step 11: do advance_ticks {"ticks": 60}
+  ok (3.9s) observed server ticks 190 -> 252
+step 12: do lua {"code": "held=nwscript.call('GetPosition',p); return held"}
+  ok (0.5s) lua -> {"values": [{"x": 104.52619934082031, "y": 90.97286987304688, "z": 1.3689230680465698}]}
+step 13: do advance_ticks {"ticks": 90}
+  ok (5.9s) observed server ticks 256 -> 348
+step 14: opening F12 releases preexisting held movement
+  ok (0.3s) assert_lua == true
+step 15: do owned_input {"action": "keyup", "key": "s"}
+  ok (0.2s) sent keyup to owned game window 0xe00004
+step 16: do console_command {"code": "2+2", "contains": ["number: 4"]}
+  ok (0.6s) > 2+2
+number: 4
+step 17: do console_open {"open": false}
+  ok (0.2s) F12 overlay open=False
+step 18: do advance_ticks {"ticks": 90}
+  ok (7.3s) observed server ticks 367 -> 459
+step 19: release inside overlay does not stick after close
+  ok (0.1s) assert_lua == true
+step 20: do owned_input {"action": "keydown", "key": "w"}
+  ok (0.1s) sent keydown to owned game window 0xe00004
+step 21: do advance_ticks {"ticks": 30}
+  ok (2.1s) observed server ticks 466 -> 496
+step 22: do owned_input {"action": "keyup", "key": "w"}
+  ok (0.1s) sent keyup to owned game window 0xe00004
+step 23: do advance_ticks {"ticks": 90}
+  ok (5.9s) observed server ticks 500 -> 590
+step 24: game movement input restored after F12 close
+  ok (0.1s) assert_lua == true
+step 25: do console_open {"open": true}
+  ok (0.1s) F12 overlay open=True
+step 26: do console_command {"code": "900+7", "keys_before_submit": ["ctrl+Up", "ctrl+Down"], "contains": ["number: 907"]}
+  ok (0.6s) > 900+7
+number: 907
+step 27: do console_command {"code": "local value=908\nreturn value", "keys_before_submit": ["ctrl+Up", "ctrl+Down"], "contains": ["number: 908"]}
+  ok (0.9s) > local value=908
+return value
+number: 908
+step 28: do console_open {"open": false}
+  ok (0.2s) F12 overlay open=False
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133930/report.json
+{"ok": true, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133930"}
+[13:40:52] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-133930
+Continuous capture retained; explicit native-behavior visual review required before showcase export

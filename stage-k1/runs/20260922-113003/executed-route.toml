@@ -1,0 +1,111 @@
+# Peaceful scale scene. Deploy model_scene.lua plus the matching authored script.
+# Route predicates are independent native readbacks; video still needs visual review.
+name = "model memory: player"
+target = "k1"
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 120
+load_timeout = 600
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+timeout = 600
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+[[step]]
+do = "clear_auto_pause"
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+[[step]]
+do = "mark_log"
+[[step]]
+label = "peaceful gameplay and checked native model available"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); return kp.model.capabilities().available and nwscript.call('GetIsInCombat',p)==0 and nwscript.call('GetIsInConversation',p)==0"
+equals = true
+[[step]]
+label = "capture original player scale and pre-existing area identities"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); _G.model_original=assert(kp.model.snapshot(p)); _G.model_existing={}; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do model_existing[o]=true; o=nwscript.call('GetNextObjectInArea',a,1) end; nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',nwscript.call('GetFacing',p)); return true"
+equals = true
+[[step]]
+do = "advance_ticks"
+ticks = 180
+timeout = 30
+
+[[step]]
+label = "trigger immediate finite scene"
+do = "lua"
+code = "local p=nwscript.call('GetFirstPC'); nwscript.call('SetLocalNumber',p,7,0); nwscript.call('SetLocalNumber',p,8,0); nwscript.call('SetLocalNumber',p,5,1)"
+
+[[step]]
+label = "independent phase 1 scale 0.35 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=1 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-0.35)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*0.35)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent phase 2 scale 2.40 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=2 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-2.40)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*2.40)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent phase 3 scale 1.00 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=3 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-1.00)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*1.00)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent phase 4 scale 0.35 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=4 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-0.35)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*0.35)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent phase 5 scale 2.40 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=5 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-2.40)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*2.40)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent phase 6 scale 1.00 readback"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=6 then return false end; local c=assert(kp.model.snapshot(p)); return c.model==model_original.model and math.abs(c.base-1.00)<0.001 and math.abs(c.effective-model_original.effective/model_original.base*1.00)<0.001"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "all phases restored before completion"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,7)~=1 then return false end; local c=assert(kp.model.snapshot(p)); return nwscript.call('GetLocalNumber',p,6)==6 and c.model==model_original.model and math.abs(c.base-model_original.base)<0.001 and math.abs(c.effective-model_original.effective)<0.001"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+do = "await_log"
+pattern = "\\[model-scene:player\\] phase="
+minimum = 6
+maximum = 6
+[[step]]
+do = "await_log"
+pattern = "\\[model-scene:player\\] complete phases=6 restored=1"
+minimum = 1
+maximum = 1

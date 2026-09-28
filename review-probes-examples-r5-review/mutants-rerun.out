@@ -1,0 +1,39 @@
+cursed.lua 56165e59420a chain 9152960ef3c0
+=== current
+TOTAL pass=15 fail=0
+=== mut-no-firstpc
+FAIL	a leader swap changes nothing: GetFirstPC and party membership each keep a creature out on their own	tools/tests/examples/cursed.lua:248: assertion failed!
+FAIL	within one module, membership and control are read again at every blast: a member who left is hit, a hostile who joined and a new member are spared, a former leader is hit	tools/tests/examples/cursed.lua:258: assertion failed!
+TOTAL pass=13 fail=2
+=== mut-no-party
+FAIL	arming, eligible target, requests and duplicate guard	tools/tests/examples/cursed.lua:11: assertion failed!
+FAIL	conversation invalid and distant or party exclusions	tools/tests/examples/cursed.lua:38: assertion failed!
+FAIL	hostiles chain; the PC, a tagged member and an untagged member are never hit and their flags are never read or set	tools/tests/examples/cursed.lua:216: assertion failed!
+FAIL	after a module load: a member re-created under a new ID is left out, an old party ID now on a hostile is hit, and a recycled corpse ID detonates again	tools/tests/examples/cursed.lua:227: assertion failed!
+FAIL	a leader swap changes nothing: GetFirstPC and party membership each keep a creature out on their own	tools/tests/examples/cursed.lua:242: assertion failed!
+FAIL	within one module, membership and control are read again at every blast: a member who left is hit, a hostile who joined and a new member are spared, a former leader is hit	tools/tests/examples/cursed.lua:258: assertion failed!
+FAIL	tags decide nothing: a hostile with a companion tag is hit, a member with a hostile tag and an untagged hostile are judged by membership	tools/tests/examples/cursed.lua:277: assertion failed!
+FAIL	a death during a module transition does nothing; the next armed death blasts again with the party still left out	tools/tests/examples/cursed.lua:288: assertion failed!
+FAIL	unload mid-chain leaves nothing to put back	tools/tests/examples/cursed.lua:194: an effect reached the PC or a party member: 2
+FAIL	OnAreaEnter takes from_save_game: an in-module enter disarms and keeps the detonated set; a save-game enter empties it	tools/tests/examples/cursed.lua:194: an effect reached the PC or a party member: 2
+FAIL	party answers: an error or an unknown answer keeps a creature out and stops its detonation; a false answer means not in the party	tools/tests/examples/cursed.lua:316: assertion failed!
+TOTAL pass=4 fail=11
+=== mut-no-load-clear
+FAIL	after a module load: a member re-created under a new ID is left out, an old party ID now on a hostile is hit, and a recycled corpse ID detonates again	tools/tests/examples/cursed.lua:233: a corpse under an ID used in the last module never detonated (R4-7)
+TOTAL pass=14 fail=1
+=== mut-truthy-save
+FAIL	OnAreaEnter takes from_save_game: an in-module enter disarms and keeps the detonated set; a save-game enter empties it	tools/tests/examples/cursed.lua:306: from_save_game=0 emptied the detonated set (0 is true in Lua)
+TOTAL pass=14 fail=1
+=== mut-fail-open
+FAIL	party answers: an error or an unknown answer keeps a creature out and stops its detonation; a false answer means not in the party	tools/tests/examples/cursed.lua:316: assertion failed!
+TOTAL pass=14 fail=1
+=== mut-false-as-unknown
+FAIL	party answers: an error or an unknown answer keeps a creature out and stops its detonation; a false answer means not in the party	tools/tests/examples/cursed.lua:321: a boolean false answer was not read as "not in the party"
+TOTAL pass=14 fail=1
+=== mut-cache-spared
+FAIL	within one module, membership and control are read again at every blast: a member who left is hit, a hostile who joined and a new member are spared, a former leader is hit	tools/tests/examples/cursed.lua:265: a member who left the party was still spared
+FAIL	party answers: an error or an unknown answer keeps a creature out and stops its detonation; a false answer means not in the party	tools/tests/examples/cursed.lua:321: a boolean false answer was not read as "not in the party"
+TOTAL pass=13 fail=2
+=== mut-cache-party
+FAIL	within one module, membership and control are read again at every blast: a member who left is hit, a hostile who joined and a new member are spared, a former leader is hit	tools/tests/examples/cursed.lua:265: a member who left the party was still spared
+TOTAL pass=14 fail=1

@@ -1,0 +1,39 @@
+-- Configuring done (1246.4s)
+-- Generating done (295.1s)
+-- Build files have been written to: /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-cfg
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/api/output.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/api/compat.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/api/timers.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/harness/channel.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/lua/host.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/harness/commands.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/api/camera.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/api/camera_profiles.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/api/camera_backend.cpp.o
+[ 20%] Building CXX object CMakeFiles/kphasor.dir/src/api/camera_lua.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘void* kp::runtime::{anonymous}::client_area_get_server_area_body(void*)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:568:11: warning: variable ‘area’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  568 |     void* area = orig != nullptr ? orig(self) : nullptr;
+      |           ^~~~
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘int kp::runtime::{anonymous}::run_script_body(void*, CExoString*, uint32_t, int)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:737:15: warning: variable ‘rc’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  737 |     const int rc = orig(self, name, object_id, has_object);
+      |               ^~
+[ 24%] Linking CXX shared library libkphasor.so
+[ 88%] Built target kphasor
+[ 92%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o
+[ 92%] Linking CXX executable kp_lifecycletest
+[100%] Built target kp_lifecycletest
+[ 84%] Built target kphasor
+[ 84%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o
+[ 84%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o
+[ 88%] Linking CXX executable kp_scriptsapitest
+[100%] Built target kp_scriptsapitest
+build-rc=0

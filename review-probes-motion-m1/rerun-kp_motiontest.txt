@@ -1,0 +1,30 @@
+PASS motion.unsupported_profile_capabilities_false
+PASS motion.relocated_image_refused
+PASS motion.span_table_valid
+PASS motion.guard_flip_refuses_before_call
+PASS motion.chain_failure_refuses_before_call
+PASS motion.invalid_object_id_refused_before_call
+PASS motion.non_placeable_type_refuses
+PASS motion.wrong_vtable_refuses
+PASS motion.id_roundtrip_mismatch_refuses
+PASS motion.capture_reads_server_xyz_and_orientation
+PASS motion.nonfinite_value_refuses
+PASS motion.unreadable_field_refuses
+PASS motion.accepts_client_id_0xffffffff
+PASS motion.unbind_bumps_epoch
+PASS motion.lua_unbound_capabilities_false
+PASS motion.forged_userdata_argerror
+PASS motion.lua_capture_surface
+  PENDING regeneration: server_object.area_id
+  PENDING regeneration: server_object.position
+  PENDING regeneration: server_object.orientation
+  PENDING regeneration: server_object.client_push_gate_unverified
+  PENDING regeneration: server_object.dirty_bits
+  PENDING regeneration: placeable.aabb_registered
+  PENDING regeneration: placeable.quaternion_raw_order_unverified
+  PENDING regeneration: server.get_placeable_by_object_id (proposed row)
+  PENDING regeneration: placeable.vtable (proposed row)
+PASS motion.profile_matches_address_table_row
+PASS motion.bindings_json_matches_profile
+PASS motion.spans_match_reference_image
+20/20 tests passed, 2926 checks (synthetic memory; no live ABI proof)

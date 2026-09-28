@@ -1,0 +1,30 @@
+{
+  "code": "blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true",
+  "input": "real owned-window keyboard",
+  "expected_request": 1,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "boolean: true"
+      }
+    ],
+    "submitted": 1,
+    "completed": 1,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 370
+  }
+}

@@ -1,0 +1,5 @@
+FAIL m8 split: r-x | r-- refuses DecodeFailed
+FAIL m8: install on a non-executable page refuses child exit 1
+FAIL m10 split: r-x | --- refuses DecodeFailed truncated
+FAIL m10: patch window crossing into a PROT_NONE page refuses child exit 1
+2 of 654 checks FAILED

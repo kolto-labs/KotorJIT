@@ -1,0 +1,118 @@
+{
+  "media_sha256": "97537f4e8f08cdd2e533fa187529e0ebad801524271f14e6296335e86787e458",
+  "frames": 480,
+  "pts_first": 0.0,
+  "pts_last": 7.983333,
+  "eval_status": "passed",
+  "index_status": "passed",
+  "ratio": 0.002777777777777778,
+  "max_gap": 0.03333333333333333,
+  "violations": [],
+  "local": [
+    {
+      "i": 55,
+      "pts": 0.916667,
+      "top": 55,
+      "bottom": 55,
+      "delta": 1
+    },
+    {
+      "i": 56,
+      "pts": 0.933333,
+      "top": 56,
+      "bottom": 56,
+      "delta": 1
+    },
+    {
+      "i": 57,
+      "pts": 0.95,
+      "top": 57,
+      "bottom": 57,
+      "delta": 1
+    },
+    {
+      "i": 58,
+      "pts": 0.966667,
+      "top": 58,
+      "bottom": 58,
+      "delta": 1
+    },
+    {
+      "i": 59,
+      "pts": 0.983333,
+      "top": 59,
+      "bottom": 59,
+      "delta": 1
+    },
+    {
+      "i": 60,
+      "pts": 1.0,
+      "top": 59,
+      "bottom": 59,
+      "delta": 0
+    },
+    {
+      "i": 61,
+      "pts": 1.016667,
+      "top": 60,
+      "bottom": 60,
+      "delta": 1
+    },
+    {
+      "i": 62,
+      "pts": 1.033333,
+      "top": 62,
+      "bottom": 62,
+      "delta": 2
+    },
+    {
+      "i": 63,
+      "pts": 1.05,
+      "top": 63,
+      "bottom": 63,
+      "delta": 1
+    },
+    {
+      "i": 64,
+      "pts": 1.066667,
+      "top": 64,
+      "bottom": 64,
+      "delta": 1
+    },
+    {
+      "i": 65,
+      "pts": 1.083333,
+      "top": 65,
+      "bottom": 65,
+      "delta": 1
+    },
+    {
+      "i": 66,
+      "pts": 1.1,
+      "top": 66,
+      "bottom": 66,
+      "delta": 1
+    },
+    {
+      "i": 67,
+      "pts": 1.116667,
+      "top": 67,
+      "bottom": 67,
+      "delta": 1
+    },
+    {
+      "i": 68,
+      "pts": 1.133333,
+      "top": 68,
+      "bottom": 68,
+      "delta": 1
+    },
+    {
+      "i": 69,
+      "pts": 1.15,
+      "top": 69,
+      "bottom": 69,
+      "delta": 1
+    }
+  ]
+}

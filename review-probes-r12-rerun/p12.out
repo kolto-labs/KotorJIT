@@ -1,0 +1,8 @@
+no_token: refused: child start lacks the supervisor token descriptor
+forged_token_no_commitments: refused: child start has no supervisor commitments
+replay_config_new_pipe_other_token: refused: child token does not match the supervisor commitment
+regular_file_token: refused: child token descriptor is not the supervisor pipe
+forged_pipe_and_commitments_no_lock: refused: child does not hold the canonical lock: canonical lock descriptor or path is unavailable: [Errno 9] Bad file descriptor
+forged_pipe_commitments_env_redirected_lock: refused: child does not hold the canonical lock: lock descriptor is not the canonical lock file
+canonical_lock_path_would_be= /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock exists= True
+exit=0

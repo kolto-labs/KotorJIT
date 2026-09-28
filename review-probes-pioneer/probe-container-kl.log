@@ -1,0 +1,4 @@
+Ran 2 tests in 27.813s
+OK
+PROBE K descriptor 0644: client stop -> PlaybackError: playback sidecar must be owned by this user with mode600; after raw stop owner_alive=True descriptor_left=True
+PROBE L two concurrent attaches: [('ok', '4e2cf0c8'), ('ok', '4e2cf0c8')]; live_owner_procs=1 engine_connections=1

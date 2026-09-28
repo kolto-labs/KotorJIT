@@ -1,0 +1,24 @@
+test_idle_flood_keeps_threads_bounded_and_control_working (__main__.Round3AdmissionTests.test_idle_flood_keeps_threads_bounded_and_control_working) ... I6 pid=1086797 base=2/7 peak=34/39
+FAIL
+test_trickling_client_is_dropped_by_total_deadline (__main__.Round3AdmissionTests.test_trickling_client_is_dropped_by_total_deadline) ... FAIL
+
+======================================================================
+FAIL: test_idle_flood_keeps_threads_bounded_and_control_working (__main__.Round3AdmissionTests.test_idle_flood_keeps_threads_bounded_and_control_working)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 824, in test_idle_flood_keeps_threads_bounded_and_control_working
+    self.assertLessEqual(threads, base_threads + self.slots() + 2,
+AssertionError: 34 not less than or equal to 20 : 34 owner threads after 64 idle sockets
+
+======================================================================
+FAIL: test_trickling_client_is_dropped_by_total_deadline (__main__.Round3AdmissionTests.test_trickling_client_is_dropped_by_total_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 863, in test_trickling_client_is_dropped_by_total_deadline
+    self.assertTrue(closed, 'trickling client kept its connection past the deadline')
+AssertionError: False is not true : trickling client kept its connection past the deadline
+
+----------------------------------------------------------------------
+Ran 2 tests in 13.306s
+
+FAILED (failures=2)

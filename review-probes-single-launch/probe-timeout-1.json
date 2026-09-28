@@ -1,0 +1,30 @@
+{
+ "raised": "BootFailure",
+ "reason": "boot timeout",
+ "launch_count": 1,
+ "max_boot_attempts": 1,
+ "evidence_path": "/tmp/kp_probe_ptefq8vi/stage/runs/20260927-182731/boot-attempts.json",
+ "mode": "timeout",
+ "env": "1",
+ "elapsed": 3.6,
+ "game_launch_popens": 1,
+ "wineserver_k_calls": 1,
+ "evidence_exists_after_teardown": true,
+ "session_json_exists": false,
+ "evidence": {
+  "max_boot_attempts": 1,
+  "max_boot_attempts_source": "env",
+  "launch_count": 1,
+  "outcome": "failed",
+  "attempts": [
+   {
+    "attempt": 1,
+    "outcome": "failed",
+    "reason": "boot timeout",
+    "detail": "no status reply in 3s (last: [Errno 111] Connection refused)",
+    "started": 1790551651.7104828,
+    "ended": 1790551654.7632186
+   }
+  ]
+ }
+}

@@ -1,0 +1,169 @@
+=== chain sha 9152960ef3c0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/chain_attacks.lua
+--- block 1
+BREAKS	A1 module load with new party IDs restores flag	new-id bastila min_one_hp=nil (prior was 0); SetMinOneHP calls=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+BREAKS	A2 failed restore is retried at the next disarm (f:arm calls OnModuleLoad)	GetMinOneHP reads=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+BREAKS	A3 unload during pending timer	flag after unload=nil, extra SetMinOneHP from late timer=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+BREAKS	A4 re-entrant detonation keeps original prior	reads=0 final=0 timers=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+BREAKS	A5 nested generations: only last timer restores	gens= mid=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 6
+HOLDS 	A6 boolean-false prior treated as unreadable	SetMinOneHP=0 (party member excluded when bridge returns false)
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 7
+BREAKS	A7 party gets floor(40/3)=13	amounts=40
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 8
+HOLDS 	A8 OnAreaEnter by any object disarms+restores	armed after non-PC OnAreaEnter=0 (pre-existing behaviour, not new)
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/pc_probe.lua
+--- block 1
+BREAKS	P1 PC guarded then restored at settle	during=nil after=nil
+BREAKS	P2 PC restored on unload; late timer inert	after=nil
+BREAKS	P3 PC with new id after module load is restored	new-id PC min_one_hp=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples/mutations.lua
+--- block 1
+PROBE-ASSERT-FAILED	mutation not applied
+BREAKS	M1 transition restore is load-bearing (mutant keeps flag=1)	mutant flag=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+ERROR	tools/tests/examples/fixture.lua:4: unmapped example: cursed/100_item_airstrike.lua
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+ERROR	[string "/home/brunner56/kp-live-20260922/review-probe..."]:8: bad argument #1 to 'open' (string expected, got nil)
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r2/pc_swap_probe.lua
+--- block 1
+PROBE-ASSERT-FAILED	original PC was not guarded
+old_pc=nil replacement_pc=1
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r3/r3_probes.lua
+--- block 1
+R3-1 two-gone-same-target: sets=[] old_pc(11)=nil atton(12,prior1)=1 pending_logged=false
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+PROBE-ASSERT-FAILED	nil
+PROBE-ASSERT-FAILED	nil
+R3-2 recycled-owned-id PC: after_load=1 after_blast_settle_unload=1 pending_logs=0 sets=[]
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+R3-3 same-tag recycled owned id: bastila(1)=nil pending=false
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+R3-4 unload while member absent: bastila_flag=nil pending_logged=false (script state discarded after unload)
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+PROBE-ASSERT-FAILED	nil
+R3-5 same-tag valid stored id, non-party: sets=[] impostor(2)=1 real_bastila(5)=1 pending=false
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes.lua
+--- block 1
+R4-1a PC tag errors: during=nil new_pc(7)=1 sets=[] pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+R4-1b PC tag '' + control swap + same-module OnAreaEnter: after_enter=nil after_settle=nil after_unload=nil pending=0 unload_line=""
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+R4-1c same, no OnAreaEnter: after_settle=nil pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 4
+R4-2 two same-tag members + OnAreaEnter: during=0,0 after=0,0 sets=[] prior_unknown=0 pending=0 not_restored=0
+R4-2b stuck twin blasted again then settled: twin4=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 5
+R4-3 member leaves party in window: after_settle=nil pending=0 after_rejoin=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 6
+R4-3b left party, unload: bastila=nil unload_line=""
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 7
+R4-4 transition with empty roster; old settle timer fires after: pending_at_load=0 pc(11)=nil bastila(12)=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 8
+R4-4b death during load window: EffectDamage delta=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 9
+R4-5 unload right after load: not_restored=0 lines=""
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 10
+R4-6 5x same-module OnAreaEnter, tagged: pc=nil bastila=nil guards_left_pending=0 armed_local5=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 11
+R4-6b untagged member, same-module OnAreaEnter: after_enter=0 after_settle=0 after_unload=0 unload_line=""
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 12
+R4-6c stale timer after re-arm: bastila after old timer=nil after new=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 13
+R4-7 recycled ID corpse after load: detonations before=1 after=2
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 14
+R4-8 untagged carry onto a genuine-1 member: member5=1 pc1=nil pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes2.lua
+--- block 1
+G1 untagged carry onto genuine-1 member: sets=[] member5=1 pc1=nil pending_total=0 prior_unknown=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+R4-1b(a) PC blasted again while control swapped: before=nil after_settle=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 3
+R4-1b(b) control stays swapped, 3 more blast+settle cycles elsewhere: pc1=nil pending_total=0
+R4-1b(b2) control back on PC, next settle: pc1=nil
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probes3.lua
+--- block 1
+R4-1L PC tag '' + swap + OnModuleLoad (IDs unchanged): after_load=nil after_settle=nil after_unload=nil pending=0 unload=""
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+--- block 2
+R4-2L same-tag pair across OnModuleLoad: after=0,0 prior_unknown=0 pending=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0
+##### /home/brunner56/kp-live-20260922/review-probes-examples-r4/r4_probe8_detail.lua
+--- block 1
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[] pc1=nil member5=1 logs=0
+RAN
+SAFETY	minonehp_calls=0 party_or_pc_effects=0

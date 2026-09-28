@@ -1,0 +1,11 @@
+FAIL m8: retry on the dead page refuses Ok 
+FAIL m8: retry wrote nothing and left the page as it was rw-p
+FAIL I3: install, restore always refused: original bytes, page left RW child exit 1
+FAIL m7: stuck install detail says not executable mprotect restore refused (EACCES: SELinux execmod?) and rollback refused; new bytes left in place
+FAIL I3: install, rollback also refused: patch live, still installed child exit 1
+FAIL m7 uninstall: detail says not executable mprotect restore refused (EACCES: SELinux execmod?) and rollback refused; new bytes left in place
+FAIL m7: uninstall, rollback also refused: uninstalled, page left RW child exit 1
+FAIL m8: non-executable page refuses r--p Ok 
+FAIL m8: refusal wrote nothing, changed no protection, mapped nothing r--p -> r--p
+FAIL m8: install on a non-executable page refuses child killed by signal 11
+4 of 650 checks FAILED

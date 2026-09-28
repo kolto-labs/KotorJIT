@@ -1,0 +1,125 @@
+=== scripts/examples/cursed/40_chain_reaction.lua e7b65781ca5b
+R4-1a PC tag errors: during=1 new_pc(7)=0 sets=[7<-0] pending=0
+R4-1b PC tag '' + control swap + same-module OnAreaEnter: after_enter=1 after_settle=1 after_unload=1 pending=3 unload_line="[cursed:boom] min-one-HP NOT restored at unload: PC still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetFirstPC\"), 0)"
+R4-1c same, no OnAreaEnter: after_settle=0 pending=0
+R4-2 two same-tag members + OnAreaEnter: during=1,1 after=0,1 sets=[3<-0] prior_unknown=1 pending=0 not_restored=0
+R4-2b stuck twin blasted again then settled: twin4=1
+R4-3 member leaves party in window: after_settle=1 pending=1 after_rejoin=0
+R4-3b left party, unload: bastila=1 unload_line="[cursed:boom] min-one-HP NOT restored at unload: bastila still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetObjectByTag\", \"bastila\", 0), 0)"
+R4-4 transition with empty roster; old settle timer fires after: pending_at_load=2 pc(11)=0 bastila(12)=0
+R4-4b death during load window: EffectDamage delta=0
+R4-5 unload right after load: not_restored=2 lines="[cursed:boom] min-one-HP NOT restored at unload: bastila still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetObjectByTag\", \"bastila\", 0), 0) || [cursed:boom] min-one-HP NOT restored at unload: PC still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetFirstPC\"), 0)"
+R4-6 5x same-module OnAreaEnter, tagged: pc=0 bastila=0 guards_left_pending=0 armed_local5=0
+R4-6b untagged member, same-module OnAreaEnter: after_enter=1 after_settle=1 after_unload=1 unload_line="[cursed:boom] min-one-HP NOT restored at unload: untagged party member still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", <the object>, 0)"
+R4-6c stale timer after re-arm: bastila after old timer=1 after new=0
+R4-7 recycled ID corpse after load: detonations before=1 after=1
+R4-8 untagged carry onto a genuine-1 member: member5=0 pc1=1 pending=0
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[5<-0] pc1=1 member5=0 logs=0
+G1 untagged carry onto genuine-1 member: sets=[5<-1 5<-0] member5=0 pc1=1 pending_total=2 prior_unknown=0
+R4-1b(a) PC blasted again while control swapped: before=1 after_settle=0
+R4-1b(b) control stays swapped, 3 more blast+settle cycles elsewhere: pc1=1 pending_total=5
+R4-1b(b2) control back on PC, next settle: pc1=0
+=== /home/brunner56/kp-live-20260922/review-probes-examples-r4/chain_r3_74c0ca1a.lua 74c0ca1ac5dd
+R4-1a PC tag errors: during=1 new_pc(7)=0 sets=[7<-0] pending=0
+R4-1b PC tag '' + control swap + same-module OnAreaEnter: after_enter=0 after_settle=0 after_unload=0 pending=0 unload_line=""
+R4-1c same, no OnAreaEnter: after_settle=0 pending=0
+R4-2 two same-tag members + OnAreaEnter: during=1,1 after=0,0 sets=[4<-0 3<-0] prior_unknown=0 pending=0 not_restored=0
+R4-2b stuck twin blasted again then settled: twin4=0
+R4-3 member leaves party in window: after_settle=0 pending=0 after_rejoin=0
+R4-3b left party, unload: bastila=0 unload_line=""
+R4-4 transition with empty roster; old settle timer fires after: pending_at_load=2 pc(11)=0 bastila(12)=0
+R4-4b death during load window: EffectDamage delta=0
+R4-5 unload right after load: not_restored=0 lines=""
+R4-6 5x same-module OnAreaEnter, tagged: pc=0 bastila=0 guards_left_pending=0 armed_local5=0
+R4-6b untagged member, same-module OnAreaEnter: after_enter=0 after_settle=0 after_unload=0 unload_line=""
+R4-6c stale timer after re-arm: bastila after old timer=1 after new=0
+R4-7 recycled ID corpse after load: detonations before=1 after=1
+R4-8 untagged carry onto a genuine-1 member: member5=1 pc1=0 pending=0
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[1<-0] pc1=0 member5=1 logs=0
+G1 untagged carry onto genuine-1 member: sets=[5<-1 5<-1] member5=1 pc1=0 pending_total=0 prior_unknown=0
+R4-1b(a) PC blasted again while control swapped: before=0 after_settle=0
+R4-1b(b) control stays swapped, 3 more blast+settle cycles elsewhere: pc1=0 pending_total=0
+R4-1b(b2) control back on PC, next settle: pc1=0
+=== /home/brunner56/kp-live-20260922/review-probes-examples-r4/chain_HEAD.lua a346b5a8381d
+/usr/bin/luajit: tools/tests/examples/fixture.lua:156: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	tools/tests/examples/fixture.lua:156: in function 'fire'
+	...kp-live-20260922/review-probes-examples-r4/r4_probes.lua:39: in main chunk
+	[C]: at 0x5631de0b1b00
+R4-1a PC tag errors: during=1 new_pc(7)=1 sets=[] pending=0
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[] pc1=1 member5=1 logs=0
+/usr/bin/luajit: tools/tests/examples/fixture.lua:156: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	tools/tests/examples/fixture.lua:156: in function 'fire'
+	...p-live-20260922/review-probes-examples-r4/r4_probes2.lua:19: in main chunk
+	[C]: at 0x56543452eb00
+=== /home/brunner56/kp-live-20260922/review-probes-examples-r4/mut-nobump-areaenter.lua 96e6197b9adf
+R4-1a PC tag errors: during=1 new_pc(7)=0 sets=[7<-0] pending=0
+R4-1b PC tag '' + control swap + same-module OnAreaEnter: after_enter=0 after_settle=0 after_unload=0 pending=0 unload_line=""
+R4-1c same, no OnAreaEnter: after_settle=0 pending=0
+R4-2 two same-tag members + OnAreaEnter: during=1,1 after=0,0 sets=[3<-0 4<-0] prior_unknown=0 pending=0 not_restored=0
+R4-2b stuck twin blasted again then settled: twin4=0
+R4-3 member leaves party in window: after_settle=1 pending=1 after_rejoin=0
+R4-3b left party, unload: bastila=1 unload_line="[cursed:boom] min-one-HP NOT restored at unload: bastila still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetObjectByTag\", \"bastila\", 0), 0)"
+R4-4 transition with empty roster; old settle timer fires after: pending_at_load=2 pc(11)=0 bastila(12)=0
+R4-4b death during load window: EffectDamage delta=0
+R4-5 unload right after load: not_restored=2 lines="[cursed:boom] min-one-HP NOT restored at unload: bastila still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetObjectByTag\", \"bastila\", 0), 0) || [cursed:boom] min-one-HP NOT restored at unload: PC still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetFirstPC\"), 0)"
+R4-6 5x same-module OnAreaEnter, tagged: pc=0 bastila=0 guards_left_pending=0 armed_local5=0
+R4-6b untagged member, same-module OnAreaEnter: after_enter=0 after_settle=0 after_unload=0 unload_line=""
+R4-6c stale timer after re-arm: bastila after old timer=1 after new=0
+R4-7 recycled ID corpse after load: detonations before=1 after=1
+R4-8 untagged carry onto a genuine-1 member: member5=0 pc1=1 pending=0
+R4-8d same-module OnAreaEnter, control on untagged member 5: sets=[1<-0] pc1=0 member5=1 logs=0
+G1 untagged carry onto genuine-1 member: sets=[5<-1 5<-1] member5=1 pc1=0 pending_total=0 prior_unknown=0
+R4-1b(a) PC blasted again while control swapped: before=0 after_settle=0
+R4-1b(b) control stays swapped, 3 more blast+settle cycles elsewhere: pc1=0 pending_total=0
+R4-1b(b2) control back on PC, next settle: pc1=0
+=== writer's 22 tests on mut-nobump-areaenter
+PASS	arming, eligible target, requests and duplicate guard
+PASS	conversation invalid and distant or party exclusions
+PASS	transient inner PC failure allows retry
+PASS	party min-one-HP guard restores each prior flag after settle, transition and unload
+PASS	unreadable prior min-one-HP flag leaves that party member untouched
+PASS	module load re-resolves a guarded party member whose object ID changed
+PASS	module load re-resolves the guarded PC through GetFirstPC when its object ID changed
+PASS	module load restores the original PC while it is still valid; a new GetFirstPC object is left alone
+PASS	a PC swap onto another guarded member restores both objects to their own priors
+PASS	a gone PC is never resolved onto another member this script guarded under its own ID
+PASS	a member that cannot be re-resolved is recorded and retried; every resolvable guard is still cleared
+PASS	R3-1: two PC entries recreated after a load each go back to their own creature
+PASS	R3-2: a PC recreated under an ID the script used before a load is restored, and its stuck flag never becomes a prior
+PASS	R3-3: a companion recreated under a recycled ID after a load is restored by tag
+PASS	R3-5: after a load, a valid stored ID with the same tag that is not a party member is not the companion
+PASS	a non-party creature with the companion tag is never taken for the companion; the entry stays pending
+PASS	R3-4: unload restores everyone it can find and names each creature it cannot, with the console fix
+PASS	an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC
+PASS	two entries that resolve to one creature after a load give an unknown prior, restored to 0 and logged
+PASS	an untagged member that cannot be found after a load keeps its first prior when a blast reaches it again
+PASS	frag VFX is unreachable when blast deaths arrive after the hook returns
+PASS	frag VFX is reached only if a death script re-enters during the damage call
+=== writer's 22 tests on current
+PASS	arming, eligible target, requests and duplicate guard
+PASS	conversation invalid and distant or party exclusions
+PASS	transient inner PC failure allows retry
+PASS	party min-one-HP guard restores each prior flag after settle, transition and unload
+PASS	unreadable prior min-one-HP flag leaves that party member untouched
+PASS	module load re-resolves a guarded party member whose object ID changed
+PASS	module load re-resolves the guarded PC through GetFirstPC when its object ID changed
+PASS	module load restores the original PC while it is still valid; a new GetFirstPC object is left alone
+PASS	a PC swap onto another guarded member restores both objects to their own priors
+PASS	a gone PC is never resolved onto another member this script guarded under its own ID
+PASS	a member that cannot be re-resolved is recorded and retried; every resolvable guard is still cleared
+PASS	R3-1: two PC entries recreated after a load each go back to their own creature
+PASS	R3-2: a PC recreated under an ID the script used before a load is restored, and its stuck flag never becomes a prior
+PASS	R3-3: a companion recreated under a recycled ID after a load is restored by tag
+PASS	R3-5: after a load, a valid stored ID with the same tag that is not a party member is not the companion
+PASS	a non-party creature with the companion tag is never taken for the companion; the entry stays pending
+PASS	R3-4: unload restores everyone it can find and names each creature it cannot, with the console fix
+PASS	an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC
+PASS	two entries that resolve to one creature after a load give an unknown prior, restored to 0 and logged
+PASS	an untagged member that cannot be found after a load keeps its first prior when a blast reaches it again
+PASS	frag VFX is unreachable when blast deaths arrive after the hook returns
+PASS	frag VFX is reached only if a death script re-enters during the damage call
+exit=0

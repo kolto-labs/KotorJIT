@@ -1,0 +1,16 @@
+✔ evaluate preserves identity, String bytes and output correlation (13.893964ms)
+✔ stale outcome rejects without replay (2.649701ms)
+✔ wrong outcome identity and hung fetch are failures without replay (12.804929ms)
+✔ Requested stays pending and failed errors retain native bytes (53.236702ms)
+✔ every response stays in the accepted runtime and output must be Found (2.807963ms)
+✔ numeric, zero, noncanonical and overflowing identities are refused before submit (2.789119ms)
+✔ 1+1 returns the native typed Number 2 (1.236609ms)
+✔ cancel retains the accepted request owner across baseline changes (3.292407ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 234.939053

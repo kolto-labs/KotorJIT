@@ -1,0 +1,51 @@
+Resumed and preserved the predecessor’s existing Stage 1 work; I did not reset, stage, commit, touch the canonical checkout, run any live-game tooling, or modify the prohibited paths.
+
+The implementation is present and integrated:
+
+- New read-only `kp.camera.capabilities()` and `kp.camera.snapshot()` implementation in:
+  - [camera.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.hpp)
+  - [camera.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera.cpp)
+  - [camera_profiles.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_profiles.cpp)
+  - [camera_backend.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_backend.cpp)
+  - [camera_lua.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/camera_lua.cpp)
+- K1 GOG-only profile is pinned to SHA-256 `9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435`.
+- The chain is read-only and fallible: app manager → client → internal → camera owner → camera → active behaviour.
+- The profile includes the required identity safeguards:
+  - owner vtable `0x751848`
+  - camera vtable `0x741b20`
+  - chase/OnAStick vtable `0x75165c`
+  - TypeId routine guarded as `0x106a`
+- The four named camera fields are read only: distance, speed, preset pitch, and height.
+- The `+0x84` dolly value remains raw. Documentation and the report explicitly note that it may be uninitialised after the copy-constructed mode-restore path.
+- Raw `+0x28`, `+0x38`, and `+0x50` values are exposed as explicitly meaning-unverified fields; no semantic claim was made for them.
+- The Lua surface exports only lowercase `capabilities` and `snapshot`, and the consistency check confirms they do not duplicate NWScript routine names.
+
+Reviewed-data and generated-table work is complete:
+
+- Added [k1_gog_103_camera_bindings.json](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/adjudication/k1_gog_103_camera_bindings.json), citing both the original plan and independent offset re-derivation, with at least two signals for every accepted binding.
+- Added optional camera rows to [hooksites.toml](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/hooksites.toml), preserving the appended motion rows.
+- Regenerated only [k1_gog_103.json](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_gog_103.json); I did not run `--all` and did not touch `k2_gog_aspyr.json`.
+- Added host-only tests in:
+  - [kp_cameratest.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_cameratest.cpp)
+  - [camera_backend_fixture.hpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/camera_backend_fixture.hpp)
+  - [camera_profile_consistency_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/camera_profile_consistency_test.py)
+- Updated [lua-api.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/lua-api.md) and [api-status.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/docs/user/api-status.md) to say **host-tested, K1 GOG only, no live proof**.
+- Created the requested completion report: [camera-stage1-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/camera-stage1-report.md).
+
+Validation status:
+
+- `python3 tools/camera_profile_consistency_test.py` passed: **5/5**.
+  - It verified profile/overlay/generated-table agreement, reference-image SHA, all guard/literal spans, vtable slots, and Lua-vs-NWScript namespace separation.
+- The first native CTest run found one real test-fixture failure at `kp_cameratest.cpp:101`: exact comparison of separately rounded floating literals for raw `+0x28` fixture data.
+- I corrected the assertion to compare the fixture’s actual `0.1f * (i + 1)` construction rather than a separately rounded `0.4f` literal, then rebuilt the 32-bit `kp_cameratest` target successfully. The rebuilt binary timestamp is `2026-09-27 13:28:44 -0500`, size **837,964 bytes**.
+- The full CTest rerun’s `camera_profile_consistency_test` passed in **5/5** again. The final direct `kp_cameratest` receipt did not return through the host-command bridge before this turn ended, so I am not claiming a final clean native CTest result yet.
+
+Incomplete, honestly: obtain the final `kp_cameratest` process exit receipt, then rerun:
+
+```sh
+/home/brunner56/.local/bin/host-cmd sh -c \
+  '/tmp/kp-w1-build/kp_cameratest && ctest --test-dir /tmp/kp-w1-build \
+  -R "^(kp_cameratest|camera_profile_consistency_test)$" --output-on-failure'
+```
+
+No live K1 GOG runtime snapshot was performed, so live binding and gameplay behavior remain unproven by design.

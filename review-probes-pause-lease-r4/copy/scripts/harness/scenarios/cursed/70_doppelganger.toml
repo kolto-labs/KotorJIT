@@ -1,0 +1,94 @@
+# Exact-token route: each script-created EffectDisguise userdata is retained
+# through cleanup and passed unchanged to RemoveEffect. K1 matches its copied
+# uint64 engine effect ID. This route seeds identical baseline disguises, holds
+# three living copies, and checks baseline counts/rows after exact cleanup.
+name = "cursed: doppelganger"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 240
+load_timeout = 600
+
+[[step]]
+do = "load_checkpoint"
+name = "endar_room3"
+timeout = 600
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+label = "finish Trask's tutorial bark left open by the checkpoint"
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+label = "record P, retain a PC baseline token, and prove fresh effect wrappers before arming"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetAppearanceType',pc); local baseline=nwscript.call('EffectDisguise',p); local kind=nwscript.call('GetEffectType',baseline); nwscript.call('ApplyEffectToObject',2,baseline,pc,0.0); doppel_pc_baseline_token=baseline; local first=nwscript.call('GetFirstEffect',pc); local again=nwscript.call('GetFirstEffect',pc); collectgarbage('collect'); local n=0; local e=nwscript.call('GetFirstEffect',pc); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then n=n+1 end; e=nwscript.call('GetNextEffect',pc) end; nwscript.call('SetLocalNumber',pc,98,p); nwscript.call('SetLocalNumber',pc,97,n); return p>0 and p~=21 and n>=1 and first~=again and nwscript.call('GetLocalNumber',pc,98)==p"
+equals = true
+
+[[step]]
+label = "the curse is armed after two hundred live ticks"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetLocalNumber',pc,5)==1"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+label = "summon three marked living fixtures, retain same-P baseline tokens, and record E/count"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetPosition',pc); local face=nwscript.call('GetLocalNumber',pc,98); doppel_hostile_baseline_tokens={}; local n=0; local baseline_one=true; for i=1,3 do local a=i/3*2*math.pi; local loc=nwscript.call('Location',{x=p.x+5*math.cos(a),y=p.y+5*math.sin(a),z=p.z},0); local c=nwscript.call('CreateObject',1,'g_sithtroop01',loc,1); if nwscript.call('GetIsObjectValid',c)==1 and nwscript.call('GetIsDead',c)~=1 then local original=nwscript.call('GetAppearanceType',c); local baseline=nwscript.call('EffectDisguise',face); local kind=nwscript.call('GetEffectType',baseline); nwscript.call('ApplyEffectToObject',2,baseline,c,0.0); doppel_hostile_baseline_tokens[i]=baseline; local effects=0; local e=nwscript.call('GetFirstEffect',c); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then effects=effects+1 end; e=nwscript.call('GetNextEffect',c) end; if effects~=1 then baseline_one=false end; nwscript.call('SetLocalNumber',c,99,i); nwscript.call('SetLocalNumber',c,100,original); nwscript.call('SetLocalNumber',c,101,effects); nwscript.call('ChangeToStandardFaction',c,1); n=n+1 end end; collectgarbage('collect'); return n==3 and baseline_one"
+equals = true
+timeout = 60
+
+[[step]]
+label = "all three marked hostiles engaged alive; their recorded E rows remain readable"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local area=nwscript.call('GetArea',pc); local seen=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then if nwscript.call('GetIsDead',o)==1 or nwscript.call('GetLocalNumber',o,100)<=0 then return false end; seen=seen+1 end; o=nwscript.call('GetNextObjectInArea',area,1) end; return seen==3 and nwscript.call('GetIsInCombat',pc)==1"
+equals = true
+poll = true
+timeout = 90
+
+[[step]]
+label = "active scene: PC is Malak and each of the three marked living hostiles independently reads P"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetLocalNumber',pc,98); local probe=nwscript.call('EffectDisguise',p); local kind=nwscript.call('GetEffectType',probe); local function disguises(actor) local n=0; local e=nwscript.call('GetFirstEffect',actor); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then n=n+1 end; e=nwscript.call('GetNextEffect',actor) end; return n end; if nwscript.call('GetAppearanceType',pc)~=21 then return false end; local area=nwscript.call('GetArea',pc); local copied=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then if nwscript.call('GetIsDead',o)==1 or nwscript.call('GetAppearanceType',o)~=p or disguises(o)~=nwscript.call('GetLocalNumber',o,101)+1 then return false end; copied=copied+1 elseif nwscript.call('GetIsEnemy',o,pc)==1 and nwscript.call('GetAppearanceType',o)==p then return false end; o=nwscript.call('GetNextObjectInArea',area,1) end; return copied==3 and nwscript.call('GetLocalNumber',pc,7)==3"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+label = "end combat without killing marked hostiles so the forty-tick settle rule can own cleanup"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local area=nwscript.call('GetArea',pc); local changed=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then nwscript.call('ClearAllActions',o); nwscript.call('ChangeToStandardFaction',o,0); changed=changed+1 end; o=nwscript.call('GetNextObjectInArea',area,1) end; nwscript.call('ClearAllActions',pc); return changed==3"
+equals = true
+
+[[step]]
+label = "cleanup: every marked survivor retains same-payload baseline P and the PC has P after live combat settles"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetLocalNumber',pc,98); local probe=nwscript.call('EffectDisguise',p); local kind=nwscript.call('GetEffectType',probe); local function disguises(actor) local n=0; local e=nwscript.call('GetFirstEffect',actor); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then n=n+1 end; e=nwscript.call('GetNextEffect',actor) end; return n end; if nwscript.call('GetAppearanceType',pc)~=p or nwscript.call('GetIsInCombat',pc)==1 then return false end; local area=nwscript.call('GetArea',pc); local restored=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then if nwscript.call('GetIsDead',o)==1 or nwscript.call('GetAppearanceType',o)~=p or disguises(o)~=nwscript.call('GetLocalNumber',o,101) then return false end; restored=restored+1 end; o=nwscript.call('GetNextObjectInArea',area,1) end; return restored==3"
+equals = true
+poll = true
+timeout = 120
+
+[[step]]
+label = "cleanup removes the script-owned disguise delta while preserving every marked actor's baseline disguise handles"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local probe=nwscript.call('EffectDisguise',nwscript.call('GetLocalNumber',pc,98)); local kind=nwscript.call('GetEffectType',probe); local function disguises(actor) local n=0; local e=nwscript.call('GetFirstEffect',actor); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then n=n+1 end; e=nwscript.call('GetNextEffect',actor) end; return n end; if disguises(pc)~=nwscript.call('GetLocalNumber',pc,97) then return false end; local area=nwscript.call('GetArea',pc); local survivors=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then if nwscript.call('GetIsDead',o)==1 or disguises(o)~=nwscript.call('GetLocalNumber',o,101) then return false end; survivors=survivors+1 end; o=nwscript.call('GetNextObjectInArea',area,1) end; return survivors==3"
+equals = true
+
+[[step]]
+label = "each retained baseline constructor token remains independently removable after the owned same-P token is gone"
+do = "assert_lua"
+code = "local pc=nwscript.call('GetFirstPC'); local p=nwscript.call('GetLocalNumber',pc,98); local probe=nwscript.call('EffectDisguise',p); local kind=nwscript.call('GetEffectType',probe); local function disguises(actor) local n=0; local e=nwscript.call('GetFirstEffect',actor); while nwscript.call('GetIsEffectValid',e)==1 do if nwscript.call('GetEffectType',e)==kind then n=n+1 end; e=nwscript.call('GetNextEffect',actor) end; return n end; local area=nwscript.call('GetArea',pc); local done=0; local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do local mark=nwscript.call('GetLocalNumber',o,99); if mark>=1 and mark<=3 then local baseline=doppel_hostile_baseline_tokens and doppel_hostile_baseline_tokens[mark]; if not baseline or nwscript.call('GetLocalNumber',o,101)~=1 then return false end; nwscript.call('RemoveEffect',o,baseline); if disguises(o)~=0 or nwscript.call('GetAppearanceType',o)~=nwscript.call('GetLocalNumber',o,100) then return false end; done=done+1 end; o=nwscript.call('GetNextObjectInArea',area,1) end; nwscript.call('RemoveEffect',pc,doppel_pc_baseline_token); return done==3 and disguises(pc)==0 and nwscript.call('GetAppearanceType',pc)==p"
+equals = true

@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_support.a CMakeFiles/kp_support.dir/src/api/output.cpp.o CMakeFiles/kp_support.dir/src/api/timers.cpp.o CMakeFiles/kp_support.dir/src/api/strings.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_support.a

@@ -1,0 +1,416 @@
+00000000 A AddVectoredExceptionHandler@8
+64bc6c90 b AddVectoredExceptionHandlerFuncPtr
+64a8b390 r .eh_frame$_ZN2kp7harness16save_erf_membersERKSt6vectorIhSaIhEEPS1_INS0_13SaveErfMemberESaIS6_EEPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+64a8b318 r .eh_frame$_ZN2kp7harness19savenfo_last_moduleB5cxx11ERKSt6vectorIhSaIhEE
+64a8cf8c r .eh_frame$_ZNSt22_Optional_payload_baseISt6vectorIN2kp5image7SectionESaIS3_EEE8_M_resetEv
+64a8190c r .eh_frame$_ZNSt3mapIjN2kp3api6motion5EntryESt4lessIjESaISt4pairIKjS3_EEEixERS7_
+64a7eec0 r .eh_frame$_ZNSt6vectorIbSaIbEE13_M_insert_auxESt13_Bit_iteratorb
+64a8b4f4 r .eh_frame$_ZNSt6vectorIjSaIjEE9push_backERKj
+64a761e4 r .eh_frame$_ZNSt6vectorIN2kp3api6memory10ScanRegionESaIS3_EED1Ev
+64a78ed0 r .eh_frame$_ZNSt6vectorIN2kp3lua5ValueESaIS2_EED1Ev
+64a8c4c0 r .eh_frame$_ZNSt6vectorIN2kp5image5macho7SectionESaIS3_EED1Ev
+64a8c47c r .eh_frame$_ZNSt6vectorIN2kp5image5macho7SegmentESaIS3_EED1Ev
+64a7c1e4 r .eh_frame$_ZNSt6vectorIN2kp6events8ArgumentESaIS2_EED1Ev
+64a87f90 r .eh_frame$_ZNSt6vectorIN2kp7harness11DialogReplyESaIS2_EED1Ev
+64a87f4c r .eh_frame$_ZNSt6vectorIN2kp7harness4JsonESaIS2_EED1Ev
+64a77b3c r .eh_frame$_ZNSt6vectorIN2kp8devtools4LineESaIS2_EED1Ev
+64a8b970 r .eh_frame$_ZNSt6vectorINSt10filesystem7__cxx114pathESaIS2_EE17_M_realloc_appendIJRKS2_EEEvDpOT_
+64a76230 r .eh_frame$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EE14_M_insert_rvalEN9__gnu_cxx17__normal_iteratorIPKS5_S7_EEOS5_
+64a82aa8 r .eh_frame$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EE9push_backERKS5_
+64a6665c r .eh_frame$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EED1Ev
+64a77378 r .eh_frame$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt6vectorIS7_SaIS7_EEEEiS7_St4lessIvEEvT_T0_SG_T1_T2_
+64a7d9b8 r .eh_frame$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPSt4pairIiPKcESt6vectorIS5_SaIS5_EEEEiS5_St4lessIvEEvT_T0_SE_T1_T2_
+64a82fa8 r .eh_frame$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPSt4pairIyyESt6vectorIS3_SaIS3_EEEEiS3_St4lessIvEEvT_T0_SC_T1_T2_
+64a54eb0 R GUID_MotionCompCallbacks
+64a55b20 R IID_ID3D10EffectVectorVariable
+64a56770 R IID_ID3D12VideoMotionEstimator
+64a56780 R IID_ID3D12VideoMotionVectorHeap
+64bc761c I _imp__AddVectoredExceptionHandler@8
+64bc773c I _imp__RemoveVectoredExceptionHandler@4
+64a54eb0 r .rdata$GUID_MotionCompCallbacks
+64a55b20 r .rdata$IID_ID3D10EffectVectorVariable
+64a56770 r .rdata$IID_ID3D12VideoMotionEstimator
+64a56780 r .rdata$IID_ID3D12VideoMotionVectorHeap
+64a58cd0 r .rdata$TID_D3DRMVector
+64a59a14 r .rdata$_ZTIN2kp3api6motion7BackendE
+64a5b134 r .rdata$_ZTSN2kp3api6motion7BackendE
+00000000 A RemoveVectoredExceptionHandler@4
+64bc6c8c b RemoveVectoredExceptionHandlerFuncPtr
+647d4830 t __tcf_ZZN2kp3api6motion10operationsEvE1o
+647d9670 t __tcf_ZZN2kp3api6motion14native_backendEPFbyPvjS2_ES2_E6native
+648fafd0 t .text$_ZN2kp7harness16save_erf_membersERKSt6vectorIhSaIhEEPS1_INS0_13SaveErfMemberESaIS6_EEPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+648fb910 t .text$_ZN2kp7harness19savenfo_last_moduleB5cxx11ERKSt6vectorIhSaIhEE
+64994b80 t .text$_ZNSt22_Optional_payload_baseISt6vectorIN2kp5image7SectionESaIS3_EEE8_M_resetEv
+64995280 t .text$_ZNSt3mapIjN2kp3api6motion5EntryESt4lessIjESaISt4pairIKjS3_EEEixERS7_
+6499c120 t .text$_ZNSt6vectorIbSaIbEE13_M_insert_auxESt13_Bit_iteratorb
+6499c520 t .text$_ZNSt6vectorIjSaIjEE9push_backERKj
+6499adc0 t .text$_ZNSt6vectorIN2kp3api6memory10ScanRegionESaIS3_EED1Ev
+6499ae30 t .text$_ZNSt6vectorIN2kp3lua5ValueESaIS2_EED1Ev
+6499aea0 t .text$_ZNSt6vectorIN2kp5image5macho7SectionESaIS3_EED1Ev
+6499af20 t .text$_ZNSt6vectorIN2kp5image5macho7SegmentESaIS3_EED1Ev
+6499b010 t .text$_ZNSt6vectorIN2kp6events8ArgumentESaIS2_EED1Ev
+6499b090 t .text$_ZNSt6vectorIN2kp7harness11DialogReplyESaIS2_EED1Ev
+6499b100 t .text$_ZNSt6vectorIN2kp7harness4JsonESaIS2_EED1Ev
+6499b210 t .text$_ZNSt6vectorIN2kp8devtools4LineESaIS2_EED1Ev
+6499b290 t .text$_ZNSt6vectorINSt10filesystem7__cxx114pathESaIS2_EE17_M_realloc_appendIJRKS2_EEEvDpOT_
+6499b540 t .text$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EE14_M_insert_rvalEN9__gnu_cxx17__normal_iteratorIPKS5_S7_EEOS5_
+6499be00 t .text$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EE9push_backERKS5_
+6499c0c0 t .text$_ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EED1Ev
+649b82c0 t .text$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt6vectorIS7_SaIS7_EEEEiS7_St4lessIvEEvT_T0_SG_T1_T2_
+649b8a00 t .text$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPSt4pairIiPKcESt6vectorIS5_SaIS5_EEEEiS5_St4lessIvEEvT_T0_SE_T1_T2_
+649b8b80 t .text$_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPSt4pairIyyESt6vectorIS3_SaIS3_EEEEiS3_St4lessIvEEvT_T0_SC_T1_T2_
+64a58cd0 R TID_D3DRMVector
+64aedb60 b guard variable for kp::api::motion::operations()::o
+64aedbc0 b guard variable for kp::api::motion::native_backend(bool (*)(unsigned long long, void*, unsigned int, void*), void*)::native
+646cc6b0 t AddWindowToSortBuffer(ImVector<ImGuiWindow*>*, ImGuiWindow*)
+6470aab0 t PathBezierCubicCurveToCasteljau(ImVector<ImVec2>*, float, float, float, float, float, float, float, float, float, int)
+6470a7b0 t PathBezierQuadraticCurveToCasteljau(ImVector<ImVec2>*, float, float, float, float, float, float, float, int)
+64718310 T ImFontGlyphRangesBuilder::BuildRanges(ImVector<unsigned short>*)
+6478a8b0 t kp::multiplayer::(anonymous namespace)::put_u32(std::vector<unsigned char, std::allocator<unsigned char> >&, unsigned int)
+649c45ea t kp::multiplayer::(anonymous namespace)::put_u32(std::vector<unsigned char, std::allocator<unsigned char> >&, unsigned int) [clone .cold]
+6478b210 T kp::multiplayer::Transport::take_frames(unsigned int, std::vector<kp::multiplayer::Frame, std::allocator<kp::multiplayer::Frame> >&)
+649c466a t kp::multiplayer::Transport::take_frames(unsigned int, std::vector<kp::multiplayer::Frame, std::allocator<kp::multiplayer::Frame> >&) [clone .cold]
+647e2bf0 t kp::api::(anonymous namespace)::push_array(lua_State*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+647d4410 T kp::api::register_vector(lua_State*)
+647bb520 t kp::api::memory::(anonymous namespace)::read_units(unsigned int, unsigned int, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> >&)
+649d47f2 t kp::api::memory::(anonymous namespace)::read_units(unsigned int, unsigned int, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> >&) [clone .cold]
+647c3090 T kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)
+647d5580 T kp::api::motion::Operations::valid_span(kp::api::motion::Span const&)
+647d5ee0 T kp::api::motion::Operations::read_fields(unsigned long long, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d57d0 t kp::api::motion::Operations::read_fields(unsigned long long, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d6c80 T kp::api::motion::Operations::write_and_verify(kp::api::motion::Capture const&, std::array<float, 3u> const&, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d587c t kp::api::motion::Operations::write_and_verify(kp::api::motion::Capture const&, std::array<float, 3u> const&, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d5b50 T kp::api::motion::Operations::bind(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long long, kp::api::motion::Backend*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d5794 t kp::api::motion::Operations::bind(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long long, kp::api::motion::Backend*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d4ae0 T kp::api::motion::Operations::fail(kp::api::motion::Failure, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+649d56d0 t kp::api::motion::Operations::fail(kp::api::motion::Failure, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [clone .cold]
+647d55f0 T kp::api::motion::Operations::guards(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d5748 t kp::api::motion::Operations::guards(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d66a0 T kp::api::motion::Operations::locate(unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d583c t kp::api::motion::Operations::locate(unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d4a70 T kp::api::motion::Operations::unbind()
+647d6b00 T kp::api::motion::Operations::capture(unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d586c t kp::api::motion::Operations::capture(unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d7ed0 T kp::api::motion::Operations::observe(unsigned int, unsigned long long, kp::api::motion::Observation&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d594e t kp::api::motion::Operations::observe(unsigned int, unsigned long long, kp::api::motion::Observation&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d7410 T kp::api::motion::Operations::restore(unsigned long long, kp::api::motion::Writer, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d58e8 t kp::api::motion::Operations::restore(unsigned long long, kp::api::motion::Writer, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d84c0 T kp::api::motion::Operations::relocate(unsigned long long, kp::api::motion::Writer, kp::api::motion::Capture const&, std::array<float, 3u> const&, bool, kp::api::motion::Capture&, kp::api::motion::Status&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d597c t kp::api::motion::Operations::relocate(unsigned long long, kp::api::motion::Writer, kp::api::motion::Capture const&, std::array<float, 3u> const&, bool, kp::api::motion::Capture&, kp::api::motion::Status&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d4870 T kp::api::motion::operations()
+647d9700 T kp::api::motion::bind_native(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long long, bool (*)(unsigned long long, void*, unsigned int, void*), void*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649d5a6c t kp::api::motion::bind_native(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long long, bool (*)(unsigned long long, void*, unsigned int, void*), void*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+647d94b0 T kp::api::motion::profile_for(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+647daa70 T kp::api::motion::state_token(lua_State*)
+647d4a30 T kp::api::motion::current_tick(unsigned long long&)
+647d4990 T kp::api::motion::engine_equal(std::array<float, 3u> const&, std::array<float, 3u> const&)
+647d9500 T kp::api::motion::failure_name(kp::api::motion::Failure)
+647d9610 t kp::api::motion::(anonymous namespace)::Native::set_position(unsigned long long, unsigned long long, std::array<float, 3u> const&, int, int, int)
+647d95e0 t kp::api::motion::(anonymous namespace)::Native::placeable(unsigned long long, unsigned long long, unsigned int)
+647d9680 t kp::api::motion::(anonymous namespace)::Native::~Native()
+647d9660 t kp::api::motion::(anonymous namespace)::Native::~Native()
+647d9660 t kp::api::motion::(anonymous namespace)::Native::~Native()
+647d9bf0 t kp::api::motion::(anonymous namespace)::capabilities(lua_State*)
+64aedbd0 b kp::api::motion::(anonymous namespace)::g_next_token
+64aedbb8 b kp::api::motion::(anonymous namespace)::g_tick_context
+64aedbc8 b kp::api::motion::(anonymous namespace)::g_owner_context
+647d99a0 t kp::api::motion::(anonymous namespace)::vec3(lua_State*, std::array<float, 3u> const&)
+647da490 t kp::api::motion::(anonymous namespace)::index(lua_State*)
+649d5b04 t kp::api::motion::(anonymous namespace)::index(lua_State*) [clone .cold]
+64aedbbc b kp::api::motion::(anonymous namespace)::g_tick
+647dae40 t kp::api::motion::(anonymous namespace)::capture(lua_State*)
+649d5b40 t kp::api::motion::(anonymous namespace)::capture(lua_State*) [clone .cold]
+647d9b10 t kp::api::motion::(anonymous namespace)::checked(lua_State*, int) [clone .constprop.0]
+64aedbcc b kp::api::motion::(anonymous namespace)::g_owner
+647da260 t kp::api::motion::(anonymous namespace)::observe(lua_State*)
+649d5af4 t kp::api::motion::(anonymous namespace)::observe(lua_State*) [clone .cold]
+647dab20 t kp::api::motion::(anonymous namespace)::restore(lua_State*)
+649d5b21 t kp::api::motion::(anonymous namespace)::restore(lua_State*) [clone .cold]
+647d9a50 t kp::api::motion::(anonymous namespace)::exact_id(lua_State*, int, unsigned int&) [clone .part.0] [clone .constprop.0]
+647d9bc0 t kp::api::motion::(anonymous namespace)::newindex(lua_State*)
+647db110 t kp::api::motion::(anonymous namespace)::relocate(lua_State*)
+649d5b60 t kp::api::motion::(anonymous namespace)::relocate(lua_State*) [clone .cold]
+647da050 t kp::api::motion::(anonymous namespace)::preflight(lua_State*, int&) [clone .constprop.0]
+649d5ac6 t kp::api::motion::(anonymous namespace)::preflight(lua_State*, int&) [clone .constprop.0] [clone .cold]
+64aedbd8 b kp::api::motion::(anonymous namespace)::token_key
+647dc430 T kp::api::motion::register_all(lua_State*)
+647d96a0 T kp::api::motion::native_backend(bool (*)(unsigned long long, void*, unsigned int, void*), void*)
+647daa50 T kp::api::motion::bind_owner_probe(kp::api::motion::Writer (*)(lua_State*, void*), void*)
+647d94a0 T kp::api::motion::profiles()
+647d4a10 T kp::api::motion::bind_tick(unsigned long long (*)(void*), void*)
+647d4950 T kp::api::motion::bit_equal(std::array<float, 3u> const&, std::array<float, 3u> const&)
+64a3ace0 r kp::api::motion::all_failures
+6479ea50 T kp::lua::convert_tuple(lua_State*, int, std::vector<kp::events::ValueType, std::allocator<kp::events::ValueType> > const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >&)
+649c596b t kp::lua::convert_tuple(lua_State*, int, std::vector<kp::events::ValueType, std::allocator<kp::events::ValueType> > const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >&) [clone .cold]
+647953c0 T kp::lua::Host::dispatch_one(kp::lua::Script&, kp::events::EventContract const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> > const&)
+649c5044 t kp::lua::Host::dispatch_one(kp::lua::Script&, kp::events::EventContract const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> > const&) [clone .cold]
+6479cc60 T kp::lua::Host::reload_changed(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*)
+649c57b8 t kp::lua::Host::reload_changed(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*) [clone .cold]
+64795720 T kp::lua::Host::dispatch(kp::events::EventContract const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> > const&)
+649c5074 t kp::lua::Host::dispatch(kp::events::EventContract const&, std::vector<kp::lua::Value, std::allocator<kp::lua::Value> > const&) [clone .cold]
+6479c230 T kp::lua::Host::load_all(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)
+649c56fa t kp::lua::Host::load_all(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&) [clone .cold]
+647965b0 T kp::lua::Script::probe_callbacks(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+6484ccc0 t kp::hooks::(anonymous namespace)::parse_hex_bytes(std::basic_string_view<char, std::char_traits<char> >, std::vector<unsigned char, std::allocator<unsigned char> >&) [clone .isra.0]
+649db9a4 t kp::hooks::(anonymous namespace)::parse_hex_bytes(std::basic_string_view<char, std::char_traits<char> >, std::vector<unsigned char, std::allocator<unsigned char> >&) [clone .isra.0] [clone .cold]
+64842ac0 t kp::image::(anonymous namespace)::sentinel_matches(kp::image::LoadedImage const&, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> > const&)
+649daff0 t kp::image::(anonymous namespace)::sentinel_matches(kp::image::LoadedImage const&, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> > const&) [clone .cold]
+64842b50 t kp::image::(anonymous namespace)::classify_sections(kp::image::LoadedImage const&, std::vector<kp::image::Section, std::allocator<kp::image::Section> >&)
+649db003 t kp::image::(anonymous namespace)::classify_sections(kp::image::LoadedImage const&, std::vector<kp::image::Section, std::allocator<kp::image::Section> >&) [clone .cold]
+64843780 t kp::image::(anonymous namespace)::write_all(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<unsigned char, std::allocator<unsigned char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+649db0b6 t kp::image::(anonymous namespace)::write_all(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<unsigned char, std::allocator<unsigned char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&) [clone .cold]
+64839b90 T kp::image::map_file_image(std::vector<unsigned char, std::allocator<unsigned char> > const&)
+649da88f t kp::image::map_file_image(std::vector<unsigned char, std::allocator<unsigned char> > const&) [clone .cold]
+64839a00 T kp::image::make_linear_elf_image(std::vector<unsigned char, std::allocator<unsigned char> > const&)
+649da84b t kp::image::make_linear_elf_image(std::vector<unsigned char, std::allocator<unsigned char> > const&) [clone .cold]
+648fafd0 T kp::harness::save_erf_members(std::vector<unsigned char, std::allocator<unsigned char> > const&, std::vector<kp::harness::SaveErfMember, std::allocator<kp::harness::SaveErfMember> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+648fb910 T kp::harness::savenfo_last_module[abi:cxx11](std::vector<unsigned char, std::allocator<unsigned char> > const&)
+647f7630 T kp::harness::Channel::take_requests(unsigned int, std::vector<kp::harness::Request, std::allocator<kp::harness::Request> >&)
+649d6cc4 t kp::harness::Channel::take_requests(unsigned int, std::vector<kp::harness::Request, std::allocator<kp::harness::Request> >&) [clone .cold]
+64762800 t kp::runtime::(anonymous namespace)::motion_tick(void*)
+64762870 t kp::runtime::(anonymous namespace)::motion_owner(lua_State*, void*)
+647827f0 t kp::runtime::(anonymous namespace)::take_wire_u32(std::vector<unsigned char, std::allocator<unsigned char> > const&, unsigned int&, unsigned int&) [clone .constprop.0] [clone .isra.0]
+64782ad0 t kp::runtime::(anonymous namespace)::append_wire_u32(std::vector<unsigned char, std::allocator<unsigned char> >&, unsigned int)
+649c3f28 t kp::runtime::(anonymous namespace)::append_wire_u32(std::vector<unsigned char, std::allocator<unsigned char> >&, unsigned int) [clone .cold]
+64783850 t kp::runtime::(anonymous namespace)::take_wire_float(std::vector<unsigned char, std::allocator<unsigned char> > const&, unsigned int&, float&)
+64781bd0 t kp::runtime::(anonymous namespace)::vectored_handler(_EXCEPTION_POINTERS*)@4
+64782e00 t kp::runtime::(anonymous namespace)::add_move_to_point_body(void*, unsigned short, kp::runtime::(anonymous namespace)::Vector3*, unsigned int, unsigned int, int, float, float, int, int, int, int, int, int, kp::runtime::(anonymous namespace)::Vector3*, unsigned int, unsigned int, int)
+649c3f34 t kp::runtime::(anonymous namespace)::add_move_to_point_body(void*, unsigned short, kp::runtime::(anonymous namespace)::Vector3*, unsigned int, unsigned int, int, float, float, int, int, int, int, int, int, kp::runtime::(anonymous namespace)::Vector3*, unsigned int, unsigned int, int) [clone .cold]
+646c1930 T kp::devtools::EditorInput::EditorInput(std::function<bool (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<void (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>)
+646c1930 T kp::devtools::EditorInput::EditorInput(std::function<bool (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<void (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>)
+649c19d0 t kp::devtools::EditorInput::EditorInput(std::function<bool (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>, std::function<void (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)>) [clone .cold]
+646fa820 T ImGui::DebugNodeWindowsList(ImVector<ImGuiWindow*>*, char const*)
+647150e0 T ImGui::AddDrawListToDrawDataEx(ImDrawData*, ImVector<ImDrawList*>*, ImDrawList*)
+64705ed0 t ImVector<ImDrawVert>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiTable>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImGuiTable>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<stbrp_rect>::operator[](int) [clone .part.0]
+64705f30 t ImVector<ImFontGlyph>::back() [clone .part.0]
+64705ed0 t ImVector<ImFontGlyph>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiTabBar>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<ImGuiTabBar>::operator[](int) [clone .part.0]
+64705f30 t ImVector<ImFontConfig>::back() [clone .part.0]
+64705ed0 t ImVector<ImFontConfig>::operator[](int) [clone .part.0]
+64730d10 t ImVector<ImGuiTabItem>::back() [clone .part.0]
+646c4110 t ImVector<ImGuiTabItem>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<ImGuiTabItem>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImDrawChannel>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImDrawChannel>::operator[](int) [clone .part.0]
+646c4150 t ImVector<ImGuiColorMod>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiColorMod>::pop_back() [clone .part.0]
+646c4150 t ImVector<ImGuiStyleMod>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiStyleMod>::pop_back() [clone .part.0]
+646c4150 t ImVector<ImGuiGroupData>::back() [clone .part.0]
+64730d10 t ImVector<ImGuiGroupData>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiGroupData>::pop_back() [clone .part.0]
+646c4150 t ImVector<ImGuiPopupData>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiPopupData>::pop_back() [clone .part.0]
+646c4110 t ImVector<ImGuiPopupData>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<ImGuiPopupData>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiInputEvent>::operator[](int) [clone .part.0]
+64721080 t ImVector<ImGuiOldColumns>::back() [clone .part.0]
+64720fe0 t ImVector<ImGuiOldColumns>::operator[](int) [clone .part.0]
+64730d10 t ImVector<ImGuiPtrOrIndex>::back() [clone .part.0]
+646c4150 t ImVector<ImGuiContextHook>::back() [clone .part.0]
+646c4130 t ImVector<ImGuiContextHook>::erase(ImGuiContextHook const*) [clone .part.0]
+646c4110 t ImVector<ImGuiContextHook>::operator[](int) [clone .part.0]
+646c4260 t ImVector<ImGuiStoragePair>::insert(ImGuiStoragePair const*, ImGuiStoragePair const&) [clone .part.0]
+646c4110 t ImVector<ImGuiStoragePair>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImGuiStoragePair>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<stbtt_packedchar>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImFontBuildDstData>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImFontBuildSrcData>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImGuiOldColumnData>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImGuiTableTempData>::operator[](int) [clone .part.0]
+646c4150 t ImVector<ImGuiFocusScopeData>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiFocusScopeData>::pop_back() [clone .part.0]
+646c4110 t ImVector<ImGuiFocusScopeData>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiKeyRoutingData>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiStackLevelInfo>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiListClipperData>::operator[](int) [clone .part.0]
+646c4130 t ImVector<ImGuiSettingsHandler>::erase(ImGuiSettingsHandler const*) [clone .part.0]
+64730cd0 t ImVector<ImGuiShrinkWidthItem>::operator[](int) [clone .part.0]
+646c4150 t ImVector<ImGuiWindowStackData>::back() [clone .part.0]
+646c4170 t ImVector<ImGuiWindowStackData>::pop_back() [clone .part.0]
+646c4110 t ImVector<ImGuiWindowStackData>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImFontAtlasCustomRect>::operator[](int) [clone .part.0]
+646c4130 t ImVector<ImGuiListClipperRange>::erase(ImGuiListClipperRange const*) [clone .part.0]
+646c4260 t ImVector<ImGuiListClipperRange>::insert(ImGuiListClipperRange const*, ImGuiListClipperRange const&) [clone .part.0]
+646c4110 t ImVector<ImGuiListClipperRange>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiMultiSelectState>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<ImGuiMultiSelectState>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiTableInstanceData>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImGuiTableInstanceData>::operator[](int) [clone .part.0]
+64730d10 t ImVector<ImGuiTreeNodeStackData>::back() [clone .part.0]
+64730cd0 t ImVector<ImGuiMultiSelectTempData>::operator[](int) [clone .part.0]
+64705f30 t ImVector<ImVec2>::back() [clone .part.0]
+646c4150 t ImVector<ImVec4>::back() [clone .part.0]
+64721080 t ImVector<ImVec4>::back() [clone .part.0]
+64705f10 t ImVector<ImVec4>::pop_back() [clone .part.0]
+646c4150 t ImVector<ImDrawCmd>::back() [clone .part.0]
+64705f30 t ImVector<ImDrawCmd>::back() [clone .part.0]
+64721080 t ImVector<ImDrawCmd>::back() [clone .part.0]
+646c4260 t ImVector<ImDrawCmd>::insert(ImDrawCmd const*, ImDrawCmd const&) [clone .part.0]
+646c4170 t ImVector<ImDrawCmd>::pop_back() [clone .part.0]
+64705f10 t ImVector<ImDrawCmd>::pop_back() [clone .part.0]
+64705ed0 t ImVector<ImDrawCmd>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<ImDrawCmd>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<ImDrawCmd>::operator[](int) [clone .part.0]
+646c4110 t ImVector<char>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<char>::operator[](int) [clone .part.0]
+646c4150 t ImVector<float>::back() [clone .part.0]
+646c4170 t ImVector<float>::pop_back() [clone .part.0]
+646c4110 t ImVector<float>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<float>::operator[](int) [clone .part.0]
+64720fe0 t ImVector<float>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<float>::operator[](int) [clone .part.0]
+646c4150 t ImVector<int>::back() [clone .part.0]
+646c4170 t ImVector<int>::pop_back() [clone .part.0]
+646c4110 t ImVector<int>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<int>::operator[](int) [clone .part.0]
+646c4150 t ImVector<unsigned int>::back() [clone .part.0]
+64721080 t ImVector<unsigned int>::back() [clone .part.0]
+64730d10 t ImVector<unsigned int>::back() [clone .part.0]
+646c4110 t ImVector<unsigned int>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<unsigned int>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImDrawList*>::operator[](int) [clone .part.0]
+646c4150 t ImVector<ImGuiWindow*>::back() [clone .part.0]
+646c4130 t ImVector<ImGuiWindow*>::erase(ImGuiWindow* const*) [clone .part.0]
+646c4260 t ImVector<ImGuiWindow*>::insert(ImGuiWindow* const*, ImGuiWindow* const&) [clone .part.0]
+646c4110 t ImVector<ImGuiWindow*>::operator[](int) [clone .part.0]
+646c4110 t ImVector<ImGuiViewportP*>::operator[](int) [clone .part.0]
+646c4150 t ImVector<ImFont*>::back() [clone .part.0]
+64705f30 t ImVector<ImFont*>::back() [clone .part.0]
+646c4110 t ImVector<ImFont*>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<ImFont*>::operator[](int) [clone .part.0]
+646c4110 t ImVector<unsigned short>::operator[](int) [clone .part.0]
+64705ed0 t ImVector<unsigned short>::operator[](int) [clone .part.0]
+64730cd0 t ImVector<unsigned short>::operator[](int) [clone .part.0]
+64705f10 t ImVector<unsigned long long>::pop_back() [clone .part.0]
+646cb3b0 T ImGuiTextFilter::ImGuiTextRange::split(char, ImVector<ImGuiTextFilter::ImGuiTextRange>*) const
+647d8430 T kp::api::motion::Operations::entry(unsigned int) const
+647d5e70 T kp::api::motion::Operations::pointer(unsigned long long, unsigned long long&) const
+647d83b0 T kp::api::motion::Operations::owner_of(unsigned int) const
+647d9520 t kp::api::motion::(anonymous namespace)::Native::abi() const
+647d9540 t kp::api::motion::(anonymous namespace)::Native::read(unsigned long long, void*, unsigned int) const
+647d9530 t kp::api::motion::(anonymous namespace)::Native::width() const
+64799e90 T kp::lua::Host::list_script_paths(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*) const
+649c5420 t kp::lua::Host::list_script_paths(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*) const [clone .cold]
+64839530 T kp::image::LoadedImage::read_vector(unsigned int, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> >&) const
+649da812 t kp::image::LoadedImage::read_vector(unsigned int, unsigned int, std::vector<unsigned char, std::allocator<unsigned char> >&) const [clone .cold]
+6481d4f0 T kp::harness::EventRing::read_since(unsigned long long, unsigned int, std::vector<kp::harness::EventRecord, std::allocator<kp::harness::EventRecord> >&) const
+649d9624 t kp::harness::EventRing::read_since(unsigned long long, unsigned int, std::vector<kp::harness::EventRecord, std::allocator<kp::harness::EventRecord> >&) const [clone .cold]
+64730cf0 t ImVector<ImGuiTabItem>::index_from_ptr(ImGuiTabItem const*) const [clone .part.0]
+649c22f0 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+64782840 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649c45d0 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649d47d8 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649d9630 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649da7f8 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649dab94 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+649dafd6 t std::_Vector_base<unsigned char, std::allocator<unsigned char> >::~_Vector_base() [clone .isra.0]
+6481dc00 t std::_Vector_base<unsigned int, std::allocator<unsigned int> >::~_Vector_base() [clone .isra.0]
+649dafbc t std::_Vector_base<unsigned int, std::allocator<unsigned int> >::~_Vector_base() [clone .isra.0]
+649c3f0e t std::_Vector_base<kp::lua::Value, std::allocator<kp::lua::Value> >::~_Vector_base() [clone .isra.0]
+649db580 t std::_Vector_base<kp::hooks::(anonymous namespace)::Piece, std::allocator<kp::hooks::(anonymous namespace)::Piece> >::~_Vector_base() [clone .isra.0]
+649c5a18 t std::_Vector_base<kp::events::Argument, std::allocator<kp::events::Argument> >::~_Vector_base() [clone .isra.0]
+649c5a32 t std::_Vector_base<kp::events::ValueType, std::allocator<kp::events::ValueType> >::~_Vector_base() [clone .isra.0]
+6477d470 t std::_Function_handler<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&), kp::devtools::(anonymous namespace)::editor::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}>::_M_manager(std::_Any_data&, std::_Any_data const&, std::_Manager_operation)
+6477d670 t std::_Function_handler<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > (std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&), kp::devtools::(anonymous namespace)::editor::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}>::_M_invoke(std::_Any_data const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+64994b80 T std::_Optional_payload_base<std::vector<kp::image::Section, std::allocator<kp::image::Section> > >::_M_reset()
+64995280 T std::map<unsigned int, kp::api::motion::Entry, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, kp::api::motion::Entry> > >::operator[](unsigned int const&)
+6499c120 T std::vector<bool, std::allocator<bool> >::_M_insert_aux(std::_Bit_iterator, bool)
+6481dc60 t void std::vector<unsigned char, std::allocator<unsigned char> >::_M_range_initialize<std::istreambuf_iterator<char, std::char_traits<char> > >(std::istreambuf_iterator<char, std::char_traits<char> >, std::istreambuf_iterator<char, std::char_traits<char> >, std::input_iterator_tag) [clone .isra.0]
+649d964a t void std::vector<unsigned char, std::allocator<unsigned char> >::_M_range_initialize<std::istreambuf_iterator<char, std::char_traits<char> > >(std::istreambuf_iterator<char, std::char_traits<char> >, std::istreambuf_iterator<char, std::char_traits<char> >, std::input_iterator_tag) [clone .isra.0] [clone .cold]
+6499c520 T std::vector<unsigned int, std::allocator<unsigned int> >::push_back(unsigned int const&)
+6499adc0 T std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >::~vector()
+647afcb0 t void std::vector<kp::api::Routine, std::allocator<kp::api::Routine> >::_M_assign_aux<kp::api::Routine const*>(kp::api::Routine const*, kp::api::Routine const*, std::forward_iterator_tag) [clone .isra.0]
+649d44a8 t void std::vector<kp::api::Routine, std::allocator<kp::api::Routine> >::_M_assign_aux<kp::api::Routine const*>(kp::api::Routine const*, kp::api::Routine const*, std::forward_iterator_tag) [clone .isra.0] [clone .cold]
+647ae220 t kp::lua::Value& std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >::emplace_back<kp::lua::Value>(kp::lua::Value&&) [clone .isra.0]
+649d4374 t kp::lua::Value& std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >::emplace_back<kp::lua::Value>(kp::lua::Value&&) [clone .isra.0] [clone .cold]
+6499ae30 T std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >::~vector()
+         U std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >::~vector()
+         U std::vector<kp::lua::Value, std::allocator<kp::lua::Value> >::~vector()
+6484d380 t kp::hooks::Site& std::vector<kp::hooks::Site, std::allocator<kp::hooks::Site> >::emplace_back<kp::hooks::Site>(kp::hooks::Site&&) [clone .isra.0]
+649db9d6 t kp::hooks::Site& std::vector<kp::hooks::Site, std::allocator<kp::hooks::Site> >::emplace_back<kp::hooks::Site>(kp::hooks::Site&&) [clone .isra.0] [clone .cold]
+6499aea0 T std::vector<kp::image::macho::Section, std::allocator<kp::image::macho::Section> >::~vector()
+6499af20 T std::vector<kp::image::macho::Segment, std::allocator<kp::image::macho::Segment> >::~vector()
+6483f6c0 t kp::image::Section& std::vector<kp::image::Section, std::allocator<kp::image::Section> >::emplace_back<kp::image::Section>(kp::image::Section&&) [clone .isra.0]
+649dabae t kp::image::Section& std::vector<kp::image::Section, std::allocator<kp::image::Section> >::emplace_back<kp::image::Section>(kp::image::Section&&) [clone .isra.0] [clone .cold]
+6479f4f0 t std::vector<kp::events::Argument, std::allocator<kp::events::Argument> >::vector(std::initializer_list<kp::events::Argument>, std::allocator<kp::events::Argument> const&) [clone .isra.0]
+649c5a58 t std::vector<kp::events::Argument, std::allocator<kp::events::Argument> >::vector(std::initializer_list<kp::events::Argument>, std::allocator<kp::events::Argument> const&) [clone .isra.0] [clone .cold]
+6499b010 T std::vector<kp::events::Argument, std::allocator<kp::events::Argument> >::~vector()
+6499b090 T std::vector<kp::harness::DialogReply, std::allocator<kp::harness::DialogReply> >::~vector()
+64808ef0 t std::vector<kp::harness::Json, std::allocator<kp::harness::Json> >::operator=(std::vector<kp::harness::Json, std::allocator<kp::harness::Json> > const&) [clone .isra.0]
+649d81be t std::vector<kp::harness::Json, std::allocator<kp::harness::Json> >::operator=(std::vector<kp::harness::Json, std::allocator<kp::harness::Json> > const&) [clone .isra.0] [clone .cold]
+6499b100 T std::vector<kp::harness::Json, std::allocator<kp::harness::Json> >::~vector()
+6499b210 T std::vector<kp::devtools::Line, std::allocator<kp::devtools::Line> >::~vector()
+         U std::vector<kp::devtools::Line, std::allocator<kp::devtools::Line> >::~vector()
+6499b290 T void std::vector<std::filesystem::__cxx11::path, std::allocator<std::filesystem::__cxx11::path> >::_M_realloc_append<std::filesystem::__cxx11::path const&>(std::filesystem::__cxx11::path const&)
+64763040 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [clone .isra.0]
+647908b0 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [clone .isra.0]
+649c2346 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [clone .isra.0] [clone .cold]
+649c4bb0 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [clone .isra.0] [clone .cold]
+647e2c90 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::basic_string_view<char, std::char_traits<char> > >(std::basic_string_view<char, std::char_traits<char> >&&) [clone .isra.0]
+649d5fe0 t std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::basic_string_view<char, std::char_traits<char> > >(std::basic_string_view<char, std::char_traits<char> >&&) [clone .isra.0] [clone .cold]
+6499b540 T std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_insert_rval(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+6499be00 T std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::push_back(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+6499c0c0 T std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+         U std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+648085e0 t std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json> > >::operator=(std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json> > > const&) [clone .isra.0]
+649d817e t std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json> > >::operator=(std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, kp::harness::Json> > > const&) [clone .isra.0] [clone .cold]
+647d4520 t std::_Rb_tree<unsigned int, std::pair<unsigned int const, kp::api::motion::Entry>, std::_Select1st<std::pair<unsigned int const, kp::api::motion::Entry> >, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, kp::api::motion::Entry> > >::_M_get_insert_unique_pos(unsigned int const&) [clone .isra.0]
+647d45b0 t std::_Rb_tree<unsigned int, std::pair<unsigned int const, kp::api::motion::Entry>, std::_Select1st<std::pair<unsigned int const, kp::api::motion::Entry> >, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, kp::api::motion::Entry> > >::erase[abi:cxx11](std::_Rb_tree_iterator<std::pair<unsigned int const, kp::api::motion::Entry> >) [clone .isra.0]
+647d4670 t std::_Rb_tree<unsigned int, std::pair<unsigned int const, kp::api::motion::Entry>, std::_Select1st<std::pair<unsigned int const, kp::api::motion::Entry> >, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, kp::api::motion::Entry> > >::_M_erase(std::_Rb_tree_node<std::pair<unsigned int const, kp::api::motion::Entry> >*) [clone .isra.0]
+647947a0 t std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >* std::__move_merge<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1})
+647945d0 t __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > > std::__move_merge<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1})
+647bca30 t void std::__adjust_heap<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::ScanRegion, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, int, kp::api::memory::ScanRegion, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1})
+647c0860 t void std::__adjust_heap<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::ScanRegion, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, int, kp::api::memory::ScanRegion, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1})
+649b82c0 T void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<void>)
+         U void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<void>)
+649b8a00 T void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, std::pair<int, char const*>, std::less<void> >(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, int, std::pair<int, char const*>, std::less<void>)
+647b3080 t void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, std::pair<int, char const*>, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, int, std::pair<int, char const*>, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1})
+649b8b80 T void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, int, std::pair<unsigned long long, unsigned long long>, std::less<void> >(__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, int, int, std::pair<unsigned long long, unsigned long long>, std::less<void>)
+647b3200 t void std::__partial_sort<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1})
+647bc180 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, __gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}) [clone .isra.0]
+647bba70 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, __gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}) [clone .isra.0]
+6476f6c0 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, __gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::less<void>) [clone .isra.0]
+64790ee0 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, __gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::less<void>) [clone .isra.0]
+64794310 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1})
+647e0160 t void std::__insertion_sort<__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, std::less<void> >(__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, __gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, std::less<void>) [clone .isra.0]
+647c3630 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, __gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::(anonymous namespace)::derive_regions()::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}) [clone .isra.0]
+647c27b0 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}>(__gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, __gnu_cxx::__normal_iterator<kp::api::memory::ScanRegion*, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> > >, int, kp::api::memory::bind_scan_regions(unsigned int, std::vector<kp::api::memory::ScanRegion, std::allocator<kp::api::memory::ScanRegion> >)::{lambda(kp::api::memory::ScanRegion const&, kp::api::memory::ScanRegion const&)#1}) [clone .isra.0]
+64778e40 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, __gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::less<void>) [clone .isra.0]
+64799220 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::less<void> >(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, __gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, int, std::less<void>) [clone .isra.0]
+647b39f0 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<kp::api::structs::Field const**, std::vector<kp::api::structs::Field const*, std::allocator<kp::api::structs::Field const*> > >, int, kp::api::structs::(anonymous namespace)::name_index()::{lambda()#1}::operator()() const::{lambda(kp::api::structs::Field const*, kp::api::structs::Field const*)#1}>(__gnu_cxx::__normal_iterator<kp::api::structs::Field const**, std::vector<kp::api::structs::Field const*, std::allocator<kp::api::structs::Field const*> > >, __gnu_cxx::__normal_iterator<kp::api::structs::Field const**, std::vector<kp::api::structs::Field const*, std::allocator<kp::api::structs::Field const*> > >, int, kp::api::structs::(anonymous namespace)::name_index()::{lambda()#1}::operator()() const::{lambda(kp::api::structs::Field const*, kp::api::structs::Field const*)#1}) [clone .isra.0]
+647b82d0 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, std::less<void> >(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, std::less<void>) [clone .isra.0]
+647b4df0 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, int, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+647e1af0 t void std::__introsort_loop<__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, int, std::less<void> >(__gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, __gnu_cxx::__normal_iterator<std::pair<unsigned long long, unsigned long long>*, std::vector<std::pair<unsigned long long, unsigned long long>, std::allocator<std::pair<unsigned long long, unsigned long long> > > >, int, std::less<void>) [clone .isra.0]
+64794b90 t void std::__merge_adaptive<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, int, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64794540 t void std::__inplace_stable_sort<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+6478fce0 t void std::__merge_without_buffer<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, int, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1})
+647b37b0 t void std::__move_median_to_first<__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, __gnu_cxx::__normal_iterator<std::pair<int, char const*>*, std::vector<std::pair<int, char const*>, std::allocator<std::pair<int, char const*> > > >, kp::api::structs::(anonymous namespace)::near_misses(kp::api::structs::Layout const*, char const*)::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64794fb0 t void std::__stable_sort_adaptive<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64797e60 t void std::__merge_adaptive_resize<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, int, int, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, int, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64794970 t void std::__merge_sort_with_buffer<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64798470 t void std::__stable_sort_adaptive_resize<__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, int, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}>(__gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, __gnu_cxx::__normal_iterator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, std::vector<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >, std::allocator<std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> > > > >, std::unique_ptr<kp::lua::Script, std::default_delete<kp::lua::Script> >*, int, kp::lua::Host::sort_scripts()::{lambda(auto:1 const&, auto:2 const&)#1}) [clone .isra.0]
+64a3a478 r typeinfo for kp::api::motion::(anonymous namespace)::Native
+64a59a14 R typeinfo for kp::api::motion::Backend
+64a3a4a0 r typeinfo name for kp::api::motion::(anonymous namespace)::Native
+64a5b134 R typeinfo name for kp::api::motion::Backend
+64a3a4c8 r vtable for kp::api::motion::(anonymous namespace)::Native
+647d5180 t kp::api::motion::Operations::restore(unsigned long long, kp::api::motion::Writer, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)::{lambda(kp::api::motion::Failure, char const*)#1}::operator()(kp::api::motion::Failure, char const*) const [clone .isra.0]
+649d5720 t kp::api::motion::Operations::restore(unsigned long long, kp::api::motion::Writer, unsigned int, kp::api::motion::Capture&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)::{lambda(kp::api::motion::Failure, char const*)#1}::operator()(kp::api::motion::Failure, char const*) const [clone .isra.0] [clone .cold]
+64aedb80 b kp::api::motion::operations()::o
+649f1494 d kp::api::motion::native_backend(bool (*)(unsigned long long, void*, unsigned int, void*), void*)::native
+64a3a180 r kp::api::motion::profiles()::p

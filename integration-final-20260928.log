@@ -1,0 +1,347 @@
+namespace contract: 0 failure(s)
+namespace-k1_rc=0
+namespace contract: 0 failure(s)
+namespace-k2_rc=0
+
+=== kp.vec (Lua) ===
+  vec.construct_finite_only                                        ok
+  vec.arith_ops                                                    ok
+  vec.length_normalize_zero                                        ok
+  vec.scalar_results_finite                                        ok
+  vec.dot_cross                                                    ok
+  vec.lerp_endpoints                                               ok
+  vec.distance                                                     ok
+  vec.equality                                                     ok
+  vec.metatable_protected                                          ok
+  vec.mutated_fields_revalidated                                   ok
+  vec.tostring_unpack_copy                                         ok
+  vec.names_not_routines                                           ok
+
+=== kp.vec through the routine bridge (fake VM) ===
+  vec.plain_table_still_marshals (kp.vec in)                       ok
+  vec.plain_table_still_marshals (plain table in)                  ok
+  vec.plain_table_still_marshals (round trip)                      ok
+
+15 check(s), 0 failure(s)
+vector_rc=0
+PASS motion.unsupported_profile_capabilities_false
+PASS motion.relocated_image_refused
+PASS motion.span_table_valid
+PASS motion.guard_flip_refuses_before_call
+PASS motion.chain_failure_refuses_before_call
+PASS motion.invalid_object_id_refused_before_call
+PASS motion.non_placeable_type_refuses
+PASS motion.wrong_vtable_refuses
+PASS motion.id_roundtrip_mismatch_refuses
+PASS motion.capture_reads_server_xyz_and_orientation
+PASS motion.nonfinite_value_refuses
+PASS motion.unreadable_field_refuses
+PASS motion.accepts_client_id_0xffffffff
+PASS motion.unbind_bumps_epoch
+PASS motion.lua_unbound_capabilities_false
+PASS motion.forged_userdata_argerror
+PASS motion.lua_capture_surface
+  PENDING regeneration: server_object.area_id
+  PENDING regeneration: server_object.position
+  PENDING regeneration: server_object.orientation
+  PENDING regeneration: server_object.client_push_gate_unverified
+  PENDING regeneration: server_object.dirty_bits
+  PENDING regeneration: placeable.aabb_registered
+  PENDING regeneration: placeable.quaternion_raw_order_unverified
+  PENDING regeneration: server.get_placeable_by_object_id (proposed row)
+  PENDING regeneration: placeable.vtable (proposed row)
+PASS motion.profile_matches_address_table_row
+PASS motion.bindings_json_matches_profile
+PASS motion.spans_match_reference_image
+PASS motion.gate_refusal_zero_reads_zero_calls
+PASS motion.lua_gate_refusal_before_args
+PASS motion.nonfinite_refused_zero_calls
+PASS motion.step_bound_refused
+PASS motion.dz_bound_refused
+PASS motion.origin_range_refused
+PASS motion.stale_capture_pose_refused
+PASS motion.stale_capture_pose_refused_on_signed_zero
+PASS motion.stale_capture_refused_on_nan_before_fence
+PASS motion.stale_epoch_refused
+PASS motion.area_change_refused
+PASS motion.area_sentinel_refused
+PASS motion.collision_registered_refused_by_default
+PASS motion.collision_opt_in_allows
+PASS motion.relocate_single_setter_call_flags_110
+PASS motion.readback_requires_exact_pos_and_dirty_bit
+PASS motion.readback_mismatch_reports_mutation_and_keeps_entry
+PASS motion.readback_mismatch_on_signed_zero
+PASS motion.readback_refused_on_nan_landed
+PASS motion.same_position_reported_noop_zero_setter_calls
+PASS motion.restore_exact_readback
+PASS motion.restore_refused_after_identity_change
+PASS motion.restore_conflict_when_moved_by_other_writer_no_write
+PASS motion.restore_conflict_on_signed_zero
+PASS motion.restore_refused_on_nan_before_fence
+PASS motion.relocate_conflict_on_signed_zero
+PASS motion.second_owner_refused
+PASS motion.owner_token_not_pointer
+PASS motion.write_refused_without_host_owner_core
+PASS motion.write_refused_without_host_owner
+PASS motion.write_refused_while_staged
+PASS motion.restore_allowed_while_staged
+PASS motion.unbind_clears_ledger
+PASS motion.observe_reports_push_consumed_without_client_read
+PASS motion.lua_relocate_surface
+PASS motion.capabilities_tables
+PASS motion.new_spans_match_reference_image
+PASS motion.names_disjoint_from_nwscript_routines
+58/58 tests passed, 4158 checks (synthetic memory; no live ABI proof)
+motion_rc=0
+PASS engine_gate.unbound_refuses
+PASS engine_gate.bound_probe_true_allows
+PASS engine_gate.rebind_nullptr_refuses
+PASS engine_gate.other_thread_refused
+PASS engine_gate.concurrent_rebind_never_tears
+PASS engine_gate.concurrent_two_writers_never_tear
+6/6 tests passed, 19 checks
+engine_gate_rc=0
+PASS lifecycle.unload_one_raises_OnScriptUnload_once
+PASS lifecycle.unload_one_drops_timers
+PASS lifecycle.unload_one_drops_bound_handlers
+PASS lifecycle.reload_one_increments_generation_and_rebinds
+PASS lifecycle.old_unload_cannot_touch_new_bindings
+PASS lifecycle.deleted_file_unloads_on_poll
+PASS lifecycle.new_file_loads_on_poll
+PASS lifecycle.edit_inside_first_window_detected
+PASS lifecycle.duplicate_load_refused
+PASS lifecycle.failed_reload_keeps_running_generation
+    load error: a.lua: /tmp/lifecycle-cfg/test-tmp/life-final7/failfirst/a.lua:1: '=' expected near 'is'
+PASS lifecycle.failed_first_load_is_FailedToLoad
+PASS lifecycle.quarantine_then_edit_recovers
+PASS lifecycle.state_closing_hook_once_per_close
+PASS lifecycle.request_from_own_callback_deferred
+PASS lifecycle.request_from_timer_deferred
+PASS lifecycle.unknown_name_result_error
+PASS lifecycle.priority_resort_after_reload
+PASS lifecycle.explicit_unload_survives_poll
+PASS lifecycle.load_request_for_new_file
+PASS lifecycle.service_runs_snapshot_only
+PASS lifecycle.sync_refused_while_dispatching
+PASS lifecycle.nested_dispatch_during_staging_skips_old
+PASS lifecycle.alias_of_held_script_refused
+NOTE  lifecycle.case_variant_request_refused: KP_CASEFOLD_DIR unset; case not run
+PASS lifecycle.delete_window_keeps_script
+PASS lifecycle.delete_then_recreate_same_mtime_promotes_generation
+PASS lifecycle.delete_and_recreate_between_polls_promotes_generation
+PASS lifecycle.empty_file_not_reloaded
+PASS lifecycle.request_queue_coalesced_and_bounded
+PASS lifecycle.nul_name_refused
+PASS lifecycle.queued_requests_discarded_by_load_all
+PASS lifecycle.symlink_outside_dir_refused
+31 case(s), 0 failed
+lifecycle_rc=0
+PASS scripts_api.list_shape
+PASS scripts_api.unload_request_then_service
+PASS scripts_api.self_unload_from_callback_safe
+PASS scripts_api.console_state_has_no_scriptname
+PASS scripts_api.scriptname_and_scriptdir_in_a_script
+PASS scripts_api.no_pascalcase_keys
+PASS scripts_api.bad_args_error_not_crash
+PASS scripts_api.unbound_host
+PASS scripts_api.names_are_not_nwscript_names
+PASS scripts_api.result_rejects_bad_ids
+10 case(s), 0 failed
+scripts_rc=0
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: request queue over 4096 lines or 8388608 bytes; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+
+== json codec ==
+  [PASS] dump parses back
+  [PASS] round trip is stable
+  [PASS] integer survives
+  [PASS] high-bit object id survives as a number
+  [PASS] 2^53-1 survives
+  [PASS] float survives
+  [PASS] escapes and UTF-8 survive
+  [PASS] nested array and object survive
+  [PASS] integral doubles print as integers
+  [PASS] null survives
+  [PASS] booleans survive
+  [PASS] object keeps key order
+  [PASS] request line with whitespace parses
+  [PASS] \u escapes including a surrogate pair decode to UTF-8
+  [PASS] exponent parses
+  [PASS] empty array
+  [PASS] malformed inputs are rejected
+  [PASS] nesting bomb is refused
+  [PASS] typed reads on the wrong type fall back
+
+== event ring ==
+  [PASS] fresh ring is empty
+  [PASS] first seq is 1
+  [PASS] one record reads back with its fields
+  [PASS] seq keeps counting past capacity
+  [PASS] size caps at capacity
+  [PASS] oldest seq is newest - capacity + 1
+  [PASS] read from before the tail yields the whole ring in order
+  [PASS] read_since returns records after the cursor
+  [PASS] limit is honoured
+  [PASS] cursor at newest reads nothing
+  [PASS] text fields truncate
+  [PASS] clear keeps the sequence counter
+
+== channel ==
+  [PASS] channel starts on a free loopback port
+  [PASS] port is reported
+  [PASS] a bind outside loopback is refused
+  [PASS] client connected
+  [PASS] first request answered
+  [PASS] second request on the same connection answered
+  [PASS] CRLF framing accepted
+  [PASS] second client is refused with an error line
+  [PASS] second client is closed after the refusal
+  [PASS] twelve lines queued while the drain was held
+  [PASS] take_requests caps a batch at max and keeps the rest
+  [PASS] a new client after disconnect is served
+  [PASS] a reply for a gone client is dropped, not delivered to the next
+  [PASS] every request reached the executor
+  [PASS] requests executed on the draining thread only
+  [PASS] two connections accepted in total
+  [PASS] channel stops
+
+== channel limits ==
+  [PASS] a client that floods the request queue is dropped, not queued without limit
+  [PASS] the queue goes with the connection
+  [PASS] limit channel stops
+
+== cross-protocol lines ==
+  [PASS] line screen: only a line that opens an object passes; HTTP is named
+  [PASS] (a) HTTP POST gets exactly one error reply
+  [PASS] (a) HTTP POST connection is closed after the error
+  [PASS] (a) the POST body line is never dispatched
+  [PASS] (a) a replayed POST on a new connection is condemned again
+  [PASS] (a) a fresh JSON client after the POST is served and kept
+    post1: 1 line(s), eof=1; post2: 1 line(s), eof=1
+  [PASS] (b) malformed line gets one error reply
+    (b) line: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+  [PASS] (b) malformed line closes the connection
+  [PASS] (b) the valid line behind a malformed one is not dispatched
+  [PASS] (c) three requests were taken before the client left
+  [PASS] (c) a batch from a client that has gone is not executed
+    stale batch executed: 0 of 3
+  [PASS] (a2) a 13-line POST spans two drain batches
+  [PASS] (a2) the body in the next batch of a condemned client is not dispatched
+    later batch executed: 0; lines queued 13, batches 8+5
+  [PASS] (d) valid lines, one send, all answered in order
+  [PASS] (d) a devtools line that mentions HTTP/1.1 in its code is still dispatched
+  [PASS] (d) the connection stays up after valid traffic
+  [PASS] (e) the error queued before condemn() is delivered
+  [PASS] (e) a reply queued after condemn() is dropped
+  [PASS] (e) the condemned connection is closed
+    (e) line: {"id":null,"ok":false,"error":"first"}
+  [PASS] (f) control: a subscribed client in good standing gets its event
+  [PASS] (f) a subscribed client that sends a bad line gets one error reply
+  [PASS] (f) no event frame follows the error to a condemned client
+  [PASS] (f) the condemned subscribed connection is closed
+    (f) line: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+
+== phase classifier ==
+  [PASS] main menu with a garbage load_error is menu, not error
+  [PASS] no server is menu even without the panel
+  [PASS] load_error with a server is still error
+  [PASS] loading a module is loading
+  [PASS] a loaded module with the menu panel still listed is loading, not menu
+  [PASS] the panel with no module running is menu
+  [PASS] in game is gameplay
+  [PASS] running module beneath listed main menu is not visible gameplay
+  [PASS] movie retains priority over listed main menu
+  [PASS] loading retains priority over listed main menu
+
+== stuck-load predicate ==
+  [PASS] a loaded module with no control object is the stuck load
+  [PASS] an area already on screen is not stuck
+  [PASS] server_mode 1 is still loading: RunModule has not been through
+  [PASS] a client that already has its creature needs nothing sent
+  [PASS] no module means the load has not got that far
+  [PASS] a field this build cannot read refuses rather than guesses
+
+== normal load completion guards ==
+  [PASS] native cleared menu is already absent
+  [PASS] unreadable menu is not proven absent
+  [PASS] nonnull menu needs native panel check
+  [PASS] issued load can complete normally without injected AreaLoaded
+  [PASS] old running module without observed request flag cannot complete
+  [PASS] replaced server cannot complete an old request
+  [PASS] normal completion requires actual module
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+
+== save ERF members ==
+  [PASS] two members parsed
+  [PASS] sav member named and located
+  [PASS] restype 0 is written as .res
+  [PASS] an unmapped restype is refused, not guessed
+  [PASS] a member running past the file is refused
+  [PASS] non-ERF bytes are refused
+  [PASS] an ERF member whose offset plus size wraps is refused
+  [PASS] an ERF key list offset that wraps is refused
+  [PASS] an ERF resource list offset that wraps is refused
+
+== checked arithmetic ==
+  [PASS] LASTMODULE is read from a well-formed savenfo
+  [PASS] a savenfo whose data offset wraps reads as no module, not as bytes at a low address
+  [PASS] a savenfo whose label offset wraps is refused
+  [PASS] a savenfo whose field offset wraps is refused
+  [PASS] a CExoString longer than the file is refused
+  [PASS] a plain field offset resolves
+  [PASS] a null base has no address
+  [PASS] an unresolved offset (-1) has no address
+  [PASS] a base plus offset that would wrap is refused
+  [PASS] an indexed read resolves
+  [PASS] a negative index is refused
+  [PASS] a zero stride is refused
+  [PASS] an index times stride that would wrap is refused
+  [PASS] a JSON number past int64 falls back rather than converting
+  [PASS] a large negative JSON number falls back too
+  [PASS] a number inside the range still converts
+
+== chargen panel pair ==
+  [PASS] main then child is identified by the route link
+  [PASS] child then main is identified by the route link
+  [PASS] one added panel is rejected
+  [PASS] more than two added panels is rejected
+  [PASS] null panel is rejected
+  [PASS] equal panels are rejected
+  [PASS] unlinked pair is rejected
+  [PASS] incomplete route evidence is rejected
+
+0 failure(s)
+harness_rc=0

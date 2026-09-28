@@ -1,0 +1,17 @@
+renamed_copy_exe_argv_comm: ADMITTED
+exe_symlink_name_differs: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+bash_c_string: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+timeout_launcher: ADMITTED
+env_var_then_target: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+python_dash_u_script: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+launcher_option_value: ADMITTED
+argv_later_real_binary: ADMITTED
+unreadable_cmdline_same_uid: refused: preflight could not read every /proc entry of this user
+unreadable_comm_same_uid: refused: preflight could not read every /proc entry of this user
+real sleep_named_ffmpeg: detected=True comm=ffmpeg exe=/tmp/kp-r11-p10-kp3algw5/ffmpeg argv0=/tmp/kp-r11-p10-kp3algw5/ffmpeg
+real sleep_named_enc_argv_ffmpeg_via_exec_a: detected=True comm=ffmpeg exe=/tmp/kp-r11-p10-kp3algw5/ffmpeg argv0=enc
+real renamed_enc_binary: detected=False comm=enc exe=/tmp/kp-r11-p10-kp3algw5/enc argv0=/tmp/kp-r11-p10-kp3algw5/enc
+real rows=1087 unreadable_refusing=0 exe_only_unreadable=375 exe_only_uids=[0, 70, 81, 114, 193, 951, 979, 986, 993, 995, 998, 1000, 584792] exe_only_comms=['(sd-pam)', 'ModemManager', 'NetworkManager', 'abrt-dump-journ', 'abrtd', 'accounts-daemon', 'alsactl', 'atd', 'auditd', 'avahi-daemon', 'btrfs-cleaner', 'btrfs-transaction']
+forbidden_other_uid= []
+forbidden_all= [(116708, 'ffmpeg', 1000), (116709, 'ffmpeg', 1000), (117050, 'ffmpeg', 1000), (117056, 'ffmpeg', 1000), (117722, 'ffmpeg', 1000), (117723, 'ffmpeg', 1000)]
+real preflight: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes | forbidden comms ['ffmpeg'] | unreadable 0

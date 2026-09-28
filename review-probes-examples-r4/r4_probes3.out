@@ -1,0 +1,10 @@
+=== scripts/examples/cursed/40_chain_reaction.lua
+R4-1L PC tag '' + swap + OnModuleLoad (IDs unchanged): after_load=1 after_settle=1 after_unload=1 pending=3 unload="[cursed:boom] min-one-HP NOT restored at unload: PC still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetFirstPC\"), 0)"
+R4-2L same-tag pair across OnModuleLoad: after=0,1 prior_unknown=1 pending=0
+=== /home/brunner56/kp-live-20260922/review-probes-examples-r4/chain_r3_74c0ca1a.lua
+R4-1L PC tag '' + swap + OnModuleLoad (IDs unchanged): after_load=0 after_settle=0 after_unload=0 pending=0 unload=""
+R4-2L same-tag pair across OnModuleLoad: after=0,0 prior_unknown=0 pending=0
+=== /home/brunner56/kp-live-20260922/review-probes-examples-r4/mut-nobump-areaenter.lua
+R4-1L PC tag '' + swap + OnModuleLoad (IDs unchanged): after_load=1 after_settle=1 after_unload=1 pending=3 unload="[cursed:boom] min-one-HP NOT restored at unload: PC still has it set and this script forgets it now. Fix it in the F12 console: nwscript.call(\"SetMinOneHP\", nwscript.call(\"GetFirstPC\"), 0)"
+R4-2L same-tag pair across OnModuleLoad: after=0,1 prior_unknown=1 pending=0
+exit=0

@@ -1,0 +1,227 @@
+{
+ "scenario": "Task 7 physical native scale",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/next-k1-preparations/20260927-task7-scale-102038-74cb804b/runs/20260927-102706-0523fa70",
+ "started": 1790505200.9497485,
+ "finished": 1790505295.1340692,
+ "seconds": 94.184,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.484,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 23.447,
+   "detail": "phase=gameplay module=danm14aa server_tick=8 client_tick=8195 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 8,
+    "client_tick": 8195,
+    "pc": {
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "id": 2147483644,
+     "hp": 96,
+     "z": 0.9961421489715576,
+     "max_hp": 96
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 5.031,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 1.119,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "peaceful danm14aa, checked native model, original scale",
+   "status": "ok",
+   "seconds": 1.838,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 6,
+   "step": "do advance_ticks {\"ticks\": 120, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 12.548,
+   "detail": "observed server ticks 24 -> 148"
+  },
+  {
+   "index": 7,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 1.315,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 8,
+   "step": "physically construct finite native scale scene",
+   "status": "ok",
+   "seconds": 6.308,
+   "detail": "physical console request 1 Succeeded"
+  },
+  {
+   "index": 9,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.25,
+   "detail": "native log offset 10022"
+  },
+  {
+   "index": 10,
+   "step": "physically arm delayed finite scene with a native timer",
+   "status": "ok",
+   "seconds": 2.784,
+   "detail": "physical console request 2 Succeeded"
+  },
+  {
+   "index": 11,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.23,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 12,
+   "step": "independent native phase 1, identity, effective ratio, peaceful gameplay",
+   "status": "ok",
+   "seconds": 9.17,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 13,
+   "step": "independent native phase 2, identity, effective ratio, peaceful gameplay",
+   "status": "ok",
+   "seconds": 5.047,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 14,
+   "step": "independent native phase 3, identity, effective ratio, peaceful gameplay",
+   "status": "ok",
+   "seconds": 6.272,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 15,
+   "step": "native completion and exact original scale restored",
+   "status": "ok",
+   "seconds": 3.36,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 16,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:task7scale\\\\] phase=\", \"minimum\": 3, \"maximum\": 3, \"timeout\": 10}",
+   "status": "ok",
+   "seconds": 0.113,
+   "detail": "native log matched 3 lines"
+  },
+  {
+   "index": 17,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:task7scale\\\\] complete phases=3 restored=1\", \"minimum\": 1, \"maximum\": 1, \"timeout\": 10}",
+   "status": "ok",
+   "seconds": 0.105,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 18,
+   "step": "do advance_ticks {\"ticks\": 120, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 5.694,
+   "detail": "observed server ticks 788 -> 920"
+  },
+  {
+   "index": 19,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.68,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 20,
+   "step": "physically verify completion and release only scene-owned state",
+   "status": "ok",
+   "seconds": 1.528,
+   "detail": "physical console request 3 Succeeded"
+  },
+  {
+   "index": 21,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.278,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 22,
+   "step": "native local slots and scale remain restored after physical cleanup",
+   "status": "ok",
+   "seconds": 0.12,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 23,
+   "step": "do advance_ticks {\"ticks\": 120, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 3.253,
+   "detail": "observed server ticks 1016 -> 1150"
+  }
+ ]
+}

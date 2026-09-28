@@ -1,0 +1,147 @@
+{
+ "scenario": "cursed: chain reaction",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-101511",
+ "started": 1790090125.9956956,
+ "finished": 1790090259.244104,
+ "seconds": 133.248,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_checkpoint {\"name\": \"endar_room3\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 1.85,
+   "detail": "load_save '000003 - endar_room3' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 36.836,
+   "detail": "phase=gameplay module=END_M01AA server_tick=7 client_tick=10 pc=(45.2,17.0,-1.3) hp=6/6",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 1,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "END_M01AA",
+    "server_tick": 7,
+    "client_tick": 10,
+    "pc": {
+     "x": 45.243614196777344,
+     "y": 16.95315170288086,
+     "z": -1.274999976158142,
+     "hp": 6,
+     "max_hp": 6,
+     "id": 2147483647
+    },
+    "party": [
+     {
+      "id": 2147483647,
+      "tag": ""
+     },
+     {
+      "id": 309,
+      "tag": "end_trask\u0000"
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "6b8400843711c145",
+    "journal_hash": "7d275fa007c0dfbe",
+    "counts": {
+     "globals": 1184,
+     "journal": 1
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "counter plumbing round-trip: PC local numbers 6 and 7 are writable and readable from the harness state",
+   "status": "ok",
+   "seconds": 21.73,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 4,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 3.436,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 5,
+   "step": "finish Trask's tutorial bark left open by the checkpoint",
+   "status": "ok",
+   "seconds": 9.502,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 6,
+   "step": "the curse is armed (PC local number 5 == 1, set by the script 200 ticks after the load)",
+   "status": "ok",
+   "seconds": 23.154,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "arena: summon six Sith troopers in a ring around the player (CreateObject + hostile faction)",
+   "status": "ok",
+   "seconds": 0.77,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 8,
+   "step": "the ring engaged: the player is in combat, or a live hostile stands within 25m",
+   "status": "ok",
+   "seconds": 17.627,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 9,
+   "step": "fight the room while the curse fires",
+   "status": "ok",
+   "seconds": 11.339,
+   "detail": "clear_room: 0 hostiles down in 0.4s"
+  },
+  {
+   "index": 10,
+   "step": "at least three corpses detonated",
+   "status": "ok",
+   "seconds": 2.781,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 11,
+   "step": "the party was inside at least one blast (script-reported party damage in local number 6) and the player lives",
+   "status": "ok",
+   "seconds": 4.222,
+   "detail": "assert_lua == true"
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+actual GameAdapter::load_save -> on_fail call path: PASS

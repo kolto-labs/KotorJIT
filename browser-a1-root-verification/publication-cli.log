@@ -1,0 +1,4 @@
+clean rc=0
+devtools publication: exact MANIFEST match
+planted .tga rc=1
+devtools publication: publication allowlist mismatch: expected ['index.html', 'kotor-console.mjs'], found ['index.html', 'kotor-console.mjs', 'planted.tga']

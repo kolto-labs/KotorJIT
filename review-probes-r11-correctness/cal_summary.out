@@ -1,0 +1,13 @@
+fresh60       fresh n=1199 min=1.8899  | dup n=   0 max=None    | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=passed ratio=1.0 probe_s=122
+r20_k0        fresh n= 399 min=3.8659  | dup n= 800 max=0.5374  | I-dup n=3 vals=[0.5374, 0.5143, 0.5181] | I at [250, 500, 750, 1000] | diag=failed ratio=0.3327 probe_s=148
+r20_k1        fresh n= 400 min=3.8654  | dup n= 799 max=0.5416  | I-dup n=3 vals=[0.525, 0.5416, 0.4709] | I at [250, 500, 750, 1000] | diag=failed ratio=0.3336 probe_s=126
+r20_k2        fresh n= 400 min=3.8619  | dup n= 799 max=0.517   | I-dup n=2 vals=[0.517, 0.5128] | I at [250, 500, 750, 1000] | diag=failed ratio=0.3336 probe_s=150
+r3            fresh n=  59 min=4.1049  | dup n=1140 max=0.2736  | I-dup n=2 vals=[0.2736, 0.2521] | I at [250, 500, 750, 1000] | diag=failed ratio=0.0491 probe_s=121
+r30_k0        fresh n= 599 min=3.0935  | dup n= 600 max=0.1797  | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=failed ratio=0.4995 probe_s=124
+r30_k1        fresh n= 600 min=3.0906  | dup n= 599 max=0.668   | I-dup n=4 vals=[0.6489, 0.668, 0.6522, 0.6573] | I at [250, 500, 750, 1000] | diag=failed ratio=0.5005 probe_s=126
+r50           fresh n= 999 min=2.1024  | dup n= 200 max=0.2423  | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=failed ratio=0.8332 probe_s=148
+r58           fresh n=1159 min=1.8998  | dup n=  40 max=0.2806  | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=failed ratio=0.9666 probe_s=134
+slow_half     fresh n=1199 min=1.2937  | dup n=   0 max=None    | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=passed ratio=1.0 probe_s=131
+slow_quarter  fresh n=1199 min=0.8421  | dup n=   0 max=None    | I-dup n=0 vals=[] | I at [250, 500, 750, 1000] | diag=failed ratio=0.1186 probe_s=126
+testsrc2 native-speed set: fresh n=5814 min=1.8899 | dup n=4977 max=0.668 | P-dup max=0.3114 | I-dup n=14 max=0.668
+fresh quantiles p0.1/p1/p50: 1.9006 1.9406 3.1266

@@ -1,0 +1,29 @@
+FFF.
+======================================================================
+FAIL: test_a_signal_between_fork_and_popen_return_still_supervises_the_child (kpharness_capture_diagnostic_test.InterruptTests.test_a_signal_between_fork_and_popen_return_still_supervises_the_child) (signal='SIGINT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 782, in test_a_signal_between_fork_and_popen_return_still_supervises_the_child
+    self.assertNotIn("interrupted before launch: " + name, result["errors"])
+AssertionError: 'interrupted before launch: SIGINT' unexpectedly found in ['interrupted before launch: SIGINT']
+
+======================================================================
+FAIL: test_a_signal_between_fork_and_popen_return_still_supervises_the_child (kpharness_capture_diagnostic_test.InterruptTests.test_a_signal_between_fork_and_popen_return_still_supervises_the_child) (signal='SIGHUP')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 780, in test_a_signal_between_fork_and_popen_return_still_supervises_the_child
+    self.assertEqual(result["launches"], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_a_signal_between_fork_and_popen_return_still_supervises_the_child (kpharness_capture_diagnostic_test.InterruptTests.test_a_signal_between_fork_and_popen_return_still_supervises_the_child) (signal='SIGTERM')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 780, in test_a_signal_between_fork_and_popen_return_still_supervises_the_child
+    self.assertEqual(result["launches"], 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 2 tests in 14.638s
+
+FAILED (failures=3)

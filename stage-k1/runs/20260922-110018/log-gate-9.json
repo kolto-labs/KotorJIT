@@ -1,0 +1,21 @@
+{
+  "pattern": "\\[cursed:rave\\] beat .* dances",
+  "offset": 8349,
+  "lines": [
+    "[running] info: [60_rave] [cursed:rave] beat 5: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 9: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 14: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 17: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 19: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 21: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 23: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 25: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 26: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 27: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 29: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 35: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 37: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 39: Sith Trooper dances",
+    "[running] info: [60_rave] [cursed:rave] beat 41: Sith Trooper dances"
+  ]
+}

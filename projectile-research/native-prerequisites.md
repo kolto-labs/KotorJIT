@@ -1,0 +1,15 @@
+# Additional verified native projectile prerequisites
+
+Read-only exact-image research. Byte guards in adjacent native-prerequisites.json; corpus locators binary8 agree with independently inspected original PE code. No source edits, game runs or asset redistribution.
+
+CExoResMan::Exists0x408bc0: thiscall(resourceManager, CResRef*, uint32 resourceType, uint32* optionalSize), ret12. Wrapper calls GetKeyEntry and returns its success. Caller0x647c61 supplies resource manager from global0x7a39e8; optional output zero. MDL2002 and MDX3008 preflight can run on the engine command pump before committing a new selection. It proves availability, not projectile mesh compatibility.
+
+CResRef constructor0x406d80 accepts a char pointer as a single stack argument, ret4. It delegates to0x406290; copy ctor0x406da0 uses0x406170, whose original bytes copy exactly16 bytes and normalize characters/pad remaining bytes. Use native construction/copy, never CExoString layout for ResRef.
+
+CExoString default0x5b3190 writes zero pointer+length (8bytes); destructor0x5e5c20 frees only the engine-owned buffer. C2DA GetCExoStringEntry0x413270: thiscall(table, int row, CExoString* column, CExoString* output), ret12. It validates row/column and allocates output via engine assignment. GetColumnIndex0x413100 confirms column is a CExoString pointer; a raw char pointer would be wrong. Caller receiver0x65051a..65052e provides this exact signature.
+
+CTwoDimArrays::Load2DArrays_AmmunitionTypes0x5c2360 stores table at this+0x64. Projectile receiver reads global0x7a3a28 -> +0xb8 -> +0x64 for that same table. At the verified loader entry, decoded ammunition row is byte[entryESP+0x21] (also EBP), and model selector byte[entryESP+0x22]. The receiver formats Model%d from model selector and asks that ammunition row for the original resource. Existing supplied source/target offsets remain +0x9c/+0x24. Configuration-time queries can derive allowed model0/1 from installed rows labelled Blaster/Ion/Disruptor/Sonic/Bowcaster and require original row+resource match inside the hook. Unknown row, selector or resource stays stock. Full firing coverage and modification compatibility remain live questions.
+
+Fresh PC: existing GetPlayerCreatureId0x4aea40 thiscall(server) follows server internal and returns live PC server ID; confirmed original thunk and callee. Existing checked native model converter/creature resolver provides server-to-client translation. Do not cache the PC raw pointer or execute Lua in the hook.
+
+CExoString char* constructor0x5e5a90 was additionally independently inspected. Corpus binary8 signature is CExoString*(this,char*). Original instructions save ESI/EDI, read the sole argument at adjusted ESP+0xc, count bytes, allocate length+1 through engine allocator0x6fa7e6, store pointer and length, copy through NUL, and return ret4 at0x5e5ade; null/empty branch zeroes both fields and returns ret4 at0x5e5af2. Entry guard is recorded in projectiles_profile.cpp. Native table-key construction uses this exact allocator-owned sequence and destructor0x5e5c20, not a borrowed char* disguised as CExoString.

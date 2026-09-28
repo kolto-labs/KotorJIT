@@ -1,0 +1,28 @@
+............................................................................................................................[19:36:25] target k1: data /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/install
+[19:36:25] staged tree /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness (new)
+[19:36:25]   copied writable dir Saves
+[19:36:25] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[19:36:25] executable /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness/swkotor.exe
+[19:36:25] saved original binkw32.dll -> binkw32_real.dll
+[19:36:25] runtime installed from /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/build
+[19:36:25] ini tuned: swkotor.ini (14 keys)
+[19:36:25] target k1: data /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/install
+[19:36:25] staged tree /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness (reused)
+[19:36:25] route resource cache verified for data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[19:36:25] executable /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness/swkotor.exe
+[19:36:25] runtime already current (1befffcee800)
+[19:36:25] ini tuned: swkotor.ini (14 keys)
+[19:36:25] target k1: data /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/install
+[19:36:25] staged tree /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness (reused)
+[19:36:25] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[19:36:25] executable /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/k1_resource_harness/swkotor.exe
+[19:36:25] runtime already current (1befffcee800)
+[19:36:25] ini tuned: swkotor.ini (14 keys)
+[19:36:25] target k1: data /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/install
+[19:36:25] staged tree /home/brunner56/kp-live-20260922/review-probes-single-launch-fu/kpharness_stage_1f0_i1xy/bad_resource (new)
+[19:36:25]   copied writable dir Saves
+..........................
+----------------------------------------------------------------------
+Ran 150 tests in 76.374s
+
+OK

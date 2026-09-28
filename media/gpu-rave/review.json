@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-09-22T16:08:41.318805+00:00",
+  "run_id": "20260922-110018",
+  "report_ok": true,
+  "scenario": "Sith dance crew: peaceful staged rave",
+  "source": {
+    "path": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-110018/continuous.mp4",
+    "sha256": "9abd8ac6a0c1d1d063c49b8be92a63724a3e24891e8ff01bfa9c0d83976ea558",
+    "manifest_sha256": "9abd8ac6a0c1d1d063c49b8be92a63724a3e24891e8ff01bfa9c0d83976ea558",
+    "hash_verified": true,
+    "dimensions": "1024x768",
+    "declared_frame_rate": "60/1",
+    "average_frame_rate": "24156/403",
+    "frame_count": 2013,
+    "duration_seconds": 33.583333
+  },
+  "selected_excerpt": {
+    "start_seconds": 5,
+    "duration_seconds": 16,
+    "reason": "Starts with all three staged armored Sith visible and includes repeated character-pose changes plus several dark-to-yellow-gold lighting cycles.",
+    "audio": "No audio track was added or fabricated.",
+    "interpolation": "No frame interpolation was used."
+  },
+  "visual_observation": "Three black-armored Sith are visibly staged in front of the player and repeatedly change body and arm poses while strong yellow-gold illumination pulses through alternating dark intervals. Party members remain around the player. No weapon exchange or ordinary combat is visible in the reviewed excerpt.",
+  "semantic_proof_limit": "The moving images make the dance-crew presentation visually intelligible, so the caption is supported as a playful description. They do not independently prove Lua causation, the exact animation call count, synchronized choreography, or the logged color-cycle count. The brightest pulses temporarily overexpose much of the scene.",
+  "cadence_summary": {
+    "sample_start_seconds": 5,
+    "sample_duration_seconds": 5,
+    "frames_decoded": 300,
+    "unique_frame_hashes": 300,
+    "adjacent_pairs": 299,
+    "exact_repeated_adjacent_frames": 0,
+    "exact_repeat_fraction": 0.0,
+    "mean_adjacent_luma_delta": 7.491966,
+    "proof_file": "/home/brunner56/kp-live-20260922/media/gpu-rave/cadence-5s.json"
+  },
+  "artifacts": {
+    "horizontal_mp4": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/sith-dance-crew-60fps.mp4",
+      "sha256": "25588269d7f5eaf356108fad2e9b51509d26c9a61688c058e97d11a4630bc868",
+      "bytes": 11519131,
+      "dimensions": "1024x768",
+      "frame_rate": "60/1",
+      "frames": 960,
+      "duration_seconds": 16,
+      "codec": "H.264",
+      "encode": "CRF 20, preset fast, 2 threads, full game frame"
+    },
+    "vertical_mp4": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/sith-dance-crew-vertical-1080x1920.mp4",
+      "sha256": "3cf3824bec0e15b70b93899dd959ae3514066a77e8104e26e2eefdb91e4093e8",
+      "bytes": 14750596,
+      "dimensions": "1080x1920",
+      "frame_rate": "60/1",
+      "frames": 960,
+      "duration_seconds": 16,
+      "codec": "H.264",
+      "encode": "CRF 20, preset fast, 2 threads; uncropped 4:3 game frame over subdued background",
+      "caption": "LUA TURNED THE SITH INTO A DANCE CREW"
+    },
+    "full_gif_preview": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/sith-dance-crew-preview.gif",
+      "sha256": "91b012e5999e0dfd2eebcd9fe875126c307bb01471e554f6e3a0aa719773fdbd",
+      "bytes": 30107118,
+      "dimensions": "480x360",
+      "nominal_frame_rate": "24/1",
+      "frames": 384,
+      "duration_seconds": 16,
+      "usage": "Retained high-detail preview; large file, do not use for inline delivery."
+    },
+    "compact_gif_preview": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/sith-dance-crew-compact-preview.gif",
+      "sha256": "f2e57a34ae5e0893dffd995211efa11f0b3f214d4ef04f05a06b2c314adc4438",
+      "bytes": 4441812,
+      "dimensions": "400x300",
+      "nominal_frame_rate": "24/1",
+      "frames": 120,
+      "duration_seconds": 5,
+      "source_start_seconds": 7,
+      "usage": "Compact inline preview using a 128-color palette and Bayer dithering."
+    },
+    "contact_sheet": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/contact-3s-27s.jpg",
+      "sha256": "ff9d62c5c1d97a5978973d52ae5ae0188ebd4f558e4d7b3236bbeab24c6283f9",
+      "bytes": 655509,
+      "sample": "seconds 3-27 at 1 fps"
+    },
+    "detailed_contact_sheet": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/contact-detail-3s-21s.jpg",
+      "sha256": "cf8280ec33642a7c1cf37f5e9473d961ec25a834d9b32fb4c336d197082507dd",
+      "bytes": 993902,
+      "sample": "seconds 3-21 at 2 fps"
+    },
+    "cadence_proof": {
+      "path": "/home/brunner56/kp-live-20260922/media/gpu-rave/cadence-5s.json",
+      "sha256": "b1f1e747ec3021c17195321d5dbd96d06648ca9c6073d962428aff05c62b9fba",
+      "bytes": 62755,
+      "sample": "seconds 5-10; per-frame SHA-256 and adjacent luma differences"
+    }
+  }
+}

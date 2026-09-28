@@ -1,0 +1,19 @@
+[1/19] Building CXX object CMakeFiles/kp_image.dir/src/image/pe_elf.cpp.o
+[2/19] Building CXX object CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o
+[3/19] Building CXX object CMakeFiles/kp_image.dir/src/image/sha256.cpp.o
+[4/19] Building CXX object CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/trampoline.cpp.o
+[5/19] Linking CXX static library libkp_hooks_x64.a
+[6/19] Building CXX object CMakeFiles/kp_image.dir/src/image/build_table.cpp.o
+[7/19] Building CXX object CMakeFiles/kp_image.dir/src/image/loaded_image.cpp.o
+[8/19] Building CXX object CMakeFiles/kp_imagetool.dir/tools/kp_imagetool.cpp.o
+[9/19] Building CXX object CMakeFiles/kp_image.dir/src/image/classify.cpp.o
+[10/19] Building CXX object CMakeFiles/kp_image.dir/src/image/parse.cpp.o
+[11/19] Building CXX object CMakeFiles/kp_image.dir/src/image/macho.cpp.o
+[12/19] Building CXX object CMakeFiles/kp_machotest.dir/src/image/macho.cpp.o
+[13/19] Building CXX object CMakeFiles/kp_image.dir/src/image/load.cpp.o
+[14/19] Linking CXX static library libkp_image.a
+[15/19] Linking CXX executable kp_imagetool
+[16/19] Building CXX object CMakeFiles/kp_machotest.dir/tools/kp_machotest.cpp.o
+[17/19] Linking CXX executable kp_machotest
+[18/19] Building CXX object CMakeFiles/kp_hooktool_x64.dir/tools/kp_hooktool_x64.cpp.o
+[19/19] Linking CXX executable kp_hooktool_x64

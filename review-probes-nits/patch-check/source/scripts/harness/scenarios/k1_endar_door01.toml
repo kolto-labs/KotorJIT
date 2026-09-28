@@ -1,0 +1,50 @@
+# First physical Endar transaction. The destination is a resource-decoded
+# connected walkmesh centroid, never an inferred GIT point.
+name = "k1 Endar first door transaction"
+target = "k1"
+schema_version = 1
+
+[resources.endar_walkmesh]
+kind = "walkmesh"
+source = "data/models.bif/m01aa_01a.wok"
+file = "harness-resources/m01aa_01a.wok"
+size = 26404
+sha256 = "afd30f4154e5761bcd41223bc000b21422650928c7a5e56691bc2dffad4c88ba"
+
+[execution]
+load_timeout = 300
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+label = "ordinary move/open end_door01 with state proof"
+do = "door_transaction"
+module = "end_m01aa"
+type = 8
+tag = "end_door01"
+position = [21.1225, 20.7130, -1.3158]
+position_tolerance = 0.25
+# data/models.bif/m01aa_01a.wok, BWM V1.0, 26404 bytes,
+# SHA-256 afd30f4154e5761bcd41223bc000b21422650928c7a5e56691bc2dffad4c88ba.
+# Walkable face 12 shares an edge with 13.
+# Their side test uses the live door facing, never a static model-axis normal.
+resource = "endar_walkmesh"
+walkmesh_face = 13
+walkmesh_path = [12, 13]
+walkmesh_approach_face = 12
+walkmesh_approach_centroid = [19.914662679036457, 20.194860458374023, -1.274999976158142]
+walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+walkmesh_min_projection = 0.5
+destination = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+destination_tolerance = 0.75
+timeout = 45
+
+[[step]]
+do = "quit"

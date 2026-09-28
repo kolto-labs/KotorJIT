@@ -1,0 +1,180 @@
+real commands.cpp drain on 127.0.0.1:37737
+-- baseline: well-formed client
+  [PASS] status answered, connection kept
+    runtime=f752f71974ba5491af4b58e17b5d421fbffb8e4c16bca7df1cdd8de68eb3a891
+-- (a) POST + plain submit body, one send
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- (a) POST + kp.console.v1 submit body, one send
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- (a2) parked cross-batch, body first in batch 2 (plain)
+  [PASS] listener parked on condemnation (condemn() reached the listener)
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    batch-2 body executed: 0; eof=1
+  [PASS] body in batch 2 of a condemned client is not executed
+  [PASS] only the one error reply is delivered
+  [PASS] connection closed
+-- (a2) parked cross-batch, body first in batch 2 (protocol)
+  [PASS] listener parked on condemnation (condemn() reached the listener)
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    batch-2 body executed: 0; eof=1
+  [PASS] body in batch 2 of a condemned client is not executed
+  [PASS] only the one error reply is delivered
+  [PASS] connection closed
+-- (b) {bad json + valid submit
+    got: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- (b') {"cmd": truncated object + valid
+    got: {"id":null,"ok":false,"error":"json: unexpected end at offset 7"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- non-object: array
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- non-object: number
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- non-object: string
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- non-object: true
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- non-object: null
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- whitespace-only line
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- BOM before object
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- object + trailing garbage
+    got: {"id":null,"ok":false,"error":"json: trailing characters at offset 33"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- deep nesting 100 objects
+    got: {"id":null,"ok":false,"error":"json: nested too deeply at offset 325"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- WebSocket upgrade
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- HTTP/2 preface
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- TLS-ish binary with embedded JSON line
+    got: {"id":null,"ok":false,"error":"request must be a JSON object; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- pipelined: two POSTs in one send
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- OPTIONS preflight then body
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- lowercase method (not in list)
+    got: {"id":null,"ok":false,"error":"HTTP is not spoken here; connection closed"}
+    eof=1 reset=0 submits+0
+  [PASS] exactly one error reply
+  [PASS] reply wording
+  [PASS] connection closed
+  [PASS] nothing after the bad line ran
+-- (c) client leaves mid-batch, new client connects
+  [PASS] A left and B connected during A's batch
+    A's batch executed: 1 of 3
+  [PASS] only the request that was running when A left ran
+  [PASS] B answered and kept (A's replies not delivered to B)
+    B got: {"id":7,"ok":true,"result":{"submitted":1,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}}
+-- fresh client after a condemned one
+  [PASS] condemned client closed
+    got: {"id":1,"ok":true,"result":{"submitted":1,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}}
+    got: {"id":null,"ok":true,"result":{"request":2,"submitted":2,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}}
+    got: {"id":3,"ok":false,"error":"request needs a string `cmd`"}
+    got: {"id":null,"ok":true,"result":{"request":3,"submitted":3,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}}
+  [PASS] four replies, connection kept
+  [PASS] both submits ran on the fresh generation
+  [PASS] object without cmd is answered and does not condemn
+-- valid variants: leading ws, tab, CRLF, HTTP text in code
+  [PASS] 3 answered, 3 ran, kept
+-- second connection while a condemned client is still open
+    e got: {"id":9,"ok":true,"result":{"submitted":6,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}} (eof=0)
+  [PASS] condemned closed
+  [PASS] backlogged connection accepted after the close is a fresh generation
+-- long valid line (900 KiB code)
+    got: {"id":null,"ok":true,"result":{"request":7,"submitted":7,"completed":0,"running":false,"queued":0,"open":false,"input_calls":0}}
+  [PASS] answered and ran
+-- over-long line (1.2 MiB, no newline) then a valid line
+    got: {"ok":false,"error":"line too long; connection closed"}
+    eof=1 reset=1
+  [PASS] closed, nothing ran
+-- RST probe: 256 KiB of junk after the request line
+    lines=1 eof=1 reset=0 submits+0
+  [PASS] closed, nothing ran
+    (informational) error line delivered: yes
+0 failure(s)

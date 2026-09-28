@@ -1,0 +1,4 @@
+{"time": 1790102419.9670925, "window": "0xe00004", "step": 7, "action": "keydown", "text": null, "key": "s"}
+{"time": 1790102432.2956889, "window": "0xe00004", "step": 15, "action": "keyup", "text": null, "key": "s"}
+{"time": 1790102440.564496, "window": "0xe00004", "step": 20, "action": "keydown", "text": null, "key": "w"}
+{"time": 1790102442.7594194, "window": "0xe00004", "step": 22, "action": "keyup", "text": null, "key": "w"}

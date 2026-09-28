@@ -1,0 +1,1 @@
+{"time": 1790093995.9449685, "code_sha256": "3481b304db5f5c0012fee6676b2574855635616a47c5d74a5686acbcda7c864d", "code": "local p=nwscript.call('GetFirstPC'); return kp.model.capabilities().available and nwscript.call('GetIsInCombat',p)==0 and nwscript.call('GetIsInConversation',p)==0", "response": {"values": [true]}}

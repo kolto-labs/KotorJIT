@@ -1,0 +1,4 @@
+package_creative_harness_test rc=0
+creative_host_check_test rc=0
+kpharness_commit_inputs_test rc=0
+kpharness_export_verify_test rc=0

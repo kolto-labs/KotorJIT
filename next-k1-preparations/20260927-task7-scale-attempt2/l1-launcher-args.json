@@ -1,0 +1,26 @@
+{
+  "note": "L1 NON-ACCEPTANCE diagnostic. Same launcher, backend, build, harness snapshot, stage, save and 1024x768 as V1, with KP_MAX_BOOT_ATTEMPTS=1 in the driver environment and no --dev-max-boot-attempts. Only --script l1_camera_probe.lua (no task7s2 or model_scene script), --route l1-camera-diagnostic.toml, and --marker below. No --capture-marker and no --cadence-* flags, so there is no cadence window.",
+  "env": {
+    "KP_MAX_BOOT_ATTEMPTS": "1"
+  },
+  "args": [
+    "--backend",
+    "linux-wine-k1-gamescope",
+    "--target",
+    "k1",
+    "--script",
+    "l1_camera_probe.lua",
+    "--route",
+    "l1-camera-diagnostic.toml",
+    "--width",
+    "1024",
+    "--height",
+    "768",
+    "--capture-fps",
+    "60",
+    "--boot-timeout",
+    "120",
+    "--marker",
+    "\\[l1cam\\] loaded camera="
+  ]
+}

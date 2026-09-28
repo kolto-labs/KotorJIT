@@ -1,0 +1,19 @@
+forged block bytes: 378 (print buffer 512 incl. '[mod] ')
+== OLDIDLE_F1_print_newline: session_id=0123456789abcdef0123456789abcdef problems=[]
+   host_line: [running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-
+   validate(with --log): VALID
+== OLDIDLE_F2_diag_cr: session_id=None problems=['session line 5 has a carriage return inside it; the runtime never writes one', '2 kp-session start lines in the current session, want 1', '2 different session ids in the current session', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(with --log): ['log: session line 5 has a carriage return inside it; the runtime never writes one', 'log: 2 kp-session start lines in the current session, want 1', 'log: 2 different session ids in the current session', 'log: 2 host lines in the current session, want 1', 'log: 2 gl lines in the current session, want 1', 'log.session_marker_lines is 6, want 3: a line was added, doubled or lost', 'log.host_like_lines is 2, want 1: a line was added, doubled or lost', 'log.gl_like_lines is 2, want 1: a line was added, doubled or lost', 'log.session_id None is not a 32-hex runtime session id', "log.host_line missing or not in the runtime's anchored format; runtime never reported its host", "log.gl_line missing or not in the runtime's anchored format; the overlay never initialised"]
+== OLDIDLE_F3_error_text: session_id=0123456789abcdef0123456789abcdef problems=[]
+   host_line: [running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-
+   validate(with --log): VALID
+== OLDIDLE_F4_no_banner_control: session_id=None problems=['2 kp-session start lines in the current session, want 1', '2 different session ids in the current session', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(with --log): ['log: 2 kp-session start lines in the current session, want 1', 'log: 2 different session ids in the current session', 'log: 2 host lines in the current session, want 1', 'log: 2 gl lines in the current session, want 1', 'log.session_marker_lines is 6, want 3: a line was added, doubled or lost', 'log.host_like_lines is 2, want 1: a line was added, doubled or lost', 'log.gl_like_lines is 2, want 1: a line was added, doubled or lost', 'log.session_id None is not a 32-hex runtime session id', "log.host_line missing or not in the runtime's anchored format; runtime never reported its host", "log.gl_line missing or not in the runtime's anchored format; the overlay never initialised"]
+== OLDIDLE_F5_old_clean_new_empty: session_id=None problems=['0 host lines in the current session, want 1', '0 gl lines in the current session, want 1']
+   host_line: None
+   validate(with --log): ['log: 0 host lines in the current session, want 1', 'log: 0 gl lines in the current session, want 1', 'log.session_marker_lines is 1, want 3: a line was added, doubled or lost', 'log.host_like_lines is 0, want 1: a line was added, doubled or lost', 'log.gl_like_lines is 0, want 1: a line was added, doubled or lost', 'log.session_id None is not a 32-hex runtime session id', "log.host_line missing or not in the runtime's anchored format; runtime never reported its host", "log.gl_line missing or not in the runtime's anchored format; the overlay never initialised"]
+== OLDIDLE_F6_host_before_start: session_id=None problems=['host or gl line comes before the session start line']
+   host_line: None
+   validate(with --log): ['log: host or gl line comes before the session start line', 'log.session_id None is not a 32-hex runtime session id', "log.host_line missing or not in the runtime's anchored format; runtime never reported its host", "log.gl_line missing or not in the runtime's anchored format; the overlay never initialised"]

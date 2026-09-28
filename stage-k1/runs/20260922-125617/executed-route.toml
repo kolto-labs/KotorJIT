@@ -1,0 +1,143 @@
+name="F12 rapid history regression"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+[[step]]
+wait="phase"
+equals="gameplay"
+[[step]]
+do="clear_auto_pause"
+[[step]]
+do="console_open"
+open=true
+[[step]]
+do="console_command"
+code="77+1"
+contains=["number: 78"]
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_command"
+code=""
+keys_before_submit=["ctrl+Up"]
+contains=["number: 78"]
+timeout=5
+[[step]]
+do="console_open"
+open=false

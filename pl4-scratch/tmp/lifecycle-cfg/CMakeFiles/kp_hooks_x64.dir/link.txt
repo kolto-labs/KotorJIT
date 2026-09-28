@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_hooks_x64.a CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/trampoline.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_hooks_x64.a

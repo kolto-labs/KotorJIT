@@ -1,0 +1,99 @@
+[
+  {
+    "path": "scripts/examples/harness/20_dialog_state.lua",
+    "sha256": "d0edc3dc639937113401943c6c5a7d16519a40910a97d3a15a40a5303e93b0e8",
+    "effective_sha256": "d0edc3dc639937113401943c6c5a7d16519a40910a97d3a15a40a5303e93b0e8",
+    "configuration": null,
+    "result_key": "20"
+  },
+  {
+    "path": "scripts/examples/harness/10_world_probe.lua",
+    "sha256": "9d043fdb12bc30e02fce457703b8d28bf77dedf52ecad635bb73bd8f4c652bbb",
+    "effective_sha256": "9d043fdb12bc30e02fce457703b8d28bf77dedf52ecad635bb73bd8f4c652bbb",
+    "configuration": null,
+    "result_key": "10"
+  },
+  {
+    "path": "scripts/examples/harness/60_area_dump.lua",
+    "sha256": "41dc5b3191fd9f75889fb271f404977197fafd8a6cba786b3f5e2d960f1be7ba",
+    "effective_sha256": "41dc5b3191fd9f75889fb271f404977197fafd8a6cba786b3f5e2d960f1be7ba",
+    "configuration": null,
+    "result_key": "60"
+  },
+  {
+    "path": "scripts/examples/harness/40_attack_nearest.lua",
+    "sha256": "ee74e4739f35ea8547df91975526942b19ea3c3fdef5017626547fa091163b25",
+    "effective_sha256": "ee74e4739f35ea8547df91975526942b19ea3c3fdef5017626547fa091163b25",
+    "configuration": null,
+    "result_key": "40"
+  },
+  {
+    "path": "scripts/examples/harness/70_pc_status.lua",
+    "sha256": "c8154f8045f225804cc6086ad5dfa88122fe52b9e35d8651739b894429010192",
+    "effective_sha256": "c8154f8045f225804cc6086ad5dfa88122fe52b9e35d8651739b894429010192",
+    "configuration": null,
+    "result_key": "70"
+  },
+  {
+    "path": "scripts/examples/harness/50_doors.lua",
+    "sha256": "c1793deb142682f18185cf5dc54af8a50c2c2ab363c68511c96907b984dd4a50",
+    "effective_sha256": "c1793deb142682f18185cf5dc54af8a50c2c2ab363c68511c96907b984dd4a50",
+    "configuration": null,
+    "result_key": "50"
+  },
+  {
+    "path": "scripts/examples/harness/50_doors.lua",
+    "sha256": "c1793deb142682f18185cf5dc54af8a50c2c2ab363c68511c96907b984dd4a50",
+    "effective_sha256": "634ee5eb8f1d43e7a2d84054f946347f09316cb3bbb707c680cf7c3721ce30f0",
+    "configuration": [
+      "local OPEN = false",
+      "local OPEN = true"
+    ],
+    "result_key": "50-configured"
+  },
+  {
+    "path": "scripts/examples/harness/30_move_to.lua",
+    "sha256": "f986d44610e61d298db0ff5d3ba1c6596cb00777529afadb4014472c21232198",
+    "effective_sha256": "f986d44610e61d298db0ff5d3ba1c6596cb00777529afadb4014472c21232198",
+    "configuration": null,
+    "result_key": "30"
+  },
+  {
+    "path": "scripts/examples/harness/110_loot_container.lua",
+    "sha256": "d97d16a1c8d9fd5d4e60116cf739ee68cf9cb5b17f8f993e43d6954e96d3e5dd",
+    "effective_sha256": "d97d16a1c8d9fd5d4e60116cf739ee68cf9cb5b17f8f993e43d6954e96d3e5dd",
+    "configuration": null,
+    "result_key": "110"
+  },
+  {
+    "path": "scripts/examples/harness/80_signal_event.lua",
+    "sha256": "8728b4cd6e1040e9b69a1b6d9fe19a82a3880c78c2149cc124a506923649c050",
+    "effective_sha256": "8728b4cd6e1040e9b69a1b6d9fe19a82a3880c78c2149cc124a506923649c050",
+    "configuration": null,
+    "result_key": "80"
+  },
+  {
+    "path": "scripts/examples/harness/90_run_script.lua",
+    "sha256": "560dbdc1ea4cc6eafd1dac190297f176d4beb258a703bf88c96d4f394a240e2b",
+    "effective_sha256": "560dbdc1ea4cc6eafd1dac190297f176d4beb258a703bf88c96d4f394a240e2b",
+    "configuration": null,
+    "result_key": "90"
+  },
+  {
+    "path": "scripts/examples/harness/100_module_transition.lua",
+    "sha256": "5e9eedb004502dd6d869a53dbef79ad7472474dfc0af4702f4fe642038f47a87",
+    "effective_sha256": "5e9eedb004502dd6d869a53dbef79ad7472474dfc0af4702f4fe642038f47a87",
+    "configuration": null,
+    "result_key": "100"
+  },
+  {
+    "path": "scripts/examples/harness/100_module_transition.lua",
+    "sha256": "5e9eedb004502dd6d869a53dbef79ad7472474dfc0af4702f4fe642038f47a87",
+    "effective_sha256": "a3ed22eec6d7e12a68f9a6c39b0ee69003c6556606c9ad1c8088f7b3760b75b8",
+    "configuration": [
+      "local INSPECT = true",
+      "local INSPECT = false"
+    ],
+    "result_key": "100-configured"
+  }
+]

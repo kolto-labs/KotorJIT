@@ -1,0 +1,185 @@
+[  0%] building LuaJIT for native 32-bit Linux
+==== Building LuaJIT 2.1 ====
+HOSTCC    host/minilua.o
+HOSTCC    host/buildvm_asm.o
+HOSTCC    host/buildvm_peobj.o
+HOSTCC    host/buildvm_lib.o
+CC        lj_assert.o
+HOSTCC    host/buildvm_fold.o
+CC        lj_gc.o
+CC        lj_char.o
+CC        lj_obj.o
+CC        lj_buf.o
+CC        lj_str.o
+CC        lj_tab.o
+CC        lj_func.o
+CC        lj_udata.o
+CC        lj_meta.o
+CC        lj_debug.o
+CC        lj_prng.o
+CC        lj_vmevent.o
+CC        lj_vmmath.o
+CC        lj_strscan.o
+CC        lj_strfmt.o
+CC        lj_strfmt_num.o
+CC        lj_serialize.o
+CC        lj_api.o
+CC        lj_lex.o
+CC        lj_parse.o
+CC        lj_bcread.o
+CC        lj_bcwrite.o
+CC        lj_load.o
+CC        lj_ir.o
+CC        lj_opt_mem.o
+CC        lj_opt_narrow.o
+CC        lj_opt_dce.o
+CC        lj_opt_loop.o
+CC        lj_opt_split.o
+CC        lj_opt_sink.o
+CC        lj_mcode.o
+CC        lj_snap.o
+CC        lj_asm.o
+CC        lj_trace.o
+CC        lj_gdbjit.o
+CC        lj_ctype.o
+CC        lj_cdata.o
+CC        lj_cconv.o
+CC        lj_ccall.o
+CC        lj_ccallback.o
+CC        lj_carith.o
+CC        lj_clib.o
+CC        lj_cparse.o
+CC        lj_lib.o
+CC        lj_alloc.o
+CC        lib_aux.o
+CC        lib_package.o
+CC        lib_init.o
+HOSTLINK  host/minilua
+VERSION   luajit.h
+DYNASM    host/buildvm_arch.h
+HOSTCC    host/buildvm.o
+CC        lj_state.o
+CC        lj_profile.o
+CC        luajit.o
+HOSTLINK  host/buildvm
+BUILDVM   lj_ffdef.h
+BUILDVM   lj_vm.S
+BUILDVM   lj_bcdef.h
+BUILDVM   jit/vmdef.lua
+BUILDVM   lj_folddef.h
+BUILDVM   lj_libdef.h
+ASM       lj_vm.o
+BUILDVM   lj_recdef.h
+CC        lj_opt_fold.o
+CC        lj_err.o
+CC        lj_dispatch.o
+CC        lj_record.o
+CC        lj_ffrecord.o
+CC        lj_crecord.o
+CC        lib_math.o
+CC        lib_base.o
+CC        lib_bit.o
+CC        lib_string.o
+CC        lib_table.o
+CC        lib_io.o
+CC        lib_os.o
+CC        lib_debug.o
+CC        lib_jit.o
+CC        lib_ffi.o
+CC        lib_buffer.o
+CC        lj_bc.o
+AR        libluajit.a
+LINK      luajit
+OK        Successfully built LuaJIT
+==== Successfully built LuaJIT 2.1 ====
+[  0%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/fault_guard.cpp.o
+[  4%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o
+[  8%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/multiplayer/transport.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/lua/host.cpp.o
+[ 12%] Building CXX object CMakeFiles/kphasor.dir/src/devtools/console.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/lua/value.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/events/dispatch.cpp.o
+[ 16%] Building CXX object CMakeFiles/kphasor.dir/src/events/table.cpp.o
+[ 20%] Building CXX object CMakeFiles/kphasor.dir/src/events/payload.cpp.o
+[ 20%] Building CXX object CMakeFiles/kphasor.dir/src/events/situation.cpp.o
+[ 24%] Building CXX object CMakeFiles/kphasor.dir/src/api/enginestruct.cpp.o
+[ 24%] Building CXX object CMakeFiles/kphasor.dir/src/api/routines.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘void* kp::runtime::{anonymous}::client_area_get_server_area_body(void*)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:568:11: warning: variable ‘area’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  568 |     void* area = orig != nullptr ? orig(self) : nullptr;
+      |           ^~~~
+[ 24%] Building CXX object CMakeFiles/kphasor.dir/src/api/structs.cpp.o
+[ 28%] Building CXX object CMakeFiles/kphasor.dir/src/api/entity.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘int kp::runtime::{anonymous}::run_script_body(void*, CExoString*, uint32_t, int)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:737:15: warning: variable ‘rc’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  737 |     const int rc = orig(self, name, object_id, has_object);
+      |               ^~
+[ 28%] Building CXX object CMakeFiles/kphasor.dir/src/api/projectiles.cpp.o
+[ 28%] Building CXX object CMakeFiles/kphasor.dir/src/api/memory.cpp.o
+[ 32%] Building CXX object CMakeFiles/kphasor.dir/src/api/projectiles_profile.cpp.o
+[ 32%] Building CXX object CMakeFiles/kphasor.dir/src/api/projectiles_native.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/api/projectiles_lua.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/api/model.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/api/model_profiles.cpp.o
+[ 40%] Building CXX object CMakeFiles/kphasor.dir/src/api/model_backend.cpp.o
+[ 40%] Building CXX object CMakeFiles/kphasor.dir/src/api/model_lua.cpp.o
+[ 40%] Building CXX object CMakeFiles/kphasor.dir/src/api/animation.cpp.o
+[ 44%] Building CXX object CMakeFiles/kphasor.dir/src/api/animation_profiles.cpp.o
+[ 44%] Building CXX object CMakeFiles/kphasor.dir/src/api/animation_backend.cpp.o
+[ 48%] Building CXX object CMakeFiles/kphasor.dir/src/api/animation_lua.cpp.o
+[ 48%] Building CXX object CMakeFiles/kphasor.dir/src/api/output.cpp.o
+[ 48%] Building CXX object CMakeFiles/kphasor.dir/src/api/timers.cpp.o
+[ 52%] Building CXX object CMakeFiles/kphasor.dir/src/api/strings.cpp.o
+[ 52%] Building CXX object CMakeFiles/kphasor.dir/src/api/compat.cpp.o
+[ 56%] Building CXX object CMakeFiles/kphasor.dir/src/image/sha256.cpp.o
+[ 56%] Building CXX object CMakeFiles/kphasor.dir/src/image/loaded_image.cpp.o
+[ 56%] Building CXX object CMakeFiles/kphasor.dir/src/image/pe_elf.cpp.o
+[ 60%] Building CXX object CMakeFiles/kphasor.dir/src/image/macho.cpp.o
+[ 60%] Building CXX object CMakeFiles/kphasor.dir/src/image/parse.cpp.o
+[ 60%] Building CXX object CMakeFiles/kphasor.dir/src/image/classify.cpp.o
+[ 64%] Building CXX object CMakeFiles/kphasor.dir/src/image/build_table.cpp.o
+[ 64%] Building CXX object CMakeFiles/kphasor.dir/src/image/load.cpp.o
+[ 68%] Building CXX object CMakeFiles/kphasor.dir/src/hooks/trampoline.cpp.o
+[ 68%] Building CXX object CMakeFiles/kphasor.dir/src/hooks/registry.cpp.o
+[ 68%] Building CXX object CMakeFiles/kphasor.dir/src/platform/platform.cpp.o
+[ 72%] Building CXX object CMakeFiles/kphasor.dir/src/platform/platform_linux.cpp.o
+[ 72%] Building CXX object CMakeFiles/kphasor.dir/src/harness/channel.cpp.o
+[ 76%] Building CXX object CMakeFiles/kphasor.dir/src/harness/commands.cpp.o
+[ 76%] Building CXX object CMakeFiles/kphasor.dir/src/harness/console_protocol.cpp.o
+[ 76%] Building CXX object CMakeFiles/kphasor.dir/src/harness/json.cpp.o
+[ 80%] Building CXX object CMakeFiles/kphasor.dir/src/harness/ring.cpp.o
+[ 80%] Building CXX object CMakeFiles/kphasor.dir/src/harness/engine_k1.cpp.o
+[ 80%] Building CXX object CMakeFiles/kphasor.dir/src/harness/engine_k2.cpp.o
+[ 84%] Linking CXX shared library libkphasor.so
+[ 88%] Built target kphasor
+[ 88%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform.cpp.o
+[ 96%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o
+[ 96%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/strings.cpp.o
+[ 96%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/value.cpp.o
+[ 96%] Building CXX object CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o
+[ 96%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform_linux.cpp.o
+[100%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o
+[100%] Linking CXX executable kp_lifecycletest
+[100%] Built target kp_lifecycletest
+-- Configuring done (32.6s)
+-- Generating done (231.0s)
+-- Build files have been written to: /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tmp/lifecycle-cfg
+[  3%] Building CXX object CMakeFiles/kphasor.dir/src/api/timers.cpp.o
+[  7%] Linking CXX shared library libkphasor.so
+[ 80%] Built target kphasor
+[ 80%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o
+[ 84%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o
+[ 84%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/value.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/strings.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform_linux.cpp.o
+[ 92%] Linking CXX executable kp_scriptsapitest
+[ 92%] Built target kp_scriptsapitest
+build-rc=0

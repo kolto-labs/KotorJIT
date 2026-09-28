@@ -1,0 +1,30 @@
+{
+  "code": "1 + 1",
+  "input": "real owned-window keyboard",
+  "expected_request": 1,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> 1 + 1"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "number: 2"
+      }
+    ],
+    "submitted": 1,
+    "completed": 1,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 706
+  }
+}

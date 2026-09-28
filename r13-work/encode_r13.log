@@ -1,0 +1,115 @@
+clean_native_long 623s
+clean_slowq 166s
+clean_fast4 153s
+clean_static 146s
+isodup_native_k0 142s
+isodup_native_k1 107s
+isodup_slowq_k0 123s
+isodup_static_k0 70s
+r30_native_k0 59s
+pingpong_native 43s
+[1;35m[vost#0:0/libx264 @ 0x55c0f480f140] [0m[1;31mError submitting a packet to the muxer: Disk quota exceeded
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/mp4 @ 0x55c0f480ec40] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/mp4 @ 0x55c0f480ec40] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x55c0f480ec40] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x55c0f480ec40] [0m[1;31mError writing trailer: Disk quota exceeded
+[0m[1;35m[out#0/mp4 @ 0x55c0f480ec40] [0m[1;31mError closing file: Disk quota exceeded
+[0m[1;35m[out#0/mp4 @ 0x55e87245bc40] [0m[1;31mCould not write header (incorrect codec parameters ?): Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x55e87245d780] [0m[1;31mError sending frames to consumers: Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x55e87245d780] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;32m[vf#0:0 @ 0x55e87245d780] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x55e87245bc40] [0m[1;31mNothing was written into output file, because at least one of its streams received no packets.
+[0m[1;35m[out#0/mp4 @ 0x5592cc6fbc40] [0m[1;31mCould not write header (incorrect codec parameters ?): Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x5592cc6fd780] [0m[1;31mError sending frames to consumers: Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x5592cc6fd780] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;32m[vf#0:0 @ 0x5592cc6fd780] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x5592cc6fbc40] [0m[1;31mNothing was written into output file, because at least one of its streams received no packets.
+[0m[1;35m[out#0/mp4 @ 0x557793c40c40] [0m[1;31mCould not write header (incorrect codec parameters ?): Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x557793c42780] [0m[1;31mError sending frames to consumers: Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x557793c42780] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;32m[vf#0:0 @ 0x557793c42780] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x557793c40c40] [0m[1;31mNothing was written into output file, because at least one of its streams received no packets.
+[0m[1;35m[out#0/mp4 @ 0x564a4f12bc40] [0m[1;31mCould not write header (incorrect codec parameters ?): Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x564a4f12d780] [0m[1;31mError sending frames to consumers: Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x564a4f12d780] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;32m[vf#0:0 @ 0x564a4f12d780] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x564a4f12bc40] [0m[1;31mNothing was written into output file, because at least one of its streams received no packets.
+[0m[1;35m[out#0/mp4 @ 0x5650d3e9fc40] [0m[1;31mCould not write header (incorrect codec parameters ?): Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x5650d3ea1780] [0m[1;31mError sending frames to consumers: Disk quota exceeded
+[0m[1;32m[vf#0:0 @ 0x5650d3ea1780] [0m[1;31mTask finished with error code: -122 (Disk quota exceeded)
+[0m[1;32m[vf#0:0 @ 0x5650d3ea1780] [0m[1;31mTerminating thread with return code -122 (Disk quota exceeded)
+[0m[1;35m[out#0/mp4 @ 0x5650d3e9fc40] [0m[1;31mNothing was written into output file, because at least one of its streams received no packets.
+[0mOSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/r13-work/encode_r13.py", line 94, in <module>
+    for name, how in pool.map(work, only):
+                     ~~~~~~~~^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/_base.py", line 645, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/_base.py", line 312, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/_base.py", line 454, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/_base.py", line 396, in __get_result
+    raise self._exception
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/concurrent/futures/thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "/home/brunner56/kp-live-20260922/r13-work/encode_r13.py", line 89, in work
+    out.write_text(json.dumps({'name': name, 'speed': sp, 'map': m, 'rows': rows, 'pts': pts}))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/pathlib/__init__.py", line 809, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 122] Disk quota exceeded
+[1;35m[vost#0:0/rawvideo @ 0x561bc23dbdc0] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x561bc23dba40] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/rawvideo @ 0x561bc23dba40] [0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x561bc23dba40] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;35m[vost#0:0/rawvideo @ 0x55a6d3178dc0] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x55a6d3178a40] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/rawvideo @ 0x55a6d3178a40] [0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x55a6d3178a40] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;35m[vost#0:0/rawvideo @ 0x55b11971c980] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x55b11971c600] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/rawvideo @ 0x55b11971c600] [0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x55b11971c600] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;35m[vost#0:0/rawvideo @ 0x55e0c8c53dc0] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x55e0c8c53a40] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/rawvideo @ 0x55e0c8c53a40] [0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x55e0c8c53a40] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;35m[vost#0:0/rawvideo @ 0x565127763dc0] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x565127763a40] [0m[1;31mError muxing a packet
+[0m[1;35m[vost#0:0/rawvideo @ 0x562772916dc0] [0m[1;31mError submitting a packet to the muxer: Broken pipe
+[0m    Last message repeated 1 times[1;35m[out#0/rawvideo @ 0x565127763a40] [0m    Last message repeated 1 times
+[1;35m[out#0/rawvideo @ 0x562772916a40] [0m[1;31mError muxing a packet
+[0m[1;35m[out#0/rawvideo @ 0x562772916a40] [0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x562772916a40] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;31mTask finished with error code: -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x565127763a40] [0m[1;31mTerminating thread with return code -32 (Broken pipe)
+[0m[1;35m[out#0/rawvideo @ 0x561bc23dba40] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x561bc23dba40] [0m[1;31mError closing file: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55e0c8c53a40] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55e0c8c53a40] [0m[1;31mError closing file: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55b11971c600] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55b11971c600] [0m[1;31mError closing file: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x565127763a40] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x565127763a40] [0m[1;31mError closing file: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x562772916a40] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x562772916a40] [0m[1;31mError closing file: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55a6d3178a40] [0m[1;31mError writing trailer: Broken pipe
+[0m[1;35m[out#0/rawvideo @ 0x55a6d3178a40] [0m[1;31mError closing file: Broken pipe
+[0m

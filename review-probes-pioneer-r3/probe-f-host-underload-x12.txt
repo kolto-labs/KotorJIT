@@ -1,0 +1,12 @@
+run=1 rc=0 secs=11
+run=2 rc=0 secs=8
+run=3 rc=0 secs=15
+run=4 rc=0 secs=16
+run=5 rc=0 secs=17
+run=6 rc=0 secs=27
+run=7 rc=0 secs=25
+run=8 rc=0 secs=17
+run=9 rc=0 secs=11
+run=10 rc=0 secs=9
+run=11 rc=0 secs=8
+run=12 rc=0 secs=9

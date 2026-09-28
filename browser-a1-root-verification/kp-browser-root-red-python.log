@@ -1,0 +1,14 @@
+......F.
+======================================================================
+FAIL: test_queued_calls_never_send_after_upstream_loss (__main__.BridgeUnitTest.test_queued_calls_never_send_after_upstream_loss)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_devtools_bridge_test.py", line 131, in test_queued_calls_never_send_after_upstream_loss
+    self.assertEqual(ch.calls, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.170s
+
+FAILED (failures=1)

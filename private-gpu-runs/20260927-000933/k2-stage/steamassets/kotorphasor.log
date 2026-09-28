@@ -1,0 +1,64 @@
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets\swkotor2.exe
+[identifying] sha256: 777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k2_gog_aspyr (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: e2b3e9695b092ba062e33858b417dd22f131cd2862690f3a896e9f754848bace
+[awaiting-decipher]   section .text va=0x00401000 size=5782036 entropy=6.255 state=plaintext
+[awaiting-decipher] model: unsupported: unknown executable SHA256
+[awaiting-decipher] animation: unsupported: exact verified model/image binding required
+[resolving] signature resolve: 184/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets\kotorphasor\addresses\k2_gog_aspyr.json (256 sites, build k2_gog_aspyr, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 00645540 -> 77d26bf0, 6 bytes displaced, trampoline 02060000 (11 bytes)
+[installing] debug: detour 007b6bb0 -> 77d27c30, 5 bytes displaced, trampoline 02340000 (10 bytes)
+[installing] debug: detour 004089f0 -> 77d28090, 5 bytes displaced, trampoline 02350000 (10 bytes)
+[installing] debug: detour 00687b00 -> 77d24e60, 5 bytes displaced, trampoline 02360000 (10 bytes)
+[installing] debug: detour 00762ff0 -> 77d24eb0, 5 bytes displaced, trampoline 02370000 (10 bytes)
+[installing] debug: detour 0076d3b0 -> 77d24f00, 5 bytes displaced, trampoline 02380000 (10 bytes)
+[installing] debug: detour 0075e400 -> 77d24f50, 5 bytes displaced, trampoline 02390000 (10 bytes)
+[installing] debug: detour 00729bf0 -> 77d24fa0, 9 bytes displaced, trampoline 023a0000 (14 bytes)
+[installing] debug: detour 00717360 -> 77d24ff0, 5 bytes displaced, trampoline 023b0000 (10 bytes)
+[installing] debug: detour 007e9b40 -> 77d25040, 6 bytes displaced, trampoline 023c0000 (11 bytes)
+[installing] debug: detour 007e6800 -> 77d25090, 6 bytes displaced, trampoline 023d0000 (11 bytes)
+[installing] debug: detour 007c10f0 -> 77d250e0, 6 bytes displaced, trampoline 023e0000 (11 bytes)
+[installing] debug: detour 007f59d0 -> 77d25130, 6 bytes displaced, trampoline 023f0000 (11 bytes)
+[installing] debug: detour 00646610 -> 77d25180, 6 bytes displaced, trampoline 02400000 (11 bytes)
+[installing] debug: detour 00640da0 -> 77d292c0, 7 bytes displaced, trampoline 02410000 (12 bytes)
+[installing] debug: detour 0042e160 -> 77d23ef0, 5 bytes displaced, trampoline 02420000 (10 bytes)
+[installing] debug: detour 004489f0 -> 77da26e0, 6 bytes displaced, trampoline 02430000 (11 bytes)
+[installing] debug: detour 0044d5b0 -> 77da27d0, 6 bytes displaced, trampoline 02440000 (11 bytes)
+[installing] debug: detour 006ca9c0 -> 77d22ca0, 5 bytes displaced, trampoline 02450000 (10 bytes)
+[installing] info: installed 19 hook(s) for build k2_gog_aspyr
+[installing] installed 19 hooks
+[installing] info: harness[k2]: adapter k2 for build k2_gog_aspyr: 64 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k2]: missing: appmgr.client, appmgr.reentrant_server_stats, client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, client.player_creature_id, module.name, server.pause_state, stats.continue_message_processing, stats.load_game_error, gui.tutorial_box, gui.messagebox_callback, gui.messagebox_callback_context, gui.messagebox_callback_arg, gui.modal_data, gui.modal_size, gui.party_selection_vtable, gui.initialized, gui.party_selectio
+[installing] harness: adapter k2, 64 site(s) unbound: appmgr.client, appmgr.reentrant_server_stats, client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, client.player_creature_id, module.name, server.pause_state, stats.continue_message_processing, stats.load_game_error, gui.tutorial_box, gui.messagebox_callback, gui.messagebox_callback_context, gui.messagebox_callback_arg, gui.modal_data, gui.modal_size, gui.party_selection_vtable, gui.initialized, gui.party_selection_selected_count, gui.party_selection_mode, gui.party_selection_entry0_flags, menu.newgame_button, menu.ready, gui.panel_bit_flags, gui.control_active, gui.panels_data, gui.panels_size, chargen.class_controls, chargen.class_control, chargen.main_route_panel, chargen.main_quick_panel, chargen.child_main_panel, chargen.main_visible_panel, client.movie_player, movie.internal, movie.playing, dialog.node_strref, timer.paused, gvt.table, gvt.identifiers, gvt.identifier, gvt.identifier_type_inde
+[installing] loaded 0 script(s) from Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets\kotorphasor\scripts
+[running] running: build k2_gog_aspyr, 19 hooks, 0 script(s)
+[running] harness: listening on 127.0.0.1:43391
+[running] info: harness: client connected
+[running] info: api: registered nwscript.call for 803 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k2]: load_save '000013 - game12': LASTMODULE=302NAR from Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets/saves/000013 - game12/savenfo.res
+[running] info: harness[k2]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets/saves/000013 - game12/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\private-gpu-runs\20260927-000933\k2-stage\steamassets/gameinprogress'
+[running] info: harness[k2]: load_save: 1 exported 36 file(s), first '003ebo.sav'
+[running] info: harness[k2]: load_save: 2 CreateServer(mgr=01d425d8, 0)
+[running] info: harness[k2]: load_save: 2 CreateServer returned
+[running] info: harness[k2]: load_save: 2 server=02bfe4e8
+[running] info: harness[k2]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k2]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k2]: load_save: 5 RequestStatus
+[running] info: harness[k2]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k2]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k2]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k2]: load_save: 9 SendLoadGameRequest(-1, '000013 - game12', '302NAR')
+[running] info: harness[k2]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 02d15048, implementer 00000000 -> 02bfdaf8, table 00000000 -> 02df62c8, 772 commands)
+[running] info: api: registered nwscript.call for 803 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] client loop cave: 300 frames
+[running] info: harness: client disconnected

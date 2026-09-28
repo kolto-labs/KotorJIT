@@ -1,0 +1,7 @@
+{
+  "pattern": "\\[animation-scene:freeze\\] complete owned=2 baseline=pause1",
+  "offset": 6156,
+  "lines": [
+    "[running] info: [script] [animation-scene:freeze] complete owned=2 baseline=pause1"
+  ]
+}

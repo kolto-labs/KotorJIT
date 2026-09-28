@@ -1,0 +1,1682 @@
+{
+  "clean": {
+    "status": "passed",
+    "failures": [],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 0,
+      "violations": [],
+      "steps": 480,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "passed",
+      "reason": null
+    }
+  },
+  "loop7": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 69 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 69,
+      "violations": [
+        {
+          "index": 63,
+          "pts_seconds": 1.05,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 70,
+          "pts_seconds": 1.1666666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 77,
+          "pts_seconds": 1.2833333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 84,
+          "pts_seconds": 1.4,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 91,
+          "pts_seconds": 1.5166666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 98,
+          "pts_seconds": 1.6333333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 105,
+          "pts_seconds": 1.75,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 112,
+          "pts_seconds": 1.8666666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 119,
+          "pts_seconds": 1.9833333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 126,
+          "pts_seconds": 2.1,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 133,
+          "pts_seconds": 2.216666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 140,
+          "pts_seconds": 2.3333333333333335,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 147,
+          "pts_seconds": 2.45,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 154,
+          "pts_seconds": 2.566666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 161,
+          "pts_seconds": 2.683333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 168,
+          "pts_seconds": 2.8,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 175,
+          "pts_seconds": 2.9166666666666665,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 182,
+          "pts_seconds": 3.033333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 189,
+          "pts_seconds": 3.15,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 196,
+          "pts_seconds": 3.2666666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 203,
+          "pts_seconds": 3.3833333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 210,
+          "pts_seconds": 3.5,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 217,
+          "pts_seconds": 3.6166666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 224,
+          "pts_seconds": 3.7333333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 231,
+          "pts_seconds": 3.85,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 238,
+          "pts_seconds": 3.966666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 245,
+          "pts_seconds": 4.083333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 252,
+          "pts_seconds": 4.2,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 259,
+          "pts_seconds": 4.316666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 266,
+          "pts_seconds": 4.433333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 273,
+          "pts_seconds": 4.55,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 280,
+          "pts_seconds": 4.666666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 287,
+          "pts_seconds": 4.783333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 294,
+          "pts_seconds": 4.9,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 301,
+          "pts_seconds": 5.016666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 308,
+          "pts_seconds": 5.133333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 315,
+          "pts_seconds": 5.25,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 322,
+          "pts_seconds": 5.366666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 329,
+          "pts_seconds": 5.483333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 336,
+          "pts_seconds": 5.6,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 343,
+          "pts_seconds": 5.716666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 350,
+          "pts_seconds": 5.833333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 357,
+          "pts_seconds": 5.95,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 364,
+          "pts_seconds": 6.066666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 371,
+          "pts_seconds": 6.183333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 378,
+          "pts_seconds": 6.3,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 385,
+          "pts_seconds": 6.416666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 392,
+          "pts_seconds": 6.533333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 399,
+          "pts_seconds": 6.65,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 406,
+          "pts_seconds": 6.766666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 413,
+          "pts_seconds": 6.883333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 420,
+          "pts_seconds": 7.0,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 427,
+          "pts_seconds": 7.116666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 434,
+          "pts_seconds": 7.233333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 441,
+          "pts_seconds": 7.35,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 448,
+          "pts_seconds": 7.466666666666667,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 455,
+          "pts_seconds": 7.583333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 462,
+          "pts_seconds": 7.7,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 469,
+          "pts_seconds": 7.816666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 476,
+          "pts_seconds": 7.933333333333334,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 483,
+          "pts_seconds": 8.05,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 490,
+          "pts_seconds": 8.166666666666666,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 497,
+          "pts_seconds": 8.283333333333333,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 504,
+          "pts_seconds": 8.4,
+          "previous_decoded_index": 6,
+          "decoded_index": 0,
+          "step": -6,
+          "kind": "non_monotonic"
+        }
+      ],
+      "steps": 411,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "failed",
+      "reason": "69 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "loop14": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 34 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 34,
+      "violations": [
+        {
+          "index": 70,
+          "pts_seconds": 1.1666666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 84,
+          "pts_seconds": 1.4,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 98,
+          "pts_seconds": 1.6333333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 112,
+          "pts_seconds": 1.8666666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 126,
+          "pts_seconds": 2.1,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 140,
+          "pts_seconds": 2.3333333333333335,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 154,
+          "pts_seconds": 2.566666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 168,
+          "pts_seconds": 2.8,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 182,
+          "pts_seconds": 3.033333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 196,
+          "pts_seconds": 3.2666666666666666,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 210,
+          "pts_seconds": 3.5,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 224,
+          "pts_seconds": 3.7333333333333334,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 238,
+          "pts_seconds": 3.966666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 252,
+          "pts_seconds": 4.2,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 266,
+          "pts_seconds": 4.433333333333334,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 280,
+          "pts_seconds": 4.666666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 294,
+          "pts_seconds": 4.9,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 308,
+          "pts_seconds": 5.133333333333334,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 322,
+          "pts_seconds": 5.366666666666666,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 336,
+          "pts_seconds": 5.6,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 350,
+          "pts_seconds": 5.833333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 364,
+          "pts_seconds": 6.066666666666666,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 378,
+          "pts_seconds": 6.3,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 392,
+          "pts_seconds": 6.533333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 406,
+          "pts_seconds": 6.766666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 420,
+          "pts_seconds": 7.0,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 434,
+          "pts_seconds": 7.233333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 448,
+          "pts_seconds": 7.466666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 462,
+          "pts_seconds": 7.7,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 476,
+          "pts_seconds": 7.933333333333334,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 490,
+          "pts_seconds": 8.166666666666666,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 504,
+          "pts_seconds": 8.4,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 518,
+          "pts_seconds": 8.633333333333333,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 532,
+          "pts_seconds": 8.866666666666667,
+          "previous_decoded_index": 13,
+          "decoded_index": 0,
+          "step": -13,
+          "kind": "non_monotonic"
+        }
+      ],
+      "steps": 446,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "failed",
+      "reason": "34 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "loop21": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 23 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 23,
+      "violations": [
+        {
+          "index": 63,
+          "pts_seconds": 1.05,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 84,
+          "pts_seconds": 1.4,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 105,
+          "pts_seconds": 1.75,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 126,
+          "pts_seconds": 2.1,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 147,
+          "pts_seconds": 2.45,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 168,
+          "pts_seconds": 2.8,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 189,
+          "pts_seconds": 3.15,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 210,
+          "pts_seconds": 3.5,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 231,
+          "pts_seconds": 3.85,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 252,
+          "pts_seconds": 4.2,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 273,
+          "pts_seconds": 4.55,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 294,
+          "pts_seconds": 4.9,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 315,
+          "pts_seconds": 5.25,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 336,
+          "pts_seconds": 5.6,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 357,
+          "pts_seconds": 5.95,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 378,
+          "pts_seconds": 6.3,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 399,
+          "pts_seconds": 6.65,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 420,
+          "pts_seconds": 7.0,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 441,
+          "pts_seconds": 7.35,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 462,
+          "pts_seconds": 7.7,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 483,
+          "pts_seconds": 8.05,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 504,
+          "pts_seconds": 8.4,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 525,
+          "pts_seconds": 8.75,
+          "previous_decoded_index": 20,
+          "decoded_index": 0,
+          "step": -20,
+          "kind": "non_monotonic"
+        }
+      ],
+      "steps": 457,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "failed",
+      "reason": "23 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "loop70": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 7 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 7,
+      "violations": [
+        {
+          "index": 70,
+          "pts_seconds": 1.1666666666666667,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 140,
+          "pts_seconds": 2.3333333333333335,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 210,
+          "pts_seconds": 3.5,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 280,
+          "pts_seconds": 4.666666666666667,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 350,
+          "pts_seconds": 5.833333333333333,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 420,
+          "pts_seconds": 7.0,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 490,
+          "pts_seconds": 8.166666666666666,
+          "previous_decoded_index": 69,
+          "decoded_index": 0,
+          "step": -69,
+          "kind": "non_monotonic"
+        }
+      ],
+      "steps": 473,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "failed",
+      "reason": "7 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "stale_same_level": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 2 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 2,
+      "violations": [
+        {
+          "index": 350,
+          "pts_seconds": 5.833333333333333,
+          "previous_decoded_index": 349,
+          "decoded_index": 343,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 351,
+          "pts_seconds": 5.85,
+          "previous_decoded_index": 343,
+          "decoded_index": 351,
+          "step": 8,
+          "elapsed_frames": 0.9999999999999964,
+          "kind": "index_step_disagrees_with_elapsed_time"
+        }
+      ],
+      "steps": 479,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 7,
+      "status": "failed",
+      "reason": "2 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "reorder_same_level": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 4 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 4,
+      "violations": [
+        {
+          "index": 350,
+          "pts_seconds": 5.833333333333333,
+          "previous_decoded_index": 349,
+          "decoded_index": 357,
+          "step": 8,
+          "elapsed_frames": 0.9999999999999964,
+          "kind": "index_step_disagrees_with_elapsed_time"
+        },
+        {
+          "index": 351,
+          "pts_seconds": 5.85,
+          "previous_decoded_index": 357,
+          "decoded_index": 351,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 357,
+          "pts_seconds": 5.95,
+          "previous_decoded_index": 356,
+          "decoded_index": 350,
+          "step": -6,
+          "kind": "non_monotonic"
+        },
+        {
+          "index": 358,
+          "pts_seconds": 5.966666666666667,
+          "previous_decoded_index": 350,
+          "decoded_index": 358,
+          "step": 8,
+          "elapsed_frames": 0.9999999999999964,
+          "kind": "index_step_disagrees_with_elapsed_time"
+        }
+      ],
+      "steps": 478,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 14,
+      "status": "failed",
+      "reason": "4 of 480 acceptance frames fail the per-frame index check"
+    }
+  },
+  "half_freeze": {
+    "status": "failed",
+    "failures": [
+      "capture_content_index: 481 of 480 acceptance frames fail the per-frame index check"
+    ],
+    "index": {
+      "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+      "method": "drawbox-binary-index-v1",
+      "bits": 14,
+      "luma_threshold": 127.5,
+      "violation_count": 481,
+      "violations": [
+        {
+          "index": 60,
+          "pts_seconds": 1.0,
+          "top": 60,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 61,
+          "pts_seconds": 1.0166666666666666,
+          "top": 61,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 62,
+          "pts_seconds": 1.0333333333333334,
+          "top": 62,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 63,
+          "pts_seconds": 1.05,
+          "top": 63,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 64,
+          "pts_seconds": 1.0666666666666667,
+          "top": 64,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 65,
+          "pts_seconds": 1.0833333333333333,
+          "top": 65,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 66,
+          "pts_seconds": 1.1,
+          "top": 66,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 67,
+          "pts_seconds": 1.1166666666666667,
+          "top": 67,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 68,
+          "pts_seconds": 1.1333333333333333,
+          "top": 68,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 69,
+          "pts_seconds": 1.15,
+          "top": 69,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 70,
+          "pts_seconds": 1.1666666666666667,
+          "top": 70,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 71,
+          "pts_seconds": 1.1833333333333333,
+          "top": 71,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 72,
+          "pts_seconds": 1.2,
+          "top": 72,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 73,
+          "pts_seconds": 1.2166666666666666,
+          "top": 73,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 74,
+          "pts_seconds": 1.2333333333333334,
+          "top": 74,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 75,
+          "pts_seconds": 1.25,
+          "top": 75,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 76,
+          "pts_seconds": 1.2666666666666666,
+          "top": 76,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 77,
+          "pts_seconds": 1.2833333333333334,
+          "top": 77,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 78,
+          "pts_seconds": 1.3,
+          "top": 78,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 79,
+          "pts_seconds": 1.3166666666666667,
+          "top": 79,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 80,
+          "pts_seconds": 1.3333333333333333,
+          "top": 80,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 81,
+          "pts_seconds": 1.35,
+          "top": 81,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 82,
+          "pts_seconds": 1.3666666666666667,
+          "top": 82,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 83,
+          "pts_seconds": 1.3833333333333333,
+          "top": 83,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 84,
+          "pts_seconds": 1.4,
+          "top": 84,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 85,
+          "pts_seconds": 1.4166666666666667,
+          "top": 85,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 86,
+          "pts_seconds": 1.4333333333333333,
+          "top": 86,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 87,
+          "pts_seconds": 1.45,
+          "top": 87,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 88,
+          "pts_seconds": 1.4666666666666666,
+          "top": 88,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 89,
+          "pts_seconds": 1.4833333333333334,
+          "top": 89,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 90,
+          "pts_seconds": 1.5,
+          "top": 90,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 91,
+          "pts_seconds": 1.5166666666666666,
+          "top": 91,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 92,
+          "pts_seconds": 1.5333333333333334,
+          "top": 92,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 93,
+          "pts_seconds": 1.55,
+          "top": 93,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 94,
+          "pts_seconds": 1.5666666666666667,
+          "top": 94,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 95,
+          "pts_seconds": 1.5833333333333333,
+          "top": 95,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 96,
+          "pts_seconds": 1.6,
+          "top": 96,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 97,
+          "pts_seconds": 1.6166666666666667,
+          "top": 97,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 98,
+          "pts_seconds": 1.6333333333333333,
+          "top": 98,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 99,
+          "pts_seconds": 1.65,
+          "top": 99,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 100,
+          "pts_seconds": 1.6666666666666667,
+          "top": 100,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 101,
+          "pts_seconds": 1.6833333333333333,
+          "top": 101,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 102,
+          "pts_seconds": 1.7,
+          "top": 102,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 103,
+          "pts_seconds": 1.7166666666666666,
+          "top": 103,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 104,
+          "pts_seconds": 1.7333333333333334,
+          "top": 104,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 105,
+          "pts_seconds": 1.75,
+          "top": 105,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 106,
+          "pts_seconds": 1.7666666666666666,
+          "top": 106,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 107,
+          "pts_seconds": 1.7833333333333334,
+          "top": 107,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 108,
+          "pts_seconds": 1.8,
+          "top": 108,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 109,
+          "pts_seconds": 1.8166666666666667,
+          "top": 109,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 110,
+          "pts_seconds": 1.8333333333333333,
+          "top": 110,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 111,
+          "pts_seconds": 1.85,
+          "top": 111,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 112,
+          "pts_seconds": 1.8666666666666667,
+          "top": 112,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 113,
+          "pts_seconds": 1.8833333333333333,
+          "top": 113,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 114,
+          "pts_seconds": 1.9,
+          "top": 114,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 115,
+          "pts_seconds": 1.9166666666666667,
+          "top": 115,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 116,
+          "pts_seconds": 1.9333333333333333,
+          "top": 116,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 117,
+          "pts_seconds": 1.95,
+          "top": 117,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 118,
+          "pts_seconds": 1.9666666666666666,
+          "top": 118,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 119,
+          "pts_seconds": 1.9833333333333334,
+          "top": 119,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 120,
+          "pts_seconds": 2.0,
+          "top": 120,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 121,
+          "pts_seconds": 2.0166666666666666,
+          "top": 121,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 122,
+          "pts_seconds": 2.033333333333333,
+          "top": 122,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        },
+        {
+          "index": 123,
+          "pts_seconds": 2.05,
+          "top": 123,
+          "bottom": 0,
+          "kind": "region_mismatch"
+        }
+      ],
+      "steps": 480,
+      "repeats": 0,
+      "estimated_dropped_source_frames": 0,
+      "status": "failed",
+      "reason": "481 of 480 acceptance frames fail the per-frame index check"
+    }
+  }
+}

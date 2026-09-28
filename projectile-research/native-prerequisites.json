@@ -1,0 +1,49 @@
+{
+  "image_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "sites": {
+    "resource_exists": {
+      "va": "0x408bc0",
+      "guard16": "518d44240c508b4424108d542404528b"
+    },
+    "resref_from_chars": {
+      "va": "0x406d80",
+      "guard16": "8b44240483ec10568bf1508d4c240851"
+    },
+    "resref_copy": {
+      "va": "0x406da0",
+      "guard16": "8b44240483ec10568bf1508d4c240851"
+    },
+    "string_default": {
+      "va": "0x5b3190",
+      "guard16": "8bc1c70000000000c7400400000000c3"
+    },
+    "string_destroy": {
+      "va": "0x5e5c20",
+      "guard16": "568bf18b0685c0741650c74604000000"
+    },
+    "table_string_entry": {
+      "va": "0x413270",
+      "guard16": "8b442408535657508bf1e881feffff8b"
+    },
+    "table_column_index": {
+      "va": "0x413100",
+      "guard16": "53568bf18b463c5733ff85c08b462874"
+    },
+    "get_player_id": {
+      "va": "0x4aea40",
+      "guard16": "8b4904e9686200009090909090909090"
+    },
+    "projectile_load": {
+      "va": "0x6d2c50",
+      "guard16": "6aff68cb5e730064a100000000506489"
+    },
+    "receiver_load": {
+      "va": "0x650543",
+      "guard16": "6a0068ff0000008d442434508bceff52"
+    },
+    "ammunition_load": {
+      "va": "0x5c2360",
+      "guard16": "6aff687b31720064a100000000506489"
+    }
+  }
+}

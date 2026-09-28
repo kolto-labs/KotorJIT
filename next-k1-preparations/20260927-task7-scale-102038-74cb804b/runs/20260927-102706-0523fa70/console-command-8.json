@@ -1,0 +1,67 @@
+{
+  "input": "real owned-window keyboard",
+  "identity": {
+    "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+    "session": "1",
+    "submitted": "0",
+    "last_line": "1"
+  },
+  "request": "1",
+  "outcome": {
+    "session": "1",
+    "request": "1",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Boolean",
+        "value": true
+      }
+    ],
+    "return_count": "1",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "2",
+    "last_line": "3"
+  },
+  "lines": [
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "2",
+      "kind": {
+        "encoding": "base64",
+        "data": "aW5wdXQ=",
+        "byte_length": "5"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "PiBsb2NhbCBxPW53c2NyaXB0LmNhbGw7IHRhc2s3X3BjPXEoJ0dldEZpcnN0UEMnKTsgdGFzazdfYm9keT1hc3NlcnQoa3AubW9kZWwuc25hcHNob3QodGFzazdfcGMpKTsgdGFzazdfbG9jYWw1PXEoJ0dldExvY2FsTnVtYmVyJyx0YXNrN19wYyw1KTsgdGFzazdfc2NlbmU9ZG9maWxlKCdrb3RvcnBoYXNvci9zY3JpcHRzL21vZGVsX3NjZW5lLmx1YScpLm5ld3tuYW1lPSd0YXNrN3NjYWxlJyx0cmlnZ2VyPTEsaG9sZF90aWNrcz02MCxzcGF3bj1mYWxzZSxzY2FsZXM9e3swLjM1fSx7Mi40fSx7dGFzazdfYm9keS5iYXNlfX19OyByZXR1cm4gdGFzazdfc2NlbmUuc3RhdGU9PSd3YWl0aW5nJyBhbmQgbWF0aC5hYnModGFzazdfYm9keS5iYXNlLTEpPDAuMDAx",
+        "byte_length": "375"
+      }
+    },
+    {
+      "session": "1",
+      "request": "1",
+      "sequence": "3",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "Ym9vbGVhbjogdHJ1ZQ==",
+        "byte_length": "13"
+      }
+    }
+  ],
+  "code": "local q=nwscript.call; task7_pc=q('GetFirstPC'); task7_body=assert(kp.model.snapshot(task7_pc)); task7_local5=q('GetLocalNumber',task7_pc,5); task7_scene=dofile('kotorphasor/scripts/model_scene.lua').new{name='task7scale',trigger=1,hold_ticks=60,spawn=false,scales={{0.35},{2.4},{task7_body.base}}}; return task7_scene.state=='waiting' and math.abs(task7_body.base-1)<0.001"
+}

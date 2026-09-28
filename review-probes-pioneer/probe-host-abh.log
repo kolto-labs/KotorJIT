@@ -1,0 +1,6 @@
+PROBE A clamp: prior=2.0 op=uncertain observed=3.0 speed_after_job=3.0 engine_scale_now=3.0 world_uncertain=True
+PROBE B route-edit-then-stop: stop refused: PlaybackError: stale or invalid playback descriptor; owner_alive=True; descriptor=True
+PROBE B other route attach while zombie owner: PlaybackError: another playback owner or Pioneer command holds engine 127.0.0.1:36023; stop it first
+PROBE H unauth replies=['control authentication failed', 'control authentication failed', 'pop expected at most 1 argument, got 2', 'control authentication failed'] still_attached=True status_with_one_hog=TimeoutError after 2.01s
+Ran 3 tests in 39.297s
+OK

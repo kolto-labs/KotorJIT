@@ -1,0 +1,2 @@
+/home/linuxbrew/.linuxbrew/bin/ar qc libkp_structs.a CMakeFiles/kp_structs.dir/src/api/structs.cpp.o
+/home/linuxbrew/.linuxbrew/bin/ranlib libkp_structs.a

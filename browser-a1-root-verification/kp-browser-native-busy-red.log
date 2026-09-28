@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_busy_startup_exits_before_serving (tools.kpharness_devtools_bridge_test.BridgeSubprocessTest.test_busy_startup_exits_before_serving)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_devtools_bridge_test.py", line 152, in test_busy_startup_exits_before_serving
+    self.assertNotEqual(proc.returncode,0); self.assertIn("busy: another client is connected",proc.stderr)
+                                            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'busy: another client is connected' not found in 'devtools bridge: upstream busy or unavailable: peer closed the connection\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.539s
+
+FAILED (failures=1)

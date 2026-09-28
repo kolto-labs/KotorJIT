@@ -1,0 +1,67 @@
+{
+  "input": "real owned-window keyboard",
+  "identity": {
+    "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+    "session": "1",
+    "submitted": "1",
+    "last_line": "3"
+  },
+  "request": "2",
+  "outcome": {
+    "session": "1",
+    "request": "2",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Boolean",
+        "value": true
+      }
+    ],
+    "return_count": "1",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "4",
+    "last_line": "5"
+  },
+  "lines": [
+    {
+      "session": "1",
+      "request": "2",
+      "sequence": "4",
+      "kind": {
+        "encoding": "base64",
+        "data": "aW5wdXQ=",
+        "byte_length": "5"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "PiB0YXNrN19kZWxheT0wOyBmdW5jdGlvbiB0YXNrN190aWNrKCkgdGFzazdfZGVsYXk9dGFzazdfZGVsYXkrMTsgaWYgdGFzazdfZGVsYXk8PTE4MCB0aGVuIHJldHVybiB0cnVlIGVuZDsgdGFzazdfc2NlbmU6dGljaygpOyByZXR1cm4gdGFzazdfc2NlbmUuc3RhdGV+PSdjb21wbGV0ZScgYW5kIHRhc2s3X3NjZW5lLnN0YXRlfj0nZmFpbGVkJyBlbmQ7IHRhc2s3X3RpbWVyPWtwLnJlZ2lzdGVydGltZXIoMTYsJ3Rhc2s3X3RpY2snKTsgbndzY3JpcHQuY2FsbCgnU2V0TG9jYWxOdW1iZXInLHRhc2s3X3BjLDUsMSk7IHJldHVybiB0YXNrN190aW1lcj4w",
+        "byte_length": "315"
+      }
+    },
+    {
+      "session": "1",
+      "request": "2",
+      "sequence": "5",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "Ym9vbGVhbjogdHJ1ZQ==",
+        "byte_length": "13"
+      }
+    }
+  ],
+  "code": "task7_delay=0; function task7_tick() task7_delay=task7_delay+1; if task7_delay<=180 then return true end; task7_scene:tick(); return task7_scene.state~='complete' and task7_scene.state~='failed' end; task7_timer=kp.registertimer(16,'task7_tick'); nwscript.call('SetLocalNumber',task7_pc,5,1); return task7_timer>0"
+}

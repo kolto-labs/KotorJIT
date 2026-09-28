@@ -1,0 +1,68 @@
+{
+  "dll": {
+    "path": "/home/brunner56/kp-live-20260922/dll-build-20260928/build/kphasor.dll",
+    "size_bytes": 18712839,
+    "sha256": "ed0a0dcf166ac060696caf3a1a51530ca0bc5865f434565038e61bc64851662c",
+    "mtime": "2026-09-28T00:35:00-ish (see ls -la in build.log)"
+  },
+  "old_reference_dll": {
+    "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/build/kphasor.dll",
+    "size_bytes": 18417551,
+    "sha256": "bdf420d1b283dcd69f5c292d6b85f5ce0a9fc1afe27f5199414b379c0500d26f",
+    "mtime": "2026-09-22T16:51:00",
+    "note": "built with /usr/lib64/ccache/i686-w64-mingw32-g++ per main checkout build/CMakeCache.txt:213 (KP_MINGW_CXX:FILEPATH=/usr/lib64/ccache/i686-w64-mingw32-g++)"
+  },
+  "toolchain": {
+    "compiler": "/run/host/usr/bin/i686-w64-mingw32-g++",
+    "compiler_version": "i686-w64-mingw32-g++ (GCC) 16.1.1 20260501 (Fedora MinGW 16.1.1-1.fc44)",
+    "objdump": "/run/host/usr/bin/i686-w64-mingw32-objdump",
+    "objdump_version": "GNU objdump version 2.46.0.20260210",
+    "invocation_method": "direct absolute-path exec of host binary from inside the ubuntu-dev distrobox container; no wrapper script needed (probed: cc1plus/as/ld all resolve under /run/host/... sysroot, verified via -print-sysroot and -v -E)",
+    "sysroot": "/run/host/usr/bin/../i686-w64-mingw32/sys-root"
+  },
+  "build": {
+    "new_build_dir": "/home/brunner56/kp-live-20260922/dll-build-20260928",
+    "cmake_build_dir": "/home/brunner56/kp-live-20260922/dll-build-20260928/build",
+    "configure_command": "cmake -S <W> -B <D>/build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DKP_MINGW_CXX=/run/host/usr/bin/i686-w64-mingw32-g++",
+    "build_command": "cmake --build <D>/build --target kphasor_dll -j2",
+    "build_script": "/home/brunner56/kp-live-20260922/dll-build-20260928/build.sh",
+    "build_log": "/home/brunner56/kp-live-20260922/dll-build-20260928/build.log",
+    "exit_code": 0,
+    "notes": "Built only the kphasor_dll target (not 'all') to avoid triggering the kp_structs_generated custom target, which writes src/generated/structs_k1.inc into the W source tree (src/api/structs.cmake:33-40). structs_k1.inc was untouched (verified by before/after untracked-file hash set matching)."
+  },
+  "source_state": {
+    "worktree": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation",
+    "head_sha": "ca329e52dd27d1a3f5a56748d93c8ab0fd7f24f2",
+    "head_sha_matches_before_and_after_build": true,
+    "status_porcelain_sha256": "d1a66a72211580731bf555a31127103d155902c99e846f99476336880ea3b595",
+    "diff_head_sha256": "76eefba1cc699a43445ac4cbd2b3b76779f2130b2e1cb345a81a810170935566",
+    "untracked_file_count": 148,
+    "untracked_files_combined_sha256": "ee8e64ab698a51c9a11eac71c0f86b56554e7af8b7924a40cf79a76427a76f56",
+    "untracked_files_hash_list": "untracked-files-hashes-before.txt (== untracked-files-hashes-after.txt, diffed clean)",
+    "libluajit_a_sha256": "9bc74003050d8b60436c0511af91ee7bfc7bb36ed4c7c46dacbee5dbbd39a7af",
+    "libluajit_a_path": "third_party/luajit/src/libluajit.a (via symlink third_party/luajit -> /run/media/brunner56/MyBook/Workspaces/KotorPhasor/third_party/luajit, i.e. shared with main checkout, unchanged before/after)",
+    "k1_gog_103_json_sha256": "5749fbf0b3f90b71296319fd5bebf94aca7f2bfd5f27d110934eaaa1089ecbf3",
+    "k1_gog_103_json_matches_expected": true
+  },
+  "import_table_gate": {
+    "new_dll_imports": ["DINPUT8.dll", "dwmapi.dll", "GDI32.dll", "KERNEL32.dll", "msvcrt.dll", "OPENGL32.DLL", "SHELL32.dll", "USER32.dll", "WS2_32.dll"],
+    "forbidden_dynamic_deps_present": false,
+    "checked_for": ["libwinpthread-1.dll", "libgcc_s_dw2-1.dll", "libstdc++-6.dll"],
+    "result": "PASS - static linking confirmed, same import set shape as the 9/22 reference DLL"
+  },
+  "integration_content_check": {
+    "method": "grep -a -c -F <literal> on both DLL binaries; nm -C symbol grep on both DLL binaries",
+    "literals_checked": [
+      "kp.motion.capture",
+      "kp.vec.meta",
+      "kp.scripts.",
+      "motion capture allocation required",
+      "no script host is running"
+    ],
+    "new_dll_hits": "1 each (present)",
+    "old_dll_hits": "0 each (absent)",
+    "symbol_count_motion_vector_scripts_new": 416,
+    "symbol_count_motion_vector_scripts_old": 306,
+    "conclusion": "New DLL contains the integrated runtime/motion/vector/scripts pieces; 9/22 DLL lacks them, as expected"
+  }
+}

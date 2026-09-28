@@ -1,0 +1,80 @@
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77dff830, 8 bytes displaced, trampoline 01e00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77e00870, 6 bytes displaced, trampoline 022f0000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77e00cd0, 7 bytes displaced, trampoline 02300000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77dfdaa0, 8 bytes displaced, trampoline 02310000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77dfdaf0, 6 bytes displaced, trampoline 02320000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77dfdb40, 6 bytes displaced, trampoline 02330000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77dfdb90, 6 bytes displaced, trampoline 02340000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77dfdbe0, 7 bytes displaced, trampoline 02350000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77dfdc30, 6 bytes displaced, trampoline 02360000 (11 bytes)
+[installing] debug: detour 00594220 -> 77dfdc80, 5 bytes displaced, trampoline 02370000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77dfdcd0, 5 bytes displaced, trampoline 02380000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77dfdd20, 10 bytes displaced, trampoline 02390000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77dfdd70, 10 bytes displaced, trampoline 023a0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77dfddc0, 6 bytes displaced, trampoline 023b0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77e01f00, 7 bytes displaced, trampoline 023c0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77dfcb30, 6 bytes displaced, trampoline 023d0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77e7afa0, 5 bytes displaced, trampoline 023e0000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77e7b090, 9 bytes displaced, trampoline 023f0000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77dfb8e0, 8 bytes displaced, trampoline 02400000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] loaded 0 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 0 script(s)
+[running] harness: listening on 127.0.0.1:51875
+[running] info: harness: client connected
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load_save '000001 - AUTOSAVE': LASTMODULE=danm14aa from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000001 - AUTOSAVE/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000001 - AUTOSAVE/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 15 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae81f0, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=021f04e0
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000001 - AUTOSAVE', 'danm14aa')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 0465fbc8, implementer 00000000 -> 021eff08, table 00000000 -> 0465ffa8, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=fffffffc, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=fffffffc
+[running] info: harness[k1]: main menu: RemovePanel(mgr=02066878, panel=021f45a0) rc=1, PanelExists now 0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] client loop cave: 300 frames
+[running] client loop cave: 400 frames
+[running] client loop cave: 500 frames
+[running] client loop cave: 600 frames
+[running] client loop cave: 700 frames
+[running] client loop cave: 800 frames
+[running] client loop cave: 900 frames
+[running] [model] id=2147483644 creature=0x50ae988 model=0x4fe7548 base_before=1 effective_before=1 requested=0.35 setter=1 readback=1 base_after=0.35 effective_after=0.35 verified=1
+[running] client loop cave: 1000 frames
+[running] client loop cave: 1100 frames
+[running] client loop cave: 1200 frames
+[running] [model] id=2147483644 creature=0x50ae988 model=0x4fe7548 base_before=0.35 effective_before=0.35 requested=1 setter=1 readback=1 base_after=1 effective_after=1 verified=1
+[running] client loop cave: 1300 frames
+[running] info: harness: client disconnected

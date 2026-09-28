@@ -1,0 +1,187 @@
+{
+  "all_files": {
+    "gamescope-harness-manifest.json": "691ab195fd11ea490ab58415f09350943f6d95504c933c06bfd0b88fad2f7b6e",
+    "gamescope-harness-manifest.json.sha256": "7191101a79fab23c9b48a124c9c21fd9fb57fa352d483eb79393f36176cda56d",
+    "runtime/kpharness/__init__.py": "9282a855bb913f8b0a3168df7bb6a92c278977f05625e8c649dcc51f74fad4c5",
+    "runtime/kpharness/bwm.py": "4d9e1226bdaafe3727d075ac0ecfb2173e0075a177c0928c6ae3e50e2a845f1e",
+    "runtime/kpharness/checkpoints.py": "c844589b971a468fdb8ef2990b05347b9ca827ab247158bde0b17087abdeec25",
+    "runtime/kpharness/client.py": "4c9ca9d24ff2d44e85f844cbd5409838a55e2ac0eb230ee28e22e2444e120fb9",
+    "runtime/kpharness/console_protocol.py": "6b60936c68437c82ab31b068f5be07d35644feb1db8a571369a7b3a6df662e7c",
+    "runtime/kpharness/console_steps.py": "41c7745064b313face29c1e656c158f384cb8c5aa829b08668bc390477fb59fd",
+    "runtime/kpharness/creative.py": "6fa9b4a801b972cbf43d06ce3ec3f4947fd667847d87f14222d4a0cabc14ffbf",
+    "runtime/kpharness/creative_checkpoints.py": "aae80bdef1db9cc218a36c4e0622bcabcb0ae6779334362a9e1bca51e5faff2b",
+    "runtime/kpharness/creative_steps.py": "bc1849a0c63a603766d8b63fec33077f893bfcfef256a56a301506763522c89c",
+    "runtime/kpharness/creative_wine.py": "0bb74fd07de603080e6153766a44ab24001cde083c7a7af6ed263bff6eea5812",
+    "runtime/kpharness/discover.py": "9fad36c358bded7ec37c3d77aeeb400317a4e70ec54f99957755599fbc423a9d",
+    "runtime/kpharness/display_backends.py": "5cd23f3435a042ab58dc7698809dccb6452aaa07a530bb48bcc5e13aa432c468",
+    "runtime/kpharness/gamescope_processes.py": "0bae1acea229128da5eab031a5b459d1f049e0c3d433c38f4981fee8eddaed21",
+    "runtime/kpharness/gamescope_snapshot.py": "89fa339c9b5bcbca6305b092f438762f94ffea2ad1733e31c12c1ab5b3ec2def",
+    "runtime/kpharness/gamescope_socket.py": "44a7cc819838daab94be9b4924c370b8c0e650dc0a3d92296c0300d083faf169",
+    "runtime/kpharness/gamescope_xwayland.py": "4d73632e9f48cf82258c7cf7231f7acccfa1e192c4f502ae4667ec7bb3c8f3cf",
+    "runtime/kpharness/oracle.py": "f6eb286ab13ad88b4dfe052a2c6e7fc125988d9fda8470112a2a18c730e2fa07",
+    "runtime/kpharness/owned_x11.py": "592ad9714c66b1acd660fb393f5318a36d5285af7bc0942c9581d7474d38fd7a",
+    "runtime/kpharness/physical_console.py": "e8c972aec6c591fcc5bad47ce3878f5f95551fa3f246e970e15495c1d441e4a5",
+    "runtime/kpharness/recording.py": "283c61d3383b7dcce9df236d936af0ae7518b96745d621b2fba24bb95bcd908b",
+    "runtime/kpharness/resources.py": "03bd74b28285c69528dde880119353c71383e713467abcfad017463458876963",
+    "runtime/kpharness/scenario.py": "98f1b3678bdd5f363184a621cd5ad8ee12b2f7976c7e1262a8df9931c1bfdf47",
+    "runtime/kpharness/session.py": "3064be71c6c798bcc43c69e902980169ea58835a146594a73447d1f61005fde3",
+    "runtime/kpharness/shots.py": "b5e903ebab783b9d33bdc3cbee6d7df346c76edb6acc59405845227fe9073bf8",
+    "runtime/kpharness/targets.py": "2cd427a49c9c0f34415b7443ff56f8c075cfa1d323db6701640285e7b54a54cd",
+    "runtime/kpharness/waits.py": "ac1141c71df4e2960e97a35beac274567d0ed87d93f8d770a4db5d8abfec6f9f",
+    "runtime/kpharness/world.py": "4d232f9b33dfba1172bc8e1aefdb49fa94c436e83a93f86f8d94d2144bc251e3"
+  },
+  "manifest": {
+    "backend": "linux-wine-k1-gamescope",
+    "created_utc": "2026-09-27T10:23:19.884594+00:00",
+    "entrypoint": "kpharness.creative",
+    "files": [
+      {
+        "path": "kpharness/__init__.py",
+        "sha256": "9282a855bb913f8b0a3168df7bb6a92c278977f05625e8c649dcc51f74fad4c5"
+      },
+      {
+        "path": "kpharness/bwm.py",
+        "sha256": "4d9e1226bdaafe3727d075ac0ecfb2173e0075a177c0928c6ae3e50e2a845f1e"
+      },
+      {
+        "path": "kpharness/checkpoints.py",
+        "sha256": "c844589b971a468fdb8ef2990b05347b9ca827ab247158bde0b17087abdeec25"
+      },
+      {
+        "path": "kpharness/client.py",
+        "sha256": "4c9ca9d24ff2d44e85f844cbd5409838a55e2ac0eb230ee28e22e2444e120fb9"
+      },
+      {
+        "path": "kpharness/console_protocol.py",
+        "sha256": "6b60936c68437c82ab31b068f5be07d35644feb1db8a571369a7b3a6df662e7c"
+      },
+      {
+        "path": "kpharness/console_steps.py",
+        "sha256": "41c7745064b313face29c1e656c158f384cb8c5aa829b08668bc390477fb59fd"
+      },
+      {
+        "path": "kpharness/creative.py",
+        "sha256": "6fa9b4a801b972cbf43d06ce3ec3f4947fd667847d87f14222d4a0cabc14ffbf"
+      },
+      {
+        "path": "kpharness/creative_checkpoints.py",
+        "sha256": "aae80bdef1db9cc218a36c4e0622bcabcb0ae6779334362a9e1bca51e5faff2b"
+      },
+      {
+        "path": "kpharness/creative_steps.py",
+        "sha256": "bc1849a0c63a603766d8b63fec33077f893bfcfef256a56a301506763522c89c"
+      },
+      {
+        "path": "kpharness/creative_wine.py",
+        "sha256": "0bb74fd07de603080e6153766a44ab24001cde083c7a7af6ed263bff6eea5812"
+      },
+      {
+        "path": "kpharness/discover.py",
+        "sha256": "9fad36c358bded7ec37c3d77aeeb400317a4e70ec54f99957755599fbc423a9d"
+      },
+      {
+        "path": "kpharness/display_backends.py",
+        "sha256": "5cd23f3435a042ab58dc7698809dccb6452aaa07a530bb48bcc5e13aa432c468"
+      },
+      {
+        "path": "kpharness/gamescope_processes.py",
+        "sha256": "0bae1acea229128da5eab031a5b459d1f049e0c3d433c38f4981fee8eddaed21"
+      },
+      {
+        "path": "kpharness/gamescope_snapshot.py",
+        "sha256": "89fa339c9b5bcbca6305b092f438762f94ffea2ad1733e31c12c1ab5b3ec2def"
+      },
+      {
+        "path": "kpharness/gamescope_socket.py",
+        "sha256": "44a7cc819838daab94be9b4924c370b8c0e650dc0a3d92296c0300d083faf169"
+      },
+      {
+        "path": "kpharness/gamescope_xwayland.py",
+        "sha256": "4d73632e9f48cf82258c7cf7231f7acccfa1e192c4f502ae4667ec7bb3c8f3cf"
+      },
+      {
+        "path": "kpharness/oracle.py",
+        "sha256": "f6eb286ab13ad88b4dfe052a2c6e7fc125988d9fda8470112a2a18c730e2fa07"
+      },
+      {
+        "path": "kpharness/owned_x11.py",
+        "sha256": "592ad9714c66b1acd660fb393f5318a36d5285af7bc0942c9581d7474d38fd7a"
+      },
+      {
+        "path": "kpharness/physical_console.py",
+        "sha256": "e8c972aec6c591fcc5bad47ce3878f5f95551fa3f246e970e15495c1d441e4a5"
+      },
+      {
+        "path": "kpharness/recording.py",
+        "sha256": "283c61d3383b7dcce9df236d936af0ae7518b96745d621b2fba24bb95bcd908b"
+      },
+      {
+        "path": "kpharness/resources.py",
+        "sha256": "03bd74b28285c69528dde880119353c71383e713467abcfad017463458876963"
+      },
+      {
+        "path": "kpharness/scenario.py",
+        "sha256": "98f1b3678bdd5f363184a621cd5ad8ee12b2f7976c7e1262a8df9931c1bfdf47"
+      },
+      {
+        "path": "kpharness/session.py",
+        "sha256": "3064be71c6c798bcc43c69e902980169ea58835a146594a73447d1f61005fde3"
+      },
+      {
+        "path": "kpharness/shots.py",
+        "sha256": "b5e903ebab783b9d33bdc3cbee6d7df346c76edb6acc59405845227fe9073bf8"
+      },
+      {
+        "path": "kpharness/targets.py",
+        "sha256": "2cd427a49c9c0f34415b7443ff56f8c075cfa1d323db6701640285e7b54a54cd"
+      },
+      {
+        "path": "kpharness/waits.py",
+        "sha256": "ac1141c71df4e2960e97a35beac274567d0ed87d93f8d770a4db5d8abfec6f9f"
+      },
+      {
+        "path": "kpharness/world.py",
+        "sha256": "4d232f9b33dfba1172bc8e1aefdb49fa94c436e83a93f86f8d94d2144bc251e3"
+      }
+    ],
+    "package": "kpharness",
+    "repository_inputs": [
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpdiscover.py",
+        "sha256": "b7ac5c182e1f98e44502325a061545c1561675d436f26b14e186138265d963e3"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/manifest.json",
+        "sha256": "82dab5efa9bc24e99af0073faac770c458bd2c4238fd58bd533b9738dd796c22"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/app_signatures.toml",
+        "sha256": "a71416465b7355566181519873cf0e5acdde6a13d8a976d0a987db9551829faf"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_gog_103.json",
+        "sha256": "44a5984b71bf994dd5ee520e49198ced4953a3ff2e385673e9264a44ee36d4f2"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_steam_103.json",
+        "sha256": "57b1368a8b96d6b07edffecd1ac00f161d3c3ff5d9900d70273fdf77382a494c"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k1_steam_103_unpacked.json",
+        "sha256": "541c5c3e7890406ce08d2959ed90cd3a97eee8974ceff6d34ae8522ccb7182c5"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k2_gog_aspyr.json",
+        "sha256": "4e21a72a9754ae2b1a7babfe2d7fbf0d0b0c5a165efd0b92588a997923b38187"
+      },
+      {
+        "path": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/addresses/k2_steam_aspyr.json",
+        "sha256": "14eb04aa740189c39a973155441e866b77fe3d09bd553d7aed1d01994dda3cc7"
+      }
+    ],
+    "repository_root": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation",
+    "schema": 1
+  },
+  "manifest_sha256": "691ab195fd11ea490ab58415f09350943f6d95504c933c06bfd0b88fad2f7b6e",
+  "source_equal": true
+}

@@ -1,0 +1,11 @@
+parent_symlink_fixed: REFUSED ValueError: source contains a symlink; review before packaging: docs/user
+parent_symlink_walked: REFUSED ValueError: source contains a symlink; review before packaging: scripts/examples
+hardlink: REFUSED ValueError: source is a hard link (2 names); review before packaging: scripts/examples/cursed/hl.lua
+case_variants: BUILT; leaked entries=[]; leaked bytes=[]
+binary_lua: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/evil.lua (magic: png; not UTF-8; NUL byte)
+utf16_lua: REFUSED ValueError: packaged text must be UTF-8 without media, archive or program bytes: scripts/examples/cursed/u16.lua (not UTF-8; NUL byte)
+markers: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/m.lua:1
+nested_private: BUILT; leaked entries=[]; leaked bytes=[]
+backslash_name: REFUSED ValueError: unsafe name in source (backslash in name); review before packaging: 'scripts/examples/cursed/..\\..\\..\\..\\evil.lua'
+symlink_leaf: REFUSED ValueError: source contains a symlink; review before packaging: scripts/examples/cursed/ln.lua
+pem_in_readme: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/README.md:1

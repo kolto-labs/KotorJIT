@@ -1,0 +1,277 @@
+[  0%] i686-w64-mingw32-g++ trampoline.cpp
+[  0%] i686-w64-mingw32-g++ registry.cpp
+[  0%] i686-w64-mingw32-g++ platform.cpp
+[  0%] Building CXX object CMakeFiles/kp_hooks.dir/src/hooks/trampoline.cpp.o
+[  0%] i686-w64-mingw32-g++ src/image/sha256.cpp
+[  1%] i686-w64-mingw32-g++ platform_win32.cpp
+[  1%] i686-w64-mingw32-g++ src/image/loaded_image.cpp
+[  1%] Built target hooks_win32
+[  1%] Building CXX object CMakeFiles/kp_machotest.dir/tools/kp_machotest.cpp.o
+[  1%] i686-w64-mingw32-g++ src/image/pe_elf.cpp
+[  1%] Built target kp_structs_generated
+[  2%] Building CXX object CMakeFiles/kp_hooks.dir/src/hooks/registry.cpp.o
+[  2%] Building CXX object CMakeFiles/kp_transporttest.dir/tools/kp_transporttest.cpp.o
+[  2%] i686-w64-mingw32-g++ src/image/macho.cpp
+[  3%] i686-w64-mingw32-g++ src/image/parse.cpp
+[  3%] i686-w64-mingw32-g++ src/image/classify.cpp
+[  3%] Building CXX object CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/decode.cpp.o
+[  4%] Building CXX object CMakeFiles/kp_transporttest.dir/src/multiplayer/transport.cpp.o
+[  5%] i686-w64-mingw32-g++ src/image/build_table.cpp
+[  5%] Building CXX object CMakeFiles/kp_image.dir/src/image/sha256.cpp.o
+[  6%] i686-w64-mingw32-g++ src/image/load.cpp
+[  6%] Built target image_win32
+[  6%] Building CXX object CMakeFiles/kp_machotest.dir/src/image/macho.cpp.o
+[  6%] Building CXX object CMakeFiles/kp_hooks.dir/src/platform/platform.cpp.o
+[  6%] Building CXX object CMakeFiles/kp_image.dir/src/image/loaded_image.cpp.o
+[  6%] Building CXX object CMakeFiles/kp_hooks_x64.dir/src/hooks/x64/trampoline.cpp.o
+[  6%] Building CXX object CMakeFiles/kp_hooks.dir/src/platform/platform_linux.cpp.o
+[  6%] Linking CXX executable kp_transporttest
+[  7%] Linking CXX static library libkp_hooks_x64.a
+[  8%] Linking CXX executable kp_machotest
+[  9%] Building CXX object CMakeFiles/kp_image.dir/src/image/pe_elf.cpp.o
+[  9%] Building CXX object CMakeFiles/kp_image.dir/src/image/macho.cpp.o
+[  9%] Built target kp_hooks_x64
+[  9%] Built target kp_transporttest
+[ 10%] Linking CXX static library libkp_hooks.a
+[ 10%] Built target kp_hooks
+[ 10%] Built target kp_machotest
+[ 10%] i686-w64-mingw32-g++ structs.cpp
+[ 11%] i686-w64-mingw32-g++ output.cpp
+[ 12%] i686-w64-mingw32-g++ timers.cpp
+[ 13%] Built target api_structs_win32
+[ 13%] i686-w64-mingw32-g++ entity.cpp
+[ 13%] Building CXX object CMakeFiles/kp_image.dir/src/image/parse.cpp.o
+[ 14%] Building CXX object CMakeFiles/kp_image.dir/src/image/classify.cpp.o
+[ 14%] Built target api_entity_win32
+[ 15%] Building CXX object CMakeFiles/kp_support.dir/src/api/output.cpp.o
+[ 15%] Building CXX object CMakeFiles/kp_image.dir/src/image/build_table.cpp.o
+[ 15%] i686-w64-mingw32-g++ strings.cpp
+[ 15%] Building CXX object CMakeFiles/kp_support.dir/src/api/timers.cpp.o
+[ 15%] i686-w64-mingw32-g++ projectiles_entry.cpp
+[ 15%] i686-w64-mingw32-g++ editor_input.cpp
+[ 15%] i686-w64-mingw32-g++ imgui.cpp
+[ 16%] i686-w64-mingw32-g++ imgui_draw.cpp
+[ 17%] i686-w64-mingw32-g++ imgui_tables.cpp
+[ 17%] i686-w64-mingw32-g++ imgui_widgets.cpp
+[ 17%] i686-w64-mingw32-g++ binkw32.dll (proxy)
+[ 17%] i686-w64-mingw32-g++ imgui_impl_win32.cpp
+[ 17%] i686-w64-mingw32-g++ imgui_impl_opengl2.cpp
+[ 18%] Building CXX object CMakeFiles/kp_image.dir/src/image/load.cpp.o
+[ 18%] i686-w64-mingw32-g++ runtime.cpp
+[ 18%] Built target binkw32
+[ 18%] i686-w64-mingw32-g++ console.cpp
+[ 18%] i686-w64-mingw32-g++ overlay.cpp
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/api/compat.cpp.o
+[ 18%] Building CXX object CMakeFiles/kp_support.dir/src/api/strings.cpp.o
+[ 18%] Built target support_win32
+[ 19%] Building CXX object CMakeFiles/kphasor.dir/src/api/timers.cpp.o
+[ 20%] Linking CXX static library libkp_support.a
+[ 20%] Built target kp_support
+[ 21%] Building CXX object CMakeFiles/kphasor.dir/src/events/table.cpp.o
+[ 21%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/tools/kp_consoleprotocoltest.cpp.o
+[ 21%] Linking CXX static library libkp_image.a
+[ 21%] Built target kp_image
+[ 22%] Building CXX object CMakeFiles/kp_harnesstest.dir/tools/kp_harnesstest.cpp.o
+[ 22%] i686-w64-mingw32-g++ dllmain.cpp
+[ 22%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/console_protocol.cpp.o
+[ 23%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/harness/json.cpp.o
+[ 23%] Building CXX object CMakeFiles/kp_projectilestest.dir/tools/kp_projectilestest.cpp.o
+[ 23%] Building CXX object CMakeFiles/kp_consoletest.dir/tools/kp_consoletest.cpp.o
+[ 23%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/channel.cpp.o
+[ 24%] Building CXX object CMakeFiles/kp_projectilestest.dir/src/api/projectiles.cpp.o
+[ 24%] Building CXX object CMakeFiles/kp_consoleprotocoltest.dir/src/devtools/console.cpp.o
+[ 24%] i686-w64-mingw32-g++ fault_guard.cpp
+[ 24%] Building CXX object CMakeFiles/kp_projectilestest.dir/src/api/projectiles_lua.cpp.o
+[ 25%] i686-w64-mingw32-g++ hook_bodies.cpp
+[ 26%] Building CXX object CMakeFiles/kp_projectilestest.dir/src/api/projectiles_entry.cpp.o
+[ 26%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/json.cpp.o
+[ 26%] Linking CXX executable kp_projectilestest
+[ 27%] Building CXX object CMakeFiles/kp_consoletest.dir/src/devtools/console.cpp.o
+[ 27%] Built target kp_projectilestest
+[ 27%] Building CXX object CMakeFiles/kphasor.dir/src/harness/channel.cpp.o
+[ 27%] Linking CXX executable kp_consoleprotocoltest
+[ 28%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/harness/ring.cpp.o
+[ 29%] Built target kp_consoleprotocoltest
+[ 30%] i686-w64-mingw32-g++ transport.cpp
+[ 30%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/platform/platform.cpp.o
+[ 30%] i686-w64-mingw32-g++ host.cpp
+[ 31%] Building CXX object CMakeFiles/kp_harnesstest.dir/src/platform/platform_linux.cpp.o
+[ 31%] Linking CXX executable kp_harnesstest
+[ 31%] Built target kp_harnesstest
+[ 31%] Building CXX object CMakeFiles/kp_editorinputtest.dir/tools/kp_editorinputtest.cpp.o
+[ 31%] Linking CXX executable kp_consoletest
+[ 31%] Building CXX object CMakeFiles/kphasor.dir/src/harness/commands.cpp.o
+[ 32%] Built target kp_consoletest
+[ 32%] i686-w64-mingw32-g++ value.cpp
+[ 33%] i686-w64-mingw32-g++ dispatch.cpp
+[ 33%] i686-w64-mingw32-g++ table.cpp
+[ 34%] Building CXX object CMakeFiles/kp_editorinputtest.dir/src/devtools/editor_input.cpp.o
+[ 35%] i686-w64-mingw32-g++ payload.cpp
+[ 36%] i686-w64-mingw32-g++ situation.cpp
+[ 36%] Building CXX object CMakeFiles/kp_hooktool_x64.dir/tools/kp_hooktool_x64.cpp.o
+[ 37%] Building CXX object CMakeFiles/kphasor.dir/src/lua/host.cpp.o
+[ 37%] Building CXX object CMakeFiles/kp_imagetool.dir/tools/kp_imagetool.cpp.o
+[ 38%] Linking CXX executable kp_hooktool_x64
+[ 38%] Building CXX object CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui.cpp.o
+[ 38%] Building CXX object CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_draw.cpp.o
+[ 38%] Built target kp_hooktool_x64
+[ 38%] i686-w64-mingw32-g++ routines.cpp
+[ 39%] i686-w64-mingw32-g++ enginestruct.cpp
+[ 40%] Building CXX object CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_tables.cpp.o
+[ 41%] i686-w64-mingw32-g++ structs.cpp
+[ 41%] i686-w64-mingw32-g++ entity.cpp
+[ 41%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o
+[ 41%] i686-w64-mingw32-g++ memory.cpp
+[ 41%] i686-w64-mingw32-g++ projectiles.cpp
+[ 41%] i686-w64-mingw32-g++ projectiles_profile.cpp
+[ 41%] Building CXX object CMakeFiles/kp_editorinputtest.dir/third_party/imgui/imgui_widgets.cpp.o
+[ 42%] Linking CXX executable kp_imagetool
+[ 42%] i686-w64-mingw32-g++ projectiles_native.cpp
+[ 43%] i686-w64-mingw32-g++ projectiles_lua.cpp
+[ 43%] Built target kp_imagetool
+[ 43%] i686-w64-mingw32-g++ model.cpp
+[ 43%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o
+[ 43%] i686-w64-mingw32-g++ model_profiles.cpp
+[ 44%] i686-w64-mingw32-g++ model_backend.cpp
+[ 44%] i686-w64-mingw32-g++ model_lua.cpp
+[ 44%] i686-w64-mingw32-g++ animation.cpp
+[ 44%] i686-w64-mingw32-g++ animation_profiles.cpp
+[ 45%] i686-w64-mingw32-g++ animation_backend.cpp
+[ 46%] i686-w64-mingw32-g++ output.cpp
+[ 46%] i686-w64-mingw32-g++ animation_lua.cpp
+[ 46%] i686-w64-mingw32-g++ timers.cpp
+[ 46%] i686-w64-mingw32-g++ strings.cpp
+[ 47%] i686-w64-mingw32-g++ compat.cpp
+[ 48%] i686-w64-mingw32-g++ channel.cpp
+[ 48%] i686-w64-mingw32-g++ commands.cpp
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘void* kp::runtime::{anonymous}::client_area_get_server_area_body(void*)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:568:11: warning: variable ‘area’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  568 |     void* area = orig != nullptr ? orig(self) : nullptr;
+      |           ^~~~
+[ 48%] i686-w64-mingw32-g++ console_protocol.cpp
+[ 49%] i686-w64-mingw32-g++ json.cpp
+[ 50%] i686-w64-mingw32-g++ ring.cpp
+[ 51%] i686-w64-mingw32-g++ engine_k1.cpp
+[ 51%] i686-w64-mingw32-g++ engine_k2.cpp
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘int kp::runtime::{anonymous}::run_script_body(void*, CExoString*, uint32_t, int)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:737:15: warning: variable ‘rc’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  737 |     const int rc = orig(self, name, object_id, has_object);
+      |               ^~
+[ 51%] i686-w64-mingw32-g++ kphasor.dll
+[ 52%] Linking CXX shared library libkphasor.so
+[ 53%] Linking CXX executable kp_editorinputtest
+[ 53%] Built target kp_editorinputtest
+[ 53%] Built target kphasor_dll
+[ 70%] Built target kphasor
+[ 70%] Building CXX object CMakeFiles/kp_memtest.dir/tools/kp_memtest.cpp.o
+[ 70%] Building CXX object CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o
+[ 70%] Building CXX object CMakeFiles/kp_hooktool.dir/tools/kp_hooktool.cpp.o
+[ 70%] Building CXX object CMakeFiles/kp_modeltest.dir/tools/kp_modeltest.cpp.o
+[ 70%] Building CXX object CMakeFiles/kp_entity.dir/src/api/entity.cpp.o
+[ 70%] Building CXX object CMakeFiles/kp_routinetest.dir/tools/kp_routinetest.cpp.o
+[ 71%] Linking CXX executable kp_namespacetest
+[ 72%] Building CXX object CMakeFiles/kp_structs.dir/src/api/structs.cpp.o
+[ 72%] Built target kp_namespacetest
+[ 72%] Building CXX object CMakeFiles/kp_memtest.dir/src/api/memory.cpp.o
+[ 72%] Building CXX object CMakeFiles/kp_supporttest.dir/tools/kp_supporttest.cpp.o
+[ 73%] Building CXX object CMakeFiles/kp_modeltest.dir/src/api/model.cpp.o
+[ 73%] Linking CXX static library libkp_entity.a
+[ 74%] Linking CXX executable kp_routinetest
+[ 74%] Built target kp_entity
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp: In function ‘void {anonymous}::function_timer_cases(const std::filesystem::__cxx11::path&)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:546:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  546 |     lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                            ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:546:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp: In function ‘int main(int, char**)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:768:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  768 |     lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                                ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_supporttest.cpp:768:80: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+[ 75%] Building CXX object CMakeFiles/kp_hooktool.dir/src/api/memory.cpp.o
+[ 75%] Built target kp_routinetest
+[ 75%] Building CXX object CMakeFiles/kp_modeltest.dir/src/api/model_profiles.cpp.o
+[ 75%] Building CXX object CMakeFiles/kp_modeltest.dir/src/api/model_backend.cpp.o
+[ 76%] Building CXX object CMakeFiles/kp_modeltest.dir/src/api/model_lua.cpp.o
+[ 76%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/output.cpp.o
+[ 76%] Building CXX object CMakeFiles/kp_cameratest.dir/tools/kp_cameratest.cpp.o
+[ 77%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/timers.cpp.o
+[ 77%] Linking CXX executable kp_modeltest
+[ 78%] Building CXX object CMakeFiles/kp_animationtest.dir/tools/kp_animationtest.cpp.o
+[ 79%] Linking CXX executable kp_memtest
+[ 79%] Linking CXX static library libkp_structs.a
+[ 79%] Built target kp_structs
+[ 79%] Building CXX object CMakeFiles/kp_supporttest.dir/src/api/strings.cpp.o
+[ 79%] Built target kp_modeltest
+[ 79%] Building CXX object CMakeFiles/kp_eventtest.dir/tools/kp_eventtest.cpp.o
+[ 79%] Building CXX object CMakeFiles/kp_supporttest.dir/src/lua/host.cpp.o
+[ 79%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/animation.cpp.o
+[ 79%] Built target kp_memtest
+[ 79%] Linking CXX executable kp_hooktool
+[ 79%] Built target kp_hooktool
+[ 80%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera.cpp.o
+[ 80%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/animation_profiles.cpp.o
+[ 80%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_profiles.cpp.o
+[ 80%] Building CXX object CMakeFiles/kp_luatest.dir/tools/kp_luatest.cpp.o
+[ 81%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/animation_backend.cpp.o
+[ 82%] Building CXX object CMakeFiles/kp_eventtest.dir/src/events/table.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_eventtest.cpp: In function ‘void {anonymous}::shape_and_host_cases()’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_eventtest.cpp:244:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+  244 |     lua::Host host({dir.string(), /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                            ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_eventtest.cpp:244:76: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+[ 83%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_backend.cpp.o
+[ 83%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/animation_lua.cpp.o
+[ 84%] Building CXX object CMakeFiles/kp_supporttest.dir/src/lua/value.cpp.o
+[ 84%] Building CXX object CMakeFiles/kp_cameratest.dir/src/api/camera_lua.cpp.o
+[ 85%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/model.cpp.o
+[ 85%] Linking CXX executable kp_cameratest
+[ 85%] Built target kp_cameratest
+[ 86%] Building CXX object CMakeFiles/kp_luatest.dir/src/lua/host.cpp.o
+[ 86%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o
+[ 86%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/model_profiles.cpp.o
+[ 86%] Building CXX object CMakeFiles/kp_luatest.dir/src/lua/value.cpp.o
+[ 87%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o
+[ 87%] Building CXX object CMakeFiles/kp_eventtest.dir/src/events/payload.cpp.o
+[ 87%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/model_backend.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_luatest.cpp: In function ‘int main(int, char**)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_luatest.cpp:73:67: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_created’ [-Wmissing-field-initializers]
+   73 |     lua::Host host({dir, /*error_budget=*/3, /*hot_reload=*/false});
+      |                                                                   ^
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kp_luatest.cpp:73:67: warning: missing initializer for member ‘kp::lua::HostConfig::on_state_closing’ [-Wmissing-field-initializers]
+[ 87%] Building CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform.cpp.o
+[ 88%] Building CXX object CMakeFiles/kp_animationtest.dir/src/api/model_lua.cpp.o
+[ 89%] Building CXX object CMakeFiles/kp_supporttest.dir/src/platform/platform_linux.cpp.o
+[ 89%] Building CXX object CMakeFiles/kp_eventtest.dir/src/events/situation.cpp.o
+[ 89%] Linking CXX executable kp_supporttest
+[ 90%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_eventtest.dir/src/events/dispatch.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_luatest.dir/src/events/dispatch.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o
+[ 91%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o
+[ 91%] Linking CXX executable kp_animationtest
+[ 92%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o
+[ 92%] Built target kp_supporttest
+[ 92%] Built target kp_animationtest
+[ 92%] Building CXX object CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o
+[ 92%] Building CXX object CMakeFiles/kp_eventtest.dir/src/lua/host.cpp.o
+[ 93%] Building CXX object CMakeFiles/kp_luatest.dir/src/platform/platform.cpp.o
+[ 94%] Building CXX object CMakeFiles/kp_eventtest.dir/src/lua/value.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_structtest.dir/tools/kp_structtest.cpp.o
+[ 95%] Linking CXX executable kp_structtest
+[ 95%] Built target kp_structtest
+[ 95%] Building CXX object CMakeFiles/kp_luatest.dir/src/platform/platform_linux.cpp.o
+[ 95%] Building CXX object CMakeFiles/kp_eventtest.dir/src/api/memory.cpp.o
+[ 96%] Linking CXX executable kp_luatest
+[ 96%] Built target kp_luatest
+[ 97%] Building CXX object CMakeFiles/kp_entitytest.dir/tools/kp_entitytest.cpp.o
+[ 97%] Linking CXX executable kp_lifecycletest
+[ 97%] Linking CXX executable kp_entitytest
+[ 97%] Linking CXX executable kp_scriptsapitest
+[ 97%] Linking CXX executable kp_eventtest
+[ 97%] Built target kp_entitytest
+[ 97%] Built target kp_eventtest
+[ 98%] Built target kp_scriptsapitest
+[100%] Built target kp_lifecycletest

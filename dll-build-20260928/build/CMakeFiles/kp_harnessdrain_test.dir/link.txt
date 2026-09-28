@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O2 -g -DNDEBUG -m32 -Wl,--dependency-file=CMakeFiles/kp_harnessdrain_test.dir/link.d CMakeFiles/kp_harnessdrain_test.dir/tools/kp_harnessdrain_test.cpp.o -o kp_harnessdrain_test  -Wl,-rpath,/home/brunner56/kp-live-20260922/dll-build-20260928/build libkphasor.so

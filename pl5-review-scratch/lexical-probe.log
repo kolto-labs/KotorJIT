@@ -1,0 +1,4 @@
+engine source sha256 f5c4cc8b67b110c6d11faa703f82892b04438deb89b0e898453c7fb57954cd72
+link command: clang++ -m32 -std=c++20 -I pl5-scratch/src engine_k1.cpp <native adapter closure>
+on_fail mutation: detected missing cleanup (red)
+finish_load mutation: detected missing cleanup (red)

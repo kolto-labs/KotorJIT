@@ -1,0 +1,54 @@
+**Status: complete — Round 11 adversarial verdict is FAIL.**
+
+I resumed the prior reviewer’s existing work rather than restarting it:
+
+- Inspected the existing Round 11 brief, implementation report, adversarial report, probe directory, dirty-worktree status, and recent probe artifacts.
+- Found that probes p10–p14 had been completed, but the append-only adversarial review had no `## Round 11 verdict` section.
+- Appended exactly one Round 11 section to [task7-capture-cadence-adversarial-review.md](/home/brunner56/kp-live-20260922/task7-capture-cadence-adversarial-review.md).
+- Preserved all worktree changes. This was a read-only source review; no source, test, documentation, Git, lock, game, Wine, Gamescope, Xwayland, mpv, or live-game resources were touched.
+- Read the companion correctness review only after forming and recording the independent verdict. It has no separate Round 11 verdict section to alter the result.
+
+Findings recorded:
+
+1. **Important — post-fork/pre-`Popen`-return signal race leaks the child from supervisor cleanup.**  
+   In [capture_diagnostic.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/capture_diagnostic.py:880), the child handle is assigned only after `spawn_child()` returns. A signal in that interval is treated as “before launch,” while the already-created child has no parent-side bounded cleanup or survivor accounting. The real-supervisor/dummy-tree probe `p11b_supervisor_spawn_window.py` demonstrated:
+   - supervisor exits 1 with `interrupted before launch`;
+   - `child_returncode=None`;
+   - `child_alive_after_supervisor_exit=True`;
+   - the unsupervised child later completes independently.
+
+2. **Important — `--child` authorization can be forged by redirecting the canonical lock root through `KP_GAMESCOPE_REPO_ROOT`.**  
+   [canonical_lock_guard()](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/gamescope_socket.py:43) trusts this inherited environment variable. The `p12_child_token.py` probe created a private fake repository/lock, held that private flock, supplied matching forged commitments and a pipe token, and got:
+   ```text
+   forged_pipe_commitments_env_redirected_lock: ADMITTED
+   ```
+   No canonical live-game lock was opened by that attack. Thus the child-entry trust boundary does not currently prove possession of the real lock.
+
+3. **Minor — genuinely renamed executables evade the name-based preflight matcher.**  
+   `p10_preflight.py` showed a safe renamed executable at `/tmp/.../enc` is admitted when `comm`, `/proc/PID/exe` basename, and argv lack a protected name:
+   ```text
+   renamed_copy_exe_argv_comm: ADMITTED
+   real renamed_enc_binary: detected=False
+   ```
+   Named wrapper forms were caught and preflight made no signal attempts, but the stated renamed-FFmpeg resistance is incomplete without a trusted executable identity check or an explicitly narrower guarantee.
+
+The review also notes evidence that does hold within its limited host-only scope:
+
+- The 1.2 content-difference floor rejects half-duplicate streams, including dither/noise variants, while several fully animated `testsrc2` cases pass.
+- The first-frame-black check behaves differently at the interval marker as intended.
+- FFprobe-shaped and xwininfo-shaped children inherited the test lock FD.
+- None of this is evidence of live Gamescope, Xwayland, GPU cadence, mpv, Wine, or K1 behavior.
+
+Counts:
+
+- **Findings:** 2 Important, 1 Minor.
+- **Completed/reused probe groups:** p10, p11a, p11b, p11c, p12, p13, p14.
+- **Source files changed by this review:** 0.
+- **Review files changed:** 1 append-only report.
+- **Unfinished runtime proof:** no live diagnostic or full 1,442-second cleanup path was run, by instruction and scope.
+
+The final line in the review is:
+
+```text
+Round 11 adversarial verdict: FAIL
+```

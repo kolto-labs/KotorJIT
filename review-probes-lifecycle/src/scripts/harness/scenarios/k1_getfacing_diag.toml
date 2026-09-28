@@ -1,0 +1,24 @@
+# Read-only bridge diagnostic for the exact resolved first Endar door.
+# This deliberately performs no movement, interaction, save, or state write.
+name = "k1 GetFacing VM bridge diagnostic"
+target = "k1"
+
+[settings]
+load_timeout = 300
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "lua"
+timeout = 15
+code = "local ok, err = pcall(nwscript.call, 'GetFacing', 71); local t = nwscript.last_trace(); return {ok=ok, err=err, execute_called=t.execute_called, execute_status=t.execute_status, push_result_entered=t.push_result_entered, result_count=t.result_count, pop_bound=t.pop_bound, pop_attempted=t.pop_attempted, pop_status=t.pop_status}"
+
+[[step]]
+do = "quit"

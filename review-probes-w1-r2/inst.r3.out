@@ -1,0 +1,233 @@
+=== HAPPY path 'KotOR [GOG] Ünï 字'
+installed k1_gog_103 into /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/KotOR [GOG] Ünï 字
+  scripts go in /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/KotOR [GOG] Ünï 字/kotorphasor/scripts
+  manifest: /home/brunner56/kp-live-20260922/review-probes-w1-r2/games/KotOR [GOG] Ünï 字/kotorphasor/install-manifest.json
+rc=0
+  ok       kphasor.dll
+  ok       kotorphasor/addresses/k1_gog_103.json
+  ok       binkw32.dll
+rc=0
+ 389 |  … ifestPath) { throw 'already installed; run -Action Uninstall first' }
+     |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | already installed; run -Action Uninstall first
+rc=1
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+binkw32.dll
+chitin.key
+kotorphasor
+swkotor.exe
+da32b9be412a
+=== T1 :: m["backup_dir"]='.'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '.' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== T9 :: m["backup_dir"]='..'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '..' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== T2 :: m['files'].insert(0,{'path':'../sentinel.txt','action':'created','sha256':hashlib.sha256(open('/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-T2/sentinel.txt','rb').read()).hexdigest()})
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | '../sentinel.txt' has an empty, '.' or '..' segment
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== T2b :: m['files'].insert(0,{'path':'..\\sentinel.txt','action':'created','sha256':'0'*64})
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | '..\sentinel.txt' has an empty, '.' or '..' segment
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N1null :: m["backup_dir"]=None
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N1empty :: m["backup_dir"]=''
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N1missing :: del m['backup_dir']
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2dotdotTail :: m["backup_dir"]='kotorphasor/backup/20260101T000000Z/..'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | 'kotorphasor/backup/20260101T000000Z/..' is not
+     | kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2abs :: m["backup_dir"]='/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-N2abs'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '/home/brunner56/kp-live-20260922/review-probes-w1-r2/games/nest-N2abs'
+     | is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2unc :: m["backup_dir"]='\\\\?\\C:\\kotorphasor\\backup\\20260101T000000Z'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '\\?\C:\kotorphasor\backup\20260101T000000Z' is not
+     | kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2dev :: m["backup_dir"]='\\\\.\\C:'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | '\\.\C:' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing
+     | removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2trailnl :: m["backup_dir"]=m['backup_dir']+'\n'
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | 'kotorphasor/backup/20260927T195830Z ' is not
+     | kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N2case :: m["backup_dir"]=m['backup_dir'].upper()
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | 'KOTORPHASOR/BACKUP/20260927T195835Z' is not
+     | kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3ads :: m['files'][1]['path']='kphasor.dll:evil'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | 'kphasor.dll:evil' is rooted or names a drive or stream
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3trdot :: m['files'][1]['path']='kphasor.dll.'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | 'kphasor.dll.' has an empty, '.' or '..' segment
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3trsp :: m['files'][1]['path']='kphasor.dll '
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | 'kphasor.dll ' has an empty, '.' or '..' segment
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3short :: m['files'][1]['path']='KPHASO~1.DLL'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest entry
+     | 'KPHASO~1.DLL' is not a file this script creates
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3drive :: m['files'][1]['path']='C:kphasor.dll'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path
+     | 'C:kphasor.dll' is rooted or names a drive or stream
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N3gamefile :: m['files'][1]['path']='chitin.key'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest entry
+     | 'chitin.key' is not a file this script creates
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4arrBD :: m["backup_dir"]=[m['backup_dir']]
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+     | is not a single string
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4arrPath :: m['files'][1]['path']=[m['files'][1]['path']]
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest file path is
+     | not a single string
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4arrSha :: m['files'][1]['sha256']=[m['files'][1]['sha256']]
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest sha256 of
+     | 'kphasor.dll' is not a single string
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4filesObj :: m['files']=m['files'][1]
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest files is not
+     | a list; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4filesStr :: m['files']='kphasor.dll'
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest files is not
+     | a list; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4filesEmpty :: m['files']=[]
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest lists no
+     | files; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4filesNull :: m['files']=None
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest files is not
+     | a list; refusing, nothing removed
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== N4schema :: m['schema']=['kotorphasor.install-manifest/v1']
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest schema is
+     | not a single string
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+--- manifest after N4filesObj (partial uninstall?):
+binkw32.dll
+binkw32_real.dll
+chitin.key
+kotorphasor
+kphasor.dll
+swkotor.exe
+=== N9dup :: m['files'].insert(1,dict(m['files'][1]))
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest lists
+     | 'kphasor.dll' more than once
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+--- N9dup rerun:
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept: manifest lists
+     | 'kphasor.dll' more than once
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+DONE
+inst rc=0

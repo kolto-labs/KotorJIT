@@ -1,0 +1,58 @@
+[
+  {
+    "wrapper": "data",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "docs",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "scripts",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "src",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "third_party",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "tools",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  },
+  {
+    "wrapper": "bundle",
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    }
+  }
+]

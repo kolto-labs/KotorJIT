@@ -1,0 +1,23 @@
+
+xwininfo: Window id: 0x342 (the root window) (has no name)
+
+  Root window id: 0x342 (the root window) (has no name)
+  Parent window id: 0x0 (none)
+     14 children:
+     0xc00004 "Star Wars: Knights of the Old Republic": ("swkotor.exe" "swkotor.exe")  1024x768+0+0  +0+0
+        1 child:
+        0xa00053 (has no name): ()  1024x768+0+0  +0+0
+     0xc00006 (has no name): ("swkotor.exe" "swkotor.exe")  1x1+0+0  +0+0
+     0xa00029 (has no name): ()  1x1+0+0  +0+0
+     0xc00002 "Default IME": ("swkotor.exe" "swkotor.exe")  1x1+0+0  +0+0
+     0xc00001 "Star Wars: Knights of the Old Republic": ("swkotor.exe" "swkotor.exe")  768x576+0+0  +0+0
+     0x600007 (has no name): ("explorer.exe" "explorer.exe")  1x1+0+0  +0+0
+     0x600006 (has no name): ("explorer.exe" "explorer.exe")  1x1+0+0  +0+0
+     0x600005 (has no name): ("explorer.exe" "explorer.exe")  1x1+0+0  +0+0
+     0x600004 (has no name): ("explorer.exe" "explorer.exe")  1x1+0+0  +0+0
+     0x800001 (has no name): ()  1x1+0+0  +0+0
+     0x600002 (has no name): ("explorer.exe" "explorer.exe")  160x20+3+29  +3+29
+     0x600003 "Default IME": ("explorer.exe" "explorer.exe")  1x1+0+0  +0+0
+     0x600001 (has no name): ()  1x1+0+0  +0+0
+     0x200001 "steamcompmgr": ()  1x1+0+0  +0+0
+

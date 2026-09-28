@@ -1,0 +1,11 @@
+c_users_lower: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+drive_c_users: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+C_USERS_upper: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+wine_z_home: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+steamuser: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+user_underscore: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+user_upper: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+user_capital: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+media_user: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+mnt_c_users: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+cleanup done: True

@@ -1,0 +1,37 @@
+/usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'pkg/a.lua'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+clean                            ok
+marker_in_entry_name_user        FLAGGED marker in name:user name
+marker_in_entry_name_runid       FLAGGED marker in name:run id
+marker_in_entry_name_home        FLAGGED marker in name:/home/
+kp_live_as_filename              FLAGGED marker in name:kp-live
+case_private_dir                 FLAGGED marker in name:.superpowers; private folder:.SuperPowers; private folder:TMP; private folder:Adjudication
+case_marker_text                 FLAGGED marker:line 1: /media/
+zip_comment_marker               FLAGGED zip comment:line 1: /home/
+entry_comment_marker             FLAGGED entry comment:line 1: /home/
+extra_field_marker               FLAGGED extra field:line 1: /home/
+prepended_blob                   FLAGGED prefix bytes:39 bytes before the first entry; prefix bytes:line 1: /home/
+appended_blob_after_eocd         ok
+nul_in_name                      ok
+bidi_name                        FLAGGED unportable name:Unicode format character (such as a bidi
+nfd_twins                        FLAGGED name collision:collides with 1 other name(s) after NFC ; name collision:collides with 1 other name(s) after NFC 
+case_twins                       FLAGGED name collision:collides with 1 other name(s) after NFC ; name collision:collides with 1 other name(s) after NFC 
+duplicate_names                  FLAGGED marker:line 1: /home/
+win_reserved                     FLAGGED unportable name:Windows device name; unportable name:Windows reserved character in name; unportable name:trailing dot or space in name
+bom_magic                        ok
+pdf_ascii_polyglot               ok
+utf16le_marker_in_dll            FLAGGED magic:magic: pe/dos
+ascii_marker_in_dll              FLAGGED marker:line 1: /home/
+fp_run_id_like_date_in_doc       ok
+fp_bioware_like_text             ok
+fp_mz_text                       ok
+fp_kb2_text                      ok
+fp_docs_research                 ok
+fp_runs_folder                   ok
+fp_linuxbrew_word                FLAGGED marker:line 1: linuxbrew
+encrypted_flag                   FLAGGED encrypted:encrypted entry; its content was not sca
+nested_targz_marker              FLAGGED marker:line 1: /home/
+nested_tarxz_allowed             FLAGGED marker:line 1: /home/
+nested_tarxz_with_allow_*.xz     FLAGGED ['marker'] expected []
+ascii_marker_in_dll_with_allow   FLAGGED ['marker']
+CLI encrypted rc 1 stderr tail  stdout {   "zip": "enc.zip",   "zip_sha256": "a147e37addecc6ded7bf54c47fa1655c8187f9c03

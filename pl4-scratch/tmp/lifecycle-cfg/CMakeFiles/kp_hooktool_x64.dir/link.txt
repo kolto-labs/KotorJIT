@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/kp_hooktool_x64.dir/link.d CMakeFiles/kp_hooktool_x64.dir/tools/kp_hooktool_x64.cpp.o -o kp_hooktool_x64  libkp_hooks_x64.a

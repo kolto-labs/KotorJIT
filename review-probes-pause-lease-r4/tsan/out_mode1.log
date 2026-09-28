@@ -1,0 +1,31 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=2495340)
+  Read of size 1 at 0x7ffe3852ec9c by thread T2:
+    #0 <null> <null> (race_mode1+0x4be25c) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #1 <null> <null> (race_mode1+0x4bccd1) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #2 <null> <null> (race_mode1+0x4bce49) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #3 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 1 at 0x7ffe3852ec9c by thread T1:
+    #0 <null> <null> (race_mode1+0x4bd123) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #1 <null> <null> (race_mode1+0x4bcc61) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #2 <null> <null> (race_mode1+0x4bcde1) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #3 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Location is stack of main thread.
+
+  Thread T2 (tid=2495349, running) created by main thread at:
+    #0 <null> <null> (race_mode1+0x435d0e) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+  Thread T1 (tid=2495347, finished) created by main thread at:
+    #0 <null> <null> (race_mode1+0x435d0e) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca)
+    #1 <null> <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 328820b908de8ea1ef79afa8995e302e819163d7)
+
+SUMMARY: ThreadSanitizer: data race (/home/brunner56/kp-live-20260922/review-probes-pause-lease-r4/tsan/race_mode1+0x4be25c) (BuildId: 3ce608deaa65a2629a673f872f470f6ebdd982ca) 
+==================
+MODE=1 cycles=400 saw_machine=400
+done, rc=0
+ThreadSanitizer: reported 1 warnings

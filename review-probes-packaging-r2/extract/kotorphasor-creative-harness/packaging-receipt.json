@@ -1,0 +1,443 @@
+{
+  "kind": "kpharness.creative-harness-package.v1",
+  "scope": "K1 GOG 1.03, Linux, Wine inside a private Gamescope display, KDE Plasma Wayland evidence host only. Capture (C7) is known-failing. Other hosts not attempted.",
+  "entries": [
+    "kpharness.creative",
+    "kpharness.gamescope_snapshot",
+    "kpharness.creative_accept",
+    "kpharness.creative_export",
+    "kpharness.capture_diagnostic",
+    "kpharness.commit_inputs",
+    "kpharness.export_verify"
+  ],
+  "snapshot_entries": [
+    "kpharness.creative",
+    "kpharness.gamescope_snapshot"
+  ],
+  "snapshot_files": [
+    {
+      "path": "kpharness/__init__.py",
+      "sha256": "9282a855bb913f8b0a3168df7bb6a92c278977f05625e8c649dcc51f74fad4c5"
+    },
+    {
+      "path": "kpharness/bwm.py",
+      "sha256": "4d9e1226bdaafe3727d075ac0ecfb2173e0075a177c0928c6ae3e50e2a845f1e"
+    },
+    {
+      "path": "kpharness/checkpoints.py",
+      "sha256": "c844589b971a468fdb8ef2990b05347b9ca827ab247158bde0b17087abdeec25"
+    },
+    {
+      "path": "kpharness/client.py",
+      "sha256": "4c9ca9d24ff2d44e85f844cbd5409838a55e2ac0eb230ee28e22e2444e120fb9"
+    },
+    {
+      "path": "kpharness/console_protocol.py",
+      "sha256": "6b60936c68437c82ab31b068f5be07d35644feb1db8a571369a7b3a6df662e7c"
+    },
+    {
+      "path": "kpharness/console_steps.py",
+      "sha256": "41c7745064b313face29c1e656c158f384cb8c5aa829b08668bc390477fb59fd"
+    },
+    {
+      "path": "kpharness/creative.py",
+      "sha256": "0e302254335d0acc3e95be786365a1544642b169377c4a08c67504f373de3ee6"
+    },
+    {
+      "path": "kpharness/creative_accept.py",
+      "sha256": "d0722f46eed52844c33af90af536740825d25839755fba41df0cce03cef69b01"
+    },
+    {
+      "path": "kpharness/creative_checkpoints.py",
+      "sha256": "aae80bdef1db9cc218a36c4e0622bcabcb0ae6779334362a9e1bca51e5faff2b"
+    },
+    {
+      "path": "kpharness/creative_steps.py",
+      "sha256": "bc1849a0c63a603766d8b63fec33077f893bfcfef256a56a301506763522c89c"
+    },
+    {
+      "path": "kpharness/creative_wine.py",
+      "sha256": "0bb74fd07de603080e6153766a44ab24001cde083c7a7af6ed263bff6eea5812"
+    },
+    {
+      "path": "kpharness/discover.py",
+      "sha256": "9fad36c358bded7ec37c3d77aeeb400317a4e70ec54f99957755599fbc423a9d"
+    },
+    {
+      "path": "kpharness/display_backends.py",
+      "sha256": "e97066b8ea00432eeac897ae0d71e2bfab0b9b25700a555bed0743fcfc08bf82"
+    },
+    {
+      "path": "kpharness/gamescope_processes.py",
+      "sha256": "0bae1acea229128da5eab031a5b459d1f049e0c3d433c38f4981fee8eddaed21"
+    },
+    {
+      "path": "kpharness/gamescope_snapshot.py",
+      "sha256": "89fa339c9b5bcbca6305b092f438762f94ffea2ad1733e31c12c1ab5b3ec2def"
+    },
+    {
+      "path": "kpharness/gamescope_socket.py",
+      "sha256": "44a7cc819838daab94be9b4924c370b8c0e650dc0a3d92296c0300d083faf169"
+    },
+    {
+      "path": "kpharness/gamescope_xwayland.py",
+      "sha256": "4d73632e9f48cf82258c7cf7231f7acccfa1e192c4f502ae4667ec7bb3c8f3cf"
+    },
+    {
+      "path": "kpharness/oracle.py",
+      "sha256": "f6eb286ab13ad88b4dfe052a2c6e7fc125988d9fda8470112a2a18c730e2fa07"
+    },
+    {
+      "path": "kpharness/owned_x11.py",
+      "sha256": "592ad9714c66b1acd660fb393f5318a36d5285af7bc0942c9581d7474d38fd7a"
+    },
+    {
+      "path": "kpharness/physical_console.py",
+      "sha256": "e8c972aec6c591fcc5bad47ce3878f5f95551fa3f246e970e15495c1d441e4a5"
+    },
+    {
+      "path": "kpharness/recording.py",
+      "sha256": "04d8f872dbc4624183fc5fdcbda57919b7c03a79b822bf514ed8f55cdb6bb359"
+    },
+    {
+      "path": "kpharness/resources.py",
+      "sha256": "03bd74b28285c69528dde880119353c71383e713467abcfad017463458876963"
+    },
+    {
+      "path": "kpharness/scenario.py",
+      "sha256": "98f1b3678bdd5f363184a621cd5ad8ee12b2f7976c7e1262a8df9931c1bfdf47"
+    },
+    {
+      "path": "kpharness/session.py",
+      "sha256": "3064be71c6c798bcc43c69e902980169ea58835a146594a73447d1f61005fde3"
+    },
+    {
+      "path": "kpharness/shots.py",
+      "sha256": "b5e903ebab783b9d33bdc3cbee6d7df346c76edb6acc59405845227fe9073bf8"
+    },
+    {
+      "path": "kpharness/targets.py",
+      "sha256": "2cd427a49c9c0f34415b7443ff56f8c075cfa1d323db6701640285e7b54a54cd"
+    },
+    {
+      "path": "kpharness/waits.py",
+      "sha256": "ac1141c71df4e2960e97a35beac274567d0ed87d93f8d770a4db5d8abfec6f9f"
+    },
+    {
+      "path": "kpharness/world.py",
+      "sha256": "4d232f9b33dfba1172bc8e1aefdb49fa94c436e83a93f86f8d94d2144bc251e3"
+    }
+  ],
+  "snapshot_files_sha256": "492289a345098ad513093ce463e69c72f57dc5cdc79b1b7f269ce9a5bcc8a334",
+  "exclusions": [
+    {
+      "path": "data/addresses/k1_steam_103.json",
+      "reason": "not allowlisted"
+    },
+    {
+      "path": "data/addresses/k1_steam_103_unpacked.json",
+      "reason": "not allowlisted"
+    },
+    {
+      "path": "data/addresses/k2_gog_aspyr.json",
+      "reason": "not allowlisted"
+    },
+    {
+      "path": "data/addresses/k2_steam_aspyr.json",
+      "reason": "not allowlisted"
+    },
+    {
+      "path": "scripts/harness/kpharness/__main__.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/__init__.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/__init__.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/bwm.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/bwm.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/capture_diagnostic.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/capture_diagnostic.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/checkpoints.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/checkpoints.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/cli.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/cli.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/client.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/client.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/console_protocol.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/console_steps.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_accept.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_accept.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_checkpoints.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_checkpoints.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_export.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_export.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_steps.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_steps.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_wine.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/creative_wine.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/discover.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/discover.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/display_backends.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/display_backends.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_processes.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_processes.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_snapshot.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_snapshot.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_socket.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_socket.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_xwayland.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/gamescope_xwayland.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/oracle.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/oracle.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/owned_x11.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/owned_x11.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/physical_console.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/pioneer.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/pioneer.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/playback.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/playback.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/recording.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/recording.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/resources.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/resources.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/scenario.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/scenario.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/session.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/session.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/shots.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/shots.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/targets.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/targets.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/waits.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/waits.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/world.cpython-312.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/__pycache__/world.cpython-314.pyc",
+      "reason": "cache or version control"
+    },
+    {
+      "path": "scripts/harness/kpharness/cli.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/kpharness/pioneer.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/kpharness/playback.py",
+      "reason": "not in import closure"
+    },
+    {
+      "path": "scripts/harness/scenarios/cursed/50_chaos_roulette.toml",
+      "reason": "retired: no matching public example"
+    },
+    {
+      "path": "scripts/harness/scenarios/cursed/60_rave.toml",
+      "reason": "retired: no matching public example"
+    }
+  ],
+  "sanitizations": [
+    {
+      "path": "data/addresses/k1_gog_103.json",
+      "removed_metadata_keys": [
+        "reference_image"
+      ]
+    }
+  ],
+  "path_scan": [],
+  "content_check": "every file is UTF-8 text with no media, archive or program magic",
+  "staging": "each source read once; provenance and ZIP use those bytes; sources re-read at the end",
+  "provenance": {
+    "base_commit": null,
+    "overlay_files": 60,
+    "bound_by_base": []
+  },
+  "media": "none; no media, saves or run evidence are packaged"
+}

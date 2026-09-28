@@ -1,0 +1,23 @@
+# Read-only saved-world diagnostic for the Trask approach failure.
+name = "k1 Trask action-state diagnostic"
+target = "k1"
+
+[settings]
+load_timeout = 300
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "lua"
+timeout = 15
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function row(o) local p=nwscript.call('GetPosition',o); return {id=o,valid=nwscript.call('GetIsObjectValid',o),type=nwscript.call('GetObjectType',o),tag=nwscript.call('GetTag',o),area=nwscript.call('GetArea',o),action=nwscript.call('GetCurrentAction',o),combat=nwscript.call('GetIsInCombat',o),position={x=p.x,y=p.y,z=p.z}} end; return {pc=row(pc),trask=row(t),same_area=nwscript.call('GetArea',pc)==nwscript.call('GetArea',t)}"
+
+[[step]]
+do = "quit"

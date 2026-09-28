@@ -1,0 +1,10 @@
+/home/brunner56/krayt/tmp/k1_harness/swkotor.exe
+  sha256      9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+  build       k1_gog_103
+  format      PE32
+  image base  0x00400000
+  encrypted   no
+  note        
+
+  .text digest 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+  known good   7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3  MATCH

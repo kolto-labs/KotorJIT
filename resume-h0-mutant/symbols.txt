@@ -1,0 +1,260 @@
+08052004 R _IO_stdin_used
+         U _Unwind_Resume@GCC_3.0
+0804f8fe W kp::harness::HarnessOptions::HarnessOptions()
+0804f8fe W kp::harness::HarnessOptions::HarnessOptions()
+0804f9e8 W kp::harness::HarnessOptions::~HarnessOptions()
+0804f9e8 W kp::harness::HarnessOptions::~HarnessOptions()
+         U kp::harness::listening_port()
+         U kp::harness::ring()
+         U kp::harness::stop()
+         U kp::harness::drain()
+         U kp::harness::start(kp::harness::HarnessOptions const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+0805154a T kp::harness::Channel::push_reply(unsigned long long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+08051c60 W kp::harness::Channel::Reply::Reply(kp::harness::Channel::Reply&&)
+08051c60 W kp::harness::Channel::Reply::Reply(kp::harness::Channel::Reply&&)
+0805188c W kp::harness::Channel::Reply::~Reply()
+0805188c W kp::harness::Channel::Reply::~Reply()
+         U kp::harness::EventRing::push(char const*, unsigned long long, kp::harness::EventField const*, unsigned int)
+08051800 W kp::harness::Channel::current_client() const
+08051a8c W std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_get_Tp_allocator() const
+08050dce W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_get_Tp_allocator() const
+0804f836 W std::_Function_base::_M_empty() const
+0804fce0 W std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >::time_since_epoch() const
+0804f580 W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >::count() const
+0804fefe W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::count() const
+0804f7c2 W std::chrono::duration<long long, std::ratio<1ll, 1ll> >::count() const
+080519ae W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_check_len(unsigned int, char const*) const
+08051ed0 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::end() const
+080518e4 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::size() const
+08051eb0 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::begin() const
+08051db8 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::empty() const
+08051a68 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::max_size() const
+08050cf0 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_check_len(unsigned int, char const*) const
+0804fe96 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::end() const
+0804f8d4 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::size() const
+0804fe76 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::begin() const
+08051222 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::empty() const
+08050daa W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::max_size() const
+080500ac W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator[](unsigned int) const
+080502ca W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_is_local() const
+08050aec W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_local_data() const
+08050426 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_check_length(unsigned int, unsigned int, char const*) const
+0804fbe6 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::data() const
+0804feb8 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::find(char const*, unsigned int) const
+080506d0 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::find(char const*, unsigned int, unsigned int) const
+0804fd7a W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::find(char, unsigned int) const
+0804f7d0 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::size() const
+0804fa00 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::c_str() const
+0805031a W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::length() const
+0804fdec W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::substr(unsigned int, unsigned int) const
+0804fa16 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_data() const
+0805051c W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_check(unsigned int, char const*) const
+08050cb2 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_limit(unsigned int, unsigned int) const
+08050274 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::capacity() const
+0804fb9c W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::max_size() const
+0804fd14 W std::function<void ()>::operator()() const
+0804fcfa W std::function<void ()>::operator bool() const
+0804f802 W std::_Any_data::_M_access() const
+080518a8 W std::lock_guard<std::mutex>::lock_guard(std::mutex&)
+080518a8 W std::lock_guard<std::mutex>::lock_guard(std::mutex&)
+080518ca W std::lock_guard<std::mutex>::~lock_guard()
+080518ca W std::lock_guard<std::mutex>::~lock_guard()
+0804f6d7 W std::char_traits<char>::copy(char*, char const*, unsigned int)
+0804f6a6 W std::char_traits<char>::find(char const*, unsigned int, char const&)
+0804f654 W std::char_traits<char>::assign(char&, char const&)
+0804f68f W std::char_traits<char>::length(char const*)
+0804f665 W std::char_traits<char>::compare(char const*, char const*, unsigned int)
+0804ff88 W void std::this_thread::sleep_for<long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+08051ce8 W std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_allocate(unsigned int)
+08051e22 W std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_deallocate(kp::harness::Channel::Reply*, unsigned int)
+08051d7e W std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_get_Tp_allocator()
+0805115c W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_allocate(unsigned int)
+0804f862 W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_impl::~_Vector_impl()
+0804f862 W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_impl::~_Vector_impl()
+0805034e W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned int)
+08050396 W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_get_Tp_allocator()
+0804fbfc W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~_Vector_base()
+0804fbfc W std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~_Vector_base()
+08050036 W std::_Function_base::_Function_base()
+08050036 W std::_Function_base::_Function_base()
+0804f80a W std::_Function_base::~_Function_base()
+0804f80a W std::_Function_base::~_Function_base()
+08051f98 W std::__new_allocator<kp::harness::Channel::Reply>::deallocate(kp::harness::Channel::Reply*, unsigned int)
+08051f4e W std::__new_allocator<kp::harness::Channel::Reply>::allocate(unsigned int, void const*)
+08051350 W std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned int)
+080514fa W std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::allocate(unsigned int, void const*)
+080513f0 W std::__new_allocator<char>::deallocate(char*, unsigned int)
+080514c2 W std::__new_allocator<char>::allocate(unsigned int, void const*)
+080510de W std::__ptr_traits_ptr_to<char const*, char const, false>::pointer_to(char const&)
+0804f77e W std::__ptr_traits_ptr_to<char*, char, false>::pointer_to(char&)
+0805178c W std::mutex::lock()
+080517d2 W std::mutex::unlock()
+080516da W std::atomic<bool>::store(bool, std::memory_order)
+08050410 W std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >::time_point(std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > const&)
+08050410 W std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >::time_point(std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > const&)
+0805106c W std::enable_if<std::chrono::__is_duration<std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >::value, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >::type std::chrono::duration_cast<std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+080513d0 W std::enable_if<std::chrono::__is_duration<std::chrono::duration<long long, std::ratio<1ll, 1000ll> > >::value, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > >::type std::chrono::duration_cast<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, long long, std::ratio<1ll, 1ll> >(std::chrono::duration<long long, std::ratio<1ll, 1ll> > const&)
+08050fd0 W std::enable_if<std::chrono::__is_duration<std::chrono::duration<long long, std::ratio<1ll, 1ll> > >::value, std::chrono::duration<long long, std::ratio<1ll, 1ll> > >::type std::chrono::duration_cast<std::chrono::duration<long long, std::ratio<1ll, 1ll> >, long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0804f620 W std::chrono::duration_values<long long>::zero()
+08051302 W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > std::chrono::__duration_cast_impl<std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, std::ratio<1000000ll, 1ll>, long long, false, true>::__cast<long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+08051465 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::chrono::__duration_cast_impl<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, std::ratio<1000ll, 1ll>, long long, false, true>::__cast<long long, std::ratio<1ll, 1ll> >(std::chrono::duration<long long, std::ratio<1ll, 1ll> > const&)
+0805128c W std::chrono::duration<long long, std::ratio<1ll, 1ll> > std::chrono::__duration_cast_impl<std::chrono::duration<long long, std::ratio<1ll, 1ll> >, std::ratio<1ll, 1000ll>, long long, true, false>::__cast<long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0805081c W timespec std::chrono::__to_timeout_timespec<long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+         U std::chrono::_V2::steady_clock::now()@GLIBCXX_3.4.19
+08050b6a W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >::duration<long long, std::ratio<1ll, 1000ll>, void>(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0804f60a W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >::duration<long long, void>(long long const&)
+08050b6a W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >::duration<long long, std::ratio<1ll, 1000ll>, void>(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0804f60a W std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >::duration<long long, void>(long long const&)
+080507f2 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::zero()
+080512d0 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::duration<long long, std::ratio<1ll, 1ll>, void>(std::chrono::duration<long long, std::ratio<1ll, 1ll> > const&)
+08050fba W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::duration<long long, void>(long long const&)
+080512d0 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::duration<long long, std::ratio<1ll, 1ll>, void>(std::chrono::duration<long long, std::ratio<1ll, 1ll> > const&)
+08050fba W std::chrono::duration<long long, std::ratio<1ll, 1000ll> >::duration<long long, void>(long long const&)
+0804f630 W std::chrono::duration<long long, std::ratio<1ll, 1ll> >::duration<long long, void>(long long const&)
+0804f630 W std::chrono::duration<long long, std::ratio<1ll, 1ll> >::duration<long long, void>(long long const&)
+08050ff0 W std::common_type<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, std::chrono::duration<long long, std::ratio<1ll, 1ll> > >::type std::chrono::operator-<long long, std::ratio<1ll, 1000ll>, long long, std::ratio<1ll, 1ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&, std::chrono::duration<long long, std::ratio<1ll, 1ll> > const&)
+0804fc99 W std::chrono::time_point<std::chrono::_V2::steady_clock, std::common_type<std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > >::type> std::chrono::operator+<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, long long, std::ratio<1ll, 1000ll> >(std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > > const&, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0805039e W std::common_type<std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > >::type std::chrono::operator+<long long, std::ratio<1ll, 1000000000ll>, long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > const&, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+0804f872 W auto std::chrono::operator<=><std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > >(std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > > const&, std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > > const&)
+0804f58d W auto std::chrono::operator<=><long long, std::ratio<1ll, 1000000000ll>, long long, std::ratio<1ll, 1000000000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > const&, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> > const&)
+0804ff0b W auto std::chrono::operator<=><long long, std::ratio<1ll, 1000ll>, long long, std::ratio<1ll, 1000ll> >(std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&, std::chrono::duration<long long, std::ratio<1ll, 1000ll> > const&)
+08051a94 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_S_max_size(std::allocator<kp::harness::Channel::Reply> const&)
+08051d2c W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_Guard_alloc::_Guard_alloc(kp::harness::Channel::Reply*, unsigned int, std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >&)
+08051d2c W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_Guard_alloc::_Guard_alloc(kp::harness::Channel::Reply*, unsigned int, std::_Vector_base<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >&)
+08051d4c W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_Guard_alloc::~_Guard_alloc()
+08051d4c W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_Guard_alloc::~_Guard_alloc()
+0805192a W kp::harness::Channel::Reply& std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::emplace_back<kp::harness::Channel::Reply>(kp::harness::Channel::Reply&&)
+08051ac0 W void std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::_M_realloc_append<kp::harness::Channel::Reply>(kp::harness::Channel::Reply&&)
+08051e00 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::end()
+08051bf0 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::back()
+08051908 W std::vector<kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >::push_back(kp::harness::Channel::Reply&&)
+08050dd6 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_S_max_size(std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&)
+080511a0 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Guard_alloc::_Guard_alloc(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned int, std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)
+080511a0 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Guard_alloc::_Guard_alloc(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned int, std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)
+080511c0 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Guard_alloc::~_Guard_alloc()
+080511c0 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Guard_alloc::~_Guard_alloc()
+0805060a W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >& std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::emplace_back<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+08050e02 W void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_append<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+0805126a W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::end()
+08050f44 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::back()
+0804fe22 W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::push_back(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+0804fc4c W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+0804fc4c W std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector()
+08050a88 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_destroy(unsigned int)
+08050240 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+0805033e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_capacity(unsigned int)
+080510a2 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_S_allocate(std::allocator<char>&, unsigned int)
+0804f790 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::_Alloc_hider(char*, std::allocator<char>&&)
+0804f9bc W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::_Alloc_hider(char*, std::allocator<char> const&)
+0804f790 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::_Alloc_hider(char*, std::allocator<char>&&)
+0804f9bc W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::_Alloc_hider(char*, std::allocator<char> const&)
+0804f704 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::~_Alloc_hider()
+0804f704 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_Alloc_hider::~_Alloc_hider()
+08050150 W void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+0804f764 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_local_data()
+0804fa20 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_set_length(unsigned int)
+08050a5e W void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_S_copy_chars<char const*>(char*, char const*, char const*)
+08050312 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_get_allocator()
+0805068e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::append(char const*)
+0804fd48 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::append(char const*, unsigned int)
+08050330 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_data(char*)
+08050b06 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_S_copy(char*, char const*, unsigned int)
+0805046e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append(char const*, unsigned int)
+080509b4 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_create(unsigned int&, unsigned int)
+08050230 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_length(unsigned int)
+08050b9c W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_mutate(unsigned int, unsigned int, char const*, unsigned int)
+0804fa88 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+0805055e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned int, unsigned int)
+0804f714 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()
+0804f714 W _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1EvQ26is_default_constructible_vIT1_E
+0804f932 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+0804fa88 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+0805055e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned int, unsigned int)
+0804f714 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()
+0804f714 W _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E
+0804f932 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+0804fa62 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+0804fa62 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+08050056 W std::function<void ()>::function()
+08050056 W std::function<void ()>::function()
+0804f8bc W std::function<void ()>::~function()
+0804f8bc W std::function<void ()>::~function()
+0805092c W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::__check_overflow<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, (char)49, (char)53, (char)48>()
+08050986 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::__check_overflow<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, (char)51, (char)48, (char)48>()
+08050959 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::__check_overflow<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, (char)52, (char)48, (char)48>()
+080507c5 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::__check_overflow<std::chrono::duration<long long, std::ratio<1ll, 1000ll> >, (char)53>()
+08050018 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::operator"" ms<(char)49, (char)53, (char)48>()
+08050100 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::operator"" ms<(char)51, (char)48, (char)48>()
+0805008f W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::operator"" ms<(char)52, (char)48, (char)48>()
+0804fee0 W std::chrono::duration<long long, std::ratio<1ll, 1000ll> > std::literals::chrono_literals::operator"" ms<(char)53>()
+0804f7fa W std::_Any_data::_M_access()
+0805108c W std::type_info const*& std::_Any_data::_M_access<std::type_info const*>()
+08051fb6 W void std::destroy_at<kp::harness::Channel::Reply>(kp::harness::Channel::Reply*)
+08051374 W void std::destroy_at<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+08051d86 W kp::harness::Channel::Reply* std::__relocate_a<kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, std::allocator<kp::harness::Channel::Reply> >(kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, std::allocator<kp::harness::Channel::Reply>&)
+080511f1 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >* std::__relocate_a<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >&)
+08051c92 W kp::harness::Channel::Reply* std::construct_at<kp::harness::Channel::Reply, kp::harness::Channel::Reply>(kp::harness::Channel::Reply*, kp::harness::Channel::Reply&&)
+08051c92 W _ZSt12construct_atIN2kp7harness7Channel5ReplyEJS3_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispcl7declvalIT0_EEEEEPS4_S7_DpOS6_
+08051106 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >* std::construct_at<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+08051106 W _ZSt12construct_atINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEJS5_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S6_pispcl7declvalIT0_EEEEEPS6_S9_DpOS8_
+08051e6a W kp::harness::Channel::Reply* std::__relocate_a_1<kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, std::allocator<kp::harness::Channel::Reply> >(kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, std::allocator<kp::harness::Channel::Reply>&)
+0805138b W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >* std::__relocate_a_1<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >&)
+         U std::__throw_bad_alloc()@GLIBCXX_3.4
+08051ef2 W void std::__relocate_object_a<kp::harness::Channel::Reply, kp::harness::Channel::Reply, std::allocator<kp::harness::Channel::Reply> >(kp::harness::Channel::Reply*, kp::harness::Channel::Reply*, std::allocator<kp::harness::Channel::Reply>&)
+0805140a W void std::__relocate_object_a<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >&)
+         U std::__throw_logic_error(char const*)@GLIBCXX_3.4
+         U std::__throw_length_error(char const*)@GLIBCXX_3.4
+         U std::__throw_system_error(int)@GLIBCXX_3.4.11
+         U std::__glibcxx_assert_fail(char const*, int, char const*, char const*)@GLIBCXX_3.4.30
+         U std::__throw_out_of_range_fmt(char const*, ...)@GLIBCXX_3.4.20
+         U std::__throw_bad_function_call()@GLIBCXX_3.4.14
+         U std::__throw_bad_array_new_length()@GLIBCXX_3.4.29
+0804fbca W unsigned int const& std::max<unsigned int>(unsigned int const&, unsigned int const&)
+0804f846 W unsigned int const& std::min<unsigned int>(unsigned int const&, unsigned int const&)
+080510ef W void std::_Destroy<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+08050b3c W void std::_Destroy<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+080516cf W std::operator&(std::memory_order, std::__memory_order_modifier)
+0804f572 W std::operator<=(std::strong_ordering, std::__cmp_cat::__literal_zero)
+0804f566 W std::operator<(std::strong_ordering, std::__cmp_cat::__literal_zero)
+0804fe43 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, char const*)
+08055eb0 V vtable for __cxxabiv1::__class_type_info@CXXABI_1.3
+0805011e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)::_Guard::_Guard(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+0805011e W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)::_Guard::_Guard(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+0805012c W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)::_Guard::~_Guard()
+0805012c W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)::_Guard::~_Guard()
+0804f64e W operator delete(void*, void*)
+         U operator delete(void*, unsigned int)@CXXABI_1.3.9
+         U operator new(unsigned int)@GLIBCXX_3.4
+0804f646 W operator new(unsigned int, void*)
+080560a4 B __bss_start
+080560a0 D __data_start
+         U __divdi3@GLIBC_2.0
+         U __errno_location@GLIBC_2.0
+         w __gmon_start__
+         U __gxx_personality_v0@CXXABI_1.3
+         U __libc_start_main@GLIBC_2.34
+080560a4 D _edata
+080560b0 B _end
+08052000 R _fp_hw
+0804e2b0 T _start
+         U close@GLIBC_2.0
+         U connect@GLIBC_2.0
+080560a0 W data_start
+         U htonl@GLIBC_2.0
+         U htons@GLIBC_2.0
+0804f109 T main
+         U memchr@GLIBC_2.0
+         U memcmp@GLIBC_2.0
+         U memcpy@GLIBC_2.0
+         U nanosleep@GLIBC_2.0
+         U poll@GLIBC_2.0
+         U printf@GLIBC_2.0
+         U pthread_mutex_lock@GLIBC_2.0
+         U pthread_mutex_unlock@GLIBC_2.0
+         U puts@GLIBC_2.0
+         U recv@GLIBC_2.0
+         U send@GLIBC_2.0
+         U setvbuf@GLIBC_2.0
+         U socket@GLIBC_2.0
+080560a4 B stdout@GLIBC_2.0
+         U strlen@GLIBC_2.0

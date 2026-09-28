@@ -1,0 +1,16 @@
+== nwscript_boundary_test
+NWScript boundary violations:
+docs/devtools-design.md:134: dotted member on removed host root: kotor.lua
+rc=0
+== gen_event_glue --check
+rc=0
+== camera_profile_consistency_test
+----------------------------------------------------------------------
+Ran 5 tests in 9.722s
+
+OK
+== verify_regen
+changed existing sites: []
+changed top-level keys: ['adjudicated_bindings'] {'adjudicated_bindings': (199, 219)}
+summary deltas: {'total': (256, 276), 'resolved': (256, 276), 'by_adjudication': (196, 216), 'by_field': (128, 145)}
+VERDICT: only intended entries changed

@@ -1,0 +1,4 @@
+HOLDS 	P1 PC guarded then restored at settle	during=1 after=0
+HOLDS 	P2 PC restored on unload; late timer inert	after=0
+BREAKS	P3 PC with new id after module load is restored	new-id PC min_one_hp=1
+exit=0

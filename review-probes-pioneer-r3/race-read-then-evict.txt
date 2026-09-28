@@ -1,0 +1,2 @@
+{"widen": 0.3, "legit_reply": "", "reply_wait": 0.53, "executed": ["play"]}
+{"widen": 0.05, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.261, "executed": ["play"]}

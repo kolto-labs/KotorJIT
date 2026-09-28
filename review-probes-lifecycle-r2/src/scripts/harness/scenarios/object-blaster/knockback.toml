@@ -1,0 +1,324 @@
+# Object blaster Stage 5: knockback (engine force-push, interim) on each player damage event
+#
+# Declared inputs. Check them before launch; the route cannot hash its runtime.
+#   runtime   kphasor.dll sha256 165f00008e8633173127de990668f6f93906e461fe96c94833f47a45fff55b9c
+#             frozen projectile build, passed with --build-dir
+#             /home/brunner56/kp-live-20260922/frozen-projectile-visual2 . session.log must
+#             report runtime 165f00008e86. Never copy it into the repository.
+#   fixture   private blaster_fixture.lua (projectile-research), deployed console-only to
+#             kotorphasor/console-examples/blaster_fixture.lua
+#   save      owned "000001 - AUTOSAVE" with an unequipped single disruptor pistol
+#             (base item 16, ammunition row 3 "Disruptor")
+#   script    scripts/demos/object-blaster/object_blaster.lua deployed to kotorphasor/scripts
+#
+# Knockback is labelled "engine force-push, interim": stock EffectForcePushed with the
+# PC as caller, from the target's damaged event. Not tumbling, not ragdoll, not timed
+# to projectile arrival.
+# Pass: target displaced >= 2.0 m along the PC-to-target line, away from the PC;
+# exactly one push per player damage event (demo counters 7 == 8, one log line per
+# push, no mismatched line); no damage means no push (quiet window); teardown unbinds
+# the handler and returns bolts to stock, so later stock damage pushes nothing.
+# A forced miss is not staged live: a miss raises no damaged event, so the demo is
+# never called. The host mock test tools/tests/examples/object_blaster.lua covers it.
+# Models are the installed game's own resources. Nothing retail is copied.
+# The last step is the Stage 1 restoration gate. It failed in run 20260922-143031
+# and stays failing until Stage 1 lands, even when this stage's own steps pass.
+name = "object blaster: stage 5 knockback"
+target = "k1"
+
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 45
+load_timeout = 600
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+timeout = 600
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+
+[[step]]
+do = "clear_auto_pause"
+
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+
+[[step]]
+do = "mark_log"
+
+[[step]]
+label = "projectile runtime present: kp.projectiles supported, selection off, observation off"
+do = "assert_lua"
+code = "local s=kp.projectiles and kp.projectiles.status(); return s~=nil and s.supported==true and s.enabled==false and s.observing==false"
+equals = true
+
+[[step]]
+label = "snapshot original equipment and existing area creatures"
+do = "assert_lua"
+code = "local q=nwscript.call; p=q('GetFirstPC'); oldright=q('GetItemInSlot',4,p); oldleft=q('GetItemInSlot',5,p); oldmin=q('GetMinOneHP',p); existing={}; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do existing[o]=true; o=q('GetNextObjectInArea',q('GetArea',p),1) end; q('SetCameraMode',p,2); q('SetCameraFacing',q('GetFacing',p)); beforeitems={}; local function keep(i) if q('GetIsObjectValid',i)==1 then beforeitems[i]={stack=q('GetItemStackSize',i),base=q('GetBaseItemType',i),owner=q('GetItemPossessor',i),tag=q('GetTag',i)} end end; local i=q('GetFirstItemInInventory',p); local seen={}; local n=0; while q('GetIsObjectValid',i)==1 do assert(not seen[i] and n<512,'inventory enumeration incomplete'); seen[i]=true;n=n+1;keep(i);i=q('GetNextItemInInventory',p) end;keep(oldright);keep(oldleft); return q('GetIsInCombat',p)==0"
+equals = true
+
+[[step]]
+label = "demo armed: state 4 (ready), request slot clear"
+do = "assert_lua"
+code = "local q=nwscript.call; local p=q('GetFirstPC'); return q('GetLocalNumber',p,6)==4 and q('GetLocalNumber',p,5)==0"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: borrow the disruptor and spawn the disposable target"
+do = "console_command"
+code = "blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "independent borrowed disruptor pistol (base 16) and exactly one owned target"
+do = "assert_lua"
+code = "local q=nwscript.call; local gun=q('GetItemInSlot',4,p); local prior=beforeitems[gun]; if not prior or prior.stack~=1 or gun==oldright or gun==oldleft or q('GetIsObjectValid',gun)~=1 or q('GetItemPossessor',gun)~=p or q('GetItemStackSize',gun)~=1 or q('GetBaseItemType',gun)~=16 or prior.base~=16 then return false end; selectedgun=gun; local n=0; local o=q('GetFirstObjectInArea',q('GetArea',p),1); while q('GetIsObjectValid',o)==1 do if not existing[o] then n=n+1; target=o end; o=q('GetNextObjectInArea',q('GetArea',p),1) end; if n~=1 then return false end; baselinehp=q('GetCurrentHitPoints',target); return q('GetMinOneHP',target)==1 and q('GetIsObjectValid',q('GetItemInSlot',5,p))==0"
+equals = true
+poll = true
+
+[[step]]
+label = "request demo start (PC local 5 = 1)"
+do = "assert_lua"
+code = "nwscript.call('SetLocalNumber',p,5,1); return true"
+equals = true
+
+[[step]]
+label = "independent demo running: state 1, footlocker selected, counters zero; mark target and PC positions"
+do = "assert_lua"
+code = "local q=nwscript.call; if q('GetLocalNumber',p,6)==9 then error('demo failed to start') end; local s=kp.projectiles.status(); if q('GetLocalNumber',p,6)~=1 or q('GetLocalNumber',p,5)~=0 then return false end; kb_start=q('GetPosition',target); kb_pc=q('GetPosition',p); return s.enabled==true and string.lower(s.model)=='plc_footlker' and q('GetLocalNumber',p,7)==0 and q('GetLocalNumber',p,8)==0"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: fire the borrowed disruptor at the target"
+do = "console_command"
+code = "return blaster_fixture.fire()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "stock combat damages the disposable target"
+do = "assert_lua"
+code = "local q=nwscript.call; return q('GetIsObjectValid',target)==1 and q('GetCurrentHitPoints',target)<baselinehp and q('GetIsDead',target)==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "Stage 5 pass: target displaced >= 2.0 m away from the PC after a push"
+do = "assert_lua"
+code = "local q=nwscript.call; if q('GetLocalNumber',p,6)~=1 then error('demo left the running state') end; local pushes,events=q('GetLocalNumber',p,7),q('GetLocalNumber',p,8); if pushes~=events then error('pushes '..pushes..' differ from damage events '..events) end; if pushes<1 then return false end; local t=q('GetPosition',target); local ux,uy=kb_start.x-kb_pc.x,kb_start.y-kb_pc.y; local len=math.sqrt(ux*ux+uy*uy); if len<0.5 then error('target started on top of the PC') end; kb_away=((t.x-kb_start.x)*ux+(t.y-kb_start.y)*uy)/len; return kb_away>=2.0"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+screenshot = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: stop firing"
+do = "console_command"
+code = "return blaster_fixture.stop()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+
+[[step]]
+label = "exactly one push per player damage event (demo counters 7 == 8 >= 1); mark the quiet window"
+do = "assert_lua"
+code = "local q=nwscript.call; local pushes,events=q('GetLocalNumber',p,7),q('GetLocalNumber',p,8); kb_quiet={pushes=pushes,events=events,hp=q('GetCurrentHitPoints',target),pos=q('GetPosition',target)}; return q('GetLocalNumber',p,6)==1 and pushes>=1 and pushes==events"
+equals = true
+
+[[step]]
+label = "first push logged exactly once"
+do = "await_log"
+pattern = "\\[object-blaster\\] push n=1 event=1 "
+minimum = 1
+maximum = 1
+timeout = 10
+
+[[step]]
+label = "no push line whose count differs from its damage event"
+do = "await_log"
+pattern = "\\[object-blaster\\] push n=(\\d+) event=(?!\\1 )"
+minimum = 0
+maximum = 0
+timeout = 10
+
+[[step]]
+label = "no ignored event, teardown problem or failure logged"
+do = "await_log"
+pattern = "\\[object-blaster\\] (ignored|teardown problems|stopped reason=failed)"
+minimum = 0
+maximum = 0
+timeout = 10
+
+[[step]]
+do = "advance_ticks"
+ticks = 180
+
+[[step]]
+label = "no damage, no push: counters, hit points and position unchanged over 180 ticks"
+do = "assert_lua"
+code = "local q=nwscript.call; local t=q('GetPosition',target); local dx,dy=t.x-kb_quiet.pos.x,t.y-kb_quiet.pos.y; return q('GetLocalNumber',p,7)==kb_quiet.pushes and q('GetLocalNumber',p,8)==kb_quiet.events and q('GetCurrentHitPoints',target)==kb_quiet.hp and dx*dx+dy*dy<0.0625"
+equals = true
+
+[[step]]
+label = "request demo stop (PC local 5 = 3)"
+do = "assert_lua"
+code = "nwscript.call('SetLocalNumber',p,5,3); return true"
+equals = true
+
+[[step]]
+label = "independent teardown: state 3, selection and observation off, counters kept"
+do = "assert_lua"
+code = "local q=nwscript.call; if q('GetLocalNumber',p,6)==9 then error('demo teardown failed') end; local s=kp.projectiles.status(); if q('GetLocalNumber',p,6)~=3 then return false end; kb_seq=s.observed; return q('GetLocalNumber',p,5)==0 and s.enabled==false and s.observing==false and q('GetLocalNumber',p,7)==kb_quiet.pushes"
+equals = true
+poll = true
+timeout = 30
+
+[[step]]
+do = "await_log"
+label = "teardown logged once"
+pattern = "\\[object-blaster\\] stopped reason=request "
+minimum = 1
+maximum = 1
+timeout = 10
+
+[[step]]
+label = "restore target hit points before the post-teardown volley"
+do = "assert_lua"
+code = "local q=nwscript.call; q('ApplyEffectToObject',0,q('EffectHeal',1000),target,0.0); return true"
+equals = true
+
+[[step]]
+label = "target healed; mark hit points and position"
+do = "assert_lua"
+code = "local q=nwscript.call; kb_after={hp=q('GetCurrentHitPoints',target),pos=q('GetPosition',target)}; return kb_after.hp>1"
+equals = true
+poll = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: fire after teardown"
+do = "console_command"
+code = "return blaster_fixture.fire()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "stock combat damages the target after teardown"
+do = "assert_lua"
+code = "local q=nwscript.call; return q('GetIsObjectValid',target)==1 and q('GetCurrentHitPoints',target)<kb_after.hp and q('GetIsDead',target)==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: stop firing"
+do = "console_command"
+code = "return blaster_fixture.stop()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "advance_ticks"
+ticks = 120
+
+[[step]]
+label = "clean teardown: stock damage after stop gives no push, no new projectile record, no displacement"
+do = "assert_lua"
+code = "local q=nwscript.call; local s=kp.projectiles.status(); local t=q('GetPosition',target); local dx,dy=t.x-kb_after.pos.x,t.y-kb_after.pos.y; return q('GetLocalNumber',p,7)==kb_quiet.pushes and q('GetLocalNumber',p,8)==kb_quiet.events and s.observed==kb_seq and s.enabled==false and dx*dx+dy*dy<0.25"
+equals = true
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "F12: stop firing, destroy the target, re-equip the original weapons"
+do = "console_command"
+code = "return blaster_fixture.cleanup()"
+contains = ["boolean: true"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+do = "console_open"
+open = true
+
+[[step]]
+label = "record restore_report before the restoration gate (diagnostic only)"
+do = "console_command"
+code = "return blaster_fixture.restore_report()"
+contains = ["restore_report:"]
+
+[[step]]
+do = "console_open"
+open = false
+
+[[step]]
+label = "Stage 1 gate: independent target deletion, equipment and exact inventory restoration"
+do = "assert_lua"
+code = "local q=nwscript.call; local after={};local seen={};local n=0; local function keep(i) if q('GetIsObjectValid',i)==1 then after[i]={stack=q('GetItemStackSize',i),base=q('GetBaseItemType',i),owner=q('GetItemPossessor',i),tag=q('GetTag',i)} end end; local i=q('GetFirstItemInInventory',p); while q('GetIsObjectValid',i)==1 do assert(not seen[i] and n<512,'inventory enumeration incomplete');seen[i]=true;n=n+1;keep(i);i=q('GetNextItemInInventory',p) end;keep(q('GetItemInSlot',4,p));keep(q('GetItemInSlot',5,p)); for id,item in pairs(beforeitems) do local now=after[id];if not now or now.stack~=item.stack or now.base~=item.base or now.owner~=item.owner or now.tag~=item.tag then return false end end; for id in pairs(after) do if not beforeitems[id] then return false end end; return q('GetIsObjectValid',target)==0 and q('GetItemInSlot',4,p)==oldright and q('GetItemInSlot',5,p)==oldleft and q('GetMinOneHP',p)==oldmin"
+equals = true
+poll = true
+
+[[step]]
+do = "advance_ticks"
+ticks = 90

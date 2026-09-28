@@ -1,0 +1,40 @@
+{
+  "code": "return blaster_fixture.fire()",
+  "input": "real owned-window keyboard",
+  "expected_request": 2,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "boolean: true"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> return blaster_fixture.fire()"
+      },
+      {
+        "request": 2,
+        "kind": "error",
+        "text": "kotorphasor/console-examples/blaster_fixture.lua:84: weapon equip has not settled; resref=unavailable_no_K1_GetResRef_routine,created_stack=number:5,created_tag=\"g_w_blstrpstl001\\0\",created_possessor=number:2147483644,pc=number:2147483644,current_pc=number:2147483644,expected={id=number:510,valid=number:1,base=number:12,object_type=number:2,tag=\"g_w_blstrpstl001\\0\",possessor=number:2147483644,stack=number:4},right={id=number:552,valid=number:1,base=number:12,object_type=number:2,tag=\"g_w_blstrpstl001\\0\",possessor=number:2147483644,stack=number:1},left={id=number:2130706432,valid=number:0,base=string:not_queried_invalid,object_type=string:not_queried_invalid,tag=\"not_queried_invalid\",possessor=string:not_queried_invalid,stack=string:not_queried_invalid},right_equals_expected=false,scoped_ok=true,scoped_right=number:552,scoped_left=number:2130706432,scoped_error=nil,original_right={id=number:440,valid=number:1,base=number:8,object_type=number:2,tag=\"g_w_lghtsbr01\\0\",possessor=number:2147483644,stack=number:1},original_left={id=number:441,valid=number:1,base=number:5,object_type=number:2,tag=\"g_w_vbroshort09\\0\",possessor=number:2147483644,stack=number:1},inventory_count=32,inventory_more=true,inventory=[{id=number:506,valid=number:1,base=number:1,object_type=number:2,tag=\"ptar_shockstick\\0\",possessor=number:2147483644,stack=number:1};{id=number:507,valid=number:1,base=number:3,object_type=number:2,tag=\"g_w_vbroswrd01\\0\",possessor=number:2147483644,stack=number:1};{id=number:508,valid=number:1,base=number:4,object_type=number:2,tag=\"g_w_shortswrd01\\0\",possessor=number:2147483644,stack=number:1};{id=number:441,valid=number:1,base=number:5,object_type=number:2,tag=\"g_w_vbroshort09\\0\",possessor=number:2147483644,stack=number:1};{id=number:509,valid=number:1,base=number:5,object_type=number:2,tag=\"g_w_vbroshort01\\0\",possessor=number:2147483644,stack=number:1};{id=number:440,valid=number:1,base=number:8,object_type=number:2,tag=\"g_w_lghtsbr01\\0\",possessor=number:2147483644,stack=number:1};{id=number:510,valid=number:1,base=number:12,object_type=number:2,tag=\"g_w_blstrpstl001\\0\",possessor=number:2147483644,stack=number:4};{id=number:511,valid=number:1,base=number:13,object_type=number:2,tag=\"g_w_hvyblstr01\\0\",possessor=number:2147483644,stack=number:4};{id=number:512,valid=number:1,base=number:15,object_type=number:2,tag=\"g_w_ionblstr01\\0\",possessor=number:2147483644,stack=number:2};{id=number:513,valid=number:1,base=number:16,object_type=number:2,tag=\"g_w_dsrptpstl001\\0\",possessor=number:2147483644,stack=number:1};{id=number:514,valid=number:1,base=number:18,object_type=number:2,tag=\"g_w_ionrfl01\\0\",possessor=number:2147483644,stack=number:1};{id=number:515,valid=number:1,base=number:21,object_type=number:2,tag=\"g_w_dsrptrfl001\\0\",possessor=number:2147483644,stack=number:1};{id=number:516,valid=number:1,base=number:31,object_type=number:2,tag=\"g_w_adhsvgren001\\0\",possessor=number:2147483644,stack=number:2};{id=number:517,valid=number:1,base=number:39,object_type=number:2,tag=\"g_a_class5001\\0\",possessor=number:2147483644,stack=number:2};{id=number:518,valid=number:1,base=number:40,object_type=number:2,tag=\"g_a_class6007\\0\",possessor=number:2147483644,stack=number:1};{id=number:519,valid=number:1,base=number:40,object_type=number:2,tag=\"g_a_class6001\\0\",possessor=number:2147483644,stack=number:2};{id=number:520,valid=number:1,base=number:44,object_type=number:2,tag=\"tar08_davikmask\\0\",possessor=number:2147483644,stack=number:1};{id=number:521,valid=number:1,base=number:46,object_type=number:2,tag=\"g_i_frarmbnds01\\0\",possessor=number:2147483644,stack=number:1};{id=number:522,valid=number:1,base=number:46,object_type=number:2,tag=\"g_i_frarmbnds05\\0\",possessor=number:2147483644,stack=number:1};{id=number:523,valid=number:1,base=number:52,object_type=number:2,tag=\"dan_starpad\\0\",possessor=number:2147483644,stack=number:1};{id=number:524,valid=number:1,base=number:55,object_type=number:2,tag=\"g_i_medeqpmnt04\\0\",possessor=number:2147483644,stack=number:7};{id=number:525,valid=number:1,base=number:56,object_type=number:2,tag=\"g_i_drdrepeqp001\\0\",possessor=number:2147483644,stack=number:5};{id=number:526,valid=number:1,base=number:58,object_type=number:2,tag=\"g_i_trapkit005\\0\",possessor=number:2147483644,stack=number:1};{id=number:527,valid=number:1,base=number:58,object_type=number:2,tag=\"g_i_trapkit010\\0\",possessor=number:2147483644,stack=number:2};{id=number:528,valid=number:1,base=number:59,object_type=number:2,tag=\"g_i_secspike01\\0\",possessor=number:2147483644,stack=number:4};{id=number:529,valid=number:1,base=number:60,object_type=number:2,tag=\"k_computer_spike\\0\",possessor=number:2147483644,stack=number:3};{id=number:530,valid=number:1,base=number:60,object_type=number:2,tag=\"k_repair_part\\0\",possessor=number:2147483644,stack=number:10};{id=number:531,valid=number:1,base=number:64,object_type=number:2,tag=\"g_i_upgrade003\\0\",possessor=number:2147483644,stack=number:1};{id=number:532,valid=number:1,base=number:64,object_type=number:2,tag=\"g_i_upgrade004\\0\",possessor=number:2147483644,stack=number:2};{id=number:533,valid=number:1,base=number:64,object_type=number:2,tag=\"g_i_upgrade002\\0\",possessor=number:2147483644,stack=number:1};{id=number:534,valid=number:1,base=number:64,object_type=number:2,tag=\"g_i_upgrade006\\0\",possessor=number:2147483644,stack=number:1};{id=number:535,valid=number:1,base=number:64,object_type=number:2,tag=\"g_i_upgrade001\\0\",possessor=number:2147483644,stack=number:1}]\nstack traceback:\n\t[C]: in function 'assert'\n\tkotorphasor/console-examples/blaster_fixture.lua:84: in function <kotorphasor/console-examples/blaster_fixture.lua:82>"
+      }
+    ],
+    "submitted": 2,
+    "completed": 2,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 400
+  }
+}

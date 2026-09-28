@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-r11-correctness/probe_r9.py", line 17, in <module>
+    out('initial_head_same_across_runs', A.initialize_cleanup_ledger(Path(a))==A.initialize_cleanup_ledger(Path(b)))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: initialize_cleanup_ledger() missing 1 required keyword-only argument: 'commitment_log'
+exit=1

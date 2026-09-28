@@ -1,0 +1,1259 @@
+[
+  {
+    "bytes": 8730187,
+    "frames": 480,
+    "name": "healthy.mp4",
+    "result": {
+      "acceptance": {
+        "changed_frames": 360,
+        "distinct_noise_floor": 3.9,
+        "distinct_ratio": 1.0,
+        "end_capture_seconds": 7.0,
+        "expected_changes": 360,
+        "frame_count": 361,
+        "start_capture_seconds": 1.0
+      },
+      "failures": [],
+      "first_frame": {
+        "index": 60,
+        "pts_seconds": 1.0,
+        "ymax": 236.0,
+        "ymin": 13.0
+      },
+      "frame_count": 480,
+      "index_sequence": {
+        "bits": 14,
+        "estimated_dropped_source_frames": 0,
+        "luma_threshold": 127.5,
+        "method": "drawbox-binary-index-v1",
+        "reason": null,
+        "repeats": 0,
+        "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+        "status": "passed",
+        "steps": 360,
+        "violation_count": 0,
+        "violations": []
+      },
+      "level_sequence": {
+        "ladder": {
+          "centers": [
+            39.91885,
+            70.65684999999999,
+            96.8282,
+            123.493,
+            149.5265,
+            175.3745,
+            204.185
+          ],
+          "maximum_within_level_gap": 1.086999999999989,
+          "minimum_level_gap": 21.492000000000004,
+          "resolution": 19.77184912603516,
+          "resolved": true,
+          "thresholds": [
+            54.7822,
+            83.57025,
+            110.58345,
+            136.522,
+            162.4805,
+            190.3465
+          ]
+        },
+        "level_histogram": [
+          {
+            "count": 52,
+            "level": -3
+          },
+          {
+            "count": 52,
+            "level": -2
+          },
+          {
+            "count": 51,
+            "level": -1
+          },
+          {
+            "count": 51,
+            "level": 0
+          },
+          {
+            "count": 52,
+            "level": 1
+          },
+          {
+            "count": 52,
+            "level": 2
+          },
+          {
+            "count": 51,
+            "level": 3
+          }
+        ],
+        "method": "yavg-rank-largest-gaps-v1",
+        "period": 7,
+        "reason": null,
+        "repeats": 0,
+        "resolution_factor": 1.9,
+        "rule": "every fresh acceptance frame steps +3 levels (mod 7) from the previous frame; a duplicate repeats the level",
+        "status": "passed",
+        "step": 3,
+        "steps": 360,
+        "violation_count": 0,
+        "violations": []
+      },
+      "method": "ffprobe-lavfi-signalstats-v1",
+      "policy": {
+        "bits": 14,
+        "black_luma_max": 24,
+        "cell": 32,
+        "distinct_noise_floor": 3.9,
+        "id": "animated-diagnostic-v2",
+        "index_bits": 14,
+        "index_cell": 32,
+        "index_fps": 60,
+        "index_inset": 6,
+        "index_luma_threshold": 127.5,
+        "index_step_tolerance_frames": 1,
+        "inset": 6,
+        "level_period": 7,
+        "level_resolution_factor": 1.9,
+        "level_step": 3,
+        "minimum_distinct_ratio": 0.99,
+        "separation_factor": 2.0
+      },
+      "separation": {
+        "above_band": 360,
+        "below_band": 0,
+        "duplicate_max": null,
+        "factor": 2.0,
+        "fresh_min": 79.853,
+        "guard_band": [
+          1.95,
+          7.8
+        ],
+        "histogram": [
+          {
+            "count": 0,
+            "lower": 0.0,
+            "upper": 0.125
+          },
+          {
+            "count": 0,
+            "lower": 0.125,
+            "upper": 0.25
+          },
+          {
+            "count": 0,
+            "lower": 0.25,
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "upper": 1.0
+          },
+          {
+            "count": 0,
+            "lower": 1.0,
+            "upper": 2.0
+          },
+          {
+            "count": 0,
+            "lower": 2.0,
+            "upper": 4.0
+          },
+          {
+            "count": 0,
+            "lower": 4.0,
+            "upper": 8.0
+          },
+          {
+            "count": 0,
+            "lower": 8.0,
+            "upper": 16.0
+          },
+          {
+            "count": 0,
+            "lower": 16.0,
+            "upper": 32.0
+          },
+          {
+            "count": 0,
+            "lower": 32.0,
+            "upper": 64.0
+          },
+          {
+            "count": 360,
+            "lower": 64.0,
+            "upper": 128.0
+          },
+          {
+            "count": 0,
+            "lower": 128.0,
+            "upper": null
+          }
+        ],
+        "inside_band": 0,
+        "rule": "no acceptance frame difference strictly inside (floor/factor, floor*factor)",
+        "status": "separated"
+      },
+      "startup": {
+        "black_frames_before_acceptance": 0,
+        "capture_first_frame": {
+          "ymax": 84.0,
+          "ymin": 0.0
+        },
+        "frames_before_acceptance": 60
+      },
+      "status": "passed"
+    },
+    "sha256": "c2831407519aeb92c6de9a829ab7a549fe94520558d1efaabf2242869aadd4b4"
+  },
+  {
+    "bytes": 8040047,
+    "frames": 480,
+    "name": "loop7.mp4",
+    "result": {
+      "acceptance": {
+        "changed_frames": 360,
+        "distinct_noise_floor": 3.9,
+        "distinct_ratio": 1.0,
+        "end_capture_seconds": 7.0,
+        "expected_changes": 360,
+        "frame_count": 361,
+        "start_capture_seconds": 1.0
+      },
+      "failures": [
+        "capture_content_index: 52 of 360 acceptance frames fail the per-frame index check"
+      ],
+      "first_frame": {
+        "index": 60,
+        "pts_seconds": 1.0,
+        "ymax": 235.0,
+        "ymin": 16.0
+      },
+      "frame_count": 480,
+      "index_sequence": {
+        "bits": 14,
+        "estimated_dropped_source_frames": 0,
+        "luma_threshold": 127.5,
+        "method": "drawbox-binary-index-v1",
+        "reason": "52 of 360 acceptance frames fail the per-frame index check",
+        "repeats": 0,
+        "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+        "status": "failed",
+        "steps": 308,
+        "violation_count": 52,
+        "violations": [
+          {
+            "decoded_index": 0,
+            "index": 63,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.05,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 70,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.166667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 77,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.283333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 84,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.4,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 91,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.516667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 98,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.633333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 105,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.75,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 112,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.866667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 119,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 1.983333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 126,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.1,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 133,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.216667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 140,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.333333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 147,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.45,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 154,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.566667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 161,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.683333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 168,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.8,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 175,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 2.916667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 182,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.033333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 189,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.15,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 196,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.266667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 203,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.383333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 210,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.5,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 217,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.616667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 224,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.733333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 231,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.85,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 238,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 3.966667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 245,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.083333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 252,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.2,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 259,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.316667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 266,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.433333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 273,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.55,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 280,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.666667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 287,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.783333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 294,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 4.9,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 301,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.016667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 308,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.133333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 315,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.25,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 322,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.366667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 329,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.483333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 336,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.6,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 343,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.716667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 350,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.833333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 357,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 5.95,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 364,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.066667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 371,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.183333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 378,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.3,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 385,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.416667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 392,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.533333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 399,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.65,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 406,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.766667,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 413,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 6.883333,
+            "step": -6
+          },
+          {
+            "decoded_index": 0,
+            "index": 420,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 6,
+            "pts_seconds": 7.0,
+            "step": -6
+          }
+        ]
+      },
+      "level_sequence": {
+        "ladder": {
+          "centers": [
+            37.5877,
+            68.5698,
+            95.4641,
+            122.363,
+            147.371,
+            174.289,
+            203.091
+          ],
+          "maximum_within_level_gap": 0.01300000000000523,
+          "minimum_level_gap": 24.995000000000005,
+          "resolution": 1922.6923076915346,
+          "resolved": true,
+          "thresholds": [
+            53.07875,
+            82.0233,
+            108.91355,
+            134.8605,
+            160.82999999999998,
+            188.69
+          ]
+        },
+        "level_histogram": [
+          {
+            "count": 52,
+            "level": -3
+          },
+          {
+            "count": 52,
+            "level": -2
+          },
+          {
+            "count": 51,
+            "level": -1
+          },
+          {
+            "count": 51,
+            "level": 0
+          },
+          {
+            "count": 52,
+            "level": 1
+          },
+          {
+            "count": 52,
+            "level": 2
+          },
+          {
+            "count": 51,
+            "level": 3
+          }
+        ],
+        "method": "yavg-rank-largest-gaps-v1",
+        "period": 7,
+        "reason": null,
+        "repeats": 0,
+        "resolution_factor": 1.9,
+        "rule": "every fresh acceptance frame steps +3 levels (mod 7) from the previous frame; a duplicate repeats the level",
+        "status": "passed",
+        "step": 3,
+        "steps": 360,
+        "violation_count": 0,
+        "violations": []
+      },
+      "method": "ffprobe-lavfi-signalstats-v1",
+      "policy": {
+        "bits": 14,
+        "black_luma_max": 24,
+        "cell": 32,
+        "distinct_noise_floor": 3.9,
+        "id": "animated-diagnostic-v2",
+        "index_bits": 14,
+        "index_cell": 32,
+        "index_fps": 60,
+        "index_inset": 6,
+        "index_luma_threshold": 127.5,
+        "index_step_tolerance_frames": 1,
+        "inset": 6,
+        "level_period": 7,
+        "level_resolution_factor": 1.9,
+        "level_step": 3,
+        "minimum_distinct_ratio": 0.99,
+        "separation_factor": 2.0
+      },
+      "separation": {
+        "above_band": 360,
+        "below_band": 0,
+        "duplicate_max": null,
+        "factor": 2.0,
+        "fresh_min": 79.9143,
+        "guard_band": [
+          1.95,
+          7.8
+        ],
+        "histogram": [
+          {
+            "count": 0,
+            "lower": 0.0,
+            "upper": 0.125
+          },
+          {
+            "count": 0,
+            "lower": 0.125,
+            "upper": 0.25
+          },
+          {
+            "count": 0,
+            "lower": 0.25,
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "upper": 1.0
+          },
+          {
+            "count": 0,
+            "lower": 1.0,
+            "upper": 2.0
+          },
+          {
+            "count": 0,
+            "lower": 2.0,
+            "upper": 4.0
+          },
+          {
+            "count": 0,
+            "lower": 4.0,
+            "upper": 8.0
+          },
+          {
+            "count": 0,
+            "lower": 8.0,
+            "upper": 16.0
+          },
+          {
+            "count": 0,
+            "lower": 16.0,
+            "upper": 32.0
+          },
+          {
+            "count": 0,
+            "lower": 32.0,
+            "upper": 64.0
+          },
+          {
+            "count": 360,
+            "lower": 64.0,
+            "upper": 128.0
+          },
+          {
+            "count": 0,
+            "lower": 128.0,
+            "upper": null
+          }
+        ],
+        "inside_band": 0,
+        "rule": "no acceptance frame difference strictly inside (floor/factor, floor*factor)",
+        "status": "separated"
+      },
+      "startup": {
+        "black_frames_before_acceptance": 0,
+        "capture_first_frame": {
+          "ymax": 84.0,
+          "ymin": 0.0
+        },
+        "frames_before_acceptance": 60
+      },
+      "status": "failed"
+    },
+    "sha256": "376c2330714e59752842c8fee85f60369123b28f165d9b246ca2d9a57b19821e"
+  },
+  {
+    "bytes": 8185533,
+    "frames": 480,
+    "name": "loop14.mp4",
+    "result": {
+      "acceptance": {
+        "changed_frames": 360,
+        "distinct_noise_floor": 3.9,
+        "distinct_ratio": 1.0,
+        "end_capture_seconds": 7.0,
+        "expected_changes": 360,
+        "frame_count": 361,
+        "start_capture_seconds": 1.0
+      },
+      "failures": [
+        "capture_content_index: 26 of 360 acceptance frames fail the per-frame index check"
+      ],
+      "first_frame": {
+        "index": 60,
+        "pts_seconds": 1.0,
+        "ymax": 235.0,
+        "ymin": 16.0
+      },
+      "frame_count": 480,
+      "index_sequence": {
+        "bits": 14,
+        "estimated_dropped_source_frames": 0,
+        "luma_threshold": 127.5,
+        "method": "drawbox-binary-index-v1",
+        "reason": "26 of 360 acceptance frames fail the per-frame index check",
+        "repeats": 0,
+        "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+        "status": "failed",
+        "steps": 334,
+        "violation_count": 26,
+        "violations": [
+          {
+            "decoded_index": 0,
+            "index": 70,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 1.166667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 84,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 1.4,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 98,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 1.633333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 112,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 1.866667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 126,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 2.1,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 140,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 2.333333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 154,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 2.566667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 168,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 2.8,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 182,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 3.033333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 196,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 3.266667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 210,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 3.5,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 224,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 3.733333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 238,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 3.966667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 252,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 4.2,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 266,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 4.433333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 280,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 4.666667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 294,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 4.9,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 308,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 5.133333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 322,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 5.366667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 336,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 5.6,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 350,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 5.833333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 364,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 6.066667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 378,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 6.3,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 392,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 6.533333,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 406,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 6.766667,
+            "step": -13
+          },
+          {
+            "decoded_index": 0,
+            "index": 420,
+            "kind": "non_monotonic",
+            "previous_decoded_index": 13,
+            "pts_seconds": 7.0,
+            "step": -13
+          }
+        ]
+      },
+      "level_sequence": {
+        "ladder": {
+          "centers": [
+            38.75565,
+            68.5669,
+            95.4634,
+            122.363,
+            147.922,
+            174.84300000000002,
+            203.115
+          ],
+          "maximum_within_level_gap": 2.335100000000004,
+          "minimum_level_gap": 24.979,
+          "resolution": 10.697186415999296,
+          "resolved": true,
+          "thresholds": [
+            54.2427,
+            82.0152,
+            108.91135,
+            134.8625,
+            161.386,
+            189.245
+          ]
+        },
+        "level_histogram": [
+          {
+            "count": 52,
+            "level": -3
+          },
+          {
+            "count": 52,
+            "level": -2
+          },
+          {
+            "count": 51,
+            "level": -1
+          },
+          {
+            "count": 51,
+            "level": 0
+          },
+          {
+            "count": 52,
+            "level": 1
+          },
+          {
+            "count": 52,
+            "level": 2
+          },
+          {
+            "count": 51,
+            "level": 3
+          }
+        ],
+        "method": "yavg-rank-largest-gaps-v1",
+        "period": 7,
+        "reason": null,
+        "repeats": 0,
+        "resolution_factor": 1.9,
+        "rule": "every fresh acceptance frame steps +3 levels (mod 7) from the previous frame; a duplicate repeats the level",
+        "status": "passed",
+        "step": 3,
+        "steps": 360,
+        "violation_count": 0,
+        "violations": []
+      },
+      "method": "ffprobe-lavfi-signalstats-v1",
+      "policy": {
+        "bits": 14,
+        "black_luma_max": 24,
+        "cell": 32,
+        "distinct_noise_floor": 3.9,
+        "id": "animated-diagnostic-v2",
+        "index_bits": 14,
+        "index_cell": 32,
+        "index_fps": 60,
+        "index_inset": 6,
+        "index_luma_threshold": 127.5,
+        "index_step_tolerance_frames": 1,
+        "inset": 6,
+        "level_period": 7,
+        "level_resolution_factor": 1.9,
+        "level_step": 3,
+        "minimum_distinct_ratio": 0.99,
+        "separation_factor": 2.0
+      },
+      "separation": {
+        "above_band": 360,
+        "below_band": 0,
+        "duplicate_max": null,
+        "factor": 2.0,
+        "fresh_min": 79.916,
+        "guard_band": [
+          1.95,
+          7.8
+        ],
+        "histogram": [
+          {
+            "count": 0,
+            "lower": 0.0,
+            "upper": 0.125
+          },
+          {
+            "count": 0,
+            "lower": 0.125,
+            "upper": 0.25
+          },
+          {
+            "count": 0,
+            "lower": 0.25,
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "upper": 1.0
+          },
+          {
+            "count": 0,
+            "lower": 1.0,
+            "upper": 2.0
+          },
+          {
+            "count": 0,
+            "lower": 2.0,
+            "upper": 4.0
+          },
+          {
+            "count": 0,
+            "lower": 4.0,
+            "upper": 8.0
+          },
+          {
+            "count": 0,
+            "lower": 8.0,
+            "upper": 16.0
+          },
+          {
+            "count": 0,
+            "lower": 16.0,
+            "upper": 32.0
+          },
+          {
+            "count": 0,
+            "lower": 32.0,
+            "upper": 64.0
+          },
+          {
+            "count": 360,
+            "lower": 64.0,
+            "upper": 128.0
+          },
+          {
+            "count": 0,
+            "lower": 128.0,
+            "upper": null
+          }
+        ],
+        "inside_band": 0,
+        "rule": "no acceptance frame difference strictly inside (floor/factor, floor*factor)",
+        "status": "separated"
+      },
+      "startup": {
+        "black_frames_before_acceptance": 0,
+        "capture_first_frame": {
+          "ymax": 84.0,
+          "ymin": 0.0
+        },
+        "frames_before_acceptance": 60
+      },
+      "status": "failed"
+    },
+    "sha256": "9ba6f0050312b02d453f67db3e2e6bc31587252aa44f82ca8e88548e8cf5ad66"
+  }
+]

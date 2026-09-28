@@ -1,0 +1,11 @@
+c_users_lower: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+drive_c_users: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+C_USERS_upper: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+wine_z_home: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+steamuser: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/w.lua']; leaked bytes=[]; receipt names=[]
+user_underscore: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/w.lua']; leaked bytes=[b'<user>']; receipt names=[]
+user_upper: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/w.lua']; leaked bytes=[b'<USER>']; receipt names=[]
+user_capital: BUILT; leaked entries=['kotorphasor-creative-harness/scripts/examples/cursed/w.lua']; leaked bytes=[b'<User>']; receipt names=[]
+media_user: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+mnt_c_users: REFUSED ValueError: absolute local paths or private names in packaged text: scripts/examples/cursed/w.lua:1
+cleanup done: True

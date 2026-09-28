@@ -1,0 +1,27 @@
+{
+  "note": "Proposed marker flags for kpharness.creative (Gamescope backend). Other flags as in the failed prep launch-once.json, with fresh paths, the new build, a fresh harness snapshot, and both --script entries (frozen model_scene.lua and task7s2_scale.lua).",
+  "marker_args": [
+    "--marker",
+    "\\[model-scene:task7s2\\] phase=1 actor=1",
+    "--capture-marker",
+    "calm_start=\\[task7s2\\] calm_start$",
+    "--capture-marker",
+    "tiny=\\[model-scene:task7s2\\] phase=1 actor=1 base=0\\.350 ",
+    "--capture-marker",
+    "giant=\\[model-scene:task7s2\\] phase=2 actor=1 base=1\\.900 ",
+    "--capture-marker",
+    "normal=\\[model-scene:task7s2\\] phase=3 actor=1 base=1\\.000 ",
+    "--capture-marker",
+    "restored=\\[model-scene:task7s2\\] restored actors=1 holding-original-scale",
+    "--capture-marker",
+    "complete=\\[model-scene:task7s2\\] complete phases=3 restored=1",
+    "--capture-marker",
+    "calm_end=\\[task7s2\\] calm_end$",
+    "--cadence-start-marker",
+    "calm_start",
+    "--cadence-end-marker",
+    "calm_end"
+  ],
+  "giant": 1.9,
+  "tiny": 0.35
+}

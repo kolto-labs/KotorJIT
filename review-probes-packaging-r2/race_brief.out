@@ -1,0 +1,10 @@
+scripts/examples secret flips=231 {'ValueError: source contains a symlink; review before packaging': 34, 'BUILT_clean': 5, 'ValueError: source path does not resolve to itself; review before packag': 1} leaks []
+scripts/examples/cursed secret flips=304 {'ValueError: source contains a symlink; review before packaging': 28, 'BUILT_clean': 9, 'ValueError: source changed during the build; nothing was written': 1, 'ValueError: source path does not resolve to itself; review before packag': 2} leaks []
+docs/user secret flips=195 {'ValueError: source changed during the build; nothing was written': 1, 'BUILT_clean': 7, 'ValueError: source contains a symlink; review before packaging': 9, 'ValueError: source file cannot be opened without following links': 1, 'ValueError: required package file is missing': 19, 'ValueError: source path does not resolve to itself; review before packag': 3} leaks []
+scripts/harness/kpharness secret flips=69 {'ValueError: source contains a symlink; review before packaging': 4, 'SyntaxError: invalid syntax (export_verify.py, line 1)': 21, 'SyntaxError: invalid syntax (creative.py, line 1)': 1, 'SyntaxError: invalid syntax (commit_inputs.py, line 1)': 4, 'ValueError: required Gamescope harness module is missing or linked': 3, 'SyntaxError: invalid syntax (creative_export.py, line 1)': 1, 'SyntaxError: invalid syntax (capture_diagnostic.py, line 1)': 1, 'ValueError: source path does not resolve to itself; review before packag': 3, 'ValueError: source file was replaced while reading': 1, 'ValueError: source changed during the build; nothing was written': 1} leaks []
+scripts/examples/cursed identical flips=91 {'ValueError: source contains a symlink; review before packaging': 32, 'ValueError: source path does not resolve to itself; review before packag': 2, 'BUILT_clean': 4, 'ValueError: source changed during the build; nothing was written': 1, 'FileNotFoundError: [Errno 2] No such file or directory': 1} leaks []
+cleanup done: True
+
+real	0m27.572s
+user	0m3.081s
+sys	0m0.751s

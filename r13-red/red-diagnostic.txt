@@ -1,0 +1,424 @@
+..F....F...F.E.FFFEFFFFFFFFFFFFF.EEEEEEEEEEEEEEEEEEE.EEE
+======================================================================
+ERROR: test_a_content_sequence_failure_is_a_fail_even_when_separation_is_ambiguous (__main__.CriteriaTests.test_a_content_sequence_failure_is_a_fail_even_when_separation_is_ambiguous)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 554, in test_a_content_sequence_failure_is_a_fail_even_when_separation_is_ambiguous
+    self.assertEqual(result["content_level_sequence"]["status"], "failed")
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'content_level_sequence'
+
+======================================================================
+ERROR: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='canonical_pts_binding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 542, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_shm_fallback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='first_frame_admission')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='exact_geometry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='content_gate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='canonical_pts_binding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='rate_at_least_99_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='missing_or_dropped_at_most_half_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='maximum_gap_50ms')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='zero_ffmpeg_duplicates')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='cadence_evidence_recomputed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='cleanup_complete')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_owned_survivors')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='ledger_clear')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='protected_displays_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='media_sha256_recorded')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='snapshot_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='no_driver_error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_each_criterion_fails_independently (__main__.CriteriaTests.test_each_criterion_fails_independently) (criterion='acceptance_interval_matches_route')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 604, in test_each_criterion_fails_independently
+    self.assertIn(name, result["failing_criteria"])
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_guard_band_content_is_calibration_ambiguous_whatever_else_passes (__main__.CriteriaTests.test_guard_band_content_is_calibration_ambiguous_whatever_else_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 524, in test_guard_band_content_is_calibration_ambiguous_whatever_else_passes
+    self.assertEqual(result["failing_criteria"], ["content_gate", "cadence_evidence_recomputed"])
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'failing_criteria'
+
+======================================================================
+ERROR: test_a_real_loader_invocation_of_a_renamed_tool_copy_is_refused (__main__.LoaderLaunchTests.test_a_real_loader_invocation_of_a_renamed_tool_copy_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1252, in test_a_real_loader_invocation_of_a_renamed_tool_copy_is_refused
+    self.assertEqual(row["loader_tool_match"], "ffmpeg")
+                     ~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'loader_tool_match'
+
+======================================================================
+ERROR: test_loader_launch_is_detected_by_the_program_argument_name (__main__.LoaderLaunchTests.test_loader_launch_is_detected_by_the_program_argument_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1210, in test_loader_launch_is_detected_by_the_program_argument_name
+    self.assertEqual(by_pid[1002]["loader_program"], "/opt/x/ffprobe")
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'loader_program'
+
+======================================================================
+ERROR: test_loader_launch_of_a_renamed_copy_is_detected_by_content (__main__.LoaderLaunchTests.test_loader_launch_of_a_renamed_copy_is_detected_by_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 1225, in test_loader_launch_of_a_renamed_copy_is_detected_by_content
+    self.assertEqual((by_pid[1101]["loader_tool_match"], by_pid[1101]["loader_match_by"]), ("ffprobe", "sha256"))
+                      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'loader_tool_match'
+
+======================================================================
+FAIL: test_ffprobe_has_no_default_and_must_be_given_explicitly (__main__.PreflightTests.test_ffprobe_has_no_default_and_must_be_given_explicitly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 172, in test_ffprobe_has_no_default_and_must_be_given_explicitly
+    self.assertFalse(hasattr(CD, "DEFAULT_FFPROBE"))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_a_raw_native_thread_is_counted_and_the_supervisor_refuses (__main__.SnapshotAndCommitmentTests.test_a_raw_native_thread_is_counted_and_the_supervisor_refuses)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 282, in test_a_raw_native_thread_is_counted_and_the_supervisor_refuses
+    deps.spawn_child.assert_not_called()
+  File "/usr/lib/python3.12/unittest/mock.py", line 905, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'mock' to not have been called. Called 1 times.
+Calls: [call(['/usr/bin/python3.12', '-I', '-S', '-B', '-c', 'import runpy,sys;sys.dont_write_bytecode=True;sys.path.insert(0,\'/tmp/tmpu8ped225/snapshot/runtime\');runpy.run_module("kpharness.capture_diagnostic",run_name="__main__")', '--child', '/tmp/tmpu8ped225/runs/20260927-233501-34e10aaf/diagnostic-config.json'], cwd='/tmp/tmpu8ped225/snapshot', env={'SENTRY-TRACE': 'c1457a80aaa9437e9558ed3945e87ff0-af9d901aebef866e', 'IMSETTINGS_INTEGRATE_DESKTOP': 'yes', 'SHELL': 'bash', 'COREPACK_ENABLE_AUTO_PIN': '0', 'SESSION_MANAGER': '[REDACTED]', 'XDG_CONFIG_DIRS': '/home/brunner56/.config/kdedefaults:/etc/xdg:/usr/share/kde-settings/kde-profile/default/xdg', 'CLAUDE_CODE_CHILD_SESSION': '1', 'CLAUDE_CODE_EMIT_TOOL_USE_SUMMARIES': 'false', 'CLAUDE_PREVIEW_CLASSIFIER_FLOOR': '1', 'XDG_SESSION_PATH': '[REDACTED]', 'CLAUDE_CODE_ENABLE_ASK_USER_QUESTION_TOOL': 'true', 'NVM_INC': '/home/brunner56/.nvm/versions/node/v26.3.0/include/node', 'HISTCONTROL': 'ignoredups', 'XDG_MENU_PREFIX': 'plasma-', 'AI_AGENT': 'claude-code_2-1-280_agent', 'CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING': 'true', 'HISTSIZE': '1000', 'HOSTNAME': 'BodenPC', 'ICEAUTHORITY': '[REDACTED]', 'CLAUDE_CODE_SESSION_ID': '[REDACTED]', 'JAVA_HOME': '/home/brunner56/.local/opt/jdk/current', 'CLAUDE_PID': '638964', 'SSH_AUTH_SOCK': '[REDACTED]', 'XDG_DATA_HOME': '/home/brunner56/.local/share', 'CLAUDE_EFFORT': 'medium', 'XDG_CONFIG_HOME': '/home/brunner56/.config', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CLAUDE_CODE_REPORT_FINDINGS': '1', 'DISTROBOX_ENTER_PATH': '/usr/bin/distrobox-enter', 'DESKTOP_SESSION': '[REDACTED]', 'ELECTRON_PA_APP_NAME': 'Claude', 'GDK_CORE_DEVICE_EVENTS': '1', 'LMOD_DIR': '/usr/share/lmod/lmod/libexec', 'EDITOR': '/usr/bin/nano', 'CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH': '1', 'PWD': '/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation', 'CLAUDE_CODE_EAGER_FLUSH': '1', 'LOGNAME': 'brunner56', 'XDG_SESSION_DESKTOP': 'KDE', 'XDG_SESSION_TYPE': '[REDACTED]', 'QTLIB': '/usr/lib64/qt-3.3/lib', 'MODULESHOME': '/usr/share/lmod/lmod', 'MANPATH': ':/home/brunner56/.nvm/versions/node/v26.3.0/share/man::/usr/share/lmod/lmod/share/man', 'MESA_VK_WSI_PRESENT_MODE': 'immediate', 'CLAUDE_CODE_MESSAGING_SOCKET': '/run/user/1000/cc-socks/638964.sock', 'SYSTEMD_EXEC_PID': '188395', 'XAUTHORITY': '[REDACTED]', 'NoDefaultCurrentDirectoryInExePath': '1', 'container': 'podman', 'CLAUDECODE': '1', 'XKB_DEFAULT_MODEL': 'pc105', 'HOME': '/home/brunner56', 'CLAUDE_AGENT_SDK_VERSION': '0.3.280', 'SSH_ASKPASS': '/usr/bin/ksshaskpass', 'LANG': 'en_US.UTF-8', 'LS_COLORS': '', 'XDG_CURRENT_DESKTOP': 'KDE', 'CLAUDE_CODE_SESSION_ATTENDED': '1', 'CLAUDE_CODE_HOST_SESSION_ID': '[REDACTED]', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/plasma-plasmashell.service/memory.pressure', 'WAYLAND_DISPLAY': 'wayland-0', 'LMOD_SETTARG_FULL_SUPPORT': 'no', 'CLAUDE_CODE_DISABLE_CRON': '', '__lmod_sh_dbg': "'x'", 'CLAUDE_CODE_DISABLE_TERMINAL_TITLE': '1', 'INVOCATION_ID': '2e29b5eed6b24c24be135868d8a252a1', 'ANTHROPIC_BASE_URL': 'https://api.anthropic.com', 'LMOD_VERSION': '9.1.1', 'CLAUDE_CODE_OAUTH_SCOPES': '[REDACTED]', 'MANAGERPID': '1708', 'QTINC': '/usr/lib64/qt-3.3/include', 'IMSETTINGS_MODULE': 'none', 'CHROME_DESKTOP': 'com.anthropic.Claude.desktop', 'PULSE_LATENCY_MSEC': '60', 'CONTAINER_ID': 'ubuntu-dev', 'KDE_SESSION_UID': '1000', 'PROTON_USE_WINED3D': '0', 'EGL_PLATFORM': 'wayland', 'XDG_CACHE_HOME': '/home/brunner56/.cache', 'INFOPATH': '/home/linuxbrew/.linuxbrew/share/info:/home/linuxbrew/.linuxbrew/share/info:', 'MODULEPATH_ROOT': '/usr/share/modulefiles', 'MOZ_GMP_PATH': '/usr/lib64/mozilla/plugins/gmp-gmpopenh264/system-installed', 'NVM_DIR': '/home/brunner56/.nvm', 'XKB_DEFAULT_LAYOUT': 'us', 'XDG_SESSION_CLASS': 'user', 'LMOD_PKG': '/usr/share/lmod/lmod', 'ANDROID_HOME': '/home/brunner56/Android/Sdk', 'TERM': 'dumb', 'LESSOPEN': '||/usr/bin/lesspipe.sh %s', 'USER': 'brunner56', 'SDL_VIDEODRIVER': 'wayland', 'GHIDRA_INSTALL_DIR': '/home/brunner56/.local/opt/ghidra/current', 'QT_WAYLAND_RECONNECT': '1', 'KDE_SESSION_VERSION': '6', 'PAM_KWALLET5_LOGIN': '/run/user/1000/kwallet5.socket', 'DISPLAY': ':0', 'LMOD_ROOT': '/usr/share/lmod', 'SHLVL': '2', 'NVM_CD_FLAGS': '', 'BASH_ENV': '/usr/share/lmod/lmod/init/bash', 'GIT_EDITOR': 'true', 'LMOD_sys': 'Linux', 'XDG_SESSION_ID': '3', 'VKD3D_SWAPCHAIN_LATENCY_FRAMES': '1', 'MANAGERPIDFDID': '28769', 'USE_LOCAL_OAUTH': '', 'WINEDEBUG': '-all', 'TERMINFO_DIRS': '/usr/share/terminfo:/run/host/usr/share/terminfo', 'XDG_STATE_HOME': '/home/brunner56/.local/state', 'FC_FONTATIONS': '1', 'DISABLE_AUTOUPDATER': '1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'QTDIR': '/usr/lib64/qt-3.3', 'CLAUDE_CODE_ENTRYPOINT': 'claude-desktop', 'MCP_SERVER_CONNECTION_BATCH_SIZE': '8', 'DEBUGINFOD_URLS': 'ima:enforcing https://debuginfod.fedoraproject.org/ ima:ignore ', 'DBUS_SYSTEM_BUS_ADDRESS': 'unix:path=/run/host/run/dbus/system_bus_socket', 'NODE_USE_SYSTEM_CA': '1', 'API_TIMEOUT_MS': '900000', 'DOCKER_HOST': 'unix:///run/user/1000/podman/podman.sock', 'BUN_INSTALL': '/home/brunner56/.bun', 'DEBUGINFOD_IMA_CERT_PATH': '/etc/keys/ima:', 'DXVK_CONFIG': 'dxgi.maxFrameLatency=1;d3d9.maxFrameLatency=1;dxgi.syncInterval=0;d3d9.presentInterval=0', 'KDEDIRS': '/usr', 'PROTON_ENABLE_WAYLAND': '1', 'MCP_CONNECTION_NONBLOCKING': 'true', 'JOURNAL_STREAM': '10:927273033', 'XDG_DATA_DIRS': '/home/brunner56/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'GDK_BACKEND': 'wayland', 'KDE_FULL_SESSION': 'true', 'CLAUDE_CODE_EXECPATH': '/home/brunner56/.config/Claude/claude-code/2.1.280/claude', 'PATH': '/home/brunner56/.bun/bin:/home/brunner56/.local/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/brunner56/.local/share/gem/ruby/4.0.0/bin:/home/brunner56/.local/share/gem/ruby/4.0.0/bin:/home/brunner56/.bun/bin:/home/brunner56/.local/bin:/home/brunner56/.local/bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.opencode/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/brunner56/.local/bin:/home/brunner56/.local/share/../bin:/home/brunner56/.kilo/bin:/home/brunner56/.grok/bin:/home/brunner56/.cargo/bin:/home/brunner56/.local/opt/ghidra/current:/home/brunner56/.local/opt/jdk/current/bin:/home/brunner56/.opencode/bin:/home/brunner56/.local/bin:/home/brunner56/bin:/home/brunner56/.nvm/versions/node/v26.3.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/usr/lib64/qt-3.3/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/bin:/var/lib/snapd/snap/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.corridor/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.lmstudio/bin:/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/Android/Sdk/emulator:/home/brunner56/Android/Sdk/platform-tools:/home/brunner56/Android/Sdk/cmdline-tools/latest/bin:/usr/lib/jvm/java-25-openjdk/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.lmstudio/bin:/home/brunner56/.nvm/versions/node/v20.20.2/bin:/home/brunner56/.nvm/versions/node/v22.22.3/bin:/home/brunner56/.nvm/versions/node/v24.15.0/bin:/home/brunner56/.nvm/versions/node/v24.21.0/bin:/home/brunner56/.nvm/versions/node/v26.10.0/bin:/home/brunner56/go/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_011VrAwzVfXk6ccJFRCVPb41/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_014AH5hoCLbfMtN3eRfR7BYD/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_0155zZVATbJU3jHUmPP9NvMC/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_0166qiQqhgmKzXvuQGEvdRdw/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_017zncz89kmhdPgdpZQZm5Dj/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_019iPNgSpqW7kdNT72VAaUud/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01FTLa86dhbVJ3HB1LdHdhN7/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01GGVzv6vXnEiYqATQVsubdH/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01GjdKQx9o9xZp3FJs53hFFV/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01HjnQwYWPokcJcu9cRYzTbg/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01LFhefzHyLd2gnEZfUr2Nwe/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01MFEgnUaF7pHjbNwmfzjCYc/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01UWNpa6bBq8PZzGmTDJPMZW/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01XV45mGq79uCir6Rg2d9D8t/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01XXJmxLXPEhPMmnxmrgntNw/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/6acf881b-ac25-4e97-87c4-1b92fb083cf9/rpm/plugin_01YBNfaNwQztYsnUydt8m47G/bin:/home/brunner56/.config/Claude/local-agent-mode-sessions/skills-plugin/6acf881b-ac25-4e97-87c4-1b92fb083cf9/bbfaa6ca-3db3-4f3c-8110-8285d8b09424/bin:/home/brunner56/.claude/plugins/cache/compound-engineering-plugin/compound-engineering/3.23.4/bin:/home/brunner56/.claude/skills/humanize/bin:/home/brunner56/.claude/skills/humanizer/bin', 'MODULEPATH': '/etc/modulefiles:/usr/share/modulefiles:/usr/share/modulefiles/Linux:/usr/share/modulefiles/Core:/usr/share/lmod/lmod/modulefiles/Core', 'DBUS_SESSION_BUS_ADDRESS': '[REDACTED]', 'LMOD_CMD': '/usr/share/lmod/lmod/libexec/lmod', 'KDE_APPLICATIONS_AS_SCOPE': '1', 'MAIL': '/var/spool/mail/brunner56', 'NVM_BIN': '/home/brunner56/.nvm/versions/node/v26.3.0/bin', 'CLAUDE_CODE_DESKTOP_APP_VERSION': '2.7032.0', 'BAGGAGE': 'sentry-environment=production,sentry-release=Claude%402.7032.0,sentry-public_key=2f98127cbffe4740b1f767a2de77d23b,sentry-trace_id=c1457a80aaa9437e9558ed3945e87ff0,sentry-org_id=1158394', 'DISABLE_MICROCOMPACT': '1', 'CODEX_GITHUB_PERSONAL_ACCESS_TOKEN': '[REDACTED]', 'USE_STAGING_OAUTH': '', 'CLAUDE_CODE_MESSAGING_TOKEN': '[REDACTED]', '_': '/usr/bin/timeout', 'KP_GAMESCOPE_REPO_ROOT': '/'}, pass_fds=(3, 4), start_new_session=True, stdout=<_io.BufferedWriter name='/tmp/tmpu8ped225/runs/20260927-233501-34e10aaf/driver.log'>, stderr=-2)].
+
+======================================================================
+FAIL: test_supervisor_snapshots_then_prints_commitments_before_the_single_launch (__main__.SnapshotAndCommitmentTests.test_supervisor_snapshots_then_prints_commitments_before_the_single_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 237, in test_supervisor_snapshots_then_prints_commitments_before_the_single_launch
+    self.assertIn("content_level_sequence", result)
+AssertionError: 'content_level_sequence' not found in {'child': {'pid': 4194321, 'role': 'child', 'start': None}, 'child_returncode': 1, 'cleanup_budget': {'components': {'display': 25, 'evidence_margin': 15, 'recorder': 1398.0, 'source_process': 4}, 'exhausted': False, 'seconds': 1442.0}, 'commitments': {'child_token_sha256': 'da801b7304d88831f9910c18bef95e5e69d7ed1ac439c3b25cdb0caad7582fd0', 'cleanup_budget_seconds': 1442.0, 'cleanup_ledger_sha256': '1786cae00464a00f36e4dae705d95ffe0b92a57ce5e00bb1bb029a48905f45aa', 'ffmpeg': {'command': '/usr/bin/python3.12', 'resolved_path': '/usr/bin/python3.12', 'sha256': '1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118'}, 'ffprobe_resolved_path': '/usr/bin/python3.12', 'ffprobe_sha256': '1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118', 'kind': 'kpharness.capture-diagnostic-commitments.v1', 'route_sha256': '38a507713cabfc46efbacf487aea2debed9ba13b005ab2243f92d58c7ab86707', 'run_dir': '/tmp/tmp3_xek4z0/runs/20260927-233633-b0c40648', 'snapshot_manifest_sha256': '5555555555555555555555555555555555555555555555555555555555555555', 'utc': '2026-09-27T23:36:33.457387+00:00'}, 'content_separation': None, 'criteria': {'acceptance_interval_matches_route': False, 'cadence_evidence_recomputed': False, 'canonical_pts_binding': False, 'cleanup_complete': False, 'content_gate': False, 'exact_geometry': False, 'first_frame_admission': False, 'ledger_clear': True, 'maximum_gap_50ms': False, 'media_sha256_recorded': False, 'missing_or_dropped_at_most_half_percent': False, 'no_driver_error': False, 'no_owned_survivors': True, 'no_shm_fallback': False, 'protected_displays_unchanged': True, 'rate_at_least_99_percent': False, 'snapshot_unchanged': True, 'zero_ffmpeg_duplicates': False}, 'errors': [], 'finished_utc': '2026-09-27T23:36:33.461711+00:00', 'interrupts': [], 'kind': 'kpharness.capture-diagnostic-result.v1', 'launches': 1, 'media_sha256': None, 'owned_alive_after_child': [], 'owned_survivors': [], 'run_dir': '/tmp/tmp3_xek4z0/runs/20260927-233633-b0c40648', 'started_utc': '2026-09-27T23:36:33.223765+00:00', 'supervisor_threads_at_spawn': 1, 'verdict': 'FAIL'}
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='no_shm_fallback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='first_frame_admission')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='exact_geometry')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='rate_at_least_99_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='missing_or_dropped_at_most_half_percent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='maximum_gap_50ms')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='zero_ffmpeg_duplicates')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='cadence_evidence_recomputed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='acceptance_interval_matches_route')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='cleanup_complete')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='no_owned_survivors')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='ledger_clear')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='protected_displays_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='media_sha256_recorded')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='snapshot_unchanged')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+======================================================================
+FAIL: test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail (__main__.CriteriaTests.test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail) (criterion='no_driver_error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_capture_diagnostic_test.py", line 541, in test_any_failed_non_content_criterion_makes_ambiguous_content_a_fail
+    self.assertEqual(result["verdict"], "FAIL")
+AssertionError: 'calibration_ambiguous' != 'FAIL'
+- calibration_ambiguous
++ FAIL
+
+
+----------------------------------------------------------------------
+Ran 23 tests in 128.818s
+
+FAILED (failures=19, errors=24)

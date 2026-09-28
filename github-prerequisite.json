@@ -1,0 +1,16 @@
+{
+  "checked_utc": "2026-09-22T15:46:07Z",
+  "repository": "bodencrouch/KotorPhasor",
+  "run_id": 35491392460,
+  "attempt": 2,
+  "purpose": "Recheck whether existing CI can start; not validation of the current implementation branch",
+  "url": "https://github.com/bodencrouch/KotorPhasor/actions/runs/35491392460/attempts/2",
+  "status": "completed",
+  "conclusion": "failure",
+  "executed_steps": 0,
+  "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings",
+  "secrets_configured": false,
+  "environments_configured": false,
+  "self_hosted_runners": 0,
+  "mac_gameplay_verified": false
+}

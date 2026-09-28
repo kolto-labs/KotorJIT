@@ -1,0 +1,72 @@
+RESUME, DO NOT RESTART. A previous agent was doing exactly this task and was stopped mid-way at the user's request (model switch). Before doing anything new: inspect what it already produced — its output/report/review file if one exists (it may be partial), files it was allowed to edit (git diff --stat and mtimes in the worktree), and its scratch/probe dirs. Keep completed work that verifies; re-run its last checks; continue from where it stopped. Do not duplicate completed sections; if a partial section exists in an append-only review file, finish it rather than adding a second one. The previous agent's last status line is given below.
+
+GLOBAL RULES: Worktree (cwd) /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation is intentionally dirty with other writers' work — preserve every unrelated change; never git reset/stash/staging/commit/push; never edit the canonical checkout. Never run Wine, a game, Gamescope, Xvfb/Xwayland, mpv, or x11grab capture; never touch /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock; never signal processes you did not start. Host-only tools (ffprobe, 32-bit binaries, pwsh, gamescope) via /home/brunner56/.local/bin/host-cmd sh -c '...'. Never run whole-worktree `git diff --check` (>12 min). The disk and CPU are heavily loaded: prefer incremental builds in your own scratch dir. Lua-native APIs are kp.*; NWScript only via nwscript.call; Lua must not duplicate NWScript names. End with a final message: status, counts, files, and anything incomplete marked honestly.
+
+PREVIOUS AGENT LAST STATUS: codex run had just started
+
+TASK:
+Independent review of the KotorPhasor Lua utilities FOLLOW-UP round (strict-globals timer crash fix, delay bounds, kp.vec finiteness, C-function labels). Read-only on the worktree; write only /home/brunner56/kp-live-20260922/lua-utilities-followup-review.md; scratch builds/probes under /home/brunner56/kp-live-20260922/review-probes-u1u2-followup/ (build outside the worktree). No game; never touch the live-game lock; no git reset/stash/staging/commit.
+
+Worktree (cwd): /run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation. Prior review: /home/brunner56/kp-live-20260922/lua-utilities-u1u2-review.md (probes in review-probes-u1u2/, kp_reviewprobe strictg/hugedelay). Writer report section "Follow-up round" in .superpowers/sdd/lua-boundary-validation-plan/lua-utilities-u1-u2-report.md; logs in /home/brunner56/kp-u1u2-build/. Files: src/api/timers.{cpp,hpp}, src/api/vector.{cpp,hpp}, tools/kp_supporttest.cpp, tools/kp_vectortest.cpp.
+
+Verify: strict-globals lookup now inside the protected call (rerun your strictg probe: no PANIC; error attributed and timer cancelled), lookup that removes its own timer, delay bounds (0..4294967295 ms finite; NaN/inf/negative/over rejected; existing callers unaffected — grep registertimer usage), finiteness via volatile double on x87 (check -m32 codegen really stores/reloads; try -O2 and -ffast-math-free build flags actually used by the repo), normalize underflow behavior, C-function labels (address-based: any budget-keying bug if a C function is freed and address reused?). Also re-check the prior PASS items did not regress (ref release exactly once, closing guard both finalizer orders, pump mutation). Build with the repo toolchain (cmake; run 32-bit binaries via /home/brunner56/.local/bin/host-cmd). Classify Critical/Important/Minor; null move legal. End "U1+U2 follow-up verdict: PASS|FAIL". Final: verdict, findings, commands+outputs.
+
+
+AGENT-TO-AGENT PROTOCOL (prove-the-effort)
+
+1. Independent first. Form your own answer from the evidence before you read
+   any other agent's answer. Then read theirs. (Same-model agents that read
+   each other first converge on a confident wrong answer.)
+
+2. Claims carry referents. Every claim you make to another agent names the
+   thing that shows it: a command and its output, a file:line, a test name,
+   a number with its source, a worked example. A claim with none is marked
+   `unverified` by you, not discovered by them.
+
+3. Be skeptical once, then narrower, then stop. When a claim reaches you
+   without a referent: ask for the one thing that would settle it. If the
+   answer is still a principle ("best practice", "should work", "it's
+   designed that way"), ask narrower once. After two asks with no new
+   referent, mark the claim `unresolved` and move on. Never ask "are you
+   sure?". it is not a question and it flips answers without evidence.
+
+4. Defend by re-deriving, not by folding. When your claim is challenged,
+   go back to the evidence and re-derive; if it still holds, say so with
+   the referent and your confidence. Do not apologise and switch because
+   someone pushed. Do not restate the same claim a second time without a
+   new referent either. that is the signal to stop.
+
+5. Concede in under five words when a referent lands. "you're right",
+   "fair", "that holds". Then take the next claim.
+
+6. Compromise means the option that wins on the named criterion, not the
+   midpoint. Before arguing, both sides write the criterion the decision
+   turns on (latency, lines touched, blast radius, reversibility, what the
+   user asked for) and the measurement or example that would decide it.
+   Run the check if it can be run here. If both options hold, take the one
+   that is cheaper to reverse. If neither side can produce a referent inside
+   the round cap, hand both positions and the missing referent to a judge
+   that argued neither side, or to the user, with one line each.
+
+7. Null move is legal. If the other agent's claim survives your one
+   question, say "that holds" and stop. Do not manufacture a flaw.
+
+8. Round cap three. Ask, ask narrower, verdict. A judge reads both orders
+   and writes its evidence before its verdict; it never shares a backbone
+   with an arguer when that can be arranged.
+
+9. Aim at the claim, never the agent. Short turns. A hard line gets a
+   laugh, not a paragraph. Three short messages beat one wall of text.
+
+10. Report in this shape, one block per claim:
+    claim: <verbatim>
+    referent: <what showed it, or "none">
+    checked: <command / file:line / "not checkable here">
+    verdict: holds | does not hold | unresolved
+    confidence: <low | medium | high> and what would change it
+
+
+AGENT-TO-AGENT GRILL HANDSHAKE (grill-me, soft-curious, used between spawns)
+- If you are a WRITER: end your report with a "Grill me" section: the 3–5 short why / how-come / is-there-a-reason questions a skeptical reviewer would most likely ask about your change (the places you are least sure of), each followed by your answer with a referent (command+output, file:line, test name) or "unverified". Put your weakest answer first.
+- If you are a REVIEWER: first read the writer's "Grill me" section (after forming your own independent view per rule 1). Attack the weakest answered question first; for each one say "that holds" with the referent, or ask one narrower question and check it yourself. Add your own grill questions the writer missed. Curious, not cross-exam: aim at the claim, never the agent.
+- Either role: when you hand off, list the one question you could not settle and what single check would settle it.

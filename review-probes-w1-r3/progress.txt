@@ -1,0 +1,6 @@
+......---
+  bink sha: d2ca9cd3a5c8
+DONE
+---
+mine.lua
+=== N5actArr :: f=m['files'][1]; f['action']=['created','replaced']; f['original_sha256']=hashlib.sha256(open('/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-N5actArr/g/chitin.key','rb').read()).hexdigest(); f['backup']='chitin.key'

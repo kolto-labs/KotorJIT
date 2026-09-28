@@ -1,0 +1,18 @@
+renamed_copy_exe_argv_comm: ADMITTED
+exe_symlink_name_differs: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+bash_c_string: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+timeout_launcher: ADMITTED
+env_var_then_target: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+python_dash_u_script: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes
+launcher_option_value: ADMITTED
+argv_later_real_binary: ADMITTED
+unreadable_cmdline_same_uid: refused: preflight could not read every /proc entry of this user
+unreadable_comm_same_uid: refused: preflight could not read every /proc entry of this user
+real sleep_named_ffmpeg: detected=True comm=ffmpeg exe=/tmp/kp-r11-p10-nkvjflsv/ffmpeg argv0=/tmp/kp-r11-p10-nkvjflsv/ffmpeg
+real sleep_named_enc_argv_ffmpeg_via_exec_a: detected=True comm=ffmpeg exe=/tmp/kp-r11-p10-nkvjflsv/ffmpeg argv0=enc
+real renamed_enc_binary: detected=False comm=enc exe=/tmp/kp-r11-p10-nkvjflsv/enc argv0=/tmp/kp-r11-p10-nkvjflsv/enc
+real rows=1224 unreadable_refusing=0 exe_only_unreadable=887 exe_only_uids=[0, 999, 1000, 60505, 65534] exe_only_comms=['(sd-pam)', '2.1.278', '2.1.283', 'AutoHotkey64.ex', 'ChatGPT', 'MainThread', 'ModemManager', 'NetworkManager', 'PotPlayerMini64', 'Prowlarr', 'QMPlay2', 'Radarr']
+forbidden_other_uid= []
+forbidden_all= [(1099968, 'wineserver', 1000), (1737182, 'ffprobe', 1000)]
+real preflight: refused: preflight found existing Wine, game, Gamescope, or FFmpeg processes | forbidden comms ['ffmpeg', 'ffprobe', 'wineserver'] | unreadable 0
+exit=0

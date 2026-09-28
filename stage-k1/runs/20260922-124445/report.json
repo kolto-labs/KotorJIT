@@ -1,0 +1,262 @@
+{
+ "scenario": "model memory: wave",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-124445",
+ "started": 1790099099.1248784,
+ "finished": 1790099137.5206625,
+ "seconds": 38.396,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.061,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 5.244,
+   "detail": "phase=gameplay module=danm14aa server_tick=9 client_tick=14 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 9,
+    "client_tick": 14,
+    "pc": {
+     "hp": 96,
+     "max_hp": 96,
+     "id": 2147483644,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.359,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.067,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.018,
+   "detail": "saved native log offset 6305"
+  },
+  {
+   "index": 6,
+   "step": "peaceful gameplay and checked native model available",
+   "status": "ok",
+   "seconds": 0.157,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "capture original player scale and pre-existing area identities",
+   "status": "ok",
+   "seconds": 0.093,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 8,
+   "step": "do advance_ticks {\"ticks\": 180, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 3.301,
+   "detail": "observed server ticks 23 -> 211"
+  },
+  {
+   "index": 9,
+   "step": "do capture_free_look",
+   "status": "ok",
+   "seconds": 0.043,
+   "detail": "Toggled native free-look on owned game display; visual confirmation required"
+  },
+  {
+   "index": 10,
+   "step": "do advance_ticks {\"ticks\": 120, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 1.455,
+   "detail": "observed server ticks 217 -> 340"
+  },
+  {
+   "index": 11,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.066,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 12,
+   "step": "do console_command {\"code\": \"wave=dofile(\\\"kotorphasor/scripts/model_scene.lua\\\").new{name=\\\"wave\\\",trigger=2,hold_ticks=90,spawn=true,resref=\\\"g_sithtroop01\\\",faction=2,forward=6,sides={-2,0,2},scales={{.4,2,.4},{2,.4,2},{1,1,1},{.4,2,.4},{2,.4,2},{1,1,1}}}; function demo_tick() wave:tick(); return wave.state~=\\\"complete\\\" and wave.state~=\\\"failed\\\" end; return wave.state\", \"contains\": [\"waiting\"]}",
+   "status": "ok",
+   "seconds": 4.635,
+   "detail": "> wave=dofile(\"kotorphasor/scripts/model_scene.lua\").new{name=\"wave\",trigger=2,hold_ticks=90,spawn=true,resref=\"g_sithtroop01\",faction=2,forward=6,sides={-2,0,2},scales={{.4,2,.4},{2,.4,2},{1,1,1},{.4,2,.4},{2,.4,2},{1,1,1}}}; function demo_tick() wave:tick(); return wave.state~=\"complete\" and wave.state~=\"failed\" end; return wave.state\nstring: waiting"
+  },
+  {
+   "index": 13,
+   "step": "do console_command {\"code\": \"clock=kp.registertimer(16,\\\"demo_tick\\\"); nwscript.call(\\\"SetLocalNumber\\\",nwscript.call(\\\"GetFirstPC\\\"),5,2); return clock>0\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 2.503,
+   "detail": "> clock=kp.registertimer(16,\"demo_tick\"); nwscript.call(\"SetLocalNumber\",nwscript.call(\"GetFirstPC\"),5,2); return clock>0\nboolean: true"
+  },
+  {
+   "index": 14,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.085,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 15,
+   "step": "independent wave phase 1 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 0.795,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 16,
+   "step": "independent wave phase 2 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.749,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 17,
+   "step": "independent wave phase 3 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 2.167,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 18,
+   "step": "independent wave phase 4 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 2.201,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 19,
+   "step": "independent wave phase 5 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 2.307,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 20,
+   "step": "independent wave phase 6 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 3.149,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 21,
+   "step": "all phases restored before completion",
+   "status": "ok",
+   "seconds": 5.762,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 22,
+   "step": "all scene-owned actors removed, pre-existing scene remains",
+   "status": "ok",
+   "seconds": 0.037,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 23,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:wave\\\\] phase=\", \"minimum\": 18, \"maximum\": 18}",
+   "status": "ok",
+   "seconds": 0.026,
+   "detail": "native log matched 18 lines"
+  },
+  {
+   "index": 24,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:wave\\\\] complete phases=6 restored=3\", \"minimum\": 1, \"maximum\": 1}",
+   "status": "ok",
+   "seconds": 0.018,
+   "detail": "native log matched 1 lines"
+  },
+  {
+   "index": 25,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.122,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 26,
+   "step": "do console_command {\"code\": \"return wave.state, wave.phase\", \"contains\": [\"string: complete\", \"number: 6\"]}",
+   "status": "ok",
+   "seconds": 0.757,
+   "detail": "> return wave.state, wave.phase\nstring: complete\nnumber: 6"
+  },
+  {
+   "index": 27,
+   "step": "do console_command {\"code\": \"wave:unload(); wave=nil; demo_tick=nil; return true\", \"contains\": [\"boolean: true\"]}",
+   "status": "ok",
+   "seconds": 1.117,
+   "detail": "> wave:unload(); wave=nil; demo_tick=nil; return true\nboolean: true"
+  },
+  {
+   "index": 28,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.099,
+   "detail": "F12 overlay open=False"
+  }
+ ]
+}

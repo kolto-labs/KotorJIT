@@ -1,0 +1,158 @@
+[
+  {
+    "wrapper": "bundle",
+    "zip": "",
+    "zip_sha256": "537c169ecb57da62ab626ce2dbd2bec13be592f627b7365accf1703f2bfbdf71",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "bundle/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "bundle/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  },
+  {
+    "wrapper": "docs",
+    "zip": "",
+    "zip_sha256": "2516af72e794dbe967ff3d59039e4d6bbad617c77eb2e17538b56f8246fbc6da",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "docs/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "docs/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  },
+  {
+    "wrapper": "scripts",
+    "zip": "",
+    "zip_sha256": "5885b5b2c00568735095ece939a34e9250e661ae9ea94b6a4d6563b043cd5999",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "scripts/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "scripts/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  },
+  {
+    "wrapper": "src",
+    "zip": "",
+    "zip_sha256": "d6fefc857ce860158b5afeaa6ec86945cb0b89b52af0539a18925aa1009591f8",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "src/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "src/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  },
+  {
+    "wrapper": "third_party",
+    "zip": "",
+    "zip_sha256": "e5ef6310926000780404fb287e272e6ac1d26f320ccde9dde08717d81ef748ee",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "third_party/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "third_party/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  },
+  {
+    "wrapper": "tools",
+    "zip": "",
+    "zip_sha256": "c5cdddb5612175ca50f6da1a894b15d8763673d620ce08571479a585b1ab9c84",
+    "entries": 3,
+    "ok": false,
+    "finding_counts": {
+      "excluded file": 1,
+      "private folder": 1
+    },
+    "findings": [
+      {
+        "entry": "tools/tmp/evidence.txt",
+        "kind": "private folder",
+        "detail": "tmp"
+      },
+      {
+        "entry": "tools/data/codecaves.toml",
+        "kind": "excluded file",
+        "detail": "data/codecaves.toml is held back pending an owner decision"
+      }
+    ],
+    "expected": [],
+    "markers": 0,
+    "allow": []
+  }
+]

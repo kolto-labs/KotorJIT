@@ -1,0 +1,11 @@
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-S2/kpreal:
+addresses
+backup
+install-manifest.json
+scripts
+
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-S2/kpreal/scripts:
+mine.lua
+binkw32.dll
+precious.txt
+................................................................

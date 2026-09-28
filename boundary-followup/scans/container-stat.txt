@@ -1,0 +1,4 @@
+kp-release-20260927 rc=1 before=[0388d0806c74c0ad158f7d120165a5d530798c14fbbaa1674b8c6c759ce867c9 10168030 1790486537] after=[0388d0806c74c0ad158f7d120165a5d530798c14fbbaa1674b8c6c759ce867c9 10168030 1790486537] same=yes
+643 {'NUL byte': 1, 'excluded file': 2, 'magic': 2, 'marker': 30, 'not UTF-8': 1, 'private folder': 1, 'tar owner': 606} markers 26 unchanged True
+kp-release-20260922 rc=1 before=[de14c1261e0e1b0e0aec124c8676f8e40ec696b47a258d9e1b0adc97af677131 10156721 1790484635] after=[de14c1261e0e1b0e0aec124c8676f8e40ec696b47a258d9e1b0adc97af677131 10156721 1790484635] same=yes
+644 {'NUL byte': 1, 'excluded file': 2, 'magic': 2, 'marker': 31, 'not UTF-8': 1, 'private folder': 1, 'tar owner': 606} markers 26 unchanged True

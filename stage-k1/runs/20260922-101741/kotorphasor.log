@@ -1,0 +1,856 @@
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01d00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 020f0000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 02100000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02110000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02120000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02130000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02140000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02150000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02160000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02170000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 02180000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 02190000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 021a0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 021b0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 021c0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 021d0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 021e0000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 021f0000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02200000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 2 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] info: [00_probe] [probe] watching K1 (k1_gog_103)
+[running] running: build k1_gog_103, 19 hooks, 2 script(s)
+[running] harness: listening on 127.0.0.1:36477
+[running] info: harness: client connected
+[running] info: harness[k1]: speed: scale=16.000
+[running] info: harness[k1]: load_save '000001 - AUTOSAVE': LASTMODULE=danm14aa from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000001 - AUTOSAVE/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000001 - AUTOSAVE/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 15 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8228, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=02930888
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000001 - AUTOSAVE', 'danm14aa')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] info: [00_probe] [probe] OnTick x1
+[running] info: [00_probe] [probe] OnLoad x1
+[running] vm: routine bridge refreshed (internal 00000000 -> 046a0060, implementer 00000000 -> 029302b0, table 00000000 -> 046a0440, 772 commands)
+[running] info: [00_probe] [probe] script: x1
+[running] info: [00_probe] [probe] OnModuleLoad x1
+[running] info: [00_probe] [probe] script:k_pdan_itemacq x1
+[running] info: [00_probe] [probe] OnModulePlayerEnter x1
+[running] info: [00_probe] [probe] script:k_hen_spawn01 x1
+[running] info: [00_probe] [probe] script:k_hen_heartbt01 x1
+[running] info: [00_probe] [probe] script:k_ai_master x1
+[running] info: [00_probe] [probe] script:dbm_event_hen x1
+[running] info: [00_probe] [probe] script:atosht_heart x1
+[running] info: [00_probe] [probe] script:jsnsnk_heart x1
+[running] info: [00_probe] [probe] script:k_trg_partyheart x1
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: [00_probe] [probe] OnAreaEnter x1
+[running] info: [00_probe] [probe] script:k_pdan_14a_area x1
+[running] info: [00_probe] [probe] script:k_zon_catalog x1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=fffffffc, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=fffffffc
+[running] info: harness[k1]: main menu: RemovePanel(mgr=01e9b0f8, panel=02934948) rc=1, PanelExists now 0
+[running] info: [00_probe] [probe] script:k_pman_door05 x1
+[running] info: [00_probe] [probe] script:k_def_heartbt01 x1
+[running] info: [00_probe] [probe] script:k_def_percept01 x1
+[running] info: [10_position_trace] [trace] t=10 pos 105.676 96.464 0.996 face 136.47
+[running] info: [00_probe] [probe] script: x100
+[running] info: [00_probe] [probe] script:k_hen_retreat x1
+[running] info: [00_probe] [probe] script:k_hen_exit5m x1
+[running] info: [00_probe] [probe] script:k_hen_percept01 x1
+[running] info: [00_probe] [probe] script:k_hen_enter5m x1
+[running] info: [00_probe] [probe] script:k_zon_control x1
+[running] info: [00_probe] [probe] script: x200
+[running] info: [00_probe] [probe] script:atosht_heart x100
+[running] info: [00_probe] [probe] script:k_ai_master x100
+[running] info: [00_probe] [probe] script: x300
+[running] info: [00_probe] [probe] script:atosht_heart x200
+[running] info: [00_probe] [probe] script: x400
+[running] info: [00_probe] [probe] script:k_def_heartbt01 x100
+[running] info: [00_probe] [probe] script:k_pdan_jon01 x1
+[running] info: [00_probe] [probe] script: x500
+[running] info: [00_probe] [probe] script:k_ai_master x200
+[running] info: [00_probe] [probe] script:atosht_heart x300
+[running] info: [00_probe] [probe] script: x600
+[running] info: [00_probe] [probe] script:k_pdan_itemacq x100
+[running] info: [00_probe] [probe] script: x700
+[running] info: [00_probe] [probe] script:atosht_heart x400
+[running] info: [00_probe] [probe] script:k_ai_master x300
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01d00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 02010000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 02020000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02030000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02040000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02050000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02060000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02070000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02080000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02090000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 020a0000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 020b0000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 020c0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 020d0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 020e0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 020f0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 02100000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 02110000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02120000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 1 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 1 script(s)
+[running] harness: listening on 127.0.0.1:43269
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=024309b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 04740148, implementer 00000000 -> 024303e0, table 00000000 -> 04740528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=022bc888, panel=02434a78) rc=1, PanelExists now 0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] info: [50_chaos_roulette] [cursed] armed
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#1)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#2)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#3)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#4)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#5)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#6)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#7)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#8)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#9)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#10)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#11)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#12)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#13)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#14)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#15)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#16)
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#17)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#18)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#19)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#20)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#21)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#22)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#23)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#24)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#25)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#26)
+[running] client loop cave: 300 frames
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#27)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#28)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#29)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#30)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#31)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#32)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#33)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#34)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#35)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#36)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#37)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#38)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#39)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#40)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#41)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#42)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#43)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#44)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#45)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#46)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#47)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#48)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#49)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#50)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#51)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#52)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#53)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#54)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#55)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#56)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#57)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#58)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#59)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#60)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#61)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#62)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#63)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#64)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#65)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#66)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#67)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#68)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#69)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#70)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#71)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#72)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#73)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#74)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#75)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#76)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#77)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#78)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#79)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#80)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#81)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#82)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#83)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#84)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#85)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#86)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#87)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#88)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#89)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#90)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#91)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#92)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#93)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#94)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#95)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#96)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#97)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#98)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#99)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#100)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#101)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#102)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#103)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#104)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#105)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#106)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#107)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#108)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#109)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#110)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: choke (#111)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#112)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#113)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#114)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#115)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#116)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#117)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#118)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#119)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#120)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#121)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#122)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#123)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#124)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#125)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#126)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#127)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: lightning tether (#128)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: stun (#129)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#130)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#131)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#132)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: haste (#133)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: whirlwind (#134)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: burning shield (#135)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: second wind (#136)
+[running] client loop cave: 400 frames
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: hot potato (#137)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: sudden gizka (#138)
+[running] info: [50_chaos_roulette] [cursed:wheel] Sith Trooper: terror (#139)
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01de0000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 01df0000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 01e00000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02310000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02320000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02330000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02340000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02350000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02360000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02370000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 02380000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 02390000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 023a0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 023b0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 023c0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 023d0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 023e0000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 023f0000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02400000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 1 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 1 script(s)
+[running] harness: listening on 127.0.0.1:43843
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=021f09b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 04680148, implementer 00000000 -> 021f03e0, table 00000000 -> 04680528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=0207c888, panel=021f4a78) rc=1, PanelExists now 0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] info: [10_rancor_roulette] [cursed] armed
+[running] info: [10_rancor_roulette] [cursed:roulette] Utility Droid -> jolee (#1)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> jolee (#2)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> carth (#3)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> jolee (#4)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> darth malak (#5)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> carth (#6)
+[running] info: [10_rancor_roulette] [cursed:roulette] Sith Trooper -> canderous (#7)
+[running] info: [10_rancor_roulette] [cursed:roulette] Utility Droid -> jolee (#8)
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] client loop cave: 300 frames
+[running] client loop cave: 400 frames
+[running] client loop cave: 500 frames
+[running] client loop cave: 600 frames
+[running] client loop cave: 700 frames
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01de0000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 01df0000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 01e00000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02310000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02320000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02330000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02340000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02350000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02360000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02370000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 02380000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 02390000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 023a0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 023b0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 023c0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 023d0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 023e0000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 023f0000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02400000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 1 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 1 script(s)
+[running] harness: listening on 127.0.0.1:36009
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=021f09b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 04680148, implementer 00000000 -> 021f03e0, table 00000000 -> 04680528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=0207c888, panel=021f4a78) rc=1, PanelExists now 0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] info: [20_fus_ro_dah] [cursed] armed
+[running] client loop cave: 300 frames
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#1)
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#2)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#3)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#4)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#5)
+[running] info: [20_fus_ro_dah] [cursed:shout] FUS RO DAH: 5 flung
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#6)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#7)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#8)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#9)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#10)
+[running] info: [20_fus_ro_dah] [cursed:shout] FUS RO DAH: 3 flung
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#11)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#12)
+[running] client loop cave: 400 frames
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#13)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#14)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#15)
+[running] info: [20_fus_ro_dah] [cursed:shout] FUS RO DAH: 3 flung
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#16)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#17)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#18)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#19)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#20)
+[running] info: [20_fus_ro_dah] [cursed:shout] FUS RO DAH: 3 flung
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#21)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#22)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#23)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#24)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#25)
+[running] info: [20_fus_ro_dah] [cursed:shout] FUS RO DAH: 1 flung
+[running] client loop cave: 500 frames
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#26)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#27)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#28)
+[running] info: [20_fus_ro_dah] [cursed:shout] Sith Trooper flung (#29)
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01e00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 02210000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 02220000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02230000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02240000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02250000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02260000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02270000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02280000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02290000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 022a0000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 022b0000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 022c0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 022d0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 022e0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 022f0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 02300000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 02310000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02320000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 1 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 1 script(s)
+[running] harness: listening on 127.0.0.1:41161
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=021f09b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 04680148, implementer 00000000 -> 021f03e0, table 00000000 -> 04680528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=0207c888, panel=021f4a78) rc=1, PanelExists now 0
+[running] client loop cave: 100 frames
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] client loop cave: 200 frames
+[running] info: [30_necromancer] [cursed] armed
+[running] client loop cave: 300 frames
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#1): corpse 325 -> 347
+[running] info: [30_necromancer] [cursed:necro] verify 347: valid=1 dead=0 hp=25 app=21
+[running] client loop cave: 400 frames
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#2): corpse 341 -> 351
+[running] info: [30_necromancer] [cursed:necro] verify 351: valid=1 dead=0 hp=25 app=21
+[running] client loop cave: 500 frames
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#3): corpse 321 -> 355
+[running] info: [30_necromancer] [cursed:necro] verify 355: valid=1 dead=0 hp=25 app=21
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#4): corpse 337 -> 359
+[running] info: [30_necromancer] [cursed:necro] verify 359: valid=1 dead=0 hp=25 app=21
+[running] client loop cave: 600 frames
+[running] client loop cave: 700 frames
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#5): corpse 329 -> 365
+[running] info: [30_necromancer] [cursed:necro] verify 365: valid=1 dead=0 hp=25 app=21
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper fell (k_def_death01)
+[running] client loop cave: 800 frames
+[running] info: [30_necromancer] [cursed:necro] Sith Trooper rose as Malak (#6): corpse 333 -> 369
+[running] info: [30_necromancer] [cursed:necro] verify 369: valid=1 dead=0 hp=25 app=21
+[running] client loop cave: 900 frames
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01e00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 02010000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 02020000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02030000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02040000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02050000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02060000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02070000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02080000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02090000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 020a0000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 020b0000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 020c0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 020d0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 020e0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 020f0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 02100000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 02110000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02120000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 2 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 2 script(s)
+[running] harness: listening on 127.0.0.1:56795
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=024509b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 04760148, implementer 00000000 -> 024503e0, table 00000000 -> 04760528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=022dc888, panel=02454a78) rc=1, PanelExists now 0
+[running] info: [zz_validation_observer] [validation:speed] tick=10 speed=1.000
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=55 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=41 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=44 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=37 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=48 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=51 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=34 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=7 row=41 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=14 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=28 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=9 row=30 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=16 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=62 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=53 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=2 row=6 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=64 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=30 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=32 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=309 row=378 dead=0 party=1
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=18 row=184 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=56 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=23 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=2147483647 row=136 dead=0 party=1
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=20 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=59 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=54 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:effect] tick=20 id=7 type=72 before=0 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=20 id=9 type=72 before=0 after=1
+[running] info: [zz_validation_observer] [validation:effect] tick=30 id=2 type=72 before=0 after=1
+[running] info: [zz_validation_observer] [validation:effect] tick=40 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=50 id=309 before=36 after=34 dead=0
+[running] info: [zz_validation_observer] [validation:hp] tick=60 id=23 before=1 after=-11 dead=1
+[running] info: [zz_validation_observer] [validation:hp] tick=70 id=20 before=15 after=10 dead=0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] info: [zz_validation_observer] [validation:effect] tick=80 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=80 id=20 before=10 after=3 dead=0
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] client loop cave: 100 frames
+[running] info: [zz_validation_observer] [validation:effect] tick=100 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=100 id=20 before=3 after=-11 dead=1
+[running] info: [zz_validation_observer] [validation:effect] tick=120 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=130 id=309 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=140 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=150 id=309 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=160 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=180 id=309 type=72 before=1 after=2
+[running] client loop cave: 200 frames
+[running] info: [40_chain_reaction] [cursed] armed
+[running] info: [zz_validation_observer] [validation:effect] tick=210 id=309 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=329 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=325 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=333 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=337 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=321 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=220 id=341 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:effect] tick=230 id=309 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=240 id=341 before=25 after=19 dead=0
+[running] info: [zz_validation_observer] [validation:hp] tick=250 id=2147483647 before=6 after=1 dead=0
+[running] info: [zz_validation_observer] [validation:hp] tick=250 id=309 before=34 after=20 dead=0
+[running] info: [zz_validation_observer] [validation:hp] tick=250 id=341 before=19 after=15 dead=0
+[running] info: [zz_validation_observer] [validation:effect] tick=260 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=260 id=309 before=20 after=18 dead=0
+[running] info: [zz_validation_observer] [validation:effect] tick=260 id=309 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=260 id=341 before=15 after=8 dead=0
+[running] info: [zz_validation_observer] [validation:hp] tick=270 id=309 before=18 after=1 dead=0
+[running] info: [zz_validation_observer] [validation:effect] tick=280 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=290 id=341 before=8 after=3 dead=0
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 2 hit (#1)
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 3 hit (#2)
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 4 hit (#3)
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 2 hit (#4)
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 4 hit (#5)
+[running] info: [40_chain_reaction] [cursed:boom] Sith Trooper detonated: 5 hit (#6)
+[running] client loop cave: 300 frames
+[running] info: [zz_validation_observer] [validation:effect] tick=300 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=330 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=330 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=330 id=309 type=72 before=1 after=2
+[running] info: harness: client disconnected
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] game executable: Z:\home\brunner56\kp-live-20260922\stage-k1\swkotor.exe
+[identifying] sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+[identifying] game directory: Z:\home\brunner56\kp-live-20260922\stage-k1
+[awaiting-decipher] classifying and, if encrypted, waiting for the code section to decipher
+[awaiting-decipher] build: k1_gog_103 (image base 0x00400000, waited 0ms)
+[awaiting-decipher] code section verified: 7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3
+[awaiting-decipher]   section .text va=0x00401000 size=3391488 entropy=6.497 state=plaintext
+[resolving] signature resolve: 256/256 sites bound (VA is a hint)
+[resolving] address table: Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\addresses\k1_gog_103.json (256 sites, build k1_gog_103, win)
+[installing] vm: 13 of 13 stack sites resolved; the two VM objects are captured from the first script the game runs
+[installing] debug: detour 005d45d0 -> 77ef3e70, 8 bytes displaced, trampoline 01e00000 (13 bytes)
+[installing] debug: detour 004babb0 -> 77ef6590, 6 bytes displaced, trampoline 02210000 (11 bytes)
+[installing] debug: detour 00401f00 -> 77ef4eb0, 7 bytes displaced, trampoline 02220000 (12 bytes)
+[installing] debug: detour 004fece0 -> 77ef20e0, 8 bytes displaced, trampoline 02230000 (13 bytes)
+[installing] debug: detour 0058b850 -> 77ef2130, 6 bytes displaced, trampoline 02240000 (11 bytes)
+[installing] debug: detour 00587ba0 -> 77ef2180, 6 bytes displaced, trampoline 02250000 (11 bytes)
+[installing] debug: detour 0058f140 -> 77ef21d0, 6 bytes displaced, trampoline 02260000 (11 bytes)
+[installing] debug: detour 004c5120 -> 77ef2220, 7 bytes displaced, trampoline 02270000 (12 bytes)
+[installing] debug: detour 0050d6c0 -> 77ef2270, 6 bytes displaced, trampoline 02280000 (11 bytes)
+[installing] debug: detour 00594220 -> 77ef22c0, 5 bytes displaced, trampoline 02290000 (10 bytes)
+[installing] debug: detour 005964e0 -> 77ef2310, 5 bytes displaced, trampoline 022a0000 (10 bytes)
+[installing] debug: detour 005c6ee0 -> 77ef2360, 10 bytes displaced, trampoline 022b0000 (15 bytes)
+[installing] debug: detour 005c7f10 -> 77ef23b0, 10 bytes displaced, trampoline 022c0000 (15 bytes)
+[installing] debug: detour 005d47a0 -> 77ef2400, 6 bytes displaced, trampoline 022d0000 (11 bytes)
+[installing] debug: detour 005d1100 -> 77ef6970, 7 bytes displaced, trampoline 022e0000 (12 bytes)
+[installing] debug: detour 00602eb0 -> 77eeeae0, 6 bytes displaced, trampoline 022f0000 (11 bytes)
+[installing] debug: detour 005f2f60 -> 77f68320, 5 bytes displaced, trampoline 023e0000 (10 bytes)
+[installing] debug: detour 00602af0 -> 77f68410, 9 bytes displaced, trampoline 023f0000 (14 bytes)
+[installing] debug: detour 0051f4f0 -> 77ef01a0, 8 bytes displaced, trampoline 02400000 (13 bytes)
+[installing] info: installed 19 hook(s) for build k1_gog_103
+[installing] installed 19 hooks
+[installing] info: harness[k1]: adapter k1 for build k1_gog_103: 7 site(s) missing of 169, shape=thiscall
+[installing] info: harness[k1]: missing: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] harness: adapter k1, 7 site(s) unbound: client.get_paused_by_combat, client.set_paused_by_combat, client.get_auto_paused, client.set_auto_paused, msg.unlock_object, door.locked, door.lockable
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] info: api: registered nwscript.call for 769 engine routines
+[installing] info: api: kp native facilities installed, 111 event constants
+[installing] loaded 2 script(s) from Z:\home\brunner56\kp-live-20260922\stage-k1\kotorphasor\scripts
+[running] running: build k1_gog_103, 19 hooks, 2 script(s)
+[running] harness: listening on 127.0.0.1:59675
+[running] info: harness: client connected
+[running] info: harness[k1]: load_save '000003 - endar_room3': LASTMODULE=END_M01AA from Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/savenfo.res
+[running] info: harness[k1]: load_save: 1 export 'Z:\home\brunner56\kp-live-20260922\stage-k1/saves/000003 - endar_room3/SAVEGAME.sav' -> 'Z:\home\brunner56\kp-live-20260922\stage-k1/gameinprogress'
+[running] info: harness[k1]: load_save: 1 exported 4 file(s), first 'AVAILNPC0.utc'
+[running] info: harness[k1]: load_save: 2 CreateServer(mgr=01ae8238, 0)
+[running] info: harness[k1]: load_save: 2 CreateServer returned
+[running] info: harness[k1]: load_save: 2 server=021f09b8
+[running] info: harness[k1]: load_save: 3 paused 2 world timer(s)
+[running] info: harness[k1]: load_save: 4 StartConnectToSession(net, 0, name, '', 10, 0x10)
+[running] info: harness[k1]: load_save: 5 RequestStatus
+[running] info: harness[k1]: load_save: 6 SetPlayerCharacterName('test')
+[running] info: harness[k1]: load_save: 7 SetInputClass(0,1)=yes DisableInput=yes
+[running] info: harness[k1]: load_save: 8 SetLoadFromSaveGame(1), SetLoadingSaveGame(1)
+[running] info: harness[k1]: load_save: 9 SendLoadGameRequest(-1, '000003 - endar_room3', 'END_M01AA')
+[running] info: harness[k1]: load_save: request sent (rc=1); poll server_mode/loading_module/stats
+[running] vm: routine bridge refreshed (internal 00000000 -> 046a0148, implementer 00000000 -> 021f03e0, table 00000000 -> 046a0528, 772 commands)
+[running] info: api: registered nwscript.call for 769 engine routines
+[running] info: api: kp native facilities installed, 111 event constants
+[running] info: harness[k1]: load step: stuck load -- server_mode=2 area_not_ready=1 player_creature_id=7f000000 load_from_savegame=1; sending PlayerToServer Area/AreaLoaded
+[running] info: harness[k1]: load step: AreaLoaded call returned 1
+[running] info: harness[k1]: load step: the server placed the player -- load_from_savegame=0, player_creature_id=ffffffff, area_not_ready=1
+[running] info: harness[k1]: load step: the client finished the load -- area_not_ready=0, player_creature_id=ffffffff
+[running] info: harness[k1]: main menu: RemovePanel(mgr=0207c888, panel=021f4a78) rc=1, PanelExists now 0
+[running] info: [zz_validation_observer] [validation:speed] tick=10 speed=1.000
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=55 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=41 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=44 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=37 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=48 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=51 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=34 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=7 row=41 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=14 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=28 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=9 row=30 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=16 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=62 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=53 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=2 row=6 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=64 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=30 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=32 row=355 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=309 row=378 dead=0 party=1
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=18 row=184 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=56 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=23 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=2147483647 row=136 dead=0 party=1
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=20 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=59 row=28 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:appearance] tick=10 id=54 row=57 dead=0 party=0
+[running] info: [zz_validation_observer] [validation:effect] tick=20 id=7 type=72 before=0 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=20 id=9 type=72 before=0 after=1
+[running] info: [zz_validation_observer] [validation:effect] tick=20 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=30 id=9 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:effect] tick=30 id=2 type=72 before=0 after=1
+[running] info: [zz_validation_observer] [validation:effect] tick=50 id=2 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=50 id=20 before=15 after=11 dead=0
+[running] info: harness[k1]: unpause_timers: unpaused 2 timer(s), combat=unavailable auto=unavailable
+[running] info: [zz_validation_observer] [validation:hp] tick=60 id=23 before=1 after=-11 dead=1
+[running] info: [zz_validation_observer] [validation:hp] tick=70 id=20 before=11 after=5 dead=0
+[running] info: [zz_validation_observer] [validation:effect] tick=80 id=2147483647 type=72 before=1 after=2
+[running] info: [zz_validation_observer] [validation:hp] tick=80 id=20 before=5 after=-11 dead=1
+[running] warn: engine structures are leaking: no destructor is bound (site vmcmd.destroy_game_defined_structure)
+[running] client loop cave: 100 frames
+[running] client loop cave: 200 frames
+[running] info: harness: client disconnected
+[running] info: [50_chaos_roulette] [cursed] armed

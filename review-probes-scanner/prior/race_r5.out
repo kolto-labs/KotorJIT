@@ -1,0 +1,2 @@
+scripts/harness/kpharness secret flips=468 {'JSON error: harness module does not parse': 8, 'JSON error: source contains a symlink; review before packaging': 28, 'JSON error: required Gamescope harness module is missing or linked': 2, 'JSON error: source path does not resolve to itself; review before packag': 2} leaks []
+cleanup done: True

@@ -1,0 +1,40 @@
+{
+  "code": "return blaster_fixture.fire()",
+  "input": "real owned-window keyboard",
+  "expected_request": 2,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> blaster_fixture=dofile('kotorphasor/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "boolean: true"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> return blaster_fixture.fire()"
+      },
+      {
+        "request": 2,
+        "kind": "error",
+        "text": "kotorphasor/console-examples/blaster_fixture.lua:70: weapon equip has not settled; pc=number:2147483644,current_pc=number:2147483644,expected={id=number:510,valid=number:1,base=number:12,object_type=number:2},right={id=number:552,valid=number:1,base=number:12,object_type=number:2},left={id=number:2130706432,valid=number:0,base=string:not_queried_invalid,object_type=string:not_queried_invalid},right_equals_expected=false,scoped_ok=true,scoped_right=number:552,scoped_left=number:2130706432,scoped_error=nil,original_right={id=number:440,valid=number:1,base=number:8,object_type=number:2},original_left={id=number:441,valid=number:1,base=number:5,object_type=number:2}\nstack traceback:\n\t[C]: in function 'assert'\n\tkotorphasor/console-examples/blaster_fixture.lua:70: in function <kotorphasor/console-examples/blaster_fixture.lua:68>"
+      }
+    ],
+    "submitted": 2,
+    "completed": 2,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 418
+  }
+}

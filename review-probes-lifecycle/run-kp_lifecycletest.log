@@ -1,0 +1,24 @@
+PASS lifecycle.unload_one_raises_OnScriptUnload_once
+PASS lifecycle.unload_one_drops_timers
+PASS lifecycle.unload_one_drops_bound_handlers
+PASS lifecycle.reload_one_increments_generation_and_rebinds
+PASS lifecycle.old_unload_cannot_touch_new_bindings
+PASS lifecycle.deleted_file_unloads_on_poll
+PASS lifecycle.new_file_loads_on_poll
+PASS lifecycle.edit_inside_first_window_detected
+PASS lifecycle.duplicate_load_refused
+PASS lifecycle.failed_reload_keeps_running_generation
+    load error: a.lua: ...e-20260922/review-probes-lifecycle/tmp/l/failfirst/a.lua:1: '=' expected near 'is'
+PASS lifecycle.failed_first_load_is_FailedToLoad
+PASS lifecycle.quarantine_then_edit_recovers
+PASS lifecycle.state_closing_hook_once_per_close
+PASS lifecycle.request_from_own_callback_deferred
+PASS lifecycle.request_from_timer_deferred
+PASS lifecycle.unknown_name_result_error
+PASS lifecycle.priority_resort_after_reload
+PASS lifecycle.explicit_unload_survives_poll
+PASS lifecycle.load_request_for_new_file
+PASS lifecycle.service_runs_snapshot_only
+PASS lifecycle.sync_refused_while_dispatching
+21 case(s), 0 failed
+rc=0

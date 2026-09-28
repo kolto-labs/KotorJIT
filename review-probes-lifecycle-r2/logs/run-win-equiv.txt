@@ -1,0 +1,13 @@
+hardlinkcreate:ok
+equivalent(a.lua,a.lua)=1ec=-
+equivalent(a.lua,A.LUA)=1ec=-
+equivalent(a.lua,b.lua)=1ec=-
+equivalent(a.lua,c.lua)=0ec=-
+exists(A.LUA)=1
+listedZ:/home/brunner56/kp-live-20260922/review-probes-lifecycle-r2/win/t/eq\a.
+lua
+listedZ:/home/brunner56/kp-live-20260922/review-probes-lifecycle-r2/win/t/eq\b.
+lua
+listedZ:/home/brunner56/kp-live-20260922/review-probes-lifecycle-r2/win/t/eq\c.
+lua
+lexically_normal(Z:/x/./y/a.lua)=Z:\x\y\a.lua

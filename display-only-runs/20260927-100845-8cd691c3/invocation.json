@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/usr/bin/python3.14",
+    "-I",
+    "-S",
+    "-B",
+    "/home/brunner56/kp-live-20260922/display-only-runs/20260927-100845-8cd691c3/display_gate.py",
+    "--child"
+  ],
+  "driver_sha256": "52011111643384a82bab95ab679f10388505ee7d4cb36ef13a2feee3416bec24",
+  "inherited_lock_fd": 3
+}

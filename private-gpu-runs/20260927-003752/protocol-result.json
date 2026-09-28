@@ -1,0 +1,237 @@
+{
+  "ok": true,
+  "artifacts": {
+    "kphasor.dll": "fd8e069a1ff5a7b489f32a6492222f396f85e7b74539deb56228395b297dfac2",
+    "binkw32.dll": "1b25f37125237aefb67271533f88c48dcf07ddd37bf180743a3b0dfa2ff729d9"
+  },
+  "world": {
+    "phase": "gameplay",
+    "phase_detail": {
+      "server_mode": 2,
+      "loading_module": 0,
+      "area_not_ready": 0,
+      "input_class": 0,
+      "main_menu": 0,
+      "game_over": 0,
+      "pause": 0,
+      "controller_pause": 0,
+      "tutorial": 0,
+      "modal_count": 0,
+      "status_summary": 0,
+      "movie": 0,
+      "load_error": 0,
+      "move_pending": 0,
+      "timers_paused": 0,
+      "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 52,
+    "client_tick": 77,
+    "pc": {
+      "hp": 96,
+      "id": 2147483644,
+      "max_hp": 96,
+      "x": 105.67625427246094,
+      "y": 96.4639663696289,
+      "z": 0.9961421489715576
+    },
+    "party": [
+      {
+        "tag": "",
+        "id": 2147483644
+      }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+      "globals": 1184,
+      "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+  },
+  "typed": {
+    "session": "1",
+    "request": "2",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Nil"
+      },
+      {
+        "type": "Boolean",
+        "value": false
+      },
+      {
+        "type": "String",
+        "bytes": {
+          "encoding": "base64",
+          "data": "AP9B",
+          "byte_length": "3"
+        },
+        "original_bytes": "3",
+        "truncated": false
+      },
+      {
+        "type": "Number",
+        "kind": "NegativeZero"
+      },
+      {
+        "type": "Number",
+        "kind": "PositiveInfinity"
+      },
+      {
+        "type": "Number",
+        "kind": "NegativeInfinity"
+      },
+      {
+        "type": "Number",
+        "kind": "NaN"
+      }
+    ],
+    "return_count": "7",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "4",
+    "last_line": "11"
+  },
+  "no_returns": {
+    "session": "1",
+    "request": "3",
+    "state": "Succeeded",
+    "values": [],
+    "return_count": "0",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "12",
+    "last_line": "13"
+  },
+  "error": {
+    "session": "1",
+    "request": "4",
+    "state": "Failed",
+    "values": [],
+    "return_count": "0",
+    "returns_truncated": false,
+    "error": {
+      "code": "lua_runtime",
+      "text": {
+        "encoding": "base64",
+        "data": "cHJvdG9jb2wtZXJyb3IKc3RhY2sgdHJhY2ViYWNrOgoJW2J1aWx0aW4jMTldOiBhdCAweDc3ZjBmOWYw",
+        "byte_length": "60"
+      },
+      "truncated": false
+    },
+    "first_line": "14",
+    "last_line": "15"
+  },
+  "recovery": {
+    "session": "1",
+    "request": "5",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Number",
+        "kind": "Finite",
+        "value": 42
+      }
+    ],
+    "return_count": "1",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "16",
+    "last_line": "17"
+  },
+  "physical": {
+    "session": "1",
+    "request": "6",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "String",
+        "bytes": {
+          "encoding": "base64",
+          "data": "cGh5c2ljYWwtdjE=",
+          "byte_length": "11"
+        },
+        "original_bytes": "11",
+        "truncated": false
+      },
+      {
+        "type": "Nil"
+      },
+      {
+        "type": "Boolean",
+        "value": false
+      }
+    ],
+    "return_count": "3",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "19",
+    "last_line": "22"
+  },
+  "legacy": {
+    "session": "1",
+    "request": "1",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Number",
+        "kind": "Finite",
+        "value": 42
+      }
+    ],
+    "return_count": "1",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "2",
+    "last_line": "3"
+  },
+  "runtime": "fb8201a9ec8d38e6fce9d8f6ba625ab209ea525bdb05bfb286aa4b817880fb83",
+  "session": "1",
+  "cancellation_scope": "AlreadyTerminal only; no native running-cancel preemption claim",
+  "source_unchanged": true
+}

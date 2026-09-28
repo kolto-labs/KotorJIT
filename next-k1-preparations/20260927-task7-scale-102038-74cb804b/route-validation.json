@@ -1,0 +1,268 @@
+{
+  "settings": {
+    "authored_barks": [],
+    "default_timeout": 45.0,
+    "dialog_grace": 10.0,
+    "events_timeout": 60.0,
+    "game_speed": 1.0,
+    "hang_seconds": 90.0,
+    "load_seconds": 300.0,
+    "load_tick_seconds": 60.0,
+    "load_timeout": 600.0,
+    "shot_interval": 120.0,
+    "stagnation_seconds": 120.0
+  },
+  "steps": [
+    {
+      "index": 1,
+      "kind": "do",
+      "raw": {
+        "dir": "000001 - AUTOSAVE",
+        "do": "load_save",
+        "timeout": 600
+      }
+    },
+    {
+      "index": 2,
+      "kind": "wait",
+      "raw": {
+        "equals": "gameplay",
+        "timeout": 600,
+        "wait": "phase"
+      }
+    },
+    {
+      "index": 3,
+      "kind": "do",
+      "raw": {
+        "do": "clear_auto_pause"
+      }
+    },
+    {
+      "index": 4,
+      "kind": "do",
+      "raw": {
+        "do": "advance_dialog",
+        "timeout": 120,
+        "until": "gameplay"
+      }
+    },
+    {
+      "index": 5,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); if q('GetModuleFileName')~='danm14aa' or q('GetIsObjectValid',p)~=1 or q('GetIsDead',p)==1 or q('GetIsInCombat',p)~=0 or q('GetIsInConversation',p)~=0 or not kp.model.capabilities().available then return false end; task7_original=assert(kp.model.snapshot(p)); task7_module=q('GetModuleFileName'); task7_area=q('GetArea',p); task7_locals={}; for i=5,9 do task7_locals[i]=q('GetLocalNumber',p,i) end; q('SetCameraMode',p,2); q('SetCameraFacing',q('GetFacing',p)); return math.abs(task7_original.base-1)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "peaceful danm14aa, checked native model, original scale"
+      }
+    },
+    {
+      "index": 6,
+      "kind": "do",
+      "raw": {
+        "do": "advance_ticks",
+        "ticks": 120,
+        "timeout": 30
+      }
+    },
+    {
+      "index": 7,
+      "kind": "do",
+      "raw": {
+        "do": "console_open",
+        "open": true
+      }
+    },
+    {
+      "index": 8,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; task7_pc=q('GetFirstPC'); task7_body=assert(kp.model.snapshot(task7_pc)); task7_local5=q('GetLocalNumber',task7_pc,5); task7_scene=dofile('kotorphasor/scripts/model_scene.lua').new{name='task7scale',trigger=1,hold_ticks=60,spawn=false,scales={{0.35},{2.4},{task7_body.base}}}; return task7_scene.state=='waiting' and math.abs(task7_body.base-1)<0.001",
+        "contains": [
+          "boolean: true"
+        ],
+        "do": "console_command",
+        "expect_values": [
+          {
+            "type": "Boolean",
+            "value": true
+          }
+        ],
+        "label": "physically construct finite native scale scene",
+        "return_count": 1,
+        "timeout": 30
+      }
+    },
+    {
+      "index": 9,
+      "kind": "do",
+      "raw": {
+        "do": "mark_log"
+      }
+    },
+    {
+      "index": 10,
+      "kind": "do",
+      "raw": {
+        "code": "task7_delay=0; function task7_tick() task7_delay=task7_delay+1; if task7_delay<=180 then return true end; task7_scene:tick(); return task7_scene.state~='complete' and task7_scene.state~='failed' end; task7_timer=kp.registertimer(16,'task7_tick'); nwscript.call('SetLocalNumber',task7_pc,5,1); return task7_timer>0",
+        "contains": [
+          "boolean: true"
+        ],
+        "do": "console_command",
+        "expect_values": [
+          {
+            "type": "Boolean",
+            "value": true
+          }
+        ],
+        "label": "physically arm delayed finite scene with a native timer",
+        "return_count": 1,
+        "timeout": 30
+      }
+    },
+    {
+      "index": 11,
+      "kind": "do",
+      "raw": {
+        "do": "console_open",
+        "open": false
+      }
+    },
+    {
+      "index": 12,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; if q('GetLocalNumber',p,6)~=1 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==task7_module and q('GetArea',p)==task7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==task7_original.id and c.model==task7_original.model and c.creature==task7_original.creature and math.abs(c.base-0.35)<0.001 and math.abs(c.effective-task7_original.effective/task7_original.base*0.35)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "independent native phase 1, identity, effective ratio, peaceful gameplay",
+        "poll": true,
+        "timeout": 45
+      }
+    },
+    {
+      "index": 13,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; if q('GetLocalNumber',p,6)~=2 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==task7_module and q('GetArea',p)==task7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==task7_original.id and c.model==task7_original.model and c.creature==task7_original.creature and math.abs(c.base-2.4)<0.001 and math.abs(c.effective-task7_original.effective/task7_original.base*2.4)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "independent native phase 2, identity, effective ratio, peaceful gameplay",
+        "poll": true,
+        "timeout": 45
+      }
+    },
+    {
+      "index": 14,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; if q('GetLocalNumber',p,6)~=3 then return false end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==task7_module and q('GetArea',p)==task7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.id==task7_original.id and c.model==task7_original.model and c.creature==task7_original.creature and math.abs(c.base-1.0)<0.001 and math.abs(c.effective-task7_original.effective/task7_original.base*1.0)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "independent native phase 3, identity, effective ratio, peaceful gameplay",
+        "poll": true,
+        "timeout": 45
+      }
+    },
+    {
+      "index": 15,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); if q('GetLocalNumber',p,8)~=0 then error('scene failed') end; local c=assert(kp.model.snapshot(p)); return q('GetLocalNumber',p,7)==1 and q('GetLocalNumber',p,6)==3 and c.model==task7_original.model and c.creature==task7_original.creature and math.abs(c.base-task7_original.base)<0.001 and math.abs(c.effective-task7_original.effective)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "native completion and exact original scale restored",
+        "poll": true,
+        "timeout": 60
+      }
+    },
+    {
+      "index": 16,
+      "kind": "do",
+      "raw": {
+        "do": "await_log",
+        "maximum": 3,
+        "minimum": 3,
+        "pattern": "\\[model-scene:task7scale\\] phase=",
+        "timeout": 10
+      }
+    },
+    {
+      "index": 17,
+      "kind": "do",
+      "raw": {
+        "do": "await_log",
+        "maximum": 1,
+        "minimum": 1,
+        "pattern": "\\[model-scene:task7scale\\] complete phases=3 restored=1",
+        "timeout": 10
+      }
+    },
+    {
+      "index": 18,
+      "kind": "do",
+      "raw": {
+        "do": "advance_ticks",
+        "ticks": 120,
+        "timeout": 30
+      }
+    },
+    {
+      "index": 19,
+      "kind": "do",
+      "raw": {
+        "do": "console_open",
+        "open": true
+      }
+    },
+    {
+      "index": 20,
+      "kind": "do",
+      "raw": {
+        "code": "assert(task7_scene.state=='complete' and task7_scene.phase==3); task7_scene:unload(); nwscript.call('SetLocalNumber',task7_pc,5,task7_local5); task7_scene=nil; task7_tick=nil; task7_body=nil; return true",
+        "contains": [
+          "boolean: true"
+        ],
+        "do": "console_command",
+        "expect_values": [
+          {
+            "type": "Boolean",
+            "value": true
+          }
+        ],
+        "label": "physically verify completion and release only scene-owned state",
+        "return_count": 1,
+        "timeout": 30
+      }
+    },
+    {
+      "index": 21,
+      "kind": "do",
+      "raw": {
+        "do": "console_open",
+        "open": false
+      }
+    },
+    {
+      "index": 22,
+      "kind": "do",
+      "raw": {
+        "code": "local q=nwscript.call; local p=q('GetFirstPC'); for i=5,9 do if q('GetLocalNumber',p,i)~=task7_locals[i] then return false end end; local c=assert(kp.model.snapshot(p)); return q('GetModuleFileName')==task7_module and q('GetArea',p)==task7_area and q('GetIsInCombat',p)==0 and q('GetIsInConversation',p)==0 and c.model==task7_original.model and c.creature==task7_original.creature and math.abs(c.base-task7_original.base)<0.001 and math.abs(c.effective-task7_original.effective)<0.001",
+        "do": "assert_lua",
+        "equals": true,
+        "label": "native local slots and scale remain restored after physical cleanup"
+      }
+    },
+    {
+      "index": 23,
+      "kind": "do",
+      "raw": {
+        "do": "advance_ticks",
+        "ticks": 120,
+        "timeout": 30
+      }
+    }
+  ],
+  "target": "k1"
+}

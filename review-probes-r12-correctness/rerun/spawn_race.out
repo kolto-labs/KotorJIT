@@ -1,0 +1,8 @@
+supervisor_exit 1
+result_errors ['interrupted: SIGINT']
+result_launches 1 child_returncode 1
+result_owned_survivors []
+result_cleanup_budget {'components': {'display': 25, 'evidence_margin': 15, 'recorder': 1398.0, 'source_process': 4}, 'exhausted': False, 'seconds': 60.0}
+child_ready_after_supervisor_exit False
+owned_alive_3s_after_supervisor_exit []
+child_ran_unsupervised_seconds 3.0 child_interrupts ['SIGINT'] child_error DiagnosticInterrupted: SIGINT cleanup_steps None

@@ -1,0 +1,3 @@
+{"testsrc2_60": {"frames": 720, "fresh": 719, "dup": 0, "fresh_min": 1.89066, "dup_max": null, "probe_seconds": 77.8}}
+{"testsrc2_30_to_60": {"frames": 720, "fresh": 359, "dup": 360, "fresh_min": 3.09352, "dup_max": 0.179698, "probe_seconds": 194.4}}
+{"testsrc2_20_to_60": {"frames": 720, "fresh": 239, "dup": 480, "fresh_min": 3.86589, "dup_max": 0.537359, "probe_seconds": 91.9}}

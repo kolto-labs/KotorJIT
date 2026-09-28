@@ -1,0 +1,21 @@
+== R1_print_newline: lines=7 session_id=None problems=['session line 5 mentions kp-session= but is not a runtime line', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (9): log: session line 5 mentions kp-session= but is not a runtime line
+== R2_diag_cr: lines=7 session_id=None problems=['session line 5 mentions kp-session= but is not a runtime line', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (9): log: session line 5 mentions kp-session= but is not a runtime line
+== R3_error_text: lines=7 session_id=None problems=['session line 5 mentions kp-session= but is not a runtime line', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (9): log: session line 5 mentions kp-session= but is not a runtime line
+== R4_unicode_seps: lines=7 session_id=None problems=['session line 5 mentions kp-session= but is not a runtime line', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (9): log: session line 5 mentions kp-session= but is not a runtime line
+== R5_literal_backslash_n: lines=7 session_id=None problems=['session line 5 mentions kp-session= but is not a runtime line', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (9): log: session line 5 mentions kp-session= but is not a runtime line
+== IO1_io_after_overlay: lines=10 session_id=0123456789abcdef0123456789abcdef problems=[]
+   host_line: [running] kp-session=0123456789abcdef0123456789abcdef host: wine=no wine_version=- os=10.0.19045 overlays=-
+   validate(--log): VALID
+== IO2_io_at_load: lines=10 session_id=None problems=['2 kp-session start lines in the current session, want 1', '2 different session ids in the current session', '2 host lines in the current session, want 1', '2 gl lines in the current session, want 1']
+   host_line: None
+   validate(--log): REJECT (10): log: 2 kp-session start lines in the current session, want 1

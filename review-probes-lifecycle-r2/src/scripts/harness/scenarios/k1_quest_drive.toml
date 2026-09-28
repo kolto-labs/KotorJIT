@@ -1,0 +1,38 @@
+# K1 quest/journal drive: exercise a real plot entry through the VM bridge.
+name = "k1 quest journal drive"
+target = "k1"
+
+[settings]
+load_timeout = 300
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "lua"
+# KOR_KNOW_FREED is a real K1 plot identifier present in the shipped save
+# corpus. The engine materializes journal rows on a later frame.
+code = "nwscript.call('AddJournalQuestEntry','KOR_KNOW_FREED', 1); return 'journal mutation queued'"
+
+[[step]]
+wait = "journal"
+tag = "KOR_KNOW_FREED"
+equals = 1
+timeout = 60
+
+[[step]]
+do = "lua"
+code = "local s=nwscript.call('GetJournalEntry','KOR_KNOW_FREED'); return {plot='KOR_KNOW_FREED', state=s}"
+
+[[step]]
+screenshot = true
+label = "quest-journal-updated"
+
+[[step]]
+do = "quit"

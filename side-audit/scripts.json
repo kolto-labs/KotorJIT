@@ -1,0 +1,1823 @@
+{
+  "scope": "Every Lua file under scripts/ and tools/ in the current worktree; excludes vendored Lua, generated scratch/build trees, and private external experiments. Named native routines are call sites, not implementations written here. Helper functions inherit file classification unless listed by public API separately.",
+  "counts": {
+    "scripts_tree": 38,
+    "tools_tree": 17,
+    "total": 55
+  },
+  "scripts": [
+    {
+      "path": "scripts/demos/animation-memory/two_actor_freeze.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/animation-memory/two_actor_freeze.lua",
+      "sha256": "f146855a7411f157014d0b3354807fdb955fef1694bd075160879b04ab911a30",
+      "disposition": "current script/example",
+      "side": "both: server scene setup plus client model/animation",
+      "reason": "Scene/animation setup uses server-world identity and local-state native routines; spawning configurations also use CreateObject/DestroyObject/faction. player_scale sets spawn=false. kp.model and kp.animation target client model state, with optional server ownership validation.",
+      "native_routine_literals": [
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInCombat",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "GetModuleFileName",
+        "GetPosition",
+        "GetStandardFaction",
+        "Location",
+        "SetCommandable",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.animation.capabilities",
+        "kp.animation.cue",
+        "kp.animation.inspect",
+        "kp.model.identify",
+        "kp.model.matches",
+        "kp.model.snapshot",
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnScriptUnload"
+      ],
+      "defined_function_names": [
+        "OnScriptUnload",
+        "OnTick",
+        "active",
+        "checked",
+        "cleanup",
+        "context_ok",
+        "cue",
+        "inspect",
+        "log",
+        "number",
+        "phase",
+        "q",
+        "same",
+        "valid",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/demos/model-memory/model_scene.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/model-memory/model_scene.lua",
+      "sha256": "2af947fe2f4384b64b3aa2a7a04d24f5706bce2739cc7f3096c9ba5d459dc287",
+      "disposition": "shared demo helper",
+      "side": "both: server scene setup plus client model/animation",
+      "reason": "Scene/animation setup uses server-world identity and local-state native routines; spawning configurations also use CreateObject/DestroyObject/faction. player_scale sets spawn=false. kp.model and kp.animation target client model state, with optional server ownership validation.",
+      "native_routine_literals": [
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsInCombat",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "GetModuleFileName",
+        "GetPosition",
+        "GetStandardFaction",
+        "Location",
+        "SetCommandable",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.model",
+        "kp.model.capabilities",
+        "kp.model.identify",
+        "kp.model.matches",
+        "kp.model.resize",
+        "kp.model.restore",
+        "kp.model.snapshot",
+        "kp.print"
+      ],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "M.new",
+        "call",
+        "checked",
+        "close",
+        "context_matches",
+        "fail",
+        "log",
+        "number",
+        "phase",
+        "read",
+        "restore",
+        "self:tick",
+        "self:unload",
+        "valid",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/demos/model-memory/npc_wave.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/model-memory/npc_wave.lua",
+      "sha256": "e9c14a593c9823ab21ca5508b50a36fcae635b44816def70781bb72817365cf4",
+      "disposition": "current script/example",
+      "side": "both: server scene setup plus client model/animation",
+      "reason": "Scene/animation setup uses server-world identity and local-state native routines; spawning configurations also use CreateObject/DestroyObject/faction. player_scale sets spawn=false. kp.model and kp.animation target client model state, with optional server ownership validation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnTick",
+        "OnScriptUnload"
+      ],
+      "defined_function_names": [
+        "OnScriptUnload",
+        "OnTick"
+      ]
+    },
+    {
+      "path": "scripts/demos/model-memory/player_scale.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/model-memory/player_scale.lua",
+      "sha256": "e03ab91fd811736a6403b8a32797f88348e0a42dc392c511d688b87d01f24b27",
+      "disposition": "current script/example",
+      "side": "both: server scene setup plus client model/animation",
+      "reason": "Scene/animation setup uses server-world identity and local-state native routines; spawning configurations also use CreateObject/DestroyObject/faction. player_scale sets spawn=false. kp.model and kp.animation target client model state, with optional server ownership validation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnTick",
+        "OnScriptUnload"
+      ],
+      "defined_function_names": [
+        "OnScriptUnload",
+        "OnTick"
+      ]
+    },
+    {
+      "path": "scripts/demos/object-blaster/object_blaster.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/demos/object-blaster/object_blaster.lua",
+      "sha256": "dbfc15e192dcafeb9586da7f3cd7ebcdaaf05f2f49b9c201363ec8371de942ca",
+      "disposition": "current script/example",
+      "side": "both: projectile presentation and server combat effects",
+      "reason": "Arms kp.projectiles replacement, which resolves server PC identity and client projectile/model resources; NWScript applies ForcePushed after server attacked-event HP-drop detection.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectForcePushed",
+        "GetCurrentHitPoints",
+        "GetFirstPC",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "IsObjectPartyMember",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.events.OnCreatureAttacked",
+        "kp.events.OnCreatureDamaged",
+        "kp.events.register",
+        "kp.events.unregister",
+        "kp.print",
+        "kp.projectiles"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnScriptUnload"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnScriptUnload",
+        "OnTick",
+        "blaster.on_attacked",
+        "blaster.poll",
+        "blaster.start",
+        "blaster.stop",
+        "blaster.switch_model",
+        "choose_model",
+        "fail",
+        "handle",
+        "note",
+        "player",
+        "publish",
+        "q",
+        "rearm",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/10_abstain_nil.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/10_abstain_nil.lua",
+      "sha256": "91308fbe25480c1cfb0451090827409f1b7607d187a76921a2134148c10ca74f",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/20_abstain_badstring.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/20_abstain_badstring.lua",
+      "sha256": "e38c5adb9dce3e2b84859d20698ecd603963a8b22091a1990e2935053bc95e78",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/25_claims_via_string.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/25_claims_via_string.lua",
+      "sha256": "2fb4eb30a9e539a01dead1e10af4b4a8f2699486dd53e9600602e9c4779a1205",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/30_claims_false.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/30_claims_false.lua",
+      "sha256": "41757499f42ab8ea9bc6b3dc38b168722961ebaef37337a59e1bb2857e1b9693",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/40_too_late.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/40_too_late.lua",
+      "sha256": "7e18f0bfae1ea017c72bab03270c8ca200edd0eb797c9273198e6269e933429e",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/arbitration/50_number_two_is_false.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/arbitration/50_number_two_is_false.lua",
+      "sha256": "938a7b525dc7bbba931788f0a9801a6690b770c99a50656cf89fff63e05af3e4",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/coverage/10_cover.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/coverage/10_cover.lua",
+      "sha256": "c13f64247ba86895849d42d4b32816957a4530a4ad5079d2a886818a879e77b3",
+      "disposition": "current script/example",
+      "side": "both, command dependent",
+      "reason": "Client console event invokes server-facing world/global/action commands, global fade requests (native side unresolved), autosave, or process-local log; haste controls server MainLoop repeats.",
+      "native_routine_literals": [
+        "ActionStartConversation",
+        "DoSinglePlayerAutoSave",
+        "GetFirstPC",
+        "GetGlobalBoolean",
+        "GetGlobalNumber",
+        "GetIsConversationActive",
+        "GetIsObjectValid",
+        "GetObjectByTag",
+        "JumpToObject",
+        "SetGlobalBoolean",
+        "SetGlobalFadeIn",
+        "SetGlobalNumber",
+        "StartNewModule"
+      ],
+      "kp_references": [
+        "kp.print",
+        "kp.speed"
+      ],
+      "defined_callbacks": [
+        "OnConsoleCommand"
+      ],
+      "defined_function_names": [
+        "OnConsoleCommand",
+        "help",
+        "q",
+        "valid",
+        "words"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/100_item_airstrike.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/100_item_airstrike.lua",
+      "sha256": "ce2e1504f9b45cfe5edb85a694df6330613f2d3ec7a3033e4f1c72e0256e0e11",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectDamage",
+        "EffectDisguise",
+        "EffectVisualEffect",
+        "GetArea",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsEnemy",
+        "GetIsObjectValid",
+        "GetItemPossessor",
+        "GetName",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnModuleAcquireItem",
+        "OnModulePlayerLevelUp"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleAcquireItem",
+        "OnModuleLoad",
+        "OnModulePlayerLevelUp",
+        "OnTick",
+        "disarm",
+        "dist",
+        "norm",
+        "q",
+        "strike",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/10_rancor_roulette.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/10_rancor_roulette.lua",
+      "sha256": "1bca2de3ca5f8ea3205221dff55f559c8a08da51a5dc967b6ea3f134dfdc2db6",
+      "disposition": "current script/example",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectDisguise",
+        "EffectVisualEffect",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetName",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "SetLocalNumber",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print",
+        "kp.registertimer"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnRunScript",
+        "OnCreaturePerception",
+        "OnCreatureAttacked"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnCreatureAttacked",
+        "OnCreaturePerception",
+        "OnModuleLoad",
+        "OnRunScript",
+        "OnTick",
+        "armed",
+        "curse",
+        "cursed_apply",
+        "disarm",
+        "dist",
+        "norm",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/20_fus_ro_dah.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/20_fus_ro_dah.lua",
+      "sha256": "e84102b158102bfd2b6250481177fe6ec24f4b8aae2e4f9999d5802f8c4481c6",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectForcePushed",
+        "EffectVisualEffect",
+        "GetArea",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetName",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "GetTimeSecond",
+        "IsObjectPartyMember",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnCreatureAttacked"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnCreatureAttacked",
+        "OnModuleLoad",
+        "OnTick",
+        "armed",
+        "disarm",
+        "dist",
+        "flash",
+        "fling",
+        "norm",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/30_necromancer.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/30_necromancer.lua",
+      "sha256": "af24b0172f83b6fc3e17cde42e56d529d33df060bcf535a29b46b22896315ed6",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ActionAttack",
+        "ApplyEffectToObject",
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "DestroyObject",
+        "EffectDisguise",
+        "EffectVisualEffect",
+        "GetAppearanceType",
+        "GetCurrentHitPoints",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetName",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "Location",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print",
+        "kp.registertimer"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnRunScript",
+        "OnTick",
+        "armed",
+        "cursed_rise",
+        "cursed_verify",
+        "disarm",
+        "is_death_script",
+        "norm",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/40_chain_reaction.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/40_chain_reaction.lua",
+      "sha256": "9152960ef3c02818f78146289ba0bc709a727a3c7751839352ea2ccb99ae6d8c",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectDamage",
+        "EffectVisualEffect",
+        "GetArea",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetName",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnRunScript",
+        "OnTick",
+        "armed",
+        "detonate",
+        "disarm",
+        "dist",
+        "in_party",
+        "is_death_script",
+        "norm",
+        "q",
+        "spared",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/70_doppelganger.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/70_doppelganger.lua",
+      "sha256": "5d9864b22241ff135d3bb0c1ecb3f2671af218b58cdf2f44eb7bc62c95f62c42",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectDisguise",
+        "EffectVisualEffect",
+        "GetAppearanceType",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInCombat",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "IsObjectPartyMember",
+        "RemoveEffect",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnTick",
+        "OnCreatureAttacked"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnCreatureAttacked",
+        "OnModuleLoad",
+        "OnTick",
+        "apply_disguise",
+        "call",
+        "cleanup_all",
+        "clear_run",
+        "eligible_hostile",
+        "finish_if_resolved",
+        "forget_state",
+        "pending_any",
+        "pending_failure",
+        "q",
+        "remove_owned",
+        "resolve_state",
+        "row",
+        "set_armed",
+        "show_copy",
+        "show_malak",
+        "speak",
+        "terminal_transition",
+        "valid_living",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/80_loot_pinata.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/80_loot_pinata.lua",
+      "sha256": "a72857b81e3b4a09c186579eb331da9bc785a2e70a33bbda4a4bfd511895ec00",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ActionAttack",
+        "ApplyEffectToObject",
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "EffectVisualEffect",
+        "GetFirstPC",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetName",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "Location",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnRunScript",
+        "OnTick",
+        "armed",
+        "disarm",
+        "is_death_script",
+        "norm",
+        "pinata",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/cursed/90_bullet_time.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/cursed/90_bullet_time.lua",
+      "sha256": "57d1cfbc9f917c2202d5734a58950fa163fb4316b644779b2d2a1f6460f52096",
+      "disposition": "current script/example",
+      "side": "both: server tick pacing and client time/presentation",
+      "reason": "kp.speed repeats server MainLoop, kp.game_speed changes client timers; native effects/global fades add presentation.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectVisualEffect",
+        "GetCurrentHitPoints",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetMaxHitPoints",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.game_speed",
+        "kp.print",
+        "kp.registertimer",
+        "kp.speed"
+      ],
+      "defined_callbacks": [
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnTick",
+        "cursed_release",
+        "engage",
+        "q",
+        "scale",
+        "yes"
+      ]
+    },
+    {
+      "path": "scripts/examples/edge_fallback/all_abstain.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/edge_fallback/all_abstain.lua",
+      "sha256": "71ce5320521cf52530daa2d25aeade8f77b6ac17f0523eaefdf7154ae16ac14e",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/edge_number_two/50_number_two_is_false.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/edge_number_two/50_number_two_is_false.lua",
+      "sha256": "938a7b525dc7bbba931788f0a9801a6690b770c99a50656cf89fff63e05af3e4",
+      "disposition": "current script/example",
+      "side": "process-local Lua arbitration at server VM hook",
+      "reason": "Returns override/abstention values for OnRunScript; no direct client/server memory mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript"
+      ]
+    },
+    {
+      "path": "scripts/examples/edge_quarantine/always_errors.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/edge_quarantine/always_errors.lua",
+      "sha256": "314dc45cda17647b03a081581296543809f0e00b51bb0a4ced7e0c4a2edc407a",
+      "disposition": "current script/example",
+      "side": "process-local Lua host test at server OnTick",
+      "reason": "Deliberately errors to test host quarantine; no game-object mutation.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnTick"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/100_module_transition.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/100_module_transition.lua",
+      "sha256": "5e9eedb004502dd6d869a53dbef79ad7472474dfc0af4702f4fe642038f47a87",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "GetDistanceBetween",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetModuleName",
+        "GetObjectByTag",
+        "GetPartyMemberCount",
+        "StartNewModule"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/harness/10_world_probe.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/10_world_probe.lua",
+      "sha256": "9d043fdb12bc30e02fce457703b8d28bf77dedf52ecad635bb73bd8f4c652bbb",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "GetArea",
+        "GetCommandable",
+        "GetCurrentAction",
+        "GetCurrentHitPoints",
+        "GetDistanceBetween",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetGlobalNumber",
+        "GetIsDead",
+        "GetIsEnemy",
+        "GetIsInCombat",
+        "GetIsObjectValid",
+        "GetMaxHitPoints",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "GetTag",
+        "IsObjectPartyMember"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "clean"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/110_loot_container.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/110_loot_container.lua",
+      "sha256": "d97d16a1c8d9fd5d4e60116cf739ee68cf9cb5b17f8f993e43d6954e96d3e5dd",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ActionTakeItem",
+        "ClearAllActions",
+        "GetArea",
+        "GetDistanceBetween",
+        "GetFirstItemInInventory",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetNextItemInInventory",
+        "GetNextObjectInArea",
+        "GetTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/harness/20_dialog_state.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/20_dialog_state.lua",
+      "sha256": "d0edc3dc639937113401943c6c5a7d16519a40910a97d3a15a40a5303e93b0e8",
+      "disposition": "current script/example",
+      "side": "native-VM dialog/world observation; exact split unresolved",
+      "reason": "Object/speaker queries and GetIsConversationActive run through the captured VM; bridge signatures do not prove the client/server owner of every queried field.",
+      "native_routine_literals": [
+        "GetCurrentAction",
+        "GetDistanceBetween",
+        "GetFirstPC",
+        "GetIsConversationActive",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLastSpeaker",
+        "GetObjectByTag",
+        "GetPCSpeaker",
+        "GetTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "clean"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/30_move_to.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/30_move_to.lua",
+      "sha256": "f986d44610e61d298db0ff5d3ba1c6596cb00777529afadb4014472c21232198",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ActionMoveToLocation",
+        "ActionMoveToObject",
+        "ClearAllActions",
+        "GetDistanceBetween",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetObjectByTag",
+        "GetPosition",
+        "Location",
+        "Vector"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/harness/40_attack_nearest.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/40_attack_nearest.lua",
+      "sha256": "ee74e4739f35ea8547df91975526942b19ea3c3fdef5017626547fa091163b25",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ActionAttack",
+        "ClearAllActions",
+        "GetArea",
+        "GetCurrentAction",
+        "GetCurrentHitPoints",
+        "GetDistanceBetween",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsEnemy",
+        "GetIsObjectValid",
+        "GetNextObjectInArea",
+        "GetTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "clean"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/50_doors.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/50_doors.lua",
+      "sha256": "c1793deb142682f18185cf5dc54af8a50c2c2ab363c68511c96907b984dd4a50",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ActionOpenDoor",
+        "GetDistanceBetween",
+        "GetFirstPC",
+        "GetIsDoorActionPossible",
+        "GetIsObjectValid",
+        "GetIsOpen",
+        "GetLockKeyRequired",
+        "GetLocked",
+        "GetObjectByTag",
+        "GetPlotFlag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/harness/60_area_dump.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/60_area_dump.lua",
+      "sha256": "41dc5b3191fd9f75889fb271f404977197fafd8a6cba786b3f5e2d960f1be7ba",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "GetArea",
+        "GetCurrentAction",
+        "GetCurrentHitPoints",
+        "GetDistanceBetween",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsEnemy",
+        "GetIsObjectValid",
+        "GetIsOpen",
+        "GetLocked",
+        "GetName",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "GetTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "clean"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/70_pc_status.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/70_pc_status.lua",
+      "sha256": "c8154f8045f225804cc6086ad5dfa88122fe52b9e35d8651739b894429010192",
+      "disposition": "current script/example",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "GetCommandable",
+        "GetCurrentAction",
+        "GetCurrentHitPoints",
+        "GetEffectType",
+        "GetFirstEffect",
+        "GetFirstItemInInventory",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsEffectValid",
+        "GetIsInCombat",
+        "GetIsObjectValid",
+        "GetItemInSlot",
+        "GetMaxHitPoints",
+        "GetNextEffect",
+        "GetNextItemInInventory",
+        "GetTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "clean"
+      ]
+    },
+    {
+      "path": "scripts/examples/harness/80_signal_event.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/80_signal_event.lua",
+      "sha256": "8728b4cd6e1040e9b69a1b6d9fe19a82a3880c78c2149cc124a506923649c050",
+      "disposition": "current script/example",
+      "side": "server object event dispatch",
+      "reason": "SignalEvent targets a gameplay object; OnOpen text in this file is not a Lua callback registration.",
+      "native_routine_literals": [
+        "EventUserDefined",
+        "GetArea",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetObjectByTag",
+        "SignalEvent"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/harness/90_run_script.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/harness/90_run_script.lua",
+      "sha256": "560dbdc1ea4cc6eafd1dac190297f176d4beb258a703bf88c96d4f394a240e2b",
+      "disposition": "current script/example",
+      "side": "server VM script dispatch; invoked script determines effects",
+      "reason": "ExecuteScript runs the supplied resref on a selected object; downstream client effects depend on that external script.",
+      "native_routine_literals": [
+        "ExecuteScript",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetObjectByTag"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": []
+    },
+    {
+      "path": "scripts/examples/multiplayer/10_avatar_sync.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/multiplayer/10_avatar_sync.lua",
+      "sha256": "954b9cdee1f17e9011f109a4f5d9dc55e62786dfdb52b3d6108db3d76e54a2c0",
+      "disposition": "current script/example",
+      "side": "peer networking plus local server-facing ghost actors",
+      "reason": "Each injected process reads its local PC and creates/moves/destroys local ghost creatures through NWScript. Direct symmetric Winsock UDP; no dedicated authority and no world/combat/quest/inventory synchronization. Rendering follows the engine.",
+      "native_routine_literals": [
+        "CreateObject",
+        "CutsceneMove",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetPosition",
+        "GetTag",
+        "Location",
+        "SetFacing"
+      ],
+      "kp_references": [
+        "kp.gamedir",
+        "kp.print",
+        "kp.time"
+      ],
+      "defined_callbacks": [
+        "OnScriptLoad",
+        "OnScriptUnload",
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnScriptLoad",
+        "OnScriptUnload",
+        "OnTick",
+        "apply_peer_state",
+        "broadcast",
+        "build_ghost_utc",
+        "despawn_peer",
+        "drain_incoming",
+        "ensure_ghost_template",
+        "ensure_peer_ghost",
+        "f32",
+        "f32bits",
+        "finite_state",
+        "game_dir",
+        "gff_add_field",
+        "gff_build",
+        "gff_label",
+        "gff_push_fielddata",
+        "i32",
+        "local_area_tag",
+        "make_sockaddr",
+        "new_gff_builder",
+        "now_ms",
+        "pack_packet",
+        "peer_allowed",
+        "q",
+        "reconcile",
+        "rf32",
+        "ru32",
+        "u32",
+        "u8",
+        "udp_open",
+        "udp_recv",
+        "udp_send",
+        "unpack_packet"
+      ]
+    },
+    {
+      "path": "scripts/examples/multiplayer/10_avatar_sync_test.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/multiplayer/10_avatar_sync_test.lua",
+      "sha256": "784e2e98d56e4d491b06572243f82ef8311934fff163cc2dd202f355ef89e556",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "CreateObject",
+        "CutsceneMove",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetPosition",
+        "GetTag",
+        "Location",
+        "SetFacing",
+        "call",
+        "check",
+        "facing_calls",
+        "find_upval",
+        "gamedir",
+        "get_up",
+        "inject",
+        "kp.print",
+        "log_call",
+        "ru32",
+        "set_up",
+        "time",
+        "with_caller"
+      ]
+    },
+    {
+      "path": "scripts/examples/probe/00_probe.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/probe/00_probe.lua",
+      "sha256": "cafcf88daf0683c076f24cc6e6f8b8dbf497d48bfda74e5105c20efeda5658b7",
+      "disposition": "current script/example",
+      "side": "observer of server events plus client console and process lifecycle",
+      "reason": "Logs callbacks only. Some callback names are dead and never fire; see event inventory.",
+      "native_routine_literals": [],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnRunScript",
+        "OnTick",
+        "OnSave",
+        "OnLoad",
+        "OnCreatureAttacked",
+        "OnCreatureDeath",
+        "OnCreatureSpawn",
+        "OnCreatureEndCombatRound",
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnModuleStart",
+        "OnModulePlayerEnter",
+        "OnModuleHeartbeat",
+        "OnConsoleCommand",
+        "OnScriptLoad"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnConsoleCommand",
+        "OnCreatureAttacked",
+        "OnCreatureDeath",
+        "OnCreatureEndCombatRound",
+        "OnCreatureSpawn",
+        "OnLoad",
+        "OnModuleHeartbeat",
+        "OnModuleLoad",
+        "OnModulePlayerEnter",
+        "OnModuleStart",
+        "OnRunScript",
+        "OnSave",
+        "OnScriptLoad",
+        "OnTick",
+        "note"
+      ]
+    },
+    {
+      "path": "scripts/examples/probe/10_position_trace.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/examples/probe/10_position_trace.lua",
+      "sha256": "1dd76b8b044e31913ca414779ea9cf9e9ef5657ba6b07e869d04cb3d472af4e4",
+      "disposition": "current script/example",
+      "side": "server-facing world observation",
+      "reason": "OnTick invokes GetFirstPC/GetPosition/GetFacing and logs results.",
+      "native_routine_literals": [
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsObjectValid",
+        "GetPosition"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnTick",
+        "q"
+      ]
+    },
+    {
+      "path": "tools/animation_scene_test.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/animation_scene_test.lua",
+      "sha256": "d2dd85e7d83ce68b9d5eab982e95a54b130a785684d9d138ebc0687a38435d7e",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInCombat",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "GetModuleFileName",
+        "GetPosition",
+        "GetStandardFaction",
+        "Location",
+        "SetCommandable",
+        "SetLocalNumber",
+        "call",
+        "capabilities",
+        "cue",
+        "identify",
+        "inspect",
+        "matches",
+        "print",
+        "run",
+        "snapshot"
+      ]
+    },
+    {
+      "path": "tools/model_scene_test.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/model_scene_test.lua",
+      "sha256": "dd396274fcf926f717f42ab22ce00a27bba39cac9ff5616d1bfee261d6442c90",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "ChangeToStandardFaction",
+        "CreateObject",
+        "DestroyObject",
+        "GetArea",
+        "GetFacing",
+        "GetFirstPC",
+        "GetIsInCombat",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "GetModuleFileName",
+        "GetPosition",
+        "GetStandardFaction",
+        "Location",
+        "SetCommandable",
+        "SetLocalNumber",
+        "call",
+        "capabilities",
+        "env.dofile",
+        "identity",
+        "matches",
+        "print",
+        "resize",
+        "restore",
+        "run",
+        "snap"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/cursed.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/cursed.lua",
+      "sha256": "56165e59420acb0ce60826a31c5f54f034f90ed19c2e7aee8b3e034e92e915e4",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectDisguise",
+        "GetFirstEffect",
+        "GetIsEffectValid",
+        "RemoveEffect"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "GetTimeSecond",
+        "f.overrides.ApplyEffectToObject",
+        "f.overrides.GetFirstPC",
+        "f.overrides.GetIsEnemy",
+        "f.overrides.GetIsInConversation",
+        "f.overrides.GetItemPossessor",
+        "f.overrides.GetPosition",
+        "f.overrides.IsObjectPartyMember",
+        "f.overrides.RemoveEffect",
+        "flags",
+        "populated",
+        "protected_now",
+        "real",
+        "rearm_in_module",
+        "vfx_rows",
+        "watch"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixture.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixture.lua",
+      "sha256": "cb74dc7b22f3d955515fe9ca68823a0f0daf36f916ccaeefd12682ff37ca5427",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [
+        "GetAppearanceType"
+      ],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "ApplyEffectToObject",
+        "CreateObject",
+        "EventUserDefined",
+        "F.new",
+        "F.source",
+        "GetAppearanceType",
+        "GetArea",
+        "GetCurrentHitPoints",
+        "GetDistanceBetween",
+        "GetEffectType",
+        "GetFacing",
+        "GetFirstEffect",
+        "GetFirstItemInInventory",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetGoodEvilValue",
+        "GetIsDead",
+        "GetIsEffectValid",
+        "GetIsEnemy",
+        "GetIsObjectValid",
+        "GetItemInSlot",
+        "GetItemPossessor",
+        "GetLastAttacker",
+        "GetLastPerceived",
+        "GetLastSpeaker",
+        "GetLocation",
+        "GetMaxHitPoints",
+        "GetMinOneHP",
+        "GetModuleName",
+        "GetName",
+        "GetNextEffect",
+        "GetNextItemInInventory",
+        "GetNextObjectInArea",
+        "GetObjectByTag",
+        "GetPCSpeaker",
+        "GetPartyMemberByIndex",
+        "GetPartyMemberCount",
+        "GetPosition",
+        "GetTag",
+        "GetTimeSecond",
+        "IsObjectPartyMember",
+        "Location",
+        "RemoveEffect",
+        "SetLocalNumber",
+        "SetMinOneHP",
+        "Vector",
+        "add_effect",
+        "call",
+        "diagnostic",
+        "effect_handle",
+        "effect_ref",
+        "expire_effects",
+        "f:active_disguises",
+        "f:active_effects",
+        "f:appearance",
+        "f:arm",
+        "f:count",
+        "f:fire",
+        "f:has",
+        "f:last",
+        "f:load",
+        "f:tick",
+        "game_speed",
+        "obj",
+        "print",
+        "r.GetIsInCombat",
+        "random",
+        "refresh_appearance",
+        "registertimer",
+        "speed",
+        "with_caller"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/cursed/50_chaos_roulette.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/cursed/50_chaos_roulette.lua",
+      "sha256": "5d796ae8cca1dd28d9c686dbda2be7ed517a892ea129e2a3f583166157aeb411",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectBeam",
+        "EffectChoke",
+        "EffectDamage",
+        "EffectDamageShield",
+        "EffectDisguise",
+        "EffectHaste",
+        "EffectHeal",
+        "EffectHorrified",
+        "EffectStunned",
+        "EffectVisualEffect",
+        "EffectWhirlWind",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocation",
+        "GetName",
+        "GetPosition",
+        "JumpToLocation",
+        "SetLocalNumber",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnModuleLoad",
+        "OnAreaEnter",
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnAreaEnter",
+        "OnModuleLoad",
+        "OnRunScript",
+        "OnTick",
+        "apply",
+        "armed",
+        "disarm",
+        "dist",
+        "norm",
+        "q",
+        "run",
+        "yes"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/cursed/60_rave.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/cursed/60_rave.lua",
+      "sha256": "56e47290dd3777387a5a572847a8f26bdce8ffce87ca15c3300d6318209eecd9",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing gameplay plus presentation requests; native presentation route unresolved",
+      "reason": "Object/effect/action operations target gameplay; global fade/music calls request presentation. This is semantic intent, not proof of a client-side native handler. No direct client-memory write is made by the Lua code; exact native routing remains unresolved.",
+      "native_routine_literals": [
+        "ActionPlayAnimation",
+        "ApplyEffectToObject",
+        "ClearAllActions",
+        "EffectVisualEffect",
+        "GetArea",
+        "GetFirstObjectInArea",
+        "GetFirstPC",
+        "GetIsDead",
+        "GetIsInCombat",
+        "GetIsObjectValid",
+        "GetModuleName",
+        "GetName",
+        "GetNextObjectInArea",
+        "GetPosition",
+        "IsObjectPartyMember",
+        "MusicBattlePlay",
+        "SetGlobalFadeIn",
+        "SetGlobalFadeOut",
+        "SetLocalNumber"
+      ],
+      "kp_references": [
+        "kp.print",
+        "kp.registertimer"
+      ],
+      "defined_callbacks": [
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnTick",
+        "creatures",
+        "cursed_beat",
+        "dist",
+        "norm",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua",
+      "sha256": "7f263c2f57846a7192b5228ed651c5b6dad60119fbde70828a29a93054fa1ccb",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "GetFirstPC",
+        "GetLastAttacker",
+        "GetModuleName",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnRunScript",
+        "OnSave",
+        "OnLoad"
+      ],
+      "defined_function_names": [
+        "OnLoad",
+        "OnRunScript",
+        "OnSave",
+        "norm_script",
+        "on_manaan",
+        "q"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua",
+      "sha256": "c06f339b5b74a13c813d266bd168030bee40f12b796e1bce8e750be54e5e7e92",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "GetFirstPC",
+        "GetIsEnemy",
+        "GetLastPerceived",
+        "GetModuleName",
+        "GetName",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript",
+        "norm_script",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua",
+      "sha256": "6aaf0ad7a0c959aa724083fed63a329f88c4ad41985b77796c1583c1bccf76f4",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing gameplay through captured NWScript VM",
+      "reason": "Native routine bridge queries/mutates gameplay objects. The Lua file is local to the injected process; native routine ownership is not encoded in its signature.",
+      "native_routine_literals": [
+        "ApplyEffectToObject",
+        "EffectAttackIncrease",
+        "GetIsDead",
+        "GetIsObjectValid",
+        "GetObjectByTag",
+        "GetPartyMemberByIndex",
+        "GetPartyMemberCount",
+        "GetTag",
+        "IsObjectPartyMember"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript",
+        "bastila_conscious",
+        "norm_script",
+        "party",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua",
+      "sha256": "5d151bc4be025706932022240ceddc6067e6d40474fa9b04f12f2ec8709622c4",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "GetFirstPC",
+        "GetGoodEvilValue",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick"
+      ],
+      "defined_function_names": [
+        "OnTick",
+        "alignment"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua",
+      "sha256": "35d87eb81d4320d0aa1e3fe3b6a822fff43b74d47e336acfd303675ae962229c",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "GetModuleName",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnTick",
+        "OnSave",
+        "OnLoad"
+      ],
+      "defined_function_names": [
+        "OnLoad",
+        "OnSave",
+        "OnTick",
+        "q"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua",
+      "sha256": "d6e7c59d7d2e79eb8a6a058aa2cde84caaf1f94c79bd3c49d71ca56cbd096df4",
+      "disposition": "retired public example; regression fixture only",
+      "side": "server-facing world/gameplay plus engine speech presentation",
+      "reason": "Reads/mutates gameplay state through NWScript and requests speech/text. Client display is a downstream engine effect, not a direct Lua client-memory implementation.",
+      "native_routine_literals": [
+        "GetCurrentHitPoints",
+        "GetMaxHitPoints",
+        "GetTag",
+        "IsObjectPartyMember",
+        "SpeakString"
+      ],
+      "kp_references": [
+        "kp.print"
+      ],
+      "defined_callbacks": [
+        "OnRunScript"
+      ],
+      "defined_function_names": [
+        "OnRunScript",
+        "hurt_line",
+        "norm_script",
+        "q",
+        "yes"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/harness.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/harness.lua",
+      "sha256": "79f5f3bef636ec0530818f97111320c7d457e4781575e36a279f2d3a21acbf85",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "GetCurrentAction",
+        "GetEffectType",
+        "GetFirstEffect",
+        "GetFirstItemInInventory",
+        "GetIsEffectValid",
+        "GetItemInSlot",
+        "GetNextEffect",
+        "source"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/object_blaster.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/object_blaster.lua",
+      "sha256": "1edb16f749540296ea6ae323a5aa1620331bd17fe16c9957d2717dbeb4b2850e",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [
+        "kp.events",
+        "kp.events.OnCreatureDamaged",
+        "kp.events.register",
+        "kp.projectiles"
+      ],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "ApplyEffectToObject",
+        "EffectForcePushed",
+        "GetCurrentHitPoints",
+        "GetFirstPC",
+        "GetIsInConversation",
+        "GetIsObjectValid",
+        "GetLocalNumber",
+        "IsObjectPartyMember",
+        "SetLocalNumber",
+        "call",
+        "configure",
+        "disable",
+        "new",
+        "observe",
+        "print",
+        "register",
+        "status",
+        "test",
+        "unregister",
+        "w.arm",
+        "w.attack",
+        "w.count",
+        "w.has",
+        "w.pushes",
+        "w.request",
+        "w.tick",
+        "with_caller"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/probes_coverage.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/probes_coverage.lua",
+      "sha256": "19b60326f10dafb53c2d65df45e2b436a31129e3fc056075b0d3e4a7d9f47808",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "f.overrides.GetIsObjectValid"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/run.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/run.lua",
+      "sha256": "1c797378f04c1642816696d1ec68f67d723db2205611b14e7500569a3f6c477c",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "test"
+      ]
+    },
+    {
+      "path": "tools/tests/examples/showcase.lua",
+      "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/tests/examples/showcase.lua",
+      "sha256": "5fd9461bed9ffb9411510e9187ab7f609b89bf50fc6a5abde12e0191037005a3",
+      "disposition": "host test with mocked engine; not a live implementation",
+      "side": "host test only",
+      "reason": "Mocks/test setup execute outside the real engine; test calls do not prove any game-side execution.",
+      "native_routine_literals": [],
+      "kp_references": [],
+      "defined_callbacks": [],
+      "defined_function_names": [
+        "GetIsEnemy",
+        "GetTag",
+        "f.overrides.ApplyEffectToObject",
+        "f.overrides.EffectAttackIncrease",
+        "f.overrides.GetGoodEvilValue",
+        "f.overrides.GetIsEnemy",
+        "f.overrides.GetObjectByTag",
+        "g.overrides.GetLastAttacker"
+      ]
+    }
+  ]
+}

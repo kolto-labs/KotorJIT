@@ -1,0 +1,374 @@
+{
+ "scenario": "Release candidate: F12 and native string boundaries",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260927-001952",
+ "started": 1790486395.4466138,
+ "finished": 1790486417.2276592,
+ "seconds": 21.781,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\"}",
+   "status": "ok",
+   "seconds": 0.062,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\"}",
+   "status": "ok",
+   "seconds": 3.846,
+   "detail": "phase=gameplay module=danm14aa server_tick=23 client_tick=28 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 23,
+    "client_tick": 28,
+    "pc": {
+     "z": 0.9961421489715576,
+     "hp": 96,
+     "id": 2147483644,
+     "max_hp": 96,
+     "x": 105.67625427246094,
+     "y": 96.4639663696289
+    },
+    "party": [
+     {
+      "tag": "",
+      "id": 2147483644
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.364,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.033,
+   "detail": "saved native log offset 6156"
+  },
+  {
+   "index": 5,
+   "step": "do advance_ticks {\"ticks\": 120, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 2.53,
+   "detail": "observed server ticks 29 -> 160"
+  },
+  {
+   "index": 6,
+   "step": "do lua {\"code\": \"console_pc=nwscript.call('GetFirstPC'); console_before=nwscript.call('GetPosition',console_pc); return console_before\"}",
+   "status": "ok",
+   "seconds": 0.028,
+   "detail": "lua -> {\"values\": [{\"z\": 0.9961421489715576, \"x\": 105.67625427246094, \"y\": 96.4639663696289}]}"
+  },
+  {
+   "index": 7,
+   "step": "do owned_input {\"action\": \"keydown\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.069,
+   "detail": "sent keydown to owned game window 0xc00004"
+  },
+  {
+   "index": 8,
+   "step": "do advance_ticks {\"ticks\": 30, \"timeout\": 15}",
+   "status": "ok",
+   "seconds": 0.731,
+   "detail": "observed server ticks 168 -> 201"
+  },
+  {
+   "index": 9,
+   "step": "do owned_input {\"action\": \"keyup\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.069,
+   "detail": "sent keyup to owned game window 0xc00004"
+  },
+  {
+   "index": 10,
+   "step": "do advance_ticks {\"ticks\": 90, \"timeout\": 15}",
+   "status": "ok",
+   "seconds": 1.866,
+   "detail": "observed server ticks 205 -> 296"
+  },
+  {
+   "index": 11,
+   "step": "game movement input works before opening overlay",
+   "status": "ok",
+   "seconds": 0.048,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 12,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.13,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 13,
+   "step": "do owned_input {\"action\": \"keydown\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.079,
+   "detail": "sent keydown to owned game window 0xc00004"
+  },
+  {
+   "index": 14,
+   "step": "do advance_ticks {\"ticks\": 30, \"timeout\": 15}",
+   "status": "ok",
+   "seconds": 0.778,
+   "detail": "observed server ticks 310 -> 340"
+  },
+  {
+   "index": 15,
+   "step": "do owned_input {\"action\": \"keyup\", \"key\": \"w\"}",
+   "status": "ok",
+   "seconds": 0.142,
+   "detail": "sent keyup to owned game window 0xc00004"
+  },
+  {
+   "index": 16,
+   "step": "do console_command {\"code\": \"1 + 1\", \"contains\": [\"number: 2\"]}",
+   "status": "ok",
+   "seconds": 0.344,
+   "detail": "> 1 + 1\nnumber: 2"
+  },
+  {
+   "index": 17,
+   "step": "do console_command {\"code\": \"return nil, false, 42, \\\"KotOR is live\\\"\", \"contains\": [\"nil: nil\", \"boolean: false\", \"number: 42\", \"KotOR is live\"]}",
+   "status": "ok",
+   "seconds": 0.502,
+   "detail": "> return nil, false, 42, \"KotOR is live\"\nnil: nil\nboolean: false\nnumber: 42\nstring: KotOR is live"
+  },
+  {
+   "index": 18,
+   "step": "do console_command {\"code\": \"print(\\\"hello\\\", 42); io.write(\\\"stdout\\\\n\\\"); io.stderr:write(\\\"stderr\\\\n\\\")\", \"contains\": [\"hello\", \"stdout\", \"stderr\"]}",
+   "status": "ok",
+   "seconds": 0.936,
+   "detail": "> print(\"hello\", 42); io.write(\"stdout\\n\"); io.stderr:write(\"stderr\\n\")\nhello\t42\n\nstdout\n\nstderr\n\nok (no return values)"
+  },
+  {
+   "index": 19,
+   "step": "do console_command {\"code\": \"error(\\\"intentional test\\\")\", \"contains\": [\"intentional test\", \"stack traceback\"], \"kind\": \"error\", \"allow_error\": true}",
+   "status": "ok",
+   "seconds": 0.269,
+   "detail": "> error(\"intentional test\")\nintentional test\nstack traceback:\n\t[builtin#19]: at 0x77f1a9b0"
+  },
+  {
+   "index": 20,
+   "step": "do console_command {\"code\": \"6 * 7\", \"contains\": [\"number: 42\"]}",
+   "status": "ok",
+   "seconds": 0.129,
+   "detail": "> 6 * 7\nnumber: 42"
+  },
+  {
+   "index": 21,
+   "step": "do console_command {\"code\": \"demo_value = 23\", \"contains\": [\"no return values\"]}",
+   "status": "ok",
+   "seconds": 0.189,
+   "detail": "> demo_value = 23\nok (no return values)"
+  },
+  {
+   "index": 22,
+   "step": "do console_command {\"code\": \"demo_value * 2\", \"contains\": [\"number: 46\"]}",
+   "status": "ok",
+   "seconds": 0.248,
+   "detail": "> demo_value * 2\nnumber: 46"
+  },
+  {
+   "index": 23,
+   "step": "real keyboard history recall",
+   "status": "ok",
+   "seconds": 0.189,
+   "detail": "> demo_value * 2\nnumber: 46"
+  },
+  {
+   "index": 24,
+   "step": "real keyboard Tab completion",
+   "status": "ok",
+   "seconds": 0.185,
+   "detail": "> math.sqrt(81)\nnumber: 9"
+  },
+  {
+   "index": 25,
+   "step": "real Ctrl+Enter multiline definition",
+   "status": "ok",
+   "seconds": 0.444,
+   "detail": "> function console_double(x)\n  return x * 2\nend\nok (no return values)"
+  },
+  {
+   "index": 26,
+   "step": "do console_command {\"code\": \"console_double(21)\", \"contains\": [\"number: 42\"]}",
+   "status": "ok",
+   "seconds": 0.2,
+   "detail": "> console_double(21)\nnumber: 42"
+  },
+  {
+   "index": 27,
+   "step": "do console_command {\"code\": \"while true do end\", \"contains\": [\"budget\"], \"kind\": \"error\", \"allow_error\": true}",
+   "status": "ok",
+   "seconds": 0.188,
+   "detail": "> while true do end\nconsole cancelled or instruction budget exhausted\nstack traceback:\n\tdevtools:1: in main chunk"
+  },
+  {
+   "index": 28,
+   "step": "do console_command {\"code\": \"21 * 2\", \"contains\": [\"number: 42\"]}",
+   "status": "ok",
+   "seconds": 0.164,
+   "detail": "> 21 * 2\nnumber: 42"
+  },
+  {
+   "index": 29,
+   "step": "do console_command {\"code\": \"pc = nwscript.call(\\\"GetFirstPC\\\"); body = assert(kp.model.snapshot(pc)); return body.base\", \"contains\": [\"number: 1\"]}",
+   "status": "ok",
+   "seconds": 0.413,
+   "detail": "> pc = nwscript.call(\"GetFirstPC\"); body = assert(kp.model.snapshot(pc)); return body.base\nnumber: 1"
+  },
+  {
+   "index": 30,
+   "step": "typing game key bindings did not move PC",
+   "status": "ok",
+   "seconds": 0.036,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 31,
+   "step": "do console_command {\"code\": \"assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base\", \"contains\": [\"0.35\"]}",
+   "status": "ok",
+   "seconds": 0.365,
+   "detail": "> assert(kp.model.resize(body, 0.35)); return kp.model.snapshot(pc).base\nnumber: 0.34999999403953552"
+  },
+  {
+   "index": 32,
+   "step": "independent native scale readback from typed console command",
+   "status": "ok",
+   "seconds": 0.033,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 33,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.08,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 34,
+   "step": "do advance_ticks {\"ticks\": 180, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 2.675,
+   "detail": "observed server ticks 566 -> 759"
+  },
+  {
+   "index": 35,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.054,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 36,
+   "step": "do console_command {\"code\": \"assert(kp.model.restore(body)); return kp.model.snapshot(pc).base\", \"contains\": [\"number: 1\"]}",
+   "status": "ok",
+   "seconds": 0.305,
+   "detail": "> assert(kp.model.restore(body)); return kp.model.snapshot(pc).base\nnumber: 1"
+  },
+  {
+   "index": 37,
+   "step": "do assert_lua {\"code\": \"return math.abs(kp.model.snapshot(console_pc).base-1)<0.001\", \"equals\": true}",
+   "status": "ok",
+   "seconds": 0.039,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 38,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.058,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 39,
+   "step": "do advance_ticks {\"ticks\": 90, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 1.346,
+   "detail": "observed server ticks 793 -> 896"
+  },
+  {
+   "index": 40,
+   "step": "do console_open {\"open\": true}",
+   "status": "ok",
+   "seconds": 0.049,
+   "detail": "F12 overlay open=True"
+  },
+  {
+   "index": 41,
+   "step": "do console_command {\"code\": \"local q=nwscript.call; local t=q('GetTag',q('GetItemInSlot',4,q('GetFirstPC'))); assert(#t>0 and not t:find(string.char(0),1,true)); assert(q('GetSubString','abcdef',1,3)=='bcd'); assert(q('GetStringLength','')==0); return 'native strings exact'\", \"contains\": [\"native strings exact\"]}",
+   "status": "ok",
+   "seconds": 0.599,
+   "detail": "> local q=nwscript.call; local t=q('GetTag',q('GetItemInSlot',4,q('GetFirstPC'))); assert(#t>0 and not t:find(string.char(0),1,true)); assert(q('GetSubString','abcdef',1,3)=='bcd'); assert(q('GetStringLength','')==0); return 'native strings exact'\nstring: native strings exact"
+  },
+  {
+   "index": 42,
+   "step": "do console_command {\"code\": \"local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetStringLength','safe')==4); return 'rejected before VM mutation'\", \"contains\": [\"rejected before VM mutation\"]}",
+   "status": "ok",
+   "seconds": 0.804,
+   "detail": "> local q=nwscript.call; local ok,e=pcall(q,'GetSubString','x'..string.char(0)..'y',0,1); assert(not ok and tostring(e):find('NUL',1,true)); assert(q('GetStringLength','safe')==4); return 'rejected before VM mutation'\nstring: rejected before VM mutation"
+  },
+  {
+   "index": 43,
+   "step": "do console_open {\"open\": false}",
+   "status": "ok",
+   "seconds": 0.119,
+   "detail": "F12 overlay open=False"
+  },
+  {
+   "index": 44,
+   "step": "do assert_lua {\"code\": \"local q=nwscript.call; return q('GetSubString','abcdef',1,3)=='bcd' and q('GetStringLength','after')==5\", \"equals\": true}",
+   "status": "ok",
+   "seconds": 0.044,
+   "detail": "assert_lua == true"
+  }
+ ]
+}

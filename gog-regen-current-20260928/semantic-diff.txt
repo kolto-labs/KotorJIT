@@ -1,0 +1,14 @@
+added ['placeable.aabb_registered', 'placeable.quaternion_raw_order_unverified', 'server_object.area_id', 'server_object.client_push_gate_unverified', 'server_object.dirty_bits', 'server_object.orientation', 'server_object.position']
+removed []
+reference_image /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image => /home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image
+reference_sha256 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435 => 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+derived_sha256 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435 => 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435
+sentinel {'va': 5423312, 'va_hex': '0x0052C0D0', 'bytes': '8b54240481fa04030000', 'describes': 'vm.execute_command'} => {'va': 5423312, 'va_hex': '0x0052C0D0', 'bytes': '8b54240481fa04030000', 'describes': 'vm.execute_command'}
+known_text_equal True
+changed_existing ['server_object.set_position']
+CHANGE server_object.set_position
+  confidence 1.0 => 0.95
+  method_detail 'user_defined' => 'hand-adjudicated; func row agrees'
+  source 'func' => 'adjudicated'
+summary {'total': 276, 'resolved': 276, 'by_func': 60, 'by_identity': 0, 'by_adjudication': 216, 'by_field': 145, 'overlay_conflicts': [], 'refused_ambiguous': [], 'unresolved': [], 'multi_candidate': [], 'low_confidence': [], 'missing_required': [], 'installable': True} => {'total': 283, 'resolved': 283, 'by_func': 59, 'by_identity': 0, 'by_adjudication': 224, 'by_field': 152, 'overlay_conflicts': [], 'refused_ambiguous': [], 'unresolved': [], 'multi_candidate': [], 'low_confidence': [], 'missing_required': [], 'installable': True}
+proposed_present [('server.get_placeable_by_object_id', False), ('placeable.vtable', False)]

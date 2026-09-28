@@ -1,0 +1,4 @@
+nested tar in tar.gz owner   FLAGGED [('tar owner', 'uname is the build user')] expected=[]
+nested tar in tar.gz as .gz  FLAGGED [('tar owner', 'uname is the build user')] expected=[]
+small PE wide marker allow   ok [] expected=['magic']
+same + one 0xff byte allow   FLAGGED [('marker', 'line 0: utf-16 C:\\Users')] expected=['magic']

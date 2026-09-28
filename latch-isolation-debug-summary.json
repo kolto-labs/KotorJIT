@@ -1,0 +1,8 @@
+{
+  "reset_calls": 300,
+  "reset_thread_ids": [
+    "1"
+  ],
+  "probe_passed": true,
+  "normal_exit": true
+}

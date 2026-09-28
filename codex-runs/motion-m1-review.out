@@ -1,0 +1,32 @@
+**Motion M1 verdict: FAIL.**
+
+I resumed from the existing M1 work instead of restarting. The implementation and prior scratch artifacts were present; the required review file was not. The similarly named file under `codex-runs/` was just a copy of the task prompt, so I wrote the completed independent review to:
+
+[motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+
+The checked core is in good shape:
+
+- `kp_motiontest` re-run: **20/20 passing**, **2,926 checks** — synthetic/fallible-reader evidence only.
+- MinGW i686 compile re-run: **4/4 M1 sources compile cleanly**, no warnings.
+- Profile data stays within the M0 safe list; M0 keep-out offsets/symbols are not used.
+- Guard-before-call ordering, unsupported-image/ABI refusal, type/vtable/id fences, no-partial-output behavior, valid `0xffffffff`, protected userdata, `nil, "kind: reason"` failures, and `[0, 360)` facing are covered and held in the fixture.
+- The getter declaration matches the M0 evidence: Win32 i386 `thiscall(CServerExoApp*, uint32_t)`, one stack argument / `ret 4`.
+- `kp.motion`, `capabilities`, and `capture` do not collide with names in the K1/K2 NWScript routine data.
+- The seven M1 hooksite rows are additive and begin at [data/hooksites.toml](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/data/hooksites.toml:2354). The larger `+219` dirty diff also includes a pre-existing camera block; M1 accounts for only **+58 lines** there.
+
+The failure is real but localized: this M1 slice has neither production integration nor an explicit engine-thread gate.
+
+`capture()` directly invokes the engine getter at [motion.cpp](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/api/motion.cpp:93), but the new code does not prove or enforce that it is on the game’s main thread. In addition, no M1 source is yet in `runtime.cmake`, no runtime bind/register/unbind call exists, and no CMake inclusion makes `kp.motion` part of the actual runtime. The standalone test can therefore pass while the feature remains inaccessible in the shipped DLL.
+
+That integration is deliberately reserved for serialized I-M, so I did not touch shared runtime/CMake/namespace files. The I-M owner needs to wire the module in, state/enforce the thread-affinity contract, run the runtime-linked namespace test, and have the controller perform the plan’s disposable-footlocker live oracle under the live-game lock.
+
+I also recorded a smaller public-contract mismatch: `capabilities().reads` is currently one space-delimited Lua string, while the accompanying report describes it as a list. It should either become a fresh Lua array or be documented and tested as a string.
+
+Files created outside the worktree:
+
+- [motion-m1-review.md](/home/brunner56/kp-live-20260922/motion-m1-review.md)
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-kp_motiontest.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/rerun-mingw.txt`
+- `/home/brunner56/kp-live-20260922/review-probes-motion-m1/mingw-rerun/*.o`
+
+I did not modify the intentionally dirty worktree, stage, commit, push, run Wine/game/display tooling, touch the live-game lock, or signal any process.

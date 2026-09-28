@@ -1,0 +1,41 @@
+[10:04:04] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[10:04:04] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[10:04:04] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[10:04:04] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[10:04:04] runtime already current (7ebfc850dd23)
+[10:04:04] ini tuned: swkotor.ini (14 keys)
+[10:04:04] Xvfb up on :100 (pid 679271)
+[10:04:04] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[10:04:04] wineserver settled before launch
+[10:04:04] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[10:04:18] channel up on 127.0.0.1:36009: build k1_gog_103, 19 hooks, live=True
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_checkpoint {"name": "endar_room3", "timeout": 600}
+  ok (1.9s) load_save '000003 - endar_room3' issued
+step 2: wait phase {"equals": "gameplay", "timeout": 600}
+screenshot -> 0001_periodic.png
+  ok (37.1s) phase=gameplay module=END_M01AA server_tick=7 client_tick=10 pc=(45.2,17.0,-1.3) hp=6/6
+step 3: counter plumbing round-trip: PC local numbers 6 and 7 are writable and readable from the harness state
+  ok (26.3s) assert_lua == true
+step 4: do clear_auto_pause
+  ok (5.0s) clear_auto_pause ok
+step 5: finish Trask's tutorial bark left open by the checkpoint
+  ok (1.9s) advance_dialog reached 'gameplay' after 0 picks
+step 6: the curse is armed (PC local number 5 == 1, set by the script 200 ticks after the load)
+  ok (27.1s) assert_lua == true
+step 7: arena: summon six Sith troopers in a ring around the player (CreateObject + hostile faction)
+  ok (5.3s) assert_lua == true
+step 8: the ring engaged: the player is in combat, or a live hostile stands within 25m
+  ok (2.8s) assert_lua == true
+step 9: fight the room while the curse fires
+clear_room: attack 'g_sithtroop01\x00' id=344 dist=3.6 act=65534
+screenshot -> 0002_periodic.png
+clear_room: attack 'g_sithtroop01\x00' id=340 dist=3.9 act=39
+clear_room: attack 'g_sithtroop01\x00' id=336 dist=3.9 act=39
+clear_room: attack 'g_sithtroop01\x00' id=332 dist=6.4 act=39
+  ok (134.5s) clear_room: 6 hostiles down in 118.8s
+step 10: at least five hits became Force shouts
+  ok (3.4s) assert_lua == true
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100404/report.json
+{"ok": true, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100404"}
+[10:08:25] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-100404

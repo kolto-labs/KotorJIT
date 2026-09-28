@@ -1,0 +1,130 @@
+==2133062== Helgrind, a thread error detector
+==2133062== Copyright (C) 2007-2026, and GNU GPL'd, by OpenWorks LLP et al.
+==2133062== Using Valgrind-3.27.1 and LibVEX; rerun with -h for copyright info
+==2133062== Command: /tmp/pause_race_mode0
+==2133062== 
+==2133062== ---Thread-Announcement------------------------------------------
+==2133062== 
+==2133062== Thread #3 was created
+==2133062==    at 0x4D943E3: clone (clone.S:76)
+==2133062==    by 0x4D94540: __clone_internal_fallback (clone-internal.c:64)
+==2133062==    by 0x4D94540: __clone_internal (clone-internal.c:109)
+==2133062==    by 0x4D107A5: create_thread (pthread_create.c:298)
+==2133062==    by 0x4D11450: pthread_create@@GLIBC_2.34 (pthread_create.c:863)
+==2133062==    by 0x484ED17: pthread_create_WRK (hg_intercepts.c:455)
+==2133062==    by 0x48506A2: pthread_create@* (hg_intercepts.c:488)
+==2133062==    by 0x48F9548: __gthread_create (gthr-default.h:709)
+==2133062==    by 0x48F9548: std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) (thread.cc:173)
+==2133062==    by 0x4017EF: std::thread::thread<void (&)(), , void>(void (&)()) (std_thread.h:175)
+==2133062==    by 0x40138D: main (kp_pause_publish_race_test.cpp:117)
+==2133062== 
+==2133062== ---Thread-Announcement------------------------------------------
+==2133062== 
+==2133062== Thread #2 was created
+==2133062==    at 0x4D943E3: clone (clone.S:76)
+==2133062==    by 0x4D94540: __clone_internal_fallback (clone-internal.c:64)
+==2133062==    by 0x4D94540: __clone_internal (clone-internal.c:109)
+==2133062==    by 0x4D107A5: create_thread (pthread_create.c:298)
+==2133062==    by 0x4D11450: pthread_create@@GLIBC_2.34 (pthread_create.c:863)
+==2133062==    by 0x484ED17: pthread_create_WRK (hg_intercepts.c:455)
+==2133062==    by 0x48506A2: pthread_create@* (hg_intercepts.c:488)
+==2133062==    by 0x48F9548: __gthread_create (gthr-default.h:709)
+==2133062==    by 0x48F9548: std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) (thread.cc:173)
+==2133062==    by 0x401719: std::thread::thread<void (&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>, void>(void (&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (std_thread.h:175)
+==2133062==    by 0x40137C: main (kp_pause_publish_race_test.cpp:116)
+==2133062== 
+==2133062== ----------------------------------------------------------------
+==2133062== 
+==2133062== Possible data race during read of size 8 at 0x409080 by thread #3
+==2133062== Locks held: none
+==2133062==    at 0x401273: (anonymous namespace)::engine_once() (kp_pause_publish_race_test.cpp:89)
+==2133062==    by 0x402107: void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) (invoke.h:63)
+==2133062==    by 0x402053: std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) (invoke.h:98)
+==2133062==    by 0x401FC3: void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) (std_thread.h:303)
+==2133062==    by 0x401F7B: std::thread::_Invoker<std::tuple<void (*)()> >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F3F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==    by 0x484EF0D: mythread_wrapper (hg_intercepts.c:416)
+==2133062==    by 0x4D10C18: start_thread (pthread_create.c:454)
+==2133062==    by 0x4D943F3: clone (clone.S:100)
+==2133062== 
+==2133062== This conflicts with a previous write of size 8 by thread #2
+==2133062== Locks held: none
+==2133062==    at 0x401261: (anonymous namespace)::worker_once(kp::harness::pause::Machine&) (kp_pause_publish_race_test.cpp:80)
+==2133062==    by 0x402177: void std::__invoke_impl<void, void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(std::__invoke_other, void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:63)
+==2133062==    by 0x4020CD: std::__invoke_result<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >::type std::__invoke<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:98)
+==2133062==    by 0x40200A: void std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (std_thread.h:303)
+==2133062==    by 0x401F97: std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F5F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==    by 0x484EF0D: mythread_wrapper (hg_intercepts.c:416)
+==2133062==  Address 0x409080 is 0 bytes inside data symbol "_ZN12_GLOBAL__N_1L13g_pause_plainE"
+==2133062== 
+==2133062== ----------------------------------------------------------------
+==2133062== 
+==2133062== Possible data race during read of size 1 at 0x1FFEFFF3D4 by thread #3
+==2133062== Locks held: none
+==2133062==    at 0x403D6E: kp::harness::pause::Machine::ownership_available() const (pause_lease.hpp:126)
+==2133062==    by 0x4034BA: kp::harness::pause::Machine::on_pause_entry(unsigned long) (pause_lease.cpp:238)
+==2133062==    by 0x4012AA: (anonymous namespace)::engine_once() (kp_pause_publish_race_test.cpp:101)
+==2133062==    by 0x402107: void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) (invoke.h:63)
+==2133062==    by 0x402053: std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) (invoke.h:98)
+==2133062==    by 0x401FC3: void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) (std_thread.h:303)
+==2133062==    by 0x401F7B: std::thread::_Invoker<std::tuple<void (*)()> >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F3F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==    by 0x484EF0D: mythread_wrapper (hg_intercepts.c:416)
+==2133062==    by 0x4D10C18: start_thread (pthread_create.c:454)
+==2133062==    by 0x4D943F3: clone (clone.S:100)
+==2133062== 
+==2133062== This conflicts with a previous write of size 1 by thread #2
+==2133062== Locks held: none
+==2133062==    at 0x4025EB: kp::harness::pause::Machine::set_hooks_installed(bool, bool) (pause_lease.cpp:74)
+==2133062==    by 0x40125C: (anonymous namespace)::worker_once(kp::harness::pause::Machine&) (kp_pause_publish_race_test.cpp:79)
+==2133062==    by 0x402177: void std::__invoke_impl<void, void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(std::__invoke_other, void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:63)
+==2133062==    by 0x4020CD: std::__invoke_result<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >::type std::__invoke<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:98)
+==2133062==    by 0x40200A: void std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (std_thread.h:303)
+==2133062==    by 0x401F97: std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F5F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==  Address 0x1ffefff3d4 is on thread #1's stack
+==2133062==  in frame #7, created by main (kp_pause_publish_race_test.cpp:107)
+==2133062== 
+==2133062== ----------------------------------------------------------------
+==2133062== 
+==2133062== Possible data race during read of size 1 at 0x1FFEFFF3D5 by thread #3
+==2133062== Locks held: none
+==2133062==    at 0x403D7D: kp::harness::pause::Machine::ownership_available() const (pause_lease.hpp:126)
+==2133062==    by 0x4034BA: kp::harness::pause::Machine::on_pause_entry(unsigned long) (pause_lease.cpp:238)
+==2133062==    by 0x4012AA: (anonymous namespace)::engine_once() (kp_pause_publish_race_test.cpp:101)
+==2133062==    by 0x402107: void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) (invoke.h:63)
+==2133062==    by 0x402053: std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) (invoke.h:98)
+==2133062==    by 0x401FC3: void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) (std_thread.h:303)
+==2133062==    by 0x401F7B: std::thread::_Invoker<std::tuple<void (*)()> >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F3F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==    by 0x484EF0D: mythread_wrapper (hg_intercepts.c:416)
+==2133062==    by 0x4D10C18: start_thread (pthread_create.c:454)
+==2133062==    by 0x4D943F3: clone (clone.S:100)
+==2133062== 
+==2133062== This conflicts with a previous write of size 1 by thread #2
+==2133062== Locks held: none
+==2133062==    at 0x4025F9: kp::harness::pause::Machine::set_hooks_installed(bool, bool) (pause_lease.cpp:75)
+==2133062==    by 0x40125C: (anonymous namespace)::worker_once(kp::harness::pause::Machine&) (kp_pause_publish_race_test.cpp:79)
+==2133062==    by 0x402177: void std::__invoke_impl<void, void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(std::__invoke_other, void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:63)
+==2133062==    by 0x4020CD: std::__invoke_result<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >::type std::__invoke<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> >(void (*&&)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine>&&) (invoke.h:98)
+==2133062==    by 0x40200A: void std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (std_thread.h:303)
+==2133062==    by 0x401F97: std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > >::operator()() (std_thread.h:310)
+==2133062==    by 0x401F5F: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(kp::harness::pause::Machine&), std::reference_wrapper<kp::harness::pause::Machine> > > >::_M_run() (std_thread.h:255)
+==2133062==    by 0x48F9475: execute_native_thread_routine (thread.cc:105)
+==2133062==  Address 0x1ffefff3d5 is on thread #1's stack
+==2133062==  in frame #7, created by main (kp_pause_publish_race_test.cpp:107)
+==2133062== 
+MODE=0 cycles=400 saw_machine=400
+done, rc=0
+==2133062== 
+==2133062== Use --history-level=approx or =none to gain increased speed, at
+==2133062== the cost of reduced accuracy of conflicting-access information
+==2133062== For lists of detected and suppressed errors, rerun with: -s
+==2133062== ERROR SUMMARY: 1200 errors from 3 contexts (suppressed: 802 from 3)
+RC=99

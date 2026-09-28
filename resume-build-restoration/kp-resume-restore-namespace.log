@@ -1,0 +1,45 @@
+[  4%] Building CXX object CMakeFiles/kphasor.dir/src/devtools/console.cpp.o
+[  4%] Building CXX object CMakeFiles/kphasor.dir/src/devtools/overlay.cpp.o
+[  9%] Building CXX object CMakeFiles/kphasor.dir/src/events/dispatch.cpp.o
+[  9%] Building CXX object CMakeFiles/kphasor.dir/src/events/payload.cpp.o
+[ 13%] Building CXX object CMakeFiles/kphasor.dir/src/events/situation.cpp.o
+[ 13%] Building CXX object CMakeFiles/kphasor.dir/src/events/table.cpp.o
+[ 13%] Building CXX object CMakeFiles/kphasor.dir/src/harness/channel.cpp.o
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/harness/commands.cpp.o
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/harness/console_protocol.cpp.o
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/harness/engine_k1.cpp.o
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/harness/engine_k2.cpp.o
+[ 18%] Building CXX object CMakeFiles/kphasor.dir/src/harness/json.cpp.o
+[ 22%] Building CXX object CMakeFiles/kphasor.dir/src/harness/ring.cpp.o
+[ 22%] Building CXX object CMakeFiles/kphasor.dir/src/hooks/registry.cpp.o
+[ 22%] Building CXX object CMakeFiles/kphasor.dir/src/hooks/trampoline.cpp.o
+[ 22%] Building CXX object CMakeFiles/kphasor.dir/src/image/build_table.cpp.o
+[ 27%] Building CXX object CMakeFiles/kphasor.dir/src/image/classify.cpp.o
+[ 31%] Building CXX object CMakeFiles/kphasor.dir/src/image/load.cpp.o
+[ 31%] Building CXX object CMakeFiles/kphasor.dir/src/image/loaded_image.cpp.o
+[ 31%] Building CXX object CMakeFiles/kphasor.dir/src/image/macho.cpp.o
+[ 31%] Building CXX object CMakeFiles/kphasor.dir/src/image/parse.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/image/pe_elf.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/image/sha256.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/lua/host.cpp.o
+[ 36%] Building CXX object CMakeFiles/kphasor.dir/src/lua/value.cpp.o
+[ 40%] Building CXX object CMakeFiles/kphasor.dir/src/multiplayer/transport.cpp.o
+[ 45%] Building CXX object CMakeFiles/kphasor.dir/src/platform/platform.cpp.o
+[ 45%] Building CXX object CMakeFiles/kphasor.dir/src/platform/platform_linux.cpp.o
+[ 50%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/dllmain.cpp.o
+[ 50%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/fault_guard.cpp.o
+[ 50%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/hook_bodies.cpp.o
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘void* kp::runtime::{anonymous}::client_area_get_server_area_body(void*)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:568:11: warning: variable ‘area’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  568 |     void* area = orig != nullptr ? orig(self) : nullptr;
+      |           ^~~~
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp: In function ‘int kp::runtime::{anonymous}::run_script_body(void*, CExoString*, uint32_t, int)’:
+/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/src/runtime/hook_bodies.cpp:737:15: warning: variable ‘rc’ might be clobbered by ‘longjmp’ or ‘vfork’ [-Wclobbered]
+  737 |     const int rc = orig(self, name, object_id, has_object);
+      |               ^~
+[ 50%] Building CXX object CMakeFiles/kphasor.dir/src/runtime/runtime.cpp.o
+[ 54%] Linking CXX shared library libkphasor.so
+[100%] Built target kphasor
+[100%] Building CXX object CMakeFiles/kp_namespacetest.dir/tools/kp_namespacetest.cpp.o
+[100%] Linking CXX executable kp_namespacetest
+[100%] Built target kp_namespacetest

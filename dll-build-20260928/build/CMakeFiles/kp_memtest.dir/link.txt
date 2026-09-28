@@ -1,0 +1,1 @@
+/home/brunner56/.local/bin/c++ -O2 -g -DNDEBUG -no-pie -m32 -Wl,--dependency-file=CMakeFiles/kp_memtest.dir/link.d CMakeFiles/kp_memtest.dir/tools/kp_memtest.cpp.o CMakeFiles/kp_memtest.dir/src/api/memory.cpp.o -o kp_memtest  libkp_image.a libkp_hooks.a luajit32/src/libluajit.a -lm -ldl

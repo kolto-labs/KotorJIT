@@ -1,0 +1,196 @@
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: request queue over 4096 lines or 8388608 bytes; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:info] harness: client disconnected
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+[kp:info] harness: client connected
+[kp:warn] harness: client sent a line that is not a JSON request; client dropped
+
+== json codec ==
+  [PASS] dump parses back
+  [PASS] round trip is stable
+  [PASS] integer survives
+  [PASS] high-bit object id survives as a number
+  [PASS] 2^53-1 survives
+  [PASS] float survives
+  [PASS] escapes and UTF-8 survive
+  [PASS] nested array and object survive
+  [PASS] integral doubles print as integers
+  [PASS] null survives
+  [PASS] booleans survive
+  [PASS] object keeps key order
+  [PASS] request line with whitespace parses
+  [PASS] \u escapes including a surrogate pair decode to UTF-8
+  [PASS] exponent parses
+  [PASS] empty array
+  [PASS] malformed inputs are rejected
+  [PASS] nesting bomb is refused
+  [PASS] typed reads on the wrong type fall back
+
+== event ring ==
+  [PASS] fresh ring is empty
+  [PASS] first seq is 1
+  [PASS] one record reads back with its fields
+  [PASS] seq keeps counting past capacity
+  [PASS] size caps at capacity
+  [PASS] oldest seq is newest - capacity + 1
+  [PASS] read from before the tail yields the whole ring in order
+  [PASS] read_since returns records after the cursor
+  [PASS] limit is honoured
+  [PASS] cursor at newest reads nothing
+  [PASS] text fields truncate
+  [PASS] clear keeps the sequence counter
+
+== channel ==
+  [PASS] channel starts on a free loopback port
+  [PASS] port is reported
+  [PASS] a bind outside loopback is refused
+  [PASS] client connected
+  [PASS] first request answered
+  [PASS] second request on the same connection answered
+  [PASS] CRLF framing accepted
+  [PASS] second client is refused with an error line
+  [PASS] second client is closed after the refusal
+  [PASS] twelve lines queued while the drain was held
+  [PASS] take_requests caps a batch at max and keeps the rest
+  [PASS] a new client after disconnect is served
+  [PASS] a reply for a gone client is dropped, not delivered to the next
+  [PASS] every request reached the executor
+  [PASS] requests executed on the draining thread only
+  [PASS] two connections accepted in total
+  [PASS] channel stops
+
+== channel limits ==
+  [PASS] a client that floods the request queue is dropped, not queued without limit
+  [PASS] the queue goes with the connection
+  [PASS] limit channel stops
+
+== cross-protocol lines ==
+  [PASS] line screen: only a line that opens an object passes; HTTP is named
+  [PASS] (a) HTTP POST gets exactly one error reply
+  [PASS] (a) HTTP POST connection is closed after the error
+  [PASS] (a) the POST body line is never dispatched
+  [PASS] (a) a replayed POST on a new connection is condemned again
+  [PASS] (a) a fresh JSON client after the POST is served and kept
+    post1: 1 line(s), eof=1; post2: 1 line(s), eof=1
+  [PASS] (b) malformed line gets one error reply
+    (b) line: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+  [PASS] (b) malformed line closes the connection
+  [PASS] (b) the valid line behind a malformed one is not dispatched
+  [PASS] (c) three requests were taken before the client left
+  [PASS] (c) a batch from a client that has gone is not executed
+    stale batch executed: 0 of 3
+  [PASS] (a2) a 13-line POST spans two drain batches
+  [PASS] (a2) the body in the next batch of a condemned client is not dispatched
+    later batch executed: 0; lines queued 13, batches 8+5
+  [PASS] (d) valid lines, one send, all answered in order
+  [PASS] (d) a devtools line that mentions HTTP/1.1 in its code is still dispatched
+  [PASS] (d) the connection stays up after valid traffic
+  [PASS] (e) the error queued before condemn() is delivered
+  [PASS] (e) a reply queued after condemn() is dropped
+  [PASS] (e) the condemned connection is closed
+    (e) line: {"id":null,"ok":false,"error":"first"}
+  [PASS] (f) control: a subscribed client in good standing gets its event
+  [PASS] (f) a subscribed client that sends a bad line gets one error reply
+  [PASS] (f) no event frame follows the error to a condemned client
+  [PASS] (f) the condemned subscribed connection is closed
+    (f) line: {"id":null,"ok":false,"error":"json: expected string at offset 1"}
+
+== phase classifier ==
+  [PASS] main menu with a garbage load_error is menu, not error
+  [PASS] no server is menu even without the panel
+  [PASS] load_error with a server is still error
+  [PASS] loading a module is loading
+  [PASS] a loaded module with the menu panel still listed is loading, not menu
+  [PASS] the panel with no module running is menu
+  [PASS] in game is gameplay
+  [PASS] running module beneath listed main menu is not visible gameplay
+  [PASS] movie retains priority over listed main menu
+  [PASS] loading retains priority over listed main menu
+
+== stuck-load predicate ==
+  [PASS] a loaded module with no control object is the stuck load
+  [PASS] an area already on screen is not stuck
+  [PASS] server_mode 1 is still loading: RunModule has not been through
+  [PASS] a client that already has its creature needs nothing sent
+  [PASS] no module means the load has not got that far
+  [PASS] a field this build cannot read refuses rather than guesses
+
+== normal load completion guards ==
+  [PASS] native cleared menu is already absent
+  [PASS] unreadable menu is not proven absent
+  [PASS] nonnull menu needs native panel check
+  [PASS] issued load can complete normally without injected AreaLoaded
+  [PASS] old running module without observed request flag cannot complete
+  [PASS] replaced server cannot complete an old request
+  [PASS] normal completion requires actual module
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] unknown or pending client area refuses completion
+  [PASS] unknown or pending server save flag refuses completion
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+  [PASS] only running server mode completes normal load
+
+== save ERF members ==
+  [PASS] two members parsed
+  [PASS] sav member named and located
+  [PASS] restype 0 is written as .res
+  [PASS] an unmapped restype is refused, not guessed
+  [PASS] a member running past the file is refused
+  [PASS] non-ERF bytes are refused
+  [PASS] an ERF member whose offset plus size wraps is refused
+  [PASS] an ERF key list offset that wraps is refused
+  [PASS] an ERF resource list offset that wraps is refused
+
+== checked arithmetic ==
+  [PASS] LASTMODULE is read from a well-formed savenfo
+  [PASS] a savenfo whose data offset wraps reads as no module, not as bytes at a low address
+  [PASS] a savenfo whose label offset wraps is refused
+  [PASS] a savenfo whose field offset wraps is refused
+  [PASS] a CExoString longer than the file is refused
+  [PASS] a plain field offset resolves
+  [PASS] a null base has no address
+  [PASS] an unresolved offset (-1) has no address
+  [PASS] a base plus offset that would wrap is refused
+  [PASS] an indexed read resolves
+  [PASS] a negative index is refused
+  [PASS] a zero stride is refused
+  [PASS] an index times stride that would wrap is refused
+  [PASS] a JSON number past int64 falls back rather than converting
+  [PASS] a large negative JSON number falls back too
+  [PASS] a number inside the range still converts
+
+== chargen panel pair ==
+  [PASS] main then child is identified by the route link
+  [PASS] child then main is identified by the route link
+  [PASS] one added panel is rejected
+  [PASS] more than two added panels is rejected
+  [PASS] null panel is rejected
+  [PASS] equal panels are rejected
+  [PASS] unlinked pair is rejected
+  [PASS] incomplete route evidence is rejected
+
+0 failure(s)

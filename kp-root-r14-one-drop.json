@@ -1,0 +1,212 @@
+{
+  "status": "failed",
+  "method": "ffprobe-lavfi-signalstats-v1",
+  "policy": {
+    "id": "animated-diagnostic-v2",
+    "black_luma_max": 24,
+    "minimum_distinct_ratio": 0.99,
+    "distinct_noise_floor": 3.9,
+    "separation_factor": 2.0,
+    "level_period": 7,
+    "level_step": 3,
+    "level_resolution_factor": 1.9,
+    "index_bits": 14,
+    "index_cell": 32,
+    "index_inset": 6,
+    "index_luma_threshold": 127.5,
+    "index_fps": 60,
+    "index_step_tolerance_frames": 1
+  },
+  "frame_count": 599,
+  "first_frame": {
+    "index": 60,
+    "pts_seconds": 1.0,
+    "ymin": 0.0,
+    "ymax": 235.0
+  },
+  "startup": {
+    "frames_before_acceptance": 60,
+    "black_frames_before_acceptance": 0,
+    "capture_first_frame": {
+      "ymin": 0.0,
+      "ymax": 235.0
+    }
+  },
+  "acceptance": {
+    "start_capture_seconds": 1.0,
+    "end_capture_seconds": 9.0,
+    "frame_count": 480,
+    "expected_changes": 479,
+    "changed_frames": 479,
+    "distinct_noise_floor": 3.9,
+    "distinct_ratio": 1.0
+  },
+  "failures": [
+    "capture_content_sequence: 1 of 479 acceptance frames break the +3 level step (mod 7)"
+  ],
+  "separation": {
+    "rule": "no acceptance frame difference strictly inside (floor/factor, floor*factor)",
+    "guard_band": [
+      1.95,
+      7.8
+    ],
+    "factor": 2.0,
+    "below_band": 0,
+    "inside_band": 0,
+    "above_band": 479,
+    "duplicate_max": null,
+    "fresh_min": 10.0,
+    "histogram": [
+      {
+        "lower": 0.0,
+        "upper": 0.125,
+        "count": 0
+      },
+      {
+        "lower": 0.125,
+        "upper": 0.25,
+        "count": 0
+      },
+      {
+        "lower": 0.25,
+        "upper": 0.5,
+        "count": 0
+      },
+      {
+        "lower": 0.5,
+        "upper": 1.0,
+        "count": 0
+      },
+      {
+        "lower": 1.0,
+        "upper": 2.0,
+        "count": 0
+      },
+      {
+        "lower": 2.0,
+        "upper": 4.0,
+        "count": 0
+      },
+      {
+        "lower": 4.0,
+        "upper": 8.0,
+        "count": 0
+      },
+      {
+        "lower": 8.0,
+        "upper": 16.0,
+        "count": 479
+      },
+      {
+        "lower": 16.0,
+        "upper": 32.0,
+        "count": 0
+      },
+      {
+        "lower": 32.0,
+        "upper": 64.0,
+        "count": 0
+      },
+      {
+        "lower": 64.0,
+        "upper": 128.0,
+        "count": 0
+      },
+      {
+        "lower": 128.0,
+        "upper": null,
+        "count": 0
+      }
+    ],
+    "status": "separated"
+  },
+  "level_sequence": {
+    "rule": "every fresh acceptance frame steps +3 levels (mod 7) from the previous frame; a duplicate repeats the level",
+    "method": "yavg-rank-largest-gaps-v1",
+    "period": 7,
+    "step": 3,
+    "resolution_factor": 1.9,
+    "ladder": {
+      "thresholds": [
+        75.0,
+        85.0,
+        95.0,
+        105.0,
+        115.0,
+        125.0
+      ],
+      "centers": [
+        70.0,
+        80.0,
+        90.0,
+        100.0,
+        110.0,
+        120.0,
+        130.0
+      ],
+      "minimum_level_gap": 10.0,
+      "maximum_within_level_gap": 0.0,
+      "resolution": null,
+      "resolved": true
+    },
+    "level_histogram": [
+      {
+        "level": -3,
+        "count": 68
+      },
+      {
+        "level": -2,
+        "count": 69
+      },
+      {
+        "level": -1,
+        "count": 68
+      },
+      {
+        "level": 0,
+        "count": 69
+      },
+      {
+        "level": 1,
+        "count": 69
+      },
+      {
+        "level": 2,
+        "count": 69
+      },
+      {
+        "level": 3,
+        "count": 68
+      }
+    ],
+    "steps": 478,
+    "repeats": 0,
+    "violation_count": 1,
+    "violations": [
+      {
+        "index": 350,
+        "pts_seconds": 5.85,
+        "previous_level": 1,
+        "level": 0,
+        "step": 6,
+        "difference": 10.0,
+        "kind": "step"
+      }
+    ],
+    "status": "failed",
+    "reason": "1 of 479 acceptance frames break the +3 level step (mod 7)"
+  },
+  "index_sequence": {
+    "rule": "a per-frame index (14 bits + parity, two independent regions) never repeats or goes backward across the acceptance window",
+    "method": "drawbox-binary-index-v1",
+    "bits": 14,
+    "luma_threshold": 127.5,
+    "violation_count": 0,
+    "violations": [],
+    "steps": 479,
+    "repeats": 0,
+    "estimated_dropped_source_frames": 1,
+    "status": "passed",
+    "reason": null
+  }
+}

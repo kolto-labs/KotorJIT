@@ -1,0 +1,174 @@
+# Fresh Endar opening: route solely by engine dialogue and world state.
+name = "k1 fresh Endar: open first authored locker"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 90
+
+[[step]]
+do = "sleep"
+seconds = 2
+
+[[step]]
+do = "new_game"
+timeout = 90
+
+[[step]]
+wait = "chargen_stage"
+equals = "class"
+timeout = 45
+
+[[step]]
+do = "chargen_select_class"
+index = 0
+
+[[step]]
+wait = "chargen_stage"
+equals = "route"
+timeout = 45
+
+[[step]]
+do = "chargen_begin_play"
+timeout = 45
+
+[[step]]
+wait = "phase_any"
+equals = ["gameplay", "dialog"]
+timeout = 300
+
+[[step]]
+wait = "module"
+equals = "end_m01aa"
+timeout = 90
+
+[[step]]
+wait = "global"
+name = "End_TraskTalk"
+equals = 1
+timeout = 120
+
+[[step]]
+wait = "dialog"
+timeout = 120
+
+[[step]]
+do = "reply"
+pick = "Who are you?"
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 57
+timeout = 60
+
+[[step]]
+wait = "dialog_entry"
+equals = 58
+timeout = 60
+
+[[step]]
+wait = "dialog"
+timeout = 60
+
+# E58 local row 0 is pinned by the DLG resource to R79 -> E61.
+[[step]]
+do = "reply"
+pick = 0
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 61
+timeout = 60
+
+# E61 → R80 → E62 and the class-specific branch are authored automatic nodes.
+# The live class-0 run reaches E65, whose first engine-visible response is
+# R90 → E73.  This is still an ordinary player dialogue choice, not an
+# automatic continuation, so wait for the live reply table and choose it by
+# its engine-resolved text.
+[[step]]
+wait = "dialog_entry"
+equals = 65
+timeout = 60
+
+[[step]]
+wait = "dialog"
+timeout = 60
+
+[[step]]
+do = "reply"
+pick = "Okay, let's go help Bastila!"
+timeout = 30
+
+[[step]]
+wait = "dialog_entry"
+equals = 73
+timeout = 120
+
+# E73 local row 0 is pinned by the DLG resource to terminal R92
+# (end_attack, entry 1); the other row loops to E51.
+[[step]]
+wait = "dialog"
+timeout = 60
+
+[[step]]
+do = "reply"
+pick = 0
+
+[[step]]
+wait = "journal"
+tag = "end_attack"
+equals = 1
+timeout = 120
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 120
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local d=nwscript.call('GetObjectByTag','end_door01',0); if nwscript.call('GetIsObjectValid',d)~=1 then error('Trask door unavailable') end; if nwscript.call('GetIsOpen',d)~=0 or nwscript.call('GetLocked',d)~=1 then error('Trask dialogue did not leave door closed and locked') end; return {door=d,open=nwscript.call('GetIsOpen',d),locked=nwscript.call('GetLocked',d)}"
+
+# R92's authored k_pend_time01 schedules its end_trask user event after
+# DelayCommand(20.0).  Let the game's own continuation drain before issuing
+# a player action; no route script is run directly.
+[[step]]
+do = "sleep"
+seconds = 25
+
+[[step]]
+wait = "phase"
+equals = "paused"
+timeout = 60
+
+[[step]]
+label = "resume the authored post-Trask timer pause through the engine"
+do = "unpause_timers"
+timeout = 30
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 60
+
+# The locker is the first authored physical objective after Trask.  Its
+# template and placement are pinned from end_m01aa.rim/end_m01aa_s.rim; this
+# queues only ordinary movement and ActionInteractObject, then reads back the
+# same live instance as open and the PC as idle/in-range.
+[[step]]
+label = "open the authored end_locker01 through the action queue"
+do = "placeable_transaction"
+module = "end_m01aa"
+type = 64
+tag = "end_locker01"
+position = [10.795940399169922, 21.870288848876953, -1.1049995422363281]
+position_tolerance = 0.25
+interaction_range = 1.0
+pre_open = false
+timeout = 60
+
+[[step]]
+do = "quit"

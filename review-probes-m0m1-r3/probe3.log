@@ -1,0 +1,22 @@
+    status=Unreadable detail=target page is unmapped or not readable
+PASS  PROT_NONE target -> Unreadable, no fault
+PASS  PROT_NONE target with expect -> Unreadable, no fault
+    status=Unreadable detail=target page is unmapped or not readable
+PASS  unmapped target -> Unreadable, no fault
+    status=Unreadable detail=target page is unmapped or not readable
+PASS  window crosses r-x | --- (8 bytes left) -> Unreadable, bytes+prot unchanged
+    status=Unreadable
+PASS  window crosses r-x | unmapped -> Unreadable
+PASS  expect_len beyond window -> Unreadable, no read past window
+    status=Ok stolen=14 detail=-
+PASS  guard page: 17 stolen-able bytes end before --- -> installs, calls, uninstalls
+    status=Ok stolen=14 detail=-
+PASS  exact edge: 14 stolen bytes end exactly at --- page -> Ok, uninstall restores
+    status=Unreadable
+PASS  exact edge minus one: 13 r-x bytes then --- -> Unreadable
+    status=DecodeFailed detail=truncated
+PASS  INFO overlong insn, fully mapped page: status
+    status=Unreadable detail=target page is unmapped or not readable
+FAIL  INFO overlong insn, 20 bytes before --- page: status (exit != 0)
+1 FAILING
+rc=1

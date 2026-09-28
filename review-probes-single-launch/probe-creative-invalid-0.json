@@ -1,0 +1,17 @@
+{
+ "raised": "InvalidBootAttempts: KP_MAX_BOOT_ATTEMPTS must be in 1..5, got 0",
+ "events": [
+  "live_lock ACQUIRED /tmp/kp_creative_probe_3xsl3oop/scratch-live.lock",
+  "recorder constructed"
+ ],
+ "left_on_disk": [
+  "output/.stage-k1.kp-creative-owner.json",
+  "output/.wineprefix-k1.kp-creative-owner.json",
+  "output/20260927-232924-470c26bc",
+  "output/20260927-232924-470c26bc/driver.log",
+  "output/20260927-232924-470c26bc/executed-route.toml",
+  "output/20260927-232924-470c26bc/sources",
+  "output/stage-k1",
+  "output/wineprefix-k1"
+ ]
+}

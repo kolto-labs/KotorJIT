@@ -1,0 +1,88 @@
+name="camera calibration - diagnostic only"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=60
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+[[step]]
+wait="phase"
+equals="gameplay"
+[[step]]
+do="clear_auto_pause"
+[[step]]
+do="mark_log"
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,0); nwscript.call('SetCameraFacing',0); kp.print('[camera-calibration] mode=0 angle=0 pcFacing='..nwscript.call('GetFacing',p)); return {mode=0,angle=0,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,0); nwscript.call('SetCameraFacing',90); kp.print('[camera-calibration] mode=0 angle=90 pcFacing='..nwscript.call('GetFacing',p)); return {mode=0,angle=90,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,0); nwscript.call('SetCameraFacing',180); kp.print('[camera-calibration] mode=0 angle=180 pcFacing='..nwscript.call('GetFacing',p)); return {mode=0,angle=180,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,0); nwscript.call('SetCameraFacing',270); kp.print('[camera-calibration] mode=0 angle=270 pcFacing='..nwscript.call('GetFacing',p)); return {mode=0,angle=270,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',0); kp.print('[camera-calibration] mode=2 angle=0 pcFacing='..nwscript.call('GetFacing',p)); return {mode=2,angle=0,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',90); kp.print('[camera-calibration] mode=2 angle=90 pcFacing='..nwscript.call('GetFacing',p)); return {mode=2,angle=90,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',180); kp.print('[camera-calibration] mode=2 angle=180 pcFacing='..nwscript.call('GetFacing',p)); return {mode=2,angle=180,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true
+[[step]]
+do="lua"
+code="local p=nwscript.call('GetFirstPC'); nwscript.call('SetCameraMode',p,2); nwscript.call('SetCameraFacing',270); kp.print('[camera-calibration] mode=2 angle=270 pcFacing='..nwscript.call('GetFacing',p)); return {mode=2,angle=270,facing=nwscript.call('GetFacing',p),position=nwscript.call('GetPosition',p)}"
+[[step]]
+do="advance_ticks"
+ticks=180
+timeout=30
+[[step]]
+screenshot=true

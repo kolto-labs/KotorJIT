@@ -1,0 +1,26 @@
+{
+  "base_commit": "ca329e52dd27d1a3f5a56748d93c8ab0fd7f24f2",
+  "overlay_sha256": {
+    "src/api/routines.cpp": "59f8441cbba02d8ec32f6c21d8a136140abea6280d1b95ca159e1d1065178a40",
+    "tools/kp_routinetest.cpp": "9879b960cb716f5d76e80eee6d7aea1ddb79f0f5feca1ef98d02c8f5725807ba",
+    "src/hooks/registry.cpp": "d9e9a7aa3545ec8d1a0c5570e12009e0061775a76eb2085dda83cc7ac4018cc1",
+    "tools/kp_hooktool.cpp": "bbea8cd4b3055721ceb93a28af50cb2e7ece820af8982e25120caad186620e49",
+    "src/harness/engine_k1.cpp": "6d3c79de3eb38bacd2e7b6826d65589e1e6aa5456157f53b32aa3b8c34d28821",
+    "src/harness/fields.hpp": "37cf59e1a1482fb272157c6983b3ec6129be89ea9ed7c525fa04981a25f4d760",
+    "tools/kp_harnesstest.cpp": "20fb675528368cab9116725f65bba52b7cf32480fafbb7be0644391b94996cd2",
+    "data/addresses/k2_gog_aspyr.json": "4e21a72a9754ae2b1a7babfe2d7fbf0d0b0c5a165efd0b92588a997923b38187"
+  },
+  "luajit_commit": "1ee778a4e37122d8ca7d5733c590a47dafd6b15c",
+  "luajit_static_library_sha256": "9bc74003050d8b60436c0511af91ee7bfc7bb36ed4c7c46dacbee5dbbd39a7af",
+  "table_metadata": {
+    "build": "k2_gog_aspyr",
+    "file_sha256": "4e21a72a9754ae2b1a7babfe2d7fbf0d0b0c5a165efd0b92588a997923b38187",
+    "pre_generated": true,
+    "research_regeneration": "Requires external corpus and private adjudication inputs, not distributed"
+  },
+  "release_scope": "Clean ca329e5 export + original four reviewed file overlays + three reviewed normal-load completion fix files + reviewed K2 table; rebuilt DLL, pending new K1/K2 exact-artifact acceptance",
+  "table_overlay": {
+    "path": "data/addresses/k2_gog_aspyr.json",
+    "sha256": "4e21a72a9754ae2b1a7babfe2d7fbf0d0b0c5a165efd0b92588a997923b38187"
+  }
+}

@@ -1,0 +1,3 @@
+FAIL m6: page 0 resealed r-x, page 1 untouched rw-p r-xs
+FAIL m6: real two-mapping RW flip refused: page 0 resealed, nothing written child killed by signal 11
+1 of 654 checks FAILED

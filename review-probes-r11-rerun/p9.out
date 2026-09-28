@@ -1,0 +1,7 @@
+half_dup_30_to_60 animated-diagnostic-v1: failed ratio=0.5000 floor=1.2
+half_dup_30_to_60 game-capture-v1: passed ratio=0.9958 floor=0.0
+tenth_fresh_6_to_60 animated-diagnostic-v1: failed ratio=0.1000 floor=1.2
+tenth_fresh_6_to_60 game-capture-v1: passed ratio=0.8000 floor=0.0
+content_probe_35s_1024x768: 117.7s frames=2100 (scaled bound 450 s)
+nproc=12 loadavg=(259.03759765625, 263.47314453125, 242.64013671875)
+exit=0

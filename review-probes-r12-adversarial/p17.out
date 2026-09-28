@@ -1,0 +1,9 @@
+checkout trusted lock path = /run/media/brunner56/MyBook/Workspaces/KotorPhasor/tmp/harness-locks/live-game.lock exists = True
+checkout_env_redirect: refused: child does not hold the canonical lock: lock descriptor is not the canonical lock file
+second_ofd_without_flock: refused: canonical lock descriptor does not hold the exclusive lock
+holder_ofd: ADMITTED {'path': '/tmp/kp-r12-p17-vvwqv0rw/root2/tmp/harness-locks/live-game.lock', 'fd': 4, 'dev': 52, 'ino': 2179841, 'exclusive': True}
+renamed_then_replaced: refused: lock descriptor is not the canonical lock file
+renamed_no_replacement: refused: canonical lock descriptor or path is unavailable: [Errno 2] No such file or directory: '/tmp/kp-r12-p17-vvwqv0rw/root2/tmp/harness-locks/live-game.lock'
+snapshot repository_root = /tmp/kp-r12-p17-vvwqv0rw/fakerepo | every module byte-identical to checkout = True
+snapshot_copy_forged_lock: ADMITTED {'path': '/tmp/kp-r12-p17-vvwqv0rw/fakerepo/tmp/harness-locks/live-game.lock', 'fd': 6, 'dev': 52, 'ino': 2181935, 'exclusive': True}
+bind_mount_redirect: ADMITTED {'path': '/tmp/kp-r12-p17-vvwqv0rw/root5/tmp/harness-locks/live-game.lock', 'fd': 3, 'dev': 52, 'ino': 2182006, 'exclusive': True}

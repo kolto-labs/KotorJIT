@@ -1,0 +1,31 @@
+Completed the VM-boundary validation continuation without restarting or disturbing the other dirty worktree changes.
+
+Changed only the permitted deliverables:
+
+- [tools/address_table_layout_test.py](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/address_table_layout_test.py)
+- [steam-k1-vm-layout-fix-report.md](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/.superpowers/sdd/lua-boundary-validation-plan/steam-k1-vm-layout-fix-report.md)
+
+What is now covered:
+
+- Per-game VM-layout values are derived from adjudication overlays and checked against the proper donors:
+  - K1 donor: `k1_gog_103`, with `wrapper_internal = 0x0` and `internal_command_implementer = 0x3d4`.
+  - K2 donor: `k2_gog_aspyr`, using its own bindings.
+- The required VM binding sites are parsed from `src/api/enginestruct.cpp`’s `need(...)` gate (currently nine sites at lines 154–162), confirmed as looked up by `runtime.cpp`, and required to resolve for every table containing `vm.run_script`.
+- Hook-pack precedence is guarded:
+  - repository hookpack candidates are rejected,
+  - `hookpack_problems(pack, build, overlay=None)` validates a supplied pack using the same layout and VM-stack rules,
+  - tests cover wrong-game offsets, missing stack sites, mismatched binary instances, invalid and duplicate adapter keys, and overlay behavior.
+- Added a literal red-first on-disk temporary-copy test. It copies `k1_gog_103.json` into a `TemporaryDirectory`, mutates the copy to K2’s wrapper offset (`0x1c`) and removes a required stack address, rereads it, and confirms both guards fail. The temporary directory is automatically removed.
+
+Verification completed successfully, host-only:
+
+```text
+python3 tools/address_table_layout_test.py
+Ran 26 tests in 48.823s
+
+OK
+```
+
+No Wine, game process, capture process, live-game lock, canonical checkout, staging area, commit, or push was touched.
+
+Remaining limitation, recorded explicitly in the report: the repository guard cannot discover a deployment-time hook pack supplied outside the worktree via `KOTORPHASOR_HOOKPACK` or a live game directory. The reusable `hookpack_problems` helper is the check to run against that exact staged file once its path is known.

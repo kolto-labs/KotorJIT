@@ -1,0 +1,31 @@
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst2.out:6
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst.out:29
+=== S1 symlinked backup timestamp dir -> outside victim dir
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept:
+     | '/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-S1/g/kotorphasor/backup/20260927T234056Z', on the way to the backup folder, is a junctio
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+=== S2 kotorphasor dir itself a symlink to outside
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | uninstall refused, nothing removed; manifest kept:
+     | '/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-S2/g/kotorphasor', on the way to the backup folder, is a junction or symbolic link; refu
+rc=1
+after: swkotor.exe chitin.key binkw32.dll binkw32_real.dll kphasor.dll kotorphasor/install-manifest.json | sentinel ok
+  bink sha: d2ca9cd3a5c8
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/games/nest-S2/kpreal:
+addresses
+=== N10order :: r=[f for f in m['files'] if f['path']=='binkw32_real.dll'][0]; m['files'].remove(r); m['files'].append(r); import shutil; shutil.rmtree('/home/b
+WARNING: backup kotorphasor/backup/20260927T234110Z/binkw32.dll missing or changed; restoring binkw32.dll from binkw32_real.dll, which matches the recorded orig
+restored original binkw32.dll
+uninstalled (scripts and logs left in place)
+rc=0
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst.out:=== N4arrBD :: m["backup_dir"]=[m['backup_dir']]
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst.out-     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst.out-     | uninstall refused, nothing removed; manifest kept: manifest backup_dir
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst.out-     | is not a single string
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst2.out:=== N5actArr :: f=m['files'][1]; f['action']=['created','replaced']; f['original_sha256']=hashlib.sha256(open('/home/brunner56/kp-live-20
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst2.out-     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst2.out-     | uninstall refused, nothing removed; manifest kept: manifest action of
+/home/brunner56/kp-live-20260922/review-probes-w1-r3/inst2.out-     | 'kphasor.dll' is not a single string

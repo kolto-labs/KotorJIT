@@ -1,0 +1,106 @@
+name="F12 held-key release and return-to-game input"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=30
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+[[step]]
+wait="phase"
+equals="gameplay"
+[[step]]
+do="clear_auto_pause"
+[[step]]
+do="mark_log"
+[[step]]
+do="advance_ticks"
+ticks=120
+[[step]]
+do="lua"
+code="p=nwscript.call('GetFirstPC'); start=nwscript.call('GetPosition',p); return start"
+[[step]]
+do="owned_input"
+action="keydown"
+key="s"
+[[step]]
+do="advance_ticks"
+ticks=30
+[[step]]
+do="assert_lua"
+code="local q=nwscript.call('GetPosition',p);return (q.x-start.x)^2+(q.y-start.y)^2>0.0025"
+equals=true
+label="held backwards key moves PC before overlay"
+[[step]]
+do="console_open"
+open=true
+[[step]]
+do="advance_ticks"
+ticks=60
+[[step]]
+do="lua"
+code="held=nwscript.call('GetPosition',p); return held"
+[[step]]
+do="advance_ticks"
+ticks=90
+[[step]]
+do="assert_lua"
+code="local q=nwscript.call('GetPosition',p);print('held key delta',q.x-held.x,q.y-held.y);return (q.x-held.x)^2+(q.y-held.y)^2<0.0001"
+equals=true
+label="opening F12 releases preexisting held movement"
+[[step]]
+do="owned_input"
+action="keyup"
+key="s"
+[[step]]
+do="console_command"
+code="2+2"
+contains=["number: 4"]
+[[step]]
+do="console_open"
+open=false
+[[step]]
+do="advance_ticks"
+ticks=90
+[[step]]
+do="assert_lua"
+code="local q=nwscript.call('GetPosition',p);return (q.x-held.x)^2+(q.y-held.y)^2<0.0001"
+equals=true
+label="release inside overlay does not stick after close"
+[[step]]
+do="owned_input"
+action="keydown"
+key="w"
+[[step]]
+do="advance_ticks"
+ticks=30
+[[step]]
+do="owned_input"
+action="keyup"
+key="w"
+[[step]]
+do="advance_ticks"
+ticks=90
+[[step]]
+do="assert_lua"
+code="local q=nwscript.call('GetPosition',p);return (q.x-held.x)^2+(q.y-held.y)^2>0.0025"
+equals=true
+label="game movement input restored after F12 close"
+
+[[step]]
+do="console_open"
+open=true
+[[step]]
+do="console_command"
+code="900+7"
+keys_before_submit=["ctrl+Up", "ctrl+Down"]
+contains=["number: 907"]
+[[step]]
+do="console_command"
+code="local value=908\nreturn value"
+keys_before_submit=["ctrl+Up", "ctrl+Down"]
+contains=["number: 908"]
+[[step]]
+do="console_open"
+open=false

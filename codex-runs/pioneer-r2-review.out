@@ -1,0 +1,43 @@
+Pioneer round 2 verdict: **FAIL**.
+
+I resumed rather than restarted:
+
+- Confirmed there was no existing Round‑2 reviewer file to continue; the writer report and Round‑1 review/probe were present.
+- Preserved the intentionally dirty worktree. I made no source edits, staging changes, commits, resets, stashes, or process signals.
+- Created the sole review artifact: [pioneer-round2-review.md](/home/brunner56/kp-live-20260922/pioneer-round2-review.md).
+- Copied the Round‑1 probe into `/home/brunner56/kp-live-20260922/review-probes-pioneer-r2/probe_playback_round1_fixed.py` and fixed its known cleanup leak: Probe B now detaches the successfully attached second-route owner.
+
+The independent review finds no Critical issues, but one Important finding:
+
+| ID | Severity | Finding | Failure scenario |
+|---|---|---|---|
+| I6 | Important | Unbounded threaded control server admits idle unauthenticated sockets before token verification. | A local process can open many loopback connections without sending a newline. `ThreadingMixIn` creates an unbounded daemon thread per socket; the 1-second timeout and token validation happen inside those threads. Enough sockets can exhaust threads, file descriptors, or memory and make the only safe `status`/`stop` control path unavailable while the owner retains both locks. |
+
+The relevant source referents are:
+
+- [`playback.py:595`](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py:595) through `:612`: the handler reads before authenticating.
+- [`playback.py:615`](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py:615) through `:618`: unbounded `ThreadingMixIn` server.
+- [`playback.py:47`](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py:47) through `:50`: the idle connection occupies its handler for up to one second.
+
+The fix should impose bounded admission before spawning the handler thread—e.g. a semaphore around `process_request_thread` that closes/rejects excess sockets—and add a regression test that exceeds the limit while proving bounded thread count plus working authenticated `status` and `stop`.
+
+Round‑1 closure results verified from source:
+
+- I1/I3 speed restoration logic is now journaled before writing speed and restored without route/pending validation.
+- I2 allows `status` and `stop` despite a changed route.
+- I4’s graceful signals and lock-gated reclaim design hold by source review.
+- I5’s cleanup calls server shutdown even after individual cleanup failures.
+- M5’s `exec`, `reply`, `state`, `events`, and `shots` route through the per-engine guard.
+- The old owner-less `pioneer step` compare-and-restore path remains a documented residual in [`pioneer.py:478`](/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/pioneer.py:478); it is outside attached playback and is now engine-guarded, so I classified it as a null move for this round rather than a new blocker.
+
+Execution counts:
+
+- **Fresh completed suites:** 0.
+- **Fresh probe copies prepared:** 1.
+- **Important findings:** 1.
+- **Critical findings:** 0.
+- **Files written:** 2 review-only artifacts:
+  - [pioneer-round2-review.md](/home/brunner56/kp-live-20260922/pioneer-round2-review.md)
+  - [probe_playback_round1_fixed.py](/home/brunner56/kp-live-20260922/review-probes-pioneer-r2/probe_playback_round1_fixed.py)
+
+Incomplete, honestly: I invoked the corrected Round‑1 probe in both the container and through the required host wrapper, but the heavily loaded system did not return usable completed test receipts before the bounded tool-return limit. The retained logs are not counted as passes, and I did not represent the writer’s earlier `32 / 21 / 150 / 33` suite counts as fresh verification. The remaining verification work is serialized completion of playback, pioneer-policy, offline, and creative suites in both container and host environments, with retained logs.

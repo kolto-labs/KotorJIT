@@ -1,0 +1,104 @@
+diff --git a/src/runtime/hook_bodies.cpp b/src/runtime/hook_bodies.cpp
+index 2317ed3..277f381 100644
+--- a/src/runtime/hook_bodies.cpp
++++ b/src/runtime/hook_bodies.cpp
+@@ -784,6 +784,10 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
+         }
+         kp::api::timers::pump(kp::api::timers::now_ms(), tick);
+         h.advance_tick();
++        if (h.pending_requests() != 0) {
++            const unsigned ran = h.service_requests();
++            if (ran != 0) Runtime::instance().log("lua: serviced %u script request(s)", ran);
++        }
+ 
+         if (tick % kReloadEvery == 0) {
+             std::vector<std::string> errors;
+diff --git a/src/runtime/runtime.cmake b/src/runtime/runtime.cmake
+index 560a2b5..1354dfb 100644
+--- a/src/runtime/runtime.cmake
++++ b/src/runtime/runtime.cmake
+@@ -74,6 +74,7 @@ set(KP_API_SOURCES
+     "${KP_SRC_ROOT}/api/timers.cpp"
+     "${KP_SRC_ROOT}/api/strings.cpp"
+     "${KP_SRC_ROOT}/api/compat.cpp"
++    "${KP_SRC_ROOT}/api/scripts_lua.cpp"
+ )
+ foreach(f ${KP_API_SOURCES})
+     if(NOT EXISTS ${f})
+diff --git a/src/runtime/runtime.cpp b/src/runtime/runtime.cpp
+index 36d8c76..fd11d63 100644
+--- a/src/runtime/runtime.cpp
++++ b/src/runtime/runtime.cpp
+@@ -36,6 +36,7 @@
+ #include "api/animation.hpp"
+ #include "image/loaded_image.hpp"
+ #include "api/timers.hpp"
++#include "api/scripts_lua.hpp"
+ #include "harness/commands.hpp"
+ #include "harness/engine.hpp"
+ extern "C" {
+@@ -707,6 +708,7 @@ bool Runtime::boot_scripts(const Config& cfg) {
+ 
+         // Native events, metadata, harness controls and flushed kp.print output.
+         api::compat::install(L, game_dir);
++        kp::api::scripts::register_all(L);
+     };
+ 
+     // The console builds a state of its own and needs the same API on it.
+@@ -724,7 +726,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
+                 game == api::Game::K2 ? "K2" : "K1");
+     }
+ 
++    hc.on_state_closing = [](lua_State*) {};
+     auto host = std::make_unique<lua::Host>(hc);
++    kp::api::scripts::bind_host(host.get());
+     std::vector<std::string> errors;
+     const unsigned loaded = host->load_all(errors);
+     for (const std::string& e : errors) log("script: %s", e.c_str());
+@@ -783,6 +787,7 @@ bool Runtime::start(const Config& cfg) {
+         if (hooks_) clear_originals();
+         hooks_.reset();
+         table_.reset();
++        kp::api::scripts::bind_host(nullptr);
+         host_.reset();
+     api::animation::operations().unbind();
+     api::projectiles::unbind_native();
+@@ -847,6 +852,7 @@ void Runtime::stop() {
+     // quiescent point, which in practice means process shutdown.
+     if (hooks_) hooks_->uninstall();
+ 
++    kp::api::scripts::bind_host(nullptr);
+     host_.reset();
+     api::animation::operations().unbind();
+     api::projectiles::unbind_native();
+diff --git a/tools/kp_namespacetest.cpp b/tools/kp_namespacetest.cpp
+index 187f5f1..c117dcc 100644
+--- a/tools/kp_namespacetest.cpp
++++ b/tools/kp_namespacetest.cpp
+@@ -13,6 +13,7 @@
+ #include "api/output.hpp"
+ #include "api/routines.hpp"
+ #include "api/structs.hpp"
++#include "api/scripts_lua.hpp"
+ #include "lua/host.hpp"
+ #include "runtime/internal.hpp"
+ 
+@@ -41,6 +42,7 @@ void install_native(lua_State* L, bool reverse = false) {
+     kp::api::entity::register_all(L);
+     kp::api::register_support(L);
+     kp::runtime::register_director(L);
++    kp::api::scripts::register_all(L);
+     if (!reverse) kp::api::compat::install(L, "/offline/game");
+ }
+ void install(lua_State* L, bool reverse = false) {
+@@ -101,7 +103,9 @@ int main(int argc, char**) {
+                     'print', 'diagnostic', 'console', 'feedback', 'registertimer',
+                     'removetimer', 'tokenizestring', 'tokenizecmdstring',
+                     'harness.state', 'events.register', 'events.unregister',
+-                    'speed', 'time'}) do
++                    'speed', 'time', 'scripts.list', 'scripts.load',
++                    'scripts.unload', 'scripts.reload', 'scripts.result',
++                    'scriptname', 'scriptdir'}) do
+                     local v = kp
+                     for name in path:gmatch('[^.]+') do v = v[name] end
+                     assert(type(v) == 'function', 'missing kp.' .. path)

@@ -1,0 +1,12 @@
+{
+  "source_video": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-104621/continuous.mp4",
+  "source_sha256": "2b736bac86ae887912d93b1136344bbd4cbf55c4695cf3be9f30b9eda72d0512",
+  "route_ok": true,
+  "start_seconds": 87.889,
+  "duration_seconds": 10,
+  "selection": "automatic arena/combat route marker; requires visual review for defining effects",
+  "artifacts": {
+    "representative.mp4": "855d73ab4870a16ef33272472b86001af0ad582e32069f44ba3c69989a62faa6",
+    "representative.gif": "f6320bbf9d032b972a5d233d18ab1a0df46331e584fa1621987f36461abbf4b6"
+  }
+}

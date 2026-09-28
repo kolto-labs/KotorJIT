@@ -1,0 +1,5 @@
+sigint_in_every_phase: exit=1 steps=['recorder', 'source_process', 'display'] child_interrupts=['SIGINT'] cleanup=passed sup_interrupts=['SIGINT', 'SIGINT', 'SIGINT', 'SIGINT'] exhausted=False owned_alive_after=[] result_written=True 
+sigterm_to_child_then_sigint_group: exit=1 steps=['recorder', 'source_process', 'display'] child_interrupts=['SIGTERM', 'SIGINT'] cleanup=passed sup_interrupts=['SIGINT'] exhausted=False owned_alive_after=[] result_written=True 
+sigterm_both_then_sighup_child_mid_cleanup: exit=1 steps=['recorder', 'source_process', 'display'] child_interrupts=['SIGTERM', 'SIGINT', 'SIGHUP'] cleanup=passed sup_interrupts=['SIGTERM'] exhausted=False owned_alive_after=[] result_written=True 
+signals_during_budget_kill: exit=1 steps=[] child_interrupts=None cleanup=None sup_interrupts=['SIGINT'] exhausted=True owned_alive_after=[] result_written=True 
+supervisor_sigkilled: exit=-9 steps=['recorder', 'source_process', 'display'] child_interrupts=[] cleanup=passed sup_interrupts=None exhausted=None owned_alive_after=[] result_written=False child_alive_after_supervisor_death=True

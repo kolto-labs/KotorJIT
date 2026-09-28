@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/private_gpu_controller.py", line 101, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/brunner56/kp-live-20260922/private_gpu_controller.py", line 77, in main
+    child(sys.argv[2],sys.argv[3:]);return
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/private_gpu_controller.py", line 59, in child
+    display.start_xvfb()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/brunner56/kp-live-20260922/gpu_display.py", line 18, in start_xvfb
+    if self.xvfb.poll() is not None or time.monotonic()>deadline:raise RuntimeError('Owned GPU display failed to start')
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Owned GPU display failed to start

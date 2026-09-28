@@ -1,0 +1,225 @@
+--- /home/brunner56/kp-live-20260922/r13-baseline/creative-runner.md	2026-09-27 18:17:24.303052353 -0500
++++ docs/creative-runner.md	2026-09-27 18:46:37.470102213 -0500
+@@ -447,7 +447,7 @@
+ 
+ | Policy | Black luma max | Noise floor | Separation factor | Minimum distinct ratio |
+ | --- | --- | --- | --- | --- |
+-| `animated-diagnostic-v2` | 24 | 3.9 | 3 | 99% |
++| `animated-diagnostic-v2` | 24 | 3.9 | 2 | 99% |
+ | `game-capture-v1` | 24 | 0 (not calibrated) | none | 5% |
+ 
+ The master is lossy (`libx264 -preset ultrafast -crf 28`). A repeated source
+@@ -465,32 +465,80 @@
+ level. The cadence gate's 50 ms maximum gap rejects a capture that skips that
+ far.
+ 
+-The round 12 calibration used 1024x768 synthetic encodes of that pattern. Each
+-was rendered to `bgr0` (the x11grab input format) and encoded with the
+-recorder's exact codec settings. The production probes then read each master.
+-Labels came from a hash of every source frame. The 17 families were the
+-pattern at full, half, and quarter `testsrc2` speed, and with `testsrc2` nearly
+-frozen. They also included capture duplication and skips at 3, 12, 15, 20, 30,
+-45, 50, and 58 FPS repeated to 60. Offset variants put duplicates on I-frames.
+-Across 7,825 duplicate frames the largest difference was 1.0167, an I-frame
+-duplicate. Across 10,518 fresh frames the smallest was 15.2818. The floor 3.9
+-is 3.84 times the largest duplicate and 3.92 times below the smallest fresh
+-frame. Scripts and output are in
+-`/home/brunner56/kp-live-20260922/r12-calibration/` (`calib_r12.py`,
+-`summary.out`).
++The calibration used 1024x768 synthetic encodes of that pattern. Each was
++rendered to `bgr0` (the x11grab input format) and encoded with the recorder's
++exact codec settings. The production probes then read each master. Labels came
++from the index map or a hash of every source frame. The families cover the
++pattern at full, quarter, and 4x `testsrc2` speed and with `testsrc2` frozen.
++They also cover capture duplication and skips down to 3 FPS repeated to 60, and
++duplicates forced onto every x264 I-frame at every level. The largest duplicate
++difference is 1.2414, an I-frame duplicate. The smallest fresh difference is
++14.887. Both numbers come from the round 12 correctness review, which had 47
++families. They replace the writer's earlier 1.0167 and 15.2818. The floor 3.9 is
++3.14 times the largest duplicate and 3.82 times below the smallest fresh frame.
++The calibration scripts and their output stay with the review evidence, outside
++the repository.
+ 
+ The diagnostic also checks that the two populations really separate. It
+ records a histogram of the per-frame difference over fixed bins
+ (`CONTENT_HISTOGRAM_EDGES`) in `content.separation`. The guard band is the open
+-interval from floor / 3 to floor x 3 (1.3 to 11.7). If any acceptance frame
+-falls inside it, the frame is neither a clean duplicate nor a clean fresh frame.
+-The content result is then `calibration_ambiguous`, and the diagnostic verdict
+-is `calibration_ambiguous`. That verdict is a failure. It never passes, and it
+-never blames capture. It outranks PASS and FAIL, and every criterion is still
+-recorded. A stuck capture or a half-duplicate capture separates cleanly and
+-fails as `capture_content_static`. Plain `testsrc2` (the pattern without its
+-step) falls inside the band and is `calibration_ambiguous`. So is any real
+-path whose noise does not match the synthetic calibration.
++interval from floor / 2 to floor x 2 (1.95 to 7.8). The largest calibrated
++duplicate is 1.57 times below its lower edge. The smallest calibrated fresh
++frame is 1.91 times above its upper edge. If any acceptance frame falls inside
++the band, the frame is neither a clean duplicate nor a clean fresh frame, and
++the content result is `calibration_ambiguous`. That result never passes, and it
++never blames capture. A stuck capture or a half-duplicate capture separates
++cleanly and fails as `capture_content_static`. So does any real path whose
++noise does not match the synthetic calibration.
++
++The difference size alone cannot tell a stale loop from fresh frames. A capture
++that cycles two or three old buffers changes every frame by a full level. So
++the diagnostic policy also checks the level sequence (`content.level_sequence`):
++
++- Each acceptance frame's brightness level is decoded from its `yavg`. The
++  sorted values are split into seven levels at their six largest gaps, and the
++  levels are numbered -3 to 3 in order of brightness. Only the order is used,
++  never the luma scale, so another path's scale cannot fail it.
++- The decoding must be resolved. The smallest gap between levels must be at
++  least `level_resolution_factor` (1.9) times the largest gap inside a level.
++  Clean synthetic families gave at least 3.93 over 8 s clips and 20.0 over a
++  full 30 s interval. The factor is half the smallest, rounded down.
++- A fresh frame must step +3 levels (mod 7) from the previous frame, and a
++  duplicate repeats the level. Any other step is a violation. So is a clearly
++  fresh difference (at least floor x 2) without a step, and a clearly duplicate
++  difference (at most floor / 2) with one. Differences inside the guard band
++  are left to the separation rule.
++- An unresolved decoding or any violation fails as `capture_content_sequence`.
++  That failure is independent of the noise floor, so it is never excused as
++  `calibration_ambiguous`. The block records the level histogram, the decoded
++  ladder, the total violation count, and the first 64 violations with frame
++  index, PTS, levels, step, and difference.
++
++What the level sequence catches, on synthetic encodes read by the production
++probes:
++
++- Two-frame and three-frame stale loops.
++- `testsrc2` without the step, which is what mpv would show if it dropped the
++  `eq` filter or ignored `eval=frame`. The yavg values then do not form seven
++  separated levels. Before this check, the native-speed cases were only
++  `calibration_ambiguous`, and slow motion could have looked like a stuck
++  capture.
++- Torn or partial frames whose yavg falls between levels.
++- Blended frames.
++- A single skipped source frame (+6).
++- A duplicate followed by a skip: one repeated frame, then the frame after next.
++
++The last case matters for the real run. If mpv presents a frame late and then
++drops one to catch up, or the capture clock drifts against mpv's, the result is
++a duplicate followed by a +6 step. That fails the sequence even when the
++duplicate ratio is within the 1% the distinct-frame ratio allows. A duplicate
++that is followed by the next frame (+3) passes.
++
++The level sequence does not catch a region frozen for the whole clip. That
++region only compresses the ladder: with the bottom half or three quarters
++frozen, the levels stay in order and each step is still +3. The separation rule
++catches it only when the remaining differences fall inside the guard band, as
++they do with 90% of the frame frozen.
+ 
+ The game policy is unchanged, and its zero floor is not calibrated. Its ratio
+ is an upper bound on real change. Encoder refinement after one real change counts too. A still frame with
+@@ -653,26 +701,38 @@
+ ```sh
+ cd scripts/harness && /usr/bin/python3.14 -S -B -m kpharness.capture_diagnostic run \
+   --run-root /operator/diagnostic-runs --snapshot /operator/diagnostic-snapshot \
+-  --cleanup-commitment-log /operator/owned/commitments.log --authorized-single-run
++  --cleanup-commitment-log /operator/owned/commitments.log \
++  --ffprobe /absolute/path/to/native/ffprobe --authorized-single-run
+ ```
+ 
+ Run it on the host, not in a container. The supervisor imports from the
+ worktree, and the child it starts runs isolated (`-I -S -B`) from the verified
+-snapshot only. The defaults are `/usr/bin/ffmpeg` (not the
+-`~/.local/bin` wrapper) and the Homebrew FFprobe. Each tool must resolve to one
+-native ELF file. The driver takes the canonical live-game lock and passes that
++snapshot only. FFmpeg defaults to `/usr/bin/ffmpeg` (not the `~/.local/bin`
++wrapper). FFprobe has no default: `--ffprobe` is required. Each tool must
++resolve to one native ELF file, not a wrapper script. The commitments line and
++`preflight.json` record each tool's resolved path and SHA-256. The calibration
++above used an FFmpeg 9.0.1 `ffprobe`. The driver takes the canonical live-game lock and passes that
+ descriptor to every child, including the recorder's FFprobe probes and every
+ `xwininfo` query. It refuses if any `wineserver`, `swkotor`, `gamescope`,
+ `ffmpeg`, or `ffprobe` process exists. It matches the name in `comm`, in the
+ `/proc/PID/exe` target, in `argv[0]`, and in the first script argument after a
+ launcher such as `bash`, `env`, or `python3` (a wrapped `bash ~/.local/bin/ffmpeg`
+-is caught). For processes of this user whose `/proc/PID/exe` can be opened, it
+-also compares the executable with the configured FFmpeg and FFprobe ELF files:
+-first by device and inode (a hard link), then by size and SHA-256 (a renamed
+-copy). Only same-size files are hashed, and each inode is hashed once. The
+-guarantee is limited to that. It does not catch a different build of FFmpeg, a
+-process of another user, a non-dumpable process whose `exe` is hidden, or a
+-process started after the scan. It also refuses if the `comm`, `stat`, or `cmdline` of any `/proc`
++is caught). A dynamic-loader launch such as
++`/lib64/ld-linux-x86-64.so.2 /usr/bin/ffmpeg` is also covered. When `comm`, the
++`exe` basename, or `argv[0]` is a loader (`ld-linux*`, including the
++15-character `ld-linux-x86-64`, or `ld.so`), the first argument that is not a
++loader option names the program. Options that take a value, such as
++`--library-path` and `--argv0`, are skipped. The row records it as
++`loader_program`, and its name is checked like any other. For processes of this
++user whose `/proc/PID/exe` can be opened, it also compares the executable with
++the configured FFmpeg and FFprobe ELF files: first by device and inode (a hard
++link), then by size and SHA-256 (a renamed copy). It compares a loader's program
++file the same way, resolving a relative path against `/proc/PID/cwd`. Only
++same-size files are hashed, and each inode is hashed once. The guarantee is
++limited to that. It does not catch a different build of FFmpeg, a process of
++another user, a non-dumpable process whose `exe` is hidden, or a process started
++after the scan. It also does not catch a program loaded some other way, for
++example through `dlopen` from another process. It also refuses if the `comm`, `stat`, or `cmdline` of any `/proc`
+ entry of this user cannot be read. An unreadable `/proc/PID/exe` alone is kept
+ as evidence: the kernel hides it for non-dumpable processes such as
+ `kwin_wayland` and `ssh-agent`, and `comm` and `argv` still classify them. Its
+@@ -714,9 +774,10 @@
+ that window is held, then forwarded once the child can be supervised. The
+ child inherits the blocked set and unblocks it only after its own handlers are
+ in place, before it starts Gamescope, the client, or FFmpeg. The block only
+-holds in a single-threaded supervisor. The supervisor records
+-`supervisor_threads_at_spawn` and refuses to spawn if it has more than one
+-thread. SIGINT, SIGHUP, and SIGTERM
++holds in a single-threaded supervisor. The supervisor counts its threads in
++`/proc/self/task`, so a native `_thread` thread counts too. It records the
++count as `supervisor_threads_at_spawn` and refuses to spawn if it is more than
++one. SIGINT, SIGHUP, and SIGTERM
+ all take this path, and repeated signals are recorded but never cut the ordered
+ cleanup short. The supervisor then waits for the cleanup budget (1,442 s, about
+ 24 minutes, dominated by the two frame-scaled FFprobe deadlines; the components are
+@@ -735,19 +796,39 @@
+ 
+ `diagnostic-result.json` lists each criterion. The verdict is PASS only when all
+ of them pass: no SHM fallback string, first-frame admission, exact window
+-geometry, the `animated-diagnostic-v2` content gate, canonical PTS binding, at
++geometry, the `animated-diagnostic-v2` content gate (with its level sequence),
++canonical PTS binding, at
+ least 99% of 60 FPS, at most 0.5% missing or dropped slots, no gap over 50 ms,
+ zero FFmpeg duplicates, recomputed cadence evidence, and an acceptance interval
+ bounded by the route markers. The run also needs complete cleanup, no surviving
+ owned or forbidden process, a clear ledger at the launch head, unchanged
+ X0/X94/X100 sockets and lock files, an unchanged snapshot, a recorded media
+ SHA-256, and no driver error. Any failure exits nonzero and keeps all evidence.
+-If the recomputed content separation is ambiguous, the verdict is
+-`calibration_ambiguous` instead, whatever the other criteria say. It also exits
+-nonzero. `diagnostic-result.json` records that separation, recomputed from the
+-hashed content artifact, as `content_separation`: guard band, counts, the
+-largest duplicate, the smallest fresh frame, and the histogram. It is `null`
+-when no content could be recomputed.
++`failing_criteria` lists every failed criterion, in the order above, and the
++printed result line repeats it.
++
++The verdict is `calibration_ambiguous` only when three things hold:
++
++- the recomputed content separation is ambiguous;
++- that is the content gate's only failure, so the level sequence passed and the
++  first acceptance frame is not black;
++- every non-content criterion passed.
++
++For the recomputed-cadence criterion, "passed" is judged with the content gate
++set aside, because the recorder folds a content failure into the cadence
++status. The result records that check as
++`cadence_recomputed_apart_from_content`. If a survivor, a changed protected
++display, a cleanup failure, a cadence failure, SHM fallback, or any other
++non-content criterion fails, the verdict is FAIL. The same holds for a refused
++lock: the run never launches, and a run without a launch is always FAIL. The
++`calibration_ambiguous` verdict also exits nonzero.
++
++`diagnostic-result.json` records two blocks recomputed from the hashed content
++artifact. `content_separation` has the guard band, counts, the largest
++duplicate, the smallest fresh frame, and the histogram. `content_level_sequence`
++has the decoded ladder, the level histogram, the step and repeat counts, the
++violation count, and the recorded violations. Each is `null` when no content
++could be recomputed.
+ 
+ Visual acceptance binds reviewer identity, UTC acceptance time, review scope,
+ execution digest, and master digest into a separate acceptance digest. The

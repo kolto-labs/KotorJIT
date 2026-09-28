@@ -1,0 +1,5 @@
+[100%] Built target kphasor
+[100%] Built target kp_namespacetest
+build_rc=0
+aa479d8ada5ba18cf8674d4dcdcf2fd72c74efc485aa0baed1befefa7154098d  tmp/lifecycle-cfg/kp_namespacetest
+00604dbf773a513ae97a3321d16709a123391d46d263c078c6490bb8853008e1  /home/brunner56/kp-live-20260922/dead-event-namespacetest-build-current.log

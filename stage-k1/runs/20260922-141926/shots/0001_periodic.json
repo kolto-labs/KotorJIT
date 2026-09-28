@@ -1,0 +1,36 @@
+{
+ "phase": "loading",
+ "phase_detail": {
+  "server_mode": 0,
+  "loading_module": 1,
+  "area_not_ready": 1,
+  "input_class": 0,
+  "main_menu": 1,
+  "game_over": 0,
+  "pause": 0,
+  "controller_pause": 0,
+  "tutorial": 0,
+  "modal_count": 0,
+  "status_summary": -1,
+  "movie": 0,
+  "load_error": 0,
+  "move_pending": 0,
+  "timers_paused": 3,
+  "chargen": -1
+ },
+ "chargen_stage": "none",
+ "module": "",
+ "server_tick": 1,
+ "client_tick": 12,
+ "pc": null,
+ "party": null,
+ "dialog": null,
+ "globals_hash": "14f93d791bd584cb",
+ "journal_hash": "d6a0a052f3525599",
+ "counts": {
+  "globals": 1184,
+  "journal": 12
+ },
+ "live": true,
+ "poisoned": []
+}

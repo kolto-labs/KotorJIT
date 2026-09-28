@@ -1,0 +1,13 @@
+test_real_encodes_fail_duplicates_and_pass_full_animation (kpharness_gamescope_backend_test.RealEncodeContentTests.test_real_encodes_fail_duplicates_and_pass_full_animation) ... half_duplicate_30_to_60 {'animated-diagnostic-v2': ('failed', 0.5), 'game-capture-v1': ('passed', 1.0)}
+one_in_ten_fresh {'animated-diagnostic-v2': ('failed', 0.0979), 'game-capture-v1': ('passed', 0.8402)}
+slow_quarter_stepped {'animated-diagnostic-v2': ('passed', 1.0), 'game-capture-v1': ('passed', 1.0)}
+static_still {'animated-diagnostic-v2': ('failed', 0.0), 'game-capture-v1': ('failed', 0.0)}
+textured_static {'animated-diagnostic-v2': ('failed', 0.0), 'game-capture-v1': ('failed', 0.0)}
+blink_8x8 {'animated-diagnostic-v2': ('failed', 0.0), 'game-capture-v1': ('passed', 0.0515)}
+full_animated_60 {'animated-diagnostic-v2': ('passed', 1.0), 'game-capture-v1': ('passed', 1.0)}
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 107.434s
+
+OK

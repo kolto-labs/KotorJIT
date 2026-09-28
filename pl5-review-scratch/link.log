@@ -1,0 +1,36 @@
+/usr/bin/ld.bfd: /lib/crt1.o: in function `__wrap_main':
+(.text+0x2e): undefined reference to `main'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::(anonymous namespace)::runtime_shape()':
+engine_k1.cpp:(.text+0x1a7): undefined reference to `kp::runtime::Runtime::instance()'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::(anonymous namespace)::play_movies_body_stack(void*, void*, int*, int, int, void*)':
+engine_k1.cpp:(.text+0x453): undefined reference to `kp::platform::is_readable(void const*, unsigned int)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::(anonymous namespace)::play_movies_body_ecx(void*, void*, int*, int, int, void*)':
+engine_k1.cpp:(.text+0x523): undefined reference to `kp::platform::is_readable(void const*, unsigned int)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::bind_adapter_originals(kp::hooks::HookSet const&)':
+engine_k1.cpp:(.text+0x5db): undefined reference to `kp::hooks::HookSet::original(std::basic_string_view<char, std::char_traits<char> >) const'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x62b): undefined reference to `kp::hooks::HookSet::original(std::basic_string_view<char, std::char_traits<char> >) const'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::GameAdapter::log(char const*, ...) const':
+engine_k1.cpp:(.text+0x1251): undefined reference to `kp::platform::log(kp::platform::LogLevel, char const*, ...)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::GameAdapter::read_last_module(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) const':
+engine_k1.cpp:(.text+0x350e): undefined reference to `kp::runtime::self_module_path[abi:cxx11]()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x3528): undefined reference to `kp::runtime::directory_of(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::GameAdapter::load_save(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+engine_k1.cpp:(.text+0x4145): undefined reference to `kp::runtime::active_multiplayer_transport()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x4165): undefined reference to `kp::runtime::Runtime::instance()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x41a9): undefined reference to `kp::runtime::active_multiplayer_transport()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x41c9): undefined reference to `kp::runtime::Runtime::instance()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x43d1): undefined reference to `kp::runtime::self_module_path[abi:cxx11]()'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text+0x43ee): undefined reference to `kp::runtime::directory_of(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::make_adapter(kp::hooks::AddressTable const&, unsigned int)':
+engine_k1.cpp:(.text+0x1df19): undefined reference to `kp::harness::make_k2_adapter(kp::hooks::AddressTable const&, unsigned int)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::HookBodyScope::HookBodyScope()':
+engine_k1.cpp:(.text._ZN2kp7harness13HookBodyScopeC2Ev[_ZN2kp7harness13HookBodyScopeC2Ev]+0xa): undefined reference to `kp::runtime::enter_hook_body()'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::HookBodyScope::~HookBodyScope()':
+engine_k1.cpp:(.text._ZN2kp7harness13HookBodyScopeD2Ev[_ZN2kp7harness13HookBodyScopeD2Ev]+0xa): undefined reference to `kp::runtime::leave_hook_body()'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::readable(unsigned int, unsigned int)':
+engine_k1.cpp:(.text._ZN2kp7harness8readableEjj[_ZN2kp7harness8readableEjj]+0x25): undefined reference to `kp::platform::is_readable(void const*, unsigned int)'
+/usr/bin/ld.bfd: /home/brunner56/kp-live-20260922/pl5-review-scratch/engine_k1.o: in function `kp::harness::write_uint(unsigned int, unsigned int, unsigned int, char const*)':
+engine_k1.cpp:(.text._ZN2kp7harness10write_uintEjjjPKc[_ZN2kp7harness10write_uintEjjjPKc]+0x77): undefined reference to `kp::platform::set_protection(void*, unsigned int, kp::platform::Protect)'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text._ZN2kp7harness10write_uintEjjjPKc[_ZN2kp7harness10write_uintEjjjPKc]+0xb7): undefined reference to `kp::platform::set_protection(void*, unsigned int, kp::platform::Protect)'
+/usr/bin/ld.bfd: engine_k1.cpp:(.text._ZN2kp7harness10write_uintEjjjPKc[_ZN2kp7harness10write_uintEjjjPKc]+0x114): undefined reference to `kp::platform::log(kp::platform::LogLevel, char const*, ...)'
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)

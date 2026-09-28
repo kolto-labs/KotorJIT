@@ -1,0 +1,72 @@
+[10:35:34] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[10:35:34] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[10:35:34] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[10:35:34] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[10:35:34] runtime already current (7ebfc850dd23)
+[10:35:34] ini tuned: swkotor.ini (14 keys)
+[10:35:35] Xvfb up on :100 (pid 745549)
+[10:35:35] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[10:35:35] wineserver settled before launch
+[10:35:35] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[10:35:50] channel up on 127.0.0.1:45565: build k1_gog_103, 19 hooks, live=True
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE", "timeout": 180}
+  ok (2.0s) load_save '000001 - AUTOSAVE' issued
+step 2: wait module {"equals": "danm14aa", "timeout": 180}
+screenshot -> 0001_periodic.png
+  ok (8.6s) phase=loading module=danm14aa server_tick=4 client_tick=7
+step 3: wait phase {"equals": "gameplay", "timeout": 180}
+  ok (23.5s) phase=gameplay module=danm14aa server_tick=7 client_tick=10 pc=(105.7,96.5,1.0) hp=96/96
+step 4: do clear_auto_pause
+  ok (6.5s) clear_auto_pause ok
+step 5: real conscious Bastila party precondition
+  ok (0.6s) assert_lua == true
+step 6: do await_log {"pattern": "\\[arrival\\] dan", "minimum": 1, "timeout": 120}
+  ok (4.8s) native log matched 1 lines
+step 7: Dantooine arrival text inspection
+screenshot -> 0002_Dantooine_arrival_text_inspection.png
+  ok (0.4s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534/shots/0002_Dantooine_arrival_text_inspection.png
+step 8: do mark_log
+  ok (0.1s) saved native log offset 8877
+step 9: meditation actual engine hook gives every member an active attack-effect delta
+  ok (0.3s) assert_lua == true
+step 10: independent active attack-effect counts increased on every party member
+  ok (0.3s) assert_lua == true
+step 11: do await_log {"pattern": "\\[meditation\\] round \\d+: steadied [23] of the party", "minimum": 1, "timeout": 120}
+  ok (0.1s) native log matched 1 lines
+step 12: meditation suppresses repeated attacked hook until end-of-round
+  ok (0.3s) assert_lua == true
+step 13: temporary meditation effect expires to baseline
+  ok (5.8s) assert_lua == true
+step 14: do mark_log
+  ok (0.2s) saved native log offset 9399
+step 15: establish alignment baseline20
+  ok (0.4s) assert_lua == true
+step 16: do advance_ticks {"ticks": 200, "timeout": 180}
+  ok (28.3s) observed server ticks 103 -> 303
+step 17: do mark_log
+  ok (0.1s) saved native log offset 10081
+step 18: cross alignment decade20 to35
+  ok (0.3s) assert_lua == true
+step 19: do await_log {"pattern": "\\[conscience\\] \\+15, now 35", "minimum": 1, "timeout": 120, "maximum": 1}
+  ok (8.4s) native log matched 1 lines
+step 20: Alignment text inspection
+screenshot -> 0003_Alignment_text_inspection.png
+  ok (0.5s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534/shots/0003_Alignment_text_inspection.png
+step 21: do mark_log
+  ok (0.0s) saved native log offset 10191
+step 22: same-decade alignment change35 to36
+  ok (0.2s) assert_lua == true
+step 23: do advance_ticks {"ticks": 200, "timeout": 180}
+  ok (28.6s) observed server ticks 368 -> 568
+step 24: do await_log {"pattern": "\\[conscience\\]", "minimum": 0, "timeout": 120, "maximum": 0}
+  ok (0.2s) native log matched 0 lines
+step 25: do mark_log
+  ok (0.2s) saved native log offset 10763
+step 26: wounded Bastila real low HP and stock damage hook
+  ok (0.3s) assert_lua == true
+step 27: do await_log {"pattern": "\\[wounded\\] .*bastila.*below 35%", "minimum": 1, "timeout": 120, "maximum": 1}
+  failed (120.3s) native log predicate not reached: \[wounded\] .*bastila.*below 35%
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534/report.json
+{"ok": false, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534"}
+[10:39:54] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-103534

@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/k2_startup_gpu.py", line 66, in main
+    ch=session.boot()
+  File "/home/brunner56/kp-live-20260922/private_k2_gpu_controller.py", line 51, in owned_boot
+    return original_boot(self,*a,**kw)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/session.py", line 1418, in boot
+    self.stage(resources)
+    ~~~~~~~~~~^^^^^^^^^^^
+  File "/home/brunner56/kp-live-20260922/k2_startup_gpu.py", line 46, in stage
+    subprocess.run(['cp','-a','--reflink=auto',str(origin),str(d)],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['cp', '-a', '--reflink=auto', '/run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets/override', '/home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/steamassets/override']' died with <Signals.SIGTERM: 15>.
+[23:57:20] target k2-wine: data /run/media/brunner56/MyBook/SteamLibrary/steamapps/common/Knights of the Old Republic II/steamassets
+[23:57:20] staged tree /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage (new)
+[23:57:20] executable /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/steamassets/swkotor2.exe
+[23:57:20] saved original binkw32.dll -> binkw32_real.dll
+[23:57:20] runtime installed from /home/brunner56/kp-release-20260922/build
+[23:57:20] ini tuned: swkotor2.ini (14 keys)
+[23:58:57] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/runs/20260926-235719
+[23:58:57] torn down; logs in /home/brunner56/kp-live-20260922/private-gpu-runs/20260926-235707/k2-stage/runs/20260926-235719

@@ -1,0 +1,7 @@
+{
+  "source": "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/scenarios/model-memory/player.toml",
+  "source_sha256": "314e1e80622a0da036279fc18066b83201904406a117eb7e2d9a93ac699957a2",
+  "effective": "/home/brunner56/kp-live-20260922/model-outdoor/player.toml",
+  "effective_sha256": "b7f53140d679014d6ed9b94fb4e8381f473e3714369fc13ae0ca0724cfcea257",
+  "change": "Load private Dantooine autosave instead of cramped Endar checkpoint; all capability, phase and restoration predicates unchanged."
+}

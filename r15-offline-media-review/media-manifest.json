@@ -1,0 +1,42 @@
+{
+  "drift_pair8.mp4": {
+    "bytes": 8713333,
+    "sha256": "97537f4e8f08cdd2e533fa187529e0ebad801524271f14e6296335e86787e458"
+  },
+  "duplicate8.mp4": {
+    "bytes": 8689286,
+    "sha256": "7bccf104c1952d25d5d64facad47246ce4f867010e052beee7f69d9c6d064f51"
+  },
+  "fast4_8.mp4": {
+    "bytes": 8730758,
+    "sha256": "bd1dbf748bc917ab18411040aa270151476965806daa59c33fed165550bf0409"
+  },
+  "half_frozen_bottom8.mp4": {
+    "bytes": 8703500,
+    "sha256": "15c82b6bd42f7fbb13ea2c40a4756222ddd476c6afd2e84461d859f99e8803b7"
+  },
+  "half_frozen_bottom8_true.mp4": {
+    "bytes": 3720633,
+    "sha256": "5fefdd44f94c416a3e0be466f994810c4665a0a19fbb972ac9536e6a97846bee"
+  },
+  "healthy34.mp4": {
+    "bytes": 36607778,
+    "sha256": "5f60da86a7f83593e57119b829b943d5e703fc1dfdf46228fe8f18c12949d51e"
+  },
+  "healthy8.mp4": {
+    "bytes": 8707513,
+    "sha256": "11e17868875d95a4b0fce0c7f42cbb56919ccaac37a1b5e7e79aca5375ec850b"
+  },
+  "single_skip8.mp4": {
+    "bytes": 8706290,
+    "sha256": "37bdb44d2013f372624c9a18c9a618a273360c80772c2654bb7bcf3c27c2974e"
+  },
+  "slowq8.mp4": {
+    "bytes": 8186582,
+    "sha256": "4994d49aca7ecc3048a88547135d4e6782dffcacc33a347f67230edbbebfeb35"
+  },
+  "static8.mp4": {
+    "bytes": 7868976,
+    "sha256": "0bc1c641c687f930ca52077f483de40dbae6fc5407017c13e6411573606eea3b"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "label": "tag",
+  "code": "local s=nwscript.call('GetTag',K2PC); assert(type(s)=='string' and not s:find(string.char(0),1,true)); return s,#s",
+  "request": 3,
+  "lines": [
+    {
+      "request": 3,
+      "kind": "input",
+      "text": "> local s=nwscript.call('GetTag',K2PC); assert(type(s)=='string' and not s:find(string.char(0),1,true)); return s,#s"
+    },
+    {
+      "request": 3,
+      "kind": "result",
+      "text": "string: "
+    },
+    {
+      "request": 3,
+      "kind": "result",
+      "text": "number: 0"
+    }
+  ]
+}

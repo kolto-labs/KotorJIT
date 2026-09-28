@@ -1,0 +1,8 @@
+test_status_1000_under_flood (__main__.Stress.test_status_1000_under_flood) ... 
+STRESS {"calls": 2000, "flooders": 32, "flood_connects": 35222, "failures": 0, "kinds": {}, "peak_threads": 19, "p50": 0.0024, "p99": 1.6222, "max": 5.2646}
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 231.841s
+
+OK

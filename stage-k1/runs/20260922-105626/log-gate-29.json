@@ -1,0 +1,7 @@
+{
+  "pattern": "\\[wounded\\] .*bastila.*below 35%",
+  "offset": 7712,
+  "lines": [
+    "[running] info: [60_party_wounded] [wounded] bastila below 35%"
+  ]
+}

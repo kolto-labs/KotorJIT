@@ -1,0 +1,14 @@
+HOLDS 	M1 transition restore is load-bearing (mutant keeps flag=1)	mutant flag=1
+HOLDS 	M2 anomaly => current bytes strike nothing	EffectDamage calls=0, local7=1
+HOLDS 	M3 HEAD bytes under anomaly still strike	EffectDamage calls=2
+exit=0
+--- avatar test vs ORIGINAL script
+[log] [mp] failed to open UDP socket on port 39131.
+[log] [mp] failed to open UDP socket on port 39131.
+OK: all checks passed
+exit=0
+--- avatar test vs MUTANT (no with_caller)
+[log] [mp] failed to open UDP socket on port 39131.
+FAIL: first spawn must SetFacing(90) with the ghost as caller
+FAIL: facing change 90 -> 100 must SetFacing(100) with the ghost as caller
+FAILED: 2 check(s) did not pass

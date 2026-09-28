@@ -1,0 +1,37 @@
+[10:26:01] target k1: data /home/brunner56/krayt/tmp/k1_harness
+[10:26:01] staged tree /home/brunner56/kp-live-20260922/stage-k1 (reused)
+[10:26:01] reset staged Saves from /home/brunner56/krayt/tmp/k1_harness/Saves
+[10:26:01] executable /home/brunner56/kp-live-20260922/stage-k1/swkotor.exe
+[10:26:01] runtime already current (7ebfc850dd23)
+[10:26:01] ini tuned: swkotor.ini (14 keys)
+[10:26:01] Xvfb up on :100 (pid 720335)
+[10:26:01] wine prefix already initialised, skipping wineboot (/home/brunner56/kp-live-20260922/wineprefix-k1)
+[10:26:01] wineserver settled before launch
+[10:26:01] launching: bwrap --die-with-parent --ro-bind / / --bind /run/user/1000/kpharness/wine-9f695d1a7797f669 /tmp --bind /home/brunner56/kp-live-20260922/stage-k1 /home/brunner56/kp-live-20260922/stage-k1 --bind /home/brunner56/kp-live-20260922/wineprefix-k1 /home/brunner56/kp-live-20260922/wineprefix-k1 --dev-bind /dev/dri /dev/dri --dir /tmp/.X11-unix --ro-bind /tmp/.X11-unix /tmp/.X11-unix -- wine swkotor.exe (cwd /home/brunner56/kp-live-20260922/stage-k1)
+[10:26:25] channel up on 127.0.0.1:56579: build k1_gog_103, 19 hooks, live=True
+execution: game speed 1x (retail-speed opt-out)
+step 1: do load_save {"dir": "000001 - AUTOSAVE", "timeout": 180}
+  ok (3.4s) load_save '000001 - AUTOSAVE' issued
+step 2: wait module {"equals": "danm14aa", "timeout": 180}
+screenshot -> 0001_periodic.png
+  ok (11.6s) phase=loading module=danm14aa server_tick=4 client_tick=7
+step 3: wait phase {"equals": "gameplay", "timeout": 180}
+  ok (33.5s) phase=gameplay module=danm14aa server_tick=7 client_tick=10 pc=(105.7,96.5,1.0) hp=96/96
+step 4: do clear_auto_pause
+  ok (18.7s) clear_auto_pause ok
+step 5: real conscious Bastila party precondition
+  ok (12.6s) assert_lua == true
+step 6: do await_log {"pattern": "\\[arrival\\] dan", "minimum": 1, "timeout": 120}
+  ok (12.4s) native log matched 1 lines
+step 7: Dantooine arrival text inspection
+screenshot -> 0002_Dantooine_arrival_text_inspection.png
+  ok (1.0s) /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102558/shots/0002_Dantooine_arrival_text_inspection.png
+step 8: do mark_log
+  ok (11.0s) saved native log offset 107357
+step 9: meditation actual engine hook gives every member an active attack-effect delta
+  ok (12.4s) assert_lua == true
+step 10: independent active attack-effect counts increased on every party member
+  failed (29.4s) assert_lua mismatch: expected true, got false
+report: /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102558/report.json
+{"ok": false, "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102558"}
+[10:28:53] torn down; logs in /home/brunner56/kp-live-20260922/stage-k1/runs/20260922-102558

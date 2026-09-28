@@ -1,0 +1,8 @@
+R1 after recovery: physical=0 machine.game_intent=1
+R1 after acquire+release: physical=0 (was running before acquire), pause calls=1 unpause calls=2
+R2 recovery-while-held then release: physical=0 intent=0
+R3 register-before-hooks: physical=0 (was running before acquire)
+R4 game Pause after external clear: physical=1 intent=1 leases=1 (both want paused)
+R5 ownership_available after reporting hooks removed while leased: 1
+R6 begin_load failing restore: status=cleanup_incomplete, tracked after=0, physical=1
+R7 acquire after shutdown: shut_down

@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-09-28T03:49:47.934928+00:00",
+  "sha256": {
+    "README.md": "aaa73556448375524e59008a01ddfa12a13efef0f18f8a8c36008c586999189f",
+    "lua-functions.md": "af3a118e6eeae38065fa6f1bd84cffbf7b8a6492a47da8704b4f56cc1f8d3050",
+    "lua-api.md": "daa64023ca01a511077e6e986ee415a3bb281ba07117e81d9c2df34b5e8a031c",
+    "lua-api.json": "87d1ec06855d523d6ff2035282b708d0e3a5f1e8020bd16ca5d3b73ee396744d",
+    "auxiliary-api.md": "9bd392c3864846543a63be0a4f0106e499b0e1852588a9bf79e418623d7964d1",
+    "auxiliary-api.json": "c1d0eb2355a3ca81d769990908261cf02a867121e07f82c2c544ce40669b15ec",
+    "runtime-events.md": "301778c41aeb3c91f775afca41db2874cf046ed91ac92f075b580daf32618b1d",
+    "runtime-events.json": "03b41676f45d817da6b99a16554882c00aa3a366bf9601b9aa92d5772b5227e5",
+    "scripts.md": "ebe6011438d36d20b25ff10ab050776ee8ff81177177a23bae9af3560e19cc11",
+    "scripts.json": "20ec13c46495178b7d21db4f68e55720a82783eedd247a2849120813e05441e5",
+    "harness.md": "90e91d98ab2aa1066151f0fc27ea74f4bbeb712ccc715d7001349142c4b411b6",
+    "harness.json": "33d291fd3b7f640545b0d544d28220505b56657d6bb3aef6ffd6a8f505d85570",
+    "native-routines.md": "ddba53c16c57051fde635cfa557c31aed394777fa8520c3a2f5597280a035dc3",
+    "native-routines.json": "e575b17311e1aea7f7ec928a390a2a8703bdb42f2fd4258d69cfa70074173125",
+    "spec-review.md": "12918f85fbdd5b31f98a666b447b99cf6fd8f402bddca171b26de29e39369f43",
+    "quality-review.md": "eab876313a4ff1dc70a8fdddd8d4b262c5242271831942adf143c69489e34260",
+    "coverage-check.json": "0f537513196903fc2025d87fe0855d137742166c25c7867a47526ffa097b535a",
+    "source-sha256.json": "4f555ce1d8c3344d4db66a47af18cf2313c87f6c0ff6ef50429fda67c775f84f",
+    "build-root-inventory.py": "3ddb4e2136d8cc7cc66eb98cf1de67061bec45b81607c8354b0e4dd6217482a4"
+  }
+}

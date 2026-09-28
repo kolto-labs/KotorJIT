@@ -1,0 +1,62 @@
+name="Sith dance crew: peaceful staged rave"
+target="k1"
+[settings]
+game_speed=1.0
+hang_seconds=90
+default_timeout=120
+
+[[step]]
+do="load_save"
+dir="000001 - AUTOSAVE"
+timeout=180
+
+[[step]]
+wait="phase"
+equals="gameplay"
+timeout=180
+
+[[step]]
+do="clear_auto_pause"
+
+[[step]]
+do="assert_lua"
+label="Three peaceful Sith on the dance floor"
+code="local pc=nwscript.call(\"GetFirstPC\"); local p=nwscript.call(\"GetPosition\",pc); local a=math.rad(nwscript.call(\"GetFacing\",pc)); local remove={}; local o=nwscript.call(\"GetFirstObjectInArea\",nwscript.call(\"GetArea\",pc),1); while nwscript.call(\"GetIsObjectValid\",o)==1 do if nwscript.call(\"IsObjectPartyMember\",o)==0 then local q=nwscript.call(\"GetPosition\",o); if (q.x-p.x)^2+(q.y-p.y)^2<900 then remove[#remove+1]=o end end; o=nwscript.call(\"GetNextObjectInArea\",nwscript.call(\"GetArea\",pc),1) end; for _,id in ipairs(remove) do nwscript.call(\"DestroyObject\",id,0,0,0) end; demo_actors={}; for i=-1,1 do local loc=nwscript.call(\"Location\",{x=p.x+4*math.cos(a)-i*2*math.sin(a),y=p.y+4*math.sin(a)+i*2*math.cos(a),z=p.z},nwscript.call(\"GetFacing\",pc)+180); local id=nwscript.call(\"CreateObject\",1,\"g_sithtroop01\",loc,1); assert(nwscript.call(\"GetIsObjectValid\",id)==1); nwscript.call(\"ChangeToStandardFaction\",id,2); nwscript.with_caller(id,function() nwscript.call(\"ClearAllActions\") end); demo_actors[#demo_actors+1]=id end; demo_beat_start=nwscript.call(\"GetLocalNumber\",pc,7); return #demo_actors==3"
+equals=true
+
+[[step]]
+do="mark_log"
+
+[[step]]
+do="advance_ticks"
+ticks=120
+timeout=30
+
+[[step]]
+do="assert_lua"
+label="All three dancers remain alive and out of combat"
+code="for _,id in ipairs(demo_actors) do if nwscript.call(\"GetIsObjectValid\",id)~=1 or nwscript.call(\"GetIsDead\",id)~=0 or nwscript.call(\"GetIsInCombat\",id)~=0 then return false end end; return true"
+equals=true
+
+[[step]]
+do="advance_ticks"
+ticks=1200
+timeout=60
+
+[[step]]
+do="await_log"
+pattern="\\[cursed:rave\\] beat .* dances"
+minimum=4
+timeout=15
+
+[[step]]
+do="assert_lua"
+label="At least two complete five-color cycles"
+code="return nwscript.call(\"GetLocalNumber\",nwscript.call(\"GetFirstPC\"),7)-demo_beat_start>=10"
+equals=true
+
+[[step]]
+do="assert_lua"
+label="Remove only the three demonstration actors"
+code="for _,id in ipairs(demo_actors) do nwscript.call(\"DestroyObject\",id,0,0,0) end; return true"
+equals=true

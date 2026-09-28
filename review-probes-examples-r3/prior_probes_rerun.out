@@ -1,0 +1,19 @@
+HOLDS 	A1 module load with new party IDs restores flag	new-id bastila min_one_hp=0 (prior was 0); SetMinOneHP calls=2
+HOLDS 	A2 failed restore is retried at the next disarm (f:arm calls OnModuleLoad)	GetMinOneHP reads=2
+HOLDS 	A3 unload during pending timer	flag after unload=0, extra SetMinOneHP from late timer=0
+HOLDS 	A4 re-entrant detonation keeps original prior	reads=1 final=0 timers=2
+HOLDS 	A5 nested generations: only last timer restores	gens=1,2 mid=1
+HOLDS 	A6 boolean-false prior treated as unreadable	SetMinOneHP=0 (party member excluded when bridge returns false)
+HOLDS 	A7 party gets floor(40/3)=13	amounts=40,13
+HOLDS 	A8 OnAreaEnter by any object disarms+restores	armed after non-PC OnAreaEnter=0 (pre-existing behaviour, not new)
+exit=0
+HOLDS 	P1 PC guarded then restored at settle	during=1 after=0
+HOLDS 	P2 PC restored on unload; late timer inert	after=0
+HOLDS 	P3 PC with new id after module load is restored	new-id PC min_one_hp=0
+exit=0
+HOLDS 	M1 transition restore is load-bearing (mutant keeps flag=1)	mutant flag=1
+HOLDS 	M2 anomaly => current bytes strike nothing	EffectDamage calls=0, local7=1
+HOLDS 	M3 HEAD bytes under anomaly still strike	EffectDamage calls=2
+exit=0
+old_pc=0 replacement_pc=1
+exit=0

@@ -1,0 +1,5 @@
+actual GameAdapter::load_save -> on_fail call path: PASS
+/home/brunner56/kp-live-20260922/pl5-review-scratch/run_onfail_linkage.sh: line 30: 574553 Aborted                    timeout 10s "$SCR/onfail_mutant_fixture" > "$SCR/onfail-mutant-run.log" 2>&1
+onfail_mutant_fixture: /home/brunner56/kp-live-20260922/pl5-review-scratch/onfail_mutant_fixture.cpp:70: int main(): Assertion `!a.pause_machine_.loading()' failed.
+timeout: the monitored command dumped core
+production on_fail cleanup mutant: red as expected

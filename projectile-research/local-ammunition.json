@@ -1,0 +1,80 @@
+[
+  {
+    "label": "None",
+    "model": "",
+    "model0": "",
+    "model1": "",
+    "shotsound0": "",
+    "shotsound1": "",
+    "impactsound0": "",
+    "impactsound1": "",
+    "muzzleflash": "",
+    "shieldhit": "",
+    "row": "0"
+  },
+  {
+    "label": "Blaster",
+    "model": "w_laserfire_r",
+    "model0": "w_laserfire_r",
+    "model1": "w_lfire_pb_r1",
+    "shotsound0": "cb_sh_blast1",
+    "shotsound1": "cb_sh_pwrblast1",
+    "impactsound0": "cb_ht_blastleth1",
+    "impactsound1": "cb_ht_blastleth1",
+    "muzzleflash": "v_muzflash_01",
+    "shieldhit": "1",
+    "row": "1"
+  },
+  {
+    "label": "Ion",
+    "model": "w_laserfire_b",
+    "model0": "w_laserfire_b",
+    "model1": "w_lfire_pb_b1",
+    "shotsound0": "cb_sh_medbl1",
+    "shotsound1": "cb_sh_pwrblast1",
+    "impactsound0": "cb_ht_medblleth1",
+    "impactsound1": "cb_ht_medblleth1",
+    "muzzleflash": "v_muzflash_01",
+    "shieldhit": "0",
+    "row": "2"
+  },
+  {
+    "label": "Disruptor",
+    "model": "w_laserfire_w",
+    "model0": "w_laserfire_w",
+    "model1": "w_lfire_pb_w1",
+    "shotsound0": "cb_sh_hvybl1",
+    "shotsound1": "cb_sh_pwrblast1",
+    "impactsound0": "cb_ht_hvyblleth1",
+    "impactsound1": "cb_ht_hvyblleth1",
+    "muzzleflash": "v_muzflash_01",
+    "shieldhit": "0",
+    "row": "3"
+  },
+  {
+    "label": "Sonic",
+    "model": "w_laserfire_s",
+    "model0": "w_laserfire_s",
+    "model1": "w_lfire_pb_s1",
+    "shotsound0": "cb_sh_sonbl1",
+    "shotsound1": "cb_sh_pwrblast2",
+    "impactsound0": "cb_ht_sonblclth1",
+    "impactsound1": "cb_ht_sonblclth1",
+    "muzzleflash": "v_muzflash_01",
+    "shieldhit": "1",
+    "row": "4"
+  },
+  {
+    "label": "Bowcaster",
+    "model": "w_laserfire_bc",
+    "model0": "w_laserfire_bc",
+    "model1": "w_lfire_pb_bc1",
+    "shotsound0": "cb_sh_medbl1",
+    "shotsound1": "cb_sh_pwrblast1",
+    "impactsound0": "cb_ht_medblleth1",
+    "impactsound1": "cb_ht_medblleth1",
+    "muzzleflash": "v_muzflash_01",
+    "shieldhit": "1",
+    "row": "5"
+  }
+]

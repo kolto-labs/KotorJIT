@@ -1,0 +1,199 @@
+{
+ "scenario": "model memory: wave",
+ "target": "k1",
+ "build": "k1_gog_103",
+ "run_dir": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-114018",
+ "started": 1790095231.812622,
+ "finished": 1790095249.556365,
+ "seconds": 17.744,
+ "ok": true,
+ "error": "",
+ "verdict": null,
+ "execution": {
+  "game_speed_requested": 1.0,
+  "game_speed_effective": 1.0
+ },
+ "steps": [
+  {
+   "index": 1,
+   "step": "do load_save {\"dir\": \"000001 - AUTOSAVE\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 0.047,
+   "detail": "load_save '000001 - AUTOSAVE' issued"
+  },
+  {
+   "index": 2,
+   "step": "wait phase {\"equals\": \"gameplay\", \"timeout\": 600}",
+   "status": "ok",
+   "seconds": 2.852,
+   "detail": "phase=gameplay module=danm14aa server_tick=17 client_tick=22 pc=(105.7,96.5,1.0) hp=96/96",
+   "state": {
+    "phase": "gameplay",
+    "phase_detail": {
+     "server_mode": 2,
+     "loading_module": 0,
+     "area_not_ready": 0,
+     "input_class": 0,
+     "main_menu": 0,
+     "game_over": 0,
+     "pause": 0,
+     "controller_pause": 0,
+     "tutorial": 0,
+     "modal_count": 0,
+     "status_summary": 0,
+     "movie": 0,
+     "load_error": 0,
+     "move_pending": 0,
+     "timers_paused": 0,
+     "chargen": -1
+    },
+    "chargen_stage": "none",
+    "module": "danm14aa",
+    "server_tick": 17,
+    "client_tick": 22,
+    "pc": {
+     "y": 96.4639663696289,
+     "z": 0.9961421489715576,
+     "id": 2147483644,
+     "max_hp": 96,
+     "hp": 96,
+     "x": 105.67625427246094
+    },
+    "party": [
+     {
+      "id": 2147483644,
+      "tag": ""
+     }
+    ],
+    "dialog": null,
+    "globals_hash": "14f93d791bd584cb",
+    "journal_hash": "d6a0a052f3525599",
+    "counts": {
+     "globals": 1184,
+     "journal": 12
+    },
+    "live": true,
+    "poisoned": []
+   }
+  },
+  {
+   "index": 3,
+   "step": "do clear_auto_pause",
+   "status": "ok",
+   "seconds": 0.024,
+   "detail": "clear_auto_pause ok"
+  },
+  {
+   "index": 4,
+   "step": "do advance_dialog {\"until\": \"gameplay\", \"timeout\": 120}",
+   "status": "ok",
+   "seconds": 0.061,
+   "detail": "advance_dialog reached 'gameplay' after 0 picks"
+  },
+  {
+   "index": 5,
+   "step": "do mark_log",
+   "status": "ok",
+   "seconds": 0.211,
+   "detail": "saved native log offset 6311"
+  },
+  {
+   "index": 6,
+   "step": "peaceful gameplay and checked native model available",
+   "status": "ok",
+   "seconds": 0.177,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 7,
+   "step": "capture original player scale and pre-existing area identities",
+   "status": "ok",
+   "seconds": 0.067,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 8,
+   "step": "do advance_ticks {\"ticks\": 180, \"timeout\": 30}",
+   "status": "ok",
+   "seconds": 3.31,
+   "detail": "observed server ticks 30 -> 218"
+  },
+  {
+   "index": 9,
+   "step": "trigger immediate finite scene",
+   "status": "ok",
+   "seconds": 0.026,
+   "detail": "lua -> {\"values\": []}"
+  },
+  {
+   "index": 10,
+   "step": "independent wave phase 1 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 0.39,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 11,
+   "step": "independent wave phase 2 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.976,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 12,
+   "step": "independent wave phase 3 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.932,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 13,
+   "step": "independent wave phase 4 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.647,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 14,
+   "step": "independent wave phase 5 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.444,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 15,
+   "step": "independent wave phase 6 native scale and noncombat readbacks",
+   "status": "ok",
+   "seconds": 1.454,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 16,
+   "step": "all phases restored before completion",
+   "status": "ok",
+   "seconds": 2.088,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 17,
+   "step": "all scene-owned actors removed, pre-existing scene remains",
+   "status": "ok",
+   "seconds": 0.023,
+   "detail": "assert_lua == true"
+  },
+  {
+   "index": 18,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:wave\\\\] phase=\", \"minimum\": 18, \"maximum\": 18}",
+   "status": "ok",
+   "seconds": 0.006,
+   "detail": "native log matched 18 lines"
+  },
+  {
+   "index": 19,
+   "step": "do await_log {\"pattern\": \"\\\\[model-scene:wave\\\\] complete phases=6 restored=3\", \"minimum\": 1, \"maximum\": 1}",
+   "status": "ok",
+   "seconds": 0.007,
+   "detail": "native log matched 1 lines"
+  }
+ ]
+}

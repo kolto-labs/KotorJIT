@@ -1,0 +1,22 @@
+alternating_two_frames: diag=passed ratio=1.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[2.055,2.063,2.069] n=481 fails=[] probe_s=70
+half_dup_temporal_noise_4: diag=failed ratio=0.5000 game=passed ratio=0.9958 maxdif[min,p10,p50]=[0.000,0.029,3.056] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=90
+half_dup_temporal_noise_1: diag=failed ratio=0.5000 game=passed ratio=0.9958 maxdif[min,p10,p50]=[0.000,0.054,3.094] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=93
+still_moving_box_64: diag=failed ratio=0.0000 game=failed ratio=0.0125 maxdif[min,p10,p50]=[0.000,0.000,0.000] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=36
+still_moving_box_128: diag=failed ratio=0.0000 game=failed ratio=0.0125 maxdif[min,p10,p50]=[0.000,0.000,0.000] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=44
+still_moving_box_200: diag=failed ratio=0.0000 game=failed ratio=0.0125 maxdif[min,p10,p50]=[0.000,0.000,0.000] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=59
+half_dup_plus_live_box_128: diag=failed ratio=0.5000 game=passed ratio=0.9958 maxdif[min,p10,p50]=[0.000,0.078,3.091] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=60
+testsrc2_60_yuv_path: diag=passed ratio=1.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[1.891,2.044,2.508] n=481 fails=[] probe_s=80
+testsrc2_640x480_upscaled: diag=passed ratio=1.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[1.715,2.076,2.604] n=481 fails=[] probe_s=57
+testsrc2_60_long: diag=passed ratio=1.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[1.890,2.032,2.447] n=2281 fails=[] probe_s=144
+  window 1-11s min_fresh_maxdif=1.891
+  window 11-21s min_fresh_maxdif=1.890
+  window 21-31s min_fresh_maxdif=1.893
+  window 29-39s min_fresh_maxdif=1.897
+testsrc_v1_60: diag=failed ratio=0.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[0.139,0.150,0.163] n=481 fails=['capture_content_static: distinct-frame ratio is below the policy minimum'] probe_s=54
+testsrc2_fade_in_2s: diag=passed ratio=1.0000 game=passed ratio=1.0000 maxdif[min,p10,p50]=[1.465,2.102,2.517] n=481 fails=[] probe_s=44
+  fade start=0.0: first_ymax=16.0 black_fail=True
+  fade start=0.05: first_ymax=21.0 black_fail=True
+  fade start=0.1: first_ymax=26.0 black_fail=False
+  fade start=0.2: first_ymax=40.0 black_fail=False
+  fade start=0.3: first_ymax=51.0 black_fail=False
+  fade start=0.5: first_ymax=69.0 black_fail=False

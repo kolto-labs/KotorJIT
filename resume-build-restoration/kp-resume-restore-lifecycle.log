@@ -1,0 +1,9 @@
+[ 40%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/output.cpp.o
+[ 40%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/strings.cpp.o
+[ 44%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/api/timers.cpp.o
+[ 44%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/host.cpp.o
+[ 48%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/lua/value.cpp.o
+[ 48%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform.cpp.o
+[ 52%] Building CXX object CMakeFiles/kp_lifecycletest.dir/src/platform/platform_linux.cpp.o
+[ 52%] Building CXX object CMakeFiles/kp_lifecycletest.dir/tools/kp_lifecycletest.cpp.o
+[ 52%] Linking CXX executable kp_lifecycletest

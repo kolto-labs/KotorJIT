@@ -1,0 +1,103 @@
+{
+  "commands": [
+    {
+      "step": 8,
+      "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+      "session": "1",
+      "baseline_submitted": "0",
+      "request": "1",
+      "checks": {
+        "real_keyboard": true,
+        "canonical_decimal_ids": true,
+        "increment_exactly_one": true,
+        "exact_outcome": true,
+        "same_correlation": true,
+        "separate_input_result": true,
+        "no_error": true
+      },
+      "lines": [
+        {
+          "session": "1",
+          "request": "1",
+          "sequence": "2",
+          "kind": "input",
+          "text": "> local q=nwscript.call; task7_pc=q('GetFirstPC'); task7_body=assert(kp.model.snapshot(task7_pc)); task7_local5=q('GetLocalNumber',task7_pc,5); task7_scene=dofile('kotorphasor/scripts/model_scene.lua').new{name='task7scale',trigger=1,hold_ticks=60,spawn=false,scales={{0.35},{2.4},{task7_body.base}}}; return task7_scene.state=='waiting' and math.abs(task7_body.base-1)<0.001"
+        },
+        {
+          "session": "1",
+          "request": "1",
+          "sequence": "3",
+          "kind": "result",
+          "text": "boolean: true"
+        }
+      ]
+    },
+    {
+      "step": 10,
+      "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+      "session": "1",
+      "baseline_submitted": "1",
+      "request": "2",
+      "checks": {
+        "real_keyboard": true,
+        "canonical_decimal_ids": true,
+        "increment_exactly_one": true,
+        "exact_outcome": true,
+        "same_correlation": true,
+        "separate_input_result": true,
+        "no_error": true
+      },
+      "lines": [
+        {
+          "session": "1",
+          "request": "2",
+          "sequence": "4",
+          "kind": "input",
+          "text": "> task7_delay=0; function task7_tick() task7_delay=task7_delay+1; if task7_delay<=180 then return true end; task7_scene:tick(); return task7_scene.state~='complete' and task7_scene.state~='failed' end; task7_timer=kp.registertimer(16,'task7_tick'); nwscript.call('SetLocalNumber',task7_pc,5,1); return task7_timer>0"
+        },
+        {
+          "session": "1",
+          "request": "2",
+          "sequence": "5",
+          "kind": "result",
+          "text": "boolean: true"
+        }
+      ]
+    },
+    {
+      "step": 20,
+      "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+      "session": "1",
+      "baseline_submitted": "2",
+      "request": "3",
+      "checks": {
+        "real_keyboard": true,
+        "canonical_decimal_ids": true,
+        "increment_exactly_one": true,
+        "exact_outcome": true,
+        "same_correlation": true,
+        "separate_input_result": true,
+        "no_error": true
+      },
+      "lines": [
+        {
+          "session": "1",
+          "request": "3",
+          "sequence": "6",
+          "kind": "input",
+          "text": "> assert(task7_scene.state=='complete' and task7_scene.phase==3); task7_scene:unload(); nwscript.call('SetLocalNumber',task7_pc,5,task7_local5); task7_scene=nil; task7_tick=nil; task7_body=nil; return true"
+        },
+        {
+          "session": "1",
+          "request": "3",
+          "sequence": "7",
+          "kind": "result",
+          "text": "boolean: true"
+        }
+      ]
+    }
+  ],
+  "all_checks_passed": true,
+  "single_runtime_session": true,
+  "receipt_limits": "Receipts retain baseline and exact correlated outcome/lines; not all intermediate wire responses, DirectInput input_calls, or separate window fields in each console file. Window binding is in schema2/capture receipts."
+}

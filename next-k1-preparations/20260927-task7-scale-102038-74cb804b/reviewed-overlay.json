@@ -1,0 +1,6 @@
+{
+  "src/harness/console_protocol.hpp": "04672437550986c48ade315b4c0a0b2cbb8ba40b85dd9b2baff78f47c0821fa2",
+  "src/harness/console_protocol.cpp": "a67cb4baabcfc2d92881104ad9399dcb2bff68dcd134fc32050e15b0ad462cd0",
+  "src/harness/commands.cpp": "b7e8fb5bba5bac2c7b9d85ab3d2d98e714170abfdc3907a743ff08f1178aea01",
+  "src/harness/harness.cmake": "a9ed1917dd4092accd9dd46f20044e61dfc45e83091feec20f5899a50d81b0ec"
+}

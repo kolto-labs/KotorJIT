@@ -1,0 +1,33 @@
+== idtrust 84d6269ae7a3
+21
+an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC
+== bumpafter c5e94d2c089c
+21
+an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC
+== noparty 574e3e36504d
+21
+a non-party creature with the companion tag is never taken for the companion; the entry stays pending
+== idtrust-noparty 849fe2bdd5c8
+19
+R3-5: after a load, a valid stored ID with the same tag that is not a party member is not the companion
+a non-party creature with the companion tag is never taken for the companion; the entry stays pending
+an old ID recycled onto another untagged party member after a load is not trusted; the PC is found through GetFirstPC
+== pcnotag 02445d040991
+18
+module load restores the original PC while it is still valid; a new GetFirstPC object is left alone
+a PC swap onto another guarded member restores both objects to their own priors
+a gone PC is never resolved onto another member this script guarded under its own ID
+R3-1: two PC entries recreated after a load each go back to their own creature
+== nocollide b6acc8da6695
+21
+two entries that resolve to one creature after a load give an unknown prior, restored to 0 and logged
+== nountaggedcarry 7b91aaea7114
+21
+an untagged member that cannot be found after a load keeps its first prior when a blast reaches it again
+== nounloadlog fcf8792af4e8
+21
+R3-4: unload restores everyone it can find and names each creature it cannot, with the console fix
+== nobytag dfce596b886e
+20
+party min-one-HP guard restores each prior flag after settle, transition and unload
+module load restores the original PC while it is still valid; a new GetFirstPC object is left alone

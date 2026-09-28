@@ -1,0 +1,40 @@
+{
+  "code": "local p=nwscript.call(\"GetFirstPC\"); nwscript.call(\"SetLocalNumber\",p,7,0); nwscript.call(\"SetLocalNumber\",p,8,0); nwscript.call(\"SetLocalNumber\",p,5,8); animation_clock=kp.registertimer(16,\"animation_tick\"); return animation_clock>0",
+  "input": "real owned-window keyboard",
+  "expected_request": 2,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> dofile(\"kotorphasor/console-examples/giant_bow_freeze.lua\"); function animation_tick() OnTick(); local p=nwscript.call(\"GetFirstPC\"); return nwscript.call(\"GetLocalNumber\",p,7)~=1 and nwscript.call(\"GetLocalNumber\",p,8)~=1 end; return type(OnTick)"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "string: function"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> local p=nwscript.call(\"GetFirstPC\"); nwscript.call(\"SetLocalNumber\",p,7,0); nwscript.call(\"SetLocalNumber\",p,8,0); nwscript.call(\"SetLocalNumber\",p,5,8); animation_clock=kp.registertimer(16,\"animation_tick\"); return animation_clock>0"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "boolean: true"
+      }
+    ],
+    "submitted": 2,
+    "completed": 2,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 1958
+  }
+}

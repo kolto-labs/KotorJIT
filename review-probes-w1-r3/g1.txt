@@ -1,0 +1,8 @@
+64:# and Runtime::log escapes "\r", "\n" and other control characters in <body>,
+439:    FORGED = ("forged_banner_print", "forged_banner_diag_cr", "forged_banner_error_text")
+460:    def test_forged_banner_logs_yield_no_session(self):
+472:    def test_forged_banner_receipts_rejected(self):
+484:    def test_banner_is_written_at_idle_only(self):
+637:    def test_runtime_log_escapes_line_breaks(self):
+645:        self.assertEqual(body.count("\\n"), 2)   # the escape case and the one line end
+rc=0

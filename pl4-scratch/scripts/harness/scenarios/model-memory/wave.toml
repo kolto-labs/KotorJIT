@@ -1,0 +1,112 @@
+# Peaceful scale scene. Deploy model_scene.lua plus the matching authored script.
+# Route predicates are independent native readbacks; video still needs visual review.
+name = "model memory: wave"
+target = "k1"
+[settings]
+game_speed = 1.0
+hang_seconds = 90
+default_timeout = 120
+load_timeout = 600
+[[step]]
+do = "load_checkpoint"
+name = "endar_room3"
+timeout = 600
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 600
+[[step]]
+do = "clear_auto_pause"
+[[step]]
+do = "advance_dialog"
+until = "gameplay"
+timeout = 120
+[[step]]
+do = "mark_log"
+[[step]]
+label = "peaceful gameplay and checked native model available"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); return kp.model.capabilities().available and nwscript.call('GetIsInCombat',p)==0 and nwscript.call('GetIsInConversation',p)==0"
+equals = true
+[[step]]
+label = "capture original player scale and pre-existing area identities"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); _G.model_original=assert(kp.model.snapshot(p)); _G.model_existing={}; _G.model_ratios={}; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do model_existing[o]=true; o=nwscript.call('GetNextObjectInArea',a,1) end; nwscript.call('SetCameraFacing',nwscript.call('GetFacing',p)); return true"
+equals = true
+[[step]]
+label = "trigger immediate finite scene"
+do = "lua"
+code = "local p=nwscript.call('GetFirstPC'); nwscript.call('SetLocalNumber',p,7,0); nwscript.call('SetLocalNumber',p,8,0); nwscript.call('SetLocalNumber',p,5,2)"
+
+[[step]]
+label = "independent wave phase 1 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=1 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==2 and counts.large==1 and counts.normal==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent wave phase 2 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=2 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==1 and counts.large==2 and counts.normal==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent wave phase 3 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=3 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==0 and counts.large==0 and counts.normal==3"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent wave phase 4 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=4 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==2 and counts.large==1 and counts.normal==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent wave phase 5 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=5 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==1 and counts.large==2 and counts.normal==0"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "independent wave phase 6 native scale and noncombat readbacks"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,6)~=6 then return false end; local counts={small=0,large=0,normal=0}; local n=0; local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then local c=assert(kp.model.snapshot(o)); if model_ratios[o] then assert(math.abs(c.effective/c.base-model_ratios[o])<0.001) else model_ratios[o]=c.effective/c.base end; assert(nwscript.call('GetStandardFaction',o)==2 and nwscript.call('GetIsInCombat',o)==0); n=n+1; if math.abs(c.base-0.4)<0.001 then counts.small=counts.small+1 elseif math.abs(c.base-2)<0.001 then counts.large=counts.large+1 elseif math.abs(c.base-1)<0.001 then counts.normal=counts.normal+1 end end; o=nwscript.call('GetNextObjectInArea',a,1) end; return n==3 and counts.small==0 and counts.large==0 and counts.normal==3"
+equals = true
+poll = true
+timeout = 45
+
+[[step]]
+label = "all phases restored before completion"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); if nwscript.call('GetLocalNumber',p,8)~=0 then error('scene failed') end; if nwscript.call('GetLocalNumber',p,7)~=1 then return false end; local c=assert(kp.model.snapshot(p)); return nwscript.call('GetLocalNumber',p,6)==6 and c.model==model_original.model and math.abs(c.base-model_original.base)<0.001 and math.abs(c.effective-model_original.effective)<0.001"
+equals = true
+poll = true
+timeout = 60
+
+[[step]]
+label = "all scene-owned actors removed, pre-existing scene remains"
+do = "assert_lua"
+code = "local p=nwscript.call('GetFirstPC'); local a=nwscript.call('GetArea',p); local o=nwscript.call('GetFirstObjectInArea',a,1); while nwscript.call('GetIsObjectValid',o)==1 do if not model_existing[o] then return false end; o=nwscript.call('GetNextObjectInArea',a,1) end; for id in pairs(model_existing) do if nwscript.call('GetIsObjectValid',id)~=1 then return false end end; return true"
+equals = true
+
+[[step]]
+do = "await_log"
+pattern = "\\[model-scene:wave\\] phase="
+minimum = 18
+maximum = 18
+[[step]]
+do = "await_log"
+pattern = "\\[model-scene:wave\\] complete phases=6 restored=3"
+minimum = 1
+maximum = 1

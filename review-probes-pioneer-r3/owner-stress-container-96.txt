@@ -1,0 +1,8 @@
+test_status_1000_under_flood (__main__.Stress.test_status_1000_under_flood) ... 
+STRESS {"calls": 1000, "flooders": 96, "flood_connects": 150876, "failures": 4, "kinds": {"JSONDecodeError:Expecting value: line 1 column 1 (char 0)": 1, "PlaybackError:playback owner is not reachable (timed out); if the owner is dead, run": 3}, "peak_threads": 19, "p50": 0.6161, "p99": 4.3033, "max": 5.3499}
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 849.690s
+
+OK

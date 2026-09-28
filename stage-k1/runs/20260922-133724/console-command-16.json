@@ -1,0 +1,140 @@
+{
+  "code": "",
+  "input": "real owned-window keyboard",
+  "expected_request": 12,
+  "result": {
+    "lines": [
+      {
+        "request": 0,
+        "kind": "system",
+        "text": "F12 Lua console attached. Ctrl+Enter inserts a newline; Ctrl+Up recalls history."
+      },
+      {
+        "request": 1,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 1,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 2,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 2,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 3,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 3,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 4,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 4,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 5,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 5,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 6,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 6,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 7,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 7,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 8,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 8,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 9,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 9,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 10,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 10,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 11,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 11,
+        "kind": "result",
+        "text": "number: 78"
+      },
+      {
+        "request": 12,
+        "kind": "input",
+        "text": "> 77+1"
+      },
+      {
+        "request": 12,
+        "kind": "result",
+        "text": "number: 78"
+      }
+    ],
+    "submitted": 12,
+    "completed": 12,
+    "running": false,
+    "queued": 0,
+    "open": true,
+    "input_calls": 268
+  }
+}

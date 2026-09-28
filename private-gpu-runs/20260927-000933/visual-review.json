@@ -1,0 +1,7 @@
+{
+  "accepted_gameplay": false,
+  "console_and_world_queries_passed": true,
+  "finding": "main menu remains visibly over world; phase_detail.main_menu=1; prior state-only gameplay oracle insufficient",
+  "evidence": "k2-gameplay-console.png",
+  "next": "repair normal load completion menu retirement; require main_menu=0 and inspect world screenshot"
+}

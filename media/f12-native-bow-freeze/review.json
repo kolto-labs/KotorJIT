@@ -1,0 +1,34 @@
+{
+  "source_run": "/home/brunner56/kp-live-20260922/stage-k1/runs/20260922-125837",
+  "diagnostic_provenance": "/home/brunner56/kp-live-20260922/animation-audition/bow-provenance.json",
+  "behavior_gates_passed": 27,
+  "visual": "Fixed camera, both whole bodies visible; left bow held while comparison progresses, then resumed. Native named-run control; not whole-world or whole-NPC pause.",
+  "trim_seconds": [
+    14,
+    23
+  ],
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1024,
+        "height": 768,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "539/9",
+        "duration": "9.000000",
+        "nb_frames": "539"
+      }
+    ]
+  },
+  "files": {
+    "native-bow-freeze-60fps.mp4": {
+      "sha256": "0cdf446a5c4518d9fa7b67c991a8858d06a2a05144c791db74c417df685d8cea",
+      "bytes": 665845
+    },
+    "native-bow-freeze-preview.gif": {
+      "sha256": "f56295db84111e4aaf34f266fed6499fe3dcabb106c24837b3fdf51d7c39f1a7",
+      "bytes": 913271
+    }
+  }
+}

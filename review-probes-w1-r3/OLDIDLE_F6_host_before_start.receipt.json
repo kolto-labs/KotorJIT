@@ -1,0 +1,63 @@
+{
+ "schema": "kotorphasor.native-receipt/v1",
+ "kind": "windows-native",
+ "generated_at": "2026-09-27T00:00:00.0000000Z",
+ "os": {
+  "family": "windows",
+  "product": "Windows 10 Pro",
+  "display_version": "23H2",
+  "version": "10.0",
+  "build": "22631",
+  "ubr": "4317"
+ },
+ "cpu": {
+  "arch": "AMD64",
+  "name": "SYNTHETIC CPU",
+  "translation": "none",
+  "detected_by": "IsWow64Process2"
+ },
+ "host": {
+  "wine": "no",
+  "wine_version": "-",
+  "log_os": "10.0.22631",
+  "overlays": "-",
+  "wine_registry": "no"
+ },
+ "game": {
+  "exe_name": "swkotor.exe",
+  "exe_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "container_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "slice_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "build": "k1_gog_103"
+ },
+ "runtime": {
+  "kphasor_dll_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "proxy_binkw32_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "real_binkw32_sha256": "2d0ae23a6175dc7b635c402a5e7e9542e923c0d1c376a8c5ef876ca0d5959d23",
+  "install_manifest_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+ },
+ "gl": {
+  "vendor": "SYNTHETIC VENDOR",
+  "renderer": "SYNTHETIC GPU",
+  "version": "4.6.0 SYNTHETIC"
+ },
+ "log": {
+  "sha256": "bbdf50608c5a0e7e891d439d88403543da8d3da6020b5fef7e5cbe4b1ef1e714",
+  "bytes": 379,
+  "session_start_line": "[idle] KotorPhasor 0.1.0 starting (embedded role)",
+  "session_id": null,
+  "host_line": null,
+  "gl_line": null,
+  "session_marker_lines": 3,
+  "host_like_lines": 1,
+  "gl_like_lines": 1,
+  "problems": [
+   "host or gl line comes before the session start line"
+  ]
+ },
+ "f12": {
+  "result": "pass",
+  "method": "physical-keyboard",
+  "attested_by": "user"
+ }
+}

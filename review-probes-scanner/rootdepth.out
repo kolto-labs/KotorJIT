@@ -1,0 +1,5 @@
+['data/codecaves.toml'] -> ok (NOT FLAGGED)
+['data/codecaves.toml', 'data/events.draft.toml', 'data/hooksites.toml'] -> ok (NOT FLAGGED)
+['tmp/a.lua', 'tmp/b.lua'] -> ok (NOT FLAGGED)
+['runs/x/report.md'] -> ok (NOT FLAGGED)
+['pkg/data/codecaves.toml'] -> [('excluded file', 'data/codecaves.toml is held ba')]

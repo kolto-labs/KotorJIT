@@ -1,0 +1,10 @@
+[ 52%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/output.cpp.o
+[ 52%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/scripts_lua.cpp.o
+[ 56%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/strings.cpp.o
+[ 56%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/api/timers.cpp.o
+[ 56%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/host.cpp.o
+[ 60%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/lua/value.cpp.o
+[ 60%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform.cpp.o
+[ 64%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/src/platform/platform_linux.cpp.o
+[ 68%] Building CXX object CMakeFiles/kp_scriptsapitest.dir/tools/kp_scriptsapitest.cpp.o
+[ 68%] Linking CXX executable kp_scriptsapitest

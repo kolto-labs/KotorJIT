@@ -1,0 +1,67 @@
+{
+  "input": "real owned-window keyboard",
+  "identity": {
+    "runtime": "17c8ecf0a4c7ed4decbf410c4bcd13a67635bbb646f0c9df2bfea1cb1bc6b428",
+    "session": "1",
+    "submitted": "2",
+    "last_line": "5"
+  },
+  "request": "3",
+  "outcome": {
+    "session": "1",
+    "request": "3",
+    "state": "Succeeded",
+    "values": [
+      {
+        "type": "Boolean",
+        "value": true
+      }
+    ],
+    "return_count": "1",
+    "returns_truncated": false,
+    "error": {
+      "code": "",
+      "text": {
+        "encoding": "base64",
+        "data": "",
+        "byte_length": "0"
+      },
+      "truncated": false
+    },
+    "first_line": "6",
+    "last_line": "7"
+  },
+  "lines": [
+    {
+      "session": "1",
+      "request": "3",
+      "sequence": "6",
+      "kind": {
+        "encoding": "base64",
+        "data": "aW5wdXQ=",
+        "byte_length": "5"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "PiBhc3NlcnQodGFzazdfc2NlbmUuc3RhdGU9PSdjb21wbGV0ZScgYW5kIHRhc2s3X3NjZW5lLnBoYXNlPT0zKTsgdGFzazdfc2NlbmU6dW5sb2FkKCk7IG53c2NyaXB0LmNhbGwoJ1NldExvY2FsTnVtYmVyJyx0YXNrN19wYyw1LHRhc2s3X2xvY2FsNSk7IHRhc2s3X3NjZW5lPW5pbDsgdGFzazdfdGljaz1uaWw7IHRhc2s3X2JvZHk9bmlsOyByZXR1cm4gdHJ1ZQ==",
+        "byte_length": "205"
+      }
+    },
+    {
+      "session": "1",
+      "request": "3",
+      "sequence": "7",
+      "kind": {
+        "encoding": "base64",
+        "data": "cmVzdWx0",
+        "byte_length": "6"
+      },
+      "text": {
+        "encoding": "base64",
+        "data": "Ym9vbGVhbjogdHJ1ZQ==",
+        "byte_length": "13"
+      }
+    }
+  ],
+  "code": "assert(task7_scene.state=='complete' and task7_scene.phase==3); task7_scene:unload(); nwscript.call('SetLocalNumber',task7_pc,5,task7_local5); task7_scene=nil; task7_tick=nil; task7_body=nil; return true"
+}

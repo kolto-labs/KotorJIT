@@ -1,0 +1,19 @@
+fresh60       fresh n=1079 min=51.8321  | dup n=   0 max=None    | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 passed ratio=1.0 sep=separated band_n=0 | enc_s=61 total_s=123
+frozen        fresh n=1079 min=51.7258  | dup n=   0 max=None    | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 passed ratio=1.0 sep=separated band_n=0 | enc_s=60 total_s=168
+r12_d5        fresh n= 215 min=15.5728  | dup n= 864 max=0.6924  | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.1992 sep=separated band_n=0 | enc_s=66 total_s=187
+r12_d5_k1     fresh n= 216 min=15.5728  | dup n= 863 max=0.9748  | I-dup n=4 max=0.9748 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.2002 sep=separated band_n=0 | enc_s=73 total_s=176
+r15           fresh n= 269 min=33.1493  | dup n= 810 max=0.7731  | I-dup n=2 max=0.7731 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.2492 sep=separated band_n=0 | enc_s=70 total_s=168
+r20_k0        fresh n= 359 min=33.2352  | dup n= 720 max=0.8313  | I-dup n=3 max=0.8313 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.3326 sep=separated band_n=0 | enc_s=58 total_s=144
+r20_k1        fresh n= 360 min=33.2352  | dup n= 719 max=0.9852  | I-dup n=3 max=0.9852 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.3337 sep=separated band_n=0 | enc_s=46 total_s=130
+r20_k2        fresh n= 360 min=33.2352  | dup n= 719 max=0.9745  | I-dup n=2 max=0.9745 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.3337 sep=separated band_n=0 | enc_s=53 total_s=136
+r3            fresh n=  53 min=52.0129  | dup n=1026 max=0.6744  | I-dup n=2 max=0.2958 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.049 sep=separated band_n=0 | enc_s=53 total_s=129
+r30_k0        fresh n= 539 min=15.3529  | dup n= 540 max=0.3983  | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.4995 sep=separated band_n=0 | enc_s=43 total_s=116
+r30_k1        fresh n= 540 min=15.3529  | dup n= 539 max=0.9439  | I-dup n=4 max=0.9439 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.5005 sep=separated band_n=0 | enc_s=48 total_s=114
+r30_k1_slowq  fresh n= 540 min=15.2818  | dup n= 539 max=0.9129  | I-dup n=4 max=0.9129 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.5005 sep=separated band_n=0 | enc_s=48 total_s=118
+r45           fresh n= 809 min=15.3691  | dup n= 270 max=1.0167  | I-dup n=2 max=1.0167 | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.7497 sep=separated band_n=0 | enc_s=56 total_s=122
+r50           fresh n= 899 min=15.4244  | dup n= 180 max=0.1659  | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.8332 sep=separated band_n=0 | enc_s=47 total_s=131
+r58           fresh n=1043 min=15.6651  | dup n=  36 max=0.1636  | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 failed ratio=0.9666 sep=separated band_n=0 | enc_s=52 total_s=140
+slow_half     fresh n=1079 min=51.7777  | dup n=   0 max=None    | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 passed ratio=1.0 sep=separated band_n=0 | enc_s=59 total_s=176
+slow_quarter  fresh n=1079 min=51.8356  | dup n=   0 max=None    | I-dup n=0 max=None | I at [250, 500, 750, 1000] | animated-diagnostic-v2 passed ratio=1.0 sep=separated band_n=0 | enc_s=58 total_s=169
+ALL fresh n=10518 min=15.2818 | dup n=7825 max=1.0167 | fresh/dup=15.03 geometric midpoint=3.942
+policy floor=3.9 margin_dup=3.84x margin_fresh=3.92x

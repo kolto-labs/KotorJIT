@@ -1,0 +1,28 @@
+276:void Runtime::log(const char* fmt, ...) {
+722:    for (const std::string& e : errors) log("script: %s", e.c_str());
+749:    log_path_ = cfg.log_path;
+278:void Runtime::log(const char* fmt, ...) {
+757:    for (const std::string& e : errors) log("script: %s", e.c_str());
+784:    log_path_ = cfg.log_path;
+789:    log("KotorPhasor %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
+}
+
+void event_handler_common(void* self, unsigned long n_event_id,
+                          unsigned long n_caller, void* payload,
+                          unsigned long day, unsigned long time,
+                          const char* site, std::atomic<void*>& orig_slot,
+                          std::atomic<bool>& poison) {
+    auto orig = reinterpret_cast<EventHandlerFn>(
+        orig_slot.load(std::memory_order_acquire));
+
+    lua::Host* const host = active_host();
+    bool skip = false;
+    if (live() && host != nullptr && !poison.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN(site, poison, skip = false)
+
+        int script_type = -1;
+        if (events::payload_is_script_event(static_cast<int>(n_event_id))) {
+            events::ScriptEventView view{payload};
+484:bool Runtime::start_multiplayer(const Config& cfg) {
+783:bool Runtime::start(const Config& cfg) {
+789:    log("KotorPhasor %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));

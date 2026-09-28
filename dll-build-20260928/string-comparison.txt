@@ -1,0 +1,18 @@
+--- literal: kp.motion.capture ---
+NEW: 1
+OLD: 0
+--- literal: KPMOTIO1 ---
+NEW: 0
+OLD: 0
+--- literal: kp.vec.meta ---
+NEW: 1
+OLD: 0
+--- literal: kp.scripts. ---
+NEW: 1
+OLD: 0
+--- literal: motion capture allocation required ---
+NEW: 1
+OLD: 0
+--- literal: no script host is running ---
+NEW: 1
+OLD: 0

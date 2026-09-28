@@ -1,0 +1,7 @@
+cooperative ['SIGINT']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=['recorder', 'source_process', 'display'] interrupts=['SIGINT'] budget_exhausted=False owned_alive_after=[] result_owned_survivors=[]
+cooperative ['SIGHUP']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=['recorder', 'source_process', 'display'] interrupts=['SIGHUP'] budget_exhausted=False owned_alive_after=[] result_owned_survivors=[]
+cooperative ['SIGTERM']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=['recorder', 'source_process', 'display'] interrupts=['SIGTERM'] budget_exhausted=False owned_alive_after=[] result_owned_survivors=[]
+cooperative ['SIGINT', 'SIGINT', 'SIGINT']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=['recorder', 'source_process', 'display'] interrupts=['SIGINT', 'SIGINT', 'SIGINT'] budget_exhausted=False owned_alive_after=[] result_owned_survivors=[]
+stubborn ['SIGINT']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=[] interrupts=['SIGINT'] budget_exhausted=True owned_alive_after=[] result_owned_survivors=[]
+survivor ['SIGINT']: parent_exit=1 parent_finally_ran=True child_cleanup_steps_completed=[] interrupts=['SIGINT'] budget_exhausted=True owned_alive_after=['client'] result_owned_survivors=[('client', 3919327)]
+production_budget_seconds=1442.0 components={'recorder': 1398.0, 'source_process': 4, 'display': 25, 'evidence_margin': 15}
