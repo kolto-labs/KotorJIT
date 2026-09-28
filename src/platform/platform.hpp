@@ -80,4 +80,30 @@ void set_log_sink(LogSink, void* user);
 
 void log(LogLevel, const char* fmt, ...) KP_PRINTF_FMT(2, 3);
 
+#if defined(_WIN32)
+// What the process is really running on, for a receipt that has to tell a
+// native Windows run from Wine. Wine answers every Win32 call the hook engine
+// makes, so nothing above this layer can tell; wine_get_version in ntdll is the
+// one export Wine ships that Windows never does. The OS build comes from
+// RtlGetVersion because GetVersionEx lies to unmanifested executables.
+//
+// Overlays are loaded modules whose names match known injectors (GOG Galaxy,
+// Steam/Discord/other *overlay*, NVIDIA capture nvspcap*). They share the
+// process with our WGL and DirectInput hooks, so a receipt names them. Base
+// names only: a full path would carry the user's profile directory.
+struct HostIdentity {
+    bool          wine = false;
+    char          wine_version[32] = {};   // empty unless wine
+    unsigned long os_major = 0, os_minor = 0, os_build = 0;
+    char          overlays[256] = {};      // comma-separated lowercase base names
+};
+
+HostIdentity host_identity();
+
+// One line, fixed keys, for kotorphasor.log. The receipt script and its test
+// parse exactly these keys: "host: wine=<yes|no> wine_version=<v|-> os=<M.m.b>
+// overlays=<a,b|->".
+void format_host_identity(const HostIdentity&, char* out, std::size_t len);
+#endif
+
 }  // namespace kp::platform

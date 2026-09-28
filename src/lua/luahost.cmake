@@ -94,6 +94,9 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/test-tmp")
     set_tests_properties(kp_eventtest PROPERTIES
         ENVIRONMENT "TMPDIR=${CMAKE_BINARY_DIR}/test-tmp")
+
+    # Script lifecycle and kp.scripts host tests.
+    include("${CMAKE_CURRENT_LIST_DIR}/lifecycle.cmake")
 elseif(UNIX AND NOT WIN32)
     message(STATUS "kp_luatest needs the native LuaJIT that the kphasor target "
                    "builds; include src/runtime/runtime.cmake first")

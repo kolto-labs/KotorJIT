@@ -1,10 +1,9 @@
 # What here is reusable, and what is not
 
-Most of this codebase is not about KOTOR. It is about loading code into a running
-32-bit process, deciphering a packed image, patching x86, and arbitrating between
-scripts — none of which cares what program it is pointed at. Keeping that
-separation deliberate means these parts can be lifted into an unrelated project
-without carrying a game with them.
+Most of this codebase is not about KOTOR. It loads code into a running
+32-bit process, deciphers a packed image, patches x86, and arbitrates between
+scripts. None of that cares what program it is pointed at. Keep the split
+deliberate and those parts lift into an unrelated project without the game.
 
 The rule: **generic engine, specific data.** Domain knowledge lives in files under
 `data/`. Adding a game, a build, an event, or a routine is a data change. If a
@@ -26,7 +25,7 @@ These modules mention no game, and would work against any target.
 | `tools/kpdiscover.py` | Locate installed software by content: Steam library lists, platform roots, Windows registry | `data/app_signatures.toml` |
 
 `src/image/` and `src/hooks/` between them are a usable answer to "run my code
-inside someone else's packed 32-bit program", which is a problem that has nothing
+inside someone else's packed 32-bit program". That problem has nothing
 to do with any particular game.
 
 ## Domain-specific, and deliberately data
@@ -35,18 +34,18 @@ to do with any particular game.
 |---|---|
 | `data/app_signatures.toml` | How to recognise an installed application |
 | `data/hooksites.toml` | Which functions to hook, named logically |
-| `data/addresses/*.json` | Where those functions are, per build — generated |
-| `data/events.toml` | The event contract — what a script can define |
-| `data/routines/*.json` | The engine routine table — generated |
+| `data/addresses/*.json` | Where those functions are, per build (generated) |
+| `data/events.toml` | The event contract: what a script can define |
+| `data/routines/*.json` | The engine routine table (generated)
 | `data/adjudication/` | Hand-established bindings for a stripped build |
 
 ## The thin specific layer
 
 Only two places tie the generic parts to this game:
 
-- `src/runtime/hook_bodies.cpp` — the three hook bodies, which have to know the
+- `src/runtime/hook_bodies.cpp`: the three hook bodies, which have to know the
   real function signatures.
-- `src/api/routines.*` — the bridge that pushes arguments onto this VM's stack.
+- `src/api/routines.*`: the bridge that pushes arguments onto this VM's stack.
 
 Everything else is either an engine or a table.
 

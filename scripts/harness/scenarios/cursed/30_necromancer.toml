@@ -78,7 +78,7 @@ poll = true
 timeout = 120
 
 [[step]]
-label = "the risen wore Malak's appearance (row 21) at some point: none left alive and hostile"
+label = "encounter cleanup: no living hostile remains (does not verify Malak appearance)"
 do = "assert_lua"
 code = "local pc=nwscript.call('GetFirstPC'); local area=nwscript.call('GetArea',pc); local o=nwscript.call('GetFirstObjectInArea',area,1); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetIsEnemy',o,pc)==1 and nwscript.call('GetIsDead',o)~=1 and nwscript.call('GetDistanceBetween',pc,o)<40 then return false end; o=nwscript.call('GetNextObjectInArea',area,1) end; return true"
 equals = true

@@ -45,7 +45,7 @@ timeout = 45
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
 
 [[step]]
 do = "sleep"
@@ -54,7 +54,7 @@ seconds = 30
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); kp.as(pc,function() nwscript.call('ActionStartConversation',t,'',0,0,1) end); return {distance=d,pc=pc,trask=t,before=before,queued=state()}"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); nwscript.with_caller(pc,function() nwscript.call('ActionStartConversation',t,'',0,0,1) end); return {distance=d,pc=pc,trask=t,before=before,queued=state()}"
 
 [[step]]
 do = "sleep"

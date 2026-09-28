@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/examples/showcase/20_sith_patrol_alarm.lua, against a real running
+# tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua, against a real running
 # game. Fires on k_def_percept01, which runs on the PERCEIVER, not the PC.
 #
 # Empirically the hardest of the four examples to catch firing live, and that
@@ -25,7 +25,7 @@ GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 OUT="${OUT:-$ROOT/tmp/gameplay-test-sith-patrol-alarm}"
 DISPLAY_NUM="${DISPLAY_NUM:-88}"
 
-deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/20_sith_patrol_alarm.lua" \
+deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
 

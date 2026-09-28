@@ -338,7 +338,7 @@ timeout = 120
 [[step]]
 label = "take everything from the nearest stocked metalbox (ActionTakeItem; no container GUI needed)"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
 timeout = 20
 
 [[step]]
@@ -350,7 +350,7 @@ timeout = 120
 [[step]]
 label = "take everything from the nearest stocked footlker (ActionTakeItem; no container GUI needed)"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
 timeout = 20
 
 [[step]]
@@ -609,7 +609,7 @@ scale = 1.0
 [[step]]
 label = "open end_door19: Trask holds off Bandon"
 do = "lua"
-code = "local d=nwscript.call('GetObjectByTag','end_door19',0); kp.as(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
+code = "local d=nwscript.call('GetObjectByTag','end_door19',0); nwscript.with_caller(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
 timeout = 20
 
 # The cutscene raises the XP summary and a tutorial popup as it begins;
@@ -701,7 +701,7 @@ timeout = 120
 [[step]]
 label = "open the footlocker"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
 timeout = 20
 
 [[step]]
@@ -736,7 +736,7 @@ timeout = 120
 [[step]]
 label = "use the security console"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
 timeout = 20
 
 [[step]]
@@ -827,7 +827,7 @@ timeout = 120
 [[step]]
 label = "use the escape pod"
 do = "lua"
-code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
 timeout = 20
 
 [[step]]

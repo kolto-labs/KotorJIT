@@ -7,7 +7,7 @@ You need a legal copy of the game. See [CONTRIBUTING.md](../../CONTRIBUTING.md#s
 You need a 32-bit Windows cross-compiler and LuaJIT built for that target.
 
 ```sh
-sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686
+sudo dnf install mingw32-gcc-c++ mingw32-binutils glibc-devel.i686 libstdc++-devel.i686 luajit lua
 
 git clone --branch v2.1 https://github.com/LuaJIT/LuaJIT third_party/luajit
 make -C third_party/luajit HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows BUILDMODE=static

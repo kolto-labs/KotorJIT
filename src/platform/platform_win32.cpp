@@ -8,12 +8,15 @@
 
 #include "platform/platform.hpp"
 
+#include <cctype>
+#include <cstdio>
 #include <cstring>
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include <tlhelp32.h>
 
 namespace kp::platform {
 namespace {
@@ -25,6 +28,42 @@ DWORD to_prot(Protect p) {
         case Protect::ReadWriteExec: return PAGE_EXECUTE_READWRITE;
     }
     return PAGE_READONLY;
+}
+
+// GetProcAddress hands back FARPROC; copy the bits into the real signature
+// rather than casting between function types (-Wcast-function-type).
+template <class Function>
+Function proc(HMODULE module, const char* name) {
+    FARPROC address = module ? ::GetProcAddress(module, name) : nullptr;
+    Function result = nullptr;
+    static_assert(sizeof(result) == sizeof(address));
+    std::memcpy(&result, &address, sizeof(result));
+    return result;
+}
+
+// Lowercase ASCII base name of a wide module name. Non-ASCII becomes '?':
+// the match patterns are ASCII and the log line should stay ASCII too.
+void base_name(const wchar_t* in, char* out, std::size_t len) {
+    std::size_t n = 0;
+    for (; *in && n + 1 < len; ++in) {
+        const wchar_t c = *in;
+        char ch = c < 128 ? static_cast<char>(std::tolower(static_cast<int>(c))) : '?';
+        // Space-delimited log line, comma-separated list: keep each name one token.
+        if (ch == ' ' || ch == '\t' || ch == ',') ch = '_';
+        out[n++] = ch;
+    }
+    out[n] = '\0';
+}
+
+// GOG Galaxy (galaxy*), Steam and other *overlay*, NVIDIA capture (nvspcap*),
+// Discord's hook (discordhook*.dll) and RivaTuner Statistics Server
+// (rtsshooks*.dll). Discord's current hook is not named *overlay*.
+bool is_overlay(const char* name) {
+    return std::strncmp(name, "galaxy", 6) == 0 ||
+           std::strstr(name, "overlay") != nullptr ||
+           std::strncmp(name, "nvspcap", 7) == 0 ||
+           std::strncmp(name, "discordhook", 11) == 0 ||
+           std::strncmp(name, "rtsshooks", 9) == 0;
 }
 
 }  // namespace
@@ -94,6 +133,86 @@ std::uintptr_t module_base(const char* name) {
     // not a coincidence to be defended against.
     HMODULE h = ::GetModuleHandleA((name && *name) ? name : nullptr);
     return reinterpret_cast<std::uintptr_t>(h);
+}
+
+HostIdentity host_identity() {
+    HostIdentity id;
+    HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
+
+    using WineVersion = const char*(__cdecl*)();
+    if (auto wine = proc<WineVersion>(ntdll, "wine_get_version")) {
+        id.wine = true;
+        const char* v = wine();
+        std::snprintf(id.wine_version, sizeof id.wine_version, "%s", v ? v : "?");
+        // The log line is space-delimited; keep this one token.
+        for (char* c = id.wine_version; *c; ++c)
+            if (*c == ' ' || *c == '\t' || *c == ',') *c = '_';
+    }
+
+    // LONG, not NTSTATUS: the latter is not declared under WIN32_LEAN_AND_MEAN.
+    using RtlGetVersion = LONG(WINAPI*)(OSVERSIONINFOW*);
+    if (auto get = proc<RtlGetVersion>(ntdll, "RtlGetVersion")) {
+        OSVERSIONINFOW info{};
+        info.dwOSVersionInfoSize = sizeof info;
+        if (get(&info) == 0) {
+            id.os_major = info.dwMajorVersion;
+            id.os_minor = info.dwMinorVersion;
+            id.os_build = info.dwBuildNumber;
+        }
+    }
+
+    // Toolhelp rather than EnumProcessModules: it lives in kernel32, so the DLL
+    // gains no psapi import. The snapshot can fail transiently with
+    // ERROR_BAD_LENGTH while another thread loads a module; retry a few times.
+    // A failed scan is written out as "snapshot-failed:<error>", never as an
+    // empty list, so a receipt cannot read it as "no overlays".
+    HANDLE snap = INVALID_HANDLE_VALUE;
+    DWORD snap_error = 0;
+    for (int attempt = 0; attempt < 4; ++attempt) {
+        snap = ::CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId());
+        if (snap != INVALID_HANDLE_VALUE) break;
+        snap_error = ::GetLastError();
+        if (snap_error != ERROR_BAD_LENGTH) break;
+        ::Sleep(1);
+    }
+    if (snap == INVALID_HANDLE_VALUE) {
+        std::snprintf(id.overlays, sizeof id.overlays, "snapshot-failed:%lu",
+                      static_cast<unsigned long>(snap_error));
+        return id;
+    }
+    // Names that do not fit are counted, not cut: the list ends with
+    // ",+<n>_more" instead of a truncated name. Room for that suffix is kept.
+    constexpr std::size_t kSuffixRoom = 24;   // ",+4294967295_more" and NUL
+    const std::size_t limit = sizeof id.overlays - kSuffixRoom;
+    std::size_t used = 0;
+    unsigned omitted = 0;
+    MODULEENTRY32W entry{};
+    entry.dwSize = sizeof entry;
+    for (BOOL ok = ::Module32FirstW(snap, &entry); ok; ok = ::Module32NextW(snap, &entry)) {
+        char name[MAX_MODULE_NAME32 + 1];
+        base_name(entry.szModule, name, sizeof name);
+        if (!is_overlay(name)) continue;
+        const std::size_t need = std::strlen(name) + (used ? 1 : 0);
+        if (omitted || used + need >= limit) {
+            ++omitted;
+            continue;
+        }
+        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s%s", used ? "," : "", name);
+        used += need;
+    }
+    ::CloseHandle(snap);
+    if (omitted)
+        std::snprintf(id.overlays + used, sizeof id.overlays - used, "%s+%u_more",
+                      used ? "," : "", omitted);
+    return id;
+}
+
+void format_host_identity(const HostIdentity& id, char* out, std::size_t len) {
+    if (!out || len == 0) return;
+    std::snprintf(out, len, "host: wine=%s wine_version=%s os=%lu.%lu.%lu overlays=%s",
+                  id.wine ? "yes" : "no", id.wine_version[0] ? id.wine_version : "-",
+                  id.os_major, id.os_minor, id.os_build,
+                  id.overlays[0] ? id.overlays : "-");
 }
 
 }  // namespace kp::platform

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/examples/showcase/30_battle_meditation.lua, against a real running
+# tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua, against a real running
 # game. Bastila's gate is IsObjectPartyMember(object_id) on the k_def_attacked01
 # victim; ExecuteScript on GetFirstPC() is the deterministic hook (same as
 # record_showcase.sh). Real combat below still asserts k_def_attacked01 ran.
@@ -13,7 +13,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-85}"
 
 "$ROOT/scripts/harness/pick_save.sh" dantooine_party
 
-deploy_scripts "$GAME_DIR" "$ROOT/scripts/examples/showcase/30_battle_meditation.lua" \
+deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
 rm -f "$GAME_DIR/kotorphasor.log"
 

@@ -557,8 +557,8 @@ local function apply_peer_state(p)
     end
 
     if p.applied_facing == nil or math.abs(p.facing - p.applied_facing) > 1.0 then
-        if kp and kp.as then
-            pcall(kp.as, id, function() q("SetFacing", p.facing) end)
+        if nwscript and nwscript.with_caller then
+            pcall(nwscript.with_caller, id, function() q("SetFacing", p.facing) end)
         end
         p.applied_facing = p.facing
     end

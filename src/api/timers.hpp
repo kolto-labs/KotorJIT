@@ -14,10 +14,40 @@
 //   end
 //   kp.removetimer(id)
 //
-// The callback is named by a STRING, not passed as a function value. The name
-// is resolved at fire time against the script's globals: a reloaded script
-// re-registers its functions and a stale function value would keep the old
-// chunk's upvalues alive.
+// The callback is either a STRING or a FUNCTION.
+//
+//   A name is resolved at fire time against the script's globals, so a typo is
+//   invisible until the timer expires, and redefining the global changes what
+//   the next firing runs.
+//
+//   A function is held by a registry reference from registration until the
+//   timer ends, so a closure keeps its upvalues across firings:
+//
+//     local hits = 0
+//     kp.registertimer(500, function(id, count) hits = hits + 1; return count < 3 end)
+//
+//   The reference is released exactly once: on completion (anything but true
+//   or 1 returned), on removetimer, on a throw, or with the state when it
+//   closes. A function value cannot leak into the next generation of a
+//   reloaded script, because timers never cross a state close (below).
+//   Errors from a function timer are charged to "function <source>:<line>",
+//   the place the function was defined, so every timer made from one closure
+//   definition shares one error budget, as every timer naming one global does.
+//   A C function (kp.registertimer(ms, error)) has no source line, so it is
+//   charged to "function [C] <address>": one budget per C function.
+//
+//   A name is looked up inside a protected call, so a strict-globals __index
+//   on _G that raises is an ordinary timer error: reported, charged to the
+//   name, and the timer is cancelled. It is not counted as a firing.
+//
+// Anything else in the callback slot is an argument error at the call site.
+//
+// THE DELAY is a finite number of milliseconds from 0 to kMaxDelayMs
+// (2^32 - 1, about 49.7 days). NaN, infinity, negatives and anything larger
+// are an argument error; they used to be accepted and, for infinity, fire at
+// once.
+// Both forms share one scheduler, one id space and the same arguments
+// (id, count, data).
 //
 // SCHEDULING. Timers fire from pump(), which the OnTick hook body calls once
 // per frame with a millisecond clock. Everything due at that instant is
@@ -45,7 +75,10 @@
 //
 // Nothing here needs the runtime to remember to clean up. Each state carries a
 // finalised sentinel in its own registry, so lua_close -- from unload, reload
-// or quarantine -- drops that state's timers on the way out.
+// or quarantine -- drops that state's timers on the way out. Once the sentinel
+// has been finalised, registertimer on that state raises: a script's own __gc
+// can run after the sentinel's during lua_close, and a timer registered there
+// would otherwise outlive its state.
 //
 // TWO DIVERGENCES FROM data/hostapi.toml, which declares this surface as
 // kp.timer.* and has no generator yet. That file makes cancelling the running
@@ -73,6 +106,9 @@ namespace kp::api {
 void register_timers(lua_State*);
 
 namespace timers {
+
+// The largest delay kp.registertimer accepts, in milliseconds.
+inline constexpr std::uint64_t kMaxDelayMs = 0xFFFFFFFFull;
 
 // Fire everything due at `now_ms`. Returns how many callbacks ran.
 //
@@ -112,10 +148,10 @@ void set_error_budget(unsigned);
 // runtime does not have to; it is exposed for a caller that wants to cancel a
 // script's timers without closing it.
 //
-// Registry references held by those timers are not released, because the only
-// caller that matters is a state on its way out and releasing them there would
-// touch a half-torn-down state. Calling this on a live state leaks its timers'
-// userdata refs until the state closes.
+// Registry references held by those timers (data and function callbacks) are
+// not released, because the only caller that matters is a state on its way out
+// and releasing them there would touch a half-torn-down state. Calling this on
+// a live state leaks those refs until the state closes.
 void forget_state(lua_State*);
 
 // How many timers are scheduled, in total or for one state. Diagnostics.

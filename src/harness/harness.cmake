@@ -18,6 +18,7 @@ set(KP_HARNESS_TOOLS    "${CMAKE_CURRENT_LIST_DIR}/../../tools")
 set(KP_HARNESS_SOURCES
     "${KP_HARNESS_DIR}/channel.cpp"
     "${KP_HARNESS_DIR}/commands.cpp"
+    "${KP_HARNESS_DIR}/console_protocol.cpp"
     "${KP_HARNESS_DIR}/json.cpp"
     "${KP_HARNESS_DIR}/ring.cpp"
     "${KP_HARNESS_DIR}/engine_k1.cpp"
@@ -61,4 +62,35 @@ if(UNIX AND NOT WIN32)
 
     # Self-contained: exits on its own g_failures counter.
     add_test(NAME kp_harnesstest COMMAND kp_harnesstest)
+endif()
+
+# --- kp_harnessdrain_test ---------------------------------------------------
+#
+# This is the checked-in real-commands regression requested by the H0 review.
+# commands.cpp is already a source of the native kphasor target and is therefore
+# rebuilt as part of this test's target dependency. Linking that target once is
+# deliberate: a second copy of channel.cpp or commands.cpp would make symbol
+# interposition decide which process-wide channel the test actually exercises.
+# Deferring target creation lets this fragment remain before runtime.cmake while
+# still depending on the library target that fragment defines.
+function(kp_define_harnessdrain_test)
+    if(UNIX AND NOT WIN32 AND TARGET kphasor)
+        add_executable(kp_harnessdrain_test
+            "${KP_HARNESS_TOOLS}/kp_harnessdrain_test.cpp"
+        )
+        target_include_directories(kp_harnessdrain_test PRIVATE
+            "${KP_HARNESS_SRC_ROOT}")
+        target_compile_options(kp_harnessdrain_test PRIVATE -m32 -Wall -Wextra)
+        target_link_options(kp_harnessdrain_test PRIVATE -m32)
+        target_link_libraries(kp_harnessdrain_test PRIVATE kphasor)
+        add_dependencies(kp_harnessdrain_test kphasor)
+        add_test(NAME kp_harnessdrain_test COMMAND kp_harnessdrain_test)
+        set_tests_properties(kp_harnessdrain_test PROPERTIES
+            TIMEOUT 10
+            ENVIRONMENT "KOTORPHASOR_NO_AUTOSTART=1")
+    endif()
+endfunction()
+
+if(COMMAND cmake_language)
+    cmake_language(DEFER CALL kp_define_harnessdrain_test)
 endif()

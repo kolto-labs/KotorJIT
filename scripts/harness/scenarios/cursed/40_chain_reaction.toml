@@ -78,9 +78,9 @@ poll = true
 timeout = 120
 
 [[step]]
-label = "the party was inside at least one blast (script-reported party damage in local number 6) and the player lives"
+label = "the player and every party member survived the fight (the round-5 redesign excludes the PC and party from blast damage entirely, so the script no longer records a damage counter; nothing here can tell blast damage apart from ordinary trooper attacks, so we check survival, not zero HP loss)"
 do = "assert_lua"
-code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetIsDead',pc)~=1 and nwscript.call('GetLocalNumber',pc,6) >= 10"
+code = "local pc=nwscript.call('GetFirstPC'); if nwscript.call('GetIsDead',pc)==1 then return false end; local n=nwscript.call('GetPartyMemberCount'); for i=0,n-1 do local m=nwscript.call('GetPartyMemberByIndex',i); if nwscript.call('GetIsObjectValid',m)==1 and nwscript.call('GetIsDead',m)==1 then return false end end; return true"
 equals = true
 poll = true
 timeout = 30

@@ -38,7 +38,7 @@ import socket
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import discover, targets as T
 from .client import Channel, ChannelError
@@ -73,6 +73,11 @@ STEAM_REQUIRED = re.compile(r"This game needs Steam|SteamAPI_Init\(\) failed", r
 # Keep this bounded, but allow a reliable recovery window for fresh prefixes.
 BOOT_ATTEMPTS = 5
 BOOT_RETRY_SETTLE = 3.0
+# Acceptance runs obey "one launch per authorized attempt": KP_MAX_BOOT_ATTEMPTS
+# (or GameSession(max_boot_attempts=)) lowers the budget, down to 1 = exactly one
+# game launch with no relaunch. BOOT_ATTEMPTS stays the default and the ceiling.
+MAX_BOOT_ATTEMPTS_ENV = "KP_MAX_BOOT_ATTEMPTS"
+BOOT_ATTEMPTS_EVIDENCE = "boot-attempts.json"
 
 
 class BootFailure(Exception):
@@ -86,6 +91,37 @@ class BootFailure(Exception):
 
 class LockHeld(Exception):
     pass
+
+
+class InvalidBootAttempts(ValueError):
+    """A max-boot-attempts value outside 1..BOOT_ATTEMPTS, or not an integer.
+    Raised before any lock, staging or launch."""
+
+
+def resolve_max_boot_attempts(value=None) -> Tuple[int, str]:
+    """Return (attempts, source) where source is "kwarg", "env" or "default".
+
+    An explicit keyword wins over KP_MAX_BOOT_ATTEMPTS. Only plain ints (not
+    bools) and strings of ASCII digits are accepted; anything else, including a
+    set-but-empty variable, is refused rather than silently defaulted.
+    """
+    if value is not None:
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise InvalidBootAttempts(
+                f"max_boot_attempts must be an int in 1..{BOOT_ATTEMPTS}, got {value!r}")
+        n, source = value, "kwarg"
+    elif MAX_BOOT_ATTEMPTS_ENV in os.environ:
+        raw = os.environ[MAX_BOOT_ATTEMPTS_ENV]
+        if not (raw.isascii() and raw.isdigit()):
+            raise InvalidBootAttempts(
+                f"{MAX_BOOT_ATTEMPTS_ENV} must be an integer in 1..{BOOT_ATTEMPTS}, got {raw!r}")
+        n, source = int(raw), "env"
+    else:
+        return BOOT_ATTEMPTS, "default"
+    if not 1 <= n <= BOOT_ATTEMPTS:
+        what = "max_boot_attempts" if source == "kwarg" else MAX_BOOT_ATTEMPTS_ENV
+        raise InvalidBootAttempts(f"{what} must be in 1..{BOOT_ATTEMPTS}, got {n}")
+    return n, source
 
 
 def _quiet(_: str) -> None:
@@ -340,6 +376,10 @@ def proxy_is_ours(dll: Path) -> bool:
         return False
 
 
+RUNTIME_WRITTEN_FILES = {"kphasor.dll", "steam_appid.txt", "kotorphasor.ini",
+                         "kotorphasor.log", "kotorphasor-proxy.log"}
+
+
 def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
                  depth: int = 0, log: Log = _quiet) -> None:
     """Symlink `src`'s entries into `dst`; real copies for `writable` dirs.
@@ -362,7 +402,8 @@ def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
             else:
                 target.symlink_to(entry)
         else:
-            if copy_files or entry.suffix.lower() == ".ini":
+            if (copy_files or entry.suffix.lower() == ".ini"
+                    or entry.name.lower() in RUNTIME_WRITTEN_FILES):
                 shutil.copy2(entry, target)
             else:
                 target.symlink_to(entry)
@@ -388,6 +429,8 @@ class SessionInfo:
     wine_tmp_isolated: Optional[bool] = None
     process_name: str = ""
     build: str = ""
+    max_boot_attempts: int = BOOT_ATTEMPTS
+    launch_count: int = 0
     started: float = field(default_factory=time.time)
 
     def to_dict(self) -> Dict:
@@ -417,7 +460,11 @@ class GameSession:
                  wine_debug: Optional[str] = None, log: Optional[Log] = None,
                  screen: tuple = (T.SCREEN_W, T.SCREEN_H), staged: Optional[str] = None,
                  wineprefix: Optional[str] = None, reset_saves: bool = False,
-                 persistent: bool = False):
+                 persistent: bool = False, max_boot_attempts: Optional[int] = None):
+        # Refuse a bad launch budget before touching locks, stages or displays.
+        self.max_boot_attempts, self.max_boot_attempts_source = \
+            resolve_max_boot_attempts(max_boot_attempts)
+        self.boot_attempts: List[Dict] = []
         self.target = T.get(target)
         self.root = discover.repo_root()
         self.build_dir = discover.build_dir(build_dir)
@@ -431,7 +478,7 @@ class GameSession:
         self.persistent = persistent
         self._log_fn = log or print
 
-        self.staged: Path = Path(staged).resolve() if staged else self._stage_root()
+        self.staged: Path = (Path(staged).expanduser() if staged else self._stage_root()).resolve()
         self._wineprefix: Optional[Path] = (
             Path(wineprefix).expanduser().resolve() if wineprefix else self._wineprefix_root())
         self.run_dir: Path = self.staged / "runs" / time.strftime("%Y%m%d-%H%M%S")
@@ -449,6 +496,10 @@ class GameSession:
         self.wm: Optional[subprocess.Popen] = None
         self.steam: Optional[subprocess.Popen] = None
         self.launcher: Optional[subprocess.Popen] = None
+        # Set only by capture_owned_game_window() on this session's own Xvfb.
+        # A physical-input adapter must not discover windows on a reused display.
+        self.capture_window: Optional[str] = None
+        self._capture_window_pid: Optional[int] = None
         self.env: Dict[str, str] = {}
         self.channel: Optional[Channel] = None
         self.build: str = ""
@@ -507,11 +558,11 @@ class GameSession:
     def stage(self, resources: Optional[List[Resource]] = None) -> None:
         """Make tmp/<target>_harness/ usable: overlay, runtime, inis."""
         t = self.target
-        data = discover.data_dir(t)
+        data, install = self._validate_staged_path()
         self.data_dir = data
-        install = discover.install_root(t, data)
         staged = self.staged
-        fresh = not staged.is_dir()
+        fresh = (not staged.is_dir()
+                 or not any(p.name != ".kpharness-stage.lock" for p in staged.iterdir()))
         staged.mkdir(parents=True, exist_ok=True)
         self.run_dir.mkdir(parents=True, exist_ok=True)
         self._session_log = open(self.run_dir / "session.log", "a")
@@ -553,6 +604,18 @@ class GameSession:
                 p.unlink()
                 shutil.copytree(real, p, symlinks=True)
             p.mkdir(parents=True, exist_ok=True)
+
+        # Older overlay versions linked every non-INI file. Materialize files
+        # that the loader/runtime write before those writes can reach source.
+        private_names = set(RUNTIME_WRITTEN_FILES)
+        private_names.update(p.name for p in self.game_dir.glob("*.ini"))
+        for name in private_names:
+            p = self.game_dir / name
+            if p.is_symlink():
+                source = p.resolve()
+                p.unlink()
+                if source.is_file():
+                    shutil.copy2(source, p)
 
         exe = self._ensure_executable(install)
         self.log(f"executable {exe}")
@@ -774,7 +837,10 @@ class GameSession:
                 self.log("saved original binkw32.dll -> binkw32_real.dll")
             if proxy.is_symlink():
                 proxy.unlink()
-            shutil.copy2(self.build_dir / "kphasor.dll", gd / "kphasor.dll")
+            runtime_dll = gd / "kphasor.dll"
+            if runtime_dll.is_symlink():
+                runtime_dll.unlink()
+            shutil.copy2(self.build_dir / "kphasor.dll", runtime_dll)
             shutil.copy2(self.build_dir / "binkw32.dll", proxy)
         else:
             shutil.copy2(self.build_dir / "libkphasor.so", kp / "libkphasor.so")
@@ -921,6 +987,7 @@ class GameSession:
 
     def acquire_stage_lock(self) -> None:
         """Serialize a resettable scenario stage for this process lifetime."""
+        self._validate_staged_path()
         path = self.staged / ".kpharness-stage.lock"
         info = self._read_lock(path)
         if info is not None:
@@ -932,6 +999,17 @@ class GameSession:
         path.write_text(f"{os.getpid()}\n{pid_start(os.getpid())}\n{self.display}\n"
                         f"{self.target.process_name}\n")
         self.stage_lock_path = path
+
+    def _validate_staged_path(self) -> tuple[Path, Path]:
+        """Resolve source identity before any stage-owned path can be written."""
+        data = discover.data_dir(self.target)
+        install = discover.install_root(self.target, data)
+        staged = self.staged.resolve()
+        self.staged = staged
+        if staged == install.resolve() or staged == data.resolve():
+            raise BootFailure("unsafe staged tree",
+                              f"staged tree must differ from source install: {staged}")
+        return data, install
 
     def release_lock(self) -> None:
         if self.lock_path is None:
@@ -1016,6 +1094,69 @@ class GameSession:
                 continue
             if len(argv) > 1 and argv[1] == f":{n}".encode():
                 self._kill(pid)
+
+    def capture_owned_game_window(self) -> str:
+        """Find one visible game window on this session's newly owned X server.
+
+        This deliberately refuses reused displays, ambiguous candidates, and a
+        replacement for an already captured window.  It never scans a user's
+        desktop: the Xvfb process and its exact DISPLAY must still belong to
+        this session.
+        """
+        if self.xvfb is None or self.xvfb.poll() is not None:
+            raise RuntimeError("owned game-window capture requires this session's live Xvfb")
+        display = self.env.get("DISPLAY")
+        if display != f":{self.display}":
+            raise RuntimeError("owned game-window capture display does not match session Xvfb")
+        env = dict(self.env)
+        pids = set(self.game_pids())
+        if self.launcher is not None and self.launcher.poll() is None:
+            pids.add(self.launcher.pid)
+        if not pids:
+            raise RuntimeError("owned game-window capture has no live game process")
+
+        def owner_and_geometry(window: str) -> tuple[int, int, int]:
+            owner = subprocess.check_output(["xdotool", "getwindowpid", window], env=env,
+                                            text=True, timeout=5).strip()
+            geometry = subprocess.check_output(["xdotool", "getwindowgeometry", "--shell", window],
+                                               env=env, text=True, timeout=5)
+            fields = dict(line.split("=", 1) for line in geometry.splitlines() if "=" in line)
+            return int(owner), int(fields.get("WIDTH", "0")), int(fields.get("HEIGHT", "0"))
+
+        if self.capture_window is not None:
+            try:
+                owner, width, height = owner_and_geometry(self.capture_window)
+            except (OSError, subprocess.SubprocessError, ValueError) as error:
+                raise RuntimeError("previously owned game window was lost") from error
+            if owner != self._capture_window_pid or owner not in pids or width <= 0 or height <= 0:
+                raise RuntimeError("previously owned game window was replaced or is no longer valid")
+            return self.capture_window
+
+        candidates: set[str] = set()
+        for pid in sorted(pids):
+            try:
+                result = subprocess.run(["xdotool", "search", "--onlyvisible", "--pid", str(pid)],
+                                        env=env, text=True, capture_output=True, timeout=5, check=False)
+            except (OSError, subprocess.SubprocessError) as error:
+                raise RuntimeError("owned game-window discovery could not query X11") from error
+            if result.returncode not in (0, 1):
+                raise RuntimeError("owned game-window discovery failed")
+            candidates.update(line.strip() for line in result.stdout.splitlines() if line.strip().isdigit())
+        verified = []
+        for window in sorted(candidates, key=int):
+            try:
+                owner, width, height = owner_and_geometry(window)
+            except (OSError, subprocess.SubprocessError, ValueError):
+                continue
+            if owner in pids and width > 0 and height > 0:
+                verified.append((window, owner))
+        if len(verified) != 1:
+            raise RuntimeError(f"owned game-window discovery requires exactly one visible game window, found {len(verified)}")
+        window, owner = verified[0]
+        self.capture_window = f"0x{int(window):x}"
+        self._capture_window_pid = owner
+        self.log(f"owned game window captured {self.capture_window} (pid {owner})")
+        return self.capture_window
 
     # ------------------------------------------------------------ launch --
     def _build_env(self) -> Dict[str, str]:
@@ -1293,7 +1434,7 @@ class GameSession:
                           f"no status reply in {self.boot_timeout:.0f}s (last: {last_err})")
 
     def _launch_and_connect(self) -> Channel:
-        """Launch the game and wait for its channel, up to BOOT_ATTEMPTS times.
+        """Launch the game and wait for its channel, up to max_boot_attempts times.
 
         A launch that comes straight after `pkill swkotor.exe; wineserver -k`
         dies without writing a line -- seen twice out of two, and the immediate
@@ -1302,20 +1443,86 @@ class GameSession:
         mid-shutdown. Only that class of failure is retried: a refusal, a fault
         or the wrong build says something about the build, and repeating it
         would just cost the run its budget.
+
+        The budget defaults to BOOT_ATTEMPTS; KP_MAX_BOOT_ATTEMPTS or the
+        max_boot_attempts keyword lowers it. With 1, a crash or boot timeout is
+        raised as-is after exactly one launch, with the failed process's logs
+        left in run_dir. Every launch is recorded before it starts in
+        run_dir/boot-attempts.json (teardown keeps run_dir, unlike session.json),
+        and the raised failure carries launch_count, launch_attempts,
+        max_boot_attempts and evidence_path.
         """
+        budget = getattr(self, "max_boot_attempts", None)
+        source = getattr(self, "max_boot_attempts_source", None)
+        if budget is None or source is None:
+            budget, source = resolve_max_boot_attempts()
+        else:
+            # Re-check: the attribute is public and a mutated value must not
+            # widen the budget or turn into a zero-launch "success".
+            budget, _ = resolve_max_boot_attempts(budget)
+        self.boot_attempts = []
         retryable = ("crash", "boot timeout")
-        for attempt in range(1, BOOT_ATTEMPTS + 1):
+        for attempt in range(1, budget + 1):
+            record: Dict = {"attempt": attempt, "outcome": "launching", "reason": None,
+                            "detail": None, "started": time.time(), "ended": None}
+            self.boot_attempts.append(record)
+            self._write_boot_attempts(budget, source, "launching")
             try:
                 self.launch()
-                return self.connect()
+                ch = self.connect()
             except BootFailure as e:
-                if attempt == BOOT_ATTEMPTS or e.reason not in retryable:
+                record.update(outcome="failed", reason=e.reason, detail=e.detail,
+                              ended=time.time())
+                final = attempt == budget or e.reason not in retryable
+                self._attach_boot_evidence(
+                    e, budget, self._write_boot_attempts(budget, source,
+                                                         "failed" if final else "retrying"))
+                if final:
                     raise
-                self.log(f"boot attempt {attempt} failed ({e.reason}: {e.detail}); "
+                self.log(f"boot attempt {attempt}/{budget} failed ({e.reason}: {e.detail}); "
                          f"settling {BOOT_RETRY_SETTLE:.0f}s and launching again")
                 self._kill_game()
                 time.sleep(BOOT_RETRY_SETTLE)
+            except BaseException as e:
+                record.update(outcome="failed", reason=type(e).__name__, detail=str(e),
+                              ended=time.time())
+                self._attach_boot_evidence(
+                    e, budget, self._write_boot_attempts(budget, source, "failed"))
+                raise
+            else:
+                record.update(outcome="channel", ended=time.time())
+                self._write_boot_attempts(budget, source, "channel")
+                return ch
         raise BootFailure("boot timeout", "no attempt reached a channel")
+
+    def _write_boot_attempts(self, budget: int, source: str, outcome: str) -> Optional[Path]:
+        """Persist the launch receipt atomically; never let it mask the boot."""
+        run_dir = getattr(self, "run_dir", None)
+        if run_dir is None:
+            return None
+        path = Path(run_dir) / BOOT_ATTEMPTS_EVIDENCE
+        doc = {"max_boot_attempts": budget, "max_boot_attempts_source": source,
+               "launch_count": len(self.boot_attempts), "outcome": outcome,
+               "attempts": self.boot_attempts}
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = path.with_name(path.name + ".tmp")
+            tmp.write_text(json.dumps(doc, indent=2))
+            os.replace(tmp, path)
+        except OSError as e:
+            self.log(f"warning: could not write {path} ({e})")
+            return None
+        return path
+
+    def _attach_boot_evidence(self, error: BaseException, budget: int,
+                              path: Optional[Path]) -> None:
+        try:
+            error.launch_count = len(self.boot_attempts)
+            error.launch_attempts = [dict(a) for a in self.boot_attempts]
+            error.max_boot_attempts = budget
+            error.evidence_path = str(path) if path is not None else None
+        except (AttributeError, TypeError):
+            pass
 
     def _kill_game(self) -> None:
         """Stop the game processes of a failed attempt, leaving Xvfb and the
@@ -1405,7 +1612,9 @@ class GameSession:
             lock_path=str(self.lock_path or ""), wineprefix=str(self.wineprefix) if self.target.wine else "",
             wine_tmp_dir=str(self._wine_tmp_dir or "") if self.target.wine else "",
             wine_tmp_isolated=self._wine_tmp_isolated if self.target.wine else None,
-            process_name=self.target.process_name, build=self.build)
+            process_name=self.target.process_name, build=self.build,
+            max_boot_attempts=getattr(self, "max_boot_attempts", BOOT_ATTEMPTS),
+            launch_count=len(getattr(self, "boot_attempts", [])))
         path = self.session_info_path(self.staged)
         path.write_text(json.dumps(info.to_dict(), indent=2))
         return path

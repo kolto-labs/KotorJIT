@@ -19,15 +19,15 @@ function OnScriptLoad(game, build)
 end
 ```
 
-## `kp` runtime helpers
+## Runtime helpers and bridge context
 
 | API | Result | Use |
 |---|---|---|
-| `kp.as(object, fn)` | returns `fn` results | Runs `fn` with `object` as the temporary engine caller (`OBJECT_SELF`), restoring the prior caller even if `fn` errors. |
+| `nwscript.with_caller(object, fn, ...)` | returns `fn` results | Runs `fn` with `object` as the temporary engine caller (`OBJECT_SELF`), restoring the prior caller even if `fn` errors. |
 | `kp.registertimer(ms, callback_name[, data])` | timer handle | Schedules the named global callback on the game thread after the delay. The callback receives `(timer_id, count, data)`; return `true` to repeat it. |
 | `kp.gamedir()` | string | Absolute executable/game directory. |
 | `kp.time()` | number | Monotonic milliseconds for diagnostics and bounded scripts. |
-| `kp.log(text[, level])` | none | Flushes a line to the runtime log; level is `debug`, `info`, `warn`, or `error`. |
+| `kp.diagnostic(text[, level])` | none | Flushes a line to the runtime log; level is `debug`, `info`, `warn`, or `error`. |
 | `kp.console(text)` | none | Writes a line to the game console/log. |
 | `kp.feedback(text[, x, y[, life]])` | none | Engine feedback text; one argument uses the default position/lifetime. |
 

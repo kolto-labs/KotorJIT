@@ -19,6 +19,11 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+case "${1:-}" in
+  50_chaos_roulette|60_rave)
+    echo "record_cursed: retired public example; internal regression fixtures remain in tools/tests/examples/fixtures/legacy/cursed" >&2
+    exit 2 ;;
+esac
 source "$ROOT/scripts/harness/harness_paths.sh"
 preflight_tmp_write || exit 1
 source "$ROOT/scripts/harness/record.sh"

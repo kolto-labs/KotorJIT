@@ -7,7 +7,8 @@
 -- redrawn as Revan with the knight-speed aura.
 --
 -- Mechanism: OnModuleAcquireItem and OnModulePlayerLevelUp are module
--- EventHandler callbacks. The laser is VFX_FNF_SPACE_LASER (3016, the
+-- EventHandler callbacks. OnModulePlayerLevelUp is only "Bound" in
+-- docs/user/api-status.md: nobody has seen it fire live. The laser is VFX_FNF_SPACE_LASER (3016, the
 -- Leviathan cutscene beam) applied instantly to each target, followed by
 -- EffectDamage. GetItemPossessor tells us whether the player took the item.
 --
@@ -15,11 +16,11 @@
 -- Counter: local number 7 on the PC == strikes so far.
 priority = 30
 
--- Inside an engine hook, GetIsEnemy(x, pc) answers 0 even for a creature that
--- is plainly hostile (verified live 2026-09-16: 1 from the harness state, 0
--- from inside OnRunScript for the same trooper), and GetIsDead is still 0
--- while the death script runs. Hooks therefore treat "not a party member"
--- as hostile and never gate on GetIsDead for the creature the hook is about.
+-- Targets are living non-party creatures for which GetIsEnemy(creature, pc)
+-- is 1, so neutrals are spared. Risk: on 2026-09-16, GetIsEnemy(x, pc)
+-- answered 0 for a hostile trooper from inside OnRunScript (1 from the
+-- harness state). This script asks from OnModuleAcquireItem, which has not
+-- been checked live. If the same thing happens there, a strike hits nothing.
 
 local RADIUS = 20.0
 local DAMAGE = 60
@@ -63,7 +64,7 @@ local function strike(pc, label)
   while o and yes(q("GetIsObjectValid", o)) do
     -- distance from positions: GetDistanceBetween is not trusted inside a hook
     if o ~= pc and not yes(q("IsObjectPartyMember", o)) and not yes(q("GetIsDead", o))
-       and dist(pc, o) <= RADIUS then
+       and yes(q("GetIsEnemy", o, pc)) and dist(pc, o) <= RADIUS then
       targets[#targets + 1] = o
     end
     o = q("GetNextObjectInArea", area, 1)
@@ -107,9 +108,9 @@ function OnModuleAcquireItem(item, previous_possessor, relevant)
   local pc = q("GetFirstPC")
   if not pc then return end
   if seen[item] then return end
-  seen[item] = true
   local owner = q("GetItemPossessor", item)
   if owner ~= pc and not yes(q("IsObjectPartyMember", owner)) then return end
+  seen[item] = true
   strike(pc, norm(q("GetName", item)))
 end
 

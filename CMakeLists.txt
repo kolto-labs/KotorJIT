@@ -30,10 +30,13 @@ enable_testing()
 
 # These are offline fake-server/parser gates; no game, Wine or display is launched.
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
-foreach(gate kpharness_offline_test kpharness_world_test)
+foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test kpharness_physical_console_test kpharness_gamescope_backend_test)
     add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
     set_tests_properties(${gate} PROPERTIES LABELS "offline;harness" TIMEOUT 300)
 endforeach()
+add_test(NAME gameplay_scheduler_test
+    COMMAND bash ${CMAKE_SOURCE_DIR}/tools/gameplay_scheduler_test.sh)
+set_tests_properties(gameplay_scheduler_test PROPERTIES LABELS "offline;harness" TIMEOUT 60)
 
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's
@@ -50,6 +53,7 @@ set(KP_IMAGE_SOURCES
     src/image/sha256.cpp
     src/image/loaded_image.cpp
     src/image/pe_elf.cpp
+    src/image/macho.cpp
     src/image/parse.cpp
     src/image/classify.cpp
     src/image/build_table.cpp
@@ -65,6 +69,14 @@ target_link_options(kp_image PUBLIC -m32)
 # parsing run against files, so the encrypted build can be checked without Steam.
 add_executable(kp_imagetool tools/kp_imagetool.cpp)
 target_link_libraries(kp_imagetool PRIVATE kp_image)
+
+# SDK-independent metadata parser test, also buildable on a 64-bit host.
+add_executable(kp_machotest tools/kp_machotest.cpp src/image/macho.cpp)
+target_include_directories(kp_machotest PRIVATE src)
+target_compile_options(kp_machotest PRIVATE -Wall -Wextra)
+add_test(NAME kp_machotest COMMAND kp_machotest)
+add_test(NAME kp_imagetool_macho_test
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/kp_imagetool_macho_test.py $<TARGET_FILE:kp_imagetool>)
 
 find_package(Threads REQUIRED)
 add_executable(kp_transporttest tools/kp_transporttest.cpp src/multiplayer/transport.cpp)
@@ -111,6 +123,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/routines.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/structs.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/vector.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/motion.cmake)
 
 # The headless harness control plane. Before runtime.cmake: it only publishes
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
@@ -121,10 +135,64 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
 # After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/model.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/camera.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/animation.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
 # After runtime.cmake: it links the native LuaJIT that target builds.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/lua/luahost.cmake)
 
+# Exact inventory, Lua behavior, real-host arbitration and multiplayer mocks.
+if(TARGET kp_luatest)
+    find_program(KP_EXAMPLE_LUAJIT NAMES luajit REQUIRED)
+    add_test(NAME example_validation
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/example_validation.py
+            --luajit ${KP_EXAMPLE_LUAJIT} --host $<TARGET_FILE:kp_luatest>
+            --receipt ${CMAKE_BINARY_DIR}/example-validation.json)
+    set_tests_properties(example_validation PROPERTIES LABELS "offline;examples" TIMEOUT 180)
+endif()
+
+
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
+
+if(UNIX AND NOT WIN32)
+    add_executable(kp_projectilestest tools/kp_projectilestest.cpp src/api/projectiles.cpp
+        src/api/projectiles_lua.cpp src/api/projectiles_entry.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_projectilestest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_projectilestest PRIVATE -m32 -fno-pie -Wall -Wextra)
+    target_link_options(kp_projectilestest PRIVATE -m32 -no-pie)
+    target_link_libraries(kp_projectilestest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_projectilestest COMMAND kp_projectilestest)
+    set_tests_properties(kp_projectilestest PROPERTIES TIMEOUT 10 LABELS "offline;projectiles;abi")
+
+    add_executable(kp_consoleprotocoltest tools/kp_consoleprotocoltest.cpp
+        src/harness/console_protocol.cpp src/harness/json.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_consoleprotocoltest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_consoleprotocoltest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_consoleprotocoltest PRIVATE -m32)
+    target_link_libraries(kp_consoleprotocoltest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_consoleprotocoltest COMMAND kp_consoleprotocoltest)
+    set_tests_properties(kp_consoleprotocoltest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
+
+    add_executable(kp_consoletest tools/kp_consoletest.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_consoletest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_consoletest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_consoletest PRIVATE -m32)
+    target_link_libraries(kp_consoletest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_consoletest COMMAND kp_consoletest)
+    set_tests_properties(kp_consoletest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
+endif()
+
+if(UNIX AND NOT WIN32)
+    add_executable(kp_editorinputtest tools/kp_editorinputtest.cpp src/devtools/editor_input.cpp
+        third_party/imgui/imgui.cpp third_party/imgui/imgui_draw.cpp
+        third_party/imgui/imgui_tables.cpp third_party/imgui/imgui_widgets.cpp)
+    target_include_directories(kp_editorinputtest PRIVATE src third_party/imgui)
+    target_compile_options(kp_editorinputtest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_editorinputtest PRIVATE -m32)
+    target_link_libraries(kp_editorinputtest PRIVATE Threads::Threads)
+    add_test(NAME kp_editorinputtest COMMAND kp_editorinputtest)
+    set_tests_properties(kp_editorinputtest PROPERTIES TIMEOUT 20 LABELS "offline;devtools;imgui")
+endif()

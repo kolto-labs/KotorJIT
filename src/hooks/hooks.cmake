@@ -65,6 +65,25 @@ if(UNIX AND NOT WIN32)
     add_test(NAME kp_hooktool.selftest COMMAND kp_hooktool selftest)
 endif()
 
+# --- x86_64 detour engine --------------------------------------------------
+#
+# The 64-bit engine for the Mac x86_64 slice (src/hooks/x64/). It is a
+# separate target on purpose: kp_hooks carries PUBLIC -m32 and trampoline.hpp
+# static_asserts a 4-byte pointer, and neither may leak in here. Proven
+# natively on an x86_64 Linux host only; no Darwin build exists yet.
+if(UNIX AND NOT WIN32 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
+    add_library(kp_hooks_x64 STATIC
+        "${KP_HOOKS_DIR}/x64/decode.cpp"
+        "${KP_HOOKS_DIR}/x64/trampoline.cpp")
+    target_include_directories(kp_hooks_x64 PUBLIC "${KP_SRC_DIR}")
+    target_compile_options(kp_hooks_x64 PRIVATE -Wall -Wextra)
+
+    add_executable(kp_hooktool_x64 "${KP_TOOLS_DIR}/kp_hooktool_x64.cpp")
+    target_link_libraries(kp_hooktool_x64 PRIVATE kp_hooks_x64)
+    target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
+    add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
+endif()
+
 # --- the Windows half --------------------------------------------------------
 #
 # Compiled, not linked: the runtime DLL that will consume these objects does not

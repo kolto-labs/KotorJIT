@@ -27,11 +27,16 @@ This is the [Phasor](https://github.com/urbanyoung/Phasor) model, rebuilt for KO
 
 ## What you can do
 
-769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `kp.as` and `kp.registertimer`.
+769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `nwscript.with_caller` and `kp.registertimer`.
 
 When the named API does not reach, `kp.mem.readbyte` / `writebyte` / `findsig` talk to the process directly. Hook sites are logical names (`vm.run_script`). A recorded VA is a hint; unique `expected_bytes` bind the site if that hint is missing or stale.
 
-KOTOR already treats a single-player game as a server with one client. A working UDP sync between two game instances ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). No extra process.
+KOTOR already treats a single-player game as a server with one client. A UDP avatar synchronization example with offline mock coverage ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). Real two-game synchronization, generated UTC loading and WinSock behavior still require current live evidence; see the [validation ledger](docs/example-validation.md).
+
+The [native scene catalog](scripts/demos/catalog.json) separates scale/animation
+candidates from the original example regression inventory. Eight text/buff or
+random-effect demos have been retired into internal fixtures. Candidate status
+is not a live or visual-quality pass; see [scene guidance](scripts/demos/README.md).
 
 ## Build and install
 

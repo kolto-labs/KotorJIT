@@ -47,7 +47,7 @@ timeout = 45
 [[step]]
 do = "lua"
 timeout = 20
-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); local result=kp.as(t,function() return nwscript.call('BeginConversation','end_trask01',pc) end); return {before=before,result=result,after=state()}"
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); local result=nwscript.with_caller(t,function() return nwscript.call('BeginConversation','end_trask01',pc) end); return {before=before,result=result,after=state()}"
 
 [[step]]
 do = "sleep"

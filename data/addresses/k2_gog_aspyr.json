@@ -11,7 +11,7 @@
   },
   "format_kind": "pe",
   "note": "Native Aspyr PE. Sites resolved from the func table's own namespace-qualified symbols (name_origin='namespace'), not hand-adjudicated: this build was never stripped.",
-  "adjudicated_bindings": 60,
+  "adjudicated_bindings": 61,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -2336,14 +2336,16 @@
       "method": "net_layer",
       "kind": "field",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": "field has no adjudicated offset on this build",
-      "candidates": 0,
-      "offset": null,
-      "size": null,
-      "owner": null
+      "addr": 0,
+      "source": "adjudicated",
+      "confidence": 0.95,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "offset": 16,
+      "size": 4,
+      "owner": "CClientExoAppInternal",
+      "addr_hex": "0x00000000",
+      "offset_hex": "0x10"
     },
     "client.world_timer": {
       "cls": "CClientExoAppInternal",
@@ -3597,11 +3599,11 @@
   ],
   "summary": {
     "total": 256,
-    "resolved": 183,
+    "resolved": 184,
     "by_func": 123,
     "by_identity": 0,
-    "by_adjudication": 60,
-    "by_field": 59,
+    "by_adjudication": 61,
+    "by_field": 60,
     "overlay_conflicts": [],
     "refused_ambiguous": [
       "timer.set_snapshot_scale"
@@ -3639,7 +3641,6 @@
       "server.pause_state",
       "gvt.table",
       "party.table",
-      "client.net_layer",
       "client.movie_player",
       "client.player_creature_id",
       "stats.continue_message_processing",

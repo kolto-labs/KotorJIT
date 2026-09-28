@@ -1,6 +1,10 @@
 # 50_enclave_arrival
 
-**Script:** `scripts/examples/showcase/50_enclave_arrival.lua`  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/50_enclave_arrival.lua`
 **Hook:** `OnTick` (every 45 ticks; fires on module prefix change)  
 **Save:** `pick_save.sh any`  
 **Modules:** `danm13` then `manm26ad`
@@ -26,7 +30,7 @@
 ## Notes
 
 Uses `GetModuleName()` prefix (`dan`, `man`, …). Script state `seen` persists
-per save via `OnSave`/`OnLoad`; use a save that has not already triggered both
+per save via `OnSave`/`OnLoad`. Use a save that has not already triggered both
 lines, or redeploy scripts on a fresh session.
 
 `test_enclave_arrival.sh` uses `manm26ad` (Sith base), not `manm26aa` (Ahto docks).

@@ -1,3 +1,4 @@
+#include "devtools/console.hpp"
 // The five phases, in the order runtime.hpp declares them.
 //
 // Every phase either advances or fails, and a failure leaves the game exactly
@@ -15,6 +16,7 @@
 #include <cstring>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <vector>
 
 #include "events/contract.hpp"
@@ -29,7 +31,16 @@
 #include "api/entity.hpp"
 #include "api/structs.hpp"
 #include "api/memory.hpp"
+#include "api/model.hpp"
+#include "api/camera.hpp"
+#include "api/projectiles.hpp"
+#include "api/animation.hpp"
+#include "image/loaded_image.hpp"
 #include "api/timers.hpp"
+#include "api/vector.hpp"
+#include "api/motion.hpp"
+#include "api/scripts_lua.hpp"
+#include "api/engine_gate.hpp"
 #include "harness/commands.hpp"
 #include "harness/engine.hpp"
 extern "C" {
@@ -174,6 +185,43 @@ const char* to_string(Phase p) {
 bool live() { return g_live.load(std::memory_order_acquire); }
 void set_live(bool v) { g_live.store(v, std::memory_order_release); }
 
+namespace {
+std::atomic<std::thread::id> g_engine_thread{};
+
+kp::api::motion::Writer motion_owner(lua_State* L, void*) {
+    lua::Script* script = lua::Script::owner(L);
+    if (script == nullptr) return kp::api::motion::Writer::None;
+    return script->staged() ? kp::api::motion::Writer::Staged
+                            : kp::api::motion::Writer::Loaded;
+}
+
+std::uint64_t motion_tick(void*) {
+    lua::Host* h = active_host();
+    return h != nullptr ? h->tick() : 0;
+}
+}
+
+void reset_engine_thread() {
+    g_engine_thread.store(std::thread::id{}, std::memory_order_release);
+    reset_client_gate_mismatch_log();
+}
+
+void latch_engine_thread() {
+    std::thread::id unset{};
+    g_engine_thread.compare_exchange_strong(
+        unset, std::this_thread::get_id(), std::memory_order_acq_rel);
+}
+
+bool on_engine_thread() {
+    return g_engine_thread.load(std::memory_order_acquire) == std::this_thread::get_id();
+}
+
+bool engine_thread_latched() {
+    return g_engine_thread.load(std::memory_order_acquire) != std::thread::id{};
+}
+
+bool engine_gate_probe(void*) { return live() && on_engine_thread(); }
+
 lua::Host* active_host() { return g_host.load(std::memory_order_acquire); }
 void set_active_host(lua::Host* h) { g_host.store(h, std::memory_order_release); }
 
@@ -270,11 +318,38 @@ Runtime& Runtime::instance() {
 }
 
 void Runtime::log(const char* fmt, ...) {
-    char body[1024];
+    char raw[1024];
     va_list ap;
     va_start(ap, fmt);
-    std::vsnprintf(body, sizeof body, fmt, ap);
+    std::vsnprintf(raw, sizeof raw, fmt, ap);
     va_end(ap);
+
+    // One call, one line. Script text (print, kp.diagnostic, load errors)
+    // reaches here, so a line break or other control character in it is
+    // written as an escape: it cannot start a new line that looks like the
+    // runtime's own (the receipt's banner, host and gl lines). Worst case
+    // is four bytes out per byte in, so nothing is cut.
+    char body[4 * sizeof raw];
+    std::size_t n = 0;
+    for (const char* p = raw; *p != '\0'; ++p) {
+        const unsigned char c = static_cast<unsigned char>(*p);
+        if (c >= 0x20 && c != 0x7f) {
+            body[n++] = *p;
+            continue;
+        }
+        body[n++] = '\\';
+        switch (c) {
+            case '\n': body[n++] = 'n'; break;
+            case '\r': body[n++] = 'r'; break;
+            case '\t': body[n++] = 't'; break;
+            default:
+                body[n++] = 'x';
+                body[n++] = "0123456789abcdef"[c >> 4];
+                body[n++] = "0123456789abcdef"[c & 0x0f];
+                break;
+        }
+    }
+    body[n] = '\0';
 
     while (g_log_lock.test_and_set(std::memory_order_acquire)) {}
     std::FILE* f = std::fopen(log_path_.empty() ? "kotorphasor.log" : log_path_.c_str(), "ab");
@@ -355,6 +430,23 @@ bool Runtime::await_and_verify(const Config& cfg) {
         regions.push_back({s.va, s.size, s.name});
     }
     api::memory::bind_scan_regions(runtime_base_, std::move(regions));
+    std::string model_error;
+    auto read_model = [](api::model::Address address, void* out, std::size_t size, void*) {
+        image::LiveImage live(0);
+        if(address > UINTPTR_MAX)return false;
+        return live.read(static_cast<std::uintptr_t>(address),out,size);
+    };
+    auto log_model = [](const std::string& message,void*) { Runtime::instance().log("%s",message.c_str()); };
+    if(!api::model::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
+        log("model: %s",model_error.c_str());
+    if(!api::camera::bind_native(image_sha256_,runtime_base_,read_model,nullptr,model_error))
+        log("camera: %s",model_error.c_str());
+    if(!api::motion::bind_native(image_sha256_,runtime_base_,read_model,nullptr,model_error))
+        log("motion: %s",model_error.c_str());
+    if(!api::animation::bind_native(image_sha256_,runtime_base_,read_model,log_model,nullptr,model_error))
+        log("animation: %s",model_error.c_str());
+    if(!api::projectiles::bind_native(image_sha256_,runtime_base_,model_error))
+        log("projectiles: %s",model_error.c_str());
     return true;
 }
 
@@ -619,7 +711,7 @@ bool Runtime::install(bool multiplayer_enabled) {
             sites.command_implementer_offset = command_implementer->offset;
         }
         set_vm_sites(sites);
-        log("vm: %d of 13 stack sites resolved; the two VM objects are captured "
+        log("vm: %d of 13 stack sites resolved; layout=%s; the two VM objects are captured "
             "from the first script the game runs",
             (sites.execute_command ? 1 : 0) + (sites.stack_push_integer ? 1 : 0) +
             (sites.stack_pop_integer ? 1 : 0) + (sites.stack_push_float ? 1 : 0) +
@@ -628,7 +720,8 @@ bool Runtime::install(bool multiplayer_enabled) {
             (sites.stack_pop_object ? 1 : 0) + (sites.stack_push_vector ? 1 : 0) +
             (sites.stack_pop_vector ? 1 : 0) +
             (sites.stack_push_engine_structure ? 1 : 0) +
-            (sites.stack_pop_engine_structure ? 1 : 0));
+            (sites.stack_pop_engine_structure ? 1 : 0),
+            sites.layout_resolved ? "resolved" : "unresolved");
     }
 
     std::string error;
@@ -675,6 +768,13 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::register_all(L);             // nwscript.call(name, ...), all 769
         api::memory::register_all(L);     // raw read/write, the escape hatch
         api::structs::register_all(L);    // named typed field access
+        api::animation::register_all(L);  // native named clip clocks
+        api::projectiles::register_all(L);
+        api::model::register_all(L);      // checked native actor scale
+        api::camera::register_all(L);     // read-only chase camera snapshot (K1 GOG)
+        api::register_vector(L);          // kp.vec value type and operations
+        api::motion::register_all(L);     // kp.motion guarded native movement
+        api::scripts::register_all(L);    // kp.scripts lifecycle queue
         api::entity::register_all(L);     // objects, party, resolution
         api::register_support(L);         // output, timers and strings together
         register_director(L);             // kp.speed — MainLoop tick scale
@@ -699,13 +799,18 @@ bool Runtime::boot_scripts(const Config& cfg) {
                 game == api::Game::K2 ? "K2" : "K1");
     }
 
-    auto host = std::make_unique<lua::Host>(hc);
+    host_ = std::make_unique<lua::Host>(hc);
+    // Publish the host services before load_all: top-level scripts may call
+    // kp.scripts during their initial execution, and those calls must see the
+    // same host that owns the state. Failed starts clear these bindings before
+    // destroying host_.
+    api::scripts::bind_host(host_.get());
+    api::motion::bind_owner_probe(motion_owner, nullptr);
+    api::motion::bind_tick(motion_tick, nullptr);
     std::vector<std::string> errors;
-    const unsigned loaded = host->load_all(errors);
+    const unsigned loaded = host_->load_all(errors);
     for (const std::string& e : errors) log("script: %s", e.c_str());
     log("loaded %u script(s) from %s", loaded, cfg.script_dir.c_str());
-
-    host_ = std::move(host);
 
     // Publish, host pointer first. Every hook body reads the live flag before
     // it reads the host, so until the second store lands the bodies forward
@@ -729,6 +834,10 @@ bool Runtime::boot_scripts(const Config& cfg) {
 }
 
 bool Runtime::start(const Config& cfg) {
+    // This is a worker/quiescent transition.  It is deliberately outside
+    // DllMain and loader-lock callbacks; no engine thread has been latched yet.
+    reset_engine_thread();
+    api::engine::bind_gate(engine_gate_probe, nullptr);
     log_path_ = cfg.log_path;
     role_ = cfg.role;
     set_fault_log_path(log_path_.c_str());
@@ -758,7 +867,18 @@ bool Runtime::start(const Config& cfg) {
         if (hooks_) clear_originals();
         hooks_.reset();
         table_.reset();
+        if (host_) host_->unload_all();
+        api::scripts::bind_host(nullptr);
+        api::motion::bind_owner_probe(nullptr, nullptr);
+        api::motion::bind_tick(nullptr, nullptr);
+        api::motion::operations().unbind();
+        api::engine::bind_gate(nullptr, nullptr);
+        reset_engine_thread();
         host_.reset();
+    api::animation::operations().unbind();
+    api::projectiles::unbind_native();
+    api::model::operations().unbind();
+    api::camera::operations().unbind();
         transport_.reset();
         remove_fault_guard();
         return false;
@@ -796,6 +916,7 @@ bool Runtime::start(const Config& cfg) {
 }
 
 void Runtime::stop() {
+    kp::devtools::overlay_shutdown();
     // The listener first: it was started last, and once it is gone no new
     // request can reach a drain that is about to lose its host and hooks.
     kp::harness::stop();
@@ -817,7 +938,21 @@ void Runtime::stop() {
     // quiescent point, which in practice means process shutdown.
     if (hooks_) hooks_->uninstall();
 
+    // Run unload callbacks while the host service is still bound.  The
+    // callbacks may inspect kp.scripts; after unload_all the host is empty and
+    // the service can be withdrawn before destruction.
+    if (host_) host_->unload_all();
+    api::scripts::bind_host(nullptr);
+    api::motion::bind_owner_probe(nullptr, nullptr);
+    api::motion::bind_tick(nullptr, nullptr);
+    api::motion::operations().unbind();
+    api::engine::bind_gate(nullptr, nullptr);
+    reset_engine_thread();
     host_.reset();
+    api::animation::operations().unbind();
+    api::projectiles::unbind_native();
+    api::model::operations().unbind();
+    api::camera::operations().unbind();
     hooks_.reset();
     table_.reset();
     transport_.reset();

@@ -1,0 +1,30 @@
+ 12:27:55 up 7 days,  5:22,  1 user,  load average: 203.17, 214.26, 225.14
+............................................................................................................................[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (new)
+[12:31:55]   copied writable dir Saves
+[12:31:55] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] saved original binkw32.dll -> binkw32_real.dll
+[12:31:55] runtime installed from /tmp/kpharness_stage_lxs9e80s/build
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (reused)
+[12:31:55] route resource cache verified for data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] runtime already current (a63efa27fea8)
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (reused)
+[12:31:55] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] runtime already current (a63efa27fea8)
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/bad_resource (new)
+[12:31:55]   copied writable dir Saves
+..........................
+----------------------------------------------------------------------
+Ran 150 tests in 243.004s
+
+OK
+rc=0

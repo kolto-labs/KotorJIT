@@ -2,7 +2,7 @@
 -- Surprising, and deliberate: widening it would change which scripts win.
 --
 -- Run alone to see it:
---   kp_luatest scripts/examples/arbitration/only_two OnScriptEvent x 1
+--   kp_luatest scripts/examples/edge_number_two OnRunScript k_def_heartbt01 0 0
 priority = -100
 
 function OnRunScript(script, object, has_object, relevant)

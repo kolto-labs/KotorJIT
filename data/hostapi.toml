@@ -901,7 +901,7 @@ on_failure = "nil when no caller object is set, which is the normal state outsid
 requires = "vm"
 mechanism = "CSWVirtualMachineCommands.has_caller_object +0x04 and caller_object_id +0x08"
 doc = """The object routines will treat as OBJECT_SELF right now. Reads the same
-two fields kp.as writes. Most K1 routines default an object parameter to
+two fields nwscript.with_caller writes. Most K1 routines default an object parameter to
 OBJECT_SELF, so this is worth knowing before you call one."""
 confidence = "high"
 evidence = "ExecuteCommandClearAllActions 0x0052f4a0 body reads has_caller_object then caller_object_id"
@@ -1145,7 +1145,7 @@ does. Not game state: nobody in the world hears it."""
 confidence = "high"
 
 [[function]]
-lua_name = "kp.log"
+lua_name = "kp.diagnostic"
 module = "output"
 params = [
   { name = "text", type = "string" },
@@ -1233,10 +1233,10 @@ returns = "bool"
 failure = "false"
 on_failure = "false when the object does not resolve"
 requires = "vm"
-mechanism = "kp.as around routine SpeakString (k1 id 221), which speaks as OBJECT_SELF"
+mechanism = "nwscript.with_caller around routine SpeakString (k1 id 221), which speaks as OBJECT_SELF"
 doc = """Makes a creature say something in the world. SpeakString has no object
 parameter, so this retargets OBJECT_SELF for the duration of the call, which is
-what kp.as is for."""
+what nwscript.with_caller is for."""
 confidence = "medium"
 
 [[function]]
@@ -1274,7 +1274,7 @@ confidence = "high"
 # natively:
 #
 #   DelayCommand(f, action)     -> kp.timer.after(ms, function() ... end)
-#   AssignCommand(obj, action)  -> kp.as(obj, function() ... end)
+#   AssignCommand(obj, action)  -> nwscript.with_caller(obj, function() ... end)
 #
 # The clock. kp.timer runs on app.server_main_loop, which is the server tick. It
 # stops when the game is paused and it stops in menus, which is usually what a
@@ -1636,12 +1636,12 @@ params = [
 ]
 returns = "nothing"
 failure = "error"
-on_failure = "'AssignCommand takes a script closure and cannot be called from Lua. Use kp.as(object, function() ... end).'"
+on_failure = "'AssignCommand takes a script closure and cannot be called from Lua. Use nwscript.with_caller(object, function() ... end).'"
 requires = "none"
 mechanism = "the dispatcher rejects this excluded catalog name before VM dispatch"
 doc = """Calling it through nwscript.call explains the exclusion. Its `action` parameter is
 STORE_STATE bytecode the NWScript compiler builds, and nothing outside the VM can
-construct one. kp.as does the same job by retargeting OBJECT_SELF."""
+construct one. nwscript.with_caller does the same job by retargeting OBJECT_SELF."""
 confidence = "high"
 
 [[function]]
@@ -1673,7 +1673,22 @@ outside is not possible; running it next frame is, and is usually what was meant
 confidence = "medium"
 
 [[function]]
-lua_name = "kp.as"
+lua_name = "nwscript.last_trace"
+module = "routines"
+params = []
+returns = "table or nil"
+failure = "never"
+requires = "none"
+mechanism = "copies the current game thread's limited GetFacing diagnostic trace, or returns nil before a trace exists"
+doc = """Read-only diagnostic initialized only by GetFacing (routine 28), after
+live VM/context and argument-count checks pass. Returns nil before a trace exists.
+Other routines and early context or argument-count failures do not initialize a
+new trace, so this is not a receipt for the latest arbitrary dispatch or failure.
+Reading it does not execute an engine routine."""
+confidence = "high"
+
+[[function]]
+lua_name = "nwscript.with_caller"
 module = "routines"
 params = [
   { name = "object_id", type = "object" },
@@ -1682,7 +1697,7 @@ params = [
 variadic = true
 returns = "any"
 failure = "error"
-on_failure = """'kp.as needs the VM binding' before hooks install; an error raised
+on_failure = """'nwscript.with_caller needs the VM binding' before hooks install; an error raised
 inside body propagates after the caller fields are restored"""
 requires = "vm"
 mechanism = """writes CSWVirtualMachineCommands.has_caller_object +0x04 and
@@ -1690,7 +1705,7 @@ caller_object_id +0x08, calls body, then restores both to what they were"""
 doc = """Runs a function with OBJECT_SELF set to an object. This is the generic
 replacement for AssignCommand, and it is worth more than that sounds: most K1
 routines default an object parameter to OBJECT_SELF, and every Action* routine
-queues onto OBJECT_SELF's queue. Inside kp.as, nwscript.call("ClearAllActions")
+queues onto OBJECT_SELF's queue. Inside nwscript.with_caller, nwscript.call("ClearAllActions")
 clears that object's actions and nwscript.call("SpeakString", ...) speaks as it.
 
 The previous values are saved and restored around the call, including when body

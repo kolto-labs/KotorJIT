@@ -76,7 +76,7 @@ local function engage(pc, hp, max)
   if ping then q("ApplyEffectToObject", 0, ping, pc, 0.0) end
   entries = entries + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, entries)
-  q("registertimer", HOLD_MS, "cursed_release", {})
+  kp.registertimer(HOLD_MS, "cursed_release", {})
   kp.print(("[cursed:slowmo] engaged at hp %d/%d, speed now %.2f (#%d)"):format(hp, max, seen, entries))
 end
 

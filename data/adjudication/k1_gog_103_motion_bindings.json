@@ -1,0 +1,442 @@
+{
+ "target_binary": {
+  "binary_id": 8,
+  "slug": "K1__k1_win_gog_swkotor.exe",
+  "alias": "k1_gog_103",
+  "note": "GOG 1.03 PE, sha256 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435; VAs at image base 0x400000."
+ },
+ "purpose": "kp.motion Stages M1 (read-only capture) and M2 (relocate/restore/observe), K1 GOG only: the typed server placeable lookup, the position setter, the placeable vtable, and the CSWSObject/CSWSPlaceable fields the capture reads. Only the verification's 'safe to enter reviewed data' list is used. The generator reads every <alias>_*_bindings.json.",
+ "derivations": [
+  {
+   "role": "M0 receipt",
+   "path": "/home/brunner56/kp-live-20260922/motion-m0-rederivation.md",
+   "sha256": "c9a3d022a69299ba58abe71820d2a4ca56158c1104fc5164951652fb72b5c989",
+   "method": "capstone listing camera-rederive-scratch/text.asm plus direct byte reads of the raw image with a stdlib PE reader"
+  },
+  {
+   "role": "independent verification",
+   "path": "/home/brunner56/kp-live-20260922/motion-m0-verification.md",
+   "sha256": "93cda1dc761a49d26c7d841f89efbde68122eecfd525fc2115abb62c65a003ef",
+   "method": "re-derived from text.asm before reading the receipt, independent stdlib PE reader; verdict CONFIRMS, no substantive differences"
+  }
+ ],
+ "reference_image": {
+  "sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+  "image_base": "0x400000",
+  "note": "file offset == RVA for .text/.rdata/.data; tools/kp_motiontest.cpp re-reads every guard and slot from it when present"
+ },
+ "accept_rule": "accept requires two independent derivations of the same immediate from the raw image (the M0 receipt and its verification) plus the guard bytes read from the reference image (METHOD.md section 1). Meaning-unverified offsets carry the word unverified in their name and a limits note; their offset and extent are what is accepted.",
+ "field_shape": "kind=field rows carry owner, offset and size; addr is 0 behind a pointer chain. kind=reference rows are vtable addresses compared as pointers. GetPlaceableByGameObjectID has no hooksites entry yet (proposed to the orchestrator); CSWSObject::SetPosition matches the existing server_object.set_position hooksites row.",
+ "counts": {
+  "functions": 2,
+  "fields": 7,
+  "references": 1,
+  "accept": 10
+ },
+ "open_items": [
+  "meaning of the +0x1F8 gate value (what 0x56DC60 decides)",
+  "component order of the +0x428 quaternion",
+  "facing normalisation against NWScript GetFacing",
+  "live readback: no capture has been taken in a running game",
+  "keep out: +0x3A0, +0x3C0, +0x3D8, 0x50DC40, 0x50DFD0, client vtbl+0x12C/+0x130/+0x134, 0x506FE0 reverse pass, 0x52CCE0, the brief's '+0x24'"
+ ],
+ "guards": [
+  {
+   "va": "0x4cd1cf",
+   "bytes": "a1fc397a00",
+   "pins": "SetPosition: mov eax,[g_pAppManager]"
+  },
+  {
+   "va": "0x4cd1d8",
+   "bytes": "8b4808",
+   "pins": "SetPosition: mov ecx,[eax+8]: app -> CServerExoApp"
+  },
+  {
+   "va": "0x4aed70",
+   "bytes": "8b41048b805c000100c3",
+   "pins": "CServerExoApp object array: mov eax,[ecx+4]; mov eax,[eax+0x1005c]; ret"
+  },
+  {
+   "va": "0x4ae7a0",
+   "bytes": "8b4904e9283100009090909090909090",
+   "pins": "CServerExoApp::GetPlaceableByGameObjectID: mov ecx,[ecx+4]; jmp 0x4b18d0"
+  },
+  {
+   "va": "0x4b18d5",
+   "bytes": "8b895c000100",
+   "pins": "internal GetPlaceableByGameObjectID: mov ecx,[ecx+0x1005c]"
+  },
+  {
+   "va": "0x4b18fe",
+   "bytes": "8a4108",
+   "pins": "internal: mov al,[ecx+8] (type byte)"
+  },
+  {
+   "va": "0x4b1901",
+   "bytes": "3a0538667400",
+   "pins": "internal: cmp al,[0x746638]"
+  },
+  {
+   "va": "0x4b190b",
+   "bytes": "ff5248",
+   "pins": "internal: call [edx+0x48] (AsSWSPlaceable)"
+  },
+  {
+   "va": "0x746638",
+   "bytes": "09",
+   "pins": "placeable type constant"
+  },
+  {
+   "va": "0x587803",
+   "bytes": "8a0d38667400",
+   "pins": "CSWSPlaceable ctor: mov cl,[0x746638]"
+  },
+  {
+   "va": "0x587824",
+   "bytes": "c706d0947400",
+   "pins": "CSWSPlaceable ctor: mov [esi],0x7494d0"
+  },
+  {
+   "va": "0x4d7d70",
+   "bytes": "894804",
+   "pins": "CGameObject ctor: mov [eax+4],ecx (id)"
+  },
+  {
+   "va": "0x4d7d73",
+   "bytes": "885008",
+   "pins": "CGameObject ctor: mov [eax+8],dl (type)"
+  },
+  {
+   "va": "0x4cb139",
+   "bytes": "8b968c000000",
+   "pins": "CSWSObject::GetArea: mov edx,[esi+0x8c]"
+  },
+  {
+   "va": "0x4cd1e0",
+   "bytes": "8b968c000000",
+   "pins": "CSWSObject::SetPosition: mov edx,[esi+0x8c]"
+  },
+  {
+   "va": "0x4cd1a0",
+   "bytes": "538b5c240856578bf18dbe9000000053",
+   "pins": "CSWSObject::SetPosition head incl. lea edi,[esi+0x90]; equals server_object.set_position expected_bytes"
+  },
+  {
+   "va": "0x4cd177",
+   "bytes": "8d819c000000",
+   "pins": "CSWSObject::SetOrientation: lea eax,[ecx+0x9c]"
+  },
+  {
+   "va": "0x4b1098",
+   "bytes": "8b86f8010000",
+   "pins": "CServerAIMaster::UpdateState: mov eax,[esi+0x1f8] (client-push gate)"
+  },
+  {
+   "va": "0x4cd1c8",
+   "bytes": "838efc01000002",
+   "pins": "CSWSObject::SetPosition: or dword [esi+0x1fc],2"
+  },
+  {
+   "va": "0x4cd18b",
+   "bytes": "8389fc01000004",
+   "pins": "CSWSObject::SetOrientation: or dword [ecx+0x1fc],4"
+  },
+  {
+   "va": "0x5879b4",
+   "bytes": "c78644030000ffffffff",
+   "pins": "CSWSPlaceable ctor: mov dword [esi+0x344],-1"
+  },
+  {
+   "va": "0x58495f",
+   "bytes": "8b8644030000",
+   "pins": "CSWSPlaceable::RemoveFromArea: mov eax,[esi+0x344]"
+  },
+  {
+   "va": "0x5853cf",
+   "bytes": "8d8e28040000",
+   "pins": "CSWSPlaceable::SetOrientation(quat): lea ecx,[esi+0x428]"
+  },
+  {
+   "va": "0x4cd1b1",
+   "bytes": "e8cad7fdff",
+   "pins": "CSWSObject::SetPosition: call 0x4aa980 (exact 3-float equality, early return)"
+  },
+  {
+   "va": "0x4cd1bd",
+   "bytes": "8b44241c5533ed3bc57507",
+   "pins": "CSWSObject::SetPosition: mov eax,[esp+0x1c] (a4); push ebp; xor ebp,ebp; cmp eax,ebp; jne (a4==0 sets dirty value 2)"
+  },
+  {
+   "va": "0x4cd202",
+   "bytes": "8b0b890f8b53048957048b4308894708",
+   "pins": "CSWSObject::SetPosition: copy the 3 pos dwords to [edi] = this+0x90"
+  },
+  {
+   "va": "0x4cd212",
+   "bytes": "8b44241885c0",
+   "pins": "CSWSObject::SetPosition: mov eax,[esp+0x18] (a2); test eax,eax"
+  },
+  {
+   "va": "0x4cd238",
+   "bytes": "5d5f5e5bc21000",
+   "pins": "CSWSObject::SetPosition: pop ebp/edi/esi/ebx; ret 0x10 (early return enters at 0x4cd239)"
+  }
+ ],
+ "slots": [
+  {
+   "va": "0x749518",
+   "target": "0x641db0",
+   "pins": "placeable vtable +0x48 -> mov eax,ecx; ret (AsSWSPlaceable)"
+  },
+  {
+   "va": "0x7494e0",
+   "target": "0x641db0",
+   "pins": "placeable vtable +0x10 -> mov eax,ecx; ret (AsSWSObject)"
+  },
+  {
+   "va": "0x749500",
+   "target": "0x63e7f0",
+   "pins": "placeable vtable +0x30 -> xor eax,eax; ret"
+  },
+  {
+   "va": "0x749548",
+   "target": "0x587ba0",
+   "pins": "placeable vtable +0x78 -> CSWSPlaceable::EventHandler (event.placeable)"
+  }
+ ],
+ "bindings": [
+  {
+   "name": "CServerExoApp::GetPlaceableByGameObjectID",
+   "addr": "0x004ae7a0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "thiscall(CServerExoApp*, uint32 id): mov ecx,[ecx+4]; jmp 0x4b18d0. 0x4B18D0 resolves the id through internal+0x1005c (0x4d8230), requires type byte == [0x746638] (9), returns vtbl+0x48, else 0; ret 4",
+    "bytes": "8b4904e9283100009090909090909090 @0x4ae7a0",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), typed server getter",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '0x4AE7A0 is the server typed getter' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae7a0 CServerExoApp::GetPlaceableByGameObjectID size=8 USER_DEFINED",
+    "limits": "The engine read call kp.motion makes (once per capture, relocate, restore and observe). Proposed hooksites row server.get_placeable_by_object_id (kind call) is left to the orchestrator."
+   }
+  },
+  {
+   "name": "CSWSObject::SetPosition",
+   "addr": "0x004cd1a0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "thiscall(CSWSObject* this, const Vector* pos, a2, a3, a4), ret 0x10: mov esi,ecx; lea edi,[esi+0x90]; call 0x4aa980(this+0x90,pos) and return early if all 3 floats compare equal; a4 ([esp+0x1c]) == 0 sets [esi+0x1fc] |= 2; copies the 3 pos dwords to +0x90; a2 ([esp+0x18]) != 0 calls vtbl+0x30 and area->0x506fe0(this); a3 is never read. Callee set: 0x4aa980, 0x4aed70, 0x4d8230, vtbl+0x28, vtbl+0x30, 0x506fe0. No type check; nothing touches +0x344/+0x3a0/+0x3c0/+0x3d8",
+    "bytes": "538b5c240856578bf18dbe9000000053 @0x4cd1a0; e8cad7fdff @0x4cd1b1; 8b44241c5533ed3bc57507 @0x4cd1bd; 838efc01000002 @0x4cd1c8; 8b0b890f8b53048957048b4308894708 @0x4cd202; 8b44241885c0 @0x4cd212; 5d5f5e5bc21000 @0x4cd238",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (1), engine position setter 0x004CD1A0: thiscall, 4 stack args, ret 0x10; early return; a4==0 dirty bit; callee set",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '0x4CD1A0 SetPosition is thiscall(this, const Vector* pos, a2, a3, a4), ret 0x10' holds, high; early return holds; a4==0 sets |= 2 holds; no type check holds",
+     "existing table row: data/addresses/k1_gog_103.json server_object.set_position addr_hex 0x004CD1A0, expected_bytes equal the head span"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4cd1a0 CSWSObject::SetPosition size=159 USER_DEFINED __thiscall",
+    "limits": "The only engine write kp.motion makes (M2), always with flags (1,1,0): the engine's own CreateObject call shape (0052fb95) and the multiplayer creature precedent. The placeable walkmesh (+0x344 registration) is not moved; kp.motion refuses a registered walkmesh unless opts.allow_stale_collision is true. On the next regeneration the server_object.set_position row resolves as adjudicated (the func row agrees)."
+   }
+  },
+  {
+   "name": "CSWSPlaceable::vtable",
+   "kind": "reference",
+   "owner": "CSWSPlaceable",
+   "addr": "0x007494d0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "placeable ctor 0x5877e0 stores the vtable at 0x587824 (also dtor 0x5854ce); slots +0x10/+0x48 = 0x641db0 (mov eax,ecx; ret), +0x30 = 0x63e7f0 (xor eax,eax; ret), +0x78 = 0x587ba0 (EventHandler)",
+    "bytes": "c706d0947400 @0x587824",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), CSWSPlaceable vtable",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) 'the placeable vtable is 0x7494D0' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "Compared as a pointer. Proposed hooksites row placeable.vtable (kind reference) is left to the orchestrator."
+   }
+  },
+  {
+   "name": "CSWSObject::area_id",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x8c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "GetArea 0x4cb120 and SetPosition 0x4cd1a0 both load [esi+0x8c] as the id passed to 0x4d8230, then vtbl+0x28",
+    "bytes": "8b968c000000 @0x4cb139; 8b968c000000 @0x4cd1e0",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (1), area from this+0x8C",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x8C holds the area object id' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "u32 object id of the owning area. Read raw; GetArea is not called."
+   }
+  },
+  {
+   "name": "CSWSObject::position",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x90",
+   "size": 12,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "SetPosition lea edi,[esi+0x90] then copies pos[0..2]; base ctor zeroes +0x90..+0x98; placeable save 0x586a70 writes X/Y/Z from +0x90/+0x94/+0x98",
+    "bytes": "8dbe90000000 @0x4cd1a9",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (1), position vector",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x90 is the position (3 floats)' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "3 x f32 server position."
+   }
+  },
+  {
+   "name": "CSWSObject::orientation",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x9c",
+   "size": 12,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "SetOrientation 0x4cd170: lea eax,[ecx+0x9c], 3 dword copies, or [ecx+0x1fc],4; ret 4. SetFacing builds (cos,sin,0) and passes it here; save writes Bearing from +0x9c",
+    "bytes": "8d819c000000 @0x4cd177",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), orientation vector",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x9C is the orientation vector (3 floats)' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "3 x f32 facing direction vector. Facing in degrees is derived as atan2(y,x); its normalisation against GetFacing is unverified."
+   }
+  },
+  {
+   "name": "CSWSObject::client_push_gate_unverified",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x1f8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "CServerAIMaster::UpdateState 0x4b0b70: mov eax,[esi+0x1f8]; test; je 0x4b116b skips the whole dirty-bit consumer. Writer 0x5780a6 stores the result of 0x56dc60; ctor zeroes it at 0x4d00de",
+    "bytes": "8b86f8010000 @0x4b1098",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), '+0x1F8 is the per-object gate for syncing to the client'",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x1F8 is the per-object gate on the client push' holds as a gate, high; meaning of the value low"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "Raw u32. A gate on the server-to-client push of the dirty bits. What 0x56DC60 decides is unverified; do not read it as 'visible to player'."
+   }
+  },
+  {
+   "name": "CSWSObject::dirty_bits",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x1fc",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "SetPosition a4==0: or [esi+0x1fc],2 (0x4cd1c8). SetOrientation: or [ecx+0x1fc],4 (0x4cd18b). Consumed and cleared per server tick in 0x4b0b70 (bit1 at 0x4b10fe/0x4b1138, bit2 at 0x4b113d/0x4b1166)",
+    "bytes": "838efc01000002 @0x4cd1c8; 8389fc01000004 @0x4cd18b",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), dirty bitset",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x1FC is the dirty bitset' holds, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "Only bit 1 (value 2, position) and bit 2 (value 4, orientation) are reviewed data. kp.motion exposes only those two, as booleans."
+   }
+  },
+  {
+   "name": "CSWSPlaceable::aabb_registered",
+   "kind": "field",
+   "owner": "CSWSPlaceable",
+   "addr": "0x00000000",
+   "offset": "0x344",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "ctor 0x5879b4 sets -1; RemoveFromArea 0x58495f tests >= 0 then area->0x58fec0(id) and sets -1 at 0x58497b; AddToArea stores the 0x58fd50 return at 0x5873d1",
+    "bytes": "c78644030000ffffffff @0x5879b4; 8b8644030000 @0x58495f",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2)/(3), walkmesh AABB registration",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '+0x344 initial value' -1 from construction; registered/not marker, high"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "i32 marker: >= 0 registered, -1 none. Not an index; never dereference. kp.motion exposes it only as a boolean."
+   }
+  },
+  {
+   "name": "CSWSPlaceable::quaternion_raw_order_unverified",
+   "kind": "field",
+   "owner": "CSWSPlaceable",
+   "addr": "0x00000000",
+   "offset": "0x428",
+   "size": 16,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "CSWSPlaceable::SetOrientation(quat) 0x5853c0: lea ecx,[esi+0x428], 4 dword copies, then derives the facing and calls 0x4cd170; ctor default [+0x428]=1.0, rest 0",
+    "bytes": "8d8e28040000 @0x5853cf",
+    "signals": [
+     "M0 receipt: motion-m0-rederivation.md (sha256 c9a3d022...) section (2), placeable quaternion",
+     "independent verification: motion-m0-verification.md (sha256 93cda1dc..., verdict CONFIRMS) '0x5853C0 stores the quaternion at +0x428' holds for the call shape; component order low"
+    ],
+    "derivations": [
+     "M0 receipt",
+     "independent verification"
+    ],
+    "limits": "4 x f32, raw. Component order (w,x,y,z) vs (x,y,z,w) is unverified."
+   }
+  }
+ ]
+}

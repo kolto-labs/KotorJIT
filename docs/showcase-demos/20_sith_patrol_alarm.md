@@ -1,6 +1,10 @@
 # 20_sith_patrol_alarm
 
-**Script:** `scripts/examples/showcase/20_sith_patrol_alarm.lua`  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua`
 **Hook:** `OnRunScript` / `k_def_percept01` (runs on the perceiver)  
 **Save:** `pick_save.sh endar`  
 **Module:** `end_m01aa` (Endar Spire opening)
@@ -36,7 +40,7 @@ Repeat up to **3 rounds** until `[alarm]` appears:
 ## Notes
 
 The hostile **first-perceives-PC** moment is one-shot. Scripted Endar combat often
-aggros before the party reaches the sentry, so this demo is flaky by design.
+aggros before the party reaches the sentry. This demo is flaky by design.
 Retry fresh warps; do not use `ExecuteScript` for the happy path.
 
 ## Recording

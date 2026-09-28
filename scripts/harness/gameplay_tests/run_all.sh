@@ -20,8 +20,12 @@ LIVE=(test_battle_meditation.sh test_alignment_drift.sh test_enclave_arrival.sh)
 LIVE_WIP=(test_sith_patrol_alarm.sh test_ahto_city_law.sh test_party_wounded.sh)
 
 RUN=("${FAST[@]}")
-[[ "${1:-}" == "--live" ]] && RUN+=("${LIVE[@]}")
-[[ "${1:-}" == "--live-all" ]] && RUN+=("${LIVE[@]}" "${LIVE_WIP[@]}")
+case "${1:-}" in
+  "") ;;
+  --live) RUN+=("${LIVE[@]}") ;;
+  --live-all) RUN+=("${LIVE[@]}" "${LIVE_WIP[@]}") ;;
+  *) echo "usage: $0 [--live|--live-all]" >&2; exit 2 ;;
+esac
 
 total_pass=0 total_fail=0 failed_tests=()
 LIVE_LOCK="$ROOT/tmp/harness-locks/live-game.lock"
@@ -53,7 +57,7 @@ reap_one_fast() {
 }
 for t in "${RUN[@]}"; do
   is_live=0
-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
   [[ "$is_live" -eq 0 ]] || continue
   while (( fast_count >= FAST_JOBS )); do
     reap_one_fast
@@ -69,7 +73,7 @@ while (( fast_count > 0 )); do
 done
 for t in "${RUN[@]}"; do
   is_live=0
-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
   [[ "$is_live" -eq 0 ]] || continue
   log="$fast_tmp/$t.log"
   cat "$log"
@@ -86,7 +90,7 @@ done
 # Live tests are intentionally serial, regardless of KP_FAST_JOBS.
 for t in "${RUN[@]}"; do
   is_live=0
-  for live in "${LIVE[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
+  for live in "${LIVE[@]}" "${LIVE_WIP[@]}"; do [[ "$t" == "$live" ]] && is_live=1; done
   [[ "$is_live" -eq 1 ]] || continue
   echo "=== $t ==="
   if [[ "$is_live" -eq 1 ]]; then

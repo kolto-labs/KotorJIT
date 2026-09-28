@@ -9,6 +9,7 @@
 -- Verified live on the Endar Spire corridor: metalbox (medpac, credits) and
 -- footlker (class-4 armor, long sword, two frag grenades).
 --
+-- The returned 'taken' count means requests queued, not items acquired.
 -- Poll the PC's inventory afterwards; the takes complete within a few ticks.
 
 local TAG = "metalbox"
@@ -33,7 +34,7 @@ while nwscript.call('GetIsObjectValid',it) == 1 do
   items[#items + 1] = it
   it = nwscript.call('GetNextItemInInventory',best)
 end
-kp.as(pc, function()
+nwscript.with_caller(pc, function()
   nwscript.call('ClearAllActions')
   for _, i in ipairs(items) do nwscript.call('ActionTakeItem',i, best) end
 end)

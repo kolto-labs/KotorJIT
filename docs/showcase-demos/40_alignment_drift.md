@@ -1,7 +1,11 @@
 # 40_alignment_drift
 
-**Script:** `scripts/examples/showcase/40_alignment_drift.lua`  
-**Hook:** `OnTick` (samples every **180** ticks ≈ 45s at ~4 ticks/s)  
+Retired from the public showcase on 2026-09-22. This is an internal regression
+playbook; its source is `tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua`.
+Historical live results and unresolved obligations remain unchanged.
+
+**Script:** `tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua`
+**Hook:** `OnTick` (samples every **180** ticks; wall time depends on runtime tick rate)
 **Save:** `pick_save.sh any`
 
 ## Success oracle

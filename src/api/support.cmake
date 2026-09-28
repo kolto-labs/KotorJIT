@@ -87,6 +87,8 @@ if(UNIX AND NOT WIN32)
     target_link_libraries(kp_namespacetest PRIVATE kphasor "${KP_SUPPORT_LUAJIT}" m dl)
     add_test(NAME kp_namespacetest.k1 COMMAND kp_namespacetest)
     add_test(NAME kp_namespacetest.k2 COMMAND kp_namespacetest k2)
+    set_tests_properties(kp_namespacetest.k1 kp_namespacetest.k2 PROPERTIES
+        ENVIRONMENT "KOTORPHASOR_NO_AUTOSTART=1")
 endif()
 
 # --- the Windows half --------------------------------------------------------

@@ -70,7 +70,7 @@ grace = 10
 timeout = 300
 
 [[step]]
-label = "at least three enemies were redrawn as monsters"
+label = "at least three humanoid disguise requests were counted"
 do = "assert_lua"
 code = "local pc=nwscript.call('GetFirstPC'); return nwscript.call('GetLocalNumber',pc,7) >= 3"
 equals = true

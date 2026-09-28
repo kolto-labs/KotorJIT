@@ -1,12 +1,12 @@
-# Coverage harness — soft-locks without a playthrough
+# Coverage harness: soft-locks without a playthrough
 
-Modders need to know a change made the game unwinnable **before** they
-walk the module. Keystrokes cannot do that: KOTOR has no nav points, no
+A change can make the game unwinnable. Modders need that fact before they
+walk the module. Keystrokes cannot do that. KOTOR has no nav points, no
 accessibility tree, and the LOADING splash accepts no console. The
-harness therefore has three layers. Only the first is required for the
+harness has three layers. Only the first is required for the
 "under a minute" loop.
 
-## Layer 1 — static graph (this repo, now)
+## Layer 1: static graph (this repo, now)
 
 `scripts/harness/coverage.sh [module]`
 
@@ -18,19 +18,19 @@ of those NCS files.
 
 **Findings a modder can act on immediately**
 
-- Missing NCS — a node names a script the game will not load. The
+- Missing NCS: a node names a script the game will not load. The
   option never appears, or the action never runs.
-- Unlinked nodes — an entry/reply index that nothing points at.
+- Unlinked nodes: an entry/reply index that nothing points at.
   Dead content, or a broken Index after a DLG merge.
-- Conditional-only strings — a name that appears in an `Active` script
+- Conditional-only strings: a name that appears in an `Active` script
   and in no `Script` script in this module. Often a `GetGlobal*` with
   no in-module `Set*`. Cross-module writes are the usual false
-  positive; the report is a suspect list, not a verdict.
+  positive. The report is a suspect list, not a verdict.
 
 That is the "parse every logic gate and ask how it is set" step. It
 does not need Wine, Xvfb, or a save.
 
-## Layer 2 — API director (Lua, not WASD)
+## Layer 2: API director (Lua, not WASD)
 
 `scripts/examples/coverage/10_cover.lua`
 
@@ -46,39 +46,39 @@ Console lines that call engine routines:
 | `cover autosave` | `DoSinglePlayerAutoSave` |
 
 Movement and menus stay out of xdotool. The console is still how a
-headless session *injects* the line (DirectInput); the game is not
+headless session *injects* the line (DirectInput). The game is not
 being steered by arrow keys.
 
-`kp.as(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
+`nwscript.with_caller(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
 queue on the PC. `kp.speed(n)` extra-calls MainLoop's original (capped
 at 16). `tools/coverage_walk.py` turns a scan JSON into `cover …` lines.
 
 **Reply pick:** `cover pick N` records the visible-option index. A
-conversation-manager cave will write that index; until it lands the
+conversation-manager cave will write that index. Until it lands the
 harness may type the digit while `GetIsConversationActive`.
 NWScript has no `ChooseReply`. That is a conversation-manager cave,
 queued after the graph exists so the walker knows which index to
 write. Until then, `GetIsConversationActive` + a single digit is the
-honest fallback — one key, not a playthrough.
+honest fallback. One key, not a playthrough.
 
 Checkpoint/rollback: `cover autosave` plus the existing OnSave/OnLoad
 sidecar. A full "fork every reply" runner loads that slot, picks, and
 restores.
 
-## Layer 3 — campaign walker + speed (later)
+## Layer 3: campaign walker + speed (later)
 
 Start-to-finish × every reply in "a few minutes" is not a speedhack
 of `swkotor.exe` alone. Under llvmpipe a module load is tens of
-seconds; a campaign has dozens of modules. The minutes-scale path is:
+seconds. A campaign has dozens of modules. The minutes-scale path is:
 
-1. Static prune — do not live-walk nodes the graph already proves
+1. Static prune: do not live-walk nodes the graph already proves
    unreachable or whose writers are missing.
-2. Skip presentation — fade 0, skip movies (a `PlayMovie` no-op
+2. Skip presentation: fade 0, skip movies (a `PlayMovie` no-op
    cave), skip VO delay (`DelayEntry` / `DelayReply` are already in
    the DLG).
-3. Tick scale — MainLoop already detours; a multiplier is a small
+3. Tick scale: MainLoop already detours. A multiplier is a small
    follow-up, not the first lever.
-4. Render-off server tick — the real speedup, and a separate cave.
+4. Render-off server tick: the real speedup, and a separate cave.
 
 ## What "test everything" means here
 
@@ -97,6 +97,6 @@ heuristic survives a different designer.
 
 ## Non-goals
 
-Replacing the retail GUI for blind players. That frustration is real;
-this harness does not make the shipped game speakable. It makes
+Replacing the retail GUI for blind players. That frustration is real.
+This harness does not make the shipped game speakable. It makes
 *mods* fail in a log file instead of in a 20-hour save.

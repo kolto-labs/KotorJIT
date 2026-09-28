@@ -17,7 +17,7 @@
 //             recipient 374 needs.
 //
 // data/hostapi.toml also includes proposed facilities. The implemented output
-// surface is kp.log, kp.console and kp.feedback here, plus kp.print in compat.
+// surface is kp.diagnostic, kp.console and kp.feedback here, plus kp.print in compat.
 // kp.console writes text; it does not execute a console command.
 //
 // Routines are reached BY NAME through `nwscript.call`, not by id and not by
@@ -59,7 +59,7 @@ bool console_bound();
 // command handler and a script produce identical output.
 void console_write(const char* text);
 
-// Installs kp.log, kp.console and kp.feedback into this state.
+// Installs kp.diagnostic, kp.console and kp.feedback into this state.
 void register_output(lua_State*);
 
 // The whole support module in one call: output, timers and strings.
