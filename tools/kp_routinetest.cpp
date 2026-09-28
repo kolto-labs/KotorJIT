@@ -25,8 +25,21 @@ int g_pop_calls = 0;
 bool g_pop_succeeds = true;
 int g_execute_status = 0;
 int g_pop_string_calls = 0;
-int g_execute_calls = 0;
 int g_push_calls = 0;
+const char* g_string_text = "last";
+std::uint32_t g_string_capacity = 5;
+int g_string_destroys = 0;
+std::string g_string_pushed;
+void KP_THISCALL destroy_string(void*) { ++g_string_destroys; }
+int push_string(void*, const void* input) {
+    ++g_push_calls;
+    const auto& value = *static_cast<const kp::api::ExoString*>(input);
+    const auto n = std::strlen(value.text);
+    if (value.length != n + 1) ++g_failures;
+    g_string_pushed.assign(value.text, n); // Native CStr + constructor semantics.
+    return 1;
+}
+int g_execute_calls = 0;
 int g_execute_id = -1;
 int g_execute_argc = -1;
 float g_pushed_float = 0.0f;
@@ -56,8 +69,8 @@ int pop_float(void*, float* out) {
 int pop_string(void*, void* out) {
     ++g_pop_string_calls;
     auto* s = static_cast<kp::api::ExoString*>(out);
-    s->text = "last";
-    s->length = 4;
+    s->text = g_string_text;
+    s->length = g_string_capacity;
     return 1;
 }
 
@@ -67,6 +80,13 @@ const kp::api::Routine kVoid{29, "VoidProbe", kp::api::Type::Void,
                               nullptr, 0, 0};
 const kp::api::Routine kGetLastConversation{711, "GetLastConversation", kp::api::Type::String,
                                               nullptr, 0, 0};
+
+const kp::api::Param kStringParams[] = {
+    {kp::api::Type::String, "text", false},
+    {kp::api::Type::Int, "later", false}};
+const kp::api::Routine kStringInput{29, "StringInput", kp::api::Type::Void,
+                                   kStringParams, 2, 2};
+int call_string_input(lua_State* L) { return kp::api::call(L, kStringInput, 1); }
 
 int call_facing(lua_State* L) { return kp::api::call(L, kGetFacing, 1); }
 int call_void(lua_State* L) { return kp::api::call(L, kVoid, 1); }
@@ -147,6 +167,7 @@ int main() {
     binding.push_int = push_int;
     binding.push_float = push_float;
     binding.push_object = push_object;
+    binding.push_string = push_string;
     binding.pop_int = pop_int;
     binding.pop_float = pop_float;
     binding.pop_string = pop_string;
@@ -156,6 +177,7 @@ int main() {
     access.virtual_machine = &wrapper;
     access.commands = commands;
     access.command_count = 772;
+    access.destroy_string = destroy_string;
     kp::api::bind_engine_access(access);
 
     lua_State* L = luaL_newstate();
@@ -291,7 +313,7 @@ int main() {
     g_pop_string_calls = 0;
     check(invoke(L, call_last_conversation) == 0,
           "GetLastConversation accepts its documented inverted success status");
-    check(lua_gettop(L) == 1 && std::strcmp(lua_tostring(L, -1), "last") == 0,
+    check(lua_gettop(L) == 1 && lua_objlen(L, -1) == 4 && std::strcmp(lua_tostring(L, -1), "last") == 0,
           "GetLastConversation returns the popped CExoString");
     check(g_pop_string_calls == 1, "GetLastConversation pops its string once");
     lua_settop(L, 0);
@@ -389,6 +411,58 @@ int main() {
     lua_settop(L, 0);
     implementer.table = commands;
     check(invoke(L, call_void) == 0, "routine calls recover when the live table returns");
+
+    lua_settop(L, 0);
+    g_execute_status = -2000;
+    auto string_result = [&](const char* data, std::uint32_t capacity,
+                             const char* expected, std::size_t length, bool ok) {
+        g_string_text = data;
+        g_string_capacity = capacity;
+        const int destroyed = g_string_destroys;
+        const int rc = invoke(L, call_last_conversation);
+        check((rc == 0) == ok, "native string conversion status matches contract");
+        if (ok) {
+            std::size_t size = 0;
+            const char* result = lua_tolstring(L, -1, &size);
+            check(result && size == length && std::memcmp(result, expected, length) == 0,
+                  "native string result has exact logical bytes, no terminator or spare capacity");
+        }
+        check(g_string_destroys == destroyed + 1, "owned native string destroyed exactly once");
+        lua_settop(L, 0);
+    };
+    string_result("g_w_blstrpstl001", sizeof("g_w_blstrpstl001"), "g_w_blstrpstl001", sizeof("g_w_blstrpstl001") - 1, true);
+    string_result("abc\0tail", 9, "abc", 3, true);
+    string_result("", 1, "", 0, true);
+    string_result(nullptr, 0, "", 0, true);
+    string_result(nullptr, 7, "", 0, true); // Preserve existing null-output behavior.
+    string_result("last", 0, "", 0, false);
+    const char unterminated[] = {'a', 'b', 'c'};
+    string_result(unterminated, sizeof unterminated, "", 0, false);
+    string_result(reinterpret_cast<const char*>(1), 4, "", 0, false);
+    string_result(reinterpret_cast<const char*>(UINTPTR_MAX - 1), 4, "", 0, false);
+
+    g_execute_status = 0;
+    for (const char* text : {"", "native text", "caf\xc3\xa9"}) {
+        lua_pushcfunction(L, call_string_input);
+        lua_pushstring(L, text);
+        lua_pushinteger(L, 7);
+        check(lua_pcall(L, 2, 0, 0) == 0 && g_string_pushed == text,
+              "native string input preserves empty/text bytes and terminated capacity");
+        lua_settop(L, 0);
+    }
+    const char binary[] = {'A', '\0', 'B'};
+    const int pushes = g_push_calls, executions = g_execute_calls;
+    lua_pushcfunction(L, call_string_input);
+    lua_pushlstring(L, binary, sizeof binary);
+    lua_pushinteger(L, 7); // Reverse push order would otherwise strand this integer.
+    check(lua_pcall(L, 2, 0, 0) != 0 && g_push_calls == pushes && g_execute_calls == executions,
+          "embedded NUL rejected before any native argument push or execution");
+    lua_settop(L, 0);
+    lua_pushlstring(L, binary, sizeof binary);
+    std::size_t binary_length = 0;
+    const char* binary_value = lua_tolstring(L, -1, &binary_length);
+    check(binary_length == sizeof binary && std::memcmp(binary_value, binary, sizeof binary) == 0,
+          "ordinary Lua byte strings preserve embedded NUL");
 
     lua_close(L);
     std::printf("kp_routinetest: %d failure(s)\n", g_failures);

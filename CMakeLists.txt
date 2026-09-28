@@ -30,7 +30,7 @@ enable_testing()
 
 # These are offline fake-server/parser gates; no game, Wine or display is launched.
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
-foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test)
+foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test kpharness_physical_console_test kpharness_gamescope_backend_test)
     add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
     set_tests_properties(${gate} PROPERTIES LABELS "offline;harness" TIMEOUT 300)
 endforeach()
@@ -53,6 +53,7 @@ set(KP_IMAGE_SOURCES
     src/image/sha256.cpp
     src/image/loaded_image.cpp
     src/image/pe_elf.cpp
+    src/image/macho.cpp
     src/image/parse.cpp
     src/image/classify.cpp
     src/image/build_table.cpp
@@ -68,6 +69,14 @@ target_link_options(kp_image PUBLIC -m32)
 # parsing run against files, so the encrypted build can be checked without Steam.
 add_executable(kp_imagetool tools/kp_imagetool.cpp)
 target_link_libraries(kp_imagetool PRIVATE kp_image)
+
+# SDK-independent metadata parser test, also buildable on a 64-bit host.
+add_executable(kp_machotest tools/kp_machotest.cpp src/image/macho.cpp)
+target_include_directories(kp_machotest PRIVATE src)
+target_compile_options(kp_machotest PRIVATE -Wall -Wextra)
+add_test(NAME kp_machotest COMMAND kp_machotest)
+add_test(NAME kp_imagetool_macho_test
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/kp_imagetool_macho_test.py $<TARGET_FILE:kp_imagetool>)
 
 find_package(Threads REQUIRED)
 add_executable(kp_transporttest tools/kp_transporttest.cpp src/multiplayer/transport.cpp)
@@ -114,6 +123,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/routines.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/structs.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/vector.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/motion.cmake)
 
 # The headless harness control plane. Before runtime.cmake: it only publishes
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
@@ -125,6 +136,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 # After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/model.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/camera.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/animation.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
@@ -146,6 +158,24 @@ endif()
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
 
 if(UNIX AND NOT WIN32)
+    add_executable(kp_projectilestest tools/kp_projectilestest.cpp src/api/projectiles.cpp
+        src/api/projectiles_lua.cpp src/api/projectiles_entry.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_projectilestest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_projectilestest PRIVATE -m32 -fno-pie -Wall -Wextra)
+    target_link_options(kp_projectilestest PRIVATE -m32 -no-pie)
+    target_link_libraries(kp_projectilestest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_projectilestest COMMAND kp_projectilestest)
+    set_tests_properties(kp_projectilestest PROPERTIES TIMEOUT 10 LABELS "offline;projectiles;abi")
+
+    add_executable(kp_consoleprotocoltest tools/kp_consoleprotocoltest.cpp
+        src/harness/console_protocol.cpp src/harness/json.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+    target_include_directories(kp_consoleprotocoltest PRIVATE src third_party/luajit/src)
+    target_compile_options(kp_consoleprotocoltest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_consoleprotocoltest PRIVATE -m32)
+    target_link_libraries(kp_consoleprotocoltest PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl Threads::Threads)
+    add_test(NAME kp_consoleprotocoltest COMMAND kp_consoleprotocoltest)
+    set_tests_properties(kp_consoleprotocoltest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
+
     add_executable(kp_consoletest tools/kp_consoletest.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
     target_include_directories(kp_consoletest PRIVATE src third_party/luajit/src)
     target_compile_options(kp_consoletest PRIVATE -m32 -Wall -Wextra)

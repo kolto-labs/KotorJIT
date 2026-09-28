@@ -36,4 +36,10 @@ test('coverage/10_cover.lua','prefix rejection, help, pick, haste and missing ta
  f.env.OnConsoleCommand('cover talk absent'); assert(f:count('ActionStartConversation')==0 and f:has('no object absent'))
  f.env.OnConsoleCommand('cover jump absent'); assert(f:count('JumpToObject')==0)
 end)
+test('coverage/10_cover.lua','help describes pick as print-only with no reply chosen',function(F,p)
+ local f=F.new(p):load(); f.env.OnConsoleCommand('cover help')
+ local line; for _,s in ipairs(f.prints) do if s:find('pick <n>',1,true) then line=s end end
+ assert(line and not line:lower():find('queue',1,true) and line:find('prints the index',1,true), 'pick help overclaims: '..tostring(line))
+ f.env.OnConsoleCommand('cover pick 2'); assert(#f.calls==0 and f:has('pick=2'))
+end)
 end

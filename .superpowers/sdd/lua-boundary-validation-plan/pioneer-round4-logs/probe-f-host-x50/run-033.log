@@ -1,0 +1,8 @@
+18:28:58.372593535
+168.96 146.57 111.60 70/7179 900952
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.442s
+
+OK

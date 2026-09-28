@@ -36,4 +36,6 @@ if(UNIX AND NOT WIN32)
     add_dependencies(kp_routinetest kphasor)
     target_link_libraries(kp_routinetest PRIVATE kphasor "${KP_ROUTINE_LUAJIT}" m dl)
     add_test(NAME kp_routinetest COMMAND kp_routinetest)
+    set_tests_properties(kp_routinetest PROPERTIES
+        ENVIRONMENT "KOTORPHASOR_NO_AUTOSTART=1")
 endif()

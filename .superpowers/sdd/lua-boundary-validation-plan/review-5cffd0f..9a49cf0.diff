@@ -1,0 +1,2670 @@
+# Review package: 5cffd0f..9a49cf0
+
+## Commits
+9a49cf0 Enforce native and NWScript Lua module boundaries
+
+## Files changed
+ README.md                                          |  2 +-
+ data/hostapi.toml                                  | 31 +++++++----
+ docs/api-dialects.md                               |  6 ++-
+ docs/coverage-harness.md                           |  2 +-
+ docs/harness-design.md                             |  2 +-
+ docs/lua-api-complete.md                           |  4 +-
+ docs/lua-harness-api.md                            |  6 +--
+ docs/user/api-status.md                            |  6 +--
+ docs/user/scripts.md                               |  8 +--
+ scripts/examples/coverage/10_cover.lua             | 12 ++---
+ scripts/examples/cursed/10_rancor_roulette.lua     |  4 +-
+ scripts/examples/cursed/20_fus_ro_dah.lua          |  4 +-
+ scripts/examples/cursed/30_necromancer.lua         |  4 +-
+ scripts/examples/cursed/50_chaos_roulette.lua      |  8 +--
+ scripts/examples/cursed/60_rave.lua                |  6 +--
+ scripts/examples/cursed/70_doppelganger.lua        |  4 +-
+ scripts/examples/cursed/80_loot_pinata.lua         |  2 +-
+ scripts/examples/cursed/README.md                  |  2 +-
+ scripts/examples/harness/110_loot_container.lua    |  2 +-
+ scripts/examples/harness/30_move_to.lua            |  4 +-
+ scripts/examples/harness/40_attack_nearest.lua     |  2 +-
+ scripts/examples/harness/50_doors.lua              |  2 +-
+ scripts/examples/harness/README.md                 |  8 +--
+ scripts/examples/multiplayer/10_avatar_sync.lua    |  4 +-
+ scripts/harness/kpharness/scenario.py              | 18 +++----
+ scripts/harness/scenarios/k1_dialog_walk.toml      |  2 +-
+ .../harness/scenarios/k1_endar_room3_onward.toml   |  6 +--
+ .../scenarios/k1_endar_starboard_to_taris.toml     |  6 +--
+ .../scenarios/k1_endar_trask_begin_diag.toml       |  2 +-
+ .../harness/scenarios/k1_endar_trask_opening.toml  |  4 +-
+ .../scenarios/k1_endar_trask_range_diag.toml       |  4 +-
+ .../harness/scenarios/k1_fresh_trask_quest.toml    | 12 ++---
+ scripts/harness/scenarios/k1_getfacing_diag.toml   |  2 +-
+ scripts/harness/scenarios/k1_softlock_detect.toml  |  2 +-
+ .../harness/scenarios/k1_trask_approach_diag.toml  |  2 +-
+ src/api/enginestruct.hpp                           |  2 +-
+ src/api/entity.cpp                                 |  2 +
+ src/api/output.cpp                                 |  8 +--
+ src/api/output.hpp                                 |  4 +-
+ src/api/routines.cpp                               | 22 +++-----
+ src/api/routines.hpp                               |  3 +-
+ tools/gen_compat.py                                |  9 +++-
+ tools/kp_namespacetest.cpp                         | 34 ++++++++----
+ tools/kp_routinetest.cpp                           | 62 +++++++++++++++++++---
+ tools/kp_supporttest.cpp                           |  6 +--
+ tools/kpharness_offline_test.py                    | 16 +++---
+ tools/nwscript_boundary_test.py                    | 42 +++++++++++++--
+ 47 files changed, 259 insertions(+), 146 deletions(-)
+
+## Diff
+diff --git a/README.md b/README.md
+index 64f25bc..ba4838d 100644
+--- a/README.md
++++ b/README.md
+@@ -20,21 +20,21 @@ function OnRunScript(script_name, object_id, has_object, relevant)
+     end
+ end
+ ```
+ 
+ Every Lua file that registered for that event runs. The first usable return wins. Later scripts still run, with `relevant = false`. Returning `false` from `OnRunScript` also stops the engine's own script. The exact rule is in [`docs/user/scripts.md`](docs/user/scripts.md).
+ 
+ This is the [Phasor](https://github.com/urbanyoung/Phasor) model, rebuilt for KOTOR. What carried over is in [`ATTRIBUTION.md`](ATTRIBUTION.md).
+ 
+ ## What you can do
+ 
+-769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `kp.as` and `kp.registertimer`.
++769 of KOTOR 1's 772 routines are callable through `nwscript.call(name, ...)`. No NWScript compiler. No `.nss` file, and no routine names injected into host tables. `AssignCommand`, `DelayCommand`, and `ActionDoCommand` need a closure Lua can't build. Use `nwscript.with_caller` and `kp.registertimer`.
+ 
+ When the named API does not reach, `kp.mem.readbyte` / `writebyte` / `findsig` talk to the process directly. Hook sites are logical names (`vm.run_script`). A recorded VA is a hint; unique `expected_bytes` bind the site if that hint is missing or stale.
+ 
+ KOTOR already treats a single-player game as a server with one client. A working UDP sync between two game instances ships in [`scripts/examples/multiplayer/`](scripts/examples/multiplayer/). No extra process.
+ 
+ ## Build and install
+ 
+ Start to finish: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+ 
+ ## Status
+diff --git a/data/hostapi.toml b/data/hostapi.toml
+index 5118872..482face 100644
+--- a/data/hostapi.toml
++++ b/data/hostapi.toml
+@@ -894,21 +894,21 @@ confidence = "high"
+ [[function]]
+ lua_name = "kp.obj.self"
+ module = "object"
+ params = []
+ returns = "object"
+ failure = "nil"
+ on_failure = "nil when no caller object is set, which is the normal state outside a retargeted call"
+ requires = "vm"
+ mechanism = "CSWVirtualMachineCommands.has_caller_object +0x04 and caller_object_id +0x08"
+ doc = """The object routines will treat as OBJECT_SELF right now. Reads the same
+-two fields kp.as writes. Most K1 routines default an object parameter to
++two fields nwscript.with_caller writes. Most K1 routines default an object parameter to
+ OBJECT_SELF, so this is worth knowing before you call one."""
+ confidence = "high"
+ evidence = "ExecuteCommandClearAllActions 0x0052f4a0 body reads has_caller_object then caller_object_id"
+ 
+ [[function]]
+ lua_name = "kp.obj.pc"
+ module = "object"
+ params = []
+ returns = "object"
+ failure = "nil"
+@@ -1138,21 +1138,21 @@ returns = "nothing"
+ failure = "never"
+ on_failure = "silently drops the line if the log file cannot be opened"
+ requires = "none"
+ mechanism = "src/platform logging; tostring each argument, separated by tabs"
+ doc = """Diagnostic output. Works at every phase including before the game is
+ identified, which makes it the one thing that always works when nothing else
+ does. Not game state: nobody in the world hears it."""
+ confidence = "high"
+ 
+ [[function]]
+-lua_name = "kp.log"
++lua_name = "kp.diagnostic"
+ module = "output"
+ params = [
+   { name = "text", type = "string" },
+   { name = "level", type = "string", optional = true, default = "\"info\"" },
+ ]
+ returns = "nothing"
+ failure = "never"
+ on_failure = "an unknown level is treated as info rather than raising"
+ requires = "none"
+ mechanism = "src/platform logging"
+@@ -1226,24 +1226,24 @@ lua_name = "kp.speak"
+ module = "output"
+ params = [
+   { name = "object_id", type = "object" },
+   { name = "text", type = "string" },
+   { name = "volume", type = "int", optional = true, default = "0" },
+ ]
+ returns = "bool"
+ failure = "false"
+ on_failure = "false when the object does not resolve"
+ requires = "vm"
+-mechanism = "kp.as around routine SpeakString (k1 id 221), which speaks as OBJECT_SELF"
++mechanism = "nwscript.with_caller around routine SpeakString (k1 id 221), which speaks as OBJECT_SELF"
+ doc = """Makes a creature say something in the world. SpeakString has no object
+ parameter, so this retargets OBJECT_SELF for the duration of the call, which is
+-what kp.as is for."""
++what nwscript.with_caller is for."""
+ confidence = "medium"
+ 
+ [[function]]
+ lua_name = "kp.console"
+ module = "output"
+ params = [{ name = "line", type = "string" }]
+ returns = "bool"
+ failure = "false"
+ on_failure = "logs the text and returns false when no console writer is bound"
+ requires = "none"
+@@ -1267,21 +1267,21 @@ confidence = "high"
+ # timers -- and the replacement for the three routines Lua cannot call
+ # =============================================================================
+ # AssignCommand, DelayCommand and ActionDoCommand each take an `action`: a script
+ # closure the NWScript compiler builds as STORE_STATE bytecode capturing a
+ # subroutine and its frame. There is no way to synthesise one from outside the
+ # VM, so those three are the only K1 routines the bridge cannot call. They are
+ # not a gap to work around; they are two separate features that Lua does better
+ # natively:
+ #
+ #   DelayCommand(f, action)     -> kp.timer.after(ms, function() ... end)
+-#   AssignCommand(obj, action)  -> kp.as(obj, function() ... end)
++#   AssignCommand(obj, action)  -> nwscript.with_caller(obj, function() ... end)
+ #
+ # The clock. kp.timer runs on app.server_main_loop, which is the server tick. It
+ # stops when the game is paused and it stops in menus, which is usually what a
+ # script wants and is NOT wall time. kp.time() is wall time; kp.timer.tick() is
+ # the tick counter. All three are different questions and none of them is a
+ # substitute for another.
+ #
+ # Timers do not survive a save. They hold a Lua closure and a closure cannot be
+ # serialised. OnSave and OnLoad are the persistence path: save what you need to
+ # rebuild the timer, and rebuild it in OnLoad.
+@@ -1629,26 +1629,26 @@ confidence = "high"
+ 
+ [[function]]
+ lua_name = "nwscript.call(\"AssignCommand\", ...)"
+ module = "routines"
+ params = [
+   { name = "object_id", type = "object" },
+   { name = "action", type = "any" },
+ ]
+ returns = "nothing"
+ failure = "error"
+-on_failure = "'AssignCommand takes a script closure and cannot be called from Lua. Use kp.as(object, function() ... end).'"
++on_failure = "'AssignCommand takes a script closure and cannot be called from Lua. Use nwscript.with_caller(object, function() ... end).'"
+ requires = "none"
+ mechanism = "the dispatcher rejects this excluded catalog name before VM dispatch"
+ doc = """Calling it through nwscript.call explains the exclusion. Its `action` parameter is
+ STORE_STATE bytecode the NWScript compiler builds, and nothing outside the VM can
+-construct one. kp.as does the same job by retargeting OBJECT_SELF."""
++construct one. nwscript.with_caller does the same job by retargeting OBJECT_SELF."""
+ confidence = "high"
+ 
+ [[function]]
+ lua_name = "nwscript.call(\"DelayCommand\", ...)"
+ module = "routines"
+ params = [
+   { name = "seconds", type = "float" },
+   { name = "action", type = "any" },
+ ]
+ returns = "nothing"
+@@ -1666,38 +1666,49 @@ params = [{ name = "action", type = "any" }]
+ returns = "nothing"
+ failure = "error"
+ on_failure = "'ActionDoCommand takes a script closure and cannot be called from Lua. Use kp.timer.after_ticks(1, function() ... end).'"
+ requires = "none"
+ mechanism = "the dispatcher rejects this excluded catalog name before VM dispatch"
+ doc = """Same closure problem. Queueing work onto an object's action queue from
+ outside is not possible; running it next frame is, and is usually what was meant."""
+ confidence = "medium"
+ 
+ [[function]]
+-lua_name = "kp.as"
++lua_name = "nwscript.last_trace"
++module = "routines"
++params = []
++returns = "table"
++failure = "never"
++requires = "none"
++mechanism = "copies the most recent bridge dispatch trace into a Lua table"
++doc = "Read-only diagnostic receipt for the last engine routine dispatch, including failure stages. This does not execute an engine routine."
++confidence = "high"
++
++[[function]]
++lua_name = "nwscript.with_caller"
+ module = "routines"
+ params = [
+   { name = "object_id", type = "object" },
+   { name = "body", type = "function" },
+ ]
+ variadic = true
+ returns = "any"
+ failure = "error"
+-on_failure = """'kp.as needs the VM binding' before hooks install; an error raised
++on_failure = """'nwscript.with_caller needs the VM binding' before hooks install; an error raised
+ inside body propagates after the caller fields are restored"""
+ requires = "vm"
+ mechanism = """writes CSWVirtualMachineCommands.has_caller_object +0x04 and
+ caller_object_id +0x08, calls body, then restores both to what they were"""
+ doc = """Runs a function with OBJECT_SELF set to an object. This is the generic
+ replacement for AssignCommand, and it is worth more than that sounds: most K1
+ routines default an object parameter to OBJECT_SELF, and every Action* routine
+-queues onto OBJECT_SELF's queue. Inside kp.as, nwscript.call("ClearAllActions")
++queues onto OBJECT_SELF's queue. Inside nwscript.with_caller, nwscript.call("ClearAllActions")
+ clears that object's actions and nwscript.call("SpeakString", ...) speaks as it.
+ 
+ The previous values are saved and restored around the call, including when body
+ raises, so nesting is safe and an error does not leave the VM retargeted.
+ 
+ Confidence is medium on purpose. The mechanism is proven for
+ ExecuteCommandClearAllActions, whose decompiled body reads exactly these two
+ fields; that every routine honours them the same way is inference until it is
+ watched happening."""
+ confidence = "medium"
+diff --git a/docs/api-dialects.md b/docs/api-dialects.md
+index 39a5769..be3574e 100644
+--- a/docs/api-dialects.md
++++ b/docs/api-dialects.md
+@@ -1,17 +1,21 @@
+ # Native namespace and callback migration
+ 
+ Generated from `data/api_aliases.toml` and `data/events.toml`.
+ 
+ API version 2 has two public roots: `nwscript.call(name, ...)` for direct engine routines and `kp` for every native host facility.
+ 
+-The former kotor root, bare host functions, underscored aliases, cb/events globals, host identity globals and host bit32 alias are removed. Use `kp.mem.readbyte`, `kp.registertimer` and `kp.log`. The engine logarithm is `nwscript.call('log', value)`.
++The former kotor root, bare host functions, underscored aliases, cb/events globals, host identity globals and host bit32 alias are removed. Use `kp.mem.readbyte`, `kp.registertimer` and `kp.diagnostic`. The engine logarithm is `nwscript.call('log', value)`.
++
++Bridge context is `nwscript.with_caller(object_id, fn, ...)`; the last dispatch receipt is `nwscript.last_trace()`. The old native log, as and last_routine_trace members have no compatibility aliases.
++
++Native object conveniences such as `kp.obj.position` retain distinct names. Their C++ implementation explicitly consumes `api::find` and `api::call`; they require the VM backend for engine operations without exporting engine routine names or creating the nwscript root.
+ 
+ Lua's standard `print` remains unchanged. `kp.print(...)` writes host diagnostics; console and harness states capture that native output.
+ 
+ Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, `kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.
+ 
+ ## Explicit event registration
+ 
+ ```lua
+ kp.events.register(kp.events.OnTick, function(tick, relevant)
+     -- ...
+diff --git a/docs/coverage-harness.md b/docs/coverage-harness.md
+index 1882370..05c8454 100644
+--- a/docs/coverage-harness.md
++++ b/docs/coverage-harness.md
+@@ -42,21 +42,21 @@ Console lines that call engine routines:
+ | `cover talk <tag>` | `ActionStartConversation` |
+ | `cover jump <tag>` | `JumpToObject` |
+ | `cover module` | `StartNewModule` |
+ | `cover fade0` | `SetGlobalFadeIn(0,…)` |
+ | `cover autosave` | `DoSinglePlayerAutoSave` |
+ 
+ Movement and menus stay out of xdotool. The console is still how a
+ headless session *injects* the line (DirectInput). The game is not
+ being steered by arrow keys.
+ 
+-`kp.as(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
++`nwscript.with_caller(object, fn)` retargets OBJECT_SELF so `cover talk` / `cover jump`
+ queue on the PC. `kp.speed(n)` extra-calls MainLoop's original (capped
+ at 16). `tools/coverage_walk.py` turns a scan JSON into `cover …` lines.
+ 
+ **Reply pick:** `cover pick N` records the visible-option index. A
+ conversation-manager cave will write that index. Until it lands the
+ harness may type the digit while `GetIsConversationActive`.
+ NWScript has no `ChooseReply`. That is a conversation-manager cave,
+ queued after the graph exists so the walker knows which index to
+ write. Until then, `GetIsConversationActive` + a single digit is the
+ honest fallback. One key, not a playthrough.
+diff --git a/docs/harness-design.md b/docs/harness-design.md
+index cc4c789..6f3b7f7 100644
+--- a/docs/harness-design.md
++++ b/docs/harness-design.md
+@@ -387,21 +387,21 @@ target = "k1"
+ do = "load_checkpoint"; name = "endar_start"
+ [[step]]
+ wait = "phase"; equals = "gameplay"; timeout = 300
+ [[step]]
+ expect_events = ["OnModuleLoad", "OnAreaEnter"]
+ [[step]]
+ do = "warp"; module = "end_m01aa"
+ [[step]]
+ wait = "module"; equals = "end_m01aa"
+ [[step]]
+-do = "lua"; code = "kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation', nwscript.call('GetObjectByTag','end_trask',0), '') end)"
++do = "lua"; code = "nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation', nwscript.call('GetObjectByTag','end_trask',0), '') end)"
+ [[step]]
+ wait = "phase"; equals = "dialog"
+ [[step]]
+ do = "reply"; pick = "first_active"
+ [[step]]
+ wait = "global"; name = "END_TRASK_TALK"; equals = 1
+ [[step]]
+ screenshot = true
+ ```
+ 
+diff --git a/docs/lua-api-complete.md b/docs/lua-api-complete.md
+index b45b461..5d20496 100644
+--- a/docs/lua-api-complete.md
++++ b/docs/lua-api-complete.md
+@@ -24,23 +24,23 @@ The loader is invoked by the game startup sequence; it is not the harness channe
+ ### `kp`
+ 
+ All native host facilities live below this root. API version 2 removes the old
+ host root, bare host names, underscored aliases, and the global event/identity
+ tables. See [the migration reference](api-dialects.md). Standard Lua `print` is
+ unchanged; use `kp.print` for runtime logging or captured console/harness output.
+ Register callbacks with `kp.events.register(kp.events.OnTick, handler)` and remove
+ them with `kp.events.unregister`. Global `On*` discovery remains a documented
+ legacy behavior of the dispatcher; script-defined `priority` still orders handlers.
+ 
+-- `kp.as(object_id, function)` temporarily supplies the engine caller (`OBJECT_SELF`) while the closure runs, then restores it even on error. Use it for action routines.
++- `nwscript.with_caller(object_id, function)` temporarily supplies the engine caller (`OBJECT_SELF`) while the closure runs, then restores it even on error. Use it for action routines.
+ - `kp.registertimer(milliseconds, "callback_name"[, data])` schedules a Lua callback on the game thread.
+-- `kp.log(text[, level])`, `kp.console(text)`, and `kp.feedback(text[, x, y[, life]])` write diagnostics.
++- `kp.diagnostic(text[, level])`, `kp.console(text)`, and `kp.feedback(text[, x, y[, life]])` write diagnostics.
+ - `kp.mem.readbyte/readword/readdword/readfloat/readstring`, corresponding writes, and `kp.mem.findsig(pattern)` provide explicitly unsafe process-memory access; prefer named routines and validate addresses.
+ - `kp.struct` exposes supported engine structures; K2 support remains build-dependent.
+ 
+ ### Callback events
+ 
+ See `docs/lua-api.md` for the generated event callback contract. Callback names currently include `OnScriptLoad`, `OnScriptUnload`, `OnConsoleCommand`, `OnRunScript`, `OnRunScriptDone`, `OnTick`, `OnDialogConditional`, and creature/area/item/module events. Return `false` from a cancellable callback to stop the game handler; return nothing to abstain.
+ 
+ ## Generated routine catalog: K1
+ 
+ 772 signatures (`data/routines/k1.json`).
+diff --git a/docs/lua-harness-api.md b/docs/lua-harness-api.md
+index 7f65fc0..ed680d5 100644
+--- a/docs/lua-harness-api.md
++++ b/docs/lua-harness-api.md
+@@ -12,29 +12,29 @@ At process startup the runtime loads every `*.lua` file in
+ only that file into quarantine. `OnScriptLoad(game, build)` is called after
+ registration; `OnScriptUnload()` runs on unload/reload.
+ 
+ ```lua
+ priority = 50
+ function OnScriptLoad(game, build)
+   kp.print("KotorPhasor " .. game .. " / " .. build)
+ end
+ ```
+ 
+-## `kp` runtime helpers
++## Runtime helpers and bridge context
+ 
+ | API | Result | Use |
+ |---|---|---|
+-| `kp.as(object, fn)` | returns `fn` results | Runs `fn` with `object` as the temporary engine caller (`OBJECT_SELF`), restoring the prior caller even if `fn` errors. |
++| `nwscript.with_caller(object, fn, ...)` | returns `fn` results | Runs `fn` with `object` as the temporary engine caller (`OBJECT_SELF`), restoring the prior caller even if `fn` errors. |
+ | `kp.registertimer(ms, callback_name[, data])` | timer handle | Schedules the named global callback on the game thread after the delay. The callback receives `(timer_id, count, data)`; return `true` to repeat it. |
+ | `kp.gamedir()` | string | Absolute executable/game directory. |
+ | `kp.time()` | number | Monotonic milliseconds for diagnostics and bounded scripts. |
+-| `kp.log(text[, level])` | none | Flushes a line to the runtime log; level is `debug`, `info`, `warn`, or `error`. |
++| `kp.diagnostic(text[, level])` | none | Flushes a line to the runtime log; level is `debug`, `info`, `warn`, or `error`. |
+ | `kp.console(text)` | none | Writes a line to the game console/log. |
+ | `kp.feedback(text[, x, y[, life]])` | none | Engine feedback text; one argument uses the default position/lifetime. |
+ 
+ ## `kp.harness`
+ 
+ These are the same native control operations used by the external harness,
+ available from a Lua callback or `lua exec`. Mutating operations return `true`
+ when the request is dispatched and raise a Lua error when the adapter or the
+ build cannot honour it. Query operations return the value described in the
+ table and raise on an unavailable adapter or field. The `take_*_result`
+diff --git a/docs/user/api-status.md b/docs/user/api-status.md
+index 171dccb..ca8e9b1 100644
+--- a/docs/user/api-status.md
++++ b/docs/user/api-status.md
+@@ -205,24 +205,24 @@ Heartbeat, spawn, damage, death, end-of-round, and end-of-dialogue never reach `
+ 
+ | Name | Status |
+ |---|---|
+ | `kp.mem.readbit` / `readbyte` / `readchar` / `readword` / `readshort` / `readdword` / `readint` / `readfloat` / `readdouble` / `readstring` / `readwidestring` | Bound |
+ | `kp.mem.writebit` / `writebyte` / `writechar` / `writeword` / `writeshort` / `writedword` / `writeint` / `writefloat` / `writedouble` / `writestring` / `writewidestring` | Bound |
+ | `kp.mem.findsig` | Bound |
+ | `kp.struct`: `at`, `view`, `types`, `fields`, `typeof`, `address`, `valid`, `size`, `how_to_obtain`, `allow_unverified_writes`, `totable`, `writes_performed` | Bound |
+ | `view.<field>` read and write | Bound |
+ | `kp.obj`: `ready`, `valid`, `get`, `pc`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `INVALID` | Bound |
+ | Handle methods: `id`, `type`, `valid`, `name`, `tag`, `position`, `area`, `faction`, `is_pc`, `is_party_member`, `party_slot` | Bound |
+-| `kp.log`, `kp.console`, `kp.feedback` | Bound |
++| `kp.diagnostic`, `kp.console`, `kp.feedback` | Bound |
+ | `kp.registertimer`, `kp.removetimer` | Bound |
+ | `kp.tokenizestring`, `kp.tokenizecmdstring` | Bound |
+-| `kp.as` | Bound |
++| `nwscript.with_caller` | Bound |
+ | `kp.speed` | Bound |
+ | `kp.version` | Bound |
+ | `kp.gamedir`, `kp.time` | Bound |
+ 
+ Native facilities are registered only below `kp`. The former host root and all
+ bare/underscored compatibility exports are removed; see [the migration](../api-dialects.md).
+ 
+ ### Spec only (nil)
+ 
+ `kp.mem.readbytes`, `kp.mem.writebytes`, `kp.mem.readable`, `kp.mem.writable`, `kp.mem.base`, `kp.mem.allow_code_writes`
+@@ -247,21 +247,21 @@ Writes to medium or low confidence fields need `kp.struct.allow_unverified_write
+ Effect, event, location, and talent userdata (`kp.effect`, `kp.event`, `kp.location`, `kp.talent`) are Bound as opaque handles.
+ 
+ ---
+ 
+ ## Engine routines through `nwscript.call(name, ...)`
+ 
+ 772 commands in the VM. **769 bound**. **3 omitted:**
+ 
+ | Id | Name | Status |
+ |---|---|---|
+-| 6 | `AssignCommand` | Omitted: use `kp.as` |
++| 6 | `AssignCommand` | Omitted: use `nwscript.with_caller` |
+ | 7 | `DelayCommand` | Omitted: use `kp.registertimer` |
+ | 294 | `ActionDoCommand` | Omitted |
+ 
+ Vector and engine-struct routines are callable on this build (all marshallers resolved). Two distinct failure modes, not one:
+ 
+ * A routine call that **hard-faults** (bad pointer, access violation) is caught by the same guard as every other hook body: the fault is logged, and `set_live(false)` takes *all* Lua scripting out of service, not just the bridge, until `lua reload` rebuilds the Lua states. See `src/runtime/fault_guard.cpp`.
+ * A **stack imbalance** is a routine's handler consuming a different argument count than the bridge pushed, without ever hard-faulting. It is silent. It corrupts the engine's own VM argument stack for every subsequent call, with no crash to catch and no accounting the bridge currently exposes to detect it (`VmBinding` in `src/api/routines.hpp` has no stack-depth query). There is no mechanism to recover from this today. It requires restarting the game.
+ 
+ ### Proven in a running game (Live)
+ 
+diff --git a/docs/user/scripts.md b/docs/user/scripts.md
+index 7209c5e..0b7f013 100644
+--- a/docs/user/scripts.md
++++ b/docs/user/scripts.md
+@@ -62,23 +62,23 @@ Arguments after the name follow `nwscript.nss` order. You may omit trailing defa
+ Routine names are not installed as Lua globals or table members.
+ 
+ ```lua
+ local pc = nwscript.call("GetFirstPC")
+ nwscript.call("SendMessageToPC", pc, "hello")
+ nwscript.call("AdjustAlignment", pc, 0, 5)
+ ```
+ 
+ These three names are missing on purpose. They need an NWScript closure Lua cannot build:
+ 
+-- `AssignCommand`: use `kp.as(object_id, function() ... end)`
++- `AssignCommand`: use `nwscript.with_caller(object_id, function() ... end)`
+ - `DelayCommand`: use `kp.registertimer(ms, "callback_name", data)`
+-- `ActionDoCommand`: same timer, or `kp.as`
++- `ActionDoCommand`: same timer, or `nwscript.with_caller`
+ 
+ ```lua
+ local id = kp.registertimer(1500, "on_bang", { n = 3 })
+ 
+ function on_bang(timer_id, count, data)
+     kp.feedback("bang " .. count)
+     return count < data.n
+ end
+ ```
+ 
+@@ -105,27 +105,27 @@ local dialog = kp.harness.dialog()
+ if dialog.active and dialog.waiting_for_player then
+     kp.harness.reply(dialog.replies[1].index)
+ end
+ ```
+ 
+ ## Host names that exist
+ 
+ | Name | What it does |
+ |---|---|
+ | `nwscript.call(name, ...)` | Direct engine routines; names are listed in [the generated catalog](../nwscript-api.md) |
+-| `kp.as` | Run a Lua function as `OBJECT_SELF` |
++| `nwscript.with_caller` | Run a Lua function as `OBJECT_SELF` |
+ | `kp.speed([n])` | Read or set MainLoop tick scale |
+ | `kp.version` | `"0.1.0"` |
+ | `kp.obj` | Object handles, party, `find` |
+ | `kp.struct` | Named field views |
+ | `kp.mem` | Raw reads and writes |
+-| `kp.log`, `kp.console`, `kp.feedback` | Log, console text, on-screen message |
++| `kp.diagnostic`, `kp.console`, `kp.feedback` | Log, console text, on-screen message |
+ | `kp.registertimer`, `kp.removetimer` | Delayed work |
+ | `kp.print` | Log line |
+ | `kp.events.register` / `kp.events.On*` | Bind a handler after load |
+ 
+ `kp.timer.after`, `kp.obj.create`, and most other `kp.*` rows in `data/hostapi.toml` are **not** bound. Calling them is `nil`. See [api-status.md](api-status.md).
+ 
+ Bare host names and underscored compatibility aliases have been removed. See the [API version 2 migration](../api-dialects.md).
+ 
+ ## Cheat console
+ 
+diff --git a/scripts/examples/coverage/10_cover.lua b/scripts/examples/coverage/10_cover.lua
+index c0dda7f..ff15dfe 100644
+--- a/scripts/examples/coverage/10_cover.lua
++++ b/scripts/examples/coverage/10_cover.lua
+@@ -63,38 +63,38 @@ function OnConsoleCommand(line, relevant)
+         kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
+     elseif cmd == "getb" and w[3] then
+         kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalBoolean", w[3])))
+     elseif cmd == "getn" and w[3] then
+         kp.print("[cover] " .. w[3] .. "=" .. tostring(q("GetGlobalNumber", w[3])))
+     elseif cmd == "talk" and w[3] then
+         local npc = q("GetObjectByTag", w[3], 0)
+         local pc = q("GetFirstPC")
+         if not npc or not pc then
+             kp.print("[cover] no object " .. w[3])
+-        elseif not kp or not kp.as then
+-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
++        elseif not nwscript or not nwscript.with_caller then
++            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
+         else
+             local dlg = w[4] or ""
+-            kp.as(pc, function()
++            nwscript.with_caller(pc, function()
+                 q("ActionStartConversation", npc, dlg)
+             end)
+             kp.print("[cover] talk " .. w[3] .. " dlg=" .. (dlg ~= "" and dlg or "(default)"))
+         end
+     elseif cmd == "jump" and w[3] then
+         local dest = q("GetObjectByTag", w[3], 0)
+         local pc = q("GetFirstPC")
+         if not dest or not pc then
+             kp.print("[cover] no object " .. w[3])
+-        elseif not kp or not kp.as then
+-            kp.print("[cover] kp.as missing — rebuild kphasor.dll")
++        elseif not nwscript or not nwscript.with_caller then
++            kp.print("[cover] nwscript.with_caller missing — rebuild kphasor.dll")
+         else
+-            kp.as(pc, function()
++            nwscript.with_caller(pc, function()
+                 q("JumpToObject", dest, 1)
+             end)
+             kp.print("[cover] jump " .. w[3])
+         end
+     elseif cmd == "fade0" then
+         q("SetGlobalFadeIn", 0.0, 0.0, 0.0, 0.0, 0.0)
+         kp.print("[cover] fade in 0")
+     elseif cmd == "module" and w[3] then
+         q("StartNewModule", w[3])
+         kp.print("[cover] module " .. w[3])
+diff --git a/scripts/examples/cursed/10_rancor_roulette.lua b/scripts/examples/cursed/10_rancor_roulette.lua
+index 8d9a722..fa13d41 100644
+--- a/scripts/examples/cursed/10_rancor_roulette.lua
++++ b/scripts/examples/cursed/10_rancor_roulette.lua
+@@ -116,22 +116,22 @@ function cursed_apply(timer_id, fired, data)
+   if not pc or not yes(q("GetIsObjectValid", id)) or yes(q("GetIsDead", id)) then return false end
+   done[id] = true
+   local pick = ROULETTE[math.random(#ROULETTE)]
+   local who = norm(q("GetName", id))
+   local disguise = q("EffectDisguise", pick.row)
+   local puff = q("EffectVisualEffect", VFX_WHIRLWIND)
+   if disguise then q("ApplyEffectToObject", DURATION_PERMANENT, disguise, id, 0.0) end
+   if puff then q("ApplyEffectToObject", 0, puff, id, 0.0) end
+   count = count + 1
+   q("SetLocalNumber", pc, COUNTER_SLOT, count)
+-  if kp and kp.as then
+-    kp.as(id, function() q("SpeakString", "What have you done to me?!", 0) end)
++  if nwscript and nwscript.with_caller then
++    nwscript.with_caller(id, function() q("SpeakString", "What have you done to me?!", 0) end)
+   end
+   kp.print(("[cursed:roulette] %s -> %s (#%d)"):format(who, pick.name, count))
+   return false
+ end
+ 
+ -- Called from hooks: filter cheaply, then hand the work to a timer.
+ local function curse(id)
+   if done[id] or queued[id] then return end
+   local pc = q("GetFirstPC")
+   if not pc or id == pc or not yes(q("GetIsObjectValid", id)) then return end
+diff --git a/scripts/examples/cursed/20_fus_ro_dah.lua b/scripts/examples/cursed/20_fus_ro_dah.lua
+index bad399c..6881fb3 100644
+--- a/scripts/examples/cursed/20_fus_ro_dah.lua
++++ b/scripts/examples/cursed/20_fus_ro_dah.lua
+@@ -114,17 +114,17 @@ function OnCreatureAttacked(creature, attacker, relevant)
+   if pushes % BIG_EVERY == 0 then
+     local flung = 0
+     local area = q("GetArea", pc)
+     local o = q("GetFirstObjectInArea", area, 1)
+     while o and yes(q("GetIsObjectValid", o)) do
+       if o ~= creature and dist(pc, o) <= BIG_RADIUS and fling(o, pc) then
+         flung = flung + 1
+       end
+       o = q("GetNextObjectInArea", area, 1)
+     end
+-    if kp and kp.as then
+-      kp.as(pc, function() q("SpeakString", "FUS RO DAH!", 1) end)
++    if nwscript and nwscript.with_caller then
++      nwscript.with_caller(pc, function() q("SpeakString", "FUS RO DAH!", 1) end)
+     end
+     flash(0.6, 0.8, 1.0, 0.2)
+     kp.print(("[cursed:shout] FUS RO DAH: %d flung"):format(flung))
+   end
+ end
+diff --git a/scripts/examples/cursed/30_necromancer.lua b/scripts/examples/cursed/30_necromancer.lua
+index dde6d12..b7c87a7 100644
+--- a/scripts/examples/cursed/30_necromancer.lua
++++ b/scripts/examples/cursed/30_necromancer.lua
+@@ -109,22 +109,22 @@ function cursed_rise(timer_id, fired, data)
+   local look = q("EffectDisguise", MALAK)
+   local aura = q("EffectVisualEffect", VFX_DARK_LIGHTNING)
+   local hit = q("EffectVisualEffect", VFX_LIGHTNING_HIT)
+   if look then q("ApplyEffectToObject", DURATION_PERMANENT, look, reborn, 0.0) end
+   if aura then q("ApplyEffectToObject", DURATION_TEMPORARY, aura, reborn, 12.0) end
+   if hit then q("ApplyEffectToObject", 0, hit, reborn, 0.0) end
+   q("SetGlobalFadeOut", 0.0, 0.1, 0.5, 0.0, 0.7)
+   q("SetGlobalFadeIn", 0.15, 0.6, 0.0, 0.0, 0.0)
+   count = count + 1
+   q("SetLocalNumber", pc, COUNTER_SLOT, count)
+-  if kp and kp.as then
+-    kp.as(reborn, function()
++  if nwscript and nwscript.with_caller then
++    nwscript.with_caller(reborn, function()
+       q("SpeakString", "Death is only the beginning.", 1)
+       q("ActionAttack", pc, 0)
+     end)
+   end
+   kp.print(("[cursed:necro] %s rose as Malak (#%d): corpse %s -> %s"):format(
+     norm(q("GetName", id)), count, tostring(id), tostring(reborn)))
+   q("registertimer", 2500, "cursed_verify", { id = reborn })
+   return false
+ end
+ 
+diff --git a/scripts/examples/cursed/50_chaos_roulette.lua b/scripts/examples/cursed/50_chaos_roulette.lua
+index 1241ce0..0576050 100644
+--- a/scripts/examples/cursed/50_chaos_roulette.lua
++++ b/scripts/examples/cursed/50_chaos_roulette.lua
+@@ -106,35 +106,35 @@ local WHEEL = {
+       apply(0, q("EffectVisualEffect", VFX_PLASMA), who)
+     end },
+   { name = "second wind", run = function(who, pc)
+       apply(0, q("EffectHeal", 30), who)
+     end },
+   { name = "stun", run = function(who, pc)
+       apply(DURATION_TEMPORARY, q("EffectStunned"), who, 3.0)
+       apply(0, q("EffectVisualEffect", VFX_STUN), who)
+     end },
+   { name = "hot potato", run = function(who, pc)
+-      if who ~= pc and kp and kp.as then
++      if who ~= pc and nwscript and nwscript.with_caller then
+         local loc = q("GetLocation", pc)
+-        if loc then kp.as(who, function() q("JumpToLocation", loc) end) end
++        if loc then nwscript.with_caller(who, function() q("JumpToLocation", loc) end) end
+       end
+     end },
+ }
+ 
+ local spins = 0
+ 
+ function OnRunScript(script_name, object_id, has_object, relevant)
+   if not armed() then return end
+   if norm(script_name) ~= "k_def_combend01" then return end
+   local pc = q("GetFirstPC")
+   if not pc or not yes(q("GetIsObjectValid", object_id)) then return end
+   if yes(q("GetIsDead", object_id)) then return end
+   if object_id ~= pc and dist(pc, object_id) > RANGE then return end
+   local pick = WHEEL[math.random(#WHEEL)]
+   pick.run(object_id, pc)
+   spins = spins + 1
+   q("SetLocalNumber", pc, COUNTER_SLOT, spins)
+-  if kp and kp.as then
+-    kp.as(object_id, function() q("SpeakString", pick.name, 0) end)
++  if nwscript and nwscript.with_caller then
++    nwscript.with_caller(object_id, function() q("SpeakString", pick.name, 0) end)
+   end
+   kp.print(("[cursed:wheel] %s: %s (#%d)"):format(norm(q("GetName", object_id)), pick.name, spins))
+ end
+diff --git a/scripts/examples/cursed/60_rave.lua b/scripts/examples/cursed/60_rave.lua
+index dfda26e..8b39aa7 100644
+--- a/scripts/examples/cursed/60_rave.lua
++++ b/scripts/examples/cursed/60_rave.lua
+@@ -2,21 +2,21 @@
+ --
+ -- A beat timer strobes the screen through a colour cycle, kicks the battle
+ -- music on, and on every beat picks a creature that is not fighting and
+ -- makes it dance. Every fourth beat a plasma burst goes off on a random
+ -- creature, party included. The party does not dance: ClearAllActions on
+ -- the player would cancel whatever the route told them to do.
+ --
+ -- Mechanism: kp.registertimer with a repeating callback (return true to
+ -- re-arm). SetGlobalFadeOut/In with a colour is the strobe. Dancing is
+ -- ActionPlayAnimation(ANIMATION_LOOPING_DANCE / DANCE1) queued through
+--- kp.as, which is how a script makes another creature act. Nothing starts
++-- nwscript.with_caller, which is how a script makes another creature act. Nothing starts
+ -- until the player exists and is alive, so the script is inert on the main
+ -- menu and during loads.
+ --
+ -- Oracle lines: "[cursed:rave] beat n: <name> dances" / "[cursed:rave] beat n: plasma on <name>"
+ -- Counter: local number 7 on the PC == beats so far.
+ priority = 30
+ 
+ local BEAT_MS = 700
+ local COUNTER_SLOT = 7
+ local RANGE = 30.0          -- the whole area answers GetFirstObjectInArea; keep the party in frame
+@@ -76,23 +76,23 @@ function cursed_beat(timer_id, fired, data)
+ 
+   local all = creatures(pc)
+   if #all == 0 then return true end
+   local who = all[math.random(#all)]
+   local name = norm(q("GetName", who))
+   if beats % 4 == 0 then
+     local e = q("EffectVisualEffect", VFX_PLASMA)
+     if e then q("ApplyEffectToObject", 0, e, who, 0.0) end
+     kp.print(("[cursed:rave] beat %d: plasma on %s"):format(beats, name))
+   elseif not yes(q("GetIsInCombat", who)) and not yes(q("IsObjectPartyMember", who))
+-         and kp and kp.as then
++         and nwscript and nwscript.with_caller then
+     local anim = DANCE[math.random(#DANCE)]
+-    kp.as(who, function()
++    nwscript.with_caller(who, function()
+       q("ClearAllActions")
+       q("ActionPlayAnimation", anim, 1.0, 4.0)
+     end)
+     kp.print(("[cursed:rave] beat %d: %s dances"):format(beats, name))
+   end
+   return true
+ end
+ 
+ function OnTick(tick, relevant)
+   if armed then return end
+diff --git a/scripts/examples/cursed/70_doppelganger.lua b/scripts/examples/cursed/70_doppelganger.lua
+index df98bce..3361159 100644
+--- a/scripts/examples/cursed/70_doppelganger.lua
++++ b/scripts/examples/cursed/70_doppelganger.lua
+@@ -74,38 +74,38 @@ local count = 0
+ 
+ local function malak(pc)
+   if pc_cursed then return end
+   pc_cursed = true
+   local look = q("EffectDisguise", MALAK)
+   local aura = q("EffectVisualEffect", VFX_DARK_LIGHTNING)
+   if look then q("ApplyEffectToObject", DURATION_PERMANENT, look, pc, 0.0) end
+   if aura then q("ApplyEffectToObject", DURATION_TEMPORARY, aura, pc, 6.0) end
+   q("SetGlobalFadeOut", 0.0, 0.1, 0.4, 0.0, 0.0)
+   q("SetGlobalFadeIn", 0.1, 0.5, 0.0, 0.0, 0.0)
+-  if kp and kp.as then kp.as(pc, function() q("SpeakString", "I am the Dark Lord.", 1) end) end
++  if nwscript and nwscript.with_caller then nwscript.with_caller(pc, function() q("SpeakString", "I am the Dark Lord.", 1) end) end
+   kp.print("[cursed:mirror] you are Malak now")
+ end
+ 
+ local function copy(who, pc)
+   if copies[who] or who == pc then return end
+   if not yes(q("GetIsObjectValid", who)) or yes(q("GetIsDead", who)) then return end
+   if yes(q("IsObjectPartyMember", who)) then return end
+   local row = q("GetAppearanceType", pc)
+   if type(row) ~= "number" or row <= 0 then return end
+   copies[who] = true
+   local look = q("EffectDisguise", row)
+   local puff = q("EffectVisualEffect", VFX_WHIRLWIND)
+   if look then q("ApplyEffectToObject", DURATION_PERMANENT, look, who, 0.0) end
+   if puff then q("ApplyEffectToObject", 0, puff, who, 0.0) end
+   count = count + 1
+   q("SetLocalNumber", pc, COUNTER_SLOT, count)
+-  if kp and kp.as then kp.as(who, function() q("SpeakString", "I am you.", 0) end) end
++  if nwscript and nwscript.with_caller then nwscript.with_caller(who, function() q("SpeakString", "I am you.", 0) end) end
+   kp.print(("[cursed:mirror] %s wears your face (#%d)"):format(norm(q("GetName", who)), count))
+ end
+ 
+ function OnCreatureAttacked(creature, attacker, relevant)
+   if not armed() then return end
+   local pc = q("GetFirstPC")
+   if not pc then return end
+   if creature == pc then
+     malak(pc)
+     copy(attacker, pc)
+diff --git a/scripts/examples/cursed/80_loot_pinata.lua b/scripts/examples/cursed/80_loot_pinata.lua
+index fb5f2db..0511b42 100644
+--- a/scripts/examples/cursed/80_loot_pinata.lua
++++ b/scripts/examples/cursed/80_loot_pinata.lua
+@@ -93,21 +93,21 @@ local function pinata(corpse, pc)
+   count = count + 1
+   q("SetLocalNumber", pc, COUNTER_SLOT, count)
+   kp.print(("[cursed:pinata] %s burst: %d piles"):format(norm(q("GetName", corpse)), placed))
+ 
+   if count % 2 == 0 then
+     local loc = q("Location", { x = pos.x, y = pos.y, z = pos.z }, 0.0)
+     local liz = loc and q("CreateObject", OBJECT_TYPE_CREATURE, GIZKA, loc, 1)
+     if liz and yes(q("GetIsObjectValid", liz)) then
+       gizkas = gizkas + 1
+       q("ChangeToStandardFaction", liz, STANDARD_FACTION_HOSTILE_1)
+-      if kp and kp.as then kp.as(liz, function() q("ActionAttack", pc, 0) end) end
++      if nwscript and nwscript.with_caller then nwscript.with_caller(liz, function() q("ActionAttack", pc, 0) end) end
+       kp.print(("[cursed:pinata] gizka released (#%d)"):format(gizkas))
+     end
+   end
+ end
+ 
+ function OnRunScript(script_name, object_id, has_object, relevant)
+   if not armed() then return end
+   local s = norm(script_name)
+   if not is_death_script(s) then return end
+   local pc = q("GetFirstPC")
+diff --git a/scripts/examples/cursed/README.md b/scripts/examples/cursed/README.md
+index 59eb5a3..055bebb 100644
+--- a/scripts/examples/cursed/README.md
++++ b/scripts/examples/cursed/README.md
+@@ -35,21 +35,21 @@ Every script uses the same skeleton as `scripts/examples/showcase/`:
+   visible to them, engine state is.
+ 
+ Things the event layer forced (see `docs/user/api-status.md`):
+ 
+ - `OnCreatureDeath`, `OnCreatureEndCombatRound`, `OnCreatureSpawn` are dead
+   names. Death and end-of-round are caught with `OnRunScript` by script name
+   (`k_def_death01` / `*dead*` / `*death*` and `k_def_combend01`); the script
+   runs on the corpse, so `object_id` is the creature.
+ - `DelayCommand` and `AssignCommand` are not bound. Delays are
+   `kp.registertimer(ms, "global_callback_name", data)` (return `true` to
+-  repeat); acting as another creature is `kp.as(obj, function() ... end)`.
++  repeat); acting as another creature is `nwscript.with_caller(obj, function() ... end)`.
+ - Screen flashes are `SetGlobalFadeOut(0, 0.08, r, g, b)` then
+   `SetGlobalFadeIn(hold, 0.35)`. There is no other full-screen tint routine.
+ - `EffectDisguise(row)` takes an `appearance.2da` row. Useful rows: 21 Malak,
+   22 Revan, 80 rancor, 77 krayt dragon, 69 gizka.
+ - `CreateObject(OBJECT_TYPE_ITEM=2, "g_i_credits00N", loc)` puts an item on
+   the floor; global creature templates like `g_gizka01` come from
+   `templates.bif`, so they spawn in any module.
+ 
+ ## Routes and recordings
+ 
+diff --git a/scripts/examples/harness/110_loot_container.lua b/scripts/examples/harness/110_loot_container.lua
+index 32a3a60..3f02ed9 100644
+--- a/scripts/examples/harness/110_loot_container.lua
++++ b/scripts/examples/harness/110_loot_container.lua
+@@ -26,15 +26,15 @@ while nwscript.call('GetIsObjectValid',o) == 1 do
+   o = nwscript.call('GetNextObjectInArea',area, 64)
+ end
+ if best == nil then return { taken = 0, reason = "no stocked placeable tagged " .. TAG } end
+ 
+ local items = {}
+ local it = nwscript.call('GetFirstItemInInventory',best)
+ while nwscript.call('GetIsObjectValid',it) == 1 do
+   items[#items + 1] = it
+   it = nwscript.call('GetNextItemInInventory',best)
+ end
+-kp.as(pc, function()
++nwscript.with_caller(pc, function()
+   nwscript.call('ClearAllActions')
+   for _, i in ipairs(items) do nwscript.call('ActionTakeItem',i, best) end
+ end)
+ return { container = best, dist = best_d, taken = #items }
+diff --git a/scripts/examples/harness/30_move_to.lua b/scripts/examples/harness/30_move_to.lua
+index f06b07f..1197bb6 100644
+--- a/scripts/examples/harness/30_move_to.lua
++++ b/scripts/examples/harness/30_move_to.lua
+@@ -7,24 +7,24 @@
+ 
+ local TARGET_TAG = "end_door05"   -- set to nil to use the OFFSET move instead
+ local RANGE = 1.5                 -- stop this far from the object
+ local OFFSET = { x = -3.0, y = 0.0, z = 0.0 }
+ 
+ local pc = nwscript.call('GetFirstPC')
+ 
+ if TARGET_TAG then
+   local t = nwscript.call('GetObjectByTag',TARGET_TAG, 0)
+   if nwscript.call('GetIsObjectValid',t) ~= 1 then error("no object tagged " .. TARGET_TAG) end
+-  kp.as(pc, function()
++  nwscript.with_caller(pc, function()
+     nwscript.call('ClearAllActions')
+     nwscript.call('ActionMoveToObject',t, 1, RANGE)     -- 1 == run
+   end)
+   return { target = TARGET_TAG, dist = nwscript.call('GetDistanceBetween',pc, t) }
+ end
+ 
+ local p = nwscript.call('GetPosition',pc)
+ local there = nwscript.call('Location',nwscript.call('Vector',p.x + OFFSET.x, p.y + OFFSET.y, p.z + OFFSET.z), 0.0)
+-kp.as(pc, function()
++nwscript.with_caller(pc, function()
+   nwscript.call('ClearAllActions')
+   nwscript.call('ActionMoveToLocation',there, 1)
+ end)
+ return { from = { x = p.x, y = p.y, z = p.z } }
+diff --git a/scripts/examples/harness/40_attack_nearest.lua b/scripts/examples/harness/40_attack_nearest.lua
+index a139d4c..d0f0ed8 100644
+--- a/scripts/examples/harness/40_attack_nearest.lua
++++ b/scripts/examples/harness/40_attack_nearest.lua
+@@ -24,15 +24,15 @@ while nwscript.call('GetIsObjectValid',c) == 1 do
+     if d < best_d then best, best_d = c, d end
+   end
+   c = nwscript.call('GetNextObjectInArea',area, 1)
+ end
+ 
+ if best == nil then return { target = nil, reason = "no live hostile in radius" } end
+ if act == 3 or act == 39 then
+   return { target = clean(nwscript.call('GetTag',best)), dist = best_d, reason = "already engaged", action = act }
+ end
+ 
+-kp.as(pc, function()
++nwscript.with_caller(pc, function()
+   nwscript.call('ClearAllActions')
+   nwscript.call('ActionAttack',best, 0)      -- 0 == no combat feat
+ end)
+ return { target = clean(nwscript.call('GetTag',best)), id = best, hp = nwscript.call('GetCurrentHitPoints',best), dist = best_d, queued = true }
+diff --git a/scripts/examples/harness/50_doors.lua b/scripts/examples/harness/50_doors.lua
+index 6b0db03..dee48e4 100644
+--- a/scripts/examples/harness/50_doors.lua
++++ b/scripts/examples/harness/50_doors.lua
+@@ -27,14 +27,14 @@ local info = {
+   tag = TAG, id = d,
+   open = nwscript.call('GetIsOpen',d),
+   locked = nwscript.call('GetLocked',d),
+   key_required = nwscript.call('GetLockKeyRequired',d),
+   plot = nwscript.call('GetPlotFlag',d),
+   pc_can_open = nwscript.call('GetIsDoorActionPossible',d, 0),   -- 0 == DOOR_ACTION_OPEN
+   dist = nwscript.call('GetDistanceBetween',pc, d),
+ }
+ 
+ if OPEN and info.open == 0 then
+-  kp.as(d, function() nwscript.call('ActionOpenDoor',d) end)
++  nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor',d) end)
+   info.queued = true
+ end
+ return info
+diff --git a/scripts/examples/harness/README.md b/scripts/examples/harness/README.md
+index 8969d15..3bcd752 100644
+--- a/scripts/examples/harness/README.md
++++ b/scripts/examples/harness/README.md
+@@ -19,36 +19,36 @@ Or from a route file / `pioneer step`:
+ {"do": "lua", "code": "<one-line chunk>", "timeout": 20}
+ ```
+ 
+ A chunk returns a value; tables come back as JSON under `values[0]`.
+ 
+ ## How the API is shaped
+ 
+ - `nwscript.call(name, ...)` reaches NWScript routines with the same argument order as
+   `nwscript.nss` (K1). Object ids are plain integers. Strings from the engine
+   carry a trailing `\0`; strip it with `s:gsub("%z","")` before comparing.
+-- `kp.as(obj, function() ... end)` is `AssignCommand`: the closure runs with
++- `nwscript.with_caller(obj, function() ... end)` is `AssignCommand`: the closure runs with
+   `obj` as `OBJECT_SELF`, so `Action*` calls inside it queue on `obj`. Outside
+-  `kp.as`, `OBJECT_SELF` is not the PC, and `Action*` calls go nowhere.
++  `nwscript.with_caller`, `OBJECT_SELF` is not the PC, and `Action*` calls go nowhere.
+ - Nothing here writes engine memory. State changes go through the action
+   queue or NWScript setters (`SetLocked`, `SetCommandable`, ...).
+ 
+ ## Pitfalls seen live
+ 
+ | Call | What happens | Use instead |
+ |---|---|---|
+-| `nwscript.call('AssignCommand', ...)` | action-closure error | `kp.as(obj, fn)` |
++| `nwscript.call('AssignCommand', ...)` | action-closure error | `nwscript.with_caller(obj, fn)` |
+ | `nwscript.call('Location', area, vec, f)` | "takes at most 2 arguments" | `nwscript.call('Location', vec, facing)` |
+ | `nwscript.call('GetUserActionsPending', pc)` | "takes at most 0 arguments" | `nwscript.call('GetCurrentAction', pc)` |
+ | `nwscript.call('GetLockKeyTag', d)` | string return unsupported | `nwscript.call('GetLockKeyRequired', d)` |
+ | `GetUseableFlag`, `GetPartyLeader`, `IsInConversation`, `SetPauseState` | unknown routine | see the snippets |
+-| `GetIsDoorActionPossible(d, 0) == 0` on a plot door | PC cannot open it | `kp.as(d, function() nwscript.call('ActionOpenDoor', d) end)` |
++| `GetIsDoorActionPossible(d, 0) == 0` on a plot door | PC cannot open it | `nwscript.with_caller(d, function() nwscript.call('ActionOpenDoor', d) end)` |
+ 
+ ## Action codes (`GetCurrentAction`)
+ 
+ `65534` idle, `0` move to point, `3` attack object, `7` dialog object,
+ `38` follow leader (companion AI re-asserts this every heartbeat),
+ `39` in a combat round.
+ 
+ ## Cutscenes and scripts
+ 
+ - A Skippable cinematic ends entirely on `dialog_skip` (that is the Escape
+diff --git a/scripts/examples/multiplayer/10_avatar_sync.lua b/scripts/examples/multiplayer/10_avatar_sync.lua
+index b21b5f9..f2c3f1a 100644
+--- a/scripts/examples/multiplayer/10_avatar_sync.lua
++++ b/scripts/examples/multiplayer/10_avatar_sync.lua
+@@ -550,22 +550,22 @@ local function apply_peer_state(p)
+         local dist = 0
+         if p.applied_x then
+             local dx, dy = p.x - p.applied_x, p.y - p.applied_y
+             dist = math.sqrt(dx * dx + dy * dy)
+         end
+         q("CutsceneMove", id, pos, dist > MOVE_RUN_THRESHOLD and 1 or 0)
+         p.applied_x, p.applied_y, p.applied_z = p.x, p.y, p.z
+     end
+ 
+     if p.applied_facing == nil or math.abs(p.facing - p.applied_facing) > 1.0 then
+-        if kp and kp.as then
+-            pcall(kp.as, id, function() q("SetFacing", p.facing) end)
++        if nwscript and nwscript.with_caller then
++            pcall(nwscript.with_caller, id, function() q("SetFacing", p.facing) end)
+         end
+         p.applied_facing = p.facing
+     end
+ end
+ 
+ local function reconcile(my_area)
+     local now = now_ms()
+     for cid, p in pairs(peers) do
+         if now - p.last_seen_ms > PEER_TIMEOUT_MS then
+             despawn_peer(p)
+diff --git a/scripts/harness/kpharness/scenario.py b/scripts/harness/kpharness/scenario.py
+index 07e28bb..3242e03 100644
+--- a/scripts/harness/kpharness/scenario.py
++++ b/scripts/harness/kpharness/scenario.py
+@@ -892,21 +892,21 @@ class ScenarioRunner:
+             return state
+ 
+         # Movement and use must be separate engine drains.  A combined closure
+         # can evaluate ActionInteractObject before ActionMoveToObject reaches
+         # its range, leaving both actions ineffective on the real K1 queue.
+         move_lua = ("local pc=nwscript.call(\"GetFirstPC\"); local placeable=%d; "
+                     "if nwscript.call(\"GetIsObjectValid\",placeable)~=1 then error('placeable vanished') end; "
+                     "if nwscript.call(\"GetTag\",placeable):gsub('%%z+$','')~=%s or nwscript.call(\"GetObjectType\",placeable)~=64 then error('placeable identity changed') end; "
+                     "local p=nwscript.call(\"GetPosition\",placeable); if math.sqrt((p.x-(%.9g))^2+(p.y-(%.9g))^2+(p.z-(%.9g))^2)>%.9g then error('placeable position changed') end; "
+                     "if (nwscript.call(\"GetIsOpen\",placeable)==1)~=%s then error('placeable pre-open state changed') end; "
+-                    "kp.as(pc,function() nwscript.call(\"ActionMoveToObject\",placeable,1,%.9g) end)"
++                    "nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToObject\",placeable,1,%.9g) end)"
+                     % (target_id, tag, float(position[0]), float(position[1]), float(position[2]),
+                        tolerance, pre_open_lua, interaction_range))
+         # Queueing the move is idempotent: re-issuing it when the PC already
+         # stands in range is a no-op the engine discards, so a bark that clears
+         # the action queue costs one requeue rather than a failed step.
+         self.ch.lua(move_lua, timeout=remaining("movement action"))
+ 
+         reached_range = False
+         while time.monotonic() < deadline:
+             state = cheap_poll("move")
+@@ -936,21 +936,21 @@ class ScenarioRunner:
+         # range proves when interaction may be issued; this prevents an ID
+         # reuse between that observation and the queued ActionInteractObject.
+         interact_lua = ("local pc=nwscript.call(\"GetFirstPC\"); local placeable=%d; "
+                         "if nwscript.call(\"GetIsObjectValid\",placeable)~=1 then error('placeable vanished') end; "
+                         "if nwscript.call(\"GetTag\",placeable):gsub('%%z+$','')~=%s or nwscript.call(\"GetObjectType\",placeable)~=64 then error('placeable identity changed') end; "
+                         "local p=nwscript.call(\"GetPosition\",placeable); if math.sqrt((p.x-(%.9g))^2+(p.y-(%.9g))^2+(p.z-(%.9g))^2)>%.9g then error('placeable position changed') end; "
+                         "if (nwscript.call(\"GetIsOpen\",placeable)==1)~=%s then error('placeable pre-open state changed') end; "
+                         "if nwscript.call(\"GetIsInCombat\",pc)~=0 then error('PC entered combat before placeable interaction') end; "
+                         "if nwscript.call(\"GetCurrentAction\",pc)~=0 and nwscript.call(\"GetCurrentAction\",pc)~=65534 then error('PC is not idle before placeable interaction') end; "
+                         "if nwscript.call(\"GetDistanceBetween2D\",pc,placeable)>%.9g then error('PC left declared interaction range') end; "
+-                        "kp.as(pc,function() nwscript.call(\"ActionInteractObject\",placeable) end)"
++                        "nwscript.with_caller(pc,function() nwscript.call(\"ActionInteractObject\",placeable) end)"
+                         % (target_id, tag, float(position[0]), float(position[1]), float(position[2]),
+                            tolerance, pre_open_lua, interaction_range))
+         self.ch.lua(interact_lua, timeout=remaining("interaction action"))
+ 
+         interact_queued = True
+         while time.monotonic() < deadline:
+             state = cheap_poll("interaction")
+             if self._answer_authored_bark(state):
+                 # The conversation discarded the queued interaction with the
+                 # rest of the action queue; it has to be asked for again.
+@@ -1048,21 +1048,21 @@ class ScenarioRunner:
+         tag = json.dumps(str(r["tag"]).rstrip("\0"))
+         # Revalidate the resolved identity, type and authored placement just
+         # before queueing.  An object-id reuse must never operate a new object.
+         open_lua = ("local pc=nwscript.call(\"GetFirstPC\"); local door=%d; "
+                     "if nwscript.call(\"GetIsObjectValid\",door)~=1 then error('door vanished') end; "
+                     "if nwscript.call(\"GetTag\",door):gsub('%%z+$','')~=%s or nwscript.call(\"GetObjectType\",door)~=%d then error('door identity changed') end; "
+                     # Parenthesize authored coordinates: a negative Z must
+                     # not serialize as `p.z--1.3`, which Lua treats as a line
+                     # comment and therefore reports as an EOF syntax error.
+                     "local p=nwscript.call(\"GetPosition\",door); if math.sqrt((p.x-(%.9g))^2+(p.y-(%.9g))^2+(p.z-(%.9g))^2)>%.9g then error('door position changed') end; "
+-                    "kp.as(pc,function() nwscript.call(\"ActionMoveToObject\",door,1,0.75); nwscript.call(\"ActionOpenDoor\",door) end)"
++                    "nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToObject\",door,1,0.75); nwscript.call(\"ActionOpenDoor\",door) end)"
+                     % (target_id, tag, int(r.get("type", 8)), float(position[0]), float(position[1]), float(position[2]), tolerance))
+         self.ch.lua(open_lua, timeout=min(self._timeout(step), 30.0))
+         deadline = time.monotonic() + self._timeout(step)
+         last_world: Optional[Dict[str, Any]] = None
+         moved = False
+         destination_tolerance = float(r.get("destination_tolerance", 0.75))
+         while time.monotonic() < deadline:
+             state = self.ch.state()
+             verdict = self.watchdog.check(state)
+             if verdict is not None:
+@@ -1081,21 +1081,21 @@ class ScenarioRunner:
+                     current_target = World.revalidate_route_object(
+                         current, target, module=str(r["module"]), tag=str(r["tag"]),
+                         object_type=int(r.get("type", 8)), position=position,
+                         tolerance=tolerance,
+                         occurrence=(int(r["occurrence"]) if "occurrence" in r else None))
+                 except World.WorldProbeError as e:
+                     raise _StepFailure(f"door target identity changed after action queue: {e}") from e
+                 if not moved and World.door_open_unlocked(current, current_target):
+                     # Only an observed open selected instance may authorize the
+                     # far-side ordinary movement action.
+-                    self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local where=nwscript.call(\"Location\",{x=%.9g,y=%.9g,z=%.9g},0); kp.as(pc,function() nwscript.call(\"ActionMoveToLocation\",where,1) end)" % (x, y, z),
++                    self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local where=nwscript.call(\"Location\",{x=%.9g,y=%.9g,z=%.9g},0); nwscript.with_caller(pc,function() nwscript.call(\"ActionMoveToLocation\",where,1) end)" % (x, y, z),
+                                 timeout=min(10.0, max(1.0, deadline - time.monotonic())))
+                     moved = True
+                 pc = current.get("pc", {}).get("position", {})
+                 at_destination = all(isinstance(pc.get(axis), (int, float))
+                                      and abs(float(pc[axis]) - wanted) <= destination_tolerance
+                                      for axis, wanted in zip("xyz", (x, y, z)))
+                 if (moved and World.door_open_unlocked(current, current_target) and at_destination
+                         and World.stable_gameplay(state, current)):
+                     return (f"door id={target_id} open/unlocked; PC at resource-backed far side "
+                             f"({x:g},{y:g},{z:g}) within {destination_tolerance:g}; gameplay idle/noncombat/no-dialog")
+@@ -1314,21 +1314,21 @@ class ScenarioRunner:
+         stuck there stays GetIsOpen==0 forever and every later open is a no-op,
+         so if GetIsOpen is still 0 about ``_DOOR_COMMIT_AFTER`` seconds after
+         the self-command this issues ``door_commit_open`` once, which runs
+         that second phase on the door, and keeps polling.
+         """
+         r = step.raw
+         tag = str(r["tag"])
+         budget = float(r.get("timeout", self._timeout(step)))
+         found = self.ch.lua(
+             "local d=nwscript.call(\"GetObjectByTag\",%s,0); if nwscript.call(\"GetIsObjectValid\",d)~=1 then "
+-            "error('door tag not found') end; kp.as(d,function() nwscript.call(\"ActionOpenDoor\",d) end); return d"
++            "error('door tag not found') end; nwscript.with_caller(d,function() nwscript.call(\"ActionOpenDoor\",d) end); return d"
+             % json.dumps(tag), timeout=min(30.0, budget))
+         values = found.get("values") if isinstance(found, dict) else None
+         if not isinstance(values, list) or not values:
+             raise _StepFailure(f"scripted_door_open: no live door tagged {tag!r}")
+         issued = time.monotonic()
+         deadline = issued + budget
+         committed = False
+         while time.monotonic() < deadline:
+             check = self.ch.lua(
+                 "local d=nwscript.call(\"GetObjectByTag\",%s,0); return nwscript.call(\"GetIsObjectValid\",d)==1 and nwscript.call(\"GetIsOpen\",d)==1"
+@@ -1617,21 +1617,21 @@ class ScenarioRunner:
+                         f"{until_global}={last_global} < {until_value}", state=state)
+             else:
+                 empty_since = None
+                 nearest = int(hostiles[0]["id"])
+                 if nearest != target or act in idle_actions:
+                     target = nearest
+                     self.log(f"clear_room: attack {seen.get(nearest, '')!r} id={nearest} "
+                              f"dist={float(hostiles[0].get('dist', 0.0)):.1f} act={act}")
+                     self.ch.lua(
+                         "local pc=nwscript.call(\"GetFirstPC\"); local t=%d; "
+-                        "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)"
++                        "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)"
+                         % nearest, timeout=min(30.0, max(1.0, deadline - time.monotonic())))
+             self._on_poll(state)
+             time.sleep(0.5)
+         raise _StepFailure(summary() + " but the ceiling passed before the room was clear",
+                           state=self.ch.last_state)
+ 
+     def _move_to(self, step: Step) -> str:
+         """Walk the PC to an object (``tag``) or a point (``position``).
+ 
+         State-gated: the step ends when the observed distance to the target
+@@ -1661,36 +1661,36 @@ class ScenarioRunner:
+             rng = float(r.get("range", 1.5))
+             resolve = ("local t=nwscript.call(\"GetObjectByTag\",%s,0); "
+                        "if nwscript.call(\"GetIsObjectValid\",t)~=1 then return {missing=1} end; "
+                        % json.dumps(tag))
+             probe_lua = (
+                 "local pc=nwscript.call(\"GetFirstPC\"); " + resolve +
+                 "local p=nwscript.call(\"GetPosition\",pc); " + _NEAREST_HOSTILE_LUA +
+                 "return {dist=nwscript.call(\"GetDistanceBetween\",pc,t),act=nwscript.call(\"GetCurrentAction\",pc),combat=nwscript.call(\"GetIsInCombat\",pc),hd=hd,hid=hid,x=p.x,y=p.y}")
+             move_lua = (
+                 "local pc=nwscript.call(\"GetFirstPC\"); " + resolve +
+-                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,%d,%s) end); "
++                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,%d,%s) end); "
+                 "return {issued=1}" % (run, json.dumps(rng)))
+         else:
+             if not isinstance(position, (list, tuple)) or len(position) != 3:
+                 raise _StepFailure("move_to: position must be [x, y, z]")
+             x, y, z = (json.dumps(float(v)) for v in position)
+             label = f"({x},{y},{z})"
+             rng = float(r.get("range", 0.75))
+             # Parenthesise the literals: "p.z--1.2" would open a Lua comment.
+             probe_lua = (
+                 "local pc=nwscript.call(\"GetFirstPC\"); local p=nwscript.call(\"GetPosition\",pc); "
+                 "local dx,dy,dz=p.x-(%s),p.y-(%s),p.z-(%s); " % (x, y, z) + _NEAREST_HOSTILE_LUA +
+                 "return {dist=math.sqrt(dx*dx+dy*dy+dz*dz),act=nwscript.call(\"GetCurrentAction\",pc),combat=nwscript.call(\"GetIsInCombat\",pc),hd=hd,hid=hid,x=p.x,y=p.y}")
+             move_lua = (
+                 "local pc=nwscript.call(\"GetFirstPC\"); "
+-                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); "
++                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); "
+                 "nwscript.call(\"ActionMoveToLocation\",nwscript.call(\"Location\",nwscript.call(\"Vector\",%s,%s,%s),0.0),%d) end); "
+                 "return {issued=1}" % (x, y, z, run))
+         drv = _DialogDriver(grace=float(self.sc.settings.get("dialog_grace", 10.0)))
+         started = time.monotonic()
+         issues = 0
+         best: Optional[float] = None
+         mark: Optional[float] = None        # distance at the last progress mark
+         mark_at = started
+         stall_reissued = False
+         idle_reissued = False
+@@ -1780,21 +1780,21 @@ class ScenarioRunner:
+                 issue("idle short of target, re-issue", dist, act)
+             elif now - mark_at >= stall and tick - mark_tick >= stall_ticks:
+                 hd = float(found.get("hd", 999.0))
+                 hid = int(found.get("hid") or 0)
+                 if hid and hd <= 12.0:
+                     # A hostile standing in the corridor blocks the path
+                     # without engaging (GetIsInCombat stays 0). Fight it:
+                     # combat takes the queue, and the walk resumes after.
+                     self.log(f"move_to {label}: blocked with hostile id={hid} at {hd:.1f}, attacking")
+                     self.ch.lua("local pc=nwscript.call(\"GetFirstPC\"); local t=%d; if nwscript.call(\"GetIsObjectValid\",t)==1 then "
+-                                "kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end) end; return 1"
++                                "nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end) end; return 1"
+                                 % hid, timeout=budget())
+                     fought = True
+                     mark, mark_at = dist, now
+                 elif stall_reissued:
+                     raise _StepFailure(
+                         f"move_to {label}: no progress for {stall:g}s at dist {dist:.1f} (blocked?)",
+                         state=state)
+                 else:
+                     stall_reissued = True
+                     issue(f"no progress for {stall:g}s, re-issue", dist, act)
+diff --git a/scripts/harness/scenarios/k1_dialog_walk.toml b/scripts/harness/scenarios/k1_dialog_walk.toml
+index 335fe52..b858152 100644
+--- a/scripts/harness/scenarios/k1_dialog_walk.toml
++++ b/scripts/harness/scenarios/k1_dialog_walk.toml
+@@ -19,17 +19,17 @@ wait = "phase"
+ equals = "gameplay"
+ timeout = 300
+ 
+ [[step]]
+ do = "walk_dialog"
+ save = "000001 - AUTOSAVE"
+ # end_trask is authored at (22.8836937,20.6108017,-1.2750006) in
+ # end_m01aa.mod/m01aa.git.  Queue the normal approach action first: a direct
+ # conversation request from the autosave PC at (10.55,15.70,-1.09) never
+ # enters dialog because the actor is out of interaction range.
+-start = "local trask=nwscript.call('GetObjectByTag','end_trask', 0); kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionMoveToObject',trask,1,0.75); nwscript.call('ActionStartConversation',trask, '') end)"
++start = "local trask=nwscript.call('GetObjectByTag','end_trask', 0); nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionMoveToObject',trask,1,0.75); nwscript.call('ActionStartConversation',trask, '') end)"
+ max_replies = 9
+ timeout = 90
+ 
+ [[step]]
+ screenshot = true
+ label = "after_walk"
+diff --git a/scripts/harness/scenarios/k1_endar_room3_onward.toml b/scripts/harness/scenarios/k1_endar_room3_onward.toml
+index 53ce99f..2bb0767 100644
+--- a/scripts/harness/scenarios/k1_endar_room3_onward.toml
++++ b/scripts/harness/scenarios/k1_endar_room3_onward.toml
+@@ -54,33 +54,33 @@ timeout = 120
+ # path; walk to the corridor beside each and let ActionInteractObject close in.
+ [[step]]
+ do = "move_to"
+ position = [43.0, 55.7, -1.275]
+ range = 1.0
+ timeout = 120
+ 
+ [[step]]
+ label = "take everything from the nearest stocked metalbox (ActionTakeItem; no container GUI needed)"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
++code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+ timeout = 20
+ 
+ [[step]]
+ do = "move_to"
+ position = [47.3, 60.9, -1.275]
+ range = 1.0
+ timeout = 120
+ 
+ [[step]]
+ label = "take everything from the nearest stocked footlker (ActionTakeItem; no container GUI needed)"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
++code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+ timeout = 20
+ 
+ [[step]]
+ do = "assert_lua"
+ code = "local pc=nwscript.call('GetFirstPC'); local a,s=false,false; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do local t=nwscript.call('GetTag',it):gsub('%z',''); if t=='g_a_class4001' then a=true end; if t=='g_w_lngswrd01' then s=true end; it=nwscript.call('GetNextItemInInventory',pc) end; return a and s"
+ equals = true
+ poll = true
+ timeout = 20
+ 
+ # INVENTORY_SLOT_BODY = 1, INVENTORY_SLOT_RIGHTWEAPON = 4.
+@@ -325,21 +325,21 @@ timeout = 120
+ [[step]]
+ do = "speed"
+ scale = 1.0
+ 
+ # No door readback here: the OnOpen cutscene takes the door (and closes it
+ # behind Trask) before it ever reads open, and its VO-gated nodes need the
+ # dialog ladder driving from the first moment. Gate on the cutscene starting.
+ [[step]]
+ label = "open end_door19: Trask holds off Bandon"
+ do = "lua"
+-code = "local d=nwscript.call('GetObjectByTag','end_door19',0); kp.as(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
++code = "local d=nwscript.call('GetObjectByTag','end_door19',0); nwscript.with_caller(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
+ timeout = 20
+ 
+ # The cutscene raises the XP summary and a tutorial popup as it begins;
+ # advance_dialog dismisses those and drives the VO-gated nodes. `hold` keeps
+ # it driving through the brief gameplay flash before the conversation opens.
+ [[step]]
+ do = "advance_dialog"
+ until = "gameplay"
+ hold = 8.0
+ timeout = 300
+diff --git a/scripts/harness/scenarios/k1_endar_starboard_to_taris.toml b/scripts/harness/scenarios/k1_endar_starboard_to_taris.toml
+index 6224eae..94b6caf 100644
+--- a/scripts/harness/scenarios/k1_endar_starboard_to_taris.toml
++++ b/scripts/harness/scenarios/k1_endar_starboard_to_taris.toml
+@@ -41,21 +41,21 @@ timeout = 180
+ # case-insensitive, the world probe is not.
+ [[step]]
+ do = "move_to"
+ tag = "footlker"
+ range = 2.0
+ timeout = 120
+ 
+ [[step]]
+ label = "open the footlocker"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "phase"
+ equals = "paused"
+ timeout = 30
+ 
+ [[step]]
+ do = "take_all_container"
+ timeout = 30
+@@ -76,21 +76,21 @@ timeout = 30
+ 
+ [[step]]
+ do = "move_to"
+ tag = "end_comp02"
+ range = 2.5
+ timeout = 120
+ 
+ [[step]]
+ label = "use the security console"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "dialog"
+ timeout = 30
+ 
+ [[step]]
+ do = "reply"
+ pick = "View starboard transport module."
+ timeout = 30
+@@ -167,21 +167,21 @@ timeout = 30
+ 
+ [[step]]
+ do = "move_to"
+ tag = "end_pod"
+ range = 2.5
+ timeout = 120
+ 
+ [[step]]
+ label = "use the escape pod"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "dialog"
+ timeout = 30
+ 
+ # The pod launch and STUNT_00's vision cutscene run at real time: at 16x the
+ # stunt's two scripted conversations (jc_00_vistaris, cut00_convers) restart
+ # faster than they can be ended, and a warp issued mid-conversation is held.
+ [[step]]
+diff --git a/scripts/harness/scenarios/k1_endar_trask_begin_diag.toml b/scripts/harness/scenarios/k1_endar_trask_begin_diag.toml
+index aaadf35..c81e80d 100644
+--- a/scripts/harness/scenarios/k1_endar_trask_begin_diag.toml
++++ b/scripts/harness/scenarios/k1_endar_trask_begin_diag.toml
+@@ -40,21 +40,21 @@ walkmesh_approach_face = 12
+ walkmesh_approach_centroid = [19.914662679036457, 20.194860458374023, -1.274999976158142]
+ walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ walkmesh_min_projection = 0.5
+ destination = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ destination_tolerance = 0.75
+ timeout = 45
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); local result=kp.as(t,function() return nwscript.call('BeginConversation','end_trask01',pc) end); return {before=before,result=result,after=state()}"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); local result=nwscript.with_caller(t,function() return nwscript.call('BeginConversation','end_trask01',pc) end); return {before=before,result=result,after=state()}"
+ 
+ [[step]]
+ do = "sleep"
+ seconds = 2
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+ code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)}"
+ 
+diff --git a/scripts/harness/scenarios/k1_endar_trask_opening.toml b/scripts/harness/scenarios/k1_endar_trask_opening.toml
+index e3e159e..9449a00 100644
+--- a/scripts/harness/scenarios/k1_endar_trask_opening.toml
++++ b/scripts/harness/scenarios/k1_endar_trask_opening.toml
+@@ -40,28 +40,28 @@ walkmesh_approach_face = 12
+ walkmesh_approach_centroid = [19.914662679036457, 20.194860458374023, -1.274999976158142]
+ walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ walkmesh_min_projection = 0.5
+ destination = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ destination_tolerance = 0.75
+ timeout = 45
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing after portal') end; kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing after portal') end; nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
+ 
+ [[step]]
+ do = "sleep"
+ seconds = 30
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; kp.as(pc,function() nwscript.call('ActionStartConversation',t,'') end); return {distance=d,pc=pc,trask=t}"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; nwscript.with_caller(pc,function() nwscript.call('ActionStartConversation',t,'') end); return {distance=d,pc=pc,trask=t}"
+ 
+ [[step]]
+ wait = "phase"
+ equals = "dialog"
+ timeout = 75
+ 
+ [[step]]
+ do = "quit"
+diff --git a/scripts/harness/scenarios/k1_endar_trask_range_diag.toml b/scripts/harness/scenarios/k1_endar_trask_range_diag.toml
+index 88c21a8..c4015d3 100644
+--- a/scripts/harness/scenarios/k1_endar_trask_range_diag.toml
++++ b/scripts/harness/scenarios/k1_endar_trask_range_diag.toml
+@@ -38,30 +38,30 @@ walkmesh_approach_face = 12
+ walkmesh_approach_centroid = [19.914662679036457, 20.194860458374023, -1.274999976158142]
+ walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ walkmesh_min_projection = 0.5
+ destination = [20.32586733500163, 21.70310910542806, -1.274999976158142]
+ destination_tolerance = 0.75
+ timeout = 45
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end)"
+ 
+ [[step]]
+ do = "sleep"
+ seconds = 30
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); kp.as(pc,function() nwscript.call('ActionStartConversation',t,'',0,0,1) end); return {distance=d,pc=pc,trask=t,before=before,queued=state()}"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); local d=nwscript.call('GetDistanceBetween',pc,t); if d>1.25 then error(string.format('Trask approach incomplete: %.3f',d)) end; local function state() return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)} end; local before=state(); nwscript.with_caller(pc,function() nwscript.call('ActionStartConversation',t,'',0,0,1) end); return {distance=d,pc=pc,trask=t,before=before,queued=state()}"
+ 
+ [[step]]
+ do = "sleep"
+ seconds = 2
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+ code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); return {active=nwscript.call('GetIsConversationActive'),pc_in=nwscript.call('GetIsInConversation',pc),trask_in=nwscript.call('GetIsInConversation',t),pc_action=nwscript.call('GetCurrentAction',pc),trask_action=nwscript.call('GetCurrentAction',t)}"
+ 
+diff --git a/scripts/harness/scenarios/k1_fresh_trask_quest.toml b/scripts/harness/scenarios/k1_fresh_trask_quest.toml
+index 0b7cbfa..ad89e2e 100644
+--- a/scripts/harness/scenarios/k1_fresh_trask_quest.toml
++++ b/scripts/harness/scenarios/k1_fresh_trask_quest.toml
+@@ -331,33 +331,33 @@ timeout = 120
+ # path; walk to the corridor beside each and let ActionInteractObject close in.
+ [[step]]
+ do = "move_to"
+ position = [43.0, 55.7, -1.275]
+ range = 1.0
+ timeout = 120
+ 
+ [[step]]
+ label = "take everything from the nearest stocked metalbox (ActionTakeItem; no container GUI needed)"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
++code = "local pc=nwscript.call('GetFirstPC'); local want='metalbox'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+ timeout = 20
+ 
+ [[step]]
+ do = "move_to"
+ position = [47.3, 60.9, -1.275]
+ range = 1.0
+ timeout = 120
+ 
+ [[step]]
+ label = "take everything from the nearest stocked footlker (ActionTakeItem; no container GUI needed)"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; kp.as(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
++code = "local pc=nwscript.call('GetFirstPC'); local want='footlker'; local area=nwscript.call('GetArea',pc); local best,bd=nil,1e9; local o=nwscript.call('GetFirstObjectInArea',area,64); while nwscript.call('GetIsObjectValid',o)==1 do if nwscript.call('GetTag',o):gsub('%z',''):lower()==want and nwscript.call('GetIsObjectValid',nwscript.call('GetFirstItemInInventory',o))==1 then local d=nwscript.call('GetDistanceBetween',pc,o); if d<bd then best,bd=o,d end end; o=nwscript.call('GetNextObjectInArea',area,64) end; if not best then return {taken=0} end; local items={}; local it=nwscript.call('GetFirstItemInInventory',best); while nwscript.call('GetIsObjectValid',it)==1 do items[#items+1]=it; it=nwscript.call('GetNextItemInInventory',best) end; nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); for _,i in ipairs(items) do nwscript.call('ActionTakeItem',i,best) end end); return {box=best, dist=bd, taken=#items}"
+ timeout = 20
+ 
+ [[step]]
+ do = "assert_lua"
+ code = "local pc=nwscript.call('GetFirstPC'); local a,s=false,false; local it=nwscript.call('GetFirstItemInInventory',pc); while nwscript.call('GetIsObjectValid',it)==1 do local t=nwscript.call('GetTag',it):gsub('%z',''); if t=='g_a_class4001' then a=true end; if t=='g_w_lngswrd01' then s=true end; it=nwscript.call('GetNextItemInInventory',pc) end; return a and s"
+ equals = true
+ poll = true
+ timeout = 20
+ 
+ # INVENTORY_SLOT_BODY = 1, INVENTORY_SLOT_RIGHTWEAPON = 4.
+@@ -602,21 +602,21 @@ timeout = 120
+ [[step]]
+ do = "speed"
+ scale = 1.0
+ 
+ # No door readback here: the OnOpen cutscene takes the door (and closes it
+ # behind Trask) before it ever reads open, and its VO-gated nodes need the
+ # dialog ladder driving from the first moment. Gate on the cutscene starting.
+ [[step]]
+ label = "open end_door19: Trask holds off Bandon"
+ do = "lua"
+-code = "local d=nwscript.call('GetObjectByTag','end_door19',0); kp.as(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
++code = "local d=nwscript.call('GetObjectByTag','end_door19',0); nwscript.with_caller(d,function() nwscript.call('ActionOpenDoor',d) end); return 1"
+ timeout = 20
+ 
+ # The cutscene raises the XP summary and a tutorial popup as it begins;
+ # advance_dialog dismisses those and drives the VO-gated nodes. `hold` keeps
+ # it driving through the brief gameplay flash before the conversation opens.
+ [[step]]
+ do = "advance_dialog"
+ until = "gameplay"
+ hold = 8.0
+ timeout = 300
+@@ -694,21 +694,21 @@ timeout = 180
+ # case-insensitive, the world probe is not.
+ [[step]]
+ do = "move_to"
+ tag = "footlker"
+ range = 2.0
+ timeout = 120
+ 
+ [[step]]
+ label = "open the footlocker"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local l=nwscript.call('GetObjectByTag','footlker',0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionInteractObject',l) end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "phase"
+ equals = "paused"
+ timeout = 30
+ 
+ [[step]]
+ do = "take_all_container"
+ timeout = 30
+@@ -729,21 +729,21 @@ timeout = 30
+ 
+ [[step]]
+ do = "move_to"
+ tag = "end_comp02"
+ range = 2.5
+ timeout = 120
+ 
+ [[step]]
+ label = "use the security console"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local comp=nwscript.call('GetObjectByTag',\"end_comp02\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',comp,\"end_securitycomp\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "dialog"
+ timeout = 30
+ 
+ [[step]]
+ do = "reply"
+ pick = "View starboard transport module."
+ timeout = 30
+@@ -820,21 +820,21 @@ timeout = 30
+ 
+ [[step]]
+ do = "move_to"
+ tag = "end_pod"
+ range = 2.5
+ timeout = 120
+ 
+ [[step]]
+ label = "use the escape pod"
+ do = "lua"
+-code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); kp.as(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
++code = "local pc=nwscript.call('GetFirstPC'); local pod=nwscript.call('GetObjectByTag',\"end_pod\",0); nwscript.with_caller(pc,function() nwscript.call('ClearAllActions'); nwscript.call('ActionStartConversation',pod,\"end_pod\",0,0,0,\"\",\"\",\"\",\"\",\"\",\"\") end); return 1"
+ timeout = 20
+ 
+ [[step]]
+ wait = "dialog"
+ timeout = 30
+ 
+ # The pod launch and STUNT_00's vision cutscene run at real time: at 16x the
+ # stunt's two scripted conversations (jc_00_vistaris, cut00_convers) restart
+ # faster than they can be ended, and a warp issued mid-conversation is held.
+ [[step]]
+diff --git a/scripts/harness/scenarios/k1_getfacing_diag.toml b/scripts/harness/scenarios/k1_getfacing_diag.toml
+index e9f3d72..6d0f558 100644
+--- a/scripts/harness/scenarios/k1_getfacing_diag.toml
++++ b/scripts/harness/scenarios/k1_getfacing_diag.toml
+@@ -11,14 +11,14 @@ do = "load_save"
+ dir = "000001 - AUTOSAVE"
+ 
+ [[step]]
+ wait = "phase"
+ equals = "gameplay"
+ timeout = 300
+ 
+ [[step]]
+ do = "lua"
+ timeout = 15
+-code = "local ok, err = pcall(nwscript.call, 'GetFacing', 71); local t = kp.last_routine_trace(); return {ok=ok, err=err, execute_called=t.execute_called, execute_status=t.execute_status, push_result_entered=t.push_result_entered, result_count=t.result_count, pop_bound=t.pop_bound, pop_attempted=t.pop_attempted, pop_status=t.pop_status}"
++code = "local ok, err = pcall(nwscript.call, 'GetFacing', 71); local t = nwscript.last_trace(); return {ok=ok, err=err, execute_called=t.execute_called, execute_status=t.execute_status, push_result_entered=t.push_result_entered, result_count=t.result_count, pop_bound=t.pop_bound, pop_attempted=t.pop_attempted, pop_status=t.pop_status}"
+ 
+ [[step]]
+ do = "quit"
+diff --git a/scripts/harness/scenarios/k1_softlock_detect.toml b/scripts/harness/scenarios/k1_softlock_detect.toml
+index 83ac933..7411f5c 100644
+--- a/scripts/harness/scenarios/k1_softlock_detect.toml
++++ b/scripts/harness/scenarios/k1_softlock_detect.toml
+@@ -30,21 +30,21 @@ wait = "phase"
+ equals = "gameplay"
+ timeout = 300
+ 
+ [[step]]
+ label = "lock the nearest door and walk to it"
+ do = "lua"
+ code = """
+ local pc = nwscript.call('GetFirstPC')
+ local door = nwscript.call('GetNearestObject',8, pc, 1)
+ nwscript.call('SetLocked',door, 1)
+-kp.as(pc, function() nwscript.call('ActionMoveToObject',door, 0, 1.0) end)
++nwscript.with_caller(pc, function() nwscript.call('ActionMoveToObject',door, 0, 1.0) end)
+ return nwscript.call('GetTag',door)
+ """
+ 
+ [[step]]
+ label = "the next area must not arrive: expect softlock"
+ wait = "module"
+ equals = "end_m01ab"
+ timeout = 180
+ progress = true
+ expect_verdict = "softlock"
+diff --git a/scripts/harness/scenarios/k1_trask_approach_diag.toml b/scripts/harness/scenarios/k1_trask_approach_diag.toml
+index 71ae7a1..fa7a197 100644
+--- a/scripts/harness/scenarios/k1_trask_approach_diag.toml
++++ b/scripts/harness/scenarios/k1_trask_approach_diag.toml
+@@ -12,21 +12,21 @@ do = "load_save"
+ dir = "000001 - AUTOSAVE"
+ 
+ [[step]]
+ wait = "phase"
+ equals = "gameplay"
+ timeout = 300
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+-code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing') end; kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end); return {pc=pc,trask=t,distance=nwscript.call('GetDistanceBetween',pc,t),action=nwscript.call('GetCurrentAction',pc)}"
++code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing') end; nwscript.with_caller(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end); return {pc=pc,trask=t,distance=nwscript.call('GetDistanceBetween',pc,t),action=nwscript.call('GetCurrentAction',pc)}"
+ 
+ [[step]]
+ do = "sleep"
+ seconds = 35
+ 
+ [[step]]
+ do = "lua"
+ timeout = 20
+ code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); return {distance=nwscript.call('GetDistanceBetween',pc,t),pc_action=nwscript.call('GetCurrentAction',pc),pc_position=nwscript.call('GetPosition',pc),trask_position=nwscript.call('GetPosition',t),dialog=nwscript.call('GetIsConversationActive') }"
+ 
+diff --git a/src/api/enginestruct.hpp b/src/api/enginestruct.hpp
+index 9dff45a..621ce65 100644
+--- a/src/api/enginestruct.hpp
++++ b/src/api/enginestruct.hpp
+@@ -109,21 +109,21 @@ struct VmEngineAccess {
+     // Snapshot identity plus layout for validating the live dispatcher table
+     // before touching the VM stack. A changed table needs a trusted recapture.
+     void* const* commands = nullptr;
+     std::uint32_t command_count = 0;
+     std::uint32_t commands_offset = 0x0C;
+     std::uint32_t wrapper_internal_offset = 0;
+ };
+ 
+ void                  bind_engine_access(const VmEngineAccess&);
+ const VmEngineAccess& engine_access();
+-// routine < 0 checks context only (capture and kp.as); otherwise also checks
++// routine < 0 checks context only (capture and nwscript.with_caller); otherwise also checks
+ // the selected live command slot. Never calls into the engine.
+ bool vm_binding_live(int routine = -1);
+ 
+ // Addresses straight out of data/addresses/<build>.json, by site name. The
+ // runtime resolves the names; this turns them into everything the bridge needs
+ // and calls both `kp::api::bind()` and `bind_engine_access()`.
+ //
+ // Required sites: vm.execute_command, vm.stack_{push,pop}_{integer,float,
+ // string,object}. Everything else degrades: without the vector pair, vector
+ // routines refuse; without the engine-structure pair, the 100-odd routines that
+diff --git a/src/api/entity.cpp b/src/api/entity.cpp
+index 26df21a..3479c49 100644
+--- a/src/api/entity.cpp
++++ b/src/api/entity.cpp
+@@ -54,20 +54,22 @@ bool object_id_at(lua_State* L, int index, std::uint32_t& out) {
+     const lua_Number n = lua_tonumber(L, index);
+     // NaN compares false against both relational operators, so a bare
+     // range check lets it through and the uint32_t cast below is UB on it --
+     // the same gap this convention's other two copies (api/routines.cpp,
+     // lua/value.cpp) had, now closed in all three.
+     if (!std::isfinite(n) || n < 0.0 || n > 4294967295.0) return false;
+     out = static_cast<std::uint32_t>(n);
+     return true;
+ }
+ 
++// Explicit C++ bridge consumer: native object conveniences keep distinct Lua
++// names and use api::find/api::call without registering any bridge Lua root.
+ // Call a routine whose `nargs` arguments are already on top of the stack, in
+ // DECLARED order.
+ //
+ // Declared order is deliberate and is stated here because it is the trap in
+ // this whole area. The VM pops a routine's first declared parameter first, so
+ // something has to push the last declared parameter first -- and api/routines.
+ // hpp says that reversal is the bridge's job. Pre-reversing here would undo it,
+ // and the mistake is invisible for a symmetric signature like GetObjectType and
+ // silently wrong for an asymmetric one like GetObjectByTag(string, int).
+ //
+diff --git a/src/api/output.cpp b/src/api/output.cpp
+index 4bf4d3f..64850b7 100644
+--- a/src/api/output.cpp
++++ b/src/api/output.cpp
+@@ -109,27 +109,27 @@ platform::LogLevel level_from(lua_State* L, int index) {
+     const char* name = luaL_optstring(L, index, "info");
+     const std::string_view level(name);
+     if (level == "debug") return platform::LogLevel::Debug;
+     if (level == "info")  return platform::LogLevel::Info;
+     if (level == "warn")  return platform::LogLevel::Warn;
+     if (level == "error") return platform::LogLevel::Error;
+     luaL_argerror(L, index, "expected one of debug, info, warn, error");
+     return platform::LogLevel::Info;   // not reached; luaL_argerror does not return
+ }
+ 
+-// kp.log(text [, level]) -> nothing
++// kp.diagnostic(text [, level]) -> nothing
+ //
+ // Always available, including before hooks are installed and after they are
+ // removed. This is the surface a script can rely on when nothing else works.
+-int l_log(lua_State* L) {
++int l_diagnostic(lua_State* L) {
+     const char* text = luaL_checkstring(L, 1);
+-    if (lua_gettop(L) > 2) return luaL_error(L, "kp.log expects at most 2 arguments (got %d)",
++    if (lua_gettop(L) > 2) return luaL_error(L, "kp.diagnostic expects at most 2 arguments (got %d)",
+                                              lua_gettop(L));
+     const platform::LogLevel level = level_from(L, 2);
+     for (const std::string& line : split_lines(text))
+         platform::log(level, "%s", line.c_str());
+     return 0;
+ }
+ 
+ // kp.console(text) -> boolean
+ //
+ // True when the console surface took it, false when it went to the log
+@@ -215,21 +215,21 @@ void console_write(const char* text) {
+     for (const std::string& line : split_lines(text)) {
+         if (g_console != nullptr) g_console(line.c_str(), g_console_user);
+         else platform::log(platform::LogLevel::Info, "[console] %s", line.c_str());
+     }
+ }
+ 
+ // --------------------------------------------------------------- register ---
+ 
+ void register_output(lua_State* L) {
+     push_kp_table(L);
+-    lua_pushcfunction(L, l_log);      lua_setfield(L, -2, "log");
++    lua_pushcfunction(L, l_diagnostic);      lua_setfield(L, -2, "diagnostic");
+     lua_pushcfunction(L, l_console);  lua_setfield(L, -2, "console");
+     lua_pushcfunction(L, l_feedback); lua_setfield(L, -2, "feedback");
+     lua_pop(L, 1);
+ }
+ 
+ void register_support(lua_State* L) {
+     register_output(L);
+     register_timers(L);
+     register_strings(L);
+ }
+diff --git a/src/api/output.hpp b/src/api/output.hpp
+index 6c1cb3b..062e066 100644
+--- a/src/api/output.hpp
++++ b/src/api/output.hpp
+@@ -10,21 +10,21 @@
+ //   console   the console.do_console detour, which owns the input line and its
+ //             reply path. There is no engine routine for this surface, so the
+ //             runtime binds a writer here (bind_console) and until it does the
+ //             text goes to the log.
+ //   feedback  engine routines. 374 SendMessageToPC(object, string) for a plain
+ //             message, 582 AurPostString(string, int, int, float) when the
+ //             caller asks for a screen position. 548 GetFirstPC() supplies the
+ //             recipient 374 needs.
+ //
+ // data/hostapi.toml also includes proposed facilities. The implemented output
+-// surface is kp.log, kp.console and kp.feedback here, plus kp.print in compat.
++// surface is kp.diagnostic, kp.console and kp.feedback here, plus kp.print in compat.
+ // kp.console writes text; it does not execute a console command.
+ //
+ // Routines are reached BY NAME through `nwscript.call`, not by id and not by
+ // linking the routines bridge. Two reasons, both load-bearing:
+ // ids are per-game data (K1 and K2 disagree) while names are not, and looking
+ // the name up at call time means this module does not care whether the routines
+ // bridge registered before or after it. When the name is not there -- routines
+ // not registered, VM not bound, a build where it does not exist -- the text
+ // falls back to the log rather than erroring. Output that disappears because a
+ // diagnostic path was unavailable is worse than output in the wrong place.
+@@ -52,21 +52,21 @@ using ConsoleWriter = void (*)(const char* line, void* user);
+ 
+ void bind_console(ConsoleWriter, void* user);
+ void unbind_console();
+ bool console_bound();
+ 
+ // Write one message to the console surface from C++. Splits on newlines and
+ // falls back to the log exactly as kp.console() does, so the console
+ // command handler and a script produce identical output.
+ void console_write(const char* text);
+ 
+-// Installs kp.log, kp.console and kp.feedback into this state.
++// Installs kp.diagnostic, kp.console and kp.feedback into this state.
+ void register_output(lua_State*);
+ 
+ // The whole support module in one call: output, timers and strings.
+ //
+ // The runtime calls this once per script, on that script's lua_State, after
+ // luaL_openlibs and BEFORE the chunk runs -- a script's top level is the
+ // natural place to call registertimer, and a function registered afterwards is
+ // not there yet when the chunk executes.
+ void register_support(lua_State*);
+ 
+diff --git a/src/api/routines.cpp b/src/api/routines.cpp
+index 985fe33..a7b5de8 100644
+--- a/src/api/routines.cpp
++++ b/src/api/routines.cpp
+@@ -479,73 +479,63 @@ int call(lua_State* L, const Routine& r, int first_arg) {
+         // correct table means the build is not the one we think it is.
+         return luaL_error(L, "%s (routine %d) failed: VM error %d",
+                           r.name, int(r.id), rc);
+     }
+     return push_result(L, r);
+ }
+ 
+ // ------------------------------------------------------------ register ------
+ 
+ // CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08.
+-// data/hostapi.toml `kp.as`: write, call body, restore (including on error).
++// data/hostapi.toml `nwscript.with_caller`: write, call body, restore (including on error).
+ int l_as(lua_State* L) {
+     const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
+     luaL_checktype(L, 2, LUA_TFUNCTION);
+     const VmBinding& vm = binding();
+     if (!vm_binding_live())
+-        return luaL_error(L, "kp.as needs a live VM context");
++        return luaL_error(L, "nwscript.with_caller needs a live VM context");
+ 
+     struct Commands {
+         void*         vtable;
+         std::int32_t  has_caller;
+         std::uint32_t caller_id;
+     };
+     auto* cmds = static_cast<Commands*>(vm.command_implementer);
+     const std::int32_t old_has = cmds->has_caller;
+     const std::uint32_t old_id = cmds->caller_id;
+     cmds->has_caller = 1;
+     cmds->caller_id = id;
+ 
+     const int extras = lua_gettop(L) - 2;
+     const int base = lua_gettop(L);
+     lua_pushvalue(L, 2);
+     for (int i = 0; i < extras; ++i) lua_pushvalue(L, 3 + i);
+     const int rc = lua_pcall(L, extras, LUA_MULTRET, 0);
+     if (!vm_binding_live() || binding().command_implementer != cmds)
+-        return luaL_error(L, "kp.as: VM context changed before caller restoration");
++        return luaL_error(L, "nwscript.with_caller: VM context changed before caller restoration");
+     cmds->has_caller = old_has;
+     cmds->caller_id = old_id;
+     if (rc != 0) return lua_error(L);
+     return lua_gettop(L) - base;
+ }
+ 
+ void register_all(lua_State* L) {
+     lua_getglobal(L, "nwscript");
+     if (!lua_istable(L, -1)) {
+         lua_pop(L, 1);
+-        lua_createtable(L, 0, 1);
++        lua_createtable(L, 0, 3);
+         lua_pushvalue(L, -1);
+         lua_setglobal(L, "nwscript");
+     }
+     lua_pushcfunction(L, dispatch);
+     lua_setfield(L, -2, "call");
+-    lua_pop(L, 1);
+-
+-    // kp.as: specified in data/hostapi.toml; the generator is not in-tree.
+-    lua_getglobal(L, "kp");
+-    if (!lua_istable(L, -1)) {
+-        lua_pop(L, 1);
+-        lua_newtable(L);
+-        lua_pushvalue(L, -1);
+-        lua_setglobal(L, "kp");
+-    }
+     lua_pushcfunction(L, l_as);
+-    lua_setfield(L, -2, "as");
++    lua_setfield(L, -2, "with_caller");
+     lua_pushcfunction(L, l_last_routine_trace);
+-    lua_setfield(L, -2, "last_routine_trace");
++    lua_setfield(L, -2, "last_trace");
+     lua_pop(L, 1);
+ 
+     platform::log(platform::LogLevel::Info,
+                   "api: registered nwscript.call for %zu engine routines", table().size());
+ }
+ 
+ }  // namespace kp::api
+diff --git a/src/api/routines.hpp b/src/api/routines.hpp
+index 7d4136b..6c5e5bd 100644
+--- a/src/api/routines.hpp
++++ b/src/api/routines.hpp
+@@ -76,21 +76,22 @@ struct VmBinding {
+ 
+     bool usable() const {
+         return command_implementer && virtual_machine && execute_command
+             && push_int && pop_int;
+     }
+ };
+ 
+ void bind(const VmBinding&);
+ const VmBinding& binding();
+ 
+-// Register the single `nwscript.call(name, ...)` dispatcher onto a Lua state.
++// Register nwscript.call, nwscript.with_caller and nwscript.last_trace.
++// This bridge owns only nwscript and never creates the native kp root.
+ // Routine names remain data in the generated catalog; none are exported as Lua
+ // table members.
+ void register_all(lua_State*);
+ 
+ // Call one routine with arguments already on the Lua stack starting at
+ // `first_arg`. Returns the number of values pushed back (0 or 1).
+ //
+ // Errors are raised as Lua errors, which the host's pcall turns into a script
+ // error rather than a crash. Calling a routine before the VM is bound, or with
+ // too few arguments, is a script bug and should read like one.
+diff --git a/tools/gen_compat.py b/tools/gen_compat.py
+index 9127051..05e32a8 100755
+--- a/tools/gen_compat.py
++++ b/tools/gen_compat.py
+@@ -112,22 +112,29 @@ def gen_events(events: list[dict]) -> str:
+     return "\n".join(out) + "\n"
+ 
+ 
+ def gen_docs(doc: dict, events: list[dict]) -> str:
+     lines = ["# Native namespace and callback migration", "",
+              "Generated from `data/api_aliases.toml` and `data/events.toml`.", "",
+              "API version 2 has two public roots: `nwscript.call(name, ...)` for direct "
+              "engine routines and `kp` for every native host facility.", "",
+              "The former kotor root, bare host functions, underscored aliases, "
+              "cb/events globals, host identity globals and host bit32 alias are removed. "
+-             "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.log`. "
++             "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.diagnostic`. "
+              "The engine logarithm is `nwscript.call('log', value)`.", "",
++             "Bridge context is `nwscript.with_caller(object_id, fn, ...)`; "
++             "the last dispatch receipt is `nwscript.last_trace()`. The old native "
++             "log, as and last_routine_trace members have no compatibility aliases.", "",
++             "Native object conveniences such as `kp.obj.position` retain distinct "
++             "names. Their C++ implementation explicitly consumes `api::find` and "
++             "`api::call`; they require the VM backend for engine operations without "
++             "exporting engine routine names or creating the nwscript root.", "",
+              "Lua's standard `print` remains unchanged. `kp.print(...)` writes host "
+              "diagnostics; console and harness states capture that native output.", "",
+              "Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, "
+              "`kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.", "",
+              "## Explicit event registration", "", "```lua",
+              "kp.events.register(kp.events.OnTick, function(tick, relevant)",
+              "    -- ...", "end)",
+              "kp.events.unregister(kp.events.OnTick)", "```", "",
+              "Registration accepts a function or a script-owned global function name. "
+              "The dispatcher still discovers global On* callbacks for legacy compatibility. "
+diff --git a/tools/kp_namespacetest.cpp b/tools/kp_namespacetest.cpp
+index 201141e..187f5f1 100644
+--- a/tools/kp_namespacetest.cpp
++++ b/tools/kp_namespacetest.cpp
+@@ -26,36 +26,52 @@ namespace {
+ int failures = 0;
+ void check(bool ok, const char* message) {
+     if (!ok) { ++failures; std::fprintf(stderr, "FAIL: %s\n", message); }
+ }
+ bool run(lua_State* L, const char* code) {
+     if (luaL_dostring(L, code) == 0) return true;
+     check(false, lua_tostring(L, -1));
+     lua_pop(L, 1);
+     return false;
+ }
+-void install(lua_State* L, bool reverse = false) {
++void install_native(lua_State* L, bool reverse = false) {
+     kp::api::open_engine_structs(L);
+-    kp::api::register_all(L);
+     if (reverse) kp::api::compat::install(L, "/offline/game");
+     kp::api::memory::register_all(L);
+     kp::api::structs::register_all(L);
+     kp::api::entity::register_all(L);
+     kp::api::register_support(L);
+     kp::runtime::register_director(L);
+     if (!reverse) kp::api::compat::install(L, "/offline/game");
+ }
++void install(lua_State* L, bool reverse = false) {
++    kp::api::register_all(L);
++    install_native(L, reverse);
++}
++
+ }
+ 
+ int main(int argc, char**) {
+     check(kp::api::select_game(argc > 1 ? kp::api::Game::K2 : kp::api::Game::K1),
+           "select catalog before registration");
++    for (bool bridge : {false, true}) {
++        lua_State* isolated = luaL_newstate();
++        if (!isolated) return 1;
++        luaL_openlibs(isolated);
++        if (bridge) kp::api::register_all(isolated);
++        else install_native(isolated);
++        lua_getglobal(isolated, bridge ? "kp" : "nwscript");
++        check(lua_isnil(isolated, -1), "isolated registration creates only its owned root");
++        lua_pop(isolated, 1);
++        check(lua_gettop(isolated) == 0, "isolated registration balances stack");
++        lua_close(isolated);
++    }
+     for (bool reverse : {false, true}) {
+         lua_State* L = luaL_newstate();
+         if (!L) return 1;
+         luaL_openlibs(L);
+         // Capture the complete standard global surface, including Lua print.
+         run(L, R"lua(
+             local before = {}
+             for k,v in pairs(_G) do before[k] = v end
+             kp = { marker = 42, mem = {}, obj = {}, struct = {}, events = {}, harness = {} }
+             local root, mem, obj, struct = kp, kp.mem, kp.obj, kp.struct
+@@ -67,53 +83,53 @@ int main(int argc, char**) {
+                 for k in pairs(_G) do
+                     assert(before[k] ~= nil or k == 'kp' or k == 'nwscript',
+                            'unexpected host global: ' .. k)
+                 end
+                 assert(kotor == nil and log == nil and log_msg == nil)
+                 assert(cb == nil and _G.events == nil and register_callback == nil)
+                 assert(kp == root and kp.marker == 42)
+                 assert(kp.mem == mem and kp.obj == obj and kp.struct == struct)
+                 assert(kp.events == events and kp.harness == harness)
+                 for k,v in pairs(nwscript) do
+-                    assert(k == 'call' and type(v) == 'function', 'engine export: ' .. k)
++                    assert((k == 'call' or k == 'with_caller' or k == 'last_trace')
++                           and type(v) == 'function', 'engine export: ' .. k)
+                 end
+                 assert(type(nwscript.call) == 'function')
++                assert(type(nwscript.with_caller) == 'function' and type(nwscript.last_trace) == 'function')
++                assert(kp['as'] == nil and kp['last_routine_trace'] == nil and kp['log'] == nil)
+                 assert(kp.GetFirstPC == nil and kp.log_msg == nil and kp.read_byte == nil)
+                 for _,path in ipairs({'mem.readbyte', 'obj.get', 'struct.at',
+-                    'print', 'log', 'console', 'feedback', 'registertimer',
++                    'print', 'diagnostic', 'console', 'feedback', 'registertimer',
+                     'removetimer', 'tokenizestring', 'tokenizecmdstring',
+                     'harness.state', 'events.register', 'events.unregister',
+-                    'as', 'last_routine_trace', 'speed', 'time'}) do
++                    'speed', 'time'}) do
+                     local v = kp
+                     for name in path:gmatch('[^.]+') do v = v[name] end
+                     assert(type(v) == 'function', 'missing kp.' .. path)
+                 end
+                 assert(type(kp.events.OnTick) == 'number')
+                 assert(kp.host == 'KotorPhasor' and kp.serverapp == 'KotorPhasor')
+                 assert(kp.game == 'KOTOR' and kp.api_version == 2)
+                 assert(type(kp.version) == 'string' and kp.gamedir() == '/offline/game')
+                 assert(kp.tokenizestring('a,b', ',')[2] == 'b')
+                 assert(kp.struct.allow_unverified_writes() == false)
+-                kp.print('namespace contract'); kp.log('host log is distinct from routine log')
++                kp.print('namespace contract'); kp.diagnostic('host log is distinct from routine log')
+             end
+         )lua");
+         const int contract = luaL_ref(L, LUA_REGISTRYINDEX);
+         install(L, reverse);
+         install(L, reverse); // Re-registration must preserve every shared table.
+         for (const auto& routine : kp::api::table()) {
+             lua_getglobal(L, routine.name);
+             check(lua_isnil(L, -1), routine.name);
+             lua_pop(L, 1);
+             for (const char* root : {"nwscript", "kp"}) {
+-                // kp.log is native output; routine 74 remains nwscript.call("log", x).
+-                if (std::strcmp(root, "kp") == 0 && std::strcmp(routine.name, "log") == 0)
+-                    continue;
+                 lua_getglobal(L, root);
+                 lua_getfield(L, -1, routine.name);
+                 check(lua_isnil(L, -1), routine.name);
+                 lua_pop(L, 2);
+             }
+         }
+         lua_rawgeti(L, LUA_REGISTRYINDEX, contract);
+         if (lua_pcall(L, 0, 0, 0) != 0) {
+             check(false, lua_tostring(L, -1)); lua_pop(L, 1);
+         }
+diff --git a/tools/kp_routinetest.cpp b/tools/kp_routinetest.cpp
+index f3d850e..ede68a8 100644
+--- a/tools/kp_routinetest.cpp
++++ b/tools/kp_routinetest.cpp
+@@ -201,25 +201,25 @@ int main() {
+     lua_getglobal(L, "kotor");
+     check(lua_isnil(L, -1), "routine registration does not create kotor or export routine members");
+     lua_pop(L, 1);
+ 
+     g_pop_succeeds = true;
+     g_execute_id = -1;
+     g_execute_argc = -1;
+     g_pushed_float = 0.0f;
+     kp::api::register_output(L);
+     lua_getglobal(L, "kp");
+-    lua_getfield(L, -1, "log");
++    lua_getfield(L, -1, "diagnostic");
+     lua_remove(L, -2);
+     lua_pushliteral(L, "native output must not dispatch an engine routine");
+-    check(lua_pcall(L, 1, 0, 0) == 0, "kp.log is callable beside the engine bridge");
+-    check(g_execute_id == -1, "kp.log does not dispatch routine 74");
++    check(lua_pcall(L, 1, 0, 0) == 0, "kp.diagnostic is callable beside the engine bridge");
++    check(g_execute_id == -1, "kp.diagnostic does not dispatch routine 74");
+     lua_getglobal(L, "nwscript");
+     lua_getfield(L, -1, "call");
+     lua_remove(L, -2);
+     lua_pushliteral(L, "log");
+     lua_pushnumber(L, 42.5);
+     check(lua_pcall(L, 2, 1, 0) == 0, "nwscript.call reaches the catalogued log routine");
+     check(g_execute_id == 74 && g_execute_argc == 1,
+           "nwscript.call dispatches log as routine 74 with one argument");
+     check(std::fabs(g_pushed_float - 42.5f) < 0.0001f,
+           "nwscript.call preserves log's float argument");
+@@ -261,22 +261,22 @@ int main() {
+     g_pop_succeeds = false;
+     g_pop_calls = 0;
+     lua_getglobal(L, "nwscript");
+     lua_getfield(L, -1, "call");
+     lua_remove(L, -2);
+     lua_pushliteral(L, "GetFacing");
+     lua_pushnumber(L, 7);
+     check(lua_pcall(L, 2, LUA_MULTRET, 0) != 0,
+           "GetFacing keeps its normal Lua failure while tracing");
+     lua_settop(L, 0);  // discard the normal error before querying diagnostics
+-    lua_getglobal(L, "kp");
+-    lua_getfield(L, -1, "last_routine_trace");
++    lua_getglobal(L, "nwscript");
++    lua_getfield(L, -1, "last_trace");
+     check(lua_pcall(L, 0, 1, 0) == 0, "GetFacing trace can be read after the normal routine error");
+     check(lua_istable(L, -1), "trace is a Lua table");
+     if (lua_istable(L, -1)) {
+         check(trace_int(L, "routine") == 28, "trace records GetFacing routine id");
+         check(trace_bool(L, "execute_called"), "trace records ExecuteCommand entry");
+         check(trace_int(L, "execute_status") == 0, "trace records ExecuteCommand status");
+         check(trace_bool(L, "push_result_entered"), "trace records result-boundary entry");
+         check(trace_bool(L, "pop_bound"), "trace records bound float pop");
+         check(trace_bool(L, "pop_attempted"), "trace records float pop attempt");
+         check(trace_int(L, "pop_status") == 0, "trace records float pop status");
+@@ -317,34 +317,80 @@ int main() {
+     lua_settop(L, 0);
+     binding.pop_float = pop_float;
+     binding.pop_string = pop_string;
+     kp::api::bind(binding);
+ 
+     g_pop_calls = 0;
+     check(invoke(L, call_void) == 0, "void routine still returns normally");
+     check(lua_gettop(L) == 0, "void routine returns no Lua values");
+     check(g_pop_calls == 0, "void routine does not pop a result");
+ 
++    // The public caller wrapper forwards arbitrary values and restores both
++    // caller fields after success, nesting, and a non-string Lua error.
++    lua_pushlightuserdata(L, &implementer);
++    lua_pushcclosure(L, [](lua_State* state) -> int {
++        auto* caller = static_cast<Commands*>(lua_touserdata(state, lua_upvalueindex(1)));
++        lua_pushinteger(state, caller->has_caller);
++        lua_pushnumber(state, caller->caller_id);
++        return 2;
++    }, 1);
++    lua_setglobal(L, "caller_probe");
++    implementer.has_caller = 0;
++    implementer.caller_id = 91;
++    const char* caller_test = R"lua(
++        local token = {}
++        local a, b, c = nwscript.with_caller(7, function(x, y, z)
++            local has, id = caller_probe()
++            if has ~= 1 or id ~= 7 then error('outer caller') end
++            nwscript.with_caller(8, function()
++                local has, id = caller_probe()
++                if has ~= 1 or id ~= 8 then error('nested caller') end
++            end)
++            local has, id = caller_probe()
++            if has ~= 1 or id ~= 7 then error('nested restoration') end
++            return x, y, z
++        end, token, nil, 42)
++        if a ~= token or b ~= nil or c ~= 42 then error('argument/result forwarding') end
++    )lua";
++    check(luaL_dostring(L, caller_test) == 0, "with_caller preserves nesting and variadic results");
++    check(implementer.has_caller == 0 && implementer.caller_id == 91,
++          "successful caller wrapper restores both fields");
++    lua_settop(L, 0);
++    lua_getglobal(L, "nwscript");
++    lua_getfield(L, -1, "with_caller");
++    lua_remove(L, -2);
++    lua_pushnumber(L, 9);
++    lua_pushcfunction(L, [](lua_State* state) -> int {
++        lua_pushlightuserdata(state, reinterpret_cast<void*>(123));
++        return lua_error(state);
++    });
++    check(lua_pcall(L, 2, 0, 0) != 0 && lua_touserdata(L, -1) == reinterpret_cast<void*>(123),
++          "with_caller propagates the original error object");
++    check(implementer.has_caller == 0 && implementer.caller_id == 91,
++          "failed caller wrapper restores both fields");
++    lua_settop(L, 0);
++    implementer.caller_id = 0;
++
+     implementer.table = nullptr;
+     g_push_calls = 0;
+     lua_getglobal(L, "nwscript");
+     lua_getfield(L, -1, "call");
+     lua_remove(L, -2);
+     lua_pushliteral(L, "GetFacing");
+     lua_pushnumber(L, 7);
+     check(lua_pcall(L, 2, 1, 0) != 0 && g_push_calls == 0,
+           "invalid context refuses before pushing the first routine argument");
+     lua_settop(L, 0);
+-    lua_getglobal(L, "kp");
+-    lua_getfield(L, -1, "as");
++    lua_getglobal(L, "nwscript");
++    lua_getfield(L, -1, "with_caller");
+     lua_pushnumber(L, 7);
+     lua_pushcfunction(L, call_void);
+     check(lua_pcall(L, 2, 0, 0) != 0 && implementer.has_caller == 0 && implementer.caller_id == 0,
+-          "kp.as refuses invalid context without writing caller state");
++          "nwscript.with_caller refuses invalid context without writing caller state");
+     lua_settop(L, 0);
+     implementer.table = commands;
+     check(invoke(L, call_void) == 0, "routine calls recover when the live table returns");
+ 
+     lua_close(L);
+     std::printf("kp_routinetest: %d failure(s)\n", g_failures);
+     return g_failures ? 1 : 0;
+ }
+diff --git a/tools/kp_supporttest.cpp b/tools/kp_supporttest.cpp
+index c9db286..d695998 100644
+--- a/tools/kp_supporttest.cpp
++++ b/tools/kp_supporttest.cpp
+@@ -198,22 +198,22 @@ end
+ function start()
+     kp.registertimer(999000, "never_due")
+ end
+ 
+ function never_due() end
+ )LUA"},
+ 
+ {"50_output.lua", R"LUA(
+ -- The three output surfaces, and the routine lookup feedback does by name.
+ function start()
+-    kp.log("log line, default level")
+-    kp.log("two lines\nin one call", "warn")
++    kp.diagnostic("log line, default level")
++    kp.diagnostic("two lines\nin one call", "warn")
+     print(("  [50_output] console reached the console surface: %s")
+           :format(tostring(kp.console("console line"))))
+     print(("  [50_output] feedback reached the engine: %s")
+           :format(tostring(kp.feedback("feedback with no routines registered"))))
+ end
+ 
+ -- Stand-ins for what src/api/routines.cpp will register. feedback looks the
+ -- name up at call time, so installing them after registration still works.
+ function install_fake_routines()
+     output_calls = {}
+@@ -369,21 +369,21 @@ int main(int argc, char** argv) {
+     lua::Host host({scratch.string(), /*error_budget=*/3, /*hot_reload=*/false});
+     std::vector<std::string> errors;
+     const unsigned loaded = host.load_all(errors);
+     for (const std::string& e : errors) std::printf("  load error: %s\n", e.c_str());
+     std::printf("loaded %u script(s), error budget 3\n", loaded);
+ 
+     // What the runtime does inside Script::load, before the chunk runs. Here it
+     // happens after, so each script exposes start() rather than registering at
+     // its top level.
+     for (const auto& s : host.scripts()) api::register_support(s->L());
+-    std::printf("registered kp.log/console/feedback, registertimer/removetimer, "
++    std::printf("registered kp.diagnostic/console/feedback, registertimer/removetimer, "
+                 "tokenizestring/tokenizecmdstring on %u state(s)\n", loaded);
+ 
+     rule("output");
+     std::printf("console is unbound, so console text goes to the log:\n");
+     for (const auto& s : host.scripts()) call_entry(*s, "start", false);
+ 
+     for (const auto& s : host.scripts())
+         if (s->name() == "50_output")
+             check(call_entry(*s, "fallback_without_bridge", true),
+                   "feedback without nwscript.call explicitly reports fallback");
+diff --git a/tools/kpharness_offline_test.py b/tools/kpharness_offline_test.py
+index 209d37a..79c8e5f 100755
+--- a/tools/kpharness_offline_test.py
++++ b/tools/kpharness_offline_test.py
+@@ -703,21 +703,21 @@ class TestWaits(Base):
+         self.game.globals_args.clear()
+         self.assertEqual(W.read_global(self.ch, "END_TRASK_TALK"), 1)
+         self.assertEqual(W.read_global(self.ch, "end_trask_talk"), 1)   # matched without case
+         self.assertTrue(self.game.globals_args)
+         for sent in self.game.globals_args:
+             self.assertNotIn("name", sent)
+ 
+     def test_dialog_waiting_and_auto_skip(self):
+         self.ch.request("load_save", dir="000001 - AUTOSAVE")
+         W.wait_until(self.ch, W.phase_is("gameplay"), 5.0, poll=0.01)
+-        self.ch.lua("kp.as(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
++        self.ch.lua("nwscript.with_caller(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
+         st = self.ch.state()
+         self.assertEqual(st["phase"], "dialog")
+         # The runtime spells these `waiting_on_sound` and `waiting_for_player`;
+         # a driver reading anything else sees a ready dialog too early.
+         self.assertTrue(st["dialog"]["waiting_on_sound"])
+         self.assertFalse(W.dialog_waiting()(st, self.ch))       # waiting on sound
+         # The wait sends dialog_skip on its own while the node waits on VO;
+         # only that clears the fake's sound flag.
+         st = W.wait_until(self.ch, W.dialog_waiting(), 2.0, poll=0.01)
+         self.assertTrue(W.dialog_waiting()(st, self.ch))
+@@ -731,21 +731,21 @@ class TestWaits(Base):
+                          "waiting_for_player": False, "waiting_on_sound": False}}
+         self.assertTrue(W.dialog_waiting()(st, self.ch))
+         st["dialog"]["waiting_on_sound"] = True
+         self.assertFalse(W.dialog_waiting()(st, self.ch))
+ 
+     def test_dialog_replies_carry_the_active_flag(self):
+         """Every reply row carries `active`, so the driver filters on a field
+         the protocol provides instead of defaulting a missing key to true."""
+         self.ch.request("load_save", dir="000001 - AUTOSAVE")
+         W.wait_until(self.ch, W.phase_is("gameplay"), 5.0, poll=0.01)
+-        self.ch.lua("kp.as(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
++        self.ch.lua("nwscript.with_caller(pc, function() nwscript.call(\"ActionStartConversation\",x, '') end)")
+         d = self.ch.request("dialog")
+         self.assertTrue(all("active" in r for r in d["replies"]))
+         self.assertEqual([r["index"] for r in d["replies"] if r["active"]], [0, 2])
+ 
+ 
+ class TestOracle(Base):
+     def test_hang(self):
+         self.game.freeze = True
+         wd = Watchdog(self.session, self.ch, hang_seconds=0.3)
+         with self.assertRaises(OracleTrip) as cm:
+@@ -993,21 +993,21 @@ wait = "module"; equals = "end_m01ab"; timeout = 5
+ do = "lua"; code = "return nwscript.call('GetModuleName')"
+ [[step]]
+ do = "new_game"
+ [[step]]
+ do = "fixed_step"; hz = 30; expect_error = "unsupported"
+ [[step]]
+ do = "set_global"; name = "END_TRASK_TALK"; value = 1
+ [[step]]
+ wait = "global"; name = "END_TRASK_TALK"; equals = 1; timeout = 2
+ [[step]]
+-do = "lua"; code = "kp.as(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation',nwscript.call('GetObjectByTag','end_trask',0), '') end)"
++do = "lua"; code = "nwscript.with_caller(nwscript.call('GetFirstPC'), function() nwscript.call('ActionStartConversation',nwscript.call('GetObjectByTag','end_trask',0), '') end)"
+ [[step]]
+ wait = "phase"; equals = "dialog"; timeout = 2
+ [[step]]
+ wait = "dialog"; timeout = 2
+ [[step]]
+ screenshot = true; expect_screen = "dialog"
+ [[step]]
+ do = "reply"; pick = "first_active"
+ [[step]]
+ do = "dialog_abort"
+@@ -1230,21 +1230,21 @@ do = "lua"; code = "return 1"
+ 
+     def test_walk_dialog(self):
+         text = '''
+ name = "walk"
+ target = "k1"
+ [[step]]
+ do = "load_save"; dir = "000001 - AUTOSAVE"
+ [[step]]
+ wait = "phase"; equals = "gameplay"; timeout = 5
+ [[step]]
+-do = "walk_dialog"; save = "000001 - AUTOSAVE"; start = "kp.as(pc, function() nwscript.call('ActionStartConversation',t, '') end)"; timeout = 3
++do = "walk_dialog"; save = "000001 - AUTOSAVE"; start = "nwscript.with_caller(pc, function() nwscript.call('ActionStartConversation',t, '') end)"; timeout = 3
+ '''
+         r, logs = self._runner(text, load_timeout=5.0, shot_interval=0)
+         rep = r.run()
+         self.assertTrue(rep.ok, [s.detail for s in rep.steps])
+         self.assertIn("walked 2 replies", rep.steps[2].detail)
+         self.assertIn("ended", rep.steps[2].detail)
+ 
+     def test_advance_dialog_survives_refused_dialog_skip(self):
+         text = '''
+ name = "skip refused"
+@@ -1343,21 +1343,21 @@ do = "scripted_door_open"; tag = "end_door05"; timeout = 10
+         rep = runner.run()
+         self.assertTrue(rep.ok, [s.detail for s in rep.steps])
+         self.assertEqual(rep.steps[0].detail, "scripted_door_open end_door05 open (committed)")
+         self.assertEqual(len(self.game.door_requests), 1, self.game.door_requests)
+         request = self.game.door_requests[0]
+         self.assertEqual(request["cmd"], "door_commit_open")
+         self.assertEqual(request["door"], 0x80000010)
+         self.assertEqual(set(request) - {"id"}, {"cmd", "door"})
+         # The self-command went first and at least one probe saw the door
+         # still closed before the commit was issued.
+-        self.assertIn("kp.as(d,function() nwscript.call(\"ActionOpenDoor\",d) end)", self.game.lua_codes[0])
++        self.assertIn("nwscript.with_caller(d,function() nwscript.call(\"ActionOpenDoor\",d) end)", self.game.lua_codes[0])
+         self.assertGreaterEqual(sum(1 for c in self.game.lua_codes if "GetIsOpen" in c), 2)
+ 
+     def test_scripted_door_open_does_not_commit_a_door_that_opens(self):
+         text = '''
+ name = "door opens"
+ target = "k1"
+ [[step]]
+ do = "scripted_door_open"; tag = "end_door02"; timeout = 10
+ '''
+         self._script_door(0x80000011, opens_on_its_own=True)
+@@ -1400,21 +1400,21 @@ do = "clear_room"; radius = 30; until_global = "END_ROOM3_DEAD"; until_value = 2
+         ], pause_first=True)
+         rep = self._runner(text, shot_interval=0)[0].run()
+         self.assertTrue(rep.ok, [s.detail for s in rep.steps])
+         detail = rep.steps[0].detail
+         self.assertIn("clear_room: 2 hostiles down in", detail)
+         self.assertIn("END_ROOM3_DEAD=2", detail)
+         self.assertIn("clear_auto_pause", self.game.requests)
+         self.assertEqual(len(attacks), 2, attacks)
+         self.assertIn("local t=10;", attacks[0])
+         self.assertIn("local t=11;", attacks[1])
+-        self.assertIn("kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)", attacks[0])
++        self.assertIn("nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionAttack\",t,0) end)", attacks[0])
+         probe = next(c for c in self.game.lua_codes if "GetFirstObjectInArea" in c)
+         self.assertIn('nwscript.call("GetGlobalNumber","END_ROOM3_DEAD")', probe)
+         self.assertIn("d<=30.0", probe)
+         self.assertIn('nwscript.call("GetCurrentAction",pc)', probe)
+ 
+     def test_clear_room_fails_after_grace_when_global_never_reached(self):
+         text = '''
+ name = "clear room grace"
+ target = "k1"
+ [[step]]
+@@ -1464,21 +1464,21 @@ do = "move_to"; tag = "end_door10_cut2"; timeout = 10
+             {"dist": 9.0, "act": 65534, "x": 1.0, "y": 1.0},    # idle: issue the walk
+             {"dist": 6.0, "act": 0, "x": 2.0, "y": 1.0},        # moving
+             {"dist": 3.0, "act": 0, "x": 3.0, "y": 1.0},
+             {"dist": 1.6, "act": 0, "x": 4.0, "y": 1.0},        # <= 1.5 + 0.5
+         ])
+         rep = self._runner(text, shot_interval=0)[0].run()
+         self.assertTrue(rep.ok, [s.detail for s in rep.steps])
+         self.assertIn("move_to end_door10_cut2: dist 1.6 in", rep.steps[0].detail)
+         self.assertEqual(len(moves), 1, moves)
+         self.assertIn('nwscript.call(\"GetObjectByTag\","end_door10_cut2",0)', moves[0])
+-        self.assertIn("kp.as(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,1,1.5) end)",
++        self.assertIn("nwscript.with_caller(pc,function() nwscript.call(\"ClearAllActions\"); nwscript.call(\"ActionMoveToObject\",t,1,1.5) end)",
+                       moves[0])
+         probe = next(c for c in self.game.lua_codes if "GetCurrentAction" in c)
+         self.assertIn("nwscript.call(\"GetDistanceBetween\",pc,t)", probe)
+         self.assertNotIn("clear_auto_pause", self.game.requests)
+ 
+     def test_move_to_blocked_reissues_once_then_fails_on_no_progress(self):
+         text = '''
+ name = "move to blocked"
+ target = "k1"
+ [[step]]
+@@ -1735,21 +1735,21 @@ walkmesh_far_centroid = [20.32586733500163, 21.70310910542806, -1.275]
+             return s
+         self.ch.state = state
+         self.addCleanup(lambda: setattr(World, "observe_world", real_observe))
+         self.addCleanup(lambda: setattr(self.ch, "state", real_state))
+         report = self._runner(text, shot_interval=0)[0].run()
+         self.assertTrue(report.ok, [s.detail for s in report.steps])
+         self.assertIn("open/unlocked", report.steps[0].detail)
+         emitted = "\n".join(self.game.lua_codes)
+         self.assertIn("local door=2147483664", emitted)
+         self.assertIn("door identity changed", emitted)
+-        self.assertIn("kp.as", emitted)
++        self.assertIn("nwscript.with_caller", emitted)
+         self.assertIn("ActionMoveToObject", emitted)
+         self.assertIn("ActionOpenDoor", emitted)
+         self.assertIn("ActionMoveToLocation", emitted)
+ 
+     def test_placeable_transaction_uses_checked_instance_and_open_readback(self):
+         text = '''
+ name = "placeable"
+ target = "k1"
+ [[step]]
+ do = "placeable_transaction"; module = "end_m01aa"; type = 64; tag = "end_locker01"
+diff --git a/tools/nwscript_boundary_test.py b/tools/nwscript_boundary_test.py
+index d463d9b..fed10d9 100644
+--- a/tools/nwscript_boundary_test.py
++++ b/tools/nwscript_boundary_test.py
+@@ -1,36 +1,42 @@
+ #!/usr/bin/env python3
+-"""Reject known access paths through the removed ``kotor`` table.
++"""Reject removed-root paths and explicit duplicate routine calls.
+ 
+ This is a bounded lexical receipt, not a Lua parser. It scans raw source so
+ embedded Lua in C++, shell, Python, and TOML strings stays visible. It
+ rejects both lowercase native helpers and direct routine paths through the
+ removed root. Native facilities belong below ``kp``:
+ 
+ * dotted members on ``kotor``, parenthesized ``kotor``, or
+   ``_G["kotor"]`` / ``_G.kotor``;
+ * bracket lookup on those receivers, including ``kotor[name]`` helpers;
+ * single-target local/non-local aliases wherever they occur, plus direct
+   receivers in comma-separated assignment lines; and
+ * ``rawget`` on those receivers.
+ 
+ Whitespace and newlines are accepted inside receivers and member access. This
+ intentionally does not claim data-flow tracking for arbitrarily computed
+ aliases, every possible multi-assignment layout, or a complete Lua grammar.
+ 
++For kp/nwscript, catalogued dotted and literal bracket calls plus literal
++rawget lookups are covered. Plain reads (including absence assertions), computed
++keys, aliases, and arbitrary Lua semantics are not proven by this check.
++Production registration tests enumerate the routine catalog without exceptions.
++
+ Historical research is excluded because it records the API that existed when
+ the evidence was gathered.  Active source, scripts, tests, metadata, and user
+ documentation remain in scope.
+ """
+ 
+ from __future__ import annotations
+ 
++import json
+ import re
+ import sys
+ from pathlib import Path
+ 
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ SOURCE_SUFFIXES = {".cpp", ".hpp", ".lua", ".py", ".sh", ".toml", ".md"}
+ EXCLUDED_DIRS = {
+     "adjudication",  # Historical binary research, including non-Lua database names.
+     "harness-research",
+@@ -69,20 +75,39 @@ FORBIDDEN = (
+             re.MULTILINE,
+         ),
+     ),
+     (
+         "dynamic rawget on kotor table",
+         re.compile(rf"\brawget\s*\(\s*{KOTOR_RECEIVER}\s*,"),
+     ),
+ )
+ 
+ 
++# Literal, explicit module receivers only. Computed keys and alias data flow
++# require runtime registration tests; this check does not model Lua execution.
++def routine_patterns():
++    names = set()
++    for path in (ROOT / "data/routines").glob("*.json"):
++        catalog = json.loads(path.read_text())
++        names.update(routine["name"] for routine in catalog["routines"])
++    routine = "(?:" + "|".join(re.escape(n) for n in sorted(names)) + ")"
++    base = r"(?:\b(?:kp|nwscript)\b|\b_G\s*(?:\.\s*(?:kp|nwscript)\b|\[\s*['\"](?:kp|nwscript)['\"]\s*\]))"
++    receiver = rf"(?:{base}|(?:\(\s*)+{base}(?:\s*\))+)"
++    return (
++        ("direct routine member on public module", re.compile(rf"{receiver}\s*\.\s*{routine}\b\s*\(")),
++        ("literal routine call on public module", re.compile(rf"{receiver}\s*\[\s*['\"]{routine}['\"]\s*\]\s*\(")),
++        ("literal routine rawget on public module", re.compile(rf"\brawget\s*\(\s*{receiver}\s*,\s*['\"]{routine}['\"]\s*\)")),
++    )
++
++ROUTINE_PATTERNS = routine_patterns()
++
++
+ def active_files() -> list[Path]:
+     candidates = [ROOT / "README.md"]
+     for root_name in ACTIVE_ROOTS:
+         candidates.extend((ROOT / root_name).rglob("*"))
+ 
+     files: list[Path] = []
+     for path in candidates:
+         if not path.is_file() or path.suffix not in SOURCE_SUFFIXES:
+             continue
+         if path == Path(__file__).resolve():
+@@ -90,50 +115,61 @@ def active_files() -> list[Path]:
+         if path == ROOT / "docs/nwscript-lua-harness-boundary-plan.md":
+             continue  # The accepted plan records the pre-migration collision.
+         if any(part in EXCLUDED_DIRS for part in path.relative_to(ROOT).parts):
+             continue
+         files.append(path)
+     return sorted(files)
+ 
+ 
+ def violations(text: str) -> list[tuple[str, int, str]]:
+     found: list[tuple[str, int, str]] = []
+-    for label, pattern in FORBIDDEN:
++    for label, pattern in FORBIDDEN + ROUTINE_PATTERNS:
+         for match in pattern.finditer(text):
+             line_number = text.count("\n", 0, match.start()) + 1
+             excerpt = " ".join(match.group(0).split())
+             found.append((label, line_number, excerpt))
+     return sorted(found, key=lambda item: (item[1], item[0], item[2]))
+ 
+ 
+ def self_test() -> int:
+     forbidden_examples = {
++        "duplicate native routine": "return kp.GetFirstPC()",
++        "duplicate bridge routine": "return nwscript.GetFirstPC()",
++        "duplicate logarithm": "return kp.log(10)",
++        "global dotted duplicate": "return _G.nwscript.GetFirstPC()",
++        "multiline duplicate": "return ((kp))\n . GetFirstPC()",
++        "literal duplicate": "return (_G['kp'])['GetFirstPC']()",
++        "raw duplicate": "return rawget(nwscript, 'log')",
+         "dotted": "return kotor.GetFirstPC()",
+         "native lowercase": "kotor.log('forbidden')",
+         "native memory": "local mem = kotor.mem",
+         "parenthesized dotted": "return (( kotor )).GetFirstPC()",
+         "multiline dotted": "return kotor\n  .\n  GetFirstPC()",
+         "bracket literal": "return kotor['GetFirstPC']()",
+         "bracket dynamic helper": "local fn = kotor[name]",
+         "global dotted": "return _G['kotor'].GetFirstPC()",
+         "global bracket": 'return _G.kotor["GetFirstPC"]()',
+         "whole-table dynamic helper": "local api = kotor",
+         "non-local table alias": "api = (_G['kotor'])",
+         "multiline rawget helper": "local fn = rawget(\n (kotor),\n name)",
+         "inline conditional alias": "if ready then api = kotor end",
+         "multi-assignment alias": "local keep, api = true, kotor",
+         "spaced nested parentheses": "return ( ( kotor ) ).GetFirstPC()",
+         "rawget with spaced nested parentheses": "return rawget(( ( kotor ) ), name)",
+     }
+     allowed_examples = {
++        "diagnostic": "kp.diagnostic('message')",
+         "native helper": "kp.registertimer(100, 'tick')",
+         "native namespace alias": "local mem = kp.mem",
++        "absence assertion": "assert(kp.GetFirstPC == nil)",
++        "standard math": "return math.log(10)",
++        "bridge context": "nwscript.with_caller(7, function() end)",
+         "explicit routine bridge": "return nwscript.call('GetFirstPC')",
+     }
+     failures: list[str] = []
+     for name, text in forbidden_examples.items():
+         if not violations(text):
+             failures.append(f"missed forbidden {name}: {text!r}")
+     for name, text in allowed_examples.items():
+         matches = violations(text)
+         if matches:
+             failures.append(f"rejected allowed {name} as {matches}: {text!r}")
+@@ -160,17 +196,17 @@ def main() -> int:
+             )
+ 
+     if failures:
+         print("NWScript boundary violations:")
+         print("\n".join(failures))
+         return 1
+ 
+     print(
+         f"NWScript bounded lexical receipt: checked {checked} active files; "
+         "0 covered dotted, bracket, rawget, single-target alias, or "
+-        "comma-assignment receiver paths on kotor/_G-kotor receivers"
++        "comma-assignment receiver paths on kotor/_G-kotor receivers, or literal routine calls/rawget on kp/nwscript"
+     )
+     return 0
+ 
+ 
+ if __name__ == "__main__":
+     raise SystemExit(self_test() if "--self-test" in sys.argv else main())

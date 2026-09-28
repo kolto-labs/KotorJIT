@@ -493,6 +493,8 @@ class ScenarioRunner:
         return float(step.raw.get("timeout", self.sc.settings[key]))
 
     def _on_poll(self, state: dict) -> None:
+        if getattr(self, "cancel_event", None) is not None and self.cancel_event.is_set():
+            raise W.WaitCancelled("execution stop requested")
         self._answer_authored_bark(state)
         if self.shooter is not None:
             self.shooter.maybe(state)
@@ -522,7 +524,8 @@ class ScenarioRunner:
 
     def _wait(self, step: Step, pred: W.Predicate, what: str, progress: bool, timeout: float) -> dict:
         return W.wait_until(self.ch, pred, timeout, what=what, watchdog=self.watchdog,
-                            progress=progress, on_poll=self._on_poll)
+                            progress=progress, on_poll=self._on_poll,
+                            cancel_event=getattr(self, "cancel_event", None))
 
     def _read_execution_speed(self) -> float:
         result = self.ch.lua("return kp.game_speed()")
@@ -588,6 +591,15 @@ class ScenarioRunner:
     def _do(self, step: Step) -> str:
         r = step.raw
         verb = str(r["do"])
+        # Physical-console actions are isolated from ordinary scenario and
+        # predicate logic.  They require a live, owned X11 game window and
+        # use kp.console.v1 exact request outcomes; see console_steps.py.
+        if verb in {"console_open", "console_command", "owned_input", "advance_ticks"}:
+            from .console_steps import ConsoleStepError, execute_console_step
+            try:
+                return execute_console_step(self, step)
+            except ConsoleStepError as error:
+                raise _StepFailure(str(error), state=error.state) from error
         # A load issues the engine's own sequence and returns; it does not wait
         # for the load to finish. It still gets the load budget rather than the
         # default reply timeout, because the reply comes back after several
@@ -675,7 +687,12 @@ class ScenarioRunner:
             seconds = float(r.get("seconds", r.get("duration", 0)))
             if seconds < 0 or seconds > 300:
                 raise _StepFailure("sleep: seconds must be between 0 and 300")
-            time.sleep(seconds)
+            cancel = getattr(self, "cancel_event", None)
+            if cancel is not None:
+                if cancel.wait(seconds):
+                    raise W.WaitCancelled("execution stop requested")
+            else:
+                time.sleep(seconds)
             return f"slept {seconds:g}s"
         if verb == "lua":
             result = self.ch.lua(str(r["code"]), timeout=float(r.get("timeout", 30)))
@@ -1976,6 +1993,8 @@ class ScenarioRunner:
         expect_verdict = step.raw.get("expect_verdict")
         expect_error = step.raw.get("expect_error")
         try:
+            if getattr(self, "cancel_event", None) is not None and self.cancel_event.is_set():
+                raise W.WaitCancelled("execution stop requested")
             if kind == "screenshot":
                 return self._screenshot(step)
             if kind == "do":
@@ -2001,6 +2020,8 @@ class ScenarioRunner:
                                   f"{v.kind}: {v.reason}", verdict=v.to_dict(), state=v.state)
             return StepResult(step.index, desc, "failed", time.monotonic() - t0, str(v),
                               verdict=v.to_dict(), state=v.state)
+        except W.WaitCancelled as e:
+            return StepResult(step.index, desc, "cancelled", time.monotonic() - t0, str(e))
         except W.WaitTimeout as e:
             return StepResult(step.index, desc, "failed", time.monotonic() - t0, str(e),
                               state=e.state)

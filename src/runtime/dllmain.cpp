@@ -27,6 +27,8 @@
 #endif
 #include <windows.h>
 #else
+#include <cstdlib>
+#include <cstring>
 #include <pthread.h>
 #endif
 
@@ -100,6 +102,12 @@ void* worker(void*) {
 // side: constructors run while the dynamic linker is still finishing, and the
 // decipher wait would block the process from starting at all.
 __attribute__((constructor)) void kp_elf_entry() {
+    // Native host tests link the real runtime to exercise its APIs. They must
+    // control its lifecycle themselves: an implicit startup worker would race
+    // their Host bindings and engine-owner latch. The production preload path
+    // keeps automatic startup unless explicitly disabled before process start.
+    const char* disabled = std::getenv("KOTORPHASOR_NO_AUTOSTART");
+    if (disabled != nullptr && std::strcmp(disabled, "1") == 0) return;
     pthread_t t{};
     if (pthread_create(&t, nullptr, &worker, nullptr) == 0) pthread_detach(t);
 }

@@ -11,10 +11,40 @@
  "field_shape": "kind=field rows carry owner, offset and size. addr is the owning global (g_pAppManager) or 0 when the field is reached through a pointer chain. The generator emits no expected_bytes for them.",
  "counts": {
   "functions": 69,
-  "fields": 127,
-  "accept": 196
+  "fields": 129,
+  "accept": 198
  },
  "bindings": [
+  {
+   "name": "CVirtualMachine::internal",
+   "kind": "field",
+   "owner": "CVirtualMachine",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "K1 GOG StackPopInteger 0x005d1000 loads the internal VM with mov ecx,[ecx] before calling the internal pop routine; adjacent stack wrappers use the same field.",
+    "steam_image": "Read from the Steam unpacked image: StackPopInteger 0x005d1000 = 8b 09 e9 b9 14 00 00 (mov ecx,[ecx]; jmp), so the internal VM is at offset 0. Steam unpacked image sha256 2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05: .textU (VA 0x401000, 3387856 bytes) is byte-identical to GOG .text (sha256 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435) over that range, 0 differing bytes, both sha256 39bcd9f2c21de0e24aef77bcc2912f313fe9ed57803f505819d19a59ee0d4135.",
+    "restated_from": "data/adjudication/k1_gog_103_harness_bindings.json"
+   }
+  },
+  {
+   "name": "CVirtualMachineInternal::command_implementer",
+   "kind": "field",
+   "owner": "CVirtualMachineInternal",
+   "addr": "0x00000000",
+   "offset": "0x3d4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "K1 GOG CVirtualMachineInternal is 0x3d8 bytes and RunScript/command-dispatch consumers read the final command-implementer pointer at this+0x3d4.",
+    "steam_image": "Read from the Steam unpacked image: RunScript 0x005d45d0 sets esi=this with 8b f1 (mov esi,ecx) at 0x005d45dc, then has 8b 8e d4 03 00 00 (mov ecx,[esi+0x3d4]) at 0x005d4650, 0x005d466a and 0x005d4676. Steam unpacked image sha256 2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05: .textU (VA 0x401000, 3387856 bytes) is byte-identical to GOG .text (sha256 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435) over that range, 0 differing bytes, both sha256 39bcd9f2c21de0e24aef77bcc2912f313fe9ed57803f505819d19a59ee0d4135.",
+    "restated_from": "data/adjudication/k1_gog_103_harness_bindings.json"
+   }
+  },
   {
    "name": "CSWCMessage::SendPlayerToServerInput_Attack",
    "addr": "0x00677a90",

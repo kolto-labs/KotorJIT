@@ -1,0 +1,11 @@
+test_probe_f isolated, 6 runs each, before the alive() fix:
+  round-3 playback.py: OK OK FAILED OK FAILED OK   (2/6 fail)
+  round-2 playback.py (backup, /tmp/pioneer-r3-old): FAILED OK OK OK OK FAILED   (2/6 fail)  -> pre-existing, not caused by I6 change
+/proc trace after SIGKILL of the owner (state, task count), 4 runs:
+  [('Z', 2), ('gone',)]
+  [('R', 2), ('R', 1), ('Z', 1)]
+  [('R', 2), ('Z', 2), ('Z', 1)]
+  [('R', 1), ('gone',)]
+('Z', 2): leader is a zombie while a second thread is still exiting and still holds the fds (flocks).
+The old alive() treated any 'Z' as dead, so reclaim() could run before the locks dropped.
+After alive() requires a lone zombie task: see probe-f-x8-after-alive-fix.log (8/8 OK).

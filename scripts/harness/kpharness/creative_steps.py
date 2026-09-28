@@ -20,15 +20,33 @@ class CreativeRunner(ScenarioRunner):
         self.ch.cursor = max(self.ch.cursor, watermark)
         return self.ch.cursor
 
+    def _capture_check(self):
+        check = getattr(self.session, 'check_capture', None)
+        if callable(check): check()
+
+    def run_step(self, step):
+        self._capture_check()
+        result = super().run_step(step)
+        self._capture_check()
+        return result
+
     def _do(self, step):
+        capture_check = getattr(self.session, 'check_capture', None)
+        if callable(capture_check):
+            capture_check()
         raw = step.raw
         verb = raw.get('do')
         if verb not in {'mark_log', 'await_log', 'advance_ticks'}:
-            return super()._do(step)
+            result = super()._do(step)
+            if callable(capture_check):
+                capture_check()
+            return result
         path = self.session.runtime_log
         if verb == 'mark_log':
             self.log_offset = path.stat().st_size if path.exists() else 0
-            return f'native log offset {self.log_offset}'
+            result = f'native log offset {self.log_offset}'
+            if callable(capture_check): capture_check()
+            return result
         timeout = float(raw.get('timeout', 120))
         if not 0 < timeout <= 600:
             raise _StepFailure('creative helper timeout must be in (0,600] seconds')
@@ -49,12 +67,14 @@ class CreativeRunner(ScenarioRunner):
             if type(minimum) is not int or minimum < 0 or (maximum is not None and (type(maximum) is not int or maximum < minimum)):
                 raise _StepFailure('invalid native log match bounds')
         while True:
+            if callable(capture_check): capture_check()
             state = self.ch.state()
             if verb == 'advance_ticks':
                 tick = int(state[tick_key])
                 if tick < start:
                     raise _StepFailure(f'{clock} tick reset before requested interval', state=state)
                 if tick >= target:
+                    if callable(capture_check): capture_check()
                     return f'observed {clock} ticks {start} -> {tick}'
             else:
                 if path.exists():
@@ -70,6 +90,7 @@ class CreativeRunner(ScenarioRunner):
                 if len(lines) >= minimum:
                     (self.run_dir / f'log-gate-{step.index}.json').write_text(json.dumps(
                         {'pattern': raw['pattern'], 'offset': self.log_offset, 'lines': lines}, indent=2) + '\n')
+                    if callable(capture_check): capture_check()
                     return f'native log matched {len(lines)} lines'
             verdict = self.watchdog.check(state)
             if verdict:

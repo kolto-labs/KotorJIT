@@ -28,7 +28,7 @@ oracle line in `kotorphasor.log`.
 | 10 rancor roulette | >= 3 transformations; >= 3 creatures wearing a wheel appearance | ship |
 | 20 fus ro dah | >= 5 pushes | ship |
 | 30 necromancer | >= 2 resurrections; no live hostile left in 40m | ship |
-| 40 chain reaction | >= 3 detonations; party damage >= 10 and PC alive | ship |
+| 40 chain reaction | >= 3 detonations; PC and party excluded from blast, both alive | ship |
 | 50 chaos roulette | >= 8 spins | ship |
 | 60 rave | >= 12 beats before the fight, >= 40 after | ship |
 | 70 doppelganger | >= 3 copies; `GetAppearanceType(pc) == 21` | ship |
@@ -47,7 +47,7 @@ Batch of 2026-09-16 04:05-05:00, host load 60-120, retail speed, recorded at 10 
 - **10 rancor roulette**: four failures before it passed, all the same engine fault. Disguising a *fighting* creature into a non-humanoid (rancor 80, bantha 53, kath hound 75), a droid (HK-47 3), or a unique-character model (Bandon 184) froze the client at 400 frames, then crashed the game with a null read at 0x6502ff -- the borrowed model has no combat animation for the move the trooper is making. Malak-on-a-fighter (necromancer) and the PC model on a fighter (doppelganger) never faulted, so the wheel is party humans (Bastila, Canderous, Carth, Jolee, Juhani) plus Malak, applied from a timer. 11/11 at load ~67. The rancor stays in the name, not the wheel: a big-monster disguise belongs in an out-of-combat scene.
 - **20 fus ro dah**: 9/9; the every-fifth-hit room shout found 0 targets because GetDistanceBetween misreports inside hooks; now position-based.
 - **30 necromancer**: 11/11; 18 oracle lines incl. `verify: valid=1 dead=0 hp=25 app=21` for each rebirth.
-- **40 chain reaction**: 11/11; 6 detonations, party damage published.
+- **40 chain reaction**: an earlier version passed 11/11 live with 6 detonations. The round 5 redesign has not run live yet. In it, the PC and party take no blast damage. The script checks each victim against `GetFirstPC` and `IsObjectPartyMember` right before the hit, so it never damages them in the first place. There is no more damage counter to publish.
 - **50 chaos roulette**: 10/10; 132 spins.
 - **60 rave**: 10/10; 104 beats through the fight.
 - **70 doppelganger**: 11/11; `GetAppearanceType(pc) == 21` held.

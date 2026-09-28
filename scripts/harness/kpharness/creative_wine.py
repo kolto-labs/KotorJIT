@@ -8,8 +8,11 @@ import tempfile
 from pathlib import Path
 
 from . import discover
-from .recording import artifact, sha256
-from .session import BootFailure, GameSession, display_in_use, pids_by_name, preflight_tmp_write
+from .display_backends import OwnedWindowVerifier, discover_owned_x11_window
+from .gamescope_xwayland import GamescopeXwaylandLease
+from .recording import X11WindowRecorder, artifact, sha256
+from .session import (BootFailure, GameSession, display_in_use, free_port, pids_by_name,
+                      preflight_tmp_write, write_runtime_ini)
 
 OWNER = 'kpharness.creative.v1'
 
@@ -173,5 +176,117 @@ class LinuxWineCreativeSession(GameSession):
                 self._session_closed = True
             except BaseException as error:
                 self._cleanup_errors.append(f'session: {type(error).__name__}: {error}')
+        if self._cleanup_errors:
+            raise RuntimeError('cleanup failed: ' + '; '.join(self._cleanup_errors))
+
+
+class DeferredGamescopeRecorder:
+    """Recorder configuration created before the session owns its display."""
+    def __init__(self, run_dir: Path, **kwargs):
+        self.run_dir, self.kwargs = Path(run_dir), dict(kwargs)
+        self.active = None
+    def attach(self, lease, verifier):
+        if self.active is not None:
+            raise RuntimeError('Gamescope recorder already attached')
+        self.active = X11WindowRecorder(self.run_dir, lease=lease, verifier=verifier, **self.kwargs)
+        return self.active
+    def __getattr__(self, name):
+        if self.active is None:
+            if name in {'process', 'started', 'marker', 'error', 'failure'}:
+                return None
+            raise AttributeError(name)
+        return getattr(self.active, name)
+    def stop(self):
+        if self.active is not None:
+            self.active.stop()
+
+
+class LinuxWineGamescopeCreativeSession(LinuxWineCreativeSession):
+    """K1/Wine session on a freshly owned Gamescope Xwayland lease."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.lease = GamescopeXwaylandLease(self.run_dir, *self.screen)
+        self.owned_window = None
+        self.window_verifier = None
+        self._lease_closed = False
+        self.cleanup_receipt = {"status": "not_started", "order": [],
+                                "recorder": "not_started", "game_wine": "not_started", "display": "not_started"}
+
+    def boot(self, resources=None):
+        if os.environ.get('KP_HARNESS_REUSE_DISPLAY'):
+            raise BootFailure('display ownership', 'Gamescope backend refuses display reuse')
+        self.acquire_stage_lock()
+        try:
+            self.stage(resources)
+            self.port = self.requested_port or free_port()
+            write_runtime_ini(self.game_dir, self.port)
+            self.lease.start()
+            display = self.lease.environment['DISPLAY'].split('.', 1)[0]
+            self.display = int(display[1:])
+            channel = self._launch_and_connect()
+            self.window_verifier = OwnedWindowVerifier(self.lease, run=__import__('subprocess').run)
+            self.owned_window = discover_owned_x11_window(
+                self.lease, self.game_pids(), run=__import__('subprocess').run,
+                monotonic=__import__('time').monotonic)
+            recorder = self.recorder.attach(self.lease, self.window_verifier)
+            recorder.start(self.owned_window, self.runtime_log)
+            self.capture_window = self.owned_window.window_id
+            self.write_session_info()
+            return channel
+        except BaseException as error:
+            self.cleanup_receipt["boot_error"] = f"{type(error).__name__}: {error}"
+            self._persist_cleanup()
+            try:
+                self.teardown(graceful=False)
+            except BaseException:
+                # Teardown keeps its own durable failure; never mask boot.
+                pass
+            raise
+
+    def _build_env(self):
+        return dict(self.lease.game_environment(super()._build_env()))
+
+    def check_capture(self):
+        if self.recorder.active is None:
+            raise RuntimeError('Gamescope window recorder is not active')
+        self.recorder.active.check()
+        self.window_verifier(self.owned_window)
+
+    def _persist_cleanup(self):
+        from .gamescope_snapshot import _atomic_write, assert_persistable_evidence
+        assert_persistable_evidence(self.cleanup_receipt)
+        if getattr(self, "run_dir", None) is not None:
+            self.run_dir.mkdir(parents=True, exist_ok=True)
+            _atomic_write(self.run_dir / "gamescope-session-cleanup.json",
+                          (json.dumps(self.cleanup_receipt, sort_keys=True) + "\n").encode())
+
+    def teardown(self, graceful=True):
+        attempts = self.cleanup_receipt.setdefault("attempts", [])
+        attempt = {"attempt": len(attempts) + 1, "order": [], "errors": {}}
+        operations = (("recorder", "_recorder_closed", self.recorder.stop),
+                      ("game_wine", "_session_closed", lambda: GameSession.teardown(self, graceful=graceful)),
+                      ("display", "_lease_closed", self.lease.close))
+        for name, flag, operation in operations:
+            if getattr(self, flag):
+                continue
+            if name not in self.cleanup_receipt["order"]:
+                self.cleanup_receipt["order"].append(name)
+            attempt["order"].append(name)
+            try:
+                operation()
+                setattr(self, flag, True)
+                self.cleanup_receipt[name] = "passed"
+            except BaseException as error:
+                self.cleanup_receipt[name] = "failed"
+                message = f'{name}: {type(error).__name__}: {error}'
+                attempt["errors"][name] = message
+                if message not in self._cleanup_errors:
+                    self._cleanup_errors.append(message)
+        if attempt["order"]:
+            attempts.append(attempt)
+        self.cleanup_receipt["errors"] = list(self._cleanup_errors)
+        # Any failed attempt remains a failed run, even if retry releases resources.
+        self.cleanup_receipt["status"] = "failed" if self._cleanup_errors else "passed"
+        self._persist_cleanup()
         if self._cleanup_errors:
             raise RuntimeError('cleanup failed: ' + '; '.join(self._cleanup_errors))

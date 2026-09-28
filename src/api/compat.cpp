@@ -13,6 +13,7 @@
 #include "lua/host.hpp"
 #include "harness/commands.hpp"
 #include "harness/fields.hpp"
+#include "events/table.hpp"
 #include "harness/ring.hpp"
 #include "hooks/registry.hpp"
 #include "platform/platform.hpp"
@@ -77,6 +78,21 @@ int lua_print_to_log(lua_State* L) {
 
 // -------------------------------------------------------------- callbacks ---
 
+// Shared by both "registration promises nothing" cases below: same one-line
+// Warn, differing only in why the handler will never be called.
+void warn_unreachable_registration(lua::Script& owner, int constant, const char* how) {
+    const char* why = "";
+    for (unsigned i = 0; i < kEventCount; ++i)
+        if (kEvents[i].value == constant) { why = kEvents[i].note; break; }
+    platform::log(platform::LogLevel::Warn,
+                  "[%s] registered for an event %s (%s)%s%s",
+                  owner.name().c_str(), how,
+                  [&] { for (unsigned i = 0; i < kEventCount; ++i)
+                            if (kEvents[i].value == constant) return kEvents[i].name;
+                        return "?"; }(),
+                  *why ? ": " : "", why);
+}
+
 // kp.events.register(event, "handler_name" | function)
 //
 // A name is resolved now, not at dispatch, so a typo is an error at the call
@@ -96,16 +112,21 @@ int l_register_callback(lua_State* L) {
     if (*event == '\0') {
         // The constant is real but nothing raises it here. Say so once rather
         // than accepting a handler that will never be called.
-        const char* why = "";
-        for (unsigned i = 0; i < kEventCount; ++i)
-            if (kEvents[i].value == constant) { why = kEvents[i].note; break; }
-        platform::log(platform::LogLevel::Warn,
-                      "[%s] registered for an event this game does not have (%s)%s%s",
-                      owner->name().c_str(),
-                      [&] { for (unsigned i = 0; i < kEventCount; ++i)
-                                if (kEvents[i].value == constant) return kEvents[i].name;
-                            return "?"; }(),
-                      *why ? ": " : "", why);
+        warn_unreachable_registration(*owner, constant, "this game does not have");
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+
+    // The constant is real and the game has the event, but no hook site in
+    // this build ever raises it -- e.g. OnCreatureDamaged, whose contract
+    // carries outer_event_id == -1 (see events::dispatchable). A handler
+    // registered for it would sit forever, so say so now rather than let the
+    // script believe it is armed. Derived from the contract table itself, not
+    // a hardcoded name, so it covers K1 and K2 alike.
+    const events::EventContract* contract = events::find(event);
+    if (contract == nullptr || !events::dispatchable(*contract)) {
+        warn_unreachable_registration(*owner, constant,
+                                      "no dispatch site in this build raises");
         lua_pushboolean(L, 0);
         return 1;
     }

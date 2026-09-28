@@ -136,7 +136,7 @@
     },
     {
       "path": "coverage/10_cover.lua",
-      "sha256": "a8f0b06fe282c6a08bbc55045740b5fdbec2e0df27c25b26d273be5c75e45462",
+      "sha256": "c13f64247ba86895849d42d4b32816957a4530a4ad5079d2a886818a879e77b3",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -176,7 +176,7 @@
     },
     {
       "path": "cursed/100_item_airstrike.lua",
-      "sha256": "b528fb644559a9f6db31dee129d07277d8ca64bb57c14790516de3d17925848d",
+      "sha256": "ce2e1504f9b45cfe5edb85a694df6330613f2d3ec7a3033e4f1c72e0256e0e11",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -203,7 +203,7 @@
         ],
         "predicate_obligations": {
           "cursed.100_item_airstrike.acquire_arming": "Save/load inventory replay before200 ticks does not strike; actual new acquisition by PC/party after arming does.",
-          "cursed.100_item_airstrike.targets_damage": "Independent HP/effect observations show laser and60 light damage on living nonparty targets within20m; party/dead/outside targets excluded.",
+          "cursed.100_item_airstrike.targets_damage": "Independent HP/effect observations show laser and60 light damage on living nonparty targets within20m that GetIsEnemy(target, PC) marks hostile; party/neutral/dead/outside targets excluded.",
           "cursed.100_item_airstrike.owner_dedup": "Duplicate acquire callback strikes once; unrelated owner does not consume a later legitimate acquisition.",
           "cursed.100_item_airstrike.levelup": "Actual level-up produces temporary Revan appearance22 and knight-speed aura for15seconds; request oracle alone is insufficient.",
           "cursed.100_item_airstrike.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
@@ -330,7 +330,7 @@
     },
     {
       "path": "cursed/40_chain_reaction.lua",
-      "sha256": "a346b5a8381d3fcdcfadf7c3c1ef859539fe8eb9208ee05f33db647cbdeb5c3f",
+      "sha256": "9152960ef3c02818f78146289ba0bc709a727a3c7751839352ea2ccb99ae6d8c",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -357,8 +357,8 @@
         ],
         "predicate_obligations": {
           "cursed.40_chain_reaction.death_once": "Eligible death scripts trigger one detonation per corpse; unrelated/party/PC sources and unarmed/conversation events do not.",
-          "cursed.40_chain_reaction.damage_readback": "Independent HP/effect measurements show full fire damage on living nonparty victims within7m and reduced damage floor(DAMAGE/3) on party.",
-          "cursed.40_chain_reaction.party_survival": "Party minimum-one-HP protection is observed; local6 request total is not substituted for actual damage/survival.",
+          "cursed.40_chain_reaction.damage_readback": "Independent HP/effect measurements show full fire damage on living nonparty victims within 7m and no blast damage on the PC or any party member.",
+          "cursed.40_chain_reaction.party_survival": "The PC and every party member are left out of each blast and never detonate, judged at blast time by GetFirstPC and IsObjectPartyMember (no stored IDs, no tags); independent readback shows their HP untouched by blasts and their min-one-HP flag never read or changed by the script, also across a leader swap, a module load and a companion re-created under a new ID.",
           "cursed.40_chain_reaction.cascade_cleanup": "Subsequent eligible death scripts detonate once each without unbounded repeat or freezing.",
           "cursed.40_chain_reaction.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
@@ -454,7 +454,7 @@
     },
     {
       "path": "cursed/70_doppelganger.lua",
-      "sha256": "479b743031a489bee35279deecfd318828a4199f3af5280d571c0aa8eef983dd",
+      "sha256": "5d9864b22241ff135d3bb0c1ecb3f2671af218b58cdf2f44eb7bc62c95f62c42",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -476,15 +476,16 @@
           "cursed.70_doppelganger.clean_recording"
         ],
         "unmet_preconditions": [
+          "Fresh serialized K1 run must establish retained constructor-token removal after fresh wrapper enumeration/GC pressure, with an identical baseline disguise surviving",
           "Current-source and deployed-source hash-bound live receipt",
           "Independent engine predicates and clean session",
           "Historical receipts are unbound and cannot be promoted"
         ],
         "predicate_obligations": {
           "cursed.70_doppelganger.pc_malak": "First PC-involved combat event produces independent PC appearance21 readback.",
-          "cursed.70_doppelganger.hostile_copy": "At least three eligible living hostiles independently read back the captured PC appearance; requested disguise/counter alone is insufficient.",
-          "cursed.70_doppelganger.guards_once": "NPC-vs-NPC, party, invalid and dead targets are excluded; repeated targets do not consume another successful copy.",
-          "cursed.70_doppelganger.failed_request_retry": "Missing/failed disguise request does not count as copy success and a later valid request can retry.",
+          "cursed.70_doppelganger.hostile_copy": "Record PC row P before arming; at least three marked, living eligible hostiles independently read back P while the PC reads21. Counter/request evidence alone is insufficient.",
+          "cursed.70_doppelganger.guards_once": "NPC-vs-NPC, party, invalid and dead targets are excluded; repeated targets do not consume another successful copy; after settle/transition every surviving touched actor has its recorded pre-copy row and only script-owned disguise handles are gone.",
+          "cursed.70_doppelganger.failed_request_retry": "A controlled failed disguise leaves actor row and script-owned handles unchanged, does not count as copy success, and a later valid request retries once with P.",
           "cursed.70_doppelganger.animation_safety": "PC and copied hostiles continue animating/fighting with advancing ticks and no freeze/crash.",
           "cursed.70_doppelganger.clean_recording": "Clean serialized session with current effective/deployed bytes; retain independent state artifacts and continuous video where the playbook requires visible behavior."
         }
@@ -1068,7 +1069,7 @@
     },
     {
       "path": "multiplayer/10_avatar_sync_test.lua",
-      "sha256": "e74521ac0275c60917a1e12e9b3a8928d22e65853f90b554c9221daa348078c6",
+      "sha256": "784e2e98d56e4d491b06572243f82ef8311934fff163cc2dd202f355ef89e556",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"

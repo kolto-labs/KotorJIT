@@ -59,6 +59,7 @@ local next_obj_id = 2
 local area_obj, other_area_obj = 999, 998
 local pc_area = area_obj
 local clock_ms = 1000
+local current_caller = nil   -- set by the mocked nwscript.with_caller
 
 local engine_routines = {
     GetFirstPC = function() return 1 end,
@@ -86,7 +87,7 @@ local engine_routines = {
         objects[id].pos = { pos.x, pos.y, pos.z }
         log_call("CutsceneMove", id, pos.x, pos.y, pos.z, run)
     end,
-    SetFacing = function(f) log_call("SetFacing", f) end,
+    SetFacing = function(f) log_call("SetFacing", f, current_caller) end,
 }
 nwscript = {
     call = function(name, ...)
@@ -94,11 +95,20 @@ nwscript = {
         assert(fn, "unexpected NWScript routine " .. tostring(name))
         return fn(...)
     end,
+    -- Same shape as the product: run fn with id as OBJECT_SELF, restore the
+    -- previous caller, and rethrow errors.
+    with_caller = function(id, fn, ...)
+        local previous = current_caller
+        current_caller = id
+        local results = { pcall(fn, ...) }
+        current_caller = previous
+        if not results[1] then error(results[2], 0) end
+        return unpack(results, 2)
+    end,
 }
 kp = {
     gamedir = function() return FAKE_GAMEDIR end,
     time = function() return clock_ms end,
-    as = function(id, fn) return fn() end,
 }
 kp.print = function(...)
     local parts = {}
@@ -228,10 +238,20 @@ end
 calls = {}
 inject(MSG_STATE, 42, 1, 10.0, 20.0, 0.0, 90.0, "area_a", "Bob")
 OnTick(1, true)
+local function facing_calls()
+    local out = {}
+    for _, c in ipairs(calls) do if c[1] == "SetFacing" then out[#out + 1] = c end end
+    return out
+end
+local ghost_42
 do
     local spawned = false
     for _, c in ipairs(calls) do if c[1] == "CreateObject" then spawned = true end end
     check(spawned, "expected a spawn on first sighting of a same-area peer")
+    ghost_42 = get_up(drain_incoming, "peers")[42].ghost_id
+    local f = facing_calls()
+    check(#f == 1 and f[1][2] == 90.0 and ghost_42 ~= nil and f[1][3] == ghost_42,
+          "first spawn must SetFacing(90) with the ghost as caller")
 end
 
 calls = {}
@@ -245,6 +265,9 @@ do
     end
     check(moved, "expected CutsceneMove after the peer's position changed")
     check(not spawned_again, "must not respawn a ghost that is still valid")
+    local f = facing_calls()
+    check(#f == 1 and f[1][2] == 100.0 and f[1][3] == ghost_42,
+          "facing change 90 -> 100 must SetFacing(100) with the ghost as caller")
 end
 
 -- =============================================================================
@@ -257,6 +280,7 @@ do
     local redundant = false
     for _, c in ipairs(calls) do if c[1] == "CutsceneMove" then redundant = true end end
     check(not redundant, "identical position should not re-issue CutsceneMove")
+    check(#facing_calls() == 0, "unchanged facing must not re-issue SetFacing")
 end
 
 -- =============================================================================

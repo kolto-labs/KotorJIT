@@ -103,6 +103,20 @@ bool is_loopback(const std::string& bind, in_addr& out) {
 
 }  // namespace
 
+LineShape screen_request_line(const std::string& line) {
+    std::size_t i = 0;
+    while (i < line.size() && (line[i] == ' ' || line[i] == '\t' || line[i] == '\r')) ++i;
+    if (i < line.size() && line[i] == '{') return LineShape::Ok;
+    // Wording only: anything that does not open an object is refused anyway.
+    static const char* const kMethods[] = {"GET ",     "POST ",  "PUT ",     "HEAD ", "OPTIONS ",
+                                           "DELETE ",  "PATCH ", "CONNECT ", "TRACE "};
+    for (const char* m : kMethods)
+        if (line.compare(i, std::strlen(m), m) == 0) return LineShape::Http;
+    if (line.find("HTTP/1.") != std::string::npos || line.find("HTTP/2") != std::string::npos)
+        return LineShape::Http;
+    return LineShape::NotObject;
+}
+
 Channel::Channel() = default;
 
 Channel::~Channel() { stop(); }
@@ -251,7 +265,11 @@ std::size_t Channel::take_requests(std::size_t max, std::vector<Request>& out) {
 }
 
 void Channel::push_reply(std::uint64_t client, std::string line) {
-    if (client == 0 || client != current_client()) return;
+    // The same rule as a request: a client that left, or one that has been
+    // condemned, gets nothing more. The drain queues a condemned client's one
+    // error reply before it calls condemn(), so that reply still goes out;
+    // an event frame or a deferred completion pushed after it does not.
+    if (!admit(client)) return;
     std::lock_guard<std::mutex> lock(mutex_);
     // Over the ceiling the reply is refused rather than queued: the client is
     // not reading, and the listener closes the connection on the flag.
@@ -328,6 +346,13 @@ void Channel::run_loop() {
             continue;
         }
 
+        // Read before the reply pull. The main thread condemns a client only
+        // after pushing its error reply, so a condemnation seen here means
+        // the pull below already holds that reply.
+        const bool doomed = have_client &&
+                            condemned_gen_.load(std::memory_order_acquire) ==
+                                client_gen_.load(std::memory_order_acquire);
+
         // Pull queued replies into the write buffer before selecting, so a
         // reply queued while we waited goes out on this round.
         if (have_client) {
@@ -341,6 +366,19 @@ void Channel::run_loop() {
             replies_.clear();
             reply_bytes_ = 0;
             outbuf_pending_.store(outbuf_.size(), std::memory_order_release);
+        }
+
+        // A condemned client gets what was queued for it, in one non-blocking
+        // write, and is closed. Nothing it sent after the bad line runs: the
+        // drain's admit() refuses the generation, and close_client() drops
+        // whatever the listener still held.
+        if (doomed) {
+            if (!outbuf_.empty())
+                ::send(cs, outbuf_.data(), static_cast<int>(outbuf_.size()), kSendFlags);
+            platform::log(platform::LogLevel::Warn,
+                          "harness: client sent a line that is not a JSON request; client dropped");
+            close_client();
+            continue;
         }
 
         if (have_client && outbuf_.size() > kMaxOutBytes) {

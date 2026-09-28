@@ -1,0 +1,155 @@
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 46393 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 51818 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 52183 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 57452 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 58119 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 59910 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 60271 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 61489 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 63007 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 65240 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+
+======================================================================
+ERROR: test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 735, in test_probe_h_idle_connection_does_not_block_status
+    self.assertEqual(self.PB.status(self.out)['operation_state'], 'idle')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 504, in control
+    raw = stream.readline(1024 * 1024)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+======================================================================
+ERROR: test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 601, in test_probe_b_route_edit_does_not_block_stop
+    self.assertIn(self.PB.status(self.out)['operation_state'], {'idle'})
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 500, in control
+    raise PlaybackError('stale or invalid playback descriptor')
+kpharness.playback.PlaybackError: stale or invalid playback descriptor
+
+======================================================================
+ERROR: test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 653, in test_probe_f_sigkill_then_reclaim_restores_recorded_speed
+    report = self.PB.reclaim(self.out, self.info)
+             ^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.playback' has no attribute 'reclaim'
+
+======================================================================
+ERROR: test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 683, in test_reclaim_never_restores_on_a_different_game_process
+    self.PB.status(self.out)
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 504, in control
+    raw = stream.readline(1024 * 1024)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+======================================================================
+FAIL: test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 709, in test_probe_g_unwritable_journal_exits_owner
+    self.assertTrue(wait_dead(pid), 'owner kept serving with an unwritable journal')
+AssertionError: False is not true : owner kept serving with an unwritable journal
+
+======================================================================
+FAIL: test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 722, in test_probe_k_tampered_descriptor_mode_still_detaches
+    self.assertTrue(wait_dead(pid), 'owner alive after stop with a tampered descriptor')
+AssertionError: False is not true : owner alive after stop with a tampered descriptor
+
+======================================================================
+FAIL: test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 587, in test_probe_a_readback_mismatch_restores_prior_engine_speed
+    self.assertEqual(self.engine.scale(), 2.0, 'engine left at the clamped speed')
+AssertionError: 3.0 != 2.0 : engine left at the clamped speed
+
+======================================================================
+FAIL: test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 618, in test_probe_c_route_edit_mid_job_still_restores_speed
+    self.assertEqual(self.engine.scale(), 2.0, 'route edit skipped the speed restore')
+AssertionError: 12.0 != 2.0 : route edit skipped the speed restore
+
+======================================================================
+FAIL: test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 640, in test_probe_d_sigterm_behaves_like_stop
+    self._signal_restores(15)
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 630, in _signal_restores
+    self.assertEqual(self.engine.scale(), 2.0)
+AssertionError: 12.0 != 2.0
+
+======================================================================
+FAIL: test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 643, in test_sighup_behaves_like_stop
+    self._signal_restores(1)
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 630, in _signal_restores
+    self.assertEqual(self.engine.scale(), 2.0)
+AssertionError: 12.0 != 2.0
+
+----------------------------------------------------------------------
+Ran 10 tests in 149.190s
+
+FAILED (failures=6, errors=4)

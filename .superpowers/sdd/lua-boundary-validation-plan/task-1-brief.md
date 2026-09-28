@@ -1,0 +1,7 @@
+### Task 1: Finish engine boundary enforcement
+Own src/api, related generators/data/docs/examples/harness consumers and namespace/support/routine tests only as required for the migration.
+Rename native kp.log to kp.diagnostic (no compatibility alias) throughout active consumers, metadata, generators and docs; preserve engine routine log through nwscript.call. Move kp.as to nwscript.with_caller and kp.last_routine_trace to nwscript.last_trace; preserve caller restoration/error behavior. Bridge registration must not create kp. Do not remove native object convenience operations: distinct names are permitted and their implementation can use an explicit C++ bridge API; document that dependency accurately.
+Strengthen production registration tests: enumerate routine catalog, no exceptions for native exports, no exported direct routine names, bridge-only registration does not create kp, native-only initialization does not fabricate nwscript. Retain shared script/console initializer. Update active examples and migration docs. Improve lexical boundary checker for explicit duplicate routine receivers where sound; clearly state scope instead of pretending lexical checks prove arbitrary Lua semantics.
+Research grounding: Lua 5.1 Reference Manual https://www.lua.org/manual/5.1/manual.html (environment tables and registration); use real tables and explicit module ownership.
+Run focused tests and boundary checker; report actual command/results. Do not run games.
+

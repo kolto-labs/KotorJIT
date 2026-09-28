@@ -44,7 +44,7 @@ local function help()
     kp.print("[cover] autosave            DoSinglePlayerAutoSave")
     kp.print("[cover] convo               GetIsConversationActive")
     kp.print("[cover] haste [n]           kp.speed — extra MainLoop ticks (1-16)")
-    kp.print("[cover] pick <n>            queue reply index (1-based visible option)")
+    kp.print("[cover] pick <n>            prints the index only; no reply is chosen")
 end
 
 local function words(line)
@@ -116,10 +116,9 @@ function OnConsoleCommand(line, relevant)
             kp.print("[cover] speed=" .. tostring(kp.speed(n)))
         end
     elseif cmd == "pick" and w[3] then
-        -- Visible-option index. No ChooseReply routine exists; this records
-        -- the choice for the walker and, when a conversation is up, the
-        -- harness may type the digit. The conversation-manager cave writes
-        -- the index directly when it lands.
+        -- Visible-option index. No ChooseReply routine exists, so this only
+        -- prints the number for the walker's log. Nothing here selects a
+        -- reply; any digit keystroke comes from the harness, not this script.
         local n = tonumber(w[3]) or 1
         kp.print("[cover] pick=" .. tostring(n))
     else

@@ -755,9 +755,22 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
 // which is fast enough that a player editing a script does not wait for it.
 void devtools_output(const char*, void*);
 constexpr std::uint64_t kReloadEvery = 64;
+std::atomic<bool> g_client_gate_mismatch_logged{false};
+
+void note_client_gate_mismatch() {
+    if (live() && kp::runtime::engine_thread_latched() &&
+        !kp::runtime::on_engine_thread() &&
+        !g_client_gate_mismatch_logged.exchange(true, std::memory_order_acq_rel))
+        Runtime::instance().log("engine gate: client frame callback is not the latched server MainLoop thread");
+}
 
 void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
     auto orig = reinterpret_cast<MainLoopFn>(g_orig_main_loop.load(std::memory_order_acquire));
+
+    // This is the actual server MainLoop owner seam.  It runs on the engine
+    // thread before console pumping, harness draining, or Lua dispatch.  The
+    // startup worker and client/render callbacks never latch ownership.
+    kp::runtime::latch_engine_thread();
 
     // The client loop stops turning while K1 loads a fresh module, even after
     // it has already run at the menu. The server loop still runs scripts in
@@ -1273,6 +1286,7 @@ int KP_CLIENT_LOOP_CC client_main_loop_body(void* self) {
     if ((frame % 100) == 0)
         Runtime::instance().log("client loop cave: %llu frames", static_cast<unsigned long long>(frame));
     kp::harness::note_client_frame();
+    note_client_gate_mismatch();
     kp::devtools::overlay_tick();
     if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
     kp::harness::drain();
@@ -1298,6 +1312,7 @@ int __attribute__((cdecl)) client_frame_wrapper_body(void* self) {
         Runtime::instance().log("client frame wrapper: %u entries", entered);
     const int result = orig != nullptr ? orig(self) : 0;
     kp::harness::note_client_frame();
+    note_client_gate_mismatch();
     kp::devtools::overlay_tick();
     if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
     kp::harness::drain();
@@ -1306,6 +1321,10 @@ int __attribute__((cdecl)) client_frame_wrapper_body(void* self) {
 }
 
 }  // namespace
+
+void reset_client_gate_mismatch_log() {
+    g_client_gate_mismatch_logged.store(false, std::memory_order_release);
+}
 
 // ------------------------------------------------------------- wiring in ----
 

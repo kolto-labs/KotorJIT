@@ -1,0 +1,105 @@
+# Review package: 98dffad..997a0cf
+
+## Commits
+997a0cf Document nullable GetFacing trace diagnostics accurately
+
+## Files changed
+ data/hostapi.toml    | 10 +++++++---
+ docs/api-dialects.md |  2 +-
+ tools/gen_compat.py  |  6 +++++-
+ 3 files changed, 13 insertions(+), 5 deletions(-)
+
+## Diff
+diff --git a/data/hostapi.toml b/data/hostapi.toml
+index 482face..5df5bec 100644
+--- a/data/hostapi.toml
++++ b/data/hostapi.toml
+@@ -1669,25 +1669,29 @@ on_failure = "'ActionDoCommand takes a script closure and cannot be called from
+ requires = "none"
+ mechanism = "the dispatcher rejects this excluded catalog name before VM dispatch"
+ doc = """Same closure problem. Queueing work onto an object's action queue from
+ outside is not possible; running it next frame is, and is usually what was meant."""
+ confidence = "medium"
+ 
+ [[function]]
+ lua_name = "nwscript.last_trace"
+ module = "routines"
+ params = []
+-returns = "table"
++returns = "table or nil"
+ failure = "never"
+ requires = "none"
+-mechanism = "copies the most recent bridge dispatch trace into a Lua table"
+-doc = "Read-only diagnostic receipt for the last engine routine dispatch, including failure stages. This does not execute an engine routine."
++mechanism = "copies the current game thread's limited GetFacing diagnostic trace, or returns nil before a trace exists"
++doc = """Read-only diagnostic initialized only by GetFacing (routine 28), after
++live VM/context and argument-count checks pass. Returns nil before a trace exists.
++Other routines and early context or argument-count failures do not initialize a
++new trace, so this is not a receipt for the latest arbitrary dispatch or failure.
++Reading it does not execute an engine routine."""
+ confidence = "high"
+ 
+ [[function]]
+ lua_name = "nwscript.with_caller"
+ module = "routines"
+ params = [
+   { name = "object_id", type = "object" },
+   { name = "body", type = "function" },
+ ]
+ variadic = true
+diff --git a/docs/api-dialects.md b/docs/api-dialects.md
+index be3574e..318d6b4 100644
+--- a/docs/api-dialects.md
++++ b/docs/api-dialects.md
+@@ -1,19 +1,19 @@
+ # Native namespace and callback migration
+ 
+ Generated from `data/api_aliases.toml` and `data/events.toml`.
+ 
+ API version 2 has two public roots: `nwscript.call(name, ...)` for direct engine routines and `kp` for every native host facility.
+ 
+ The former kotor root, bare host functions, underscored aliases, cb/events globals, host identity globals and host bit32 alias are removed. Use `kp.mem.readbyte`, `kp.registertimer` and `kp.diagnostic`. The engine logarithm is `nwscript.call('log', value)`.
+ 
+-Bridge context is `nwscript.with_caller(object_id, fn, ...)`; the last dispatch receipt is `nwscript.last_trace()`. The old native log, as and last_routine_trace members have no compatibility aliases.
++Bridge context is `nwscript.with_caller(object_id, fn, ...)`; `nwscript.last_trace()` returns a limited GetFacing diagnostic table, or nil before a trace exists. Only GetFacing (routine 28) initializes a trace, after live VM/context and argument-count checks pass; other routines and those early failures do not initialize a new trace. It is not a receipt for the latest arbitrary dispatch. The old native log, as and last_routine_trace members have no compatibility aliases.
+ 
+ Native object conveniences such as `kp.obj.position` retain distinct names. Their C++ implementation explicitly consumes `api::find` and `api::call`; they require the VM backend for engine operations without exporting engine routine names or creating the nwscript root.
+ 
+ Lua's standard `print` remains unchanged. `kp.print(...)` writes host diagnostics; console and harness states capture that native output.
+ 
+ Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, `kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.
+ 
+ ## Explicit event registration
+ 
+ ```lua
+diff --git a/tools/gen_compat.py b/tools/gen_compat.py
+index 05e32a8..ad383ba 100755
+--- a/tools/gen_compat.py
++++ b/tools/gen_compat.py
+@@ -115,21 +115,25 @@ def gen_events(events: list[dict]) -> str:
+ def gen_docs(doc: dict, events: list[dict]) -> str:
+     lines = ["# Native namespace and callback migration", "",
+              "Generated from `data/api_aliases.toml` and `data/events.toml`.", "",
+              "API version 2 has two public roots: `nwscript.call(name, ...)` for direct "
+              "engine routines and `kp` for every native host facility.", "",
+              "The former kotor root, bare host functions, underscored aliases, "
+              "cb/events globals, host identity globals and host bit32 alias are removed. "
+              "Use `kp.mem.readbyte`, `kp.registertimer` and `kp.diagnostic`. "
+              "The engine logarithm is `nwscript.call('log', value)`.", "",
+              "Bridge context is `nwscript.with_caller(object_id, fn, ...)`; "
+-             "the last dispatch receipt is `nwscript.last_trace()`. The old native "
++             "`nwscript.last_trace()` returns a limited GetFacing diagnostic table, "
++             "or nil before a trace exists. Only GetFacing (routine 28) initializes "
++             "a trace, after live VM/context and argument-count checks pass; other "
++             "routines and those early failures do not initialize a new trace. "
++             "It is not a receipt for the latest arbitrary dispatch. The old native "
+              "log, as and last_routine_trace members have no compatibility aliases.", "",
+              "Native object conveniences such as `kp.obj.position` retain distinct "
+              "names. Their C++ implementation explicitly consumes `api::find` and "
+              "`api::call`; they require the VM backend for engine operations without "
+              "exporting engine routine names or creating the nwscript root.", "",
+              "Lua's standard `print` remains unchanged. `kp.print(...)` writes host "
+              "diagnostics; console and harness states capture that native output.", "",
+              "Host metadata is `kp.host`, `kp.serverapp`, `kp.game`, "
+              "`kp.api_version` (2), `kp.version`, `kp.gamedir()` and `kp.time()`.", "",
+              "## Explicit event registration", "", "```lua",

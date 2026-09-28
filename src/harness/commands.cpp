@@ -1,4 +1,5 @@
 #include "devtools/console.hpp"
+#include "harness/console_protocol.hpp"
 // The harness commands. See commands.hpp for the drain's rules.
 //
 // Every command takes the parsed request and fills an Outcome. Engine work
@@ -709,6 +710,13 @@ void cmd_unsubscribe(const Json&, Outcome& out) {
 }
 
 void cmd_devtools(const Json& req, Outcome& out) {
+    if (req.has("protocol")) {
+        std::string error;
+        if (!console_protocol::dispatch(kp::devtools::console(), req,
+                console_protocol::runtime_instance(), kp::devtools::overlay_open(),
+                kp::devtools::overlay_input_calls(), out.result, error)) fail(out, error);
+        return;
+    }
     auto* operation=req.get("op");std::string op=operation?operation->as_string():"status";
     auto& c=kp::devtools::console();Json result=Json::object();
     if(op=="submit") {auto* code=req.get("code");if(!code || !code->is_string()){fail(out,"code must be a string");return;}auto id=c.submit(code->as_string());if(!id){fail(out,"console queue full or command too long");return;}result.set("request",Json::unsigned_(id));}
@@ -1234,7 +1242,13 @@ void dispatch(const std::string& cmd, const Json& req, Outcome& out, std::uint64
 // Parse and serialise are the two guarded regions. A local written inside a
 // guarded region is indeterminate after a claimed fault, so each fallback
 // re-states the flag that the code after it reads.
-std::string execute_line(const std::string& raw, std::uint64_t client) {
+//
+// `condemn` comes back true when the line is not a JSON object: an HTTP
+// request line, a header, garbage. That line gets its error reply and the
+// connection is done; see Channel::condemn.
+std::string execute_line(const std::string& raw, std::uint64_t client, bool& condemn) {
+    const LineShape shape = screen_request_line(raw);
+    condemn = shape != LineShape::Ok;
     Json req;
     std::string parse_error;
     bool parsed = false;
@@ -1250,11 +1264,17 @@ std::string execute_line(const std::string& raw, std::uint64_t client) {
 
     Json id = Json::null();
     Json reply;
-    if (!parsed) {
+    if (condemn) {
+        reply = err_reply(id, shape == LineShape::Http
+                                  ? std::string("HTTP is not spoken here; connection closed")
+                                  : std::string("request must be a JSON object; connection closed"));
+    } else if (!parsed) {
+        condemn = true;
         reply = err_reply(id, (!have_error || parse_error.empty())
                                   ? std::string("fault while parsing; harness site poisoned")
                                   : parse_error);
     } else if (!req.is_object()) {
+        condemn = true;
         reply = err_reply(id, "request must be a JSON object");
     } else {
         id = id_of(req);
@@ -1440,20 +1460,31 @@ void drain() {
 
     std::vector<std::pair<std::uint64_t, std::string>> replies;
     replies.reserve(batch.size());
+    // Condemned inside this batch. Kept local until the replies are pushed:
+    // the listener closes on condemn(), and the error reply has to be queued
+    // before it looks.
+    std::uint64_t condemned = 0;
     for (std::size_t n = 0; n < batch.size(); ++n) {
         const Request& rq = batch[n];
-        std::string line = execute_line(rq.line, rq.client);
+        // A request from a client that left, or one that already sent a line
+        // that is not a request, does not run and is not answered.
+        if (rq.client == condemned || !ch->admit(rq.client)) continue;
+        bool condemn = false;
+        std::string line = execute_line(rq.line, rq.client, condemn);
         if (!line.empty()) replies.emplace_back(rq.client, std::move(line));
+        if (condemn) condemned = rq.client;
         // A fault poisons the harness; the reply for that request still goes
         // out, and the rest of the batch is answered with a refusal.
         if (g_poison.load(std::memory_order_acquire)) {
             for (std::size_t i = n + 1; i < batch.size(); ++i)
-                replies.emplace_back(batch[i].client,
-                                     err_reply(Json::null(), "harness site poisoned").dump());
+                if (batch[i].client != condemned)
+                    replies.emplace_back(batch[i].client,
+                                         err_reply(Json::null(), "harness site poisoned").dump());
             break;
         }
     }
     for (auto& r : replies) ch->push_reply(r.first, std::move(r.second));
+    if (condemned != 0) ch->condemn(condemned);
 
     stream_events(*ch);
 }

@@ -1,0 +1,12 @@
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] exe: swkotor.exe (synthetic)
+[running] installed 15 hooks
+[running] kp-session=11112222333344445555666677778888 start
+[running] kp-session=11112222333344445555666677778888 log=esc1 host: wine=no wine_version=- os=10.0.22631 overlays=-
+[running] kp-session=11112222333344445555666677778888 gl: vendor="SYNTHETIC VENDOR" renderer="SYNTHETIC GPU" version="4.6.0 SYNTHETIC"
+[idle] stopped
+[idle] KotorPhasor 0.1.0 starting (embedded role)
+[identifying] exe: swkotor.exe (synthetic)
+[running] installed 15 hooks
+[running] kp-session=0f1e2d3c4b5a69788796a5b4c3d2e1f0 start
+[running] info: [hello] hello from a script

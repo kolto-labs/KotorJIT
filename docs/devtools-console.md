@@ -33,7 +33,17 @@ For automation, the optional existing harness forwards to this same service:
 
 A submission returns `request`. Status returns `submitted`, `completed`, `running`, `queued`, `open`, and `input_calls`. Output returns bounded `lines` with `request`, `kind`, and `text`; request zero denotes unassociated system output. Poll `completed >= request`, then inspect that request's rows for results or errors. This adapter is a test surface: the actual F12 UI never calls the harness or its listener. Existing harness `lua` remains its independent test-state contract; legacy game-console `lua exec` now queues through the product console.
 
-The shared service now also exposes session-aware typed outcomes and targeted cancellation; see [the service contract](devtools-protocol.md). These are additive native APIs beneath F12. `completed` is a legacy contiguous terminal watermark within the current session; it confirms termination, not success. Later queued cancellation cannot move it past an earlier pending/running request. New clients should look up the exact session/request outcome. This slice adds no browser transport or alternate Lua runtime.
+The shared service now also exposes session-aware typed outcomes and targeted cancellation; see [the service contract](devtools-protocol.md). These are additive native APIs beneath F12. `completed` is a legacy contiguous terminal watermark within the current session; it confirms termination, not success. Later queued cancellation cannot move it past an earlier pending/running request. New clients should look up the exact session/request outcome. This slice adds no alternate Lua runtime.
+
+For a host-only developer session, the optional browser page can be served by
+`kpharness devtools-bridge --standalone --port PORT`. Open the printed loopback
+URL and enter the token from the printed private token-file path. The page
+calls the same `kp.console.v1` service and exposes
+`await kotor.lua.evaluate(code)`; it does not create a browser Lua state. The
+bridge is loopback-only, requires a bearer token and exact origin, and does
+not attach to the Pioneer playback owner yet. It is a developer transport,
+not browser game/WASM support. Treat the token like F12 access: submitted Lua
+has the existing native `os`/`io` authority.
 
 Keyboard text and shortcuts are captured in one ordered editor queue with the modifier state from keydown. Ctrl+A, history, Tab, Ctrl+Enter, paste and submission are applied in order to the actual ImGui edit buffer. Accepted submission keeps the multiline editor active. Ordinary navigation/edit shortcuts pass through the pinned widget behind sequence barriers; an inactive editor retains them until it can receive them. This preserves text before/after Enter as separate commands without requiring slower typing. Paste reads the clipboard when its ordered action runs.
 

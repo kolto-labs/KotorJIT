@@ -6,6 +6,8 @@
 #include "backends/imgui_impl_opengl2.h"
 #include "backends/imgui_impl_win32.h"
 #include "imgui.h"
+#include "platform/platform.hpp"
+#include "runtime/runtime.hpp"
 #include <GL/gl.h>
 #include <algorithm>
 #include <array>
@@ -462,6 +464,84 @@ void draw() {
   if (active)
     active(previous_active);
 }
+// Receipt evidence lines. They go straight to Runtime::log, not through
+// platform::log, so they come out as "[<phase>] kp-session=<id> ..." with no
+// "<level>:" token. Script output (print, kp.diagnostic) passes through the
+// platform sink and gets that token. Runtime::log also escapes "\n", "\r" and
+// other control characters, so script text stays on its own line and cannot
+// start one of this shape. That holds only for a DLL built with the escaping,
+// and a script can still write the file itself with Lua's io library. The
+// receipt names both limits. The id is 128 random bits, fresh
+// per process: it ties the host and gl lines to the "start" line written when
+// the overlay attaches, and lets the receipt refuse lines from another run.
+// It is not a secret (the log is readable); scripts/receipts and
+// tools/platform_receipt_test.py treat these lines as evidence, not proof.
+const char *session_id() {
+  static char id[33] = {};
+  if (id[0])
+    return id;
+  unsigned char bytes[16] = {};
+  bool random = false;
+  // RtlGenRandom (advapi32!SystemFunction036), looked up at run time so the
+  // DLL gains no import. advapi32 is already loaded in any GUI process.
+  using GenRandom = BOOLEAN(WINAPI *)(PVOID, ULONG);
+  if (HMODULE advapi = LoadLibraryA("advapi32.dll")) {
+    FARPROC address = GetProcAddress(advapi, "SystemFunction036");
+    GenRandom gen = nullptr;
+    static_assert(sizeof gen == sizeof address);
+    std::memcpy(&gen, &address, sizeof gen);
+    random = gen && gen(bytes, sizeof bytes);
+  }
+  if (!random) {
+    // Fallback: distinct per run, not unpredictable. Good enough to tell two
+    // sessions apart, which is all the receipt uses it for.
+    LARGE_INTEGER counter{};
+    QueryPerformanceCounter(&counter);
+    FILETIME now{};
+    GetSystemTimeAsFileTime(&now);
+    unsigned long long seed[4] = {
+        static_cast<unsigned long long>(counter.QuadPart),
+        (static_cast<unsigned long long>(now.dwHighDateTime) << 32) | now.dwLowDateTime,
+        GetCurrentProcessId(), reinterpret_cast<std::uintptr_t>(&counter)};
+    unsigned long long x = 0x9e3779b97f4a7c15ull;
+    for (int i = 0; i < 16; ++i) {
+      x += seed[i % 4] + 0x9e3779b97f4a7c15ull;
+      unsigned long long z = x;
+      z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ull;
+      z = (z ^ (z >> 27)) * 0x94d049bb133111ebull;
+      bytes[i] = static_cast<unsigned char>(z ^ (z >> 31));
+    }
+  }
+  static const char hex[] = "0123456789abcdef";
+  for (int i = 0; i < 16; ++i) {
+    id[2 * i] = hex[bytes[i] >> 4];
+    id[2 * i + 1] = hex[bytes[i] & 15];
+  }
+  return id;
+}
+// Once, when the overlay attaches (first overlay_tick). Always before the
+// host and gl lines, which need a rendered frame.
+void log_session_start() {
+  runtime::Runtime::instance().log("kp-session=%s start", session_id());
+}
+// Once, at ImGui init, on the render thread with the game's context current:
+// the facts a native-Windows receipt needs. Fixed keys;
+// scripts/receipts/windows-native-receipt.ps1 parses both lines.
+// The host line's log-format token says this DLL's Runtime::log escapes
+// script text. The receipt refuses a host line without it, which is what a
+// DLL built before the escaping writes. Bump it if the log format changes.
+void log_host_and_gl() {
+  char host[512];
+  platform::format_host_identity(platform::host_identity(), host, sizeof host);
+  runtime::Runtime::instance().log("kp-session=%s log=esc1 %s", session_id(), host);
+  auto text = [](GLenum name) {
+    const GLubyte *v = glGetString(name);
+    return v ? reinterpret_cast<const char *>(v) : "?";
+  };
+  runtime::Runtime::instance().log(
+      "kp-session=%s gl: vendor=\"%s\" renderer=\"%s\" version=\"%s\"",
+      session_id(), text(GL_VENDOR), text(GL_RENDERER), text(GL_VERSION));
+}
 BOOL WINAPI swap(HDC dc) {
   static thread_local bool inside = false;
   // Once attached, closed frames chain directly to the game's presentation.
@@ -480,6 +560,7 @@ BOOL WINAPI swap(HDC dc) {
         ImGui::StyleColorsDark();
         ImGui_ImplWin32_Init(window);
         ImGui_ImplOpenGL2_Init();
+        log_host_and_gl();
         previous = reinterpret_cast<WNDPROC>(SetWindowLongPtr(
             window, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndproc)));
         console().output("system",
@@ -506,6 +587,7 @@ void overlay_tick() {
   if (attempted)
     return;
   attempted = true;
+  log_session_start();
   attach_input();
   auto *base = reinterpret_cast<unsigned char *>(GetModuleHandle(nullptr));
   auto *dos = reinterpret_cast<IMAGE_DOS_HEADER *>(base);

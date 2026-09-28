@@ -43,8 +43,10 @@ A game event hits one of the caves: `RunScript` â†’ `OnRunScript`, `MainLoop` â†
 | `kp.api_version` | Bound (`2`) |
 | `kp.version` | Bound (`"0.1.0"`) |
 | `kp.events` (111 `On*` integers) | Bound |
-| `kp.events.register`, `kp.events.unregister` | Bound |
+| `kp.events.register`, `kp.events.unregister` | Bound. `register` returns `false` (and logs a Warn) for a constant this game does not have, and also for a real event no dispatch site in this build can raise -- see "Dead names" below |
 | LuaJIT standard libraries | Bound |
+| `kp.camera.capabilities()` | Host-tested, K1 GOG only, no live proof yet |
+| `kp.camera.snapshot()` | Host-tested, K1 GOG only, no live proof yet. Read-only. Every other build reports unavailable |
 
 ---
 
@@ -176,7 +178,7 @@ The cave is installed. The Lua name fires when the engine raises that id.
 
 ### Dead names
 
-C++ only dispatches `OnRunScript` and `OnRunScriptDone` from `vm.run_script`. These function names never run. Match `script_name` instead.
+C++ only dispatches `OnRunScript` and `OnRunScriptDone` from `vm.run_script`. These function names never run. Match `script_name` instead. `kp.events.register` refuses all of them: it returns `false` and logs `[script] registered for an event no dispatch site in this build raises (Name)`, the same way it already refused a nonexistent constant, so a script cannot be fooled into believing a handler here is armed.
 
 | Dead Lua name | Typical `OnRunScript` resref |
 |---|---|

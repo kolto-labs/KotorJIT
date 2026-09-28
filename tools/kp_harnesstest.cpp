@@ -276,14 +276,15 @@ std::size_t pump(Channel& ch, std::size_t max) {
     std::vector<Request> batch;
     ch.take_requests(max, batch);
     std::vector<std::pair<std::uint64_t, std::string>> replies;
-    for (const Request& rq : batch) replies.emplace_back(rq.client, executor(rq.line));
+    for (const Request& rq : batch)
+        if (ch.admit(rq.client)) replies.emplace_back(rq.client, executor(rq.line));
     for (auto& r : replies) ch.push_reply(r.first, std::move(r.second));
     return batch.size();
 }
 
 struct ClientResults {
     bool connected = false;
-    std::string reply1, reply_bad, reply2, reply_crlf;
+    std::string reply1, reply2, reply_crlf;
     bool second_refused = false;
     bool second_eof = false;
     bool after_reconnect_ok = false;
@@ -324,8 +325,8 @@ void channel_cases() {
 
         c.send_line("{\"id\":1,\"cmd\":\"ping\"}");
         res.reply1 = c.read_line();
-        c.send_line("{bad json");
-        res.reply_bad = c.read_line();
+        // A malformed line now ends the connection; cross_protocol_cases
+        // covers it. This flow keeps one client alive throughout.
         c.send_line("{\"id\":2,\"cmd\":\"state\"}");
         res.reply2 = c.read_line();
         c.send_raw("{\"id\":3,\"cmd\":\"status\"}\r\n");
@@ -397,8 +398,7 @@ void channel_cases() {
     check(res.connected, "client connected");
     check(res.reply1.find("\"id\":1") != std::string::npos && res.reply1.find("\"ok\":true") != std::string::npos,
           "first request answered");
-    check(res.reply_bad.find("\"ok\":false") != std::string::npos, "malformed line gets an error reply");
-    check(res.reply2.find("\"id\":2") != std::string::npos, "connection survives the malformed line");
+    check(res.reply2.find("\"id\":2") != std::string::npos, "second request on the same connection answered");
     check(res.reply_crlf.find("\"id\":3") != std::string::npos, "CRLF framing accepted");
     check(res.second_refused, "second client is refused with an error line");
     check(res.second_eof, "second client is closed after the refusal");
@@ -467,6 +467,391 @@ void channel_limit_cases() {
     c.close();
     ch.stop();
     check(!ch.running(), "limit channel stops");
+}
+
+// ------------------------------------------------- cross-protocol lines ---
+//
+// The harness port runs Lua. A browser that POSTs to it sends an HTTP request
+// line and headers first, then a body line the page chose. The headers fail
+// to parse; the body can be a valid request. These cases prove that the first
+// line that is not a JSON object ends the connection, and that nothing queued
+// behind it on that connection runs.
+//
+// The executor stands in for execute_line: `devtools` requests are counted as
+// the stand-in for the console's status.submitted, which is the side effect a
+// browser body line would be after.
+
+std::atomic<int> g_hard_devtools{0};
+std::atomic<int> g_hard_executed{0};
+
+std::string hard_executor(const std::string& line, bool& reject) {
+    reject = screen_request_line(line) != LineShape::Ok;
+    g_hard_executed.fetch_add(1);
+    Json req;
+    std::string error;
+    Json reply = Json::object();
+    if (reject || !Json::parse(line, req, error) || !req.is_object()) {
+        reject = true;
+        reply.set("id", Json::null());
+        reply.set("ok", Json::boolean(false));
+        reply.set("error", Json::string(error.empty() ? "request must be a JSON object" : error));
+        return reply.dump();
+    }
+    const Json* id = req.get("id");
+    const Json* cmd = req.get("cmd");
+    if (cmd != nullptr && cmd->is_string() && cmd->as_string() == "devtools")
+        g_hard_devtools.fetch_add(1);
+    reply.set("id", id != nullptr ? *id : Json::null());
+    reply.set("ok", Json::boolean(true));
+    Json result = Json::object();
+    result.set("cmd", cmd != nullptr ? *cmd : Json::null());
+    reply.set("result", result);
+    return reply.dump();
+}
+
+// Shaped like drain() in commands.cpp: take the batch, skip what may not
+// run, run the rest, push replies, and only then condemn.
+std::size_t hard_pump(Channel& ch, std::vector<Request>* taken = nullptr) {
+    std::vector<Request> local;
+    std::vector<Request>& batch = taken != nullptr ? *taken : local;
+    if (taken == nullptr) ch.take_requests(8, batch);
+    std::vector<std::pair<std::uint64_t, std::string>> replies;
+    std::uint64_t condemned = 0;
+    for (const Request& rq : batch) {
+        if (rq.client == condemned || !ch.admit(rq.client)) continue;
+        bool reject = false;
+        replies.emplace_back(rq.client, hard_executor(rq.line, reject));
+        if (reject) condemned = rq.client;
+    }
+    for (auto& r : replies) ch.push_reply(r.first, std::move(r.second));
+    if (condemned != 0) ch.condemn(condemned);
+    return batch.size();
+}
+
+// Run `body` on a client thread while this thread drains, as the game does.
+template <typename Body>
+void with_client(Channel& ch, Body body) {
+    // The previous case's client must be gone, or this one is refused busy.
+    for (int spins = 0; spins < 5000 && ch.client_connected(); ++spins)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::atomic<bool> done{false};
+    std::thread client([&] {
+        body();
+        done = true;
+    });
+    while (!done.load()) {
+        hard_pump(ch);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    client.join();
+    hard_pump(ch);
+}
+
+// Read lines until EOF or timeout; count them and report whether EOF came.
+struct Drained {
+    std::vector<std::string> lines;
+    bool eof = false;
+};
+Drained drain_client(LineClient& c) {
+    Drained d;
+    while (true) {
+        const std::size_t nl = c.buf.find('\n');
+        if (nl != std::string::npos) {
+            d.lines.push_back(c.buf.substr(0, nl));
+            c.buf.erase(0, nl + 1);
+            continue;
+        }
+        char tmp[1024];
+        const ssize_t got = ::recv(c.fd, tmp, sizeof tmp, 0);
+        if (got == 0) { d.eof = true; return d; }
+        if (got < 0) return d;   // timeout: still open
+        c.buf.append(tmp, static_cast<std::size_t>(got));
+    }
+}
+
+void short_timeout(LineClient& c, long usec) {
+    timeval tv{};
+    tv.tv_sec = usec / 1000000;
+    tv.tv_usec = usec % 1000000;
+    ::setsockopt(c.fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv);
+}
+
+const char kBrowserPost[] =
+    "POST / HTTP/1.1\r\n"
+    "Host: 127.0.0.1\r\n"
+    "Content-Type: text/plain\r\n"
+    "\r\n"
+    "{\"id\":7,\"cmd\":\"devtools\",\"protocol\":\"kp.console.v1\",\"op\":\"submit\",\"code\":\"1\"}\n";
+
+void cross_protocol_cases() {
+    section("cross-protocol lines");
+
+    check(screen_request_line("POST / HTTP/1.1") == LineShape::Http &&
+              screen_request_line("OPTIONS * HTTP/1.1") == LineShape::Http &&
+              screen_request_line("Host: 127.0.0.1") == LineShape::NotObject &&
+              screen_request_line("{bad json") == LineShape::Ok &&
+              screen_request_line(" \t{\"cmd\":\"ping\"}") == LineShape::Ok &&
+              screen_request_line("[1]") == LineShape::NotObject &&
+              screen_request_line("{\"code\":\"POST / HTTP/1.1\"}") == LineShape::Ok,
+          "line screen: only a line that opens an object passes; HTTP is named");
+
+    Channel ch;
+    ChannelOptions opts;
+    opts.bind = "127.0.0.1";
+    opts.port = 0;
+    std::string error;
+    if (!ch.start(opts, error)) {
+        check(false, "cross-protocol channel starts");
+        return;
+    }
+
+    // (a) A whole HTTP POST in one send: one error reply, then EOF, and the
+    // body line never runs. A reconnect that replays it is condemned again;
+    // a reconnect that speaks JSON is served.
+    Drained post1, post2;
+    std::string fresh_reply;
+    bool fresh_open = false;
+    const int devtools_before_a = g_hard_devtools.load();
+    with_client(ch, [&] {
+        LineClient c;
+        if (!c.connect_to(ch.port())) return;
+        short_timeout(c, 500000);
+        c.send_raw(kBrowserPost);
+        post1 = drain_client(c);
+        c.close();
+        for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        LineClient replay;
+        if (!replay.connect_to(ch.port())) return;
+        short_timeout(replay, 500000);
+        replay.send_raw(kBrowserPost);
+        post2 = drain_client(replay);
+        replay.close();
+        for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        LineClient fresh;
+        if (!fresh.connect_to(ch.port())) return;
+        fresh.send_line("{\"id\":8,\"cmd\":\"status\"}");
+        fresh_reply = fresh.read_line();
+        short_timeout(fresh, 200000);
+        fresh_open = !fresh.eof();
+        fresh.close();
+    });
+    check(post1.lines.size() == 1 && post1.lines[0].find("\"ok\":false") != std::string::npos &&
+              post1.lines[0].find("busy") == std::string::npos,
+          "(a) HTTP POST gets exactly one error reply");
+    check(post1.eof, "(a) HTTP POST connection is closed after the error");
+    check(g_hard_devtools.load() == devtools_before_a,
+          "(a) the POST body line is never dispatched");
+    check(post2.lines.size() == 1 && post2.eof,
+          "(a) a replayed POST on a new connection is condemned again");
+    check(fresh_reply.find("\"id\":8") != std::string::npos && fresh_open,
+          "(a) a fresh JSON client after the POST is served and kept");
+    std::printf("    post1: %zu line(s), eof=%d; post2: %zu line(s), eof=%d\n",
+                post1.lines.size(), post1.eof ? 1 : 0, post2.lines.size(), post2.eof ? 1 : 0);
+
+    // (b) Invalid JSON then valid JSON in one send: the valid line is not run.
+    Drained bad;
+    const int devtools_before_b = g_hard_devtools.load();
+    with_client(ch, [&] {
+        LineClient c;
+        if (!c.connect_to(ch.port())) return;
+        short_timeout(c, 500000);
+        c.send_raw("{bad json\n{\"id\":2,\"cmd\":\"devtools\",\"op\":\"submit\",\"code\":\"1\"}\n");
+        bad = drain_client(c);
+        c.close();
+    });
+    check(bad.lines.size() == 1 && bad.lines[0].find("\"ok\":false") != std::string::npos &&
+              bad.lines[0].find("busy") == std::string::npos,
+          "(b) malformed line gets one error reply");
+    for (const auto& l : bad.lines) std::printf("    (b) line: %s\n", l.c_str());
+    check(bad.eof, "(b) malformed line closes the connection");
+    check(g_hard_devtools.load() == devtools_before_b,
+          "(b) the valid line behind a malformed one is not dispatched");
+
+    // (c) Requests already taken by the drain when their client left: the
+    // listener cleared what it still held, but the batch in hand is stale.
+    for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::vector<Request> stale;
+    int stale_run = -1;
+    {
+        LineClient c;
+        if (c.connect_to(ch.port())) {
+            for (int i = 0; i < 3; ++i)
+                c.send_line("{\"id\":" + std::to_string(30 + i) +
+                            ",\"cmd\":\"devtools\",\"op\":\"submit\",\"code\":\"1\"}");
+            for (int spins = 0; spins < 5000 && ch.pending_requests() < 3; ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            ch.take_requests(8, stale);
+            c.close();
+        }
+        for (int spins = 0; spins < 5000 && ch.client_connected(); ++spins)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        // A new client is up before the stale batch reaches the executor.
+        LineClient next;
+        if (next.connect_to(ch.port())) {
+            for (int spins = 0; spins < 5000 && !ch.client_connected(); ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            const int before = g_hard_devtools.load();
+            hard_pump(ch, &stale);
+            stale_run = g_hard_devtools.load() - before;
+            next.close();
+        }
+    }
+    check(stale.size() == 3, "(c) three requests were taken before the client left");
+    check(stale_run == 0, "(c) a batch from a client that has gone is not executed");
+    std::printf("    stale batch executed: %d of %zu\n", stale_run, stale.size());
+
+    // (a2) A real browser POST carries a dozen or more header lines, so the
+    // body lands in a later drain batch (the drain takes kMaxPerTick = 8).
+    // The condemnation has to outlive the batch that raised it.
+    std::vector<Request> b1, b2;
+    int later_run = -1;
+    std::size_t queued_lines = 0;
+    {
+        std::string post = "POST /v1 HTTP/1.1\r\n";
+        for (int h = 0; h < 11; ++h) post += "X-Header-" + std::to_string(h) + ": v\r\n";
+        post += "\r\n{\"id\":9,\"cmd\":\"devtools\",\"op\":\"submit\",\"code\":\"1\"}\n";
+        for (int spins = 0; spins < 5000 && ch.client_connected(); ++spins)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        LineClient c;
+        if (c.connect_to(ch.port())) {
+            for (int spins = 0; spins < 5000 && !ch.client_connected(); ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            c.send_raw(post);
+            // 1 request line + 11 headers + body; the blank line is not queued.
+            for (int spins = 0; spins < 5000 && ch.pending_requests() < 13; ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            queued_lines = ch.pending_requests();
+            ch.take_requests(8, b1);
+            ch.take_requests(8, b2);
+            hard_pump(ch, &b1);
+            const int before = g_hard_devtools.load();
+            hard_pump(ch, &b2);
+            later_run = g_hard_devtools.load() - before;
+            c.close();
+        }
+    }
+    check(queued_lines == 13 && b1.size() == 8 && b2.size() == 5,
+          "(a2) a 13-line POST spans two drain batches");
+    check(later_run == 0, "(a2) the body in the next batch of a condemned client is not dispatched");
+    std::printf("    later batch executed: %d; lines queued %zu, batches %zu+%zu\n", later_run,
+                queued_lines, b1.size(), b2.size());
+
+    // (d) Valid JSON is unchanged: several lines in one send, leading
+    // whitespace, and Lua code that merely mentions HTTP all run, and the
+    // connection stays up.
+    for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::vector<std::string> good;
+    bool good_open = false;
+    const int devtools_before_d = g_hard_devtools.load();
+    with_client(ch, [&] {
+        LineClient c;
+        if (!c.connect_to(ch.port())) return;
+        c.send_raw("{\"id\":40,\"cmd\":\"ping\"}\n"
+                   "  {\"id\":41,\"cmd\":\"devtools\",\"op\":\"submit\","
+                   "\"code\":\"return 'POST / HTTP/1.1'\"}\r\n"
+                   "{\"id\":42,\"cmd\":\"state\"}\n");
+        for (int i = 0; i < 3; ++i) good.push_back(c.read_line());
+        c.send_line("{\"id\":43,\"cmd\":\"ping\"}");
+        good.push_back(c.read_line());
+        short_timeout(c, 200000);
+        good_open = !c.eof();
+        c.close();
+    });
+    bool all_ok = good.size() == 4;
+    for (std::size_t i = 0; i < good.size(); ++i)
+        all_ok = all_ok && good[i].find("\"id\":" + std::to_string(40 + i)) != std::string::npos &&
+                 good[i].find("\"ok\":true") != std::string::npos;
+    check(all_ok, "(d) valid lines, one send, all answered in order");
+    check(g_hard_devtools.load() == devtools_before_d + 1,
+          "(d) a devtools line that mentions HTTP/1.1 in its code is still dispatched");
+    check(good_open, "(d) the connection stays up after valid traffic");
+
+    // (e) A reply queued after condemn() does not reach the condemned client.
+    // drain() pushes the error, condemns, then streams events; deferred
+    // completions push later still. Only the error queued before condemn()
+    // may go out.
+    for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    Drained after;
+    {
+        LineClient c;
+        if (c.connect_to(ch.port())) {
+            for (int spins = 0; spins < 5000 && !ch.client_connected(); ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            short_timeout(c, 500000);
+            const std::uint64_t gen = ch.current_client();
+            ch.push_reply(gen, "{\"id\":null,\"ok\":false,\"error\":\"first\"}");
+            ch.condemn(gen);
+            ch.push_reply(gen, "{\"secret\":\"post-condemn reply\"}");
+            after = drain_client(c);
+            c.close();
+        }
+    }
+    bool leaked = false;
+    for (const auto& l : after.lines) leaked = leaked || l.find("post-condemn") != std::string::npos;
+    check(after.lines.size() == 1 && after.lines[0].find("\"first\"") != std::string::npos,
+          "(e) the error queued before condemn() is delivered");
+    check(!leaked, "(e) a reply queued after condemn() is dropped");
+    check(after.eof, "(e) the condemned connection is closed");
+    for (const auto& l : after.lines) std::printf("    (e) line: %s\n", l.c_str());
+
+    // (f) The same with an event stream on. stream_events() in commands.cpp
+    // runs right after the drain condemns, and pushes to current_client().
+    // A subscribed client that sends a bad line gets the error and EOF, and
+    // no event frame after it. The first round is the control: the same
+    // stand-in does deliver an event to a client in good standing.
+    auto stream_stand_in = [&ch] {
+        if (!ch.subscribed()) return;
+        const std::uint64_t client = ch.current_client();
+        if (client == 0) return;
+        ch.push_reply(client, "{\"event\":\"test.event\",\"seq\":1}");
+    };
+    for (int spins = 0; spins < 2000 && ch.client_connected(); ++spins)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::string ctl_reply, ctl_event;
+    Drained sub;
+    {
+        LineClient c;
+        if (c.connect_to(ch.port())) {
+            for (int spins = 0; spins < 5000 && !ch.client_connected(); ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            ch.set_subscribed(true);
+            c.send_line("{\"id\":50,\"cmd\":\"ping\"}");
+            for (int spins = 0; spins < 5000 && ch.pending_requests() < 1; ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            hard_pump(ch);
+            stream_stand_in();
+            ctl_reply = c.read_line();
+            ctl_event = c.read_line();
+
+            short_timeout(c, 500000);
+            c.send_line("{bad json");
+            for (int spins = 0; spins < 5000 && ch.pending_requests() < 1; ++spins)
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            hard_pump(ch);
+            stream_stand_in();
+            sub = drain_client(c);
+            c.close();
+        }
+    }
+    bool event_leaked = false;
+    for (const auto& l : sub.lines) event_leaked = event_leaked || l.find("\"event\"") != std::string::npos;
+    check(ctl_reply.find("\"id\":50") != std::string::npos &&
+              ctl_event.find("test.event") != std::string::npos,
+          "(f) control: a subscribed client in good standing gets its event");
+    check(sub.lines.size() == 1 && sub.lines[0].find("\"ok\":false") != std::string::npos,
+          "(f) a subscribed client that sends a bad line gets one error reply");
+    check(!event_leaked, "(f) no event frame follows the error to a condemned client");
+    check(sub.eof, "(f) the condemned subscribed connection is closed");
+    for (const auto& l : sub.lines) std::printf("    (f) line: %s\n", l.c_str());
+
+    ch.stop();
 }
 
 // ------------------------------------------------- phase and save unpack ---
@@ -550,6 +935,17 @@ void predicate_cases() {
     play.load_error = 0;
     check(classify_phase(play, true, 0, 1, 0) == Phase::Gameplay, "in game is gameplay");
 
+    play.main_menu = 1;
+    check(classify_phase(play, true, 0, 1, 0) == Phase::Menu,
+          "running module beneath listed main menu is not visible gameplay");
+    play.movie = 1;
+    check(classify_phase(play, true, 0, 1, 0) == Phase::Movie,
+          "movie retains priority over listed main menu");
+    play.movie = 0;
+    play.area_not_ready = 1;
+    check(classify_phase(play, true, 0, 1, 0) == Phase::Loading,
+          "loading retains priority over listed main menu");
+
     section("stuck-load predicate");
 
     // The tuple measured live on 2026-09-09 with the headless load stuck:
@@ -568,6 +964,28 @@ void predicate_cases() {
               !area_loaded_due(2, -1, kInvalidObjectId, true) &&
               !area_loaded_due(2, 1, -1, true),
           "a field this build cannot read refuses rather than guesses");
+
+    section("normal load completion guards");
+    check(main_menu_pointer_absent(std::uintptr_t(0)), "native cleared menu is already absent");
+    check(!main_menu_pointer_absent(std::nullopt), "unreadable menu is not proven absent");
+    check(!main_menu_pointer_absent(std::uintptr_t(0x1234)), "nonnull menu needs native panel check");
+    check(normal_load_completed(true, true, 2, true, 0, 0),
+          "issued load can complete normally without injected AreaLoaded");
+    check(!normal_load_completed(false, true, 2, true, 0, 0),
+          "old running module without observed request flag cannot complete");
+    check(!normal_load_completed(true, false, 2, true, 0, 0),
+          "replaced server cannot complete an old request");
+    check(!normal_load_completed(true, true, 2, false, 0, 0),
+          "normal completion requires actual module");
+    for (int state : {-1, 1, 3}) {
+        check(!normal_load_completed(true, true, 2, true, state, 0),
+              "unknown or pending client area refuses completion");
+        check(!normal_load_completed(true, true, 2, true, 0, state),
+              "unknown or pending server save flag refuses completion");
+    }
+    for (int mode : {-1, 0, 1, 3})
+        check(!normal_load_completed(true, true, mode, true, 0, 0),
+              "only running server mode completes normal load");
 
     section("save ERF members");
 
@@ -754,6 +1172,7 @@ int main() {
     ring_cases();
     channel_cases();
     channel_limit_cases();
+    cross_protocol_cases();
     predicate_cases();
     bounds_cases();
     chargen_pair_cases();

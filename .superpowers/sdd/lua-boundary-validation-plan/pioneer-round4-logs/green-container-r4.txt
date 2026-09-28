@@ -1,0 +1,8 @@
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ok
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... ok
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 22.777s
+
+OK

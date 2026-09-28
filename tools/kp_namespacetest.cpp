@@ -1,9 +1,13 @@
 // Offline contract against production registrations; no game or VM required.
+#include <algorithm>
+#include <atomic>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <functional>
+#include <iterator>
 #include <string>
+#include <thread>
 #include <unistd.h>
 
 #include "api/compat.hpp"
@@ -11,8 +15,12 @@
 #include "api/entity.hpp"
 #include "api/memory.hpp"
 #include "api/output.hpp"
+#include "api/vector.hpp"
+#include "api/motion.hpp"
+#include "api/scripts_lua.hpp"
 #include "api/routines.hpp"
 #include "api/structs.hpp"
+#include "events/table.hpp"
 #include "lua/host.hpp"
 #include "runtime/internal.hpp"
 
@@ -40,6 +48,9 @@ void install_native(lua_State* L, bool reverse = false) {
     kp::api::structs::register_all(L);
     kp::api::entity::register_all(L);
     kp::api::register_support(L);
+    kp::api::register_vector(L);
+    kp::api::motion::register_all(L);
+    kp::api::scripts::register_all(L);
     kp::runtime::register_director(L);
     if (!reverse) kp::api::compat::install(L, "/offline/game");
 }
@@ -53,6 +64,83 @@ void install(lua_State* L, bool reverse = false) {
 int main(int argc, char**) {
     check(kp::api::select_game(argc > 1 ? kp::api::Game::K2 : kp::api::Game::K1),
           "select catalog before registration");
+
+    if (argc == 1) {
+        // The production latch is distinct from the engine_gate unit probe:
+        // it must begin empty, bind only the first server-main-loop caller,
+        // refuse a worker, never relatch from that worker, and reset cleanly.
+        kp::runtime::reset_engine_thread();
+        check(!kp::runtime::engine_thread_latched() && !kp::runtime::on_engine_thread(),
+              "engine latch starts unbound");
+        kp::runtime::latch_engine_thread();
+        check(kp::runtime::engine_thread_latched() && kp::runtime::on_engine_thread(),
+              "engine latch binds current thread");
+        bool worker_owner = true;
+        std::thread worker([&] {
+            worker_owner = kp::runtime::on_engine_thread();
+            kp::runtime::latch_engine_thread();
+        });
+        worker.join();
+        check(!worker_owner, "worker does not own server latch");
+        check(kp::runtime::on_engine_thread(), "main thread remains server owner");
+        kp::runtime::reset_engine_thread();
+    check(!kp::runtime::engine_thread_latched() && !kp::runtime::on_engine_thread(),
+          "engine latch resets");
+
+    // Simultaneous server contenders still elect exactly one owner. Repeated
+    // calls from the losing thread cannot replace that owner.
+    for (unsigned round = 0; round < 8; ++round) {
+        std::atomic<unsigned> ready{0}, winners{0};
+        std::atomic<bool> go{false}, stable{true};
+        auto contend = [&] {
+            ready.fetch_add(1);
+            while (!go.load()) std::this_thread::yield();
+            kp::runtime::latch_engine_thread();
+            const bool owner = kp::runtime::on_engine_thread();
+            if (owner) winners.fetch_add(1);
+            for (unsigned attempt = 0; attempt < 16; ++attempt) {
+                kp::runtime::latch_engine_thread();
+                if (kp::runtime::on_engine_thread() != owner) stable.store(false);
+            }
+        };
+        std::thread first(contend), second(contend);
+        while (ready.load() != 2) std::this_thread::yield();
+        go.store(true);
+        first.join(); second.join();
+        check(winners.load() == 1 && stable.load(), "concurrent latch has one stable owner");
+        check(!kp::runtime::on_engine_thread(), "nonparticipant never owns concurrent latch");
+        kp::runtime::reset_engine_thread();
+    }
+    }
+
+    // events::dispatchable is the source of truth kp.events.register leans on
+    // to refuse a handler that can never fire. Pin it against the exact 14
+    // names docs/user/api-status.md documents as "Dead names" -- every one of
+    // them has outer_event_id == -1 in the generated table and none of them
+    // is a name any hook body looks up directly (see kDirectDispatchNames in
+    // src/events/table.cpp). Same table for K1 and K2, so this runs once.
+    {
+        static const char* kExpectedDead[] = {
+            "OnCreatureHeartbeat", "OnCreatureSpawn", "OnCreatureDamaged",
+            "OnCreatureDeath", "OnCreatureEndCombatRound", "OnCreatureEndDialogue",
+            "OnPlaceableEndDialogue", "OnTriggerTrapTriggered", "OnTriggerHeartbeat",
+            "OnCreatureStateScript", "OnAreaTransitionFail", "OnItemUse",
+            "OnClientRequestedScript", "OnDialogConditional",
+        };
+        std::size_t found = 0;
+        for (const auto& ev : kp::events::table()) {
+            const bool expected_dead =
+                std::find_if(std::begin(kExpectedDead), std::end(kExpectedDead),
+                             [&](const char* n) { return ev.lua_name == n; }) !=
+                std::end(kExpectedDead);
+            const std::string msg = "events::dispatchable(" + ev.lua_name +
+                                    ") disagrees with api-status.md Dead names";
+            check(kp::events::dispatchable(ev) == !expected_dead, msg.c_str());
+            if (expected_dead) ++found;
+        }
+        check(found == std::size(kExpectedDead),
+              "every documented dead name is present in the generated table");
+    }
     for (bool bridge : {false, true}) {
         lua_State* isolated = luaL_newstate();
         if (!isolated) return 1;
@@ -169,6 +257,27 @@ int main(int argc, char**) {
         lua_pop(L, 1);
         run(L, "local ok,err = pcall(kp.events.register, -1, function() end); "
                "assert(not ok and err:find('kp.events.On', 1, true))");
+
+        // OnCreatureDamaged is a real script slot (ScriptDamaged) but no hook
+        // body raises it -- its contract has outer_event_id == -1 and it is
+        // not one of the names RunScript/console/save/load/tick look up
+        // directly. Registration must say so rather than pretend the handler
+        // is armed. OnDialogConditional shares OnCreatureDamaged's dead
+        // vm.run_script site and its arg shape ("arg1 CExoString*", same as
+        // the live OnRunScript) -- it is dead too, which is why dispatchable()
+        // cannot be a hook_site or arg-source heuristic.
+        run(L, "assert(kp.events.register(kp.events.OnCreatureDamaged, function() end) == false)");
+        run(L, "assert(kp.events.register(kp.events.OnDialogConditional, function() end) == false)");
+
+        // A live EventHandler-routed event (find_by_site on hook_site +
+        // outer_event_id, no script_event_type) still registers.
+        run(L, "assert(kp.events.register(kp.events.OnCreatureAttacked, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnCreatureAttacked))");
+
+        // A live SIGNAL_EVENT-routed event (find_by_site also matching on
+        // script_event_type) still registers.
+        run(L, "assert(kp.events.register(kp.events.OnModuleHeartbeat, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnModuleHeartbeat))");
     }
     std::printf("namespace contract: %d failure(s)\n", failures);
     return failures ? 1 : 0;

@@ -350,12 +350,10 @@ inline Phase classify_phase(const PhaseDetail& d, bool have_server, int continue
     if (continue_message_processing == 1 || d.loading_module == 1 || d.area_not_ready == 1)
         return Phase::Loading;
     if (d.movie == 1) return Phase::Movie;
-    // The panel check answers "is the main menu on screen", and it keeps
-    // answering yes for a while after a load: the load path only flags the
-    // panel for destruction, so PanelExists stays true into the loaded game
-    // (live run 20260909-055643: server_mode 2, module end_m01aa, main_menu 1).
-    // With a server running a module, the menu is not what the frame is.
-    if (d.main_menu == 1 && d.server_mode != 2) return Phase::Menu;
+    // A running server proves simulation, not visible gameplay. Until the
+    // menu is actually unlisted, conservatively report Menu even if a native
+    // load has completed underneath it (observed on K2 GOG).
+    if (d.main_menu == 1) return Phase::Menu;
     if (d.game_over > 0) return Phase::GameOver;
     if (d.input_class == 3 || dialog_active > 0) return Phase::Dialog;
     if (d.pause > 0 && (d.pause & 3) != 0) return Phase::Paused;
@@ -393,6 +391,20 @@ inline bool area_loaded_due(int server_mode, int area_not_ready, int player_crea
                             bool have_module) {
     if (server_mode != 2 || area_not_ready != 1 || !have_module) return false;
     return player_creature_id == kInvalidObjectId;
+}
+
+// Unknown storage is not evidence of absence; native GUI code may clear this pointer.
+inline bool main_menu_pointer_absent(const std::optional<std::uintptr_t>& menu) {
+    return menu.has_value() && *menu == 0;
+}
+
+// Normal completion must belong to this issued request, not a pre-existing
+// running module. The caller captures from-save=1 after its setter, before send.
+inline bool normal_load_completed(bool observed_from_save, bool same_server,
+                                  int server_mode, bool have_module,
+                                  int area_not_ready, int from_save) {
+    return observed_from_save && same_server && server_mode == 2 && have_module &&
+           area_not_ready == 0 && from_save == 0;
 }
 
 // GlobalIndentifier.type_and_index: type in bits 14-15, index in the low 14.
@@ -693,7 +705,7 @@ private:
 
     // Unlist the main-menu panel once a load has finished, which the GUI path
     // does from the Load Game click the harness never makes.
-    void retire_main_menu();
+    bool retire_main_menu();
 
     // Snapshot CSWGuiManager::panels. It is the engine's authoritative panel
     // list; new_game compares snapshots around OnNewGamePicked rather than
@@ -724,6 +736,8 @@ private:
     std::chrono::steady_clock::time_point load_sent_at_{};
     std::chrono::steady_clock::time_point load_placed_at_{};
     bool load_control_fallback_sent_ = false;
+    bool load_from_save_observed_ = false;
+    std::uintptr_t load_server_internal_ = 0;
 
     // Set only after OnNewGamePicked synchronously adds exactly one real panel
     // to CSWGuiManager::panels. phase() re-checks PanelExists each poll, so a

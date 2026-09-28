@@ -13,6 +13,7 @@ set(KP_RUNTIME_DIR "${CMAKE_CURRENT_LIST_DIR}")
 set(KP_SRC_ROOT    "${CMAKE_CURRENT_LIST_DIR}/..")
 
 set(KP_DEVTOOLS_WIN_SOURCES
+    "${KP_SRC_ROOT}/api/projectiles_entry.cpp"
     "${KP_SRC_ROOT}/devtools/editor_input.cpp"
     "${KP_SRC_ROOT}/../third_party/imgui/imgui.cpp"
     "${KP_SRC_ROOT}/../third_party/imgui/imgui_draw.cpp"
@@ -53,10 +54,24 @@ set(KP_API_SOURCES
     "${KP_SRC_ROOT}/api/structs.cpp"
     "${KP_SRC_ROOT}/api/entity.cpp"
     "${KP_SRC_ROOT}/api/memory.cpp"
+    "${KP_SRC_ROOT}/api/projectiles.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_profile.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_native.cpp"
+    "${KP_SRC_ROOT}/api/projectiles_lua.cpp"
     "${KP_SRC_ROOT}/api/model.cpp"
     "${KP_SRC_ROOT}/api/model_profiles.cpp"
     "${KP_SRC_ROOT}/api/model_backend.cpp"
     "${KP_SRC_ROOT}/api/model_lua.cpp"
+    "${KP_SRC_ROOT}/api/camera.cpp"
+    "${KP_SRC_ROOT}/api/camera_profiles.cpp"
+    "${KP_SRC_ROOT}/api/camera_backend.cpp"
+    "${KP_SRC_ROOT}/api/camera_lua.cpp"
+    "${KP_SRC_ROOT}/api/vector.cpp"
+    "${KP_SRC_ROOT}/api/motion.cpp"
+    "${KP_SRC_ROOT}/api/motion_profiles.cpp"
+    "${KP_SRC_ROOT}/api/motion_backend.cpp"
+    "${KP_SRC_ROOT}/api/motion_lua.cpp"
+    "${KP_SRC_ROOT}/api/engine_gate.cpp"
     "${KP_SRC_ROOT}/api/animation.cpp"
     "${KP_SRC_ROOT}/api/animation_profiles.cpp"
     "${KP_SRC_ROOT}/api/animation_backend.cpp"
@@ -65,6 +80,7 @@ set(KP_API_SOURCES
     "${KP_SRC_ROOT}/api/timers.cpp"
     "${KP_SRC_ROOT}/api/strings.cpp"
     "${KP_SRC_ROOT}/api/compat.cpp"
+    "${KP_SRC_ROOT}/api/scripts_lua.cpp"
 )
 foreach(f ${KP_API_SOURCES})
     if(NOT EXISTS ${f})

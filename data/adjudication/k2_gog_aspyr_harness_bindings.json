@@ -7,7 +7,7 @@
   "purpose": "Headless-harness FIELDS for the Aspyr GOG PE. Functions are not listed: this build was never stripped and every harness function resolves from its own namespace-qualified func row. Fields the corpus does not settle (CSWReentrantServerStats, pause_state, the K2 global variable table arrays, g_pAppManager) are absent or carry size 0 and stay unbound.",
   "naming": "Binding names are the logical keys from data/hooksites.toml, which use the K1 types.h member names (CGuiInGame::field_b4 is the dialog-active flag). On this build the same member sits at a different offset; the offset here is the K2 one and the K1 name is only the key.",
   "corpus": "kotorxid readable tree TSL__k2_win_gog_aspyr_swkotor2.exe (binary_id 22) and TSL__k2_mac_swkotor2.app (binary_id 19)",
-  "accept_rule": "accept requires at least two independent signals, at least one of which is not run v1 (METHOD.md section 1). Functions: sqlite func row on the target binary plus a read of the decompiled body, plus the raw prologue where it settles a convention. Fields: the types.h declaration plus an accessor or consumer disassembled from the raw image whose immediate is the offset. A binding with one signal is accepted at confidence < 0.9 and its site stays optional.",
+  "accept_rule": "accept requires at least two independent signals, at least one of which is not run v1 (METHOD.md section 1). Functions: sqlite func row on the target binary plus a read of the decompiled body, plus the raw prologue where it settles a convention. Fields: the types.h declaration plus an accessor or consumer disassembled from the raw image whose immediate is the offset. A binding with one signal is accepted at confidence < 0.9 and its site stays optional. Narrow exception for CClientExoAppInternal::net_layer: corpus-named target accessor plus exact SHA-bound raw accessor and neighboring message-handler accessor establish owner/offset without claiming a types.h declaration.",
   "not_bound": [
     "g_pAppManager: SetGameSpeed 0x4489f0 reads ds:0xa11c04 and CAppManager::CreateServer 0x401b80 reads ds:0xa10260; the two disagree and neither was traced, so no address is claimed",
     "CServerExoAppInternal::pause_state: no accessor disassembled",
@@ -15,8 +15,8 @@
     "CSWGlobalVariableTable arrays: K2 uses 0x93d identifier slots, array offsets after them unread"
   ],
   "counts": {
-    "fields": 55,
-    "accept": 53
+    "fields": 56,
+    "accept": 54
   },
   "bindings": [
     {
@@ -1122,6 +1122,29 @@
           "types.h declaration or decompiled consumer",
           "accessor or consumer immediate in the raw image"
         ]
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::net_layer",
+      "kind": "field",
+      "owner": "CClientExoAppInternal",
+      "addr": "0x00000000",
+      "offset": "0x10",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 0.95,
+      "evidence": {
+        "target_sha256": "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
+        "corpus": [
+          "binary_id22 TSL__k2_win_gog_aspyr_swkotor2.exe: GetNetLayer 0x40ccb0"
+        ],
+        "disassembly": "GetNetLayer thiscall: 0x40ccbc internal=[app+4]; 0x40ccbf net=[internal+0x10]; pointer returned in EAX; ret at 0x40cccb. Bytes 558bec83ec08894df88b45f88b48048b51108955fc8b45fc8be55dc3. Neighbor GetSWCMessage 0x40ccd0 reads app+4 then internal+0x150, corroborating existing owner/message_handler field.",
+        "signals": [
+          "target corpus accessor identity",
+          "exact-image accessor immediate and pointer return",
+          "neighbor accessor corroborates app/internal owner chain"
+        ],
+        "limits": "No types.h declaration asserted. Field resolution is not save-load completion or K2 runtime parity proof."
       }
     }
   ]

@@ -195,7 +195,8 @@ def _lock_file(fd: int) -> None:
     except ImportError as error:
         raise PioneerError("Pioneer route locking is unavailable on this host") from error
     except OSError as error:
-        raise PioneerError("another Pioneer command owns this route, or locking failed") from error
+        raise PioneerError("another Pioneer command owns this route (an attached playback owner "
+                           "holds it until `pioneer stop`), or locking failed") from error
 
 
 @contextlib.contextmanager
@@ -246,103 +247,117 @@ def _same_session(before: dict, after: dict) -> bool:
 def execute_pending(out: Path, channel: Channel, session: Any, step: Dict[str, Any], *, log=None):
     """Persist an issued receipt before mutation; uncertain work is never retried."""
     with route_lock(out):
-        if out.is_symlink():
-            raise PioneerError("route must not be a symlink")
-        prior = load_pending(out)
-        if prior is not None and prior.phase != "committed":
-            raise PioneerError("resolve the existing pending step before executing another")
-        data = out.read_bytes()
-        base = _load_header_only(out)
-        proof = session_proof(session, channel)
-        if base.target != proof["identity"]["session"]["target"]:
-            raise PioneerError("route and attached session targets differ")
-        candidate = data + ("\n" + render_step(step)).encode()
-        # Validate the exact rendered route before touching the game.
-        parsed = S.Scenario.parse(candidate.decode(), out)
-        if len(parsed.steps) != len(base.steps) + 1 or parsed.steps[-1].raw != step:
-            raise PioneerError("rendered step does not match requested step")
-        provenance = {"schema": 2, "transaction": uuid.uuid4().hex,
-                      "route": str(out.resolve()), "route_sha256": _digest(data),
-                      "settings_sha256": _json_hash(base.settings), "session": proof,
-                      "candidate_sha256": _digest(candidate), "index": len(base.steps) + 1,
-                      "step_sha256": _json_hash(step)}
-        pending = Pending(base.target, step, {}, time.time(), provenance, "issued")
+        return execute_pending_locked(out, channel, session, step, log=log)
+
+
+def execute_pending_locked(out: Path, channel: Channel, session: Any, step: Dict[str, Any], *, log=None):
+    """`execute_pending` for a caller that already holds this route's lock.
+
+    The attached playback owner holds the route lock for its whole life, so
+    it routes authoring through this body instead of taking the lock again.
+    """
+    if out.is_symlink():
+        raise PioneerError("route must not be a symlink")
+    prior = load_pending(out)
+    if prior is not None and prior.phase != "committed":
+        raise PioneerError("resolve the existing pending step before executing another")
+    data = out.read_bytes()
+    base = _load_header_only(out)
+    proof = session_proof(session, channel)
+    if base.target != proof["identity"]["session"]["target"]:
+        raise PioneerError("route and attached session targets differ")
+    candidate = data + ("\n" + render_step(step)).encode()
+    # Validate the exact rendered route before touching the game.
+    parsed = S.Scenario.parse(candidate.decode(), out)
+    if len(parsed.steps) != len(base.steps) + 1 or parsed.steps[-1].raw != step:
+        raise PioneerError("rendered step does not match requested step")
+    provenance = {"schema": 2, "transaction": uuid.uuid4().hex,
+                  "route": str(out.resolve()), "route_sha256": _digest(data),
+                  "settings_sha256": _json_hash(base.settings), "session": proof,
+                  "candidate_sha256": _digest(candidate), "index": len(base.steps) + 1,
+                  "step_sha256": _json_hash(step)}
+    pending = Pending(base.target, step, {}, time.time(), provenance, "issued")
+    save_pending(out, pending)
+    try:
+        result = run_one_step(out, channel, session, step, log=log)
+        if out.read_bytes() != data or not _same_session(proof, session_proof(session, channel)):
+            raise PioneerError("route or attached session changed during execution; pending result is uncertain")
+        pending.result = result.to_dict()
+        pending.provenance["result_sha256"] = _json_hash(pending.result)
+        pending.phase = "executed"
         save_pending(out, pending)
-        try:
-            result = run_one_step(out, channel, session, step, log=log)
-            if out.read_bytes() != data or not _same_session(proof, session_proof(session, channel)):
-                raise PioneerError("route or attached session changed during execution; pending result is uncertain")
-            pending.result = result.to_dict()
-            pending.provenance["result_sha256"] = _json_hash(pending.result)
-            pending.phase = "executed"
-            save_pending(out, pending)
-            return result
-        except Exception as error:
-            raise PioneerError(f"pending execution is uncertain; inspect before discarding: {error}") from error
+        return result
+    except Exception as error:
+        raise PioneerError(f"pending execution is uncertain; inspect before discarding: {error}") from error
 
 
 def commit_pending(out: Path, channel: Channel, session: Any, *, force: bool = False) -> bool:
     """Atomic, retry-safe append. True=new append; False=already committed."""
     with route_lock(out):
-        if out.is_symlink():
-            raise PioneerError("route must not be a symlink")
-        pending = load_pending(out)
-        if pending is None:
-            raise PioneerError("no pending step")
-        p = pending.provenance
-        try:
-            required = {"schema", "transaction", "route", "route_sha256", "settings_sha256",
-                        "session", "candidate_sha256", "index", "step_sha256", "result_sha256"}
-            if not required.issubset(p):
-                raise ValueError("missing provenance fields")
-            valid = (type(p["schema"]) is int and p["schema"] == 2
-                     and isinstance(p["transaction"], str) and len(p["transaction"]) == 32
-                     and all(isinstance(p[key], str) and len(p[key]) == 64
-                             for key in ("route_sha256", "settings_sha256", "candidate_sha256",
-                                         "step_sha256", "result_sha256"))
-                     and isinstance(p["session"], dict)
-                     and p["route"] == str(out.resolve())
-                     and p["step_sha256"] == _json_hash(pending.step)
-                     and p["result_sha256"] == _json_hash(pending.result)
-                     and pending.phase in {"executed", "committing", "committed"}
-                     and type(p["index"]) is int and p["index"] > 0
-                     and type(pending.result.get("index")) is int
-                     and pending.result["index"] == p["index"]
-                     and pending.result.get("status") in {"ok", "expected_failure", "failed"}
-                     and pending.target == p["session"]["identity"]["session"]["target"]
-                     and _same_session(p["session"], session_proof(session, channel)))
-        except (KeyError, TypeError, ValueError) as error:
-            raise PioneerError("malformed or legacy pending receipt; cannot commit") from error
-        if not valid:
-            raise PioneerError("stale, foreign or malformed pending receipt; cannot commit")
-        if pending.result["status"] == "failed" and not force:
-            raise PioneerError("failed pending step requires --force; this does not waive provenance")
-        data = out.read_bytes()
-        if _digest(data) == p["candidate_sha256"] and pending.phase in {"committing", "committed"}:
-            pending.phase = "committed"
-            save_pending(out, pending)
-            return False
-        if pending.phase == "committed" or _digest(data) != p["route_sha256"]:
-            raise PioneerError("route changed since pending execution")
-        base = _load_header_only(out)
-        if (base.target != pending.target or _json_hash(base.settings) != p["settings_sha256"]
-                or len(base.steps) + 1 != p["index"]):
-            raise PioneerError("pending route settings/index no longer match")
-        candidate = data + ("\n" + render_step(pending.step)).encode()
-        if _digest(candidate) != p["candidate_sha256"]:
-            raise PioneerError("pending append digest mismatch")
-        parsed = S.Scenario.parse(candidate.decode(), out)
-        if len(parsed.steps) != p["index"] or parsed.steps[-1].raw != pending.step:
-            raise PioneerError("pending append no longer parses as its recorded step")
-        pending.phase = "committing"
-        save_pending(out, pending)
-        # Detect non-cooperating edits made while writing the commit journal.
-        if out.read_bytes() != data:
-            raise PioneerError("route changed during commit")
-        _atomic_write(out, candidate)
+        return commit_pending_locked(out, channel, session, force=force)
+
+
+def commit_pending_locked(out: Path, channel: Channel, session: Any, *, force: bool = False) -> bool:
+    """`commit_pending` for a caller that already holds this route's lock."""
+    if out.is_symlink():
+        raise PioneerError("route must not be a symlink")
+    pending = load_pending(out)
+    if pending is None:
+        raise PioneerError("no pending step")
+    p = pending.provenance
+    try:
+        required = {"schema", "transaction", "route", "route_sha256", "settings_sha256",
+                    "session", "candidate_sha256", "index", "step_sha256", "result_sha256"}
+        if not required.issubset(p):
+            raise ValueError("missing provenance fields")
+        valid = (type(p["schema"]) is int and p["schema"] == 2
+                 and isinstance(p["transaction"], str) and len(p["transaction"]) == 32
+                 and all(isinstance(p[key], str) and len(p[key]) == 64
+                         for key in ("route_sha256", "settings_sha256", "candidate_sha256",
+                                     "step_sha256", "result_sha256"))
+                 and isinstance(p["session"], dict)
+                 and p["route"] == str(out.resolve())
+                 and p["step_sha256"] == _json_hash(pending.step)
+                 and p["result_sha256"] == _json_hash(pending.result)
+                 and pending.phase in {"executed", "committing", "committed"}
+                 and type(p["index"]) is int and p["index"] > 0
+                 and type(pending.result.get("index")) is int
+                 and pending.result["index"] == p["index"]
+                 and pending.result.get("status") in {"ok", "expected_failure", "failed"}
+                 and pending.target == p["session"]["identity"]["session"]["target"]
+                 and _same_session(p["session"], session_proof(session, channel)))
+    except (KeyError, TypeError, ValueError) as error:
+        raise PioneerError("malformed or legacy pending receipt; cannot commit") from error
+    if not valid:
+        raise PioneerError("stale, foreign or malformed pending receipt; cannot commit")
+    if pending.result["status"] == "failed" and not force:
+        raise PioneerError("failed pending step requires --force; this does not waive provenance")
+    data = out.read_bytes()
+    if _digest(data) == p["candidate_sha256"] and pending.phase in {"committing", "committed"}:
         pending.phase = "committed"
         save_pending(out, pending)
-        return True
+        return False
+    if pending.phase == "committed" or _digest(data) != p["route_sha256"]:
+        raise PioneerError("route changed since pending execution")
+    base = _load_header_only(out)
+    if (base.target != pending.target or _json_hash(base.settings) != p["settings_sha256"]
+            or len(base.steps) + 1 != p["index"]):
+        raise PioneerError("pending route settings/index no longer match")
+    candidate = data + ("\n" + render_step(pending.step)).encode()
+    if _digest(candidate) != p["candidate_sha256"]:
+        raise PioneerError("pending append digest mismatch")
+    parsed = S.Scenario.parse(candidate.decode(), out)
+    if len(parsed.steps) != p["index"] or parsed.steps[-1].raw != pending.step:
+        raise PioneerError("pending append no longer parses as its recorded step")
+    pending.phase = "committing"
+    save_pending(out, pending)
+    # Detect non-cooperating edits made while writing the commit journal.
+    if out.read_bytes() != data:
+        raise PioneerError("route changed during commit")
+    _atomic_write(out, candidate)
+    pending.phase = "committed"
+    save_pending(out, pending)
+    return True
 
 
 def discard_pending(out: Path) -> None:

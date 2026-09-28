@@ -24,7 +24,8 @@ from . import targets as T
 
 def repo_root() -> Path:
     """scripts/harness/kpharness/discover.py -> the repository."""
-    return Path(__file__).resolve().parents[3]
+    selected = os.environ.get("KP_GAMESCOPE_REPO_ROOT")
+    return Path(selected).resolve() if selected else Path(__file__).resolve().parents[3]
 
 
 def _load_kpdiscover():

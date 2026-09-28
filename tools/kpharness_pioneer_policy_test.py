@@ -2,6 +2,7 @@
 """Pioneer attached-policy/transaction regressions, synthetic engine only."""
 import copy
 import json
+import os
 import sys
 import tempfile
 import types
@@ -49,6 +50,14 @@ class PioneerPolicyTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        # Hermetic: the CLI step/commit path takes the per-engine lock under
+        # XDG_STATE_HOME; never the real user state directory (review M1).
+        self.state_home = self.root / 'state'
+        self.state_home.mkdir(mode=0o700)
+        previous = os.environ.get('XDG_STATE_HOME')
+        os.environ['XDG_STATE_HOME'] = str(self.state_home)
+        self.addCleanup(lambda: os.environ.__setitem__('XDG_STATE_HOME', previous) if previous is not None
+                        else os.environ.pop('XDG_STATE_HOME', None))
         self.out = self.root / 'route.toml'
         self.original = b'# preserve this comment\r\ntarget="k1"\r\n[execution]\r\ngame_speed=1.0\r\n'
         self.out.write_bytes(self.original)
@@ -216,6 +225,8 @@ class PioneerPolicyTests(unittest.TestCase):
             self.assertEqual(cli.main(['pioneer', 'commit', '--out', str(self.out)]), 0)
             self.assertEqual(cli.main(['pioneer', 'discard', '--out', str(self.out)]), 0)
         self.assertEqual(len(S.Scenario.load(self.out).steps), 1)
+        self.assertTrue((self.state_home / 'kpharness/playback-locks/localhost-12345.lock').exists(),
+                        'engine lock taken under the test state directory')
         self.assertIn('NOT undone', output.getvalue())
         self.assertIn('no duplicate append', output.getvalue())
 

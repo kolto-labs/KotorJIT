@@ -61,16 +61,22 @@ def _waiting_for_player(dialog: Dict[str, Any]) -> bool:
     return bool(dialog.get("waiting_for_player"))
 
 
+class WaitCancelled(Exception):
+    """A caller stopped waiting; this says nothing about undoing the world."""
+
+
 def wait_until(channel: Channel, fn: Predicate, timeout: float, *, poll: float = 0.25,
                what: str = "predicate", watchdog: Optional[Watchdog] = None,
                progress: bool = False, on_poll: Optional[Callable[[dict], None]] = None,
-               auto_skip_vo: bool = True) -> Dict[str, Any]:
+               auto_skip_vo: bool = True, cancel_event=None) -> Dict[str, Any]:
     """Poll until fn(state, channel) is true. Returns the state that satisfied it."""
     deadline = time.monotonic() + timeout
     last: Optional[dict] = None
     if watchdog is not None:
         watchdog.reset_progress()
     while True:
+        if cancel_event is not None and cancel_event.is_set():
+            raise WaitCancelled("execution stop requested")
         try:
             state = channel.state_for_wait()
         except ChannelTimeout:
@@ -83,7 +89,7 @@ def wait_until(channel: Channel, fn: Predicate, timeout: float, *, poll: float =
                     raise OracleTrip(v)
             if time.monotonic() >= deadline:
                 raise WaitTimeout(what, timeout, last, channel.recent_events(200))
-            time.sleep(poll)
+            cancel_event.wait(poll) if cancel_event is not None else time.sleep(poll)
             continue
         except ChannelClosed:
             # state_for_wait already made one session-owned reconnect attempt.
@@ -95,7 +101,7 @@ def wait_until(channel: Channel, fn: Predicate, timeout: float, *, poll: float =
                     raise OracleTrip(v)
             if time.monotonic() >= deadline:
                 raise WaitTimeout(what, timeout, last, channel.recent_events(200))
-            time.sleep(poll)
+            cancel_event.wait(poll) if cancel_event is not None else time.sleep(poll)
             continue
         last = state
         if on_poll is not None:
@@ -114,7 +120,7 @@ def wait_until(channel: Channel, fn: Predicate, timeout: float, *, poll: float =
                 pass
         if time.monotonic() >= deadline:
             raise WaitTimeout(what, timeout, last, channel.recent_events(200))
-        time.sleep(poll)
+        cancel_event.wait(poll) if cancel_event is not None else time.sleep(poll)
 
 
 # ------------------------------------------------------------ predicates --

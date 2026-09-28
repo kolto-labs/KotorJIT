@@ -625,6 +625,36 @@ void phase_hookpack() {
     check(o != nullptr && o->addr == 134545408,
           "the other slug picks the other instance");
 
+    // Producer logical names bind to explicit runtime keys without losing
+    // per-build evidence or field extents. Absent keys retain legacy names.
+    AddressTable mapped;
+    check(AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
+      "LogicalField":{"adapter_key":"server.mode","kind":"field","offset":8,"size":4,
+        "expected_bytes":"AA","instances":[
+          {"binary":"win","addr":4096,"expected_bytes":"BBCC","offset":12,"size":2},
+          {"binary":"mac","addr":8192,"expected_bytes":"DDEE"}]}}})JSON",
+        "win", mapped, error), "explicit adapter key parses");
+    const Site* mapped_site = mapped.find("server.mode");
+    check(mapped_site && !mapped.find("LogicalField") && mapped_site->addr == 4096 &&
+          mapped_site->expected == std::vector<std::uint8_t>({0xBB, 0xCC}) &&
+          mapped_site->offset == 12 && mapped_site->size == 2,
+          "canonical adapter key preserves selected build bytes and extent");
+    for (const char* key : {"null", "false", "42", "[]", "{}", "\"\"", "\"   \""}) {
+        const std::string malformed = std::string(
+            "{\"format\":\"agentdecompile.hookpack/v1\",\"sites\":{\"logical\":{\"adapter_key\":") + key + "}}}";
+        check(!AddressTable::parse(malformed, "win", mapped, error),
+              "malformed explicit adapter key refuses instead of falling back");
+    }
+    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
+      "a":{"adapter_key":"runtime.key"},"b":{"adapter_key":"runtime.key"}}})JSON",
+        "win", mapped, error), "duplicate explicit adapter keys refuse");
+    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
+      "a":{"adapter_key":"runtime.key"},"runtime.key":{}}})JSON",
+        "win", mapped, error), "adapter key colliding with fallback name refuses");
+    check(!AddressTable::parse(R"JSON({"format":"agentdecompile.hookpack/v1","sites":{
+      "a":{},"a":{}}})JSON", "win", mapped, error),
+        "duplicate fallback runtime keys refuse");
+
     const char* overlay = R"JSON({
       "build": "k1-win-1.03",
       "game": "k1",

@@ -1,10 +1,8 @@
 -- Chain reaction: every corpse is a thermal detonator.
 --
--- When anything dies it explodes. Everything within the blast radius takes
--- damage; anything that dies from that explodes too, so one kill in a
--- crowded room cascades. Party members are in the blast as well (a third of
--- the damage, and never below 1 HP), because a demo where the player is
--- safe is not cursed.
+-- When a creature outside the party dies, it explodes. Every other creature
+-- outside the party within the blast radius takes fire damage, and anything
+-- that dies from that explodes too, so one kill in a crowded room cascades.
 --
 -- Mechanism: death scripts run ON the corpse, so OnRunScript + the death
 -- resref is the trigger (OnCreatureDeath is never dispatched). The blast
@@ -13,16 +11,30 @@
 -- death scripts and re-enters this hook. Recursion is bounded because a
 -- corpse only detonates once.
 --
+-- The player and the party are left out. The script changes nothing on them
+-- that it would have to put back later. Before each hit it asks the engine
+-- two things about the victim: is it GetFirstPC, and is it a party member
+-- (IsObjectPartyMember). A yes to either, or no clear answer, and the victim
+-- is skipped. The same test decides whether a corpse detonates. No object ID
+-- is kept from one blast to the next for this, so a companion that comes back
+-- under a new ID, a swap of the controlled character, or a tag that another
+-- creature shares changes nothing.
+--
+-- VFX_FRAG marks a blast set off while another blast is still applying its
+-- damage (depth > 0). That happens only if a victim's death script runs
+-- inside the bridge call. The tests show both cases. A live chained kill
+-- decides which one the engine does; the note below says deaths arrive a
+-- frame later, which gives thermal only.
+--
 -- Oracle lines: "[cursed:boom] <name> detonated: k hit (#n)"
--- Counter: local number 7 on the PC == detonations so far; local number 6 ==
--- total damage dealt to party members. (Deaths caused by a blast show up as
--- their own detonation a frame later, when their death script runs; the
--- effect has not resolved by the time this hook returns.)
+-- Counter: local number 7 on the PC == detonations so far.
+-- (Deaths caused by a blast show up as their own detonation a frame later,
+-- when their death script runs; the effect has not resolved by the time
+-- this hook returns.)
 priority = 30
 
 local RADIUS = 7.0
 local DAMAGE = 40
-local PARTY_DIVISOR = 3
 local VFX_THERMAL = 3005
 local VFX_FRAG = 3003
 local DAMAGE_TYPE_FIRE = 256
@@ -35,6 +47,24 @@ local function q(name, ...)
 end
 local function yes(v) return v == 1 or v == true end
 local function norm(s) return type(s) == "string" and s:gsub("%z+$", "") or "" end
+
+-- true = in the party, false = not, nil = no answer (an error or an odd
+-- value). q() cannot be used here: it turns a false answer into nil.
+local function in_party(o)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, "IsObjectPartyMember", o)
+  if not ok then return nil end
+  if v == 1 or v == true then return true end
+  if v == 0 or v == false then return false end
+  return nil
+end
+-- Asked again every time, right before it matters.
+local function spared(o)
+  local pc = q("GetFirstPC")
+  if pc == nil or o == pc then return true end
+  return in_party(o) ~= false
+end
+
 -- Distance from positions: GetDistanceBetween answered 99/oversized inside
 -- hooks (the big shout and the airstrike found 0-1 targets in a ring of 6).
 local function dist(a, b)
@@ -43,6 +73,12 @@ local function dist(a, b)
   local dx, dy, dz = pa.x - pb.x, pa.y - pb.y, pa.z - pb.z
   return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
+
+-- Corpses that already detonated. Object IDs are reused after a module load,
+-- so this is emptied on every module load and on a save-game load.
+local exploded = {}
+local count = 0
+local depth = 0
 
 -- Arming: nothing fires until ARM_TICKS frames after a module/area load and
 -- never while the player is in a conversation. Effects applied from a hook
@@ -74,13 +110,13 @@ local function disarm()
   local pc = q("GetFirstPC")
   if pc then q("SetLocalNumber", pc, 5, 0) end
 end
-function OnModuleLoad(relevant) disarm() end
-function OnAreaEnter(area, entering, relevant) disarm() end
-
-local exploded = {}
-local count = 0
-local depth = 0
-local party_damage = 0   -- published in local number 6 so the route can see the party was hit
+function OnModuleLoad(relevant) exploded = {}; disarm() end
+-- Signature per docs/lua-api.md. from_save_game is an int, and 0 is true in
+-- Lua, so it is compared with 1.
+function OnAreaEnter(area, entering, from_save_game, relevant)
+  if from_save_game == 1 or from_save_game == true then exploded = {} end
+  disarm()
+end
 
 local function is_death_script(s)
   return s == "k_def_death01" or s:find("death", 1, true) ~= nil or s:find("dead", 1, true) ~= nil
@@ -96,7 +132,7 @@ local function detonate(corpse)
   q("SetGlobalFadeOut", 0.0, 0.05, 1.0, 0.6, 0.1)
   q("SetGlobalFadeIn", 0.05, 0.4, 0.0, 0.0, 0.0)
 
-  local hit, killed = 0, 0
+  local hit = 0
   local area = q("GetArea", corpse)
   local victims = {}
   local o = q("GetFirstObjectInArea", area, 1)
@@ -109,16 +145,11 @@ local function detonate(corpse)
   end
   depth = depth + 1
   for _, v in ipairs(victims) do
-    local party = yes(q("IsObjectPartyMember", v))
-    local amount = party and math.floor(DAMAGE / PARTY_DIVISOR) or DAMAGE
-    if party then q("SetMinOneHP", v, 1) end
-    local dmg = q("EffectDamage", amount, DAMAGE_TYPE_FIRE, 0)
-    if dmg then q("ApplyEffectToObject", 0, dmg, v, 0.0) end
-    if party then
-      party_damage = party_damage + amount
-      q("SetLocalNumber", pc, 6, party_damage)
+    if not spared(v) then
+      local dmg = q("EffectDamage", DAMAGE, DAMAGE_TYPE_FIRE, 0)
+      if dmg then q("ApplyEffectToObject", 0, dmg, v, 0.0) end
+      hit = hit + 1
     end
-    hit = hit + 1
   end
   depth = depth - 1
   count = count + 1
@@ -131,9 +162,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
   if not armed() then return end
   local s = norm(script_name)
   if not is_death_script(s) then return end
-  local pc = q("GetFirstPC")
-  if not pc or object_id == pc then return end
   if not yes(q("GetIsObjectValid", object_id)) then return end
-  if yes(q("IsObjectPartyMember", object_id)) then return end
+  if spared(object_id) then return end
   detonate(object_id)
 end

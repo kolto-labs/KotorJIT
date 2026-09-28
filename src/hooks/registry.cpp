@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <utility>
+#include <unordered_set>
 
 #include "api/memory.hpp"
 #include "platform/platform.hpp"
@@ -355,10 +356,23 @@ bool AddressTable::parse(std::string_view json, const std::string& build_slug,
             error = "hookpack has no \"sites\" object";
             return false;
         }
+        std::unordered_set<std::string> effective_keys;
         for (const auto& [name, entry] : sites->object) {
             if (entry.type != JType::Object) continue;
             Site s;
-            s.name     = name;
+            s.name = name;
+            if (const JValue* key = entry.member("adapter_key")) {
+                if (key->type != JType::String ||
+                    key->str.find_first_not_of(" \t\r\n\f\v") == std::string::npos) {
+                    error = "hookpack adapter_key must be a nonempty string: " + name;
+                    return false;
+                }
+                s.name = key->str;
+            }
+            if (!effective_keys.insert(s.name).second) {
+                error = "duplicate hookpack runtime key: " + s.name;
+                return false;
+            }
             s.cls      = as_string(entry.member("cls"));
             s.method   = as_string(entry.member("method"));
             s.kind     = site_kind_from_string(as_string(entry.member("kind")));

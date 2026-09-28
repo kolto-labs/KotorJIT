@@ -53,7 +53,7 @@ The name is a NUL-terminated input C string. The two query outputs are individua
 
 Windows original `Gob::GetAnimation` and K2 i386 pseudocode agree:
 
-- Active named run: non-null return; time output is that run's playback position; duration comes from its animation metadata.
+- Active named run: non-null return; time output is that run's playback position; duration comes from its animation metadata.int play_animation(Model* model, const char* clip_name
 - Existing but inactive clip: null return; time=-1; duration is the model clip length.
 - Absent clip: null return; duration=-1 (and time=-1).
 - Names are compared case-insensitively by the engine.
