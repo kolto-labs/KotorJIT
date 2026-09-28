@@ -27,6 +27,7 @@ import threading
 import time
 import unittest
 from pathlib import Path
+from dataclasses import replace
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -41,7 +42,7 @@ from kpharness.oracle import OracleTrip, Watchdog, fingerprint  # noqa: E402
 from kpharness.scenario import Scenario, ScenarioError, ScenarioRunner  # noqa: E402
 from kpharness import pioneer as P  # noqa: E402
 from kpharness import session as S  # noqa: E402
-from kpharness.session import (BootFailure, GameSession, overlay_tree,  # noqa: E402
+from kpharness.session import (BootFailure, LockHeld, GameSession, overlay_tree,  # noqa: E402
                                tune_ini, write_runtime_ini, pids_by_name, free_port)
 from kpharness.shots import best_match, ppm_to_png, have_pillow  # noqa: E402
 from kpharness import targets as T  # noqa: E402
@@ -940,6 +941,87 @@ do = "sleep"; seconds = 0
         self.assertIn('a = "x; y"\nb = 1 # c; d', out)
         self.assertIn('code = """\nx; y\n"""', out)
 
+    def test_operation_pin_requires_full_immutable_identity_and_is_retained(self):
+        digest = "a" * 64
+        text = f'''
+name = "generated operation"
+target = "k1"
+[operation]
+id = "kotor.k1.model-scale.v1"
+operation_contract_sha256 = "{digest}"
+target_sha256 = "{digest}"
+deployed_script_sha256 = "{digest}"
+fixture_sha256 = "{digest}"
+runtime_sha256 = "{digest}"
+[operation.staging]
+deployed_script = "kotorphasor/scripts/model.lua"
+fixture = "harness-resources/model.fixture"
+runtime_artifact = "kphasor.dll"
+[[step]]
+do = "quit"
+'''
+        sc = Scenario.parse(text)
+        self.assertIsNotNone(sc.operation)
+        self.assertEqual(sc.operation.id, "kotor.k1.model-scale.v1")
+        self.assertEqual(sc.operation.target_sha256, digest)
+        report = self._runner(text)[0].report.to_dict()
+        self.assertEqual(report["operation"], sc.operation.to_dict())
+
+        for body in (
+            f'operation_contract_sha256 = "{"A" * 64}"',
+            "extra = \"x\"",
+            "id = \"KOTOR.MODEL\"",
+            "fixture_sha256 = \"not-a-digest\"",
+        ):
+            if body.startswith("operation_contract"):
+                invalid = text.replace(f'operation_contract_sha256 = "{digest}"', body)
+            elif body.startswith("fixture"):
+                invalid = text.replace(f'fixture_sha256 = "{digest}"', body)
+            else:
+                invalid = text.replace('id = "kotor.k1.model-scale.v1"', body) if body.startswith("id") else text.replace(f'runtime_sha256 = "{digest}"', f'runtime_sha256 = "{digest}"\n' + body)
+            with self.subTest(body=body), self.assertRaises(ScenarioError):
+                Scenario.parse(invalid)
+
+    def test_operation_preflight_requires_matching_contract_operation_and_selected_binary(self):
+        from kpharness.scenario import preflight_operation
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            contract = root / "operation-contract.json"
+            contract.write_text('{"format":"agentdecompile.operation-contract/v1","operations":[]}')
+            digest = hashlib.sha256(contract.read_bytes()).hexdigest()
+            target = "b" * 64
+            route = "\n".join((
+                'target="k1"', '[operation]', 'id="kotor.k1.model-scale.v1"',
+                f'operation_contract_sha256="{digest}"', f'target_sha256="{target}"',
+                f'deployed_script_sha256="{target}"', f'fixture_sha256="{target}"',
+                f'runtime_sha256="{target}"', '[operation.staging]', 'deployed_script="kotorphasor/scripts/model.lua"', 'fixture="harness-resources/model.fixture"', 'runtime_artifact="kphasor.dll"', '[[step]]', 'do="quit"', ''))
+            pin = Scenario.parse(route).operation
+            hookpack = root / "hookpack.json"
+            hookpack.write_text(json.dumps({"format": "agentdecompile.hookpack/v1",
+                "binaries": [{"slug": "k1-gog", "sha256": target}],
+                "operations": [{"id": pin.id, "target": {"slug": "k1-gog",
+                    "sha256": target, "raw_image_sha256": target},
+                    "roles": {"convert": {"site": "Convert"}}}]}))
+            admitted = preflight_operation(pin, contract, hookpack)
+            self.assertEqual(admitted["target_slug"], "k1-gog")
+            from kpharness.scenario import preflight_artifacts
+            script, fixture, runtime = root / "script.lua", root / "fixture.bin", root / "runtime.bin"
+            for artifact, value in ((script, b"script"), (fixture, b"fixture"), (runtime, b"runtime")):
+                artifact.write_bytes(value)
+            artifact_pin = replace(pin, deployed_script_sha256=hashlib.sha256(b"script").hexdigest(),
+                                   fixture_sha256=hashlib.sha256(b"fixture").hexdigest(),
+                                   runtime_sha256=hashlib.sha256(b"runtime").hexdigest())
+            self.assertIn("runtime_artifact", preflight_artifacts(
+                artifact_pin, deployed_script=script, fixture=fixture, runtime_artifact=runtime))
+            runtime.write_bytes(b"changed")
+            with self.assertRaisesRegex(ScenarioError, "runtime artifact"):
+                preflight_artifacts(artifact_pin, deployed_script=script, fixture=fixture, runtime_artifact=runtime)
+            bad = json.loads(hookpack.read_text())
+            bad["operations"][0]["target"]["raw_image_sha256"] = "c" * 64
+            hookpack.write_text(json.dumps(bad))
+            with self.assertRaisesRegex(ScenarioError, "target/raw-image"):
+                preflight_operation(pin, contract, hookpack)
+
     def test_parse_errors(self):
         with self.assertRaises(ScenarioError):
             Scenario.parse('name = "x"\n[[step]]\ndo = "quit"\n')      # no target
@@ -951,9 +1033,9 @@ do = "sleep"; seconds = 0
     def test_shipped_scenarios_parse(self):
         d = ROOT / "scripts" / "harness" / "scenarios"
         from kpharness.scenario import list_scenarios, find_scenario
-        paths = sorted(d.rglob("*.toml"))
-        self.assertEqual(list_scenarios(), paths)
-        self.assertEqual(len([p for p in paths if p.parent.name == "cursed"]), 10)
+        paths = list_scenarios()
+        self.assertEqual(len([p for p in paths if p.parent.name == "cursed"]), 9)
+        self.assertFalse(any("_retired" in p.parts for p in paths))
         for p in paths:
             self.assertEqual(find_scenario(str(p)), p)
             self.assertEqual(find_scenario(p.relative_to(d).with_suffix("").as_posix()), p)
@@ -2525,6 +2607,66 @@ class TestStaging(unittest.TestCase):
         s2._session_log.close()
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
 
+    def test_boot_refusal_after_stage_never_reaches_listener_display_or_launcher(self):
+        staged = self.tmp / "k1_boot_gate"
+        session = GameSession("k1", staged=str(staged), log=lambda _: None)
+        staged.mkdir()
+        staged_game = staged / "game"
+        staged_game.mkdir()
+        refusal = BootFailure("operation staging", "staged runtime differs")
+        def stage(_resources):
+            session.game_dir = staged_game
+        def verify(game_dir):
+            self.assertEqual(game_dir, staged_game)
+            raise refusal
+        with mock.patch.dict(os.environ, {"KP_HARNESS_REUSE_DISPLAY": "99"}), \
+             mock.patch.object(session, "acquire_lock") as acquire, \
+             mock.patch.object(session, "stage", side_effect=stage) as stage_call, \
+             mock.patch.object(session, "teardown") as teardown, \
+             mock.patch.object(S, "write_runtime_ini") as runtime_ini, \
+             mock.patch.object(session, "start_xvfb") as start_xvfb, \
+             mock.patch.object(session, "_launch_and_connect") as launch:
+            with self.assertRaises(BootFailure) as caught:
+                session.boot(verify_staged=verify)
+        self.assertIs(caught.exception, refusal)
+        acquire.assert_called_once_with()
+        stage_call.assert_called_once_with(None)
+        teardown.assert_called_once_with(graceful=False)
+        runtime_ini.assert_not_called()
+        start_xvfb.assert_not_called()
+        launch.assert_not_called()
+
+    def test_operation_staging_verifier_reads_owned_copies_and_rejects_mutation(self):
+        from kpharness.scenario import OperationPin, OperationStagePaths, ScenarioError, verify_staged_artifacts
+        staged = self.tmp / "k1_operation_harness"
+        session = GameSession("k1", staged=str(staged), log=lambda _: None)
+        session.stage()
+        try:
+            files = {
+                "kotorphasor/scripts/model.lua": b"script-v1",
+                "harness-resources/model.fixture": b"fixture-v1",
+                "kphasor.dll": b"runtime-v1",
+            }
+            for relative, data in files.items():
+                path = staged / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(data)
+            pin = OperationPin(
+                id="kotor.k1.model-scale.v1", operation_contract_sha256="a" * 64,
+                target_sha256="b" * 64,
+                deployed_script_sha256=hashlib.sha256(files["kotorphasor/scripts/model.lua"]).hexdigest(),
+                fixture_sha256=hashlib.sha256(files["harness-resources/model.fixture"]).hexdigest(),
+                runtime_sha256=hashlib.sha256(files["kphasor.dll"]).hexdigest(),
+                staging=OperationStagePaths("kotorphasor/scripts/model.lua",
+                                            "harness-resources/model.fixture", "kphasor.dll"))
+            observed = verify_staged_artifacts(pin, staged)
+            self.assertEqual(observed["runtime_artifact"], pin.runtime_sha256)
+            (staged / "kphasor.dll").write_bytes(b"stale-runtime")
+            with self.assertRaisesRegex(ScenarioError, "runtime artifact"):
+                verify_staged_artifacts(pin, staged)
+        finally:
+            session._session_log.close()
+
     def test_reset_saves_restores_k1_source_baseline(self):
         staged = self.tmp / "k1_reset_harness"
         original = self.inst / "Saves" / "000001 - AUTOSAVE"
@@ -2626,6 +2768,137 @@ class TestStaging(unittest.TestCase):
         finally:
             if bad._session_log is not None:
                 bad._session_log.close()
+
+
+class TestOperationLease(unittest.TestCase):
+    """No-game ownership admission and terminal-state regression cases."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="kpharness_operation_lease_"))
+        self.manifest = "a" * 64
+        self.owner_start = "self-start"
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _lease(self, *, generation=1, state="prepared", pid=None, start=None):
+        from kpharness.operation_lease import Lease
+        return Lease(generation, state, self.manifest, str(self.tmp / "staged"),
+                     os.getpid() if pid is None else pid,
+                     self.owner_start if start is None else start, 1.0)
+
+    def test_released_lease_allows_a_monotonic_successor_generation(self):
+        from kpharness.operation_lease import next_generation, transition, write
+        path = self.tmp / "lease.json"
+        write(path, self._lease())
+        released = transition(path, state="released",
+                              pid_start=lambda pid: self.owner_start if pid == os.getpid() else "",
+                              clearance_receipt="owned-teardown")
+        self.assertEqual(released.generation, 2)
+        self.assertEqual(released.state, "released")
+        self.assertEqual(next_generation(path, lambda _pid: ""), 3)
+        with self.assertRaisesRegex(ValueError, "terminal lease"):
+            transition(path, state="released", pid_start=lambda _pid: self.owner_start,
+                       clearance_receipt="owned-teardown")
+
+    def test_prepared_foreign_or_malformed_lease_never_self_clears(self):
+        from kpharness.operation_lease import classify, next_generation, write
+        path = self.tmp / "lease.json"
+        write(path, self._lease(pid=424242, start="foreign-start"))
+        self.assertEqual(classify(path, lambda pid: "foreign-start" if pid == 424242 else ""), "owned")
+        with self.assertRaisesRegex(ValueError, "owned"):
+            next_generation(path, lambda pid: "foreign-start" if pid == 424242 else "")
+        path.write_text("not-json")
+        self.assertEqual(classify(path, lambda _pid: ""), "quarantined")
+        with self.assertRaisesRegex(ValueError, "quarantined"):
+            next_generation(path, lambda _pid: "")
+        raw = self._lease().to_dict()
+        raw["created_at"] = float("nan")
+        path.write_text(json.dumps(raw))
+        self.assertEqual(classify(path, lambda _pid: ""), "quarantined")
+        raw = self._lease().to_dict()
+        raw["state"] = []
+        path.write_text(json.dumps(raw))
+        self.assertEqual(classify(path, lambda _pid: ""), "quarantined")
+        path.write_text('{"format":"kpharness.operation-lease/v1","format":"other"}')
+        self.assertEqual(classify(path, lambda _pid: ""), "quarantined")
+
+    def test_rejected_successor_never_claims_or_transitions_foreign_lease(self):
+        from kpharness.operation_lease import write
+        staged = self.tmp / "staged"
+        staged.mkdir()
+        path = staged / ".kpharness-operation-lease.json"
+        write(path, self._lease(pid=424242, start="foreign-start"))
+        before = path.read_bytes()
+        session = GameSession("k1", staged=str(staged), log=lambda _msg: None)
+        with mock.patch.dict(os.environ, {"KP_HARNESS_REUSE_DISPLAY": "99"}), \
+             mock.patch.object(session, "acquire_lock"), \
+             mock.patch.object(session, "acquire_stage_lock") as stage_lock, \
+             mock.patch.object(session, "stage") as stage, \
+             mock.patch.object(session, "teardown") as teardown, \
+             mock.patch.object(S, "pid_start", side_effect=lambda pid: "foreign-start" if pid == 424242 else "self-start"), \
+             mock.patch.object(S, "transition_operation_lease") as transition, \
+             mock.patch.object(S, "write_runtime_ini") as runtime_ini, \
+             mock.patch.object(session, "_launch_and_connect") as launch:
+            with self.assertRaisesRegex(BootFailure, "operation lease"):
+                session.boot(operation_manifest_sha256=self.manifest)
+        self.assertIsNone(session.operation_lease_path)
+        self.assertEqual(path.read_bytes(), before)
+        stage_lock.assert_called_once_with()
+        stage.assert_not_called()
+        teardown.assert_called_once_with(graceful=False)
+        transition.assert_not_called()
+        runtime_ini.assert_not_called()
+        launch.assert_not_called()
+
+    def test_pre_admission_teardown_cannot_signal_or_unlink_a_foreign_session(self):
+        staged = self.tmp / "staged"
+        staged.mkdir()
+        foreign_info = staged / "session.json"
+        foreign_info.write_text("foreign-session")
+        session = GameSession("k1", staged=str(staged), log=lambda _msg: None)
+        with mock.patch.object(session, "game_pids") as game_pids, \
+             mock.patch.object(session, "_kill") as kill:
+            session.teardown(graceful=False)
+        game_pids.assert_not_called()
+        kill.assert_not_called()
+        self.assertEqual(foreign_info.read_text(), "foreign-session")
+
+    def test_repeated_teardown_cannot_reuse_consumed_launch_cleanup_authority(self):
+        staged = self.tmp / "staged"
+        staged.mkdir()
+        session = GameSession("k1", staged=str(staged), log=lambda _msg: None)
+        session._launch_attempted = True
+        with mock.patch.object(session, "game_pids", return_value=[]), \
+             mock.patch.object(session, "_kill") as kill:
+            session.teardown(graceful=False)
+            foreign_info = staged / "session.json"
+            foreign_info.write_text("successor-session")
+            kill.reset_mock()
+            session.game_pids.reset_mock()
+            session.teardown(graceful=False)
+            session.game_pids.assert_not_called()
+            kill.assert_not_called()
+        self.assertEqual(foreign_info.read_text(), "successor-session")
+
+    def test_operation_stage_lock_is_exclusive_before_any_lease_or_stage_work(self):
+        staged = self.tmp / "staged"
+        first = GameSession("k1", staged=str(staged), log=lambda _msg: None)
+        second = GameSession("k1", staged=str(staged), log=lambda _msg: None)
+        first.acquire_stage_lock()
+        try:
+            with self.assertRaises(LockHeld):
+                second.acquire_stage_lock()
+        finally:
+            first.release_stage_lock()
+
+    def test_foreign_release_request_becomes_quarantine(self):
+        from kpharness.operation_lease import read, transition, write
+        path = self.tmp / "lease.json"
+        write(path, self._lease(pid=424242, start="foreign-start"))
+        terminal = transition(path, state="released", pid_start=lambda _pid: "foreign-start")
+        self.assertEqual(terminal.state, "quarantined")
+        self.assertEqual(read(path), terminal)
 
 
 class TestStagingK2Native(unittest.TestCase):
@@ -2872,7 +3145,7 @@ class TestConfigurationContracts(unittest.TestCase):
             self.assertEqual(P._load_header_only(route).settings, replay.settings)
 
     def test_resource_normalization_preserves_shipped_step_semantics(self):
-        from dataclasses import asdict
+        from dataclasses import replace, asdict
         from kpharness.scenario import list_scenarios
         for path in list_scenarios():
             canonical = Scenario.load(path)

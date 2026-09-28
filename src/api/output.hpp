@@ -16,22 +16,12 @@
 //             caller asks for a screen position. 548 GetFirstPC() supplies the
 //             recipient 374 needs.
 //
-// UNRECONCILED, AND WORTH KNOWING BEFORE ANYONE BUILDS ON THIS. data/hostapi.toml
-// declares the same three surfaces under different names -- kp.print, kp.log,
-// kp.echo, kp.tell, kp.say -- to be emitted by tools/gen_hostapi_glue.py into
-// src/generated/hostapi.inc. Neither the generator nor the .inc exists yet, and
-// several of that file's rows (kp.speak needs kp.as, kp.str.cexo needs the
-// memory probe) depend on modules that do not exist either. So this module is
-// hand-written under the names the module brief asked for, and the two want
-// reconciling by whoever writes the generator.
+// data/hostapi.toml also includes proposed facilities. The implemented output
+// surface is kp.log, kp.console and kp.feedback here, plus kp.print in compat.
+// kp.console writes text; it does not execute a console command.
 //
-// One name in that overlap means opposite things and will bite: kp.console
-// there RUNS a line as if it had been typed into the cheat console.
-// kotor.console here WRITES a line to the console. Same word, opposite
-// direction.
-//
-// Routines are reached BY NAME through the script's own `kotor` table, not by
-// id and not by linking the routines bridge. Two reasons, both load-bearing:
+// Routines are reached BY NAME through `nwscript.call`, not by id and not by
+// linking the routines bridge. Two reasons, both load-bearing:
 // ids are per-game data (K1 and K2 disagree) while names are not, and looking
 // the name up at call time means this module does not care whether the routines
 // bridge registered before or after it. When the name is not there -- routines
@@ -44,15 +34,15 @@ struct lua_State;
 
 namespace kp::api {
 
-// Push the shared `kotor` table, creating it only if this state has none.
+// Push the shared `kp` table, creating it only if this state has none.
 //
 // Every api module registers into one table, and they register in an order
 // nobody controls, so each has to check first. Shared here rather than copied
-// into each module so there is one definition of what "the kotor table" means.
+// into each module so there is one definition of what "the kp table" means.
 // Leaves the table on the stack.
-void push_kotor_table(lua_State*);
+void push_kp_table(lua_State*);
 
-// Where kotor.console() sends its text. The runtime binds this once the console
+// Where kp.console() sends its text. The runtime binds this once the console
 // detour is installed; unbound, console output goes to the log.
 //
 // One line per call: the writer never receives an embedded newline, because a
@@ -65,11 +55,11 @@ void unbind_console();
 bool console_bound();
 
 // Write one message to the console surface from C++. Splits on newlines and
-// falls back to the log exactly as kotor.console() does, so the console
+// falls back to the log exactly as kp.console() does, so the console
 // command handler and a script produce identical output.
 void console_write(const char* text);
 
-// Installs kotor.log, kotor.console and kotor.feedback into this state.
+// Installs kp.log, kp.console and kp.feedback into this state.
 void register_output(lua_State*);
 
 // The whole support module in one call: output, timers and strings.

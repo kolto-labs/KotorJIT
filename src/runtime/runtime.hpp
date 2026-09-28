@@ -21,6 +21,9 @@
 #include <memory>
 #include <string>
 
+#include "multiplayer/role.hpp"
+#include "multiplayer/transport.hpp"
+
 namespace kp::lua { class Host; }
 namespace kp::hooks { class AddressTable; class HookSet; }
 
@@ -44,6 +47,17 @@ struct Config {
     std::string log_path;      // defaults to <game_dir>/kotorphasor.log
     unsigned    error_budget = 8;
     bool        hot_reload = true;
+    multiplayer::Role role = multiplayer::Role::Embedded;
+    std::string multiplayer_host = "127.0.0.1";
+    unsigned    multiplayer_port = 0;
+
+    // The headless harness listener. Off unless `harness_port` is set in the
+    // ini or KOTORPHASOR_HARNESS_PORT is in the environment; players never
+    // run it. The ini parser ignores section headers, so the keys are the
+    // global `harness_port` and `harness_bind`. Anything but loopback is
+    // refused when the listener starts.
+    unsigned    harness_port = 0;
+    std::string harness_bind = "127.0.0.1";
 
     // Read from kotorphasor.ini next to the game if present, so a player can
     // change these without rebuilding.
@@ -62,6 +76,7 @@ public:
     Phase              phase() const { return phase_; }
     const std::string& failure() const { return failure_; }
     const std::string& build() const { return build_; }
+    multiplayer::Role role() const { return role_; }
 
     lua::Host*              host()  { return host_.get(); }
     hooks::HookSet*         hooks() { return hooks_.get(); }
@@ -77,18 +92,22 @@ private:
     bool identify(const Config&);
     bool await_and_verify(const Config&);
     bool resolve(const Config&);
-    bool install();
+    bool start_multiplayer(const Config&);
+    bool install(bool multiplayer);
     bool boot_scripts(const Config&);
 
     Phase       phase_ = Phase::Idle;
     std::string failure_;
     std::string build_;
+    std::string image_sha256_;
+    multiplayer::Role role_ = multiplayer::Role::Embedded;
     std::string log_path_;
     std::uintptr_t runtime_base_ = 0;
 
     std::unique_ptr<hooks::AddressTable> table_;
     std::unique_ptr<hooks::HookSet>      hooks_;
     std::unique_ptr<lua::Host>           host_;
+    std::unique_ptr<multiplayer::Transport> transport_;
 };
 
 // Installed once, before any hook. Turns a hardware fault inside our own code

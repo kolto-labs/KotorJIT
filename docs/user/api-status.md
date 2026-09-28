@@ -1,5 +1,7 @@
 # API status (0.1.0)
 
+The API version 2 namespace migration is verified offline; older live observations below do not constitute a new live test.
+
 What a script can receive and call on KOTOR 1 Steam Windows (`k1_steam_103_unpacked`). Status is from the 0.1.0 runtime and a live harness boot that installed 15 hooks.
 
 The catalogs in [../lua-api.md](../lua-api.md), [../nwscript-api.md](../nwscript-api.md), and `data/hostapi.toml` list every name in the contract. Status here is whether that name actually runs.
@@ -30,19 +32,18 @@ A game event hits one of the caves: `RunScript` â†’ `OnRunScript`, `MainLoop` â†
 
 ---
 
-## Script globals
+## Script metadata and native facilities
 
 | Name | Status |
 |---|---|
 | `priority` | Live |
-| `print(...)` | Live |
-| `_HOST`, `_SERVERAPP` | Bound |
-| `_GAME` | Bound |
-| `api_version` | Bound (`1`) |
-| `_KP_VERSION`, `kp.version` | Bound (`"0.1.0"`) |
-| `cb` / `events` (111 `On*` integers) | Bound |
-| `register_callback`, `unregister_callback` | Bound |
-| `bit32` | Bound (alias of LuaJIT `bit`) |
+| `kp.print(...)` | Bound; runtime log output (standard Lua `print` is unchanged) |
+| `kp.host`, `kp.serverapp` | Bound |
+| `kp.game` | Bound |
+| `kp.api_version` | Bound (`2`) |
+| `kp.version` | Bound (`"0.1.0"`) |
+| `kp.events` (111 `On*` integers) | Bound |
+| `kp.events.register`, `kp.events.unregister` | Bound |
 | LuaJIT standard libraries | Bound |
 
 ---
@@ -204,59 +205,57 @@ Heartbeat, spawn, damage, death, end-of-round, and end-of-dialogue never reach `
 
 | Name | Status |
 |---|---|
-| `kotor.mem.readbit` / `readbyte` / `readchar` / `readword` / `readshort` / `readdword` / `readint` / `readfloat` / `readdouble` / `readstring` / `readwidestring` | Bound |
-| `kotor.mem.writebit` / `writebyte` / `writechar` / `writeword` / `writeshort` / `writedword` / `writeint` / `writefloat` / `writedouble` / `writestring` / `writewidestring` | Bound |
-| `kotor.mem.findsig` | Bound |
-| `kotor.struct` / `kp.struct`: `at`, `view`, `types`, `fields`, `typeof`, `address`, `valid`, `size`, `how_to_obtain`, `allow_unverified_writes`, `totable`, `writes_performed` | Bound |
+| `kp.mem.readbit` / `readbyte` / `readchar` / `readword` / `readshort` / `readdword` / `readint` / `readfloat` / `readdouble` / `readstring` / `readwidestring` | Bound |
+| `kp.mem.writebit` / `writebyte` / `writechar` / `writeword` / `writeshort` / `writedword` / `writeint` / `writefloat` / `writedouble` / `writestring` / `writewidestring` | Bound |
+| `kp.mem.findsig` | Bound |
+| `kp.struct`: `at`, `view`, `types`, `fields`, `typeof`, `address`, `valid`, `size`, `how_to_obtain`, `allow_unverified_writes`, `totable`, `writes_performed` | Bound |
 | `view.<field>` read and write | Bound |
-| `kotor.obj` / `kp.obj`: `ready`, `valid`, `get`, `pc`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `INVALID` | Bound |
+| `kp.obj`: `ready`, `valid`, `get`, `pc`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `INVALID` | Bound |
 | Handle methods: `id`, `type`, `valid`, `name`, `tag`, `position`, `area`, `faction`, `is_pc`, `is_party_member`, `party_slot` | Bound |
-| `kotor.log`, `kotor.console`, `kotor.feedback` | Bound |
-| `kotor.registertimer`, `kotor.removetimer` | Bound |
-| `kotor.tokenizestring`, `kotor.tokenizecmdstring` | Bound |
+| `kp.log`, `kp.console`, `kp.feedback` | Bound |
+| `kp.registertimer`, `kp.removetimer` | Bound |
+| `kp.tokenizestring`, `kp.tokenizecmdstring` | Bound |
 | `kp.as` | Bound |
 | `kp.speed` | Bound |
 | `kp.version` | Bound |
 | `kp.gamedir`, `kp.time` | Bound |
 
-`kotor.obj` and `kp.obj` are the same table. Same for `struct`. Memory is **`kotor.mem` only**.
-
-Compat aliases (Bound, 28/28):  
-`read_bit`, `read_byte`, `read_char`, `read_word`, `read_short`, `read_dword`, `read_int`, `read_float`, `read_double`, `read_string`, `read_wide_string`, `write_bit`, `write_byte`, `write_char`, `write_word`, `write_short`, `write_dword`, `write_int`, `write_float`, `write_double`, `write_string`, `write_wide_string`, `find_sig`, `log_msg`, `register_timer`, `remove_timer`, `tokenize_string`, `tokenize_cmd_string`
+Native facilities are registered only below `kp`. The former host root and all
+bare/underscored compatibility exports are removed; see [the migration](../api-dialects.md).
 
 ### Spec only (nil)
 
-`kp.mem.*` (every spelling), `kp.mem.readbytes`, `kp.mem.writebytes`, `kp.mem.readable`, `kp.mem.writable`, `kp.mem.base`, `kp.mem.allow_code_writes`
+`kp.mem.readbytes`, `kp.mem.writebytes`, `kp.mem.readable`, `kp.mem.writable`, `kp.mem.base`, `kp.mem.allow_code_writes`
 
 `kp.obj.address`, `typed_address`, `typename`, `self`, `module`, `in_area`, `near`, `move`, `create`, `destroy`
 
-`kp.print`, `kp.log`, `kp.echo`, `kp.tell`, `kp.say`, `kp.float_text`, `kp.speak`, `kp.console` (that last name would *run* a console line; `kotor.console` *writes* one), `kp.game_log`
+`kp.echo`, `kp.tell`, `kp.say`, `kp.float_text`, `kp.speak`, `kp.game_log`
 
 `kp.timer.after`, `every`, `after_ticks`, `cancel`, `list`, `tick`, `clock`
 
 `kp.str.split`, `cmdsplit`, `cexo`, `strref`
 
-`kp.random`, `kp.build`, `kp.game`, `kp.scriptdir`, `kp.scriptname`, `kp.gametime`, `kp.vec`, `kp.routine`, `kp.routines`, `kp.engine_type`, `kp.vm_ready`
+`kp.random`, `kp.build`, `kp.scriptdir`, `kp.scriptname`, `kp.gametime`, `kp.vec`, `kp.routine`, `kp.routines`, `kp.engine_type`, `kp.vm_ready`
 
 ### Struct layouts (Bound)
 
 25 layouts, 1521 fields:  
 `CSWSCreature`, `CSWCCreature`, `CSWSCreatureStats`, `CSWSObject`, `CSWCObject`, `CGameObject`, `CSWSArea`, `CSWSModule`, `CSWSPlaceable`, `CSWSDoor`, `CSWSTrigger`, `CSWSItem`, `CItemRepository`, `CExoString`, `CExoArrayList`, `CExoLinkedList`, `CScriptEvent`, `CVirtualMachine`, `CVirtualMachineInternal`, `CServerExoApp`, `CAppManager`, `CGameObjectArray`, `CSWPartyTable`, `CGameEffect`, `C2DA`
 
-Writes to medium or low confidence fields need `kotor.struct.allow_unverified_writes(true)`.
+Writes to medium or low confidence fields need `kp.struct.allow_unverified_writes(true)`.
 
 Effect, event, location, and talent userdata (`kp.effect`, `kp.event`, `kp.location`, `kp.talent`) are Bound as opaque handles.
 
 ---
 
-## Engine routines `kotor.<Name>`
+## Engine routines through `nwscript.call(name, ...)`
 
 772 commands in the VM. **769 bound**. **3 omitted:**
 
 | Id | Name | Status |
 |---|---|---|
 | 6 | `AssignCommand` | Omitted: use `kp.as` |
-| 7 | `DelayCommand` | Omitted: use `kotor.registertimer` |
+| 7 | `DelayCommand` | Omitted: use `kp.registertimer` |
 | 294 | `ActionDoCommand` | Omitted |
 
 Vector and engine-struct routines are callable on this build (all marshallers resolved). Two distinct failure modes, not one:
@@ -280,7 +279,7 @@ Vector and engine-struct routines are callable on this build (all marshallers re
 
 Every other name in [../nwscript-api.md](../nwscript-api.md) for K1. The generated table starts at `Random` (id 0) and ends at `YavinHackCloseDoor` (id 771), skipping ids 6, 7, and 294.
 
-K2 has a separate table (803 of 877). It is compiled in and callable. `k2_linux_swkotor2.elf`, `k2_win_gog_aspyr_swkotor2.exe`, and `k2_win_steam_aspyr_swkotor2.exe` all have every required hook site resolved and install (see `data/addresses/`). What is **not** verified for K2 yet: `kotor.struct`/`kp.struct`'s field offsets. `data/research/phasor_structs.json` was researched against K1's build only. Typed struct access on a K2 build is reading K1 offsets against a different binary and should not be trusted. Raw `kotor.mem.*` access, the routine bridge, and events are unaffected by this. They do not depend on struct field research.
+K2 has a separate table (803 of 877). It is compiled in and callable. `k2_linux_swkotor2.elf`, `k2_win_gog_aspyr_swkotor2.exe`, and `k2_win_steam_aspyr_swkotor2.exe` all have every required hook site resolved and install (see `data/addresses/`). What is **not** verified for K2 yet: `kp.struct`'s field offsets. `data/research/phasor_structs.json` was researched against K1's build only. Typed struct access on a K2 build is reading K1 offsets against a different binary and should not be trusted. Raw `kp.mem.*` access, the routine bridge, and events are unaffected by this. They do not depend on struct field research.
 
 ---
 
@@ -292,4 +291,4 @@ K2 has a separate table (803 of 877). It is compiled in and callable. `k2_linux_
 | Events | 111 | 10 | ~86 | 14 dead names |
 | Console commands | 3 | 3 |  |  |
 | Engine routines | 772 | 15 + 3 flaky | 751 | 3 omitted |
-| Host names | ~90 specified | `print` live | ~50 bound | ~40 spec |
+| Host names | ~90 specified | `kp.print` live | ~50 bound | ~40 spec |

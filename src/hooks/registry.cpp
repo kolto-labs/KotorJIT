@@ -1,11 +1,13 @@
 #include "hooks/registry.hpp"
 
 #include <cerrno>
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <utility>
 
+#include "api/memory.hpp"
 #include "platform/platform.hpp"
 
 namespace kp::hooks {
@@ -233,6 +235,48 @@ bool as_bool(const JValue* v, bool fallback = false) {
     return (v && v->type == JType::Bool) ? v->boolean : fallback;
 }
 
+bool parse_hex_bytes(std::string_view hex, std::vector<std::uint8_t>& out) {
+    out.clear();
+    for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
+        auto nib = [](char ch) -> int {
+            if (ch >= '0' && ch <= '9') return ch - '0';
+            if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
+            if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
+            return -1;
+        };
+        const int hi = nib(hex[i]), lo = nib(hex[i + 1]);
+        if (hi < 0 || lo < 0) { out.clear(); return false; }
+        out.push_back(static_cast<std::uint8_t>((hi << 4) | lo));
+    }
+    return true;
+}
+
+bool read_file_text(const std::string& path, std::string& text, std::string& error) {
+    std::FILE* f = std::fopen(path.c_str(), "rb");
+    if (!f) {
+        error = "cannot open " + path + ": " + std::strerror(errno);
+        return false;
+    }
+    text.clear();
+    char buf[4096];
+    std::size_t n;
+    while ((n = std::fread(buf, 1, sizeof(buf), f)) > 0) text.append(buf, n);
+    std::fclose(f);
+    return true;
+}
+
+const JValue* pick_instance(const JValue& entry, const std::string& slug) {
+    const JValue* inst = entry.member("instances");
+    if (!inst || inst->type != JType::Array || inst->array.empty()) return nullptr;
+    if (!slug.empty()) {
+        for (const auto& row : inst->array) {
+            if (as_string(row.member("binary")) == slug) return &row;
+        }
+        return nullptr;
+    }
+    return &inst->array[0];
+}
+
 }  // namespace
 
 // ---------------------------------------------------------------------------
@@ -243,6 +287,7 @@ SiteKind site_kind_from_string(std::string_view s) {
     if (s == "detour")    return SiteKind::Detour;
     if (s == "reference") return SiteKind::Reference;
     if (s == "call")      return SiteKind::Call;
+    if (s == "field")     return SiteKind::Field;
     return SiteKind::Unknown;
 }
 
@@ -251,12 +296,37 @@ const char* to_string(SiteKind k) {
         case SiteKind::Detour:    return "detour";
         case SiteKind::Reference: return "reference";
         case SiteKind::Call:      return "call";
+        case SiteKind::Field:     return "field";
         case SiteKind::Unknown:   return "unknown";
     }
     return "?";
 }
 
+namespace {
+
+// `offset` and `size` for a field site. Both live on the entry the generator
+// wrote (per-build table) or on the picked instance (hook pack), so this reads
+// from whichever object the caller hands it. A Field with a size counts as
+// resolved even at addr 0: the address is a chain the adapter walks, and the
+// offset is the whole binding.
+void parse_field_extent(const JValue& obj, Site& s) {
+    if (const JValue* o = obj.member("offset"); o && o->type == JType::Number) {
+        s.offset = static_cast<std::uint32_t>(o->number);
+    }
+    if (const JValue* z = obj.member("size"); z && z->type == JType::Number) {
+        s.size = static_cast<std::uint32_t>(z->number);
+    }
+    if (s.kind == SiteKind::Field && s.size != 0) s.resolved = true;
+}
+
+}  // namespace
+
 bool AddressTable::parse(std::string_view json, AddressTable& out, std::string& error) {
+    return parse(json, std::string(), out, error);
+}
+
+bool AddressTable::parse(std::string_view json, const std::string& build_slug,
+                         AddressTable& out, std::string& error) {
     JValue root;
     if (!JParser(json).parse(root, error)) return false;
     if (root.type != JType::Object) {
@@ -264,8 +334,116 @@ bool AddressTable::parse(std::string_view json, AddressTable& out, std::string& 
         return false;
     }
 
+    if (as_string(root.member("format")) == "agentdecompile.hookpack/v1") {
+        out = AddressTable{};
+        out.build_ = !build_slug.empty() ? build_slug : as_string(root.member("build"));
+        bool declared_binaries = false;
+        bool selected_binary = false;
+        if (const JValue* bins = root.member("binaries"); bins && bins->type == JType::Array) {
+            declared_binaries = true;
+            for (const auto& b : bins->array) {
+                if (b.type != JType::Object) continue;
+                const std::string slug = as_string(b.member("slug"));
+                if (!out.build_.empty() && slug != out.build_) continue;
+                out.game_ = as_string(b.member("game"));
+                out.platform_ = as_string(b.member("platform"));
+                if (const JValue* ib = b.member("image_base"); ib && ib->type == JType::Number) {
+                    out.image_base_ = static_cast<std::uintptr_t>(ib->number);
+                }
+                out.sha256_ = as_string(b.member("sha256"));
+                if (out.build_.empty()) out.build_ = slug;
+                selected_binary = true;
+                break;
+            }
+        }
+        if (!build_slug.empty() && declared_binaries && !selected_binary) {
+            error = "hookpack has no binary entry for selected build " + build_slug;
+            return false;
+        }
+        const JValue* sites = root.member("sites");
+        if (!sites || sites->type != JType::Object) {
+            error = "hookpack has no \"sites\" object";
+            return false;
+        }
+        for (const auto& [name, entry] : sites->object) {
+            if (entry.type != JType::Object) continue;
+            Site s;
+            s.name     = name;
+            s.adapter_key = as_string(entry.member("adapter_key"));
+            if (const JValue* aliases = entry.member("aliases"); aliases && aliases->type == JType::Array) {
+                for (const JValue& alias : aliases->array) {
+                    if (alias.type == JType::String && !alias.str.empty()) s.aliases.push_back(alias.str);
+                }
+            }
+            s.cls      = as_string(entry.member("cls"));
+            s.method   = as_string(entry.member("method"));
+            s.kind     = site_kind_from_string(as_string(entry.member("kind")));
+            s.required = as_bool(entry.member("required"));
+            if (const JValue* e = entry.member("expected_bytes"); e && e->type == JType::String) {
+                parse_hex_bytes(e->str, s.expected);
+            }
+            parse_field_extent(entry, s);
+            if (const JValue* picked = pick_instance(entry, out.build_)) {
+                if (const JValue* a = picked->member("addr"); a && a->type == JType::Number) {
+                    s.addr = static_cast<std::uintptr_t>(a->number);
+                    s.resolved = s.addr != 0;
+                }
+                if (const JValue* e = picked->member("expected_bytes"); e && e->type == JType::String) {
+                    parse_hex_bytes(e->str, s.expected);
+                }
+                if (s.cls.empty()) s.cls = as_string(picked->member("cls"));
+                if (s.method.empty()) s.method = as_string(picked->member("method"));
+                if (const JValue* c = picked->member("confidence"); c && c->type == JType::Number) {
+                    s.confidence = c->number;
+                }
+                parse_field_extent(*picked, s);
+            }
+            if (const JValue* c = entry.member("confidence"); c && c->type == JType::Number) {
+                s.confidence = c->number;
+            }
+            out.sites_.push_back(std::move(s));
+        }
+        if (const JValue* operations = root.member("operations"); operations && operations->type == JType::Array) {
+            for (const JValue& operation : operations->array) {
+                if (operation.type != JType::Object) continue;
+                const std::string id = as_string(operation.member("id"));
+                const JValue* target = operation.member("target");
+                const JValue* roles = operation.member("roles");
+                if (id.empty() || !target || target->type != JType::Object || !roles || roles->type != JType::Object)
+                    continue;
+                if (as_string(target->member("slug")) != out.build_ ||
+                    out.sha256_.empty() || as_string(target->member("sha256")) != out.sha256_)
+                    continue;
+                bool valid = !roles->object.empty();
+                for (const auto& [role, declaration] : roles->object) {
+                    (void)role;
+                    if (declaration.type != JType::Object) { valid = false; break; }
+                    const std::string site_name = as_string(declaration.member("site"));
+                    const std::string adapter_key = as_string(declaration.member("adapter_key"));
+                    const JValue* address = declaration.member("addr");
+                    const std::string expected = as_string(declaration.member("expected_bytes"));
+                    const Site* site = out.find_adapter(adapter_key);
+                    if (site == nullptr || site->name != site_name || !address || address->type != JType::Number ||
+                        site->addr != static_cast<std::uintptr_t>(address->number) || expected.empty()) {
+                        valid = false;
+                        break;
+                    }
+                    std::vector<std::uint8_t> bytes;
+                    if (!parse_hex_bytes(expected, bytes) || bytes.empty() || bytes != site->expected) {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid) out.operations_.push_back(id);
+            }
+            std::sort(out.operations_.begin(), out.operations_.end());
+            out.operations_.erase(std::unique(out.operations_.begin(), out.operations_.end()), out.operations_.end());
+        }
+        return true;
+    }
+
     out = AddressTable{};
-    out.build_    = as_string(root.member("build"));
+    out.build_    = !build_slug.empty() ? build_slug : as_string(root.member("build"));
     out.game_     = as_string(root.member("game"));
     out.platform_ = as_string(root.member("platform"));
 
@@ -299,38 +477,20 @@ bool AddressTable::parse(std::string_view json, AddressTable& out, std::string& 
             s.resolved = s.addr != 0;
         }
         if (const JValue* e = entry.member("expected_bytes"); e && e->type == JType::String) {
-            const std::string& hex = e->str;
-            for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
-                auto nib = [](char ch) -> int {
-                    if (ch >= '0' && ch <= '9') return ch - '0';
-                    if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
-                    if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
-                    return -1;
-                };
-                const int hi = nib(hex[i]), lo = nib(hex[i + 1]);
-                if (hi < 0 || lo < 0) { s.expected.clear(); break; }
-                s.expected.push_back(static_cast<std::uint8_t>((hi << 4) | lo));
-            }
+            parse_hex_bytes(e->str, s.expected);
         }
         if (const JValue* c = entry.member("confidence"); c && c->type == JType::Number) {
             s.confidence = c->number;
         }
+        parse_field_extent(entry, s);
         out.sites_.push_back(std::move(s));
     }
     return true;
 }
 
 bool AddressTable::load_file(const std::string& path, AddressTable& out, std::string& error) {
-    std::FILE* f = std::fopen(path.c_str(), "rb");
-    if (!f) {
-        error = "cannot open " + path + ": " + std::strerror(errno);
-        return false;
-    }
     std::string text;
-    char buf[4096];
-    std::size_t n;
-    while ((n = std::fread(buf, 1, sizeof(buf), f)) > 0) text.append(buf, n);
-    std::fclose(f);
+    if (!read_file_text(path, text, error)) return false;
     if (!parse(text, out, error)) {
         error = path + ": " + error;
         return false;
@@ -338,11 +498,105 @@ bool AddressTable::load_file(const std::string& path, AddressTable& out, std::st
     return true;
 }
 
+bool AddressTable::load_hookpack(const std::string& pack_path,
+                                 const std::string& build_slug,
+                                 const std::string& overlay_path,
+                                 AddressTable& out,
+                                 std::string& error) {
+    std::string text;
+    if (!read_file_text(pack_path, text, error)) return false;
+    if (!parse(text, build_slug, out, error)) {
+        error = pack_path + ": " + error;
+        return false;
+    }
+    if (overlay_path.empty()) return true;
+    AddressTable overlay;
+    if (!load_file(overlay_path, overlay, error)) return false;
+    out.merge_overlay(overlay);
+    return true;
+}
+
+void AddressTable::merge_overlay(const AddressTable& overlay) {
+    for (Site& s : sites_) {
+        const Site* o = overlay.find(s.name);
+        if (o == nullptr) continue;
+        if (!o->expected.empty()) s.expected = o->expected;
+        if (o->kind != SiteKind::Unknown) s.kind = o->kind;
+        if (o->required) s.required = true;
+        if (s.addr == 0 && o->addr != 0) {
+            s.addr = o->addr;
+            s.resolved = true;
+        }
+        if (s.cls.empty()) s.cls = o->cls;
+        if (s.method.empty()) s.method = o->method;
+        if (s.confidence == 0.0 && o->confidence != 0.0) s.confidence = o->confidence;
+        if (s.size == 0 && o->size != 0) {
+            s.offset = o->offset;
+            s.size = o->size;
+            if (s.kind == SiteKind::Field) s.resolved = true;
+        }
+    }
+    for (const Site& o : overlay.sites()) {
+        if (find(o.name) == nullptr) sites_.push_back(o);
+    }
+    if (image_base_ == 0) image_base_ = overlay.image_base();
+    if (sha256_.empty()) sha256_ = overlay.expected_sha256();
+    if (game_.empty()) game_ = overlay.game();
+    if (platform_.empty()) platform_ = overlay.platform_name();
+}
+
 const Site* AddressTable::find(std::string_view name) const {
     for (const Site& s : sites_) {
         if (s.name == name) return &s;
     }
     return nullptr;
+}
+
+const Site* AddressTable::find_adapter(std::string_view adapter_key) const {
+    const Site* matched = nullptr;
+    for (const Site& s : sites_) {
+        const bool exact = s.adapter_key == adapter_key;
+        const bool alias = std::find(s.aliases.begin(), s.aliases.end(), adapter_key) != s.aliases.end();
+        if (!exact && !alias) continue;
+        if (matched != nullptr) return nullptr;
+        matched = &s;
+    }
+    return matched;
+}
+
+bool AddressTable::has_operation(std::string_view operation_id) const {
+    return std::binary_search(operations_.begin(), operations_.end(), std::string(operation_id));
+}
+
+void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
+    const std::uintptr_t live = (runtime_base == 0) ? image_base_ : runtime_base;
+    const std::intptr_t delta = static_cast<std::intptr_t>(live - image_base_);
+
+    for (Site& s : sites_) {
+        s.bound_from_scan = false;
+        // A field has no bytes of its own; its resolution is the offset it
+        // carries. Scanning would only ever clear it.
+        if (s.kind == SiteKind::Field) continue;
+        if (s.expected.empty()) continue;
+
+        const std::uintptr_t hint = (s.addr == 0) ? 0
+            : static_cast<std::uintptr_t>(static_cast<std::intptr_t>(s.addr) + delta);
+        if (hint != 0 &&
+            platform::is_readable(reinterpret_cast<const void*>(hint), s.expected.size()) &&
+            std::memcmp(reinterpret_cast<const void*>(hint), s.expected.data(), s.expected.size()) == 0) {
+            s.resolved = true;
+            continue;
+        }
+
+        const std::uintptr_t hit = api::memory::find_unique(s.expected.data(), s.expected.size());
+        if (hit == 0) {
+            s.resolved = false;
+            continue;
+        }
+        s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hit) - delta);
+        s.resolved = s.addr != 0;
+        s.bound_from_scan = s.resolved;
+    }
 }
 
 std::vector<std::string> AddressTable::unresolved_required() const {

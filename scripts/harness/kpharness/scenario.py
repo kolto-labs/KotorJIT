@@ -73,7 +73,7 @@ import math
 import re
 import time
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Dict, List, Optional
 
 try:
@@ -117,6 +117,13 @@ DEFAULT_SETTINGS: Dict[str, Any] = {
 }
 
 FATAL_VERDICTS = ("crash", "hang", "refusal")
+_SHA256_RE = re.compile(r"[0-9a-f]{64}")
+_OPERATION_ID_RE = re.compile(r"[a-z0-9][a-z0-9._-]{0,127}")
+_OPERATION_PIN_FIELDS = (
+    "id", "operation_contract_sha256", "target_sha256", "deployed_script_sha256",
+    "fixture_sha256", "runtime_sha256", "staging",
+)
+_STAGE_FIELDS = ("deployed_script", "fixture", "runtime_artifact")
 
 
 class ScenarioError(Exception):
@@ -128,7 +135,7 @@ def normalize_header(doc: Dict[str, Any], path: Optional[Path] = None) -> tuple:
     version = doc.get("schema_version", 1)
     if type(version) is not int or version != 1:
         raise ScenarioError("schema_version must be 1 (or omitted for legacy routes)")
-    unknown = set(doc) - {"schema_version", "name", "target", "settings", "execution", "resources", "step"}
+    unknown = set(doc) - {"schema_version", "name", "target", "settings", "execution", "operation", "resources", "step"}
     if unknown:
         raise ScenarioError(f"unknown scenario fields: {', '.join(sorted(unknown))}")
     name = doc.get("name", path.stem if path else "scenario")
@@ -166,6 +173,163 @@ def normalize_header(doc: Dict[str, Any], path: Optional[Path] = None) -> tuple:
             raise ScenarioError(f"{name}: execution.{key} is out of range")
         settings[key] = float(value)
     return name, target, settings
+
+
+
+@dataclass(frozen=True)
+class OperationStagePaths:
+    deployed_script: str
+    fixture: str
+    runtime_artifact: str
+
+    @classmethod
+    def parse(cls, raw: Any, *, scenario: str) -> "OperationStagePaths":
+        if not isinstance(raw, dict) or set(raw) != set(_STAGE_FIELDS):
+            raise ScenarioError(f"{scenario}: operation.staging requires exactly " + ", ".join(_STAGE_FIELDS))
+        values: Dict[str, str] = {}
+        for key in _STAGE_FIELDS:
+            value = raw[key]
+            if not isinstance(value, str) or not value or any(c in value for c in ("\\", ":", "\0")):
+                raise ScenarioError(f"{scenario}: operation.staging.{key} must be a relative POSIX path")
+            parts = PurePosixPath(value).parts
+            if value.startswith("/") or ".." in parts or len(parts) == 0:
+                raise ScenarioError(f"{scenario}: operation.staging.{key} must not escape the staged tree")
+            values[key] = str(PurePosixPath(value))
+        return cls(**values)
+
+    def to_dict(self) -> Dict[str, str]:
+        return {key: getattr(self, key) for key in _STAGE_FIELDS}
+
+
+@dataclass(frozen=True)
+class OperationPin:
+    """The immutable identity chain required for a generated native operation.
+
+    This is a preflight artifact, not live-operation proof.  Each value is
+    deliberately a content digest; paths, build labels and a passing parser
+    cannot silently substitute for an effective target, script, fixture or
+    runtime.  The native consumer must independently admit the target-bound
+    operation before a mutable scenario is allowed to proceed.
+    """
+
+    id: str
+    operation_contract_sha256: str
+    target_sha256: str
+    deployed_script_sha256: str
+    fixture_sha256: str
+    runtime_sha256: str
+    staging: OperationStagePaths
+
+    @classmethod
+    def parse(cls, raw: Any, *, scenario: str) -> "OperationPin":
+        if not isinstance(raw, dict) or set(raw) != set(_OPERATION_PIN_FIELDS):
+            raise ScenarioError(
+                f"{scenario}: operation requires exactly " + ", ".join(_OPERATION_PIN_FIELDS))
+        operation_id = raw["id"]
+        if not isinstance(operation_id, str) or not _OPERATION_ID_RE.fullmatch(operation_id):
+            raise ScenarioError(f"{scenario}: operation.id must be a lowercase stable operation ID")
+        values: Dict[str, Any] = {"id": operation_id}
+        for key in _OPERATION_PIN_FIELDS[1:-1]:
+            value = raw[key]
+            if not isinstance(value, str) or not _SHA256_RE.fullmatch(value):
+                raise ScenarioError(f"{scenario}: operation.{key} must contain 64 lowercase hexadecimal digits")
+            values[key] = value
+        values["staging"] = OperationStagePaths.parse(raw["staging"], scenario=scenario)
+        return cls(**values)
+
+    def to_dict(self) -> Dict[str, Any]:
+        out = {key: getattr(self, key) for key in _OPERATION_PIN_FIELDS[:-1]}
+        out["staging"] = self.staging.to_dict()
+        return out
+
+    def manifest_sha256(self) -> str:
+        return hashlib.sha256(json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def normalize_operation(doc: Dict[str, Any], scenario: str) -> Optional[OperationPin]:
+    raw = doc.get("operation")
+    return None if raw is None else OperationPin.parse(raw, scenario=scenario)
+
+
+def preflight_operation(pin: OperationPin, contract_path: Path, hookpack_path: Path) -> Dict[str, str]:
+    """Compare a scenario pin to exported evidence before session construction.
+
+    Native parsing independently validates roles and byte windows at load time;
+    this Python preflight only admits the matching immutable contract digest,
+    selected binary digest and generated operation record.  It cannot turn the
+    hook pack into a live capability claim.
+    """
+    try:
+        contract_bytes = Path(contract_path).read_bytes()
+        hookpack = json.loads(Path(hookpack_path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+        raise ScenarioError(f"operation preflight: unreadable contract or hook pack: {e}") from e
+    if hashlib.sha256(contract_bytes).hexdigest() != pin.operation_contract_sha256:
+        raise ScenarioError("operation preflight: operation-contract SHA-256 does not match scenario pin")
+    if not isinstance(hookpack, dict) or hookpack.get("format") != "agentdecompile.hookpack/v1":
+        raise ScenarioError("operation preflight: hook pack format must be agentdecompile.hookpack/v1")
+    binaries = hookpack.get("binaries")
+    operations = hookpack.get("operations")
+    if not isinstance(binaries, list) or not isinstance(operations, list):
+        raise ScenarioError("operation preflight: hook pack requires binaries and operations arrays")
+    matching = [item for item in operations if isinstance(item, dict) and item.get("id") == pin.id]
+    if len(matching) != 1:
+        raise ScenarioError("operation preflight: pinned operation must occur exactly once in hook pack")
+    target = matching[0].get("target")
+    if not isinstance(target, dict) or target.get("sha256") != pin.target_sha256 or target.get("raw_image_sha256") != pin.target_sha256:
+        raise ScenarioError("operation preflight: generated operation target/raw-image SHA-256 does not match scenario pin")
+    slug = target.get("slug")
+    selected = [item for item in binaries if isinstance(item, dict) and item.get("slug") == slug]
+    if len(selected) != 1 or selected[0].get("sha256") != pin.target_sha256:
+        raise ScenarioError("operation preflight: selected hook-pack binary does not match scenario pin")
+    roles = matching[0].get("roles")
+    if not isinstance(roles, dict) or not roles:
+        raise ScenarioError("operation preflight: generated operation has no roles")
+    return {"id": pin.id, "target_slug": str(slug), "target_sha256": pin.target_sha256,
+            "operation_contract_sha256": pin.operation_contract_sha256}
+
+
+def preflight_artifacts(pin: OperationPin, *, deployed_script: Path, fixture: Path,
+                        runtime_artifact: Path) -> Dict[str, str]:
+    """Require supplied effective artifacts to match an operation pin before boot.
+
+    This reads only explicit regular files.  It intentionally does not claim
+    that a later staging copy is identical; session-owned staging rechecks that
+    boundary in the next G3 increment.
+    """
+    expected = {
+        "deployed script": (Path(deployed_script), pin.deployed_script_sha256),
+        "fixture": (Path(fixture), pin.fixture_sha256),
+        "runtime artifact": (Path(runtime_artifact), pin.runtime_sha256),
+    }
+    actual: Dict[str, str] = {}
+    for label, (path, digest) in expected.items():
+        if not path.is_file():
+            raise ScenarioError(f"operation preflight: {label} is not a readable regular file: {path}")
+        hashed = hashlib.sha256(path.read_bytes()).hexdigest()
+        if hashed != digest:
+            raise ScenarioError(f"operation preflight: {label} SHA-256 does not match scenario pin")
+        actual[label.replace(" ", "_")] = hashed
+    return actual
+
+
+def verify_staged_artifacts(pin: OperationPin, game_dir: Path) -> Dict[str, str]:
+    """Recheck immutable operation bytes in the owned staged game tree."""
+    root = Path(game_dir).resolve()
+    actual: Dict[str, str] = {}
+    for label, relative, digest in (
+        ("deployed script", pin.staging.deployed_script, pin.deployed_script_sha256),
+        ("fixture", pin.staging.fixture, pin.fixture_sha256),
+        ("runtime artifact", pin.staging.runtime_artifact, pin.runtime_sha256),
+    ):
+        path = (root / relative).resolve()
+        if root not in path.parents or not path.is_file():
+            raise ScenarioError(f"operation staging: {label} is not a regular file under the staged tree")
+        hashed = hashlib.sha256(path.read_bytes()).hexdigest()
+        if hashed != digest:
+            raise ScenarioError(f"operation staging: {label} SHA-256 does not match scenario pin")
+        actual[label.replace(" ", "_")] = hashed
+    return actual
 
 
 def normalize_resources(doc: Dict[str, Any], raw_steps: List[dict], *, start_index: int = 1) -> Dict[str, Resource]:
@@ -317,6 +481,7 @@ class Scenario:
     settings: Dict[str, Any] = field(default_factory=lambda: dict(DEFAULT_SETTINGS))
     path: Optional[Path] = None
     resources: Dict[str, Resource] = field(default_factory=dict)
+    operation: Optional[OperationPin] = None
 
     @staticmethod
     def parse(text: str, path: Optional[Path] = None, *, allow_empty: bool = False) -> "Scenario":
@@ -333,10 +498,12 @@ class Scenario:
         if not raw_steps and not allow_empty:
             raise ScenarioError(f"{name}: no [[step]] entries")
         resources = normalize_resources(doc, raw_steps)
+        operation = normalize_operation(doc, name)
         steps = [Step(i + 1, dict(s), str(s.get("label", ""))) for i, s in enumerate(raw_steps)]
         for s in steps:
             s.kind  # validate
-        return Scenario(name=name, target=target, steps=steps, settings=settings, path=path, resources=resources)
+        return Scenario(name=name, target=target, steps=steps, settings=settings, path=path,
+                        resources=resources, operation=operation)
 
     @staticmethod
     def load(path: Path) -> "Scenario":
@@ -381,6 +548,7 @@ class Report:
     verdict: Optional[Dict[str, Any]] = None
     error: str = ""
     execution: Dict[str, Any] = field(default_factory=dict)
+    operation: Optional[Dict[str, str]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {"scenario": self.scenario, "target": self.target, "build": self.build,
@@ -388,6 +556,7 @@ class Report:
                 "seconds": round(self.finished - self.started, 3) if self.finished else None,
                 "ok": self.ok, "error": self.error, "verdict": self.verdict,
                 "execution": self.execution,
+                "operation": self.operation,
                 "steps": [s.to_dict() for s in self.steps]}
 
     def write(self, path: Path) -> Path:
@@ -476,7 +645,8 @@ class ScenarioRunner:
         self.mark_seq = 0
         self.report = Report(scenario=scenario.name, target=scenario.target,
                              build=str(getattr(session, "build", "")),
-                             run_dir=str(self.run_dir), started=time.time())
+                             run_dir=str(self.run_dir), started=time.time(),
+                             operation=scenario.operation.to_dict() if scenario.operation else None)
 
     # ----------------------------------------------------------- helpers --
     def sync_cursor(self) -> int:
@@ -2054,8 +2224,19 @@ def find_scenario(name_or_path: str) -> Path:
 
 
 def list_scenarios() -> List[Path]:
+    """Every shipped route TOML under scenarios/, excluding `_`-prefixed dirs
+    (e.g. `_retired/`) so gallery rejects stay out of discovery and packaging
+    counts without deleting their sources.
+    """
     d = scenario_dir()
-    return sorted(d.rglob("*.toml")) if d.is_dir() else []
+    if not d.is_dir():
+        return []
+    out: List[Path] = []
+    for p in sorted(d.rglob("*.toml")):
+        if any(part.startswith("_") for part in p.relative_to(d).parts):
+            continue
+        out.append(p)
+    return out
 
 
 def _slug(s: str) -> str:

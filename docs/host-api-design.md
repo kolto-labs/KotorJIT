@@ -4,13 +4,19 @@ What a Lua script can call. The event pipeline decides *when* a script runs. The
 
 Grounded in the KOTOR engine routine tables, the recovered struct layouts, and the event catalog in `data/events.toml`.
 
+API version 2 separates provenance at the Lua root: `nwscript.call(name, ...)`
+dispatches direct engine routines, and every native facility is below `kp`.
+The native modules reuse one shared table; no bare compatibility promotions or
+second host root are installed. See [the migration reference](api-dialects.md).
+
 KOTOR is a dedicated server in-process (`CServerExoApp`) with one hardcoded client. That creature is `CServerExoApp::GetFirstPCObject` / `GetPlayerCreatureId` / `GetFirstPC`. Client attach and leave are `OnModulePlayerEnter` (`Mod_OnClientEntr`) and `OnModulePlayerExit`
 (`Mod_OnClientLeav`). Objects are `CServerExoApp::GetGameObject` / `CGameObject`, not a Halo player-memory slot.
 
 ## The shape of the problem
 
 KOTOR already has a scripting language. 769 of 772 engine routines become
-`kotor.GetFirstPC()`, `kotor.CreateObject(...)`, `kotor.SpeakString(...)`. The local
+`nwscript.call("GetFirstPC")`, `nwscript.call("CreateObject", ...)`,
+`nwscript.call("SpeakString", ...)`. The local
 server's player list is that one client plus party slots. Areas, dialogue, journal,
 alignment, and force powers are engine questions. Engine routines answer them.
 
@@ -30,7 +36,7 @@ Each is file-disjoint so they can be built in parallel.
 `src/api/routines.cpp`, `src/api/enginestruct.{hpp,cpp}`
 
 The highest-value module. 769 of KOTOR 1's 772 engine routines become
-`kotor.GetModule()`, `kotor.CreateObject(...)` and so on.
+`nwscript.call("GetModule")`, `nwscript.call("CreateObject", ...)` and so on.
 
 Marshalling has three kinds. Scalars are plain Lua values. Vectors are `{x=,y=,z=}` tables
 and use the VM's own vector push/pop, not three scalar pushes. Effects, events, locations

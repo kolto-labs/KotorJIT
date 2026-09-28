@@ -152,6 +152,14 @@ def cmd_run(a: argparse.Namespace) -> int:
     try:
         path = S.find_scenario(a.scenario)
         sc = S.Scenario.load(path)
+        if sc.operation is not None:
+            if not a.operation_contract or not a.hookpack:
+                raise S.ScenarioError("operation scenario requires --operation-contract and --hookpack before boot")
+            S.preflight_operation(sc.operation, Path(a.operation_contract), Path(a.hookpack))
+            if not a.deployed_script or not a.fixture or not a.runtime_artifact:
+                raise S.ScenarioError("operation scenario requires --deployed-script, --fixture and --runtime-artifact before boot")
+            S.preflight_artifacts(sc.operation, deployed_script=Path(a.deployed_script),
+                                 fixture=Path(a.fixture), runtime_artifact=Path(a.runtime_artifact))
     except S.ScenarioError as e:
         print(f"scenario: {e}", file=sys.stderr)
         return 3
@@ -159,8 +167,17 @@ def cmd_run(a: argparse.Namespace) -> int:
     s = GameSession(target, build_dir=a.build_dir, display=a.display, port=a.port,
                     boot_timeout=a.boot_timeout, force=a.force, wine_debug=a.wine_debug,
                     staged=a.staged, wineprefix=a.wineprefix, reset_saves=True)
+    def verify_staged(game_dir: Path) -> None:
+        if sc.operation is None:
+            return
+        try:
+            S.verify_staged_artifacts(sc.operation, game_dir)
+        except S.ScenarioError as e:
+            raise BootFailure("operation staging", str(e)) from e
     try:
-        ch = s.boot(resources=list(sc.resources.values()))
+        ch = s.boot(resources=list(sc.resources.values()),
+                    verify_staged=verify_staged if sc.operation is not None else None,
+                    operation_manifest_sha256=sc.operation.manifest_sha256() if sc.operation is not None else None)
     except (BootFailure, LockHeld, FileNotFoundError) as e:
         print(f"boot failed: {e}", file=sys.stderr)
         return 2
@@ -385,6 +402,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("run", help="boot, run a scenario, tear down")
     p.add_argument("scenario", help="name under scripts/harness/scenarios or a path")
+    p.add_argument("--operation-contract", help="AgentDecompile operation-contract JSON for an operation-bearing scenario")
+    p.add_argument("--hookpack", help="AgentDecompile generated hook-pack JSON for an operation-bearing scenario")
+    p.add_argument("--deployed-script", help="effective script file whose bytes match the operation scenario pin")
+    p.add_argument("--fixture", help="effective fixture file whose bytes match the operation scenario pin")
+    p.add_argument("--runtime-artifact", help="runtime artifact file whose bytes match the operation scenario pin")
     target_arg(p, default=None); boot_args(p); p.set_defaults(fn=cmd_run)
 
     p = sub.add_parser("down", help="tear a booted session down")

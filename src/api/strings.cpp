@@ -41,7 +41,7 @@ const char* check_string(lua_State* L, int index, std::size_t* len) {
 int l_tokenizestring(lua_State* L) {
     const int argc = lua_gettop(L);
     if (argc != 2)
-        return luaL_error(L, "kotor.tokenizestring expects 2 arguments (got %d)", argc);
+        return luaL_error(L, "kp.tokenizestring expects 2 arguments (got %d)", argc);
 
     std::size_t str_len = 0, delim_len = 0;
     const char* str   = check_string(L, 1, &str_len);
@@ -55,7 +55,7 @@ int l_tokenizestring(lua_State* L) {
 int l_tokenizecmdstring(lua_State* L) {
     const int argc = lua_gettop(L);
     if (argc != 1)
-        return luaL_error(L, "kotor.tokenizecmdstring expects 1 argument (got %d)", argc);
+        return luaL_error(L, "kp.tokenizecmdstring expects 1 argument (got %d)", argc);
 
     std::size_t len = 0;
     const char* line = check_string(L, 1, &len);
@@ -116,7 +116,7 @@ std::vector<std::string> tokenize_command(std::string_view line) {
 }
 
 void register_strings(lua_State* L) {
-    push_kotor_table(L);
+    push_kp_table(L);
     lua_pushcfunction(L, l_tokenizestring);     lua_setfield(L, -2, "tokenizestring");
     lua_pushcfunction(L, l_tokenizecmdstring);  lua_setfield(L, -2, "tokenizecmdstring");
     lua_pop(L, 1);

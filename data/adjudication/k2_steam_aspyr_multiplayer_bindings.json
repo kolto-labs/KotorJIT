@@ -1,0 +1,30 @@
+{
+  "schema": "kotorphasor.adjudication.v1",
+  "build": "k2_steam_aspyr",
+  "bindings": [
+    {"name":"CVirtualMachine::internal","kind":"field","owner":"CVirtualMachine","addr":"0x0","offset":"0x1c","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"Steam StackPopInteger 0x006fd980 loads [ecx+0x1c] before calling the internal VM pop routine; adjacent wrappers use the same member."}},
+    {"name":"CVirtualMachineInternal::command_implementer","kind":"field","owner":"CVirtualMachineInternal","addr":"0x0","offset":"0x3d4","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"Steam RunScript 0x007022a0 repeatedly reads this+0x3d4 at 0x0070236b onward."}},
+    {"name":"g_pAppManager","kind":"field","owner":"","addr":"0x00a1b4a4","offset":"0x0","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"The independently matched SetGameSpeed body at 0x0079c3f0 repeatedly loads [0x00a1b4a4], then reads client +0x4 and server +0x8."}},
+    {"name":"CAppManager::server","kind":"field","owner":"CAppManager","addr":"0x0","offset":"0x8","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"SetGameSpeed 0x0079c47c-0x0079c4b8 reads the server through g_pAppManager+0x8."}},
+    {"name":"CNetLayer::destination_net_layer","kind":"field","owner":"CNetLayer","addr":"0x0","offset":"0x2000c","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"The Initialize-adjacent setter at 0x00704820 stores its sole argument at this+0x2000c."}},
+    {"name":"CGameObject::id","kind":"field","owner":"CGameObject","addr":"0x0","offset":"0x4","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"The matched CGameObject constructor at 0x0053d660 stores the caller-supplied id at this+0x4 and the object type at +0x8."}},
+
+    {"name":"CNetLayer::Initialize","addr":"0x00703d70","verdict":"accept","confidence":0.95,"evidence":{"cross_build":"GOG 0x0063f910 -> Steam 0x00703d70; v1 score 0.9289 margin 0.1758; exact size, blocks, callees, cyclomatic complexity, and instruction count."}},
+    {"name":"CNetLayer::ShutDown","addr":"0x00703c50","verdict":"accept","confidence":0.9,"evidence":{"cross_build":"GOG 0x0063f7f0 -> Steam 0x00703c50; exact 66-byte/1-block/1-callee/19-instruction shape and the same -0x120 adjacency to independently matched Initialize."}},
+    {"name":"CNetLayer::SendMessageToPlayer","addr":"0x00704060","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x0063fc00 -> Steam 0x00704060; v1 score 0.9259 margin 0.4402; exact 1055-byte, 80-block, 5-callee, 322-instruction shape."}},
+    {"name":"CNetLayer::ProcessReceivedFrames","addr":"0x00703f30","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x0063fad0 -> Steam 0x00703f30; v1 score 1.0 margin 0.2664 and exact shape in every recorded dimension."}},
+    {"name":"CNetLayer::NonWindowMessages","addr":"0x00704880","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x00640420 -> Steam 0x00704880; v1 score 1.0 margin 0.2664 and exact shape in every recorded dimension."}},
+    {"name":"CNetLayer::StartServerMode","addr":"0x00704500","verdict":"accept","confidence":0.9,"evidence":{"cross_build":"GOG 0x006400a0 -> Steam 0x00704500; v1 score 0.9414 margin 0.1129 and exact shape in every recorded dimension."}},
+    {"name":"CNetLayer::StartConnectToSession","addr":"0x007045b0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x00640150 -> Steam 0x007045b0; v1 score 1.0 margin 0.3840 and exact 398-byte, 13-block, 7-callee shape."}},
+    {"name":"CSWCArea::GetServerArea","addr":"0x007aae00","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x00457800 -> Steam 0x007aae00; v1 score 1.0 margin 0.2557 and exact shape in every recorded dimension."}},
+    {"name":"CSWSModule::GetArea","addr":"0x00557ef0","verdict":"accept","confidence":0.98,"evidence":{"cross_build":"GOG 0x0072a6a0 -> Steam 0x00557ef0; v1 score 1.0 margin 0.2110 and exact shape in every recorded dimension."}},
+    {"name":"CSWCArea::AttachmentFromServerArea","addr":"0x007aae80","verdict":"accept","confidence":0.9,"evidence":{"cross_build":"Exact 25-byte/10-instruction shape at the same +0x80 position after the independently matched GetServerArea method."}},
+    {"name":"CSWSArea::AttachmentFromClientArea","addr":"0x0052dc10","verdict":"accept","confidence":0.85,"evidence":{"cross_build":"v1 maps the GOG method to this exact 25-byte/10-instruction one-pointer attachment body; layout is identical."}},
+    {"name":"CClientExoAppInternal::MainLoop","addr":"0x00781be0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"GOG 0x0042e160 -> Steam 0x00781be0; v1 score 0.9884 margin 0.4834; exact 8599-byte, 1878-instruction, 225-block, 106-callee shape, with matching mnemonic fingerprint."}},
+    {"name":"CSWSCreature::AddMoveToPointAction","addr":"0x00564770","verdict":"accept","confidence":0.85,"evidence":{"cross_build":"v1 maps GOG 0x0067d3a0 here; exact 339-byte, 5-block, 2-callee, 112-instruction shape in both binaries."}},
+    {"name":"CServerExoApp::GetPlayerCreatureId","addr":"0x0051c8f0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2791; exact 22-byte/10-instruction shape."}},
+    {"name":"CServerExoApp::GetGameObject","addr":"0x0051c0a0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.3200; exact 62-byte/21-instruction shape."}},
+    {"name":"CSWSObject::SetPosition","addr":"0x00543f50","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2594; exact 475-byte, 15-block, 5-callee, 130-instruction shape."}},
+    {"name":"CServerExoApp::GetModule","addr":"0x0051bd90","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2791; exact 22-byte/10-instruction shape."}}
+  ]
+}

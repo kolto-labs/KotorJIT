@@ -226,7 +226,7 @@ std::uintptr_t fake_resolver(std::uint32_t object_id, const char** type_name_out
 }
 
 // Installing the resolver is a Lua call so the run can show both halves: what
-// kotor.struct.view answers before anything binds a resolver, and what it
+// kp.struct.view answers before anything binds a resolver, and what it
 // answers afterwards.
 int l_install_resolver(lua_State*) {
     structs::set_address_resolver(fake_resolver);
@@ -332,16 +332,16 @@ local function raises_saying(what, needle, fn)
 end
 
 print("\n-- 1. a named read, at the width the table declares -------------")
-local ev = kotor.struct.at(event_addr, "CScriptEvent")
+local ev = kp.struct.at(event_addr, "CScriptEvent")
 ok("tostring(view) names the layout and the address: " .. tostring(ev),
    tostring(ev):find("CScriptEvent") ~= nil)
 ok("ev.event_type == 0x0202 (a u16 read, not the dword 0xDEAD0202)",
    ev.event_type == 0x0202)
 ok("ev.field_2 == 0xDEAD (the neighbour is intact and separate)",
    ev.field_2 == 0xDEAD)
-ok("kotor.struct.size('CScriptEvent') == 52", kotor.struct.size("CScriptEvent") == 52)
-ok("kotor.struct.typeof(ev) == 'CScriptEvent'", kotor.struct.typeof(ev) == "CScriptEvent")
-ok("kotor.struct.valid(ev)", kotor.struct.valid(ev) == true)
+ok("kp.struct.size('CScriptEvent') == 52", kp.struct.size("CScriptEvent") == 52)
+ok("kp.struct.typeof(ev) == 'CScriptEvent'", kp.struct.typeof(ev) == "CScriptEvent")
+ok("kp.struct.valid(ev)", kp.struct.valid(ev) == true)
 
 print("\n-- 2. THE TRAP: a CExoArrayList reads back as a list ------------")
 -- The wrong answer, produced on purpose so the two sit side by side.
@@ -357,7 +357,7 @@ ok("ev.int_params.data ~= ev.int_params[1] (pointer is not element zero)",
    ev.int_params.data ~= ev.int_params[1])
 ok("the list is never a number: type(ev.int_params) == 'userdata'",
    type(ev.int_params) == "userdata")
-local t = kotor.struct.totable(ev.int_params)
+local t = kp.struct.totable(ev.int_params)
 ok("totable gives {11,22,33}", #t == 3 and t[1] == 11 and t[3] == 33)
 raises("index 4 of a 3-element list is refused, not read",
        function() return ev.int_params[4] end)
@@ -385,7 +385,7 @@ raises("ev.hit_points is an error and lists nothing that does not exist",
 raises("assigning a new field is refused too",
        function() ev.brand_new_field = 1 end)
 raises("an unknown layout name is an error",
-       function() return kotor.struct.at(event_addr, "CSWSCreatur") end)
+       function() return kp.struct.at(event_addr, "CSWSCreatur") end)
 
 print("\n-- 6. a named write, at the field's width -----------------------")
 ev.event_type = 0x1234
@@ -407,7 +407,7 @@ raises("writing an element through the list view is refused",
        function() ev.int_params[1] = 99 end)
 
 print("\n-- 7. twelve bytes that are a Vector, not a list ----------------")
-local obj = kotor.struct.at(object_addr, "CSWSObject")
+local obj = kp.struct.at(object_addr, "CSWSObject")
 local p = obj.position
 ok("obj.position is a table, not a pointer", type(p) == "table")
 ok("obj.position.x == 12.5", p.x == 12.5)
@@ -417,39 +417,39 @@ ok("#obj.effects == 2 -- same width at 0x124, and it IS a list",
    #obj.effects == 2)
 
 print("\n-- 8. a bad address returns nil rather than faulting ------------")
-local gone = kotor.struct.at(unmapped, "CScriptEvent")
-ok("a view over an unmapped page is still a view", kotor.struct.typeof(gone) == "CScriptEvent")
+local gone = kp.struct.at(unmapped, "CScriptEvent")
+ok("a view over an unmapped page is still a view", kp.struct.typeof(gone) == "CScriptEvent")
 ok("gone.event_type is nil", gone.event_type == nil)
-ok("kotor.struct.valid(gone) is false", kotor.struct.valid(gone) == false)
+ok("kp.struct.valid(gone) is false", kp.struct.valid(gone) == false)
 ok("#gone.int_params == 0 (an unreadable header has no elements)",
    #gone.int_params == 0)
 ok("gone.int_params[1] is refused by the range check, not by a fault",
    pcall(function() return gone.int_params[1] end) == false)
-local null = kotor.struct.at(0, "CSWSObject")
+local null = kp.struct.at(0, "CSWSObject")
 ok("a view at address 0 reads nil rather than raising", null.position == nil)
 raises("and a write through it says so, having written nothing",
        function() null.current_hp = 1 end)
 
 print("\n-- 9. an object id, before and after a resolver exists ----------")
-local before, why = kotor.struct.view(live_id)
+local before, why = kp.struct.view(live_id)
 ok("with no resolver installed, view() returns nil and says why", before == nil)
 print(("         %s"):format(tostring(why)))
 install_resolver()
-local by_id = kotor.struct.view(live_id)
+local by_id = kp.struct.view(live_id)
 ok("view(id) picks CSWSObject from what the resolver named",
-   kotor.struct.typeof(by_id) == "CSWSObject")
-ok("it reads the same bytes kotor.struct.at reached", by_id.position.x == 12.5)
-ok("kotor.struct.address(by_id) re-resolves to the object address",
-   kotor.struct.address(by_id) == object_addr)
-ok("kotor.struct.valid(by_id) is true", kotor.struct.valid(by_id) == true)
-local forced = kotor.struct.view(live_id, "CScriptEvent")
+   kp.struct.typeof(by_id) == "CSWSObject")
+ok("it reads the same bytes kp.struct.at reached", by_id.position.x == 12.5)
+ok("kp.struct.address(by_id) re-resolves to the object address",
+   kp.struct.address(by_id) == object_addr)
+ok("kp.struct.valid(by_id) is true", kp.struct.valid(by_id) == true)
+local forced = kp.struct.view(live_id, "CScriptEvent")
 ok("an explicit type name overrides the resolver's choice",
-   kotor.struct.typeof(forced) == "CScriptEvent")
-local missing, why2 = kotor.struct.view(dead_id)
+   kp.struct.typeof(forced) == "CScriptEvent")
+local missing, why2 = kp.struct.view(dead_id)
 ok("an id the resolver does not know returns nil and says why", missing == nil)
 print(("         %s"):format(tostring(why2)))
 raises("a NaN object id is an argument error, not a conversion",
-       function() return kotor.struct.view(0/0) end)
+       function() return kp.struct.view(0/0) end)
 
 -- The reason a view holds an id rather than an address: the object can go away
 -- and the address it used to sit at can be handed to something else. Everything
@@ -461,27 +461,27 @@ ok("and #by_id.effects == 2", #eff == 2)
 -- A nested view at a non-zero offset, which is the case that proves the view
 -- re-resolves the ID rather than remembering an address. CSWSItem carries its
 -- CSWSObject at +0x10 where every other type carries it at +0x00.
-local item = kotor.struct.view(item_id)
+local item = kp.struct.view(item_id)
 local embedded = item.server_object
 ok("view(item_id) picks CSWSItem from what the resolver named",
-   kotor.struct.typeof(item) == "CSWSItem")
+   kp.struct.typeof(item) == "CSWSItem")
 ok("item.server_object is the CSWSObject at +0x10: current_hp == 77",
    embedded.current_hp == 77)
 ok("its address is 16 past the item's",
-   kotor.struct.address(embedded) - kotor.struct.address(item) == 16)
+   kp.struct.address(embedded) - kp.struct.address(item) == 16)
 move_item()
 ok("the engine reallocates the item, and the nested view follows it: 88",
    embedded.current_hp == 88)
 ok("still 16 past the item's new address, not 16 past the old one",
-   kotor.struct.address(embedded) - kotor.struct.address(item) == 16
-   and kotor.struct.address(item) == item_addr_moved)
-ok("and the outer view followed too", kotor.struct.address(item) ~= item_addr)
+   kp.struct.address(embedded) - kp.struct.address(item) == 16
+   and kp.struct.address(item) == item_addr_moved)
+ok("and the outer view followed too", kp.struct.address(item) ~= item_addr)
 
 retire_object()
 ok("once the object is destroyed, valid(by_id) is false",
-   kotor.struct.valid(by_id) == false)
+   kp.struct.valid(by_id) == false)
 ok("and address(by_id) is nil rather than a stale pointer",
-   kotor.struct.address(by_id) == nil)
+   kp.struct.address(by_id) == nil)
 raises_saying("READING a field now raises rather than handing back the dead object's bytes",
               "is stale", function() return by_id.current_hp end)
 raises_saying("WRITING one raises before anything is stored",
@@ -491,11 +491,11 @@ raises_saying("a nested read is stale too, at its own offset",
 raises_saying("and the list taken while it was alive: its header is inside the object",
               "is stale", function() return #eff end)
 raises_saying("so is indexing that list", "is stale", function() return eff[1] end)
-raises_saying("and totable of it", "is stale", function() return kotor.struct.totable(eff) end)
+raises_saying("and totable of it", "is stale", function() return kp.struct.totable(eff) end)
 ok("tostring says stale instead of printing an address: " .. tostring(by_id),
    tostring(by_id):find("stale") ~= nil)
 ok("writes_performed() is still 1: nothing was written into the dead object",
-   kotor.struct.writes_performed() == 1)
+   kp.struct.writes_performed() == 1)
 
 -- Ids are reused. The engine hands them out from two counters that grow toward
 -- each other, so an id that resolves again is not the same object coming back.
@@ -503,7 +503,7 @@ reissue_id()
 raises_saying("the id resolves again, and the retired view still refuses: it would be "
               .. "a different object under the same name",
               "is stale", function() return by_id.current_hp end)
-local fresh = kotor.struct.view(live_id)
+local fresh = kp.struct.view(live_id)
 ok("a view taken now reads normally", fresh.current_hp == 100)
 
 print("\n-- 10. an offset nobody confirmed is readable, not writable -----")
@@ -513,7 +513,7 @@ print("\n-- 10. an offset nobody confirmed is readable, not writable -----")
 -- reachable at all: every field the research file itself marks med or low is an
 -- aggregate, and an aggregate is refused a write one check earlier.
 local dialog
-for _, fld in ipairs(kotor.struct.fields("CSWSObject")) do
+for _, fld in ipairs(kp.struct.fields("CSWSObject")) do
     if fld.name == "dialog_owner" then dialog = fld end
 end
 ok("dialog_owner is a ptr, med confidence, list shape unconfirmed",
@@ -524,11 +524,11 @@ raises_saying("writing it is refused, and the confidence gate is the reason",
               "med confidence", function() obj.dialog_owner = 0x11223344 end)
 ok("the refusal wrote nothing", obj.dialog_owner == 0xAABBCCDD)
 ok("allow_unverified_writes(true) returns the previous setting (false)",
-   kotor.struct.allow_unverified_writes(true) == false)
+   kp.struct.allow_unverified_writes(true) == false)
 obj.dialog_owner = 0x11223344
 ok("opted in, the same write goes through -- the gate decided the outcome",
    obj.dialog_owner == 0x11223344)
-kotor.struct.allow_unverified_writes(false)
+kp.struct.allow_unverified_writes(false)
 raises_saying("opted back out, it is refused again",
               "med confidence", function() obj.dialog_owner = 0 end)
 ok("and the value is the one the opted-in write left", obj.dialog_owner == 0x11223344)
@@ -541,16 +541,16 @@ ok("obj.ai_level reads back -100", obj.ai_level == -100)
 
 -- The other half of the same fix: an aggregate is now refused as an aggregate,
 -- rather than being refused by a gate that had nothing to do with it.
-local pl = kotor.struct.at(0, "CSWSPlaceable")
+local pl = kp.struct.at(0, "CSWSPlaceable")
 raises_saying("CSWSPlaceable.orientation is f32[4]: refused as an aggregate",
               "aggregate", function() pl.orientation = 1 end)
-kotor.struct.allow_unverified_writes(true)
+kp.struct.allow_unverified_writes(true)
 raises_saying("opted in, still an aggregate -- the opt-in was never the question",
               "aggregate", function() pl.orientation = 1 end)
-kotor.struct.allow_unverified_writes(false)
+kp.struct.allow_unverified_writes(false)
 
 print("\n-- 11. the table describes itself ------------------------------")
-local f = kotor.struct.fields("CScriptEvent")
+local f = kp.struct.fields("CScriptEvent")
 ok("fields('CScriptEvent') has 6 entries", #f == 6)
 ok("field 3 is int_params at 0x4, 12 bytes, CExoArrayList",
    f[3].name == "int_params" and f[3].offset == 4 and f[3].size == 12
@@ -558,12 +558,12 @@ ok("field 3 is int_params at 0x4, 12 bytes, CExoArrayList",
 ok("its element kind is reported as i32 with stride 4",
    f[3].elem == "i32" and f[3].stride == 4)
 ok("float_params reports an unknown element kind", f[4].elem == "unknown")
-ok("fields() of an unknown layout is nil", kotor.struct.fields("Nope") == nil)
-ok("types() lists 25 layouts", #kotor.struct.types() == 25)
+ok("fields() of an unknown layout is nil", kp.struct.fields("Nope") == nil)
+ok("types() lists 25 layouts", #kp.struct.types() == 25)
 
 local shape = 0
-for _, name in ipairs(kotor.struct.types()) do
-    for _, fld in ipairs(kotor.struct.fields(name)) do
+for _, name in ipairs(kp.struct.types()) do
+    for _, fld in ipairs(kp.struct.fields(name)) do
         if fld.list_shape_unconfirmed then shape = shape + 1 end
     end
 end
@@ -571,14 +571,14 @@ ok("22 fields carry the 'may be a split-form CExoArrayList' warning: " .. shape,
    shape == 22)
 
 print("\n-- 12. registration is idempotent and shares its table ----------")
-ok("kp.struct is the same table as kotor.struct", kp.struct == kotor.struct)
-ok("kotor.mem left by another module is untouched", kotor.mem == "sentinel")
+ok("native registration does not create kotor", kotor == nil)
+ok("kp.mem left by another module is untouched", kp.mem == "sentinel")
 ok("the view metatable is not reachable from Lua",
    getmetatable(ev) == false)
 
 print("\n-- 13. writes are reported --------------------------------------")
 ok("writes_performed() == 3 (a u16, an opted-in pointer, a negative i32)",
-   kotor.struct.writes_performed() == 3)
+   kp.struct.writes_performed() == 3)
 
 print("\n-- 14. a header that claims twenty million elements -------------")
 -- The size field is read live out of the game's memory, so it is exactly as
@@ -594,7 +594,7 @@ ok(".reported_size hands back what the header claims: " .. big.reported_size,
 ok("#list is capped at 65536: " .. #big, #big == 65536)
 ok(".size agrees with #, so the two cannot disagree in a loop", big.size == #big)
 local t0 = os.clock()
-local walked = kotor.struct.totable(big)
+local walked = kp.struct.totable(big)
 local elapsed = os.clock() - t0
 ok(("totable built %d entries in %.2f s"):format(#walked, elapsed),
    #walked == 65536 and elapsed < 5.0)
@@ -629,15 +629,15 @@ raises_saying("writing one does too", "not a struct view",
               function() fake.current_hp = 1 end)
 raises_saying("so does #", "not a struct view", function() return #fake end)
 raises_saying("so does tostring", "not a struct view", function() return tostring(fake) end)
-ok("typeof(forgery) is nil, not a layout name", kotor.struct.typeof(fake) == nil)
-ok("valid(forgery) is false", kotor.struct.valid(fake) == false)
-ok("address(forgery) is nil", kotor.struct.address(fake) == nil)
+ok("typeof(forgery) is nil, not a layout name", kp.struct.typeof(fake) == nil)
+ok("valid(forgery) is false", kp.struct.valid(fake) == false)
+ok("address(forgery) is nil", kp.struct.address(fake) == nil)
 local fake_seq = newproxy(false)
 debug.setmetatable(fake_seq, debug.getmetatable(ev.int_params))
 raises_saying("a forged sequence is refused the same way", "not a struct sequence",
               function() return #fake_seq end)
 raises_saying("and totable of one", "expects a list or array view",
-              function() return kotor.struct.totable(fake_seq) end)
+              function() return kp.struct.totable(fake_seq) end)
 ok("a real view still works after all of that", ev.event_type == 0x1234)
 )LUA";
 
@@ -671,7 +671,7 @@ int main() {
     lua_createtable(L, 0, 1);
     lua_pushstring(L, "sentinel");
     lua_setfield(L, -2, "mem");
-    lua_setglobal(L, "kotor");
+    lua_setglobal(L, "kp");
 
     structs::register_all(L);
     structs::register_all(L);   // twice on purpose: registering again is a no-op

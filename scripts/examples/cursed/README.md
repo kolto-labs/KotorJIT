@@ -1,9 +1,8 @@
 # Cursed KotOR
 
-Ten Lua scripts that rewrite the rules of a fight from inside the engine, each
-tied to an engine event. They are demos of what the event layer plus the full
-NWScript routine table can do, not gameplay mods. Every one is a single file
-with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
+Public gallery demos that rewrite a fight from inside the engine. Each is one
+file with no dependencies — drop it into `kotorphasor/scripts/` and play.
+Low-signal demos live under `scripts/examples/_retired/` (not packaged).
 
 | Script | Trigger | What happens |
 |---|---|---|
@@ -11,12 +10,11 @@ with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
 | `20_fus_ro_dah.lua` | you hit something (OnCreatureAttacked) | the target is Force-pushed with a force-wave burst and a white flash; every fifth hit throws the whole room |
 | `30_necromancer.lua` | an enemy's death script runs (OnRunScript) | three seconds later it rises as Darth Malak, full health, hostile, wreathed in lightning; once per corpse |
 | `40_chain_reaction.lua` | any death script (OnRunScript) | the corpse is a thermal detonator; everyone in 7m takes fire damage; deaths from the blast detonate too |
-| `50_chaos_roulette.lua` | any creature ends a combat round (`k_def_combend01`) | a random curse: whirlwind, choke, terror, sudden gizka, lightning tether, haste, burning shield, heal, stun, hot-potato teleport |
-| `60_rave.lua` | repeating timer, armed on the first tick with a live PC | colour strobe, battle music, a random bystander dances each beat, plasma burst every fourth beat |
 | `70_doppelganger.lua` | first time you are attacked / attack (OnCreatureAttacked) | you become Malak; every enemy that fights you wears your appearance |
 | `80_loot_pinata.lua` | enemy death script (OnRunScript) | a ring of credit piles around the corpse; every second corpse releases a hostile gizka |
 | `90_bullet_time.lua` | you are hit under 70% HP (OnCreatureAttacked) | `kp.speed(0.25)` for 2.5s, blue tint, haste aura on you; a timer restores speed |
 | `100_item_airstrike.lua` | you acquire any item (OnModuleAcquireItem); level up (OnModulePlayerLevelUp) | space laser + 60 damage on every hostile in 20m; ascension as Revan on level-up |
+| `110_footlocker_blaster.lua` | PC fires a ranged weapon (`OnCreatureBroadcastSafeProjectile` / attack) | footlocker crates fly the bolt path; `footammo` retargets from console; heavy knockback on impact |
 
 ## How they are built
 
@@ -24,10 +22,10 @@ Every script uses the same skeleton as `scripts/examples/showcase/`:
 
 - `priority = 30` so they answer after the probe scripts.
 - `q(name, ...)`: every engine call goes through a pcall by name. The
-  `kotor` table is absent until the VM binds and a routine can be missing on
+  engine bridge may be unbound, and a routine can be missing on
   another build; the guard makes the script inert instead of faulting.
 - `yes(v)`: NWScript TRUE arrives as `1` or `true` depending on the marshaller.
-- A `print("[cursed:<tag>] ...")` oracle line per firing, so
+- A `kp.print("[cursed:<tag>] ...")` oracle line per firing, so
   `kotorphasor.log` proves what happened without watching the video.
 - A counter in **local number 7 on the PC** (`SetLocalNumber(pc, 7, n)`), which
   is how the route's `assert_lua` gates read progress from a different Lua
@@ -41,7 +39,7 @@ Things the event layer forced (see `docs/user/api-status.md`):
   (`k_def_death01` / `*dead*` / `*death*` and `k_def_combend01`); the script
   runs on the corpse, so `object_id` is the creature.
 - `DelayCommand` and `AssignCommand` are not bound. Delays are
-  `kotor.registertimer(ms, "global_callback_name", data)` (return `true` to
+  `kp.registertimer(ms, "global_callback_name", data)` (return `true` to
   repeat); acting as another creature is `kp.as(obj, function() ... end)`.
 - Screen flashes are `SetGlobalFadeOut(0, 0.08, r, g, b)` then
   `SetGlobalFadeIn(hold, 0.35)`. There is no other full-screen tint routine.

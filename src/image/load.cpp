@@ -347,9 +347,18 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
         r.format = Format::Pe32;
     } else if (elf::looks_like(head.data(), head.size())) {
         r.format = Format::Elf32;
+    } else if (head.size() >= 4 &&
+               ((head[0] == 0xCE && head[1] == 0xFA && head[2] == 0xED && head[3] == 0xFE) ||
+                (head[0] == 0xFE && head[1] == 0xED && head[2] == 0xFA && head[3] == 0xCE) ||
+                (head[0] == 0xCA && head[1] == 0xFE && head[2] == 0xBA && head[3] == 0xBE) ||
+                (head[0] == 0xBE && head[1] == 0xBA && head[2] == 0xFE && head[3] == 0xCA))) {
+        r.format = Format::MachO;
+        r.status = LoadStatus::ParseFailed;
+        r.detail = "Mach-O image recognized but loader not implemented yet: " + module_path;
+        return r;
     } else {
         r.status = LoadStatus::ParseFailed;
-        r.detail = "not a PE32 or ELF32 image: " + module_path;
+        r.detail = "not a PE32, ELF32, or Mach-O image: " + module_path;
         return r;
     }
 

@@ -6,11 +6,11 @@ This is a different thing from the hook sites in `data/hooksites.toml`. A hook s
 
 ## Finding one
 
-`kotor.mem.findsig(pattern)` scans the executable sections of the running game for a byte pattern and returns the address it starts at, or `nil`. `data/codecaves.toml` lists verified patterns, one per cave, each anchored on the real code immediately before the cave rather than on the cave's own filler bytes. Filler bytes repeat constantly across a binary. They are not a safe way to find one specific spot.
+`kp.mem.findsig(pattern)` scans the executable sections of the running game for a byte pattern and returns the address it starts at, or `nil`. `data/codecaves.toml` lists verified patterns, one per cave, each anchored on the real code immediately before the cave rather than on the cave's own filler bytes. Filler bytes repeat constantly across a binary. They are not a safe way to find one specific spot.
 
 ```lua
 local sig = "568bf1740ee8eed8eaff56e8c8e1fbff83c4045ec3909090"
-local hit = kotor.mem.findsig(sig)
+local hit = kp.mem.findsig(sig)
 if hit then
     local cave = hit + 0x18   -- sig length in bytes; see the entry's `note`
     -- cave is now a real address, verified 3632 bytes of unused space
@@ -21,11 +21,11 @@ The offset from the signature match to the cave's own start is always the signat
 
 ## Using one
 
-Nothing on the C++ side restricts a write to an executable section (`src/api/memory.hpp` explains why: this runtime does not gate code writes at all, so there is no permission to ask for). Write your bytes with `kotor.mem.write*` the same way you would write anywhere else:
+Nothing on the C++ side restricts a write to an executable section (`src/api/memory.hpp` explains why: this runtime does not gate code writes at all, so there is no permission to ask for). Write your bytes with `kp.mem.write*` the same way you would write anywhere else:
 
 ```lua
-kotor.mem.writebyte(cave,     0xE9)              -- jmp rel32
-kotor.mem.writedword(cave, 1, target - cave - 5)  -- relative displacement
+kp.mem.writebyte(cave,     0xE9)              -- jmp rel32
+kp.mem.writedword(cave, 1, target - cave - 5)  -- relative displacement
 ```
 
 Nothing checks that what you wrote is valid machine code, or that the cave is big enough for it. Getting either wrong corrupts the process the next time execution reaches that address. There is no undo. Keep what you write inside `size` bytes, and prefer a short trampoline (a jump out to Lua-driven logic elsewhere) over trying to fit real logic in a 15-byte gap.

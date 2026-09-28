@@ -1,0 +1,3886 @@
+{
+ "target_binary": {
+  "binary_id": 8,
+  "slug": "K1__k1_win_gog_swkotor.exe",
+  "alias": "k1_steam_103_unpacked",
+  "note": "The deciphered Steam 1.03 image. Its .text is byte-identical to GOG (docs/steam-gog-equivalence.md), so every VA and offset here is the GOG binding restated; the two files are generated from one table and must not drift."
+ },
+ "purpose": "Headless-harness sites (docs/harness-design.md, New sites and the two amendment lists): engine calls the adapter makes and struct fields the state oracle reads. Complements the VM bindings; the generator reads every <alias>_*_bindings.json.",
+ "corpus": "kotorxid readable tree K1__k1_win_gog_swkotor.exe (binary_id 8); Dev = src/AspyrBuild/depot/KOTOR/PC_Source/Dev, UN = src/_unattributed",
+ "accept_rule": "accept requires at least two independent signals, at least one of which is not run v1 (METHOD.md section 1). Functions: sqlite func row on the target binary plus a read of the decompiled body, plus the raw prologue where it settles a convention. Fields: the types.h declaration plus an accessor or consumer disassembled from the raw image whose immediate is the offset. A binding with one signal is accepted at confidence < 0.9 and its site stays optional.",
+ "field_shape": "kind=field rows carry owner, offset and size. addr is the owning global (g_pAppManager) or 0 when the field is reached through a pointer chain. The generator emits no expected_bytes for them.",
+ "counts": {
+  "functions": 69,
+  "fields": 127,
+  "accept": 196
+ },
+ "bindings": [
+  {
+   "name": "CSWCMessage::SendPlayerToServerInput_Attack",
+   "addr": "0x00677a90",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "bytes": "83 ec 08 56 6a 01 6a ff 6a 06 8b f1 c7 44 24 14 00 00 00 00 c7 44 24 10 06 00 00 00",
+    "signals": [
+     "archived Ghidra C export sender declaration and zero-feat native caller",
+     "independent exact GOG PE disassembly and VA mapping",
+     "unique 28-byte prefix excluding relative calls"
+    ],
+    "disassembly": "void __thiscall(handler,uint32 clientTargetId,uint16 combatFeat); writes target and 16-bit feat; sends category6/subtype2 at 0x677af1; ret8 at 0x677b00",
+    "limits": "Normal feat0 only. Dispatch is not proof of combat initiation, damage or encounter completion."
+   }
+  },
+  {
+   "name": "CSWCMessage::SendPlayerToServerInput_ChangeDoorState",
+   "addr": "0x00677d70",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "bytes": "83 ec 08 56 6a 01 6a ff 6a 06 8b f1 c7 44 24 10 06 00 00 00",
+    "signals": [
+     "curator-resolved retail client sender identity and native caller",
+     "independent exact GOG PE disassembly",
+     "unique 20-byte prefix excluding relative call operands"
+    ],
+    "disassembly": "void __thiscall(handler, uint32 door, int state); writes object id and 16-bit state, sends category6/subtype3 at 0x677dc9, ret8 at 0x677dd8",
+    "limits": "Dispatch queues the retail server action; no completion or live module-transition claim."
+   }
+  },
+  {
+   "name": "CSWSDoor::MoveToNextOpenState",
+   "addr": "0x00589680",
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwsdoor.cpp: CSWSDoor::MoveToNextOpenState (sole writer of the committed open_state; SetOpenState only writes also_open_state and the animation)",
+     "Dev/game/clientcore/nwcdoor.cpp: CSWCDoor::MoveNextDoorState, the model-animation-done callback that is its only caller"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x589680 CSWSDoor::MoveToNextOpenState size=88 USER_DEFINED __thiscall void (CSWSDoor* this), source_file nwsdoor.cpp (func id 165642)",
+    "signals": [
+     "func row on the target binary",
+     "raw disassembly of the body and its sole caller"
+    ],
+    "disassembly": "sole caller CSWCDoor::MoveNextDoorState 0x683f7a tail-jumps here after the opening/closing check; copies +0x2cd to +0x2cc and updates the area walkmesh",
+    "limits": "Commits a pending open state only; it does not open a closed door. Callers must first see +0xd4 in the opening animation with +0x2cd set and +0x2cc clear."
+   }
+  },
+  {
+   "name": "CGameObject::object_type",
+   "kind": "field",
+   "owner": "CGameObject",
+   "addr": "0x00000000",
+   "offset": "0x8",
+   "size": 1,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "existing generated K1 CGameObject layout",
+     "raw GOG GetGameObject consumer"
+    ],
+    "corpus": [
+     "src/generated/structs_k1.inc CGameObject.object_type: internal door type10, distinct from NWScript type mask8"
+    ],
+    "disassembly": "0x4cc105 calls GetGameObject 0x4ae750; 0x4cc114 executes 8a 41 08 (byte load at object+8)"
+   }
+  },
+  {
+   "name": "CGameObject::id",
+   "kind": "field",
+   "owner": "CGameObject",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-10-k1-server-object-identity.json",
+    "signals": [
+     "synchronised GOG CGameObject constructor receipt",
+     "GOG types.h declaration and size assertion",
+     "CSWSCreature::SetId consumer"
+    ],
+    "corpus": [
+     "include/types.h:3056-3062: CGameObject { vtable; unsigned long id; ... }, size 0x0c",
+     "Dev/game/servercore/nwscreature.cpp:119-143: CSWSCreature::SetId reads and writes (this->object).game_object.id"
+    ],
+    "disassembly": "synchronised GOG receipt records CGameObject::CGameObject at 0x004D7D60 storing its caller-supplied object id at this+4; CSWSCreature embeds that CGameObject at +0x0"
+   }
+  },
+  {
+   "name": "CSWSItem::object_id",
+   "kind": "field",
+   "owner": "CSWSItem",
+   "addr": "0x00000000",
+   "offset": "0x14",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-cswsitem-object-id-binding.md",
+    "signals": [
+     "GOG recovered CSWSItem and CSWSObject size-checked layouts",
+     "GOG CSWSItem constructor calls CSWSObject at this+0x10 with objectId",
+     "GOG CGameObject id constructor receipt"
+    ],
+    "corpus": [
+     "include/types.h:10742-10781: CSWSItem.server_object at +0x10",
+     "include/types.h:10898-11012: CSWSObject.game_object at +0x0",
+     "include/types.h:3056-3062: CGameObject.id at +0x4",
+     "UN/K1__k1_win_gog_swkotor.exe_0055.cpp:376-396: CSWSItem constructor passes objectId to CSWSObject(this+0x10)"
+    ],
+    "disassembly": "GOG CSWSItem constructor 0x005530a0 executes lea ecx,[esi+0x10] before its CSWSObject constructor call; item object id is therefore this+0x10+0x4 = this+0x14."
+   }
+  },
+  {
+   "name": "CSWSItem::possessor_id",
+   "kind": "field",
+   "owner": "CSWSItem",
+   "addr": "0x00000000",
+   "offset": "0x268",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-cswsitem-possessor-binding.md",
+    "signals": [
+     "GOG recovered CSWSItem size-checked layout",
+     "GOG CSWSItem::SetPossessor setter and nested-item consumer",
+     "GOG VM GetItemPossessor consumer"
+    ],
+    "corpus": [
+     "include/types.h:10742-10781: CSWSItem.some_obj_id at +0x268, size 0x298",
+     "Dev/game/servercore/nwsitem.cpp:16-104: SetPossessor reads and updates some_obj_id and raw item+0x268",
+     "Dev/game/servercore/nwvmachinecommands.cpp:11997-12028: GetItemPossessor reads AsSWSItem()+0x268"
+    ],
+    "disassembly": "SetPossessor is GOG 0x00553210 and GetItemPossessor is GOG 0x0053a5c0; both use the CSWSItem-subobject offset +0x268."
+   }
+  },
+  {
+   "name": "CSWSCreature::inventory",
+   "kind": "field",
+   "owner": "CSWSCreature",
+   "addr": "0x00000000",
+   "offset": "0xA2C",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-cswscreature-inventory-binding.md",
+    "signals": [
+     "GOG recovered size-checked CSWSCreature layout",
+     "exact GOG PE consumers load CSWSCreature+0xA2C and invoke CSWInventory methods"
+    ],
+    "corpus": [
+     "include/types.h:9725-10172: CSWSCreature inventory follows field_a28 at +0xA2C, size 0xAC8",
+     "export_cpp/src/unattributed/functions.part003.cpp:19507-19515: GetPlayerCreature result +0xA2C is passed to CSWInventory::GetItemInSlot",
+     "export_cpp/src/game/clientcore/swguiupgrade.cpp:4902-4908: server player creature +0xA2C is passed to CSWInventory::GetSlotFromItem"
+    ],
+    "disassembly": "The exact GOG consumers use mov eax,[eax+0xA2C] then mov ecx,eax before CSWInventory calls, proving a 32-bit CSWInventory pointer at the CSWSCreature offset."
+   }
+  },
+  {
+   "name": "CSWGuiMessageBox::HandleInputEvent",
+   "addr": "0x006250f0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-gog-messagebox-native-ok.json",
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "disassembly": "void __thiscall(panel*, int event, int active), ret 8; native OK event 0x1f6 owns modal pop, lifecycle cleanup and callback",
+    "bytes": "53 8b 5c 24 0c 85 db 56 57 8b 7c 24 10 8b f1 0f 84 e0 00 00 00 83 ff 3a 7f 59 74 35 83 ff 28 74",
+    "signals": [
+     "exact GOG PE disassembly",
+     "archived Ghidra C export",
+     "unique 32-byte signature in exact GOG binary"
+    ],
+    "limits": "Handler identity is shared by inheriting subclasses. No cross-build uniqueness or live dismissal claim."
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::SetGameSpeed",
+   "addr": "0x005f2f60",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoappinternal.cpp:2808-2835 (SetSnapshotScale on five timers)",
+     "Dev/game/clientcore/clientexoappinternal.cpp:10639-10645 (per-frame call with 1.0 or 0.25)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5f2f60 CClientExoAppInternal::SetGameSpeed size=128 USER_DEFINED __thiscall(this, float)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "prologue a1 fc 39 7a 00 85 c0 74 74 (mov eax,[g_pAppManager]); 5 bytes displaced, hookable"
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::PlayMoviesInExoArrayList",
+   "addr": "0x00602af0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_0060.cpp:14-59 (returns 0 when disable_movies before any side effect)",
+     "Dev/game/clientcore/clientexoappinternal.cpp:4870-4882 (WaitForMovie spin)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x602af0 CClientExoAppInternal::PlayMoviesInExoArrayList size=277 USER_DEFINED __thiscall, 5 stack args (ret 0x14)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "prologue 56 8b f1 8b 86 f8 01 00 00 85 c0 (mov eax,[esi+0x1f8] = disable_movies)"
+   }
+  },
+  {
+   "name": "CAppManager::CreateServer",
+   "addr": "0x00401380",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_0040.cpp:158-196"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x401380 CAppManager::CreateServer size=165 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "body reads and writes [esi+0x8] (server slot) six times"
+   }
+  },
+  {
+   "name": "CNetLayer::StartConnectToSession",
+   "addr": "0x005d5040",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_005d.cpp:1554-1591",
+     "Dev/game/clientcore/swguisaveload.cpp:930-939 (call shape)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5d5040 CNetLayer::StartConnectToSession size=227 USER_DEFINED __thiscall(this, ulong, CExoString*, CExoString*, ulong, ulong)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CSWCMessage::SendPlayerToServerStatus_RequestStatus",
+   "addr": "0x006775e0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_0067.cpp:1762-1784",
+     "Dev/game/clientcore/swguisaveload.cpp:943-944"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6775e0 CSWCMessage::SendPlayerToServerStatus_RequestStatus size=72 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::SetPlayerCharacterName",
+   "addr": "0x005edaa0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:945-947",
+     "Dev/game/clientcore/nwchandlemessage.cpp:2660-2665 (login only when the name is set)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5edaa0 CClientExoApp::SetPlayerCharacterName size=8 USER_DEFINED (wrapper to internal 0x5f2b00)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::SetInputClass",
+   "addr": "0x005eda60",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:950",
+     "Dev/game/clientcore/clientinput.cpp:170-260 (internal 0x6200e0)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5eda60 CClientExoApp::SetInputClass size=8 USER_DEFINED __thiscall(this, int, int)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::DisableInput",
+   "addr": "0x005edbe0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:951"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5edbe0 CClientExoApp::DisableInput size=19 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 .. (mov ecx,[ecx+4]; jmp 0x61f7c0) and 0x61f7c0 = mov dword [ecx+0x2bc],1"
+   }
+  },
+  {
+   "name": "CServerExoApp::SetLoadFromSaveGame",
+   "addr": "0x004af060",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:952",
+     "Dev/game/servercore/serverexoappinternal.cpp:1781 (consumer)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4af060 CServerExoApp::SetLoadFromSaveGame size=16 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 4c 24 04 89 88 c4 00 01 00 c2 04 00 (writes internal+0x100c4)"
+   }
+  },
+  {
+   "name": "CClientExoApp::SetLoadingSaveGame",
+   "addr": "0x005edfc0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:953"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5edfc0 CClientExoApp::SetLoadingSaveGame size=16 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 4c 24 04 89 88 3c 03 00 00 c2 04 00 (writes internal+0x33c)"
+   }
+  },
+  {
+   "name": "CClientExoApp::SendLoadGameRequest",
+   "addr": "0x005ed680",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:954",
+     "Dev/game/clientcore/clientexoappinternal.cpp:694-712 (internal 0x5eeab0)",
+     "Dev/game/servercore/nwshandleplayermessage.cpp:2794-2818 (server side, MODULE minor 5)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed680 CClientExoApp::SendLoadGameRequest size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::SendSaveGameRequest",
+   "addr": "0x005ed670",
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoappinternal.cpp:3718-3754 (DoQuickSave caller)",
+     "Dev/game/servercore/nwshandleplayermessage.cpp:2744-2790 (MODULE minor 4)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed670 CClientExoApp::SendSaveGameRequest size=8 USER_DEFINED __thiscall(this, ulong, CExoString*, CExoString*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiSaveLoad::UnpackGame",
+   "addr": "0x006caaf0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_006c.cpp:3208-3245,3265-3295 (CopyGameToFutureGame then rename into GAMEINPROGRESS:)",
+     "corpus_work/k1_win_gog_swkotor.exe/UnpackGame_006caaf0.c and CopyGameToFutureGame_006c9a90.c (asm substrates, 890 and 695 bytes)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6caaf0 CSWGuiSaveLoad::UnpackGame size=890 USER_DEFINED __thiscall (this, ulong, CExoString*, CSWGuiControl*); callee addr=0x6c9a90 CSWGuiSaveLoad::CopyGameToFutureGame size=695 __thiscall (this, int, CExoString*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "disassembly": "UnpackGame 0x6caaf0: SEH prologue, mov esi,[ebp+8]; mov edi,[ebp+0xc]; push edi; push esi; call 0x6c9a90 with ecx untouched; the first ecx write in the body is lea ecx,[esp+0x34] at 0x6cab2b and no earlier instruction reads or spills ecx; ret 0xc at 0x6cae67. CopyGameToFutureGame 0x6c9a90: first ecx use is lea ecx,[esp+0x18] at 0x6c9ab0 (CExoString ctor), later ecx loads come from [ebp+0xc] and globals, so `this` is never dereferenced in either body.",
+    "bytes": "55 8b ec 83 e4 f8 6a ff 68 60 53 73 00 64 a1 00 00 00 00 50 64 89 25 00 00 00 00 83 ec 68 53 56 8b 75 08 57 8b 7d 0c 57 56 e8 72 ef ff ff",
+    "limits": "this is dead in both UnpackGame and CopyGameToFutureGame, so a dummy this is safe; the string copy itself still runs against the live save directory."
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::StartNewModule",
+   "addr": "0x004ba920",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoappinternal.cpp:4725-4839"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ba920 CServerExoAppInternal::StartNewModule size=649 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::LoadModule",
+   "addr": "0x004b95b0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_004b.cpp:1984-2450"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4b95b0 CServerExoAppInternal::LoadModule size=4088 USER_DEFINED __thiscall(this, CExoString*, CSWSPlayer*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoApp::SetMoveToModulePending",
+   "addr": "0x004aecc0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwvmachinecommands.cpp:20932-20953 (the VM command's own path)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aecc0 CServerExoApp::SetMoveToModulePending size=16 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 4c 24 04 89 88 80 00 01 00 c2 04 00 (writes internal+0x10080)"
+   }
+  },
+  {
+   "name": "CServerExoApp::SetMoveToModuleString",
+   "addr": "0x004aecd0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwvmachinecommands.cpp:20932-20953"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aecd0 CServerExoApp::SetMoveToModuleString size=14 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 81 c1 84 00 01 00 e9 .. (this = internal+0x10084; tail-jump to CExoString::operator=)"
+   }
+  },
+  {
+   "name": "CServerExoApp::SetMoveToModuleStartWaypoint",
+   "addr": "0x004aed30",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwvmachinecommands.cpp:20932-20953"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aed30 CServerExoApp::SetMoveToModuleStartWaypoint size=14 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 81 c1 8c 00 01 00 e9 .. (this = internal+0x1008c; tail-jump to CExoString::operator=)"
+   }
+  },
+  {
+   "name": "CGuiInGame::SetDialogSelection",
+   "addr": "0x0062ada0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:466-474"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x62ada0 CGuiInGame::SetDialogSelection size=43 USER_DEFINED __thiscall(this, int, int, int)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 44 24 04 8b 54 24 08 89 81 c8 00 00 00 (stores +0xc8, +0xcc, +0xd4, +0xd0=1)"
+   }
+  },
+  {
+   "name": "CGuiInGame::UpdateDialog",
+   "addr": "0x006339c0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:6138-6242",
+     "Dev/game/clientcore/clientexoappinternal.cpp:10872-10892 (per-frame caller)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6339c0 CGuiInGame::UpdateDialog size=647 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::CloseDialog",
+   "addr": "0x006332b0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:5829-5985"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6332b0 CGuiInGame::CloseDialog size=895 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::HandleDialogSelection",
+   "addr": "0x00633660",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:5994-6127 (-2 -> CloseDialog before any array read)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x633660 CGuiInGame::HandleDialogSelection size=854 USER_DEFINED __thiscall(this, int, int)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiDialog::SelectReply",
+   "addr": "0x006a7110",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_006a.cpp:463-480",
+     "Dev/game/clientcore/swguidialog.cpp:331-337 (vtable slot +0x6c)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6a7110 CSWGuiDialog::SelectReply size=70 USER_DEFINED; override CSWGuiDialogCinematic::SelectReply 0x6a7e20 size=200",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 6c (cmp against visible count at +0x6c first)"
+   }
+  },
+  {
+   "name": "CSWSObject::ReplyDialog",
+   "addr": "0x004cb480",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwsobject.cpp:866-885"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4cb480 CSWSObject::ReplyDialog size=105 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "reference only (never called by the adapter); 8b 4e 34 (dialog ptr at +0x34), writes [esi+0x48]=0 and [esi+0x214]=1 on end"
+   }
+  },
+  {
+   "name": "CSWSDialog::HandleReply",
+   "addr": "0x005a03c0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwsdialog.cpp:1256-1510"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5a03c0 CSWSDialog::HandleReply size=1398 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "reference only; 83 7e 74 ff / 3b 56 70 is the drop gate (+0x74 != -1 or entry mismatch)"
+   }
+  },
+  {
+   "name": "CSWSDialog::CheckScript",
+   "addr": "0x0059ec90",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwsdialog.cpp:204-286"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x59ec90 CSWSDialog::CheckScript size=216 USER_DEFINED signature 'ulong __stdcall CheckScript(CSWSObject*, CResRef*)' (static, no this)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "prologue 64 a1 00 00 00 00 6a ff 68 38 17 72 00 50 (SEH frame, no ecx use before the args)"
+   }
+  },
+  {
+   "name": "CServerExoApp::SkipPastDialog",
+   "addr": "0x004ae970",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoappinternal.cpp:559-587 (internal 0x4b1f90 sets CSWSObject+0x1f4)",
+     "Dev/game/servercore/nwsobject.cpp:2240-2250"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae970 CServerExoApp::SkipPastDialog size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 18 36 00 00 (mov ecx,[ecx+4]; jmp 0x4b1f90)"
+   }
+  },
+  {
+   "name": "CSWSObject::StopDialog",
+   "addr": "0x004cb4f0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/nwsobject.cpp:888-946"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4cb4f0 CSWSObject::StopDialog size=174 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CWorldTimer::SetSnapshotScale",
+   "addr": "0x004ae190",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/libsource/worldtimer/worldtimer.cpp:266-310"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae190 CWorldTimer::SetSnapshotScale size=25 USER_DEFINED __thiscall(this, float)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "d9 44 24 04 .. d8 0d .. e8 .. 89 46 08 (fld arg; fmul 100.0; ftol; store +0x8)"
+   }
+  },
+  {
+   "name": "CWorldTimer::SetFixedSnapshotRate",
+   "addr": "0x004ae170",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/libsource/worldtimer/worldtimer.cpp:277-280"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae170 CWorldTimer::SetFixedSnapshotRate size=30 USER_DEFINED __thiscall(this, int, int)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "89 41 0c 89 41 10 89 41 14 89 41 18 (zeroes snapshot_time_1/2 before storing the rate)"
+   }
+  },
+  {
+   "name": "CWorldTimer::PauseWorldTimer",
+   "addr": "0x004adff0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/libsource/worldtimer/worldtimer.cpp:204-240"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4adff0 CWorldTimer::PauseWorldTimer size=56 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CWorldTimer::UnpauseWorldTimer",
+   "addr": "0x004ae030",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/libsource/worldtimer/worldtimer.cpp:204-240"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae030 CWorldTimer::UnpauseWorldTimer size=81 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::GetWorldTimer",
+   "addr": "0x005ed4f0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed4f0 CClientExoApp::GetWorldTimer size=7 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 40 24 c3 (internal+0x24)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetPauseTimer",
+   "addr": "0x005ed500",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed500 CClientExoApp::GetPauseTimer size=7 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 40 2c c3 (internal+0x2c)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetAnimationTimer",
+   "addr": "0x005ed510",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed510 CClientExoApp::GetAnimationTimer size=7 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 40 30 c3 (internal+0x30)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetWorldTimer",
+   "addr": "0x004aede0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aede0 CServerExoApp::GetWorldTimer size=10 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 80 48 00 01 00 c3 (internal+0x10048)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetPauseTimer",
+   "addr": "0x004aee00",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aee00 CServerExoApp::GetPauseTimer size=10 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 80 50 00 01 00 c3 (internal+0x10050)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetInGameGui",
+   "addr": "0x005ed690",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp:190"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed690 CClientExoApp::GetInGameGui size=7 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 40 40 c3 (internal+0x40)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetClientName",
+   "addr": "0x005ed490",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:931"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed490 CClientExoApp::GetClientName size=37 USER_DEFINED __thiscall(this, CExoString* out)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "51 8b 41 04 56 8b 74 24 0c 05 3c 01 00 00 (copies internal+0x13c into the out string)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetNetLayer",
+   "addr": "0x005ed6e0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguisaveload.cpp:937 (vtable slot +0x10 is this accessor)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed6e0 CClientExoApp::GetNetLayer size=7 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 40 10 c3 (internal+0x10)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetSWCMessage",
+   "addr": "0x005ed6f0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp:251",
+     "Dev/game/clientcore/swguisaveload.cpp:943"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5ed6f0 CClientExoApp::GetSWCMessage size=10 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 80 4c 01 00 00 c3 (internal+0x14c)"
+   }
+  },
+  {
+   "name": "CClientExoApp::IsMoviePlaying",
+   "addr": "0x005edb40",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp:434-436"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5edb40 CClientExoApp::IsMoviePlaying size=26 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 .. -> 0x5f2bd0: 8b 89 2c 01 00 00 (movie_player at internal+0x12c)"
+   }
+  },
+  {
+   "name": "CClientExoApp::GetGameOver",
+   "addr": "0x005edc60",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoapp.cpp:519-523"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x5edc60 CClientExoApp::GetGameOver size=10 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 8b 80 c0 02 00 00 c3 (internal+0x2c0)"
+   }
+  },
+  {
+   "name": "CSWGuiManager::PanelExists",
+   "addr": "0x0040bd70",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/libsource/SWGui/swgui.cpp:1988-2158 region (manager methods)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x40bd70 CSWGuiManager::PanelExists size=23 USER_DEFINED __thiscall(this, CSWGuiPanel*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoApp::GetGlobalVariableTable",
+   "addr": "0x004aee60",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoapp.cpp:410-418"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aee60 CServerExoApp::GetGlobalVariableTable size=9 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 05 fc 00 01 00 c3 (internal+0x100fc)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetPartyTable",
+   "addr": "0x004aee70",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoapp.cpp header list",
+     "Dev/game/servercore/serverexoappinternal.cpp:4625-4651 (LoadGame uses the table)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aee70 CServerExoApp::GetPartyTable size=9 source=ANALYSIS (plate-named, so the func layer does not bind it; this row is why the overlay exists)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 41 04 05 70 b7 01 00 c3 (internal+0x1b770)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetModule",
+   "addr": "0x004ae6b0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoappinternal.cpp:15-35 (internal GetModule 0x4b14f0)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae6b0 CServerExoApp::GetModule size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 38 2e 00 00 (jmp 0x4b14f0)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetPlayerCreatureId",
+   "addr": "0x004aea40",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "historical/exact/part0004.cpp F_004aea40 wrapper bytes"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aea40 CServerExoApp::GetPlayerCreatureId size=62 USER_DEFINED signature 'ulong __stdcall GetPlayerCreatureId(void)'",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 68 62 00 00: thiscall wrapper loads internal from this+4 then tail-jumps"
+   }
+  },
+  {
+   "name": "CServerExoApp::ClientToServerObjectId",
+   "addr": "0x004aea30",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:6195-6236 (UpdateDialog maps the owner id with it)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4aea30 CServerExoApp::ClientToServerObjectId size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 38 35 00 00 (jmp 0x4b1f70)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetGameObject",
+   "addr": "0x004ae750",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoapp.cpp header list"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae750 CServerExoApp::GetGameObject size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "8b 49 04 e9 a8 2f 00 00 (jmp 0x4b1700)"
+   }
+  },
+  {
+   "name": "CServerExoApp::GetClientObjectByObjectId",
+   "addr": "0x004ae910",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:6195-6236"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x4ae910 CServerExoApp::GetClientObjectByObjectId size=8 USER_DEFINED",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read"
+    ]
+   }
+  },
+  {
+   "name": "g_pAppManager",
+   "kind": "field",
+   "owner": "",
+   "addr": "0x007a39fc",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:283-292 (CAppManager)",
+     "UN/K1__k1_win_gog_swkotor.exe_0040.cpp:1950-2170 (WinMain stores it)"
+    ],
+    "disassembly": "SetGameSpeed 0x5f2f60 and StallServerCode 0x602c90 both open with a1 fc 39 7a 00 (mov eax,[0x7a39fc])",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CAppManager::client",
+   "kind": "field",
+   "owner": "CAppManager",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:283-292"
+    ],
+    "disassembly": "every CClientExoApp accessor is mov eax,[ecx+4] on the app, and WinMain passes AppManager->client",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CAppManager::server",
+   "kind": "field",
+   "owner": "CAppManager",
+   "addr": "0x00000000",
+   "offset": "0x8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:283-292"
+    ],
+    "disassembly": "CAppManager::CreateServer 0x401380 reads and writes [esi+0x8]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CAppManager::reentrant_server_stats",
+   "kind": "field",
+   "owner": "CAppManager",
+   "addr": "0x00000000",
+   "offset": "0x14",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:283-292"
+    ],
+    "disassembly": "StallServerCode 0x602c90: mov eax,[0x7a39fc]; mov eax,[eax+0x14]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoApp::internal",
+   "kind": "field",
+   "owner": "CClientExoApp",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:855-860"
+    ],
+    "disassembly": "GetInGameGui 0x5ed690: 8b 41 04 (mov eax,[ecx+4])",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoApp::internal",
+   "kind": "field",
+   "owner": "CServerExoApp",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h CServerExoApp = {vtable, internal}"
+    ],
+    "disassembly": "GetServerMode 0x4aedd0: 8b 41 04 (mov eax,[ecx+4])",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::server_mode",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10008",
+   "size": 2,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821 (unsigned short server_mode)"
+    ],
+    "disassembly": "GetServerMode 0x4aedd0: 66 8b 80 08 00 01 00 (mov ax,[eax+0x10008])",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::pause_state",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10078",
+   "size": 1,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821 (unsigned char pause_state)",
+     "Dev/game/servercore/serverexoappinternal.cpp:4903-4911 (bits 1|2 gate the timers)"
+    ],
+    "disassembly": "types.h offset arithmetic from the 0x10000 anchor; GetPauseState 0x4ae980 tail-jumps to 0x4b1d80 (not disassembled here)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::move_to_module_pending",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10080",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821",
+     "Dev/game/servercore/serverexoappinternal.cpp:4922-4951"
+    ],
+    "disassembly": "SetMoveToModulePending 0x4aecc0: 89 88 80 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::move_to_module_string",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10084",
+   "size": 8,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821 (unsigned char move_to_module_string[0x8])"
+    ],
+    "disassembly": "SetMoveToModuleString 0x4aecd0: 81 c1 84 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::loading_module",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x100b4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821",
+     "critic-re item 8 corrects the 0x100b8 reading"
+    ],
+    "disassembly": "GetLoadingModule 0x4aecf0: 8b 80 b4 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::auto_save_pending",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x100b8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821",
+     "Dev/game/servercore/serverexoappinternal.cpp:4953-5001"
+    ],
+    "disassembly": "GetAutoSavePending 0x4aed20: 8b 80 b8 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::load_from_savegame",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x100c4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821"
+    ],
+    "disassembly": "GetLoadFromSaveGame 0x4af050: 8b 80 c4 00 01 00; SetLoadFromSaveGame 0x4af060 writes the same",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::world_timer",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10048",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821"
+    ],
+    "disassembly": "GetWorldTimer 0x4aede0: 8b 80 48 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::pause_timer",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10050",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821"
+    ],
+    "disassembly": "GetPauseTimer 0x4aee00: 8b 80 50 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::global_vars",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x100fc",
+   "size": 46708,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821 (global_vars[0xb674])",
+     "include/types.h:6133-6151 (sizecheck 0xb674)"
+    ],
+    "disassembly": "GetGlobalVariableTable 0x4aee60: 05 fc 00 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::party_table",
+   "kind": "field",
+   "owner": "CServerExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x1b770",
+   "size": 408,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:11727-11821 (party_table[0x198])",
+     "include/types.h:8870-8901 (sizecheck 0x198)"
+    ],
+    "disassembly": "GetPartyTable 0x4aee70: 05 70 b7 01 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::net_layer",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x10",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "GetNetLayer 0x5ed6e0: 8b 40 10",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::timer_1",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x24",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250 (timer_1, the world timer)"
+    ],
+    "disassembly": "GetWorldTimer 0x5ed4f0: 8b 40 24",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::gui_in_game",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x40",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "GetInGameGui 0x5ed690: 8b 40 40",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::input_class",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x9c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "Dev/game/clientcore/clientinput.cpp:170-260"
+    ],
+    "disassembly": "GetInputClass 0x5eda70: 8b 80 9c 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::movie_player",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x12c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "IsMoviePlaying internal 0x5f2bd0: 8b 89 2c 01 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::message_handler",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x14c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "Dev/game/clientcore/clientexoapp.cpp:251"
+    ],
+    "disassembly": "GetSWCMessage 0x5ed6f0: 8b 80 4c 01 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::disable_movies",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x1f8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "UN/K1__k1_win_gog_swkotor.exe_005e.cpp:8811-8829 (set from the ini)"
+    ],
+    "disassembly": "PlayMoviesInExoArrayList 0x602af0: 8b 86 f8 01 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::gui_manager",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x274",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "GetSWGuiManager 0x5eda40: 8b 80 74 02 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainMenu::OnNewGamePicked",
+   "addr": "0x0067afb0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguimainmenu.cpp: CSWGuiMainMenu::OnNewGamePicked"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x67afb0 CSWGuiMainMenu::OnNewGamePicked size=487 __thiscall(this, CSWGuiControl*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "64 a1 00 00 00 00 6a ff 68 f3 e2 72 00 50 64 89 (export_asm swguimainmenu.S)"
+   }
+  },
+  {
+   "name": "CSWGuiMainMenu::newgame_button",
+   "kind": "field",
+   "owner": "CSWGuiMainMenu",
+   "addr": "0x00000000",
+   "offset": "0x3f0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiMainMenu layout",
+     "Dev/game/clientcore/swguimainmenu.cpp: OnNewGamePicked passes this embedded CSWGuiControl"
+    ],
+    "signals": [
+     "types.h declaration",
+     "decompiled consumer and raw-image function disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiClassSelection::OnSelectButton",
+   "addr": "0x006db9b0",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguiclassselection.cpp: CSWGuiClassSelection::OnSelectButton"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6db9b0 CSWGuiClassSelection::OnSelectButton size=192 USER_DEFINED __thiscall(this, CSWGuiControl*)",
+    "signals": [
+     "func row on the target binary",
+     "decompiled body read",
+     "raw image disassembly"
+    ],
+    "bytes": "recovered function at 0x006db9b0, 192 bytes; OnSelectButton consumes the live class control, adds CSWGuiMainCharGen, whose OnPanelAdded adds its visible child"
+   }
+  },
+  {
+   "name": "CSWGuiClassSelection::class_controls",
+   "kind": "field",
+   "owner": "CSWGuiClassSelection",
+   "addr": "0x00000000",
+   "offset": "0x6c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiClassSelection (panel[0x64], field_64, char_gen_creature@0x68, class_selections@0x6c)",
+     "Dev/game/clientcore/swguiclassselection.cpp: OnSelectButton"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ],
+    "disassembly": "OnSelectButton advances with &class_selections[6].gui_object: 6*0x5c+0x34 = 0x25c from this+0x6c"
+   }
+  },
+  {
+   "name": "CSWGuiMainCharGen::route_panel",
+   "kind": "field",
+   "owner": "CSWGuiMainCharGen",
+   "addr": "0x00000000",
+   "offset": "0x6c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "historical/readable/src/AspyrBuild/depot/KOTOR/PC_Source/Dev/game/clientcore/swguimainchargen.cpp: OnPanelAdded"
+    ],
+    "signals": [
+     "decompiled body read",
+     "raw-image field consumer disassembly"
+    ],
+    "disassembly": "OnPanelAdded passes &this->field3_0x6c->panel to CSWGuiManager::AddPanel; the manager delta's second new panel must equal this pointer."
+   }
+  },
+  {
+   "name": "CSWGuiControl::sizeof",
+   "kind": "field",
+   "owner": "CSWGuiControl",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 604,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: class_selections has total size 0xe28, six entries of 0x25c",
+     "Dev/game/clientcore/swguiclassselection.cpp: OnSelectButton advances six entries to gui_object"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ],
+    "disassembly": "&pCVar3[6].gui_object: 6*0x5c+0x34 = 0x25c (604) from CSWGuiClassSelection+0x6c"
+   }
+  },
+  {
+   "name": "CSWGuiManager::panels.data",
+   "kind": "field",
+   "owner": "CSWGuiManager",
+   "addr": "0x00000000",
+   "offset": "0x88",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiManager panels CExoArrayList at +0x88",
+     "Dev/libsource/SWGui/swgui.cpp: GetPosInPanelList and AddPanel consume panels.data"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainMenu::field_140c",
+   "kind": "field",
+   "owner": "CSWGuiMainMenu",
+   "addr": "0x00000000",
+   "offset": "0x140c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiMainMenu",
+     "Dev/game/clientcore/swguimainmenu.cpp: OnNewGamePicked guard"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPanel::bit_flags",
+   "kind": "field",
+   "owner": "CSWGuiPanel",
+   "addr": "0x00000000",
+   "offset": "0x44",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiPanel",
+     "Dev/libsource/SWGui/swgui.cpp: AddPanel and RemovePanel"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiControl::is_active",
+   "kind": "field",
+   "owner": "CSWGuiControl",
+   "addr": "0x00000000",
+   "offset": "0x4c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiControl",
+     "Dev/game/clientcore/swguimainmenu.cpp: OnNewGamePicked guard"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiManager::panels.size",
+   "kind": "field",
+   "owner": "CSWGuiManager",
+   "addr": "0x00000000",
+   "offset": "0x8c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h: CSWGuiManager panels CExoArrayList at +0x88",
+     "Dev/libsource/SWGui/swgui.cpp: GetPosInPanelList bounds panels.data by panels.size"
+    ],
+    "signals": [
+     "types.h declaration",
+     "raw-image consumer disassembly"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::main_menu",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x280",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "Dev/game/clientcore/clientexoappinternal.cpp:7515-7576"
+    ],
+    "disassembly": "DisplayMainMenu 0x5fca30: 8b 86 80 02 00 00 / 89 86 80 02 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::player_creature_id",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x20",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250 (player_creature_id, ninth word of the struct)",
+     "Dev/game/clientcore/clientexoappinternal.cpp:10440-10558 (gate 2 of the load-completion block)"
+    ],
+    "disassembly": "CClientExoApp::GetPlayerCreatureId 0x5ed550: 8b 41 04 8b 40 20 c3; CClientExoAppInternal::GetPlayerCreature 0x5f1420 reads the same +0x20",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::area_not_ready_to_display",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x288",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "Dev/game/clientcore/clientexoappinternal.cpp:10568-10579"
+    ],
+    "disassembly": "GetAreaNotReadyToDisplay 0x5edad0: 8b 80 88 02 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::input_disabled",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x2bc",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "DisableInput internal 0x61f7c0: c7 81 bc 02 00 00 01 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::game_over_state",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x2c0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250",
+     "Dev/game/clientcore/clientexoapp.cpp:519-523"
+    ],
+    "disassembly": "GetGameOver 0x5edc60: 8b 80 c0 02 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CClientExoAppInternal::loading_savegame",
+   "kind": "field",
+   "owner": "CClientExoAppInternal",
+   "addr": "0x00000000",
+   "offset": "0x33c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:861-1250"
+    ],
+    "disassembly": "GetLoadingSaveGame 0x5edfb0: 8b 80 3c 03 00 00; SetLoadingSaveGame 0x5edfc0 writes it",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWReentrantServerStats::continue_message_processing",
+   "kind": "field",
+   "owner": "CSWReentrantServerStats",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:9026-9040",
+     "Dev/game/clientcore/clientexoappinternal.cpp:10339-10360"
+    ],
+    "disassembly": "StallServerCode 0x602c90 clears [eax+0x10] and [eax+0x14] of the stats and then the first dword",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWReentrantServerStats::field_4",
+   "kind": "field",
+   "owner": "CSWReentrantServerStats",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWReentrantServerStats (binary 8, size 0x3c): continue_message_processing at +0x0 then field_4",
+     "Dev/game/servercore/serverexoappinternal.cpp:5022-5099 (1 load MOD/RIM, 2 save, 3 load SAV/RSV)",
+     "UN/K1__k1_win_gog_swkotor.exe_004b.cpp:420-430"
+    ],
+    "disassembly": "CServerExoAppInternal::LoadModule 0x4b95b0: at 0x4ba490 eax=[g_pAppManager+0x14] (stats) then mov [eax],edi; mov [eax+0x4],edi with edi=1 (MOD/RIM path) and at 0x4ba4c5 mov [eax],1; mov [eax+0x4],3 (SAV/RSV path); CServerExoAppInternal::SaveGame 0x4b58a0 at 0x4b5ab9: mov [eax],1; mov [eax+0x4],2; StallServerCode 0x602c90 at 0x602cc5 clears [eax] and [eax+0x4]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWReentrantServerStats::field_14",
+   "kind": "field",
+   "owner": "CSWReentrantServerStats",
+   "addr": "0x00000000",
+   "offset": "0x14",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:9026-9040",
+     "Dev/game/servercore/serverexoappinternal.cpp:1570-1576,5088-5092"
+    ],
+    "disassembly": "StallServerCode 0x602c90: cmp [eax+0x14],ecx / mov dword [eax+0x14],0",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWReentrantServerStats::load_game_error",
+   "kind": "field",
+   "owner": "CSWReentrantServerStats",
+   "addr": "0x00000000",
+   "offset": "0x38",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:9026-9040",
+     "Dev/game/servercore/serverexoappinternal.cpp:4542-4565"
+    ],
+    "disassembly": "DealWithLoadGameError 0x4ba5b0: 89 46 38",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::sw_gui_status",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x34",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:3074-3240",
+     "Dev/game/clientcore/guiingame.cpp:276-330"
+    ],
+    "disassembly": "SetSWGuiStatus 0x62aa00: 39 4e 34 / c7 46 34 02 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_30",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x30",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "k1_win_gog ghidra_types.h CGuiInGame.field_30",
+     "CGuiInGame Show/Hide bodies"
+    ],
+    "disassembly": "Show 0x62c9b0 writes 1 at gui+0x30 before k_pend_screenchg; Hide 0x62cba0 writes 0 after its modal-stack guard.",
+    "signals": [
+     "target type layout",
+     "two exact target function consumers"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::last_gui_panel",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x2c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "k1_win_gog ghidra_types.h CGuiInGame.last_gui_panel",
+     "CGuiInGame Show/Hide bodies"
+    ],
+    "disassembly": "Show stores the selected panel at gui+0x2c; Hide removes in_game_equip[last_gui_panel].",
+    "signals": [
+     "target type layout",
+     "two exact target function consumers"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::dialog_cinematic_copy",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x3c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:3074-3240",
+     "Dev/game/clientcore/guiingame.cpp:6138-6242"
+    ],
+    "disassembly": "UpdateDialog 0x6339c0: 8b 4e 3c (the panel whose vtable slot +0x6c is SelectReply)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_b4",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xb4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:3074-3240",
+     "Dev/game/clientcore/guiingame.cpp:3432-3466",
+     "Dev/game/servercore/nwvmachinecommands.cpp:16277-16291"
+    ],
+    "disassembly": "SetGlobalDialogState 0x62ec60: 89 86 b4 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_c8",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xc8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:466-474"
+    ],
+    "disassembly": "SetDialogSelection 0x62ada0: 89 81 c8 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_cc",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xcc",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:466-474"
+    ],
+    "disassembly": "second store of SetDialogSelection 0x62ada0 (edx = arg 2)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_d0",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xd0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:466-474,6152-6166"
+    ],
+    "disassembly": "UpdateDialog 0x6339c0: 39 be d0 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_dc",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xdc",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:4044-4079",
+     "Dev/game/servercore/serverexoappinternal.cpp:4922-4923"
+    ],
+    "disassembly": "UpdateControllerPauseState 0x62f780: 8b 86 dc 00 00 00 / c7 86 dc 00 00 00 01 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_114",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x114",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:124-140,1152-1208"
+    ],
+    "disassembly": "SetReplyData 0x628750: 3b b7 14 01 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_118",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x118",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:124-140"
+    ],
+    "disassembly": "SetReplyData 0x628750: 8b 8f 18 01 00 00 (CExoString stride 8)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::field_11c",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x11c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:124-140"
+    ],
+    "disassembly": "SetReplyData 0x628750: 8b 97 1c 01 00 00 (ulong stride 4)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiDialog::field_64",
+   "kind": "field",
+   "owner": "CSWGuiDialog",
+   "addr": "0x00000000",
+   "offset": "0x64",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6386-6395",
+     "Dev/game/clientcore/guiingame.cpp:6227,6459-6473"
+    ],
+    "disassembly": "UpdateDialog 0x6339c0: 8b 40 64 after loading the panel",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiDialog::field_6c",
+   "kind": "field",
+   "owner": "CSWGuiDialog",
+   "addr": "0x00000000",
+   "offset": "0x6c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6386-6395",
+     "Dev/game/clientcore/swguidialog.cpp:1132-1135"
+    ],
+    "disassembly": "SelectReply 0x6a7110: 8b 41 6c; SetReplies 0x6a86a0: 89 47 6c",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiDialog::field_1970",
+   "kind": "field",
+   "owner": "CSWGuiDialog",
+   "addr": "0x00000000",
+   "offset": "0x1970",
+   "size": 80,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6391-6411 (20 ulongs)",
+     "Dev/game/clientcore/swguidialog.cpp:1138,1176"
+    ],
+    "disassembly": "GetReplyIndex 0x6a6d80: 8b 84 81 70 19 00 00; SetReplies: 8d 97 70 19 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiDialog::field_19c0",
+   "kind": "field",
+   "owner": "CSWGuiDialog",
+   "addr": "0x00000000",
+   "offset": "0x19c0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/guiingame.cpp:6195-6236"
+    ],
+    "disassembly": "UpdateDialog 0x6339c0: 8b 82 c0 19 00 00 feeding ClientToServerObjectId",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialog::entries",
+   "kind": "field",
+   "owner": "CSWSDialog",
+   "addr": "0x00000000",
+   "offset": "0x8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10377-10404",
+     "Dev/game/servercore/nwsdialog.cpp:1364"
+    ],
+    "disassembly": "HandleReply 0x5a03c0: 8b 46 08 next to the +0x70 read",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialog::field_3c",
+   "kind": "field",
+   "owner": "CSWSDialog",
+   "addr": "0x00000000",
+   "offset": "0x3c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSDialog (binary 8, size 0x12c): field_3c at +0x3c after field_2c[0x10]",
+     "include/types.h:10377-10404 (field_3c = Skippable)",
+     "Dev/game/servercore/nwsdialog.cpp:3209-3210"
+    ],
+    "disassembly": "CSWSDialog::LoadDialog 0x5a2ae0 at 0x5a2c2e: push 0x74a7a4 (\"Skippable\"); call CResGFF::ReadFieldBYTE 0x411a60; movzx ecx,al; mov [esi+0x3c],ecx at 0x5a2c52. Consumer CSWSObject::IsDialogDelay 0x4cd2d0 at 0x4cd3bb: mov eax,[esi+0x34] (dialog); mov ecx,[eax+0x3c]; nonzero with +0x1f4 set stops the dialog sound, sets [obj+0x220]=1 and returns 0 (no delay).",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialog::field_70",
+   "kind": "field",
+   "owner": "CSWSDialog",
+   "addr": "0x00000000",
+   "offset": "0x70",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10377-10404",
+     "Dev/game/servercore/nwsdialog.cpp:1303,1364"
+    ],
+    "disassembly": "HandleReply 0x5a03c0: 3b 56 70",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialog::field_74",
+   "kind": "field",
+   "owner": "CSWSDialog",
+   "addr": "0x00000000",
+   "offset": "0x74",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10377-10404",
+     "Dev/game/servercore/nwsdialog.cpp:1303,1364"
+    ],
+    "disassembly": "HandleReply 0x5a03c0: 83 7e 74 ff (cmp against -1)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogEntry::sizeof",
+   "kind": "field",
+   "owner": "CSWSDialogEntry",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 176,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10495-10500 (sizecheck 0xb0)",
+     "Dev/game/servercore/nwsdialog.cpp:1364"
+    ],
+    "disassembly": "types.h sizecheck plus the entries[] index in HandleReply",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogEntry::link_entry_count",
+   "kind": "field",
+   "owner": "CSWSDialogEntry",
+   "addr": "0x00000000",
+   "offset": "0xa8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSDialogEntry (binary 8, size 0xb0): node[0xa8], link_entry_count, link_entries",
+     "include/types.h:10495-10500",
+     "Dev/game/servercore/nwsdialog.cpp:1352-1355"
+    ],
+    "disassembly": "CSWSDialog::LoadDialog 0x5a2ae0: push 0x74a714 (\"RepliesList\") at 0x5a2efe, CResGFF::GetList 0x4118c0 then GetListCount 0x411940, result stored mov [ebx+edx+0xa8],eax at 0x5a2f23 (entries) and the mirror \"EntriesList\" (0x74a6f8, 0x5a3167) stored at 0x5a318c for replies. Consumer CSWSDialog::HandleReply 0x5a03c0: cmp edi,[edx+eax+0xa8] at 0x5a04f2 bounds the link walk.",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogEntry::link_entries",
+   "kind": "field",
+   "owner": "CSWSDialogEntry",
+   "addr": "0x00000000",
+   "offset": "0xac",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSDialogEntry (binary 8, size 0xb0): link_entries at +0xac",
+     "include/types.h:10495-10500",
+     "Dev/game/servercore/nwsdialog.cpp:1364"
+    ],
+    "disassembly": "CSWSDialog::LoadDialog 0x5a2ae0: after the RepliesList count, new[] of count*0x18 CSWSDialogLinkEntry (push 0x59e900 ctor; push 0x18 stride; call 0x401130) and mov [ebx+ecx+0xac],eax at 0x5a2f90 (replies: 0x5a31fe). Consumer HandleReply 0x5a03c0: mov ecx,[ecx+edx+0xac] at 0x5a0538 and 0x5a0597 indexes the link array.",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogLinkEntry::sizeof",
+   "kind": "field",
+   "owner": "CSWSDialogLinkEntry",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 24,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10502-10507 (sizecheck 0x18)",
+     "Dev/game/servercore/nwsdialog.cpp:3768-3800"
+    ],
+    "disassembly": "types.h sizecheck plus SendDialogReplies' link loop",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogLinkEntry::index",
+   "kind": "field",
+   "owner": "CSWSDialogLinkEntry",
+   "addr": "0x00000000",
+   "offset": "0x10",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10502-10507",
+     "Dev/game/servercore/nwsdialog.cpp:1364"
+    ],
+    "disassembly": "declaration plus HandleReply's .index read",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogLinkEntry::display_inactive",
+   "kind": "field",
+   "owner": "CSWSDialogLinkEntry",
+   "addr": "0x00000000",
+   "offset": "0x14",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10502-10507",
+     "Dev/game/servercore/nwsdialog.cpp:3796-3802"
+    ],
+    "disassembly": "declaration plus the greyed-row branch",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSDialogBase::text_strref",
+   "kind": "field",
+   "owner": "CSWSDialogBase",
+   "addr": "0x00000000",
+   "offset": "0xc",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSDialogBase (binary 8, size 0x84): speaker[0x8] then text[0x8] at +0x8",
+     "kotorxid ghidra_type CExoLocString (binary 8): { void* internal; int strref; } with sizeof == 0x8 assertion",
+     "include/types.h:10454-10480",
+     "Dev/game/servercore/nwsdialog.cpp:656-720"
+    ],
+    "disassembly": "CSWSDialog::LoadDialogBase 0x59f5f0 at 0x59f62f: push 0x74a5f8 (\"Text\"); call CResGFF::ReadFieldCExoLocString 0x411fd0 into a stack temp, then mov esi,[ebp+8] (node); lea ecx,[esi+0x8]; call CExoLocString::operator= 0x5e9e70, whose body copies mov ecx,[edi+0x4]; mov [esi+0x4],ecx (strref) at 0x5e9e86, placing the strref at node+0xc. Readers: CExoLocString::GetString 0x5ea130 at 0x5ea1c3 mov edx,[esi+0x4]; CSWSDialog::SendDialogEntryNode 0x5a13d0 at 0x5a19c8 passes lea ecx,[esi+0x8] (node text) to GetExoStringFromLocString 0x59f320.",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSObject::field_34",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x34",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10898-10915",
+     "Dev/game/servercore/nwsobject.cpp:866-885"
+    ],
+    "disassembly": "ReplyDialog 0x4cb480: 8b 4e 34",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSObject::field_48",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x48",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10898-10915",
+     "Dev/game/servercore/nwsobject.cpp:878-884"
+    ],
+    "disassembly": "ReplyDialog 0x4cb480: c7 46 48 00 00 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSObject::field_5c",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x5c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.97,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSObject (binary 8, size 0x228): field_5c at +0x5c; CSWSDialogBase.wait_flags at +0x20 of every node",
+     "Dev/game/servercore/nwsobject.cpp:2214-2260",
+     "Dev/game/servercore/nwsdialog.cpp:1467,4323"
+    ],
+    "disassembly": "Setters: CSWSDialog::SendDialogEntry 0x5a4010 at 0x5a4804: mov eax,[esi+0x8]; mov eax,[edi+eax+0x20] (entry node wait_flags); mov [ebx+0x5c],eax (speaker object) right after SetDialogDelay 0x59ff50 consumed node+0x24 (delay). CSWSDialog::HandleReply 0x5a03c0 at 0x5a07e4: mov eax,[edi+edx+0x20] (reply node wait_flags); mov [ecx+0x5c],eax, or mov [edx+0x5c],0 at 0x5a07f3 when CGuiInGame+0xc0 is set. Constructor 0x4cfcb0 and StartDialog 0x4cf490 zero it. Consumer CSWSObject::IsDialogDelay 0x4cd2d0: mov ebx,[esi+0x5c] at 0x4cd312; test bl,0x2 -> CClientExoApp::IsSoundPlayingInDialog 0x5edbc0; test bl,0x4 -> CGuiInGame::IsAnimationPlayingInDialog 0x62d570; test bl,0x1 -> CSWCModule::IsCameraAnimated 0x6412b0; test bl,0x8 -> CGuiInGame::IsFadingInDialog 0x62abb0; any true result returns 1 (still waiting). With no bit active the return is CWorldTimer::CompareWorldTimes of dlg_delay (+0x38/+0x3c) against the world time.",
+    "semantics": "bit 0x1 camera, 0x2 sound (VO), 0x4 animation, 0x8 fade. VO-vs-delay: the line is held by the client's IsSoundPlayingInDialog only while bit 0x2 is set; otherwise the node delay (+0x24, copied into +0x38/+0x3c by SetDialogDelay) is the sole gate. A skip request (+0x1f4) on a Skippable dialog (+0x3c) bypasses both and stops the sound.",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSObject::field_1f4",
+   "kind": "field",
+   "owner": "CSWSObject",
+   "addr": "0x00000000",
+   "offset": "0x1f4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoappinternal.cpp:568-583",
+     "Dev/game/servercore/nwsobject.cpp:2240-2250"
+    ],
+    "disassembly": "SkipPastDialog internal 0x4b1f90: c7 80 f4 01 00 00 01 00 00 00; IsDialogDelay: 8b 86 f4 01 00 00",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::identifiers",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 42600,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151",
+     "Dev/game/servercore/globalvartables.cpp:7-74"
+    ],
+    "disassembly": "Hash 0x528e50 consts [0x6ef, 0xb268]; 0x6ef * 0x18 = 0xa668",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "GlobalIndentifier::sizeof",
+   "kind": "field",
+   "owner": "GlobalIndentifier",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 24,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:13280-13283 (sizecheck 0x18)"
+    ],
+    "disassembly": "FindIdentifierIndex 0x529030 consts [0x6ef]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "GlobalIndentifier::type_and_index",
+   "kind": "field",
+   "owner": "GlobalIndentifier",
+   "addr": "0x00000000",
+   "offset": "0x16",
+   "size": 2,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:13280-13283",
+     "Dev/game/servercore/globalvartables.cpp:74-137"
+    ],
+    "disassembly": "GetValue* consts carry 0x3fff (index mask) and 0x4000/0x8000/0xc000 type tags",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::booleans",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xa668",
+   "size": 113,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151",
+     "Dev/game/servercore/globalvartables.cpp:318-362"
+    ],
+    "disassembly": "GetValueBoolean 0x529110 consts include 0xa668",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::numbers",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xa6d9",
+   "size": 500,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "GetValueNumber 0x529240 consts include 0xa6d9",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::locations",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xa8d0",
+   "size": 2400,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "GetValueLocation 0x529350 consts include 0xa8d0",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::strings",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xb230",
+   "size": 40,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "GetValueString 0x529460 consts include 0xb230",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::boolean_count",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xb258",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "WriteTable 0x5299b0 consts include 0xb258",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::number_count",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xb25c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "WriteTable 0x5299b0 consts include 0xb25c",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::location_count",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xb260",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "declaration order after number_count; WriteTable reads the four counts",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGlobalVariableTable::string_count",
+   "kind": "field",
+   "owner": "CSWGlobalVariableTable",
+   "addr": "0x00000000",
+   "offset": "0xb264",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:6133-6151"
+    ],
+    "disassembly": "declaration order after location_count",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWPartyTable::party_journal",
+   "kind": "field",
+   "owner": "CSWPartyTable",
+   "addr": "0x00000000",
+   "offset": "0x11c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:8870-8901",
+     "Dev/game/servercore/partytables.cpp (GetPartyJournal)"
+    ],
+    "disassembly": "GetPartyJournal 0x5633c0 consts [0x11c]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSJournal::data",
+   "kind": "field",
+   "owner": "CSWSJournal",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10790-10795",
+     "Dev/game/servercore/nwsjournal.cpp:99-133"
+    ],
+    "disassembly": "GetState 0x5c58a0 indexes data with stride 0x3c",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSJournal::size",
+   "kind": "field",
+   "owner": "CSWSJournal",
+   "addr": "0x00000000",
+   "offset": "0x4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:10790-10795",
+     "Dev/game/servercore/nwsjournal.cpp:99-133"
+    ],
+    "disassembly": "GetState 0x5c58a0 loop bound",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "SJournalEntry::sizeof",
+   "kind": "field",
+   "owner": "SJournalEntry",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 60,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:15636-15651 (sizecheck 0x3c)"
+    ],
+    "disassembly": "GetState 0x5c58a0: 83 c7 3c / 6b f6 3c",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "SJournalEntry::field_18",
+   "kind": "field",
+   "owner": "SJournalEntry",
+   "addr": "0x00000000",
+   "offset": "0x18",
+   "size": 8,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:15636-15651",
+     "Dev/game/servercore/nwsjournal.cpp:99-133 (tag compare)"
+    ],
+    "disassembly": "GetState 0x5c58a0: 8d 4c 0f 18",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "SJournalEntry::field_20",
+   "kind": "field",
+   "owner": "SJournalEntry",
+   "addr": "0x00000000",
+   "offset": "0x20",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:15636-15651",
+     "Dev/game/servercore/nwsjournal.cpp:99-133 (returns +0x20)"
+    ],
+    "disassembly": "GetState 0x5c58a0: 8b 44 16 20",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSModule::field16_0x5c",
+   "kind": "field",
+   "owner": "CSWSModule",
+   "addr": "0x00000000",
+   "offset": "0x5c",
+   "size": 8,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/servercore/serverexoappinternal.cpp:4686-4689",
+     "include/types.h:10802-10870"
+    ],
+    "disassembly": "ExecuteLoadModule 0x4ba820: 8d 48 5c twice (lea of the CExoString)",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CExoMoviePlayer::internal",
+   "kind": "field",
+   "owner": "CExoMoviePlayer",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/clientexoappinternal.cpp:4801-4915"
+    ],
+    "disassembly": "CExoMoviePlayer::IsMoviePlaying 0x70c1f0: 8b 09 (mov ecx,[ecx]) then jmp 0x404dd0",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CExoMoviePlayerInternal::movie_playing",
+   "kind": "field",
+   "owner": "CExoMoviePlayerInternal",
+   "addr": "0x00000000",
+   "offset": "0x30",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "UN/K1__k1_win_gog_swkotor.exe_0040.cpp (PlayMoviesAsync 0x405e50 sets it)"
+    ],
+    "disassembly": "CExoMoviePlayerInternal::IsMoviePlaying 0x404dd0: 8b 41 30",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CWorldTimer::fixed_snapshot_rate_1",
+   "kind": "field",
+   "owner": "CWorldTimer",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:12353-12371",
+     "UN/K1__k1_win_gog_swkotor.exe_004a.cpp:6336-6371"
+    ],
+    "disassembly": "SetSnapshotTime 0x4adbd0 tests it first",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CWorldTimer::snapshot_scale",
+   "kind": "field",
+   "owner": "CWorldTimer",
+   "addr": "0x00000000",
+   "offset": "0x8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:12353-12371"
+    ],
+    "disassembly": "SetSnapshotScale 0x4ae190: 89 46 08",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CWorldTimer::timer_paused",
+   "kind": "field",
+   "owner": "CWorldTimer",
+   "addr": "0x00000000",
+   "offset": "0x24",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.9,
+   "evidence": {
+    "corpus": [
+     "include/types.h:12353-12371",
+     "Dev/libsource/worldtimer/worldtimer.cpp:204-240"
+    ],
+    "disassembly": "declaration plus GetSnapshotTimeDifference's paused test",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiTutorialBox::HandleInputEvent",
+   "addr": "0x006aa8a0",
+   "verdict": "accept",
+   "confidence": 0.98,
+   "evidence": {
+    "corpus": [
+     "CSWGuiTutorialBox::OnPanelAdded pause/input path",
+     "CSWGuiTutorialBox::HandleInputEvent final-page PopModalPanel path"
+    ],
+    "disassembly": "53 8b 5c 24 0c 85 db 56 8b 74 24 0c 57 8b f9 74; accepts 0x1f6 and returns with ret 8",
+    "signals": [
+     "decompiled panel lifecycle",
+     "raw image disassembly",
+     "live tutorial panel identity"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::tutorial_box",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xa0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "CGuiInGame::ShowTutorialWindow repeatedly reads +0xa0",
+     "CSWGuiTutorialBox panel lifecycle"
+    ],
+    "disassembly": "live R92 probe: *(gui+0xa0) was the fourth pointer in CSWGuiManager panels while pause=2,input_class=2,controller_pause=0",
+    "signals": [
+     "decompiled consumer",
+     "raw process memory",
+     "PanelExists-equivalent manager membership"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::status_summary",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0xa8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-status-summary-native-acknowledgement.md",
+    "corpus": [
+     "include/types.h:3074-3118 declares CGuiInGame::status_summary at +0xa8",
+     "Dev/game/clientcore/guiingame.cpp:3535-3555 GetStatusSummary reads status_summary then status fields"
+    ],
+    "disassembly": "exact GOG GetStatusSummary 0x62f0a0 begins 8b 81 a8 00 00 00; it reads *(ECX+0xa8) before testing the pointer",
+    "signals": [
+     "types.h declaration",
+     "authoritative readable consumer",
+     "exact GOG PE instruction"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainCharGen::BeginPlayGame",
+   "addr": "0x006eb320",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "docs/harness-research/new-game-control-path.md verified readable call chain",
+     "CSWGuiMainCharGen::BeginPlayGame delegates to CSWGuiClassSelection::BeginPlayGame"
+    ],
+    "disassembly": "56 8b f1 e8 08 f5 ff ff 8b 4e 68 5e e9 bf 0a ff ff; unique 17-byte body in target image",
+    "signals": [
+     "readable corpus call chain",
+     "raw image disassembly",
+     "live chargen route proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainCharGen::SetVisiblePanel",
+   "addr": "0x006ea760",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated K1 quick-character path: SetVisiblePanel(main, 2) after class OnSelect and before BeginPlayGame"
+    ],
+    "disassembly": "53 8b 5c 24 08 56 8b f1 3b 9e c8 22 00 00 0f 84 8b 00 00 00; void __thiscall(this, int), ret 4",
+    "signals": [
+     "independent raw-image verification on this alias",
+     "live quick-character pre/postcondition validation"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainCharGen::quick_panel",
+   "kind": "field",
+   "owner": "CSWGuiMainCharGen",
+   "addr": "0x00000000",
+   "offset": "0x70",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated K1 quick-character path"
+    ],
+    "signals": [
+     "native SetVisiblePanel consumer",
+     "live QuickPanel identity validation"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiCharGenPanel::main_panel",
+   "kind": "field",
+   "owner": "CSWGuiCharGenPanel",
+   "addr": "0x00000000",
+   "offset": "0x68",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated K1 chargen child ownership invariant"
+    ],
+    "signals": [
+     "native child-panel relationship",
+     "live parent back-pointer validation"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMainCharGen::visible_panel",
+   "kind": "field",
+   "owner": "CSWGuiMainCharGen",
+   "addr": "0x00000000",
+   "offset": "0x22c8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated K1 SetVisiblePanel postcondition"
+    ],
+    "signals": [
+     "native SetVisiblePanel field consumer",
+     "live value 2 postcondition"
+    ]
+   }
+  },
+  {
+   "name": "CServerExoAppInternal::UpdateClientGameObjects",
+   "addr": "0x004b6950",
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "readable K1 corpus normal GameObjUpdate/ControlObject send path",
+     "live headless AreaLoaded completion proof"
+    ],
+    "disassembly": "51 a1 e0 39 7a 00 53 56 8b f1 8b 48 04 57 e8 fd",
+    "signals": [
+     "readable corpus body",
+     "raw image disassembly",
+     "live load-completion proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMessageBox::callback",
+   "kind": "field",
+   "owner": "CSWGuiMessageBox",
+   "addr": "0x00000000",
+   "offset": "0x68",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "CSWGuiMessageBox::HandleInputEvent callback dispatch at 0x6251d1"
+    ],
+    "disassembly": "loads callback from this+0x68 and invokes it with callback_context and callback_arg",
+    "signals": [
+     "raw disassembly",
+     "live callback value 0x6aa230"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMessageBox::callback_context",
+   "kind": "field",
+   "owner": "CSWGuiMessageBox",
+   "addr": "0x00000000",
+   "offset": "0x6c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "CSWGuiMessageBox::HandleInputEvent callback dispatch at 0x6251d1"
+    ],
+    "disassembly": "loads context from this+0x6c before callback",
+    "signals": [
+     "raw disassembly",
+     "live context equaled tutorial object"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiTutorialBox::MessageBoxUnpause",
+   "addr": "0x006aa230",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "reason-14 SetTutorial dispatch installs this completion callback",
+     "body calls SetPausedByCombat(client,0,2,0) when saved pause was zero"
+    ],
+    "disassembly": "56 8b f1 8b 86 90 09 00 00 85 c0 75 13 a1 fc 39 7a 00 8b 48 04 6a 00 6a 02 6a 00 e8 d0 39 f4 ff",
+    "signals": [
+     "dispatch table",
+     "raw body",
+     "live callback pointer"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiStatusSummary::HandleInputEvent",
+   "addr": "0x00625ac0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "bytes": "53 8b 5c 24 08 56 57 8b 7c 24 14 85 ff 8b f1 74 55 8d 43 d9 83 f8 07 77 4d",
+    "signature_validation": "2026-09-15 exact GOG PE: independently mapped 0x625ac0 to raw offset 2251456; 25-byte prefix occurs once and excludes the absolute jump-table address",
+    "native_identity": "Raw vtable 0x74ff68 slot +0x3c equals 0x625ac0. OnOkButtonPressed 0x625a80 calls vtable +0x3c. Handler closes for event 0x27 with active!=0 and returns with ret8.",
+    "corpus": [
+     "func row binary_id=8 namespace CSWGuiStatusSummary",
+     "vtable slot +0x3c of live top modal"
+    ],
+    "disassembly": "events 0x27/0x28/0x2d/0x2e close panel, call SetInputClass(0,1), and SetPausedByCombat(0,0,0)",
+    "signals": [
+     "sqlite identity",
+     "raw disassembly",
+     "live vtable"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiMessageBox::callback_arg",
+   "kind": "field",
+   "owner": "CSWGuiMessageBox",
+   "addr": "0x00000000",
+   "offset": "0x70",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "SetCallback 0x624a40 stores third argument at +0x70",
+     "HandleInputEvent 0x6251df pushes +0x70 into callback"
+    ],
+    "signals": [
+     "raw setter",
+     "raw consumer",
+     "live zero value"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiManager::modal_stack.data",
+   "kind": "field",
+   "owner": "CSWGuiManager",
+   "addr": "0x00000000",
+   "offset": "0x94",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "CSWGuiManager modal-stack consumers"
+    ],
+    "disassembly": "live manager+0x94 pointed to stack containing CSWGuiStatusSummary top",
+    "signals": [
+     "decompiled manager layout",
+     "live process memory"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiManager::modal_stack.size",
+   "kind": "field",
+   "owner": "CSWGuiManager",
+   "addr": "0x00000000",
+   "offset": "0x98",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "CSWGuiManager modal-stack consumers"
+    ],
+    "disassembly": "live manager+0x98 was 1 with CSWGuiStatusSummary active",
+    "signals": [
+     "decompiled manager layout",
+     "live process memory"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiContainer::HandleInputEvent",
+   "addr": "0x006b92f0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "Dev/game/clientcore/swguiingameequip.cpp HandleInputEvent and OnPanelRemoved",
+     "Dev/game/clientcore/guiingame.cpp RemoveGUIPopUps and HideContainerGui"
+    ],
+    "disassembly": "void __thiscall, ret 8; event 0x28 sends GUI_CONTAINER Close, calls HideContainerGui, then the base panel handler",
+    "bytes": "55 8b 6c 24 0c 85 ed 56 8b f1 0f 84 10 01 00 00",
+    "signals": [
+     "decompiled native close sequence",
+     "raw staged-image disassembly",
+     "live top-modal vtable and successful close",
+     "RemoveGUIPopUps native caller uses event 0x28"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPartySelection::AcceptParty",
+   "addr": "0x006be560",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated K1 party-selection acceptance path"
+    ],
+    "disassembly": "81 ec c4 00 00 00 a1 fc 39 7a 00 53 55 56 c7 44 24 0c 00 00 00 00 c7 44; void __thiscall(this), plain ret",
+    "signals": [
+     "independent raw-image verification on this alias",
+     "live native acceptance proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPartySelection::vtable",
+   "kind": "reference",
+   "owner": "CSWGuiPartySelection",
+   "addr": "0x00756d28",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated shared K1 party-selection vtable"
+    ],
+    "signals": [
+     "live top-modal vtable",
+     "vtable slot +0x3c is HandleInputEvent 0x006bede0"
+    ]
+   }
+  },
+  {
+   "name": "CGuiInGame::initialized",
+   "kind": "field",
+   "owner": "CGuiInGame",
+   "addr": "0x00000000",
+   "offset": "0x108",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated GUI initialization gate"
+    ],
+    "signals": [
+     "native GUI lifecycle",
+     "live initialized-state proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPartySelection::selected_count",
+   "kind": "field",
+   "owner": "CSWGuiPartySelection",
+   "addr": "0x00000000",
+   "offset": "0x68",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated AcceptParty precondition"
+    ],
+    "signals": [
+     "native wrapper state",
+     "live selected_count=1 proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPartySelection::selection_mode",
+   "kind": "field",
+   "owner": "CSWGuiPartySelection",
+   "addr": "0x00000000",
+   "offset": "0x6c",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated AcceptParty precondition"
+    ],
+    "signals": [
+     "native wrapper state",
+     "live selection_mode=1 proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWGuiPartySelection::entry0.flags",
+   "kind": "field",
+   "owner": "CSWGuiPartySelection",
+   "addr": "0x00000000",
+   "offset": "0x4c4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "curator-validated forced-entry acceptance state"
+    ],
+    "signals": [
+     "native entry flags",
+     "live entry0 bit 0x4 proof"
+    ]
+   }
+  },
+  {
+   "name": "CSWParty::party_count",
+   "kind": "field",
+   "owner": "CSWParty",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:8751-8868 (CSWParty, size 0x2e0; party_count at +0)",
+     "Dev/game/clientcore/clientexoappinternal.cpp:2749-2779 (GetControlledCharacterDead reads CSWParty::GetCharacter(0))"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6346c0 CSWParty::GetCharacter size=45 CSWCCreature* __thiscall(CSWParty*, int)",
+    "signals": [
+     "validated K1 CSWParty layout",
+     "decompiled client-party consumer"
+    ],
+    "limits": "Field layouts have no entry-point signature. This applies to the byte-identical K1 GOG and Steam-unpacked .text builds (docs/steam-gog-equivalence.md)."
+   }
+  },
+  {
+   "name": "CSWPartyMemberData::sizeof",
+   "kind": "field",
+   "owner": "CSWParty",
+   "addr": "0x00000000",
+   "offset": "0x24",
+   "size": 136,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:8751-8868 (CSWParty member array starts +0x24; CSWPartyMemberData size 0x88)",
+     "Dev/game/clientcore/clientexoappinternal.cpp:2749-2779 (GetCharacter(0) consumer)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6346c0 CSWParty::GetCharacter size=45 CSWCCreature* __thiscall(CSWParty*, int)",
+    "signals": [
+     "validated K1 CSWParty and CSWPartyMemberData layouts",
+     "decompiled client-party consumer"
+    ],
+    "limits": "The emitted field offset is the row base in CSWParty; size is the CSWPartyMemberData stride. No executable field signature exists."
+   }
+  },
+  {
+   "name": "CSWPartyMemberData::client_object_id",
+   "kind": "field",
+   "owner": "CSWPartyMemberData",
+   "addr": "0x00000000",
+   "offset": "0x0",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 0.95,
+   "evidence": {
+    "corpus": [
+     "include/types.h:8751-8868 (CSWPartyMemberData client_object_id at +0)",
+     "docs/harness-research/map-re-conversation-state.md:62-63 (client id is consumed from party slot 0)"
+    ],
+    "sqlite_func": "func binary_id=8 addr=0x6346c0 CSWParty::GetCharacter size=45 CSWCCreature* __thiscall(CSWParty*, int)",
+    "signals": [
+     "validated K1 CSWPartyMemberData layout",
+     "client-to-server object-id flow documented from the client-party consumer"
+    ],
+    "limits": "No executable field signature exists; the binding is a struct-layout offset for the byte-identical K1 GOG and Steam-unpacked builds."
+   }
+  },
+  {
+   "name": "CGuiInGame::ShowSWInGameGui",
+   "addr": "0x0062c9b0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-starboard-hybrid-frontier-correction.md",
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "bytes": "64 a1 00 00 00 00 6a ff 68 10 93 72 00 50 64 89 25 00 00 00 00 83 ec 10 56 8b f1 8b 86 08 01 00 00 85 c0 57 0f 84 a3 01 00 00 a1 fc 39 7a 00 8b",
+    "signals": [
+     "exact GOG PE disassembly",
+     "authoritative corpus function body",
+     "unique 48-byte window in exact binary"
+    ],
+    "disassembly": "int __thiscall(CGuiInGame*, int panel), ret 4; panel 0 opens equipment and runs k_pend_screenchg",
+    "limits": "K1 GOG and byte-identical Steam-unpacked image only; live callback proof pending."
+   }
+  },
+  {
+   "name": "CGuiInGame::HideSWInGameGui",
+   "addr": "0x0062cba0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "receipt": "/home/brunner56/biodecompwarehouse/findings/2026-09-15-k1-starboard-hybrid-frontier-correction.md",
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "bytes": "56 8b f1 8b 86 08 01 00 00 85 c0 57 0f 84 15 01 00 00 a1 fc 39 7a 00 8b 48 04 e8 81 0e fc ff 8b f8 85 ff 0f 84 fe 00 00 00 8b 87 98 00 00 00 85",
+    "signals": [
+     "exact GOG PE disassembly",
+     "authoritative corpus function body",
+     "unique 48-byte window in exact binary"
+    ],
+    "disassembly": "int __thiscall(CGuiInGame*, int panel), ret 4; panel 0 closes equipment through native GUI lifecycle",
+    "limits": "K1 GOG and byte-identical Steam-unpacked image only; live callback proof pending."
+   }
+  },
+  {
+   "name": "CSWCMessage::SendPlayerToServerInput_UnlockObject",
+   "addr": "0x00677de0",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "binary_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
+    "signals": [
+     "GOG readable CSWCMessage sender body",
+     "exact retail CSWCDoor::MenuActionSecurity caller at 0x00683e50",
+     "server message handler case 0x0c queues AddUnlockObjectAction"
+    ],
+    "corpus": [
+     "Dev/game/clientcore/nwcsendmessage.cpp:417-442",
+     "Dev/game/clientcore/nwcdoor.cpp:200-220",
+     "Dev/game/servercore/nwshandleplayermessage.cpp: case 0x0c"
+    ],
+    "disassembly": "void __thiscall(CSWCMessage*, uint32 door, uint32 item); serializes two client object IDs and sends category 6/subtype 12. MenuActionSecurity passes INVALIDOBJID (0x7f000000) as item.",
+    "limits": "Dispatches the game-owned Security action; the harness must observe a later locked/open-state postcondition."
+   }
+  },
+  {
+   "name": "CSWSDoor::locked",
+   "kind": "field",
+   "owner": "CSWSDoor",
+   "addr": "0x00000000",
+   "offset": "0x2C4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "GOG size-checked CSWSDoor layout",
+     "GOG CSWSMessage player-input consumer reads object+0x2c4 before AddUnlockObjectAction"
+    ],
+    "corpus": [
+     "include/types.h:10548-10627",
+     "Dev/game/servercore/nwshandleplayermessage.cpp case 0x0c"
+    ],
+    "disassembly": "CSWSDoor.locked is an unsigned 32-bit field at +0x2C4."
+   }
+  },
+  {
+   "name": "CSWSDoor::lockable",
+   "kind": "field",
+   "owner": "CSWSDoor",
+   "addr": "0x00000000",
+   "offset": "0x2C8",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "GOG size-checked CSWSDoor layout",
+     "native unlock action validates the target lock state"
+    ],
+    "corpus": [
+     "include/types.h:10548-10627",
+     "Dev/game/servercore/nwshandleplayermessage.cpp case 0x0c"
+    ],
+    "disassembly": "CSWSDoor.lockable is an unsigned 32-bit field at +0x2C8."
+   }
+  },
+  {
+   "name": "CSWSDoor::open_state",
+   "kind": "field",
+   "owner": "CSWSDoor",
+   "addr": "0x00000000",
+   "offset": "0x2CC",
+   "size": 1,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "GOG size-checked CSWSDoor layout",
+     "native door state code consumes CSWSDoor open-state transitions",
+     "accessor or consumer immediate in the raw image"
+    ],
+    "corpus": [
+     "kotorxid ghidra_type CSWSDoor (binary 8, size 0x3d0): open_state at +0x2cc, also_open_state at +0x2cd",
+     "include/types.h:10548-10627",
+     "Dev/game/servercore/nwsdoor.cpp: SetOpenState/MoveToNextOpenState"
+    ],
+    "disassembly": "CSWSDoor::SetOpenState 0x589600 (this, byte state, int pending): mov [ecx+0x2cd],al always, mov [ecx+0x2cc],al only when pending==0 (0x58961e); [this+0x308] nonzero forces state 3. CSWSDoor::MoveToNextOpenState 0x589680: mov al,[esi+0x2cd]; mov [esi+0x2cc],al. CSWVirtualMachineCommands::ExecuteCommandGetIsOpen 0x539e20 at 0x539e76: mov dl,[eax+0x2cc]; setne -> GetIsOpen for doors is open_state != 0.",
+    "limits": "Byte, raw engine state (0 closed, 1 open1, 2 open2, 3 destroyed per the SetOpenState jump table), not a Boolean."
+   }
+  },
+  {
+   "name": "CSWSDoor::animation",
+   "kind": "field",
+   "owner": "CSWSDoor",
+   "addr": "0x00000000",
+   "offset": "0xD4",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ],
+    "corpus": [
+     "kotorxid ghidra_type CSWSObject (binary 8, size 0x228): int animation at +0xd4 (field_d0 then animation); CSWSDoor embeds CSWSObject at +0x0, so the door reads it at the same offset",
+     "Dev/game/servercore/nwsdoor.cpp: SetOpenState"
+    ],
+    "disassembly": "CSWSDoor vtable 0x7498b0 (installed by the constructor 0x589ee0 at 0x589f31) slot +0x7c = 0x4ccf60 CSWSObject::SetAnimation: or [ecx+0x1fc],1; mov eax,[esp+4]; mov [ecx+0xd4],eax; ret 4. CSWSDoor::SetOpenState 0x589600 calls that slot with 0x2726 (state 0), 0x2742 (1), 0x2743 (2), 0x2758 (3). CSWVirtualMachineCommands::ExecuteCommandGetIsOpen 0x539e20 at 0x539e93 reads [obj+0xd4] and compares with 0x275b for placeables.",
+    "limits": "Inherited CSWSObject member; the value is the engine animation id last set on the object, so the opening/closing check compares against the SetOpenState constants above."
+   }
+  },
+  {
+   "name": "CSWSDoor::also_open_state",
+   "kind": "field",
+   "owner": "CSWSDoor",
+   "addr": "0x00000000",
+   "offset": "0x2CD",
+   "size": 1,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ],
+    "corpus": [
+     "kotorxid ghidra_type CSWSDoor (binary 8, size 0x3d0): also_open_state at +0x2cd, immediately after open_state",
+     "Dev/game/servercore/nwsdoor.cpp: SetOpenState/MoveToNextOpenState"
+    ],
+    "disassembly": "CSWSDoor::SetOpenState 0x589600 at 0x589616: mov [ecx+0x2cd],al (the pending state, written on every call); CSWSDoor::MoveToNextOpenState 0x589680 at 0x589689: mov al,[esi+0x2cd]; cmp al,cl; mov [esi+0x2cc],al commits it and skips the walkmesh update when equal or when al==3.",
+    "limits": "Pending state only. Equal to open_state once the door animation callback has run; a door is mid-transition while +0x2cd != +0x2cc."
+   }
+  },
+  {
+   "name": "CSWSCreature::stats",
+   "kind": "field",
+   "owner": "CSWSCreature",
+   "addr": "0x00000000",
+   "offset": "0xA74",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSCreature: appearance_info[0x24] then `void* creature_stats` between field_a4e and field_a78",
+     "Dev/game/servercore/nwscreature.cpp (GetLevel/DoAutoLevelup consumers)"
+    ],
+    "disassembly": "CSWSCreature::GetLevel 0x5a5fec: 8b b1 74 0a 00 00 (mov esi,[ecx+0xA74]); CSWGuiInGameCharacter::DoAutoLevelup 0x6aecb9: 8b 88 74 0a 00 00 after GetServerCreature, then jmp AutoLevelup 0x5b27e0",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  },
+  {
+   "name": "CSWSCreatureStats::experience",
+   "kind": "field",
+   "owner": "CSWSCreatureStats",
+   "addr": "0x00000000",
+   "offset": "0x68",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "corpus": [
+     "kotorxid ghidra_type CSWSCreatureStats: field_67 then `unsigned long experience`",
+     "Dev/game/servercore/nwscreaturestats.cpp (SetExperience/CanLevelUp/AutoLevelup)"
+    ],
+    "disassembly": "SetExperience 0x5af54c: 89 6e 68 (mov [esi+0x68],ebp); CanLevelUp 0x5a683f and AutoLevelup 0x5b2864 compare [this+0x68] against the XP table [rules+level*4+0x38]",
+    "signals": [
+     "types.h declaration or decompiled consumer",
+     "accessor or consumer immediate in the raw image"
+    ]
+   }
+  }
+ ]
+}

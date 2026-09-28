@@ -10,10 +10,8 @@ priority = -1500
 local lx, ly, lz, lf
 
 local function q(name, ...)
-    if not kotor then return nil end
-    local fn = kotor[name]
-    if not fn then return nil end
-    local ok, v = pcall(fn, ...)
+    if not nwscript or type(nwscript.call) ~= "function" then return nil end
+    local ok, v = pcall(nwscript.call, name, ...)
     return ok and v or nil
 end
 
@@ -29,7 +27,7 @@ function OnTick(tick, relevant)
 
     if lx == nil or math.abs(p.x - lx) > 0.02 or math.abs(p.y - ly) > 0.02
        or math.abs(p.z - lz) > 0.02 or math.abs(f - lf) > 0.3 then
-        print(("[trace] t=%d pos %.3f %.3f %.3f face %.2f"):format(tick, p.x, p.y, p.z, f))
+        kp.print(("[trace] t=%d pos %.3f %.3f %.3f face %.2f"):format(tick, p.x, p.y, p.z, f))
         lx, ly, lz, lf = p.x, p.y, p.z, f
     end
 end

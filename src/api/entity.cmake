@@ -86,7 +86,8 @@ if(KP_MINGW_CXX)
     add_custom_command(
         OUTPUT ${KP_API_WIN32_OBJ}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_API_WIN32_OBJDIR}
-        COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+        COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
                 -I${KP_API_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
                 -c "${KP_API_DIR}/entity.cpp" -o ${KP_API_WIN32_OBJ}
         DEPENDS "${KP_API_DIR}/entity.cpp"

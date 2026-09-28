@@ -167,3 +167,73 @@ the CSWVirtualMachineCommands destructor installs at `0x0858afbb`.
    the file means the function is not in a vtable, which is fine for a non-virtual method but
    must then be backed by direct callers. Zero dword references *and* zero callers means the
    address is unreachable and therefore not a function entry.
+
+## 7. Headless-harness sites and fields (K1 GOG / Steam-unpacked, K2 GOG Aspyr)
+
+Files: `k1_gog_103_harness_bindings.json`, `k1_steam_103_unpacked_harness_bindings.json`
+(the same table restated: the deciphered Steam `.text` is byte-identical to GOG, see
+`docs/steam-gog-equivalence.md`), `k2_gog_aspyr_harness_bindings.json` (fields only).
+The generator reads every `<alias>_*_bindings.json`, so these sit next to the VM files
+rather than inside them, and a name bound twice at different addresses is an error.
+
+Two kinds of binding, two flavours of the two-signal rule.
+
+**Functions** (`kind` absent). Signal one is the `func` row on the target binary itself:
+K1 GOG (binary 8) is named throughout, so every harness function has a row with a
+namespace, a size and a recorded convention. Signal two is a read of the decompiled body
+in the readable tree, cited by file and line, which is what settles the call shape
+(argument order, which `CExoString*` the engine assigns into, what a return value means).
+Where the convention matters the raw prologue was disassembled as well:
+`CSWSDialog::CheckScript` opens with an SEH frame and never touches `ecx` before its
+arguments, so it is the `__stdcall` static the row says. `GetPlayerCreatureId` is a
+`CServerExoApp` thiscall wrapper: `mov ecx,[ecx+4]` followed by a tail jump to the internal
+implementation. Its stale recovered `__stdcall` signature is overridden by the wrapper bytes.
+
+One row exists only because of the overlay: `CServerExoApp::GetPartyTable` carries
+`source = ANALYSIS` (plate-named), which the `func` layer filters out. Its body is
+`mov eax,[ecx+4]; add eax,0x1b770; ret`, which both binds the function and confirms the
+party-table offset.
+
+**Fields** (`kind = "field"`, with `owner`, `offset`, `size`). A struct member has no
+address to match, so signal one is the `types.h` declaration (or, where `types.h` only
+has a placeholder name, two decompiled consumers) and signal two is an immediate in the
+raw image: the accessor whose body is `mov eax,[ecx+4]; mov eax,[eax+OFFSET]`, or the
+consumer that stores to `[reg+OFFSET]`. Every `CServerExoAppInternal` and
+`CClientExoAppInternal` field here has such an accessor (`GetServerMode`,
+`GetLoadingModule`, `GetGameOver`, `GetSWCMessage`, ...), and the GUI and dialog fields
+have their setter (`SetGlobalDialogState`, `SetDialogSelection`, `SetReplyData`,
+`UpdateControllerPauseState`). The global-variable table arrays come from `func.consts`
+(`0xa668`, `0xa6d9`, `0xa8d0`, `0xb230` in the four `GetValue*` bodies); the journal
+stride and member offsets from `CSWSJournal::GetState` (`add edi,0x3c`, `lea [..+0x18]`,
+`mov eax,[..+0x20]`).
+
+Two corrections landed on the way: `loading_module` is `+0x100b4` and
+`load_from_savegame` is `+0x100c4` (the earlier `+0x100b8` / `+0x100c8` reading was off by
+one field; `GetLoadingModule` and `GetLoadFromSaveGame` settle it), and `server_mode` is
+two bytes (`mov ax,[eax+0x10008]`).
+
+Bindings with one signal stay in the file at confidence below 0.9, and every harness site
+is optional, so a wrong offset costs one `unsupported` reply rather than a bad patch:
+`CSWReentrantServerStats::field_4` (declaration plus two consumers, no accessor),
+`CSWSDialog::field_3c` (Skippable), the `CSWSDialogEntry` link members, and
+`CSWGuiSaveLoad::UnpackGame` (its callee `CopyGameToFutureGame` has no readable body, so
+whether `this` is dereferenced is unread).
+
+**K2 GOG Aspyr** is never stripped, so its harness functions resolve from their own
+namespace-qualified rows and only fields are adjudicated. The same accessor method was
+used against the raw PE; the file records what it found (`message_handler` is `+0x150`
+there against K1's `+0x14c`, the party journal `+0x1b0` against `+0x11c`, the dialog
+selection block `+0xe0..+0xe8`, the reply table `+0x134..+0x13c`) and lists what it did
+not: the app-manager global (two candidate loads disagree), `pause_state`, the reentrant
+stats layout, and the K2 global-variable arrays (0x93d slots, offsets after them unread).
+Binding names are the logical keys from `hooksites.toml`, i.e. the K1 member names.
+
+**K2 Linux** has no harness file. Binary 18 has no readable tree, and no accessor there
+has been disassembled; a layout copied from the Mac donor would be one signal. The
+generator leaves every harness site unresolved on that build and the adapter reports
+them, which is the designed behaviour.
+
+Nothing was regenerated for a build whose reference image was absent (CONTRIBUTING,
+regen rule). The K1 tables were regenerated against the GOG raw image and the harness
+tree's deciphered Steam image, with a dry run diffed first to prove that every existing
+site kept its `addr` and `expected_bytes`.

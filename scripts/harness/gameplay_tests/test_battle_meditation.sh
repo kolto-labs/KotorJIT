@@ -20,9 +20,9 @@ rm -f "$GAME_DIR/kotorphasor.log"
 # Game37: Bastila is in the save; pull her into the active party if needed.
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 
-send "lua exec local b=kotor.GetObjectByTag('bastila',0); if b and b~=0 and kotor.IsObjectPartyMember(b)~=1 then kotor.AddPartyMember(b) end"
+send "lua exec local b=nwscript.call('GetObjectByTag','bastila',0); if b and b~=0 and nwscript.call('IsObjectPartyMember',b)~=1 then nwscript.call('AddPartyMember',b) end"
 send "#sleep 2"
-send "lua exec kotor.ExecuteScript('k_def_attacked01', kotor.GetFirstPC(), 0)"
+send "lua exec nwscript.call('ExecuteScript','k_def_attacked01', nwscript.call('GetFirstPC'), 0)"
 send "#sleep 5"
 
 assert_contains_re "$GAME_DIR/kotorphasor.log" '\[meditation\] round [0-9]+: steadied' \

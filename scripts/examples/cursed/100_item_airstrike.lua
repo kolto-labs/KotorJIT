@@ -31,10 +31,8 @@ local DURATION_TEMPORARY = 1
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -82,7 +80,7 @@ local function strike(pc, label)
   strikes = strikes + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, strikes)
   q("SetLocalNumber", pc, 6, hit)          -- targets hit by the last strike, for the route gate
-  print(("[cursed:strike] %s -> %d targets (#%d)"):format(label, hit, strikes))
+  kp.print(("[cursed:strike] %s -> %d targets (#%d)"):format(label, hit, strikes))
 end
 
 function OnTick(tick, relevant)
@@ -92,7 +90,7 @@ function OnTick(tick, relevant)
     armed = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end   -- local 5 == 1: armed (the route waits on it)
-    print("[cursed:strike] armed")
+    kp.print("[cursed:strike] armed")
   end
 end
 
@@ -124,5 +122,5 @@ function OnModulePlayerLevelUp(player, relevant)
   if aura then q("ApplyEffectToObject", DURATION_TEMPORARY, aura, pc, 15.0) end
   q("SetGlobalFadeOut", 0.0, 0.1, 1.0, 0.9, 0.5)
   q("SetGlobalFadeIn", 0.2, 0.8, 0.0, 0.0, 0.0)
-  print("[cursed:strike] ascension")
+  kp.print("[cursed:strike] ascension")
 end

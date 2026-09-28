@@ -4,8 +4,8 @@
 # section -- compiler alignment padding between two real functions (a run of
 # 0xCC int3 fill after MSVC, sometimes 0x90 NOP), or unused space at the end
 # of a section before the next one begins. A script finds one at runtime with
-# kotor.mem.findsig(pattern) -- see docs/user/codecaves.md -- and writes into
-# it with kotor.mem.write*, which this codebase leaves deliberately
+# kp.mem.findsig(pattern) -- see docs/user/codecaves.md -- and writes into
+# it with kp.mem.write*, which this codebase leaves deliberately
 # unrestricted for executable sections (src/api/memory.hpp).
 #
 # ADDRESSES NEVER APPEAR HERE AS THE LOOKUP MECHANISM. Each entry's `sig` is
@@ -22415,8 +22415,8 @@ sig   = "8bc8e80e0cd8ff8b4df464890d00000000598be55dc20c00"
 verified = [{ build = "k2_gog_aspyr", addr = "0x00693483", sig_match_addr = "0x0069346B" }]
 
 [[cave]]
-name  = "k2.after_add_pick_up_item_actions"
-label = "CSWSCreature::AddPickUpItemActions"
+name  = "k2.after_update_equipped_armor_base_item_field_8a"
+label = "CSWSCreature::UpdateEquippedArmorBaseItemField_8A"
 size  = 12
 fill  = 0xcc
 sig   = "e88a45ff8882fa0000008be55dc20c00"

@@ -312,7 +312,7 @@ def fold_split_lists(struct: dict, layouts: dict[str, int]) -> tuple[list[dict],
                 i += 3
                 continue
             # Left as a plain pointer, but the suspicion travels with the field
-            # rather than staying in a comment nobody reads. kotor.struct.fields()
+            # rather than staying in a comment nobody reads. kp.struct.fields()
             # reports it, so an author who reads this field as a number is told
             # it may be a list head without this tool guessing that it is one.
             candidates.append(f"{struct['name']}.{a['name']} @0x{a['offset']:x}")

@@ -33,10 +33,8 @@ local DURATION_TEMPORARY = 1
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -56,7 +54,7 @@ function cursed_release(timer_id, fired, data)
   active = false
   scale(previous)
   q("SetGlobalFadeIn", 0.0, 0.3, 0.0, 0.0, 0.0)
-  print("[cursed:slowmo] released")
+  kp.print("[cursed:slowmo] released")
   return false
 end
 
@@ -79,7 +77,7 @@ local function engage(pc, hp, max)
   entries = entries + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, entries)
   q("registertimer", HOLD_MS, "cursed_release", {})
-  print(("[cursed:slowmo] engaged at hp %d/%d, speed now %.2f (#%d)"):format(hp, max, seen, entries))
+  kp.print(("[cursed:slowmo] engaged at hp %d/%d, speed now %.2f (#%d)"):format(hp, max, seen, entries))
 end
 
 function OnTick(tick, relevant)

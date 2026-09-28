@@ -12,11 +12,22 @@
 set(KP_RUNTIME_DIR "${CMAKE_CURRENT_LIST_DIR}")
 set(KP_SRC_ROOT    "${CMAKE_CURRENT_LIST_DIR}/..")
 
+set(KP_DEVTOOLS_WIN_SOURCES
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_draw.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_tables.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/imgui_widgets.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/backends/imgui_impl_win32.cpp"
+    "${KP_SRC_ROOT}/../third_party/imgui/backends/imgui_impl_opengl2.cpp"
+)
 set(KP_RUNTIME_SOURCES
     "${KP_RUNTIME_DIR}/runtime.cpp"
+    "${KP_SRC_ROOT}/devtools/console.cpp"
+    "${KP_SRC_ROOT}/devtools/overlay.cpp"
     "${KP_RUNTIME_DIR}/dllmain.cpp"
     "${KP_RUNTIME_DIR}/fault_guard.cpp"
     "${KP_RUNTIME_DIR}/hook_bodies.cpp"
+    "${KP_SRC_ROOT}/multiplayer/transport.cpp"
 )
 
 # The Lua host is not a target yet, so its two files are compiled here rather
@@ -41,6 +52,14 @@ set(KP_API_SOURCES
     "${KP_SRC_ROOT}/api/structs.cpp"
     "${KP_SRC_ROOT}/api/entity.cpp"
     "${KP_SRC_ROOT}/api/memory.cpp"
+    "${KP_SRC_ROOT}/api/model.cpp"
+    "${KP_SRC_ROOT}/api/model_profiles.cpp"
+    "${KP_SRC_ROOT}/api/model_backend.cpp"
+    "${KP_SRC_ROOT}/api/model_lua.cpp"
+    "${KP_SRC_ROOT}/api/animation.cpp"
+    "${KP_SRC_ROOT}/api/animation_profiles.cpp"
+    "${KP_SRC_ROOT}/api/animation_backend.cpp"
+    "${KP_SRC_ROOT}/api/animation_lua.cpp"
     "${KP_SRC_ROOT}/api/output.cpp"
     "${KP_SRC_ROOT}/api/timers.cpp"
     "${KP_SRC_ROOT}/api/strings.cpp"
@@ -73,16 +92,27 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
     # Listing them explicitly is the only thing that makes this correct.
     file(GLOB KP_GENERATED_HEADERS "${KP_SRC_ROOT}/generated/*.inc")
 
-    foreach(src ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES})
+    # KP_HARNESS_SOURCES comes from src/harness/harness.cmake, included before
+    # this fragment; empty when that fragment was not included.
+    foreach(src ${KP_DEVTOOLS_WIN_SOURCES} ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES} ${KP_HARNESS_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_RT_WIN32_OBJDIR}/rt_${name}.obj")
+        # -MD records the headers this object really depends on and DEPFILE
+        # hands that list to the generator. Without it the rule sees only the
+        # .cpp and the generated tables, so editing a header rebuilds nothing,
+        # the DLL keeps the previous object, and a live run silently exercises
+        # the code you thought you had just changed. That happened once here.
+        set(dep "${KP_RT_WIN32_OBJDIR}/rt_${name}.d")
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_RT_WIN32_OBJDIR}
-            COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
-                    -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
+            COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                    ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                    -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR} -I${CMAKE_SOURCE_DIR}/third_party/imgui
+                    -MD -MF ${dep}
                     -c ${src} -o ${obj}
             DEPENDS ${src} ${KP_GENERATED_HEADERS}
+            DEPFILE ${dep}
             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"
             VERBATIM)
         list(APPEND KP_RT_WIN32_OBJECTS ${obj})
@@ -94,7 +124,8 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
     set(KP_KPHASOR_DLL "${CMAKE_BINARY_DIR}/kphasor.dll")
     add_custom_command(
         OUTPUT ${KP_KPHASOR_DLL}
-        COMMAND ${KP_MINGW_CXX} -shared -o ${KP_KPHASOR_DLL}
+        COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                ${KP_MINGW_CXX} -shared -o ${KP_KPHASOR_DLL}
                 ${KP_RT_WIN32_OBJECTS} ${KP_WIN32_OBJECTS} ${KP_HOOKS_WIN32_OBJECTS}
                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
                 # Static, and this is not a preference. A dynamic dependency on
@@ -106,6 +137,10 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
                 # needs the DLL to load, and DllMain does the rest. An empty
                 # export table says so.
                 -Wl,--exclude-all-symbols
+                # The harness channel's loopback listener. An import library,
+                # so -static above does not apply to it; ws2_32.dll is part of
+                # every Windows and of Wine.
+                -lws2_32 -lopengl32 -lgdi32 -limm32 -ldwmapi -ldinput8 -ldxguid
         DEPENDS ${KP_RT_WIN32_OBJECTS} image_win32 hooks_win32
                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
         COMMENT "i686-w64-mingw32-g++ kphasor.dll"
@@ -158,6 +193,7 @@ if(UNIX AND NOT WIN32)
 
     add_library(kphasor SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES}
                                ${KP_IMAGE_SRC} ${KP_HOOKS_SRC}
+                               ${KP_HARNESS_SOURCES}
                                ${KP_LUAJIT_LINUX_LIB})
     set_target_properties(kphasor PROPERTIES POSITION_INDEPENDENT_CODE ON)
     # Both LuaJIT header paths. The build-time copy is what the archive is built
@@ -173,4 +209,8 @@ if(UNIX AND NOT WIN32)
     # LuaJIT's own two dependencies on Linux. Nothing else we link pulls them
     # in, and the failure without them is a pile of undefined symbols at link.
     target_link_libraries(kphasor PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl)
+    # The harness channel's listener thread. Threads::Threads rather than a
+    # bare -lpthread so the 32-bit link gets whatever this glibc needs.
+    find_package(Threads REQUIRED)
+    target_link_libraries(kphasor PRIVATE Threads::Threads)
 endif()

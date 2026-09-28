@@ -72,6 +72,9 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
         "${CMAKE_SOURCE_DIR}/src/events/dispatch.cpp"
         "${CMAKE_SOURCE_DIR}/src/lua/host.cpp"
         "${CMAKE_SOURCE_DIR}/src/lua/value.cpp"
+        # registry.cpp's signature fallback calls api::memory::find_unique and
+        # kp_hooks does not carry that object; kp_hooktool lists it the same way.
+        "${CMAKE_SOURCE_DIR}/src/api/memory.cpp"
     )
     target_include_directories(kp_eventtest PRIVATE
         "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/luajit32/src")
@@ -81,10 +84,16 @@ if(UNIX AND NOT WIN32 AND TARGET kphasor)
     set_source_files_properties("${CMAKE_SOURCE_DIR}/src/events/table.cpp"
         PROPERTIES OBJECT_DEPENDS "${KP_LUATEST_GENERATED}")
     add_dependencies(kp_eventtest kphasor)
-    target_link_libraries(kp_eventtest PRIVATE kp_hooks "${KP_LUATEST_LUAJIT}" m dl)
+    # kp_image: memory.cpp walks the mapped image's sections through it.
+    target_link_libraries(kp_eventtest PRIVATE kp_hooks kp_image "${KP_LUATEST_LUAJIT}" m dl)
 
     # Self-contained: exits 0 on kp_eventtest's own g_failures == 0.
     add_test(NAME kp_eventtest COMMAND kp_eventtest)
+    # Keep temporary Lua scripts and situation sidecars off a quota-limited
+    # system /tmp; this also makes the test deterministic in constrained CI.
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/test-tmp")
+    set_tests_properties(kp_eventtest PROPERTIES
+        ENVIRONMENT "TMPDIR=${CMAKE_BINARY_DIR}/test-tmp")
 elseif(UNIX AND NOT WIN32)
     message(STATUS "kp_luatest needs the native LuaJIT that the kphasor target "
                    "builds; include src/runtime/runtime.cmake first")

@@ -103,7 +103,7 @@ play_demo() {
     fight_clicks_cmds 8
     cmds+=(
       "#console"
-      "lua exec local pc=kotor.GetFirstPC(); local t=kotor.GetNearestCreature(3,1,pc,1,0,0,0,0); if t and t~=0 then kotor.ActionAttack(t,pc,0) end"
+      "lua exec local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetNearestCreature',3,1,pc,1,0,0,0,0); if t and t~=0 then nwscript.call('ActionAttack',t,pc,0) end"
       "#console"
       "#sleep 6"
     )
@@ -125,7 +125,7 @@ play_demo() {
     cmds=(
       "heal"
       "#console"
-      "lua exec kotor.ExecuteScript('k_def_attacked01', kotor.GetFirstPC(), 0)"
+      "lua exec nwscript.call('ExecuteScript','k_def_attacked01', nwscript.call('GetFirstPC'), 0)"
       "#sleep 8"
       "warp manm26ad"
     )
@@ -137,9 +137,9 @@ play_demo() {
   40_alignment_drift)
     cmds=(
       "lua status"
-      "lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 2, 30)"
+      "lua exec nwscript.call('AdjustAlignment',nwscript.call('GetFirstPC'), 2, 30)"
       "#sleep 90"
-      "lua exec kotor.AdjustAlignment(kotor.GetFirstPC(), 1, 30)"
+      "lua exec nwscript.call('AdjustAlignment',nwscript.call('GetFirstPC'), 1, 30)"
       "#sleep 90"
     )
     walk_clicks_cmds 6
@@ -157,9 +157,9 @@ play_demo() {
     cmds=(
       "heal"
       "#console"
-      "lua exec local pc=kotor.GetFirstPC(); for i=0,kotor.GetPartyMemberCount()-1 do local m=kotor.GetPartyMemberByIndex(i); if m~=pc and kotor.IsObjectPartyMember(m)==1 then kotor.ApplyEffectToObject(1, kotor.EffectDamage(999,1,0), m, 0); break end end"
+      "lua exec local pc=nwscript.call('GetFirstPC'); for i=0,nwscript.call('GetPartyMemberCount')-1 do local m=nwscript.call('GetPartyMemberByIndex',i); if m~=pc and nwscript.call('IsObjectPartyMember',m)==1 then nwscript.call('ApplyEffectToObject',1, nwscript.call('EffectDamage',999,1,0), m, 0); break end end"
       "#sleep 3"
-      "lua exec local pc=kotor.GetFirstPC(); for i=0,kotor.GetPartyMemberCount()-1 do local m=kotor.GetPartyMemberByIndex(i); if m~=pc and kotor.IsObjectPartyMember(m)==1 then kotor.ExecuteScript('k_def_damage01', m, 0); break end end"
+      "lua exec local pc=nwscript.call('GetFirstPC'); for i=0,nwscript.call('GetPartyMemberCount')-1 do local m=nwscript.call('GetPartyMemberByIndex',i); if m~=pc and nwscript.call('IsObjectPartyMember',m)==1 then nwscript.call('ExecuteScript','k_def_damage01', m, 0); break end end"
       "#sleep 5"
       "warp end_m01aa"
     )

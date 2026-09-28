@@ -102,16 +102,16 @@ The pattern, every time:
    send() { echo "$1" >> "$Q"; local n=$(wc -l < "$Q")
             until [[ "$(cat "$D" 2>/dev/null)" == "$n" ]]; do sleep 0.5; done; }
 
-   send "lua exec kotor.GetFirstPC()"
+   send "lua exec nwscript.call('GetFirstPC')"
    send "warp end_m01aa"          # a warp CLOSES the console. See below
    send "#console"                # reopen it before typing anything else
-   send "lua exec kotor.GetName(kotor.GetFirstPC())"
+   send "lua exec nwscript.call('GetName',nwscript.call('GetFirstPC'))"
 
    touch tmp/live/stop            # tears down cleanly
    ```
 
 3. **Drive real state changes, not scripted ones.** The console's
-   `lua exec kotor.ActionAttack(...)` queues an engine action but does not
+   `lua exec nwscript.call('ActionAttack',...)` queues an engine action but does not
    reliably resolve while the console is holding focus. Real keyboard input
    (`#key w` a few times, console closed) reliably produces real combat. This
    was verified empirically, not assumed: raw movement into the Endar Spire's
@@ -126,7 +126,7 @@ The pattern, every time:
    flushed per line. `wine.log` (the game's own stdout) is block-buffered
    under Wine and can lag by minutes. Reading it reads as "nothing
    happened" when something happened five minutes ago. Every example script
-   `print()`s once when it actually acts (`[ahto] strike N...`,
+   calls `kp.print()` once when it actually acts (`[ahto] strike N...`,
    `[meditation] round N...`); grep for that line, not for the event having
    merely been dispatched, since a script can be dispatched, decide the
    condition doesn't apply, and correctly do nothing.

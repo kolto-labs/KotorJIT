@@ -421,7 +421,7 @@ bool refresh(Seq* s) {
 
 int stale_view(lua_State* L, const View* v, const char* what) {
     return luaL_error(L, "view of object 0x%08X is stale: it no longer resolves to an "
-                         "address, so %s was not touched. kotor.struct.valid() answers "
+                         "address, so %s was not touched. kp.struct.valid() answers "
                          "this without raising",
                       unsigned(v->object_id), what);
 }
@@ -584,7 +584,7 @@ int view_index(lua_State* L) {
     if (!f) {
         const std::string hint = near_misses(v->layout, key);
         return luaL_error(L, "%s has no field named '%s'.%s "
-                             "(%d bytes, %d fields; kotor.struct.fields(\"%s\") lists them)",
+                             "(%d bytes, %d fields; kp.struct.fields(\"%s\") lists them)",
                           v->layout->name, key, hint.c_str(),
                           int(v->layout->size), int(v->layout->field_count),
                           v->layout->name);
@@ -638,13 +638,7 @@ bool unverified_allowed(lua_State* L) {
         return on;
     }
     lua_pop(L, 1);
-    // Not set through the function, so honour the chunk-scope declaration the
-    // way `priority` is honoured. Read at the point of use rather than at load,
-    // because registration happens before the chunk has run.
-    lua_getglobal(L, "allow_unverified_writes");
-    const bool on = lua_toboolean(L, -1) != 0;
-    lua_pop(L, 1);
-    return on;
+    return false;
 }
 
 struct Range { double lo, hi; };
@@ -713,7 +707,7 @@ int view_newindex(lua_State* L) {
     if (f->confidence != Confidence::High && !unverified_allowed(L))
         return luaL_error(L, "%s.%s is %s confidence: the corpus did not confirm this offset, "
                              "so a wrong write here corrupts a neighbour. Reading it is fine. "
-                             "Call kotor.struct.allow_unverified_writes(true) to opt in",
+                             "Call kp.struct.allow_unverified_writes(true) to opt in",
                           v->layout->name, f->name, confidence_name(f->confidence));
 
     if (lua_type(L, 3) != LUA_TNUMBER)
@@ -762,7 +756,7 @@ int view_newindex(lua_State* L) {
     }
 
     ++g_writes;
-    // Reported, not prevented. The same bargain kotor.mem makes: the write goes
+    // Reported, not prevented. The same bargain kp.mem makes: the write goes
     // through, and the log says exactly which statement asked for it.
     //
     // An integer is logged as an integer and in hex as well. %g turns a pointer
@@ -844,7 +838,7 @@ int push_element(lua_State* L, const Seq& s, std::uint32_t index_zero_based) {
         // id at their own distance from its base. A CExoArrayList's do not: the
         // storage is a separate allocation the engine may reallocate, so an id
         // plus a distance would name a place that stops being the element. Those
-        // stay address-backed, and go stale the way kotor.struct.at does.
+        // stay address-backed, and go stale the way kp.struct.at does.
         if (!s.is_list && s.has_id)
             push_view(L, at, s.elem_layout, s.object_id, true,
                       s.head_offset + index_zero_based * s.elem_size);
@@ -931,7 +925,7 @@ int seq_newindex(lua_State* L) {
     return luaL_error(L,
         "%s.%s is read-only through a typed view. Element storage is the engine's to grow "
         "and move, so writing an element means agreeing about a stride the corpus did not "
-        "always recover. Take .data and use kotor.mem if you mean it",
+        "always recover. Take .data and use kp.mem if you mean it",
         s->owner_struct, s->owner_field);
 }
 
@@ -969,7 +963,7 @@ const Layout* layout_arg(lua_State* L, int index) {
     const Layout* l = find(name);
     if (!l) {
         const std::string hint = near_layouts(name);
-        luaL_error(L, "no layout named '%s'.%s (%d layouts; kotor.struct.types() lists them)",
+        luaL_error(L, "no layout named '%s'.%s (%d layouts; kp.struct.types() lists them)",
                    name, hint.c_str(), int(kLayoutCount));
     }
     return l;
@@ -1003,7 +997,7 @@ int l_view(lua_State* L) {
     if (!g_resolver) {
         lua_pushnil(L);
         lua_pushstring(L, "no object address resolver is installed yet; use "
-                          "kotor.struct.at(address, type) until the entity module binds one");
+                          "kp.struct.at(address, type) until the entity module binds one");
         return 2;
     }
     const char* type_name = nullptr;
@@ -1134,7 +1128,7 @@ int l_allow_unverified_writes(lua_State* L) {
 // with it. Rather than pretend otherwise, this hands back a plain table.
 int l_totable(lua_State* L) {
     Seq* s = to_seq(L, 1);
-    if (!s) return luaL_error(L, "kotor.struct.totable expects a list or array view");
+    if (!s) return luaL_error(L, "kp.struct.totable expects a list or array view");
     if (!refresh(s)) return stale_seq(L, s);
     const std::uint32_t n = seq_length(*s);
     lua_createtable(L, int(n), 0);
@@ -1256,26 +1250,13 @@ void register_all(lua_State* L) {
     open_metatable(L, kViewType, view_index, view_newindex, view_len, view_tostring);
     open_metatable(L, kSeqType, seq_index, seq_newindex, seq_len, seq_tostring);
 
-    push_global_table(L, "kotor");                  // kotor
-    push_subtable(L, lua_gettop(L), "struct");      // kotor, kotor.struct
+    push_global_table(L, "kp");                   // kp
+    push_subtable(L, lua_gettop(L), "struct");     // kp, kp.struct
     const int tbl = lua_gettop(L);
 
     for (const Entry& e : kFunctions) {
         lua_pushcfunction(L, e.fn);
         lua_setfield(L, tbl, e.name);
-    }
-
-    // data/hostapi.toml names these kp.struct.*. Bind that name to the same
-    // table object rather than registering twice, and leave an existing kp.struct
-    // alone in case someone got here first. Same arrangement entity.cpp uses for
-    // kp.obj.
-    push_global_table(L, "kp");
-    lua_getfield(L, -1, "struct");
-    const bool taken = lua_istable(L, -1);
-    lua_pop(L, 1);
-    if (!taken) {
-        lua_pushvalue(L, tbl);
-        lua_setfield(L, -2, "struct");
     }
 
     lua_settop(L, base);

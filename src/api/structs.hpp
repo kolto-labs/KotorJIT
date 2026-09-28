@@ -8,7 +8,7 @@
 // to call, and "Confirmed" is a comment. Nothing checks any of it. What goes
 // here instead:
 //
-//     local o = kotor.struct.at(addr, "CSWSObject")
+//     local o = kp.struct.at(addr, "CSWSObject")
 //     print(o.current_hp, o.position.x, #o.effects)
 //
 // The offsets come from data/research/phasor_structs.json through
@@ -43,7 +43,7 @@
 //
 // A VIEW WITH AN ID RE-RESOLVES ON EVERY ACCESS
 //
-// kotor.struct.view(id) keeps the id, and everything that touches the object's
+// kp.struct.view(id) keeps the id, and everything that touches the object's
 // bytes asks the resolver again first -- every field read, every field write,
 // every list length, every address, not only valid() and address(). The two
 // that do not are typeof() and #view, and they do not because they answer out
@@ -55,11 +55,11 @@
 // moved in. A view whose id stops resolving raises "view of object 0x... is
 // stale" from then on, permanently: the engine reuses object ids, and a view
 // that recovered would be reading a different object under the same name.
-// kotor.struct.valid() is the one call that answers instead of raising.
+// kp.struct.valid() is the one call that answers instead of raising.
 //
 // Nested views and list headers inherit the id and their own distance from the
 // object's base, so creature.object.current_hp is exactly as live as creature.
-// kotor.struct.at(address, type) tracks nothing, by definition: it holds an
+// kp.struct.at(address, type) tracks nothing, by definition: it holds an
 // address, and it goes stale the way an address does.
 //
 // A SEQUENCE LENGTH IS CAPPED
@@ -142,7 +142,7 @@ struct Field {
     // error as a missed one, pointing the other way. But a script reading such
     // a field gets a bare pointer number back, which is the exact failure this
     // module exists to remove, so the suspicion travels with the field and
-    // kotor.struct.fields() reports it instead of leaving it in a comment at
+    // kp.struct.fields() reports it instead of leaving it in a comment at
     // the bottom of a generated file.
     //
     // It also costs the field its high confidence. Reading one of these is a
@@ -185,8 +185,8 @@ const Layout* find(const char* name);
 //
 // That chain is the `entity` module's job -- g_pAppManager, the server app, the
 // object array hash. This module only needs the answer, so it takes a function
-// pointer and works without one: kotor.struct.at(address, name) is fully usable
-// before anything installs a resolver, and kotor.struct.view(id) reports that it
+// pointer and works without one: kp.struct.at(address, name) is fully usable
+// before anything installs a resolver, and kp.struct.view(id) reports that it
 // is unavailable rather than guessing.
 //
 // `type_name_out` is set to the layout the object's type byte selects, or left
@@ -197,7 +197,7 @@ void set_address_resolver(AddressResolver);
 
 // How many typed writes this process has performed.
 //
-// Writes here are as sharp as kotor.mem's -- the field table decides the width
+// Writes here are as sharp as kp.mem's -- the field table decides the width
 // and the confidence gate decides whether a script may touch an offset nobody
 // confirmed, and neither of those is a refusal to write. So the same bargain
 // applies: every store is logged with its address, field, width, value and the
@@ -205,10 +205,10 @@ void set_address_resolver(AddressResolver);
 // happened without holding the records.
 unsigned long long writes_performed();
 
-// Install kotor.struct.* into one script's state.
+// Install kp.struct.* into one script's state.
 //
 // Called once per lua_State, after the state exists and before the chunk runs.
-// The `kotor` table is shared with the routine bridge and every other module, so
+// The `kp` table is shared with the routine bridge and every other module, so
 // this checks for it and reuses it rather than replacing what is already there.
 void register_all(lua_State*);
 

@@ -2,7 +2,7 @@
 #
 # memory.cpp already ships inside kphasor (runtime.cmake's KP_API_SOURCES).
 # This fragment only builds kp_memtest, which is Linux/32-bit and -no-pie:
-# it probes its own process through kotor.mem and src/image reads ELF
+# it probes its own process through kp.mem and src/image reads ELF
 # program headers out of the live mapping. Include after runtime.cmake so
 # add_dependencies(kphasor) names a target that already exists; the LuaJIT
 # archive itself is a build-time output, same as the other harnesses.
@@ -27,4 +27,8 @@ if(UNIX AND NOT WIN32)
 
     # Self-contained: exits 0 when Lua checks plus C++ byte comparisons are 0.
     add_test(NAME kp_memtest COMMAND kp_memtest)
+
+    if(TARGET kp_hooktool)
+        add_dependencies(kp_hooktool kphasor)
+    endif()
 endif()

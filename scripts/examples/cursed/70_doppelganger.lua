@@ -28,10 +28,8 @@ local DURATION_TEMPORARY = 1
 local COUNTER_SLOT = 7
 
 local function q(name, ...)
-  if not kotor then return nil end
-  local fn = kotor[name]
-  if not fn then return nil end
-  local ok, v = pcall(fn, ...)
+  if not nwscript or type(nwscript.call) ~= "function" then return nil end
+  local ok, v = pcall(nwscript.call, name, ...)
   return ok and v or nil
 end
 local function yes(v) return v == 1 or v == true end
@@ -59,7 +57,7 @@ function OnTick(tick, relevant)
     armed_flag = true
     local pc = q("GetFirstPC")
     if pc then q("SetLocalNumber", pc, 5, 1) end
-    print("[cursed] armed")
+    kp.print("[cursed] armed")
   end
 end
 local function disarm()
@@ -84,7 +82,7 @@ local function malak(pc)
   q("SetGlobalFadeOut", 0.0, 0.1, 0.4, 0.0, 0.0)
   q("SetGlobalFadeIn", 0.1, 0.5, 0.0, 0.0, 0.0)
   if kp and kp.as then kp.as(pc, function() q("SpeakString", "I am the Dark Lord.", 1) end) end
-  print("[cursed:mirror] you are Malak now")
+  kp.print("[cursed:mirror] you are Malak now")
 end
 
 local function copy(who, pc)
@@ -101,7 +99,7 @@ local function copy(who, pc)
   count = count + 1
   q("SetLocalNumber", pc, COUNTER_SLOT, count)
   if kp and kp.as then kp.as(who, function() q("SpeakString", "I am you.", 0) end) end
-  print(("[cursed:mirror] %s wears your face (#%d)"):format(norm(q("GetName", who)), count))
+  kp.print(("[cursed:mirror] %s wears your face (#%d)"):format(norm(q("GetName", who)), count))
 end
 
 function OnCreatureAttacked(creature, attacker, relevant)

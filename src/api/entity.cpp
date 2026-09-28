@@ -188,7 +188,7 @@ std::uint32_t object_arg_checked(lua_State* L, int index) {
 
 // ------------------------------------------------- the shared workers -------
 //
-// Each of these is reached two ways: kotor.obj.name(o) and o:name(). One
+// Each of these is reached two ways: kp.obj.name(o) and o:name(). One
 // implementation, two bindings, so the two can never disagree.
 
 int push_name(lua_State* L, std::uint32_t id) {
@@ -389,7 +389,7 @@ int m_id(lua_State* L) {
 }
 
 // The type recorded when the handle was made, without asking the engine again.
-// kotor.obj.type(o) asks; this reports. They differ exactly when the id has
+// kp.obj.type(o) asks; this reports. They differ exactly when the id has
 // been recycled, and :valid() is the thing that notices.
 int m_type(lua_State* L) {
     Handle* h = static_cast<Handle*>(luaL_checkudata(L, 1, kHandleType));
@@ -552,26 +552,15 @@ bool resolve(lua_State* L, std::uint32_t id, Handle& out) {
 void register_all(lua_State* L) {
     ensure_metatable(L);
 
-    push_global_table(L, "kotor");                  // kotor
-    push_subtable(L, lua_gettop(L), "obj");         // kotor, kotor.obj
+    push_global_table(L, "kp");                   // kp
+    push_subtable(L, lua_gettop(L), "obj");        // kp, kp.obj
     const int obj = lua_gettop(L);
 
     fill(L, kModule, sizeof kModule / sizeof kModule[0]);
     push_object_id(L, kInvalidObject);
     lua_setfield(L, obj, "INVALID");
 
-    // data/hostapi.toml names these kp.obj.*. Bind that name to the same table
-    // object rather than registering twice, and leave an existing kp.obj alone
-    // in case someone got here first.
-    push_global_table(L, "kp");                     // kotor, kotor.obj, kp
-    lua_getfield(L, -1, "obj");
-    const bool taken = lua_istable(L, -1);
-    lua_pop(L, 1);
-    if (!taken) {
-        lua_pushvalue(L, obj);
-        lua_setfield(L, -2, "obj");
-    }
-    lua_pop(L, 3);
+    lua_pop(L, 2);
 }
 
 }  // namespace kp::api::entity

@@ -11,6 +11,7 @@
 
 #include "api/enginestruct.hpp"
 #include "events/contract.hpp"
+#include "multiplayer/transport.hpp"
 #include "runtime/runtime.hpp"
 
 namespace kp::hooks { class HookSet; }
@@ -74,6 +75,12 @@ void init_lua_state(lua_State*);
 lua::Host* active_host();
 void       set_active_host(lua::Host*);
 
+// Published before the multiplayer hooks install and cleared before they are
+// removed. Socket work never calls engine code; hook bodies drain it on the
+// engine thread.
+multiplayer::Transport* active_multiplayer_transport();
+void set_active_multiplayer_transport(multiplayer::Transport*);
+
 // Called by the runtime once hooks are installed, and again before they are
 // removed. The trampoline is unmapped on uninstall, so a cached original()
 // pointer must be cleared BEFORE the uninstall rather than after.
@@ -98,6 +105,14 @@ void* store_event_detour();
 void* waypoint_event_detour();
 void* save_situation_detour();
 void* load_situation_detour();
+void* creature_move_to_point_detour();
+void* add_move_to_point_detour();
+void* net_start_connect_detour();
+void* net_start_server_mode_detour();
+void* net_send_message_detour();
+void* net_process_frames_detour();
+void* client_area_get_server_area_detour();
+void  set_net_destination_offset(std::uint32_t);
 
 // ------------------------------------------------------------ fault guard ---
 

@@ -1,3 +1,4 @@
+#include "devtools/console.hpp"
 // The hook bodies: RunScript, MainLoop, DoConsole, ten EventHandlers, save/load.
 //
 // Signatures come from the recovered C for these specific functions, one per
@@ -20,6 +21,8 @@
 //   3. Leave that scope, THEN call the original. A fault inside game code is
 //      the game's business and must not be claimed by us.
 #include <atomic>
+#include <bit>
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -27,10 +30,14 @@
 #include <vector>
 
 #include "api/timers.hpp"
+#include "api/output.hpp"
 #include "events/contract.hpp"
 #include "events/payload.hpp"
 #include "events/situation.hpp"
 #include "events/table.hpp"
+#include "harness/commands.hpp"
+#include "harness/engine.hpp"
+#include "harness/ring.hpp"
 #include "hooks/registry.hpp"
 #include "hooks/thiscall.hpp"
 #include "lua/host.hpp"
@@ -102,8 +109,24 @@ std::atomic<void*> g_orig_store{nullptr};
 std::atomic<void*> g_orig_waypoint{nullptr};
 std::atomic<void*> g_orig_save{nullptr};
 std::atomic<void*> g_orig_load{nullptr};
+std::atomic<void*> g_orig_client_loop{nullptr};
+std::atomic<void*> g_orig_move_to_point{nullptr};
+std::atomic<void*> g_orig_net_start_connect{nullptr};
+std::atomic<void*> g_orig_net_start_server{nullptr};
+std::atomic<void*> g_orig_net_send{nullptr};
+std::atomic<void*> g_orig_net_process{nullptr};
+std::atomic<void*> g_orig_client_area_get_server_area{nullptr};
+std::atomic<void*> g_orig_add_move_to_point{nullptr};
+std::atomic<void*> g_server_net{nullptr};
+std::atomic<void*> g_client_net{nullptr};
+std::atomic<void*> g_client_support_server_net{nullptr};
+std::atomic<std::uint32_t> g_net_destination_offset{0};
+std::atomic<std::uint32_t> g_net_outbound_frames{0};
+std::atomic<std::uint32_t> g_net_inbound_frames{0};
 
 std::atomic<bool> g_poison_run_script{false};
+std::atomic<bool> g_poison_client_area_get_server_area{false};
+std::atomic<bool> g_poison_add_move_to_point{false};
 std::atomic<bool> g_poison_main_loop{false};
 std::atomic<bool> g_poison_do_console{false};
 // One flag per event site, not one shared flag: a fault in the door handler
@@ -121,14 +144,487 @@ std::atomic<bool> g_poison_event_store{false};
 std::atomic<bool> g_poison_event_waypoint{false};
 std::atomic<bool> g_poison_save{false};
 std::atomic<bool> g_poison_load{false};
+std::atomic<bool> g_poison_move_to_point{false};
 std::atomic<unsigned> g_tick_scale{1};
+std::atomic<std::uint64_t> g_client_loop_frames{0};
 
 std::string g_situation_path;
 std::string g_situation_blob;
 
 using RunScriptFn = int (KP_THISCALL*)(void*, CExoString*, std::uint32_t, int);
-using MainLoopFn  = void* (KP_THISCALL*)(void*);
+#if defined(_WIN32)
+#define KP_SERVER_LOOP_CC KP_THISCALL
+#else
+#define KP_SERVER_LOOP_CC __attribute__((cdecl))
+#endif
+using MainLoopFn  = void* (KP_SERVER_LOOP_CC*)(void*);
 using DoConsoleFn = void (__attribute__((cdecl)) *)(char);
+
+// The client loop's convention is a platform fact, not a per-site one. The
+// DLL only ever runs inside the MSVC-built PE, where every method is
+// __thiscall; the .so only ever runs inside the GCC-built kotor2 ELF, where
+// `this` is the first stack argument. Verified against the ELF prologue at
+// the resolved site: push ebp/ebx/edi/esi; sub esp; mov ebp,[esp+0xd0].
+//
+//   K1 0x00602EB0  int __thiscall CClientExoAppInternal::MainLoop()
+//
+// The server-loop body above still assumes __thiscall on both; that is the
+// same latent mismatch on the ELF and is left for the K2 native work.
+#if defined(_WIN32)
+#define KP_CLIENT_LOOP_CC KP_THISCALL
+#else
+#define KP_CLIENT_LOOP_CC __attribute__((cdecl))
+#endif
+using ClientLoopFn = int (KP_CLIENT_LOOP_CC*)(void*);
+using ClientFrameWrapperFn = int (__attribute__((cdecl)) *)(void*);
+std::atomic<void*> g_orig_client_frame_wrapper{nullptr};
+
+// CSWSCreature::AIActionMoveToPoint(this, CSWSObjectActionNode*): K1
+// servercore/nwscreatureai.cpp:26604.  The first four branches are the
+// complete admission gate before the action node is consumed.  We observe
+// them here and always forward the original call unmodified.
+using MoveToPointFn = int (KP_THISCALL*)(void*, void*);
+
+// K1 GOG and K2 GOG machine-code ABIs. Both exact images use these callee-pop
+// shapes; the final stack word on SendMessageToPlayer and StartServerMode is
+// absent from advisory prototypes but required by their observed ret 0x10 and
+// ret 8 instructions.
+using NetStartConnectFn = int (KP_THISCALL*)(void*, std::uint32_t, CExoString*, CExoString*,
+                                             std::uint32_t, std::uint32_t);
+using NetStartServerFn = int (KP_THISCALL*)(void*, CExoString*, std::uint32_t);
+using NetSendFn = int (KP_THISCALL*)(void*, std::uint32_t, char*, int, std::uint32_t);
+using NetProcessFn = void (KP_THISCALL*)(void*, int);
+using NoArgPointerFn = void* (KP_THISCALL*)(void*);
+using OnePointerVoidFn = void (KP_THISCALL*)(void*, void*);
+struct Vector3 { float x, y, z; };
+using AddMoveToPointFn = int (KP_THISCALL*)(void*, std::uint16_t, Vector3*,
+    std::uint32_t, std::uint32_t, int, float, float, int, int, int, int, int, int,
+    Vector3*, std::uint32_t, std::uint32_t, int);
+using GetPlayerCreatureIdFn = std::uint32_t (KP_THISCALL*)(void*);
+using GetGameObjectFn = void* (KP_THISCALL*)(void*, std::uint32_t);
+using SetPositionFn = void (KP_THISCALL*)(void*, Vector3*, int, int, int);
+
+void append_wire_u32(std::vector<std::uint8_t>& out, std::uint32_t value) {
+    out.push_back(static_cast<std::uint8_t>(value >> 24));
+    out.push_back(static_cast<std::uint8_t>(value >> 16));
+    out.push_back(static_cast<std::uint8_t>(value >> 8));
+    out.push_back(static_cast<std::uint8_t>(value));
+}
+
+bool take_wire_u32(const std::vector<std::uint8_t>& in, std::size_t& at,
+                   std::uint32_t& value) {
+    if (at + 4 > in.size()) return false;
+    value = (static_cast<std::uint32_t>(in[at]) << 24) |
+            (static_cast<std::uint32_t>(in[at + 1]) << 16) |
+            (static_cast<std::uint32_t>(in[at + 2]) << 8) |
+            static_cast<std::uint32_t>(in[at + 3]);
+    at += 4;
+    return true;
+}
+
+void append_wire_float(std::vector<std::uint8_t>& out, float value) {
+    append_wire_u32(out, std::bit_cast<std::uint32_t>(value));
+}
+
+bool take_wire_float(const std::vector<std::uint8_t>& in, std::size_t& at, float& value) {
+    std::uint32_t bits = 0;
+    if (!take_wire_u32(in, at, bits)) return false;
+    value = std::bit_cast<float>(bits);
+    return true;
+}
+
+bool valid_position(const Vector3& value) {
+    return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z) &&
+           std::abs(value.x) <= 1000000.0f && std::abs(value.y) <= 1000000.0f &&
+           std::abs(value.z) <= 1000000.0f;
+}
+
+void* current_server_app() {
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const hooks::Site* manager_site = table != nullptr ? table->find("g.app_manager") : nullptr;
+    const hooks::Site* server_field = table != nullptr ? table->find("appmgr.server") : nullptr;
+    if (manager_site == nullptr || !manager_site->resolved || server_field == nullptr ||
+        !server_field->resolved) return nullptr;
+    std::uint32_t manager = 0, server = 0;
+    const void* manager_at = reinterpret_cast<const void*>(manager_site->addr + manager_site->offset);
+    if (!platform::is_readable(manager_at, sizeof manager)) return nullptr;
+    std::memcpy(&manager, manager_at, sizeof manager);
+    const void* server_at = reinterpret_cast<const void*>(
+        static_cast<std::uintptr_t>(manager) + server_field->offset);
+    if (manager == 0 || !platform::is_readable(server_at, sizeof server)) return nullptr;
+    std::memcpy(&server, server_at, sizeof server);
+    return reinterpret_cast<void*>(static_cast<std::uintptr_t>(server));
+}
+
+bool replay_move_to_point(const multiplayer::Frame& frame) {
+    if (frame.kind != multiplayer::FrameKind::MoveToPoint ||
+        frame.sender != multiplayer::FrameSender::Client ||
+        Runtime::instance().role() != multiplayer::Role::Server) return false;
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const hooks::Site* get_player = table != nullptr
+        ? table->find("server.get_player_creature_id") : nullptr;
+    const hooks::Site* get_object = table != nullptr ? table->find("server.get_game_object") : nullptr;
+    const hooks::Site* set_position = table != nullptr
+        ? table->find("server_object.set_position") : nullptr;
+    void* server = current_server_app();
+    if (server == nullptr || get_player == nullptr || !get_player->resolved ||
+        get_object == nullptr || !get_object->resolved || set_position == nullptr ||
+        !set_position->resolved) return true;
+
+    std::size_t at = 0;
+    std::uint32_t creature_id = 0, action = 0, p3 = 0, p4 = 0, p5 = 0, p8 = 0,
+        p9 = 0, p10 = 0, p11 = 0, p12 = 0, p13 = 0, p15 = 0, p16 = 0, p17 = 0;
+    Vector3 destination{}, secondary{};
+    float p6 = 0, p7 = 0;
+    const bool decoded = take_wire_u32(frame.payload, at, creature_id) &&
+        take_wire_u32(frame.payload, at, action) &&
+        take_wire_float(frame.payload, at, destination.x) &&
+        take_wire_float(frame.payload, at, destination.y) &&
+        take_wire_float(frame.payload, at, destination.z) &&
+        take_wire_u32(frame.payload, at, p3) && take_wire_u32(frame.payload, at, p4) &&
+        take_wire_u32(frame.payload, at, p5) && take_wire_float(frame.payload, at, p6) &&
+        take_wire_float(frame.payload, at, p7) && take_wire_u32(frame.payload, at, p8) &&
+        take_wire_u32(frame.payload, at, p9) && take_wire_u32(frame.payload, at, p10) &&
+        take_wire_u32(frame.payload, at, p11) && take_wire_u32(frame.payload, at, p12) &&
+        take_wire_u32(frame.payload, at, p13) && take_wire_float(frame.payload, at, secondary.x) &&
+        take_wire_float(frame.payload, at, secondary.y) &&
+        take_wire_float(frame.payload, at, secondary.z) && take_wire_u32(frame.payload, at, p15) &&
+        take_wire_u32(frame.payload, at, p16) && take_wire_u32(frame.payload, at, p17) &&
+        at == frame.payload.size();
+    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+    if (!decoded || !valid_position(destination) || !valid_position(secondary) ||
+        !std::isfinite(p6) || !std::isfinite(p7) || creature_id != player_id) {
+        Runtime::instance().log("multiplayer: rejected MoveToPoint actor %u (player %u)",
+                                creature_id, player_id);
+        return true;
+    }
+    void* creature = reinterpret_cast<GetGameObjectFn>(get_object->addr)(server, player_id);
+    if (creature == nullptr) return true;
+    // ponytail: the dedicated loop cannot safely advance retail pathfinding
+    // without a local playing client. Apply the validated destination through
+    // the engine's own area-indexing setter; replace this with input simulation
+    // once the headless AI loop is independently brought up.
+    reinterpret_cast<SetPositionFn>(set_position->addr)(creature, &destination, 1, 1, 0);
+    Runtime::instance().log("multiplayer: replayed MoveToPoint for %u to %.3f %.3f %.3f",
+                            player_id, destination.x, destination.y, destination.z);
+    std::vector<std::uint8_t> authoritative;
+    authoritative.reserve(16);
+    append_wire_u32(authoritative, player_id);
+    append_wire_float(authoritative, destination.x);
+    append_wire_float(authoritative, destination.y);
+    append_wire_float(authoritative, destination.z);
+    if (multiplayer::Transport* transport = active_multiplayer_transport();
+        transport != nullptr &&
+        !transport->send(authoritative, 0, 0,
+                         multiplayer::FrameKind::AuthoritativePosition))
+        Runtime::instance().log("multiplayer: failed to acknowledge position for %u", player_id);
+    return true;
+}
+
+bool replay_authoritative_position(const multiplayer::Frame& frame) {
+    if (frame.kind != multiplayer::FrameKind::AuthoritativePosition ||
+        frame.sender != multiplayer::FrameSender::Server ||
+        Runtime::instance().role() != multiplayer::Role::Client) return false;
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const hooks::Site* get_player = table != nullptr
+        ? table->find("server.get_player_creature_id") : nullptr;
+    const hooks::Site* get_object = table != nullptr ? table->find("server.get_game_object") : nullptr;
+    const hooks::Site* set_position = table != nullptr
+        ? table->find("server_object.set_position") : nullptr;
+    void* server = current_server_app();
+    if (server == nullptr || get_player == nullptr || !get_player->resolved ||
+        get_object == nullptr || !get_object->resolved || set_position == nullptr ||
+        !set_position->resolved) return true;
+
+    std::size_t at = 0;
+    std::uint32_t creature_id = 0;
+    Vector3 position{};
+    const bool decoded = take_wire_u32(frame.payload, at, creature_id) &&
+        take_wire_float(frame.payload, at, position.x) &&
+        take_wire_float(frame.payload, at, position.y) &&
+        take_wire_float(frame.payload, at, position.z) && at == frame.payload.size();
+    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+    if (!decoded || !valid_position(position) || creature_id != player_id) {
+        Runtime::instance().log("multiplayer: rejected authoritative position actor %u (player %u)",
+                                creature_id, player_id);
+        return true;
+    }
+    void* creature = reinterpret_cast<GetGameObjectFn>(get_object->addr)(server, player_id);
+    if (creature == nullptr) return true;
+    reinterpret_cast<SetPositionFn>(set_position->addr)(creature, &position, 1, 1, 0);
+    Runtime::instance().log(
+        "multiplayer: applied authoritative position for %u at %.3f %.3f %.3f",
+        player_id, position.x, position.y, position.z);
+    return true;
+}
+
+void* multiplayer_endpoint() {
+    return Runtime::instance().role() == multiplayer::Role::Server
+        ? g_server_net.load(std::memory_order_acquire)
+        : g_client_net.load(std::memory_order_acquire);
+}
+
+void trace_multiplayer_frame(const char* direction, std::uint32_t ordinal,
+                             std::uint32_t player, const std::uint8_t* bytes,
+                             std::size_t length, bool accepted) {
+    // ponytail: the first 128 frames are enough to diagnose bootstrap ordering
+    // without turning the runtime log into an unbounded packet capture.
+    if (ordinal > 128) return;
+    const unsigned b0 = length > 0 ? bytes[0] : 0;
+    const unsigned b1 = length > 1 ? bytes[1] : 0;
+    const unsigned b2 = length > 2 ? bytes[2] : 0;
+    const unsigned b3 = length > 3 ? bytes[3] : 0;
+    const unsigned b7 = length > 7 ? bytes[7] : 0;
+    const unsigned b8 = length > 8 ? bytes[8] : 0;
+    Runtime::instance().log(
+        "multiplayer: %s #%u player=%u length=%zu head=%02x%02x%02x%02x b7=%02x b8=%02x %s",
+        direction, ordinal, player, length, b0, b1, b2, b3, b7, b8,
+        accepted ? "accepted" : "rejected");
+}
+
+int KP_THISCALL net_start_connect_body(void* self, std::uint32_t player,
+                                       CExoString* name, CExoString* password,
+                                       std::uint32_t timeout, std::uint32_t flags) {
+    auto orig = reinterpret_cast<NetStartConnectFn>(
+        g_orig_net_start_connect.load(std::memory_order_acquire));
+    if (active_multiplayer_transport() != nullptr &&
+        Runtime::instance().role() == multiplayer::Role::Client) {
+        g_client_net.store(self, std::memory_order_release);
+        Runtime::instance().log("multiplayer: captured client network endpoint %p", self);
+    }
+    return orig != nullptr ? orig(self, player, name, password, timeout, flags) : 0;
+}
+
+int KP_THISCALL net_start_server_mode_body(void* self, CExoString* name,
+                                            std::uint32_t extra) {
+    auto orig = reinterpret_cast<NetStartServerFn>(
+        g_orig_net_start_server.load(std::memory_order_acquire));
+    if (active_multiplayer_transport() != nullptr) {
+        if (Runtime::instance().role() == multiplayer::Role::Server) {
+            g_server_net.store(self, std::memory_order_release);
+            Runtime::instance().log("multiplayer: captured server network endpoint %p", self);
+        } else if (Runtime::instance().role() == multiplayer::Role::Client) {
+            g_client_support_server_net.store(self, std::memory_order_release);
+            Runtime::instance().log("multiplayer: captured client support-server endpoint %p", self);
+        }
+    }
+    return orig != nullptr ? orig(self, name, extra) : 0;
+}
+
+int KP_THISCALL add_move_to_point_body(
+    void* creature, std::uint16_t action, Vector3* destination,
+    std::uint32_t p3, std::uint32_t p4, int p5, float p6, float p7, int p8, int p9,
+    int p10, int p11, int p12, int p13, Vector3* secondary, std::uint32_t p15,
+    std::uint32_t p16, int p17) {
+    auto orig = reinterpret_cast<AddMoveToPointFn>(
+        g_orig_add_move_to_point.load(std::memory_order_acquire));
+    multiplayer::Transport* transport = active_multiplayer_transport();
+    if (transport != nullptr && Runtime::instance().role() == multiplayer::Role::Client &&
+        !g_poison_add_move_to_point.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("creature.add_move_to_point_action", g_poison_add_move_to_point, {})
+        const hooks::AddressTable* table = Runtime::instance().table();
+        const hooks::Site* get_player = table != nullptr
+            ? table->find("server.get_player_creature_id") : nullptr;
+        const hooks::Site* object_id = table != nullptr ? table->find("object.id") : nullptr;
+        void* server = current_server_app();
+        std::uint32_t creature_id = 0;
+        if (server != nullptr && get_player != nullptr && get_player->resolved &&
+            object_id != nullptr && object_id->resolved && destination != nullptr &&
+            secondary != nullptr && platform::is_readable(destination, sizeof *destination) &&
+            platform::is_readable(secondary, sizeof *secondary) &&
+            platform::is_readable(reinterpret_cast<const std::uint8_t*>(creature) +
+                                  object_id->offset, sizeof creature_id)) {
+            std::memcpy(&creature_id, reinterpret_cast<const std::uint8_t*>(creature) +
+                                      object_id->offset, sizeof creature_id);
+            const std::uint32_t player_id =
+                reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+            if (creature_id == player_id) {
+                std::vector<std::uint8_t> payload;
+                payload.reserve(88);
+                append_wire_u32(payload, creature_id);
+                append_wire_u32(payload, action);
+                append_wire_float(payload, destination->x);
+                append_wire_float(payload, destination->y);
+                append_wire_float(payload, destination->z);
+                append_wire_u32(payload, p3); append_wire_u32(payload, p4);
+                append_wire_u32(payload, static_cast<std::uint32_t>(p5));
+                append_wire_float(payload, p6); append_wire_float(payload, p7);
+                for (const int value : {p8, p9, p10, p11, p12, p13})
+                    append_wire_u32(payload, static_cast<std::uint32_t>(value));
+                append_wire_float(payload, secondary->x);
+                append_wire_float(payload, secondary->y);
+                append_wire_float(payload, secondary->z);
+                append_wire_u32(payload, p15); append_wire_u32(payload, p16);
+                append_wire_u32(payload, static_cast<std::uint32_t>(p17));
+                if (transport->send(payload, 0, 0, multiplayer::FrameKind::MoveToPoint))
+                    Runtime::instance().log(
+                        "multiplayer: sent MoveToPoint for %u to %.3f %.3f %.3f",
+                        creature_id, destination->x, destination->y, destination->z);
+            }
+        }
+        KP_HOOK_GUARD_END
+    }
+    return orig != nullptr ? orig(creature, action, destination, p3, p4, p5, p6, p7,
+                                  p8, p9, p10, p11, p12, p13, secondary, p15, p16, p17) : 0;
+}
+
+int KP_THISCALL net_send_message_body(void* self, std::uint32_t player, char* message,
+                                      int length, std::uint32_t extra) {
+    auto orig = reinterpret_cast<NetSendFn>(g_orig_net_send.load(std::memory_order_acquire));
+    multiplayer::Transport* transport = active_multiplayer_transport();
+    if (transport != nullptr && Runtime::instance().role() == multiplayer::Role::Client &&
+        self == g_client_support_server_net.load(std::memory_order_acquire))
+        return 1;
+    if (transport == nullptr || self != multiplayer_endpoint())
+        return orig != nullptr ? orig(self, player, message, length, extra) : 0;
+
+    if (length < 2 || static_cast<std::size_t>(length) > multiplayer::kMaxFrameBytes ||
+        message == nullptr || !platform::is_readable(message, static_cast<std::size_t>(length))) {
+        Runtime::instance().log("multiplayer: rejected outbound frame length %d", length);
+        return 0;
+    }
+    const auto* bytes = reinterpret_cast<const std::uint8_t*>(message);
+    const bool sent = transport->send({bytes, static_cast<std::size_t>(length)}, player, extra);
+    // The client UI still dereferences CServerExoApp state even when the
+    // authoritative server lives in another process (InitializeMap is one
+    // example).  Keep the client process' support server populated by feeding
+    // it the same requests through the stock paired net layer.  Its outbound
+    // messages are suppressed above, so only the remote server can drive the
+    // visible client.
+    const bool mirrored = Runtime::instance().role() != multiplayer::Role::Client ||
+        g_client_support_server_net.load(std::memory_order_acquire) == nullptr ||
+        (orig != nullptr && orig(self, player, message, length, extra) != 0);
+    trace_multiplayer_frame("outbound",
+        g_net_outbound_frames.fetch_add(1, std::memory_order_relaxed) + 1,
+        player, bytes, static_cast<std::size_t>(length), sent && mirrored);
+    return sent && mirrored ? 1 : 0;
+}
+
+void KP_THISCALL net_process_frames_body(void* self, int process) {
+    auto orig = reinterpret_cast<NetProcessFn>(g_orig_net_process.load(std::memory_order_acquire));
+    auto enqueue = reinterpret_cast<NetSendFn>(g_orig_net_send.load(std::memory_order_acquire));
+    multiplayer::Transport* transport = active_multiplayer_transport();
+    const std::uint32_t destination_offset =
+        g_net_destination_offset.load(std::memory_order_acquire);
+    if (process != 0 && transport != nullptr && self == multiplayer_endpoint() &&
+        enqueue != nullptr && destination_offset != 0) {
+        hooks::guard_void([&] {
+            std::vector<multiplayer::Frame> frames;
+            // ponytail: 64 frames per engine pass bounds tick latency; raise it
+            // only after a measured throughput bottleneck.
+            transport->take_frames(64, frames);
+            const multiplayer::FrameSender expected = Runtime::instance().role() ==
+                multiplayer::Role::Server ? multiplayer::FrameSender::Client
+                                          : multiplayer::FrameSender::Server;
+            std::uint32_t peer_address = 0;
+            const auto* destination = reinterpret_cast<const std::uint8_t*>(self) +
+                destination_offset;
+            if (platform::is_readable(destination, sizeof peer_address))
+                std::memcpy(&peer_address, destination, sizeof peer_address);
+            std::vector<std::uint8_t> synthetic_peer;
+            void* peer = reinterpret_cast<void*>(static_cast<std::uintptr_t>(peer_address));
+            if (peer == nullptr && !frames.empty()) {
+                // A split client intentionally has no in-process server peer.
+                // SendMessageToPlayer reads only this one field from its
+                // sender, so a minimal synthetic sender lets the original
+                // function enqueue into the real client ring unchanged.
+                synthetic_peer.resize(destination_offset + sizeof peer_address);
+                const std::uint32_t self_address = static_cast<std::uint32_t>(
+                    reinterpret_cast<std::uintptr_t>(self));
+                std::memcpy(synthetic_peer.data() + destination_offset,
+                            &self_address, sizeof self_address);
+                peer = synthetic_peer.data();
+            }
+            for (multiplayer::Frame& frame : frames) {
+                if (replay_move_to_point(frame)) continue;
+                if (replay_authoritative_position(frame)) continue;
+                if (frame.sender != expected || frame.payload.size() < 2 ||
+                    frame.kind != multiplayer::FrameKind::Engine ||
+                    frame.payload.size() > multiplayer::kMaxFrameBytes || peer == nullptr ||
+                    !platform::is_readable(reinterpret_cast<const std::uint8_t*>(peer) +
+                                           destination_offset, sizeof peer_address)) {
+                    Runtime::instance().log("multiplayer: rejected inbound frame length %zu",
+                                            frame.payload.size());
+                    continue;
+                }
+                // Feed the paired endpoint's original sender. It copies into
+                // `self` using the stock bounded ring; the original process
+                // call below then performs native BNCS/BNCR/game dispatch.
+                const int queued = enqueue(peer, frame.player,
+                    reinterpret_cast<char*>(frame.payload.data()),
+                    static_cast<int>(frame.payload.size()), frame.extra);
+                trace_multiplayer_frame("inbound",
+                    g_net_inbound_frames.fetch_add(1, std::memory_order_relaxed) + 1,
+                    frame.player, frame.payload.data(), frame.payload.size(), queued != 0);
+            }
+        });
+    }
+    if (orig != nullptr) orig(self, process);
+}
+
+void* KP_THISCALL client_area_get_server_area_body(void* self) {
+    auto orig = reinterpret_cast<NoArgPointerFn>(
+        g_orig_client_area_get_server_area.load(std::memory_order_acquire));
+    void* area = orig != nullptr ? orig(self) : nullptr;
+    if (area != nullptr || active_multiplayer_transport() == nullptr ||
+        Runtime::instance().role() != multiplayer::Role::Client ||
+        g_poison_client_area_get_server_area.load(std::memory_order_acquire))
+        return area;
+
+    void* fallback = nullptr;
+    KP_HOOK_GUARD_BEGIN("client.area_get_server_area",
+                        g_poison_client_area_get_server_area, fallback = nullptr)
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const hooks::Site* manager_site = table != nullptr ? table->find("g.app_manager") : nullptr;
+    const hooks::Site* server_field = table != nullptr ? table->find("appmgr.server") : nullptr;
+    const hooks::Site* get_module = table != nullptr ? table->find("app.get_module") : nullptr;
+    const hooks::Site* get_area = table != nullptr ? table->find("module.get_area") : nullptr;
+    const hooks::Site* attach_client = table != nullptr
+        ? table->find("client_area.attach_from_server") : nullptr;
+    const hooks::Site* attach_server = table != nullptr
+        ? table->find("server_area.attach_from_client") : nullptr;
+    if (manager_site != nullptr && manager_site->resolved &&
+        server_field != nullptr && server_field->resolved &&
+        get_module != nullptr && get_module->resolved &&
+        get_area != nullptr && get_area->resolved &&
+        attach_client != nullptr && attach_client->resolved &&
+        attach_server != nullptr && attach_server->resolved) {
+        std::uint32_t manager = 0;
+        const auto manager_at = reinterpret_cast<const void*>(
+            manager_site->addr + manager_site->offset);
+        if (platform::is_readable(manager_at, sizeof manager))
+            std::memcpy(&manager, manager_at, sizeof manager);
+        std::uint32_t server = 0;
+        const auto server_at = reinterpret_cast<const void*>(
+            static_cast<std::uintptr_t>(manager) + server_field->offset);
+        if (manager != 0 && platform::is_readable(server_at, sizeof server))
+            std::memcpy(&server, server_at, sizeof server);
+        if (server != 0) {
+            void* module = reinterpret_cast<NoArgPointerFn>(get_module->addr)(
+                reinterpret_cast<void*>(static_cast<std::uintptr_t>(server)));
+            if (module != nullptr) {
+                fallback = reinterpret_cast<NoArgPointerFn>(get_area->addr)(module);
+                if (fallback != nullptr) {
+                    reinterpret_cast<OnePointerVoidFn>(attach_server->addr)(fallback, self);
+                    reinterpret_cast<OnePointerVoidFn>(attach_client->addr)(self, fallback);
+                }
+            }
+        }
+    }
+    KP_HOOK_GUARD_END
+
+    if (fallback != nullptr) {
+        static std::atomic<bool> logged{false};
+        if (!logged.exchange(true, std::memory_order_relaxed))
+            Runtime::instance().log(
+                "multiplayer: client area id has no support-server mapping; using active support area");
+    }
+    return fallback;
+}
+
+// Server tick for the event ring: the host counts server frames, and the
+// ring records are keyed to that so a driver can line events up with ticks.
+std::uint64_t ring_tick(lua::Host* host) { return host != nullptr ? host->tick() : 0; }
 
 // An argument list built to whatever shape the contract declares, matched by
 // name. Used for events whose contract this code does not get to assume --
@@ -183,11 +679,11 @@ ScriptVerdict decide(const events::EventContract& ev, const events::Outcome& out
 }
 
 // `self` is the CVirtualMachineInternal, which is the only place the two live
-// VM objects the routine bridge needs can be reached from. Capturing here costs
-// one relaxed atomic load per script once bound.
+// VM objects the routine bridge needs can be reached from. Revalidate the
+// cached context; a later script can repair an invalidated VM binding.
 int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t object_id,
                                 int has_object) {
-    if (!vm_bound()) capture_vm(self);
+    capture_vm(self);
 
     auto orig = reinterpret_cast<RunScriptFn>(g_orig_run_script.load(std::memory_order_acquire));
 
@@ -211,6 +707,16 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
         if (ev != nullptr) {
             script_name = read_exostring(name);
             saw_run_script = true;
+            {
+                // Into the harness ring, before dispatch: what the engine is
+                // about to run, whether or not a script then blocks it.
+                const kp::harness::EventField fields[] = {
+                    kp::harness::EventField::str("script", script_name),
+                    kp::harness::EventField::unsigned_("object", object_id),
+                    kp::harness::EventField::integer("has_object", has_object),
+                };
+                kp::harness::ring().push("OnRunScript", ring_tick(host), fields, 3);
+            }
             const std::vector<lua::Value> args = {
                 lua::Value::str(script_name),
                 lua::Value::object(object_id),
@@ -247,10 +753,20 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
 // Hot-reload stats every script file, so it cannot run on every server frame.
 // 64 frames is around a second at the rate the server loop actually turns,
 // which is fast enough that a player editing a script does not wait for it.
+void devtools_output(const char*, void*);
 constexpr std::uint64_t kReloadEvery = 64;
 
-void* KP_THISCALL main_loop_body(void* self) {
+void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
     auto orig = reinterpret_cast<MainLoopFn>(g_orig_main_loop.load(std::memory_order_acquire));
+
+    // The client loop stops turning while K1 loads a fresh module, even after
+    // it has already run at the menu. The server loop still runs scripts in
+    // that interval. Drain here as well: drain's TLS reentrancy guard makes a
+    // nested server/client invocation a no-op, and this boundary was already
+    // the fallback for builds with no detoured client loop.
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
+    kp::harness::drain();
 
     lua::Host* const host = active_host();
 
@@ -309,74 +825,8 @@ void* KP_THISCALL main_loop_body(void* self) {
 char        g_line[512];
 std::size_t g_line_len = 0;
 
-lua_State* g_console_L = nullptr;
-
-int console_print(lua_State* L) {
-    std::string out;
-    const int n = lua_gettop(L);
-    for (int i = 1; i <= n; ++i) {
-        if (i > 1) out += "\t";
-        const char* s = lua_tostring(L, i);
-        out += (s != nullptr) ? s : luaL_typename(L, i);
-    }
-    Runtime::instance().log("lua: %s", out.c_str());
-    return 0;
-}
-
-// A state of our own, so `lua exec` works with no script loaded. Sharing a
-// script's state instead would let a console typo quarantine that script.
-lua_State* console_state() {
-    if (g_console_L != nullptr) return g_console_L;
-    g_console_L = luaL_newstate();
-    if (g_console_L == nullptr) return nullptr;
-    luaL_openlibs(g_console_L);
-    // The same API every script gets. Without this the console can evaluate Lua
-    // and not reach the game, so `lua exec kotor.GetFirstPC()` -- the obvious
-    // first thing anyone types -- would answer "attempt to index a nil value".
-    init_lua_state(g_console_L);
-    // After the API, so this wins over the one compat installs: console output
-    // reads better tagged as console output. The game has no stdout worth
-    // writing to, so print goes to the log either way. That is what makes this
-    // drivable: type in the game, read kotorphasor.log.
-    lua_pushcfunction(g_console_L, console_print);
-    lua_setglobal(g_console_L, "print");
-    return g_console_L;
-}
-
-void console_exec(const std::string& code) {
-    lua_State* L = console_state();
-    if (L == nullptr) { Runtime::instance().log("lua exec: no lua state"); return; }
-
-    const int base = lua_gettop(L);
-    // Try the text as an expression first so `lua exec 1+1` answers 2 rather
-    // than failing to parse. Falling back to a statement keeps `lua exec x = 1`
-    // working too.
-    const std::string as_expr = "return " + code;
-    if (luaL_loadbuffer(L, as_expr.c_str(), as_expr.size(), "=console") != 0) {
-        lua_pop(L, 1);
-        if (luaL_loadbuffer(L, code.c_str(), code.size(), "=console") != 0) {
-            const char* msg = lua_tostring(L, -1);
-            Runtime::instance().log("lua exec: %s", msg != nullptr ? msg : "(parse failed)");
-            lua_settop(L, base);
-            return;
-        }
-    }
-
-    if (lua_pcall(L, 0, LUA_MULTRET, 0) != 0) {
-        const char* msg = lua_tostring(L, -1);
-        Runtime::instance().log("lua exec: %s", msg != nullptr ? msg : "(error)");
-        lua_settop(L, base);
-        return;
-    }
-
-    const int nres = lua_gettop(L) - base;
-    if (nres <= 0) { Runtime::instance().log("lua exec: ok"); return; }
-    for (int i = 1; i <= nres; ++i) {
-        const char* s = lua_tostring(L, base + i);
-        Runtime::instance().log("lua exec: %s", s != nullptr ? s : luaL_typename(L, base + i));
-    }
-    lua_settop(L, base);
-}
+void devtools_output(const char* text, void*) { kp::devtools::console().output("stdout", text ? text : ""); }
+void console_exec(const std::string& code) { kp::devtools::console().submit(code); }
 
 struct PoisonSite { const char* name; std::atomic<bool>* flag; };
 
@@ -400,6 +850,11 @@ const PoisonSite kPoisonSites[] = {
     {"event.waypoint", &g_poison_event_waypoint},
     {"save", &g_poison_save},
     {"load", &g_poison_load},
+    // The harness drain's own flag: a fault while parsing a request or
+    // serialising a reply poisons the harness and nothing else.
+    {"harness", &kp::harness::poison_flag()},
+    {"creature.ai_action_move_to_point", &g_poison_move_to_point},
+    {"creature.add_move_to_point_action", &g_poison_add_move_to_point},
 };
 
 std::string poisoned_site_list() {
@@ -610,6 +1065,19 @@ void event_handler_common(void* self, unsigned long n_event_id,
         const events::EventContract* ev = events::find_by_site(
             site, static_cast<int>(n_event_id), script_type);
         if (ev != nullptr) {
+            {
+                // The ring record carries the contract's own name, which is
+                // a static string from the generated table.
+                const kp::harness::EventField fields[] = {
+                    kp::harness::EventField::unsigned_(
+                        "object", events::object_id_from_handler(self, site)),
+                    kp::harness::EventField::unsigned_("caller", n_caller),
+                    kp::harness::EventField::integer("event_id",
+                                                     static_cast<std::int64_t>(n_event_id)),
+                    kp::harness::EventField::integer("type", script_type),
+                };
+                kp::harness::ring().push(ev->lua_name.c_str(), ring_tick(host), fields, 4);
+            }
             events::HandlerFrame frame;
             frame.self = self;
             frame.caller = static_cast<std::uint32_t>(n_caller);
@@ -683,19 +1151,23 @@ void KP_THISCALL waypoint_event_body(void* self, unsigned long id, unsigned long
                          g_poison_event_waypoint);
 }
 
-// Save takes one stack argument. Load takes three: both K1 callers of the
-// CVirtualMachine thunk push three, and Internal reads them at [esp+0x38],
-// [esp+0x3c], [esp+0x44] after its SEH prologue. A one-arg load body
-// forwarded garbage for the last two and popped 4 bytes instead of 12 --
-// Wine faulted at 0x41168A (cmp eax, [edx+0xC]) on every save load.
-using SaveSituationFn = int (KP_THISCALL*)(void*, void*);
+// Save and load both take three stack arguments.  In K1,
+// CVirtualMachine::SaveScriptSituation at 0x5D47A0 reads its situation/GFF/
+// struct arguments and returns `ret 0xC`: the first WriteFieldINT receives
+// the GFF as `this`.  A one-argument detour shifted the latter two arguments,
+// handing WriteFieldINT 0xC as its `this` during module-transition saves and
+// faulting at CResGFF+0x98 (0x004127C5).  Load's three-argument ABI was
+// already established from its callers and epilogue; preserve all arguments
+// for both hooks.
+using SaveSituationFn = int (KP_THISCALL*)(void*, void*, void*, void*);
 using LoadSituationFn = int (KP_THISCALL*)(void*, void*, void*, void*);
 
-int KP_THISCALL save_situation_body(void* self, void* situation) {
+int KP_THISCALL save_situation_body(void* self, void* situation, void* gff, void* structure) {
     auto orig = reinterpret_cast<SaveSituationFn>(g_orig_save.load(std::memory_order_acquire));
     lua::Host* const host = active_host();
     if (live() && host != nullptr && !g_poison_save.load(std::memory_order_acquire)) {
         KP_HOOK_GUARD_BEGIN("vm.save_script_situation", g_poison_save, {})
+        kp::harness::ring().push("OnSave", ring_tick(host));
         if (const events::EventContract* ev = find_contract("OnSave")) {
             const events::Outcome outcome = host->dispatch(*ev, {});
             if (outcome.claimed) persist_situation(outcome.string_result);
@@ -703,7 +1175,7 @@ int KP_THISCALL save_situation_body(void* self, void* situation) {
         KP_HOOK_GUARD_END
     }
     if (orig == nullptr) return 0;
-    return orig(self, situation);
+    return orig(self, situation, gff, structure);
 }
 
 int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
@@ -711,6 +1183,7 @@ int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
     lua::Host* const host = active_host();
     if (live() && host != nullptr && !g_poison_load.load(std::memory_order_acquire)) {
         KP_HOOK_GUARD_BEGIN("vm.load_script_situation", g_poison_load, {})
+        kp::harness::ring().push("OnLoad", ring_tick(host));
         if (const events::EventContract* ev = find_contract("OnLoad")) {
             const std::vector<lua::Value> args = {
                 lua::Value::str(load_situation()),
@@ -723,11 +1196,129 @@ int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
     return orig(self, a, b, c);
 }
 
+// ------------------------------------------------ movement admission trace --
+//
+// This is deliberately a trace of the entry gate, rather than a movement
+// command or a retry policy.  The original routine owns all state changes.
+// Earlier K1 predicates remain the engine's concern. This trace observes only
+// the suppression pair at creature+0x1f8/+0xa8c and path context at +0x340.
+namespace {
+bool trace_u32(const void* base, std::size_t offset, std::uint32_t& out) {
+    if (base == nullptr) return false;
+    const std::uintptr_t p = reinterpret_cast<std::uintptr_t>(base);
+    if (offset > static_cast<std::size_t>(~std::uintptr_t(0) - p)) return false;
+    const std::uintptr_t at = p + offset;
+    if (!platform::is_readable(reinterpret_cast<const void*>(at), sizeof out)) return false;
+    std::memcpy(&out, reinterpret_cast<const void*>(at), sizeof out);
+    return true;
+}
+
+}  // namespace
+
+int KP_THISCALL creature_move_to_point_body(void* creature, void* action_node) {
+    auto orig = reinterpret_cast<MoveToPointFn>(
+        g_orig_move_to_point.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+
+    if (live() && host != nullptr && !g_poison_move_to_point.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("creature.ai_action_move_to_point", g_poison_move_to_point, {})
+        std::uint32_t creature_id = 0, action = 0, suppressed = 0, raw_mode = 0, path_context = 0;
+        const bool readable = trace_u32(creature, 4, creature_id) &&
+                              trace_u32(action_node, 0x6c, action) &&
+                              trace_u32(creature, 0x1f8, suppressed) &&
+                              trace_u32(creature, 0xa8c, raw_mode) &&
+                              trace_u32(creature, 0x340, path_context);
+        const char* gate = "partial_unreadable";
+        if (readable && suppressed != 0 && static_cast<std::int32_t>(raw_mode) != 0 &&
+            raw_mode != 4 && raw_mode != 5 && raw_mode != 6)
+            gate = "suppressed_1f8";
+        else if (readable && path_context == 0)
+            gate = "missing_path_context";
+        else if (readable)
+            gate = "prepath_unclassified";
+        const kp::harness::EventField fields[] = {
+            kp::harness::EventField::unsigned_("creature", creature_id),
+            kp::harness::EventField::unsigned_("action", action),
+            kp::harness::EventField::str("gate", gate),
+            kp::harness::EventField::integer("a8c", static_cast<std::int32_t>(raw_mode)),
+        };
+        kp::harness::ring().push("move_admission", ring_tick(host), fields, 4);
+        KP_HOOK_GUARD_END
+    }
+    return orig != nullptr ? orig(creature, action_node) : 0;
+}
+
+// ---------------------------------------------------------- client loop -----
+//
+// WinMain calls this every idle iteration, with or without a server, so it
+// is the one per-frame site that runs on the main menu. That makes it the
+// harness's drain point: requests are taken off the channel and executed
+// here, on the main thread, after the engine's frame has returned.
+//
+// No guard is armed in this body. The drain arms its own around parse and
+// serialise, and runs engine calls unarmed on purpose (see harness/
+// commands.hpp); after_frame() re-applies the harness time scale and takes a
+// pending screenshot once the frame has rendered, both engine work.
+//
+// The return value is the engine's exit flag, which WinMain ORs into its
+// own. Returning 1 here is what `quit` does: a clean exit through the
+// engine's shutdown, with the reply already handed to the socket.
+int KP_CLIENT_LOOP_CC client_main_loop_body(void* self) {
+    auto orig = reinterpret_cast<ClientLoopFn>(g_orig_client_loop.load(std::memory_order_acquire));
+
+    if (orig == nullptr) return 0;
+    const int result = orig(self);
+
+    const auto frame = g_client_loop_frames.fetch_add(1, std::memory_order_relaxed) + 1;
+    if ((frame % 100) == 0)
+        Runtime::instance().log("client loop cave: %llu frames", static_cast<unsigned long long>(frame));
+    kp::harness::note_client_frame();
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
+    kp::harness::drain();
+
+    kp::harness::after_frame();
+
+    if (kp::harness::quit_requested()) {
+        // Give the listener a moment to write the `quit` reply. Bounded: a
+        // client that stopped reading must not keep the process alive.
+        kp::harness::stop_after_flush();
+        return 1;
+    }
+    return result;
+}
+
+// K2-native reaches MainLoop through a render/update wrapper on some launch
+// paths. Keep a second, independently resolved drain point for that path.
+int __attribute__((cdecl)) client_frame_wrapper_body(void* self) {
+    auto orig = reinterpret_cast<ClientFrameWrapperFn>(g_orig_client_frame_wrapper.load(std::memory_order_acquire));
+    static std::atomic<unsigned> wrapper_frames{0};
+    const unsigned entered = wrapper_frames.fetch_add(1, std::memory_order_relaxed) + 1;
+    if ((entered % 100) == 0)
+        Runtime::instance().log("client frame wrapper: %u entries", entered);
+    const int result = orig != nullptr ? orig(self) : 0;
+    kp::harness::note_client_frame();
+    kp::devtools::overlay_tick();
+    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
+    kp::harness::drain();
+    kp::harness::after_frame();
+    return result;
+}
+
 }  // namespace
 
 // ------------------------------------------------------------- wiring in ----
 
 void set_situation_path(std::string path) { g_situation_path = std::move(path); }
+
+// The poison table as a list, for the harness `status` and `state` replies.
+// Same source as `lua status`, so the two never disagree about what is dark.
+std::vector<std::string> poisoned_sites() {
+    std::vector<std::string> out;
+    for (const PoisonSite& p : kPoisonSites)
+        if (p.flag->load(std::memory_order_acquire)) out.emplace_back(p.name);
+    return out;
+}
 
 void set_tick_scale(unsigned n) {
     if (n < 1) n = 1;
@@ -773,6 +1364,20 @@ void* store_event_detour()     { return reinterpret_cast<void*>(&store_event_bod
 void* waypoint_event_detour()  { return reinterpret_cast<void*>(&waypoint_event_body); }
 void* save_situation_detour()  { return reinterpret_cast<void*>(&save_situation_body); }
 void* load_situation_detour()  { return reinterpret_cast<void*>(&load_situation_body); }
+void* creature_move_to_point_detour() { return reinterpret_cast<void*>(&creature_move_to_point_body); }
+void* add_move_to_point_detour() { return reinterpret_cast<void*>(&add_move_to_point_body); }
+void* net_start_connect_detour() { return reinterpret_cast<void*>(&net_start_connect_body); }
+void* net_start_server_mode_detour() { return reinterpret_cast<void*>(&net_start_server_mode_body); }
+void* net_send_message_detour() { return reinterpret_cast<void*>(&net_send_message_body); }
+void* net_process_frames_detour() { return reinterpret_cast<void*>(&net_process_frames_body); }
+void* client_area_get_server_area_detour() {
+    return reinterpret_cast<void*>(&client_area_get_server_area_body);
+}
+void set_net_destination_offset(std::uint32_t offset) {
+    g_net_destination_offset.store(offset, std::memory_order_release);
+}
+void* client_main_loop_detour() { return reinterpret_cast<void*>(&client_main_loop_body); }
+void* client_frame_wrapper_detour() { return reinterpret_cast<void*>(&client_frame_wrapper_body); }
 
 void bind_originals(hooks::HookSet& set) {
     g_orig_run_script.store(set.original("vm.run_script"), std::memory_order_release);
@@ -790,6 +1395,20 @@ void bind_originals(hooks::HookSet& set) {
     g_orig_waypoint.store(set.original("event.waypoint"), std::memory_order_release);
     g_orig_save.store(set.original("vm.save_script_situation"), std::memory_order_release);
     g_orig_load.store(set.original("vm.load_script_situation"), std::memory_order_release);
+    g_orig_move_to_point.store(set.original("creature.ai_action_move_to_point"), std::memory_order_release);
+    g_orig_add_move_to_point.store(set.original("creature.add_move_to_point_action"),
+                                   std::memory_order_release);
+    g_orig_client_loop.store(set.original("app.client_main_loop"), std::memory_order_release);
+    g_orig_client_frame_wrapper.store(set.original("app.client_frame_wrapper"), std::memory_order_release);
+    g_orig_net_start_connect.store(set.original("net.start_connect_to_session"), std::memory_order_release);
+    g_orig_net_start_server.store(set.original("net.start_server_mode"), std::memory_order_release);
+    g_orig_net_send.store(set.original("net.send_message_to_player"), std::memory_order_release);
+    g_orig_net_process.store(set.original("net.process_received_frames"), std::memory_order_release);
+    g_orig_client_area_get_server_area.store(
+        set.original("client.area_get_server_area"), std::memory_order_release);
+    // The adapter's own detours (game speed, movies) keep their originals on
+    // its side of the interface.
+    kp::harness::bind_adapter_originals(set);
 }
 
 void clear_originals() {
@@ -811,8 +1430,21 @@ void clear_originals() {
     g_orig_waypoint.store(nullptr, std::memory_order_release);
     g_orig_save.store(nullptr, std::memory_order_release);
     g_orig_load.store(nullptr, std::memory_order_release);
+    g_orig_move_to_point.store(nullptr, std::memory_order_release);
+    g_orig_add_move_to_point.store(nullptr, std::memory_order_release);
+    g_orig_client_loop.store(nullptr, std::memory_order_release);
+    g_orig_client_frame_wrapper.store(nullptr, std::memory_order_release);
+    g_orig_net_start_connect.store(nullptr, std::memory_order_release);
+    g_orig_net_start_server.store(nullptr, std::memory_order_release);
+    g_orig_net_send.store(nullptr, std::memory_order_release);
+    g_orig_net_process.store(nullptr, std::memory_order_release);
+    g_orig_client_area_get_server_area.store(nullptr, std::memory_order_release);
+    g_net_destination_offset.store(0, std::memory_order_release);
+    g_server_net.store(nullptr, std::memory_order_release);
+    g_client_net.store(nullptr, std::memory_order_release);
+    g_client_support_server_net.store(nullptr, std::memory_order_release);
 
-    if (g_console_L != nullptr) { lua_close(g_console_L); g_console_L = nullptr; }
+    kp::devtools::console().reset();
 }
 
 }  // namespace kp::runtime

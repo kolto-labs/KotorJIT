@@ -302,11 +302,8 @@ void address_table_cases() {
         "data/addresses/k1_steam_103.json",
         "data/addresses/k1_steam_103_unpacked.json",
         "data/addresses/k2_gog_aspyr.json",
-        "data/addresses/k2_steam_linux.json",
     };
-    // The caves this work installs. console.do_console is required on K1 and
-    // unresolved on k2_steam_linux -- that is existing table data, not a
-    // missing EventHandler identity.
+    // The caves this work installs on the supported, target-verified tables.
     const char* caves[] = {
         "event.creature", "event.door", "event.placeable", "event.trigger",
         "event.module", "event.area", "event.encounter", "event.aoe",

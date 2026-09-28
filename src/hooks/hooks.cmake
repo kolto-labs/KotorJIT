@@ -48,8 +48,13 @@ target_link_options(kp_hooks PUBLIC -m32)
 # it can also RUN: native 32-bit Linux. Cross-compiled to Windows it would be a
 # binary nobody executes, which is worse than not building it.
 if(UNIX AND NOT WIN32)
-    add_executable(kp_hooktool "${KP_TOOLS_DIR}/kp_hooktool.cpp")
-    target_link_libraries(kp_hooktool PRIVATE kp_hooks)
+    add_executable(kp_hooktool
+        "${KP_TOOLS_DIR}/kp_hooktool.cpp"
+        "${KP_SRC_DIR}/api/memory.cpp")
+    target_include_directories(kp_hooktool PRIVATE "${CMAKE_BINARY_DIR}/luajit32/src")
+    target_link_libraries(kp_hooktool PRIVATE kp_hooks kp_image
+                          "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
+    target_link_options(kp_hooktool PRIVATE -no-pie)
     # -fcf-protection=none keeps the harness's own prologues predictable, so a
     # test that asserts on decoded lengths is testing the decoder rather than
     # this month's codegen defaults.
@@ -83,7 +88,8 @@ if(KP_MINGW_CXX)
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_HOOKS_WIN32_OBJDIR}
-            COMMAND ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -I${KP_SRC_DIR}
+            COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
+                    ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -I${KP_SRC_DIR}
                     -c ${src} -o ${obj}
             DEPENDS ${src} ${KP_GENERATED_HEADERS}
             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"

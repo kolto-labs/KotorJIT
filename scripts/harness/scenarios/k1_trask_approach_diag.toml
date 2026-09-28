@@ -1,0 +1,34 @@
+# Narrow live diagnostic: prove the player can approach the live Trask object
+# before asking the conversation system to evaluate range and dialogue gates.
+name = "k1 Trask ordinary approach diagnostic"
+target = "k1"
+
+[settings]
+load_timeout = 300
+default_timeout = 60
+
+[[step]]
+do = "load_save"
+dir = "000001 - AUTOSAVE"
+
+[[step]]
+wait = "phase"
+equals = "gameplay"
+timeout = 300
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); if nwscript.call('GetIsObjectValid',t)~=1 then error('Trask missing') end; kp.as(pc,function() nwscript.call('ActionForceMoveToObject',t,1,0.75,30.0) end); return {pc=pc,trask=t,distance=nwscript.call('GetDistanceBetween',pc,t),action=nwscript.call('GetCurrentAction',pc)}"
+
+[[step]]
+do = "sleep"
+seconds = 35
+
+[[step]]
+do = "lua"
+timeout = 20
+code = "local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetObjectByTag','end_trask',0); return {distance=nwscript.call('GetDistanceBetween',pc,t),pc_action=nwscript.call('GetCurrentAction',pc),pc_position=nwscript.call('GetPosition',pc),trask_position=nwscript.call('GetPosition',t),dialog=nwscript.call('GetIsConversationActive') }"
+
+[[step]]
+do = "quit"
