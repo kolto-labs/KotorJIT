@@ -55,6 +55,13 @@ if(APPLE)
     target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
     add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
     add_dependencies(kphasor_mac kp_hooktool_x64)
+    # The x86_64 engine-ABI unit test (layout widths, id truncation, the
+    # ExecuteCommand bound decoders). Runs on any x86_64 host.
+    add_executable(kp_mac_abitest tools/mac/kp_mac_abitest.cpp)
+    target_include_directories(kp_mac_abitest PRIVATE src)
+    target_compile_options(kp_mac_abitest PRIVATE -Wall -Wextra)
+    add_test(NAME kp_mac_abitest COMMAND kp_mac_abitest)
+    add_dependencies(kphasor_mac kp_mac_abitest)
     message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
                    "`ctest` runs the Mach-O table gate and the x86_64 detour self-test; "
                    "run tools/mac/gen_mac_tables.py --check against the local images for full byte verification.")
