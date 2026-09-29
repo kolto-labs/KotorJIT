@@ -542,8 +542,29 @@ bool Runtime::resolve(const Config& cfg) {
             generated_sites[i]=static_cast<api::model::Address>(site->addr);
         }
     }
+    // The generated-model path above is the Windows hook-pack route. The macOS
+    // x86_64 builds ship a JSON address table and no pack, but the native
+    // model backend already carries a by-hash profile for the K2 x86_64 image
+    // (api/model_profiles.cpp, macos-k2-x86_64), whose five site VAs and
+    // expected_bytes were recovered from the corpus (docs/research/
+    // mac-model-memory.md). Bind from that profile directly: its own site VAs
+    // are the "generated roles", and Operations::bind re-verifies each site's
+    // bytes at load, so a wrong image still refuses.
     if (!roles_resolved) {
-        log("model: unavailable; generated model-scale operation, exact pack image identity, and five resolved roles are required");
+        if (const api::model::Profile* mp = api::model::profile_for(image_sha256_)) {
+            bool complete = true;
+            for (std::size_t i = 0; i < generated_sites.size(); ++i) {
+                generated_sites[i] = mp->sites[i].va;
+                if (mp->sites[i].va == 0 || mp->sites[i].bytes == nullptr) complete = false;
+            }
+            roles_resolved = complete;
+            if (!complete)
+                log("model: profile %s has fewer than five sites; native model API unavailable", mp->name);
+        }
+    }
+    if (!roles_resolved) {
+        log("model: unavailable; needs the generated model-scale operation (Windows pack) or a "
+            "complete by-hash native profile (macOS)");
         return true;
     }
     std::string model_error;
