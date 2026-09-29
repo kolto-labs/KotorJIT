@@ -97,6 +97,9 @@ void test_decoder() {
         {{0x68, 1, 2, 3, 4}, 5, Rel::None, 0},                              // push imm32
         {{0xc9}, 1, Rel::None, 0},                                          // leave
         {{0x0f, 0xb6, 0xc0}, 3, Rel::None, 0},                              // movzx eax,al
+        {{0xeb, 0x10}, 2, Rel::Rel8, 1},                                    // jmp rel8
+        {{0x75, 0x16}, 2, Rel::Rel8, 1},                                    // jne rel8
+        {{0x3e, 0x74, 0xf0}, 3, Rel::Rel8, 2},                              // je rel8 with a hint prefix
         {{0x0f, 0x44, 0xc1}, 3, Rel::None, 0},                              // cmove eax,ecx
     };
     for (const auto& c : good) {
@@ -113,8 +116,7 @@ void test_decoder() {
     }
     const std::vector<Bytes> refused = {
         {0x67, 0x8b, 0x00},             // address-size prefix
-        {0xeb, 0x00},                   // jmp rel8
-        {0x74, 0x00},                   // je rel8
+        {0x66, 0x74, 0x00},             // operand-size prefix on a short branch
         {0xe0, 0x00}, {0xe3, 0x00},     // loopne, jrcxz
         {0xc3}, {0xc2, 0, 0}, {0xcc}, {0xcd, 0x80}, {0xf4}, {0xf1}, {0xcf},
         {0xc4, 0xe2, 0x79, 0x18, 0x00}, // VEX
@@ -217,6 +219,35 @@ void test_relocation() {
         Bytes out(b.size(), 0xaa);
         check(!relocate(b.data(), from, i, out.data(), from + 0xc000'0000ull) &&
               out == Bytes(b.size(), 0xaa), "relocate: out-of-range refuses, writes nothing", hex(b));
+    }
+    // Short branches widen: Jcc rel8 -> 0F 8x rel32 (6 bytes), JMP rel8 -> E9
+    // rel32 (5 bytes), keeping the absolute target.
+    for (const auto& b : std::vector<Bytes>{{0x75, 0x16}, {0x7c, 0xf0}, {0xeb, 0x7f}, {0x3e, 0x74, 0x05}}) {
+        const auto i = decode(b.data(), b.size());
+        const auto want = referent(b.data(), i, from);
+        const std::size_t n = relocated_size(i);
+        Bytes out(n, 0);
+        const std::uint64_t to = from - 0x5000'0000ull;
+        const bool ok = relocate(b.data(), from, i, out.data(), to);
+        const auto wide = decode(out.data(), out.size());
+        const bool jmp = b[b.size() - 2] == 0xeb;
+        check(ok && n == (jmp ? 5u : 6u) && wide.ok() && wide.len == n && wide.rel == Rel::Rel32 &&
+                  referent(out.data(), wide, to) == want &&
+                  (jmp ? out[0] == 0xe9 : (out[0] == 0x0f && out[1] == (0x80 | (b[b.size() - 2] & 0x0f)))),
+              "relocate: short branch widens to rel32 with the same target", hex(b));
+        Bytes far(n, 0xaa);
+        check(!relocate(b.data(), from, i, far.data(), from + 0xc000'0000ull) && far == Bytes(n, 0xaa),
+              "relocate: widened branch out of range refuses, writes nothing", hex(b));
+    }
+    // The shape of CSWSWaypoint::EventHandler on both Mac builds: a 13-byte
+    // frame + RIP compare, then jne rel8 straddling byte 14.
+    {
+        Bytes wp = {0x55, 0x48, 0x89, 0xe5, 0x48, 0x8d, 0x05, 0x25, 0x22, 0x1f, 0x00, 0x39, 0x30, 0x75, 0x16,
+                    0x48, 0x85, 0xff, 0x74, 0x11};
+        wp.resize(wp.size() + 16, 0xcc);
+        const auto pw = plan(wp.data(), wp.size(), 0x1'0038'0f90ull);
+        check(pw.status == HookStatus::Ok && pw.stolen == 15 && pw.needs_near,
+              "plan: rel8 inside the window is planned and widened", std::to_string(int(pw.status)));
     }
     // Non-relative instructions copy verbatim.
     Bytes mov = {0x48, 0x89, 0xe5}, out(3);

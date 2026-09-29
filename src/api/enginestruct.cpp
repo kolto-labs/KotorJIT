@@ -30,21 +30,28 @@ hooks::ThiscallFn<int, int, int>            g_execute_command = nullptr;
 hooks::ThiscallFn<int, int>                 g_push_int    = nullptr;
 hooks::ThiscallFn<int, float>               g_push_float  = nullptr;
 hooks::ThiscallFn<int, const void*>         g_push_string = nullptr;
-hooks::ThiscallFn<int, std::uint32_t>       g_push_object = nullptr;
+// Object ids cross this boundary at the engine's width (abi::ObjectId): 32
+// bits on i386, 64 on x86_64, where StackPopObject writes a full 8 bytes.
+hooks::ThiscallFn<int, abi::ObjectId>       g_push_object = nullptr;
 hooks::ThiscallFn<int, int*>                g_pop_int     = nullptr;
 hooks::ThiscallFn<int, float*>              g_pop_float   = nullptr;
 hooks::ThiscallFn<int, void*>               g_pop_string  = nullptr;
-hooks::ThiscallFn<int, std::uint32_t*>      g_pop_object  = nullptr;
+hooks::ThiscallFn<int, abi::ObjectId*>      g_pop_object  = nullptr;
 
 int shim_execute(void* self, int id, int argc) { return g_execute_command(self, id, argc); }
 int shim_push_int(void* vm, int v)             { return g_push_int(vm, v); }
 int shim_push_float(void* vm, float v)         { return g_push_float(vm, v); }
 int shim_push_string(void* vm, const void* s)  { return g_push_string(vm, s); }
-int shim_push_object(void* vm, std::uint32_t v){ return g_push_object(vm, v); }
+int shim_push_object(void* vm, std::uint32_t v){ return g_push_object(vm, abi::ObjectId(v)); }
 int shim_pop_int(void* vm, int* out)           { return g_pop_int(vm, out); }
 int shim_pop_float(void* vm, float* out)       { return g_pop_float(vm, out); }
 int shim_pop_string(void* vm, void* out)       { return g_pop_string(vm, out); }
-int shim_pop_object(void* vm, std::uint32_t* o){ return g_pop_object(vm, o); }
+int shim_pop_object(void* vm, std::uint32_t* o){
+    abi::ObjectId wide = 0;
+    const int rc = g_pop_object(vm, &wide);
+    *o = abi::script_id(wide);
+    return rc;
+}
 
 // ------------------------------------------------------------ the handles --
 
@@ -118,15 +125,43 @@ bool vm_binding_live(int routine) {
     if (!internal || !platform::is_readable(internal, sizeof(void*))) return false;
     if (!platform::is_readable(b.command_implementer, a.commands_offset + sizeof(void*)))
         return false;
-    void* const* table = *reinterpret_cast<void* const* const*>(
+    const void* table = *reinterpret_cast<const void* const*>(
         static_cast<const char*>(b.command_implementer) + a.commands_offset);
-    if (table != a.commands || !platform::is_readable(table, sizeof(void*) * a.command_count))
+    if (table != a.commands ||
+        !platform::is_readable(table, layout::kEngine.command_entry_bytes * a.command_count))
         return false;
     return routine < 0 || (static_cast<unsigned>(routine) < a.command_count &&
-        table[routine] && platform::is_readable(table[routine], 1));
+        command_slot_live(table, static_cast<std::uint32_t>(routine)));
+}
+
+bool command_slot_live(const void* table, std::uint32_t routine) {
+    const auto* entry = static_cast<const char*>(table) + layout::kEngine.command_entry_bytes * routine;
+    std::uintptr_t ptr = 0;
+    std::memcpy(&ptr, entry, sizeof ptr);
+    if (ptr == 0) return false;
+    if (abi::kX64 && (ptr & 1u) != 0) return true;   // virtual: vtable offset + 1
+    return platform::is_readable(reinterpret_cast<const void*>(ptr), 1);
 }
 
 std::uint32_t discover_command_count(const VmSites& s) {
+#if defined(__x86_64__) || defined(_M_X64)
+    // The table's field (vmcmd.command_count) and the live dispatcher must
+    // agree. There is no KPM-style table growth on the Mac builds; a
+    // disagreement means the code is not what the table was generated from.
+    if (s.execute_command == 0) return 0;
+    const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
+    if (!platform::is_readable(p, 32)) return 0;
+    std::uint8_t buf[32];
+    std::memcpy(buf, p, sizeof buf);
+    std::uint32_t live = 0;
+    if (!decode_execute_command_bound_x64(buf, sizeof buf, live)) return 0;
+    if (s.commands_count != 0 && s.commands_count != live) {
+        platform::log(platform::LogLevel::Error,
+                      "vm: ExecuteCommand bound %u differs from the table's %u", live, s.commands_count);
+        return 0;
+    }
+    return live;
+#else
     std::uint32_t bound = s.commands_count ? s.commands_count : 0x304;
     if (s.execute_command != 0) {
         const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
@@ -139,6 +174,7 @@ std::uint32_t discover_command_count(const VmSites& s) {
         }
     }
     return bound;
+#endif
 }
 
 bool bind_sites(const VmSites& s, std::string& error) {
@@ -179,10 +215,10 @@ bool bind_sites(const VmSites& s, std::string& error) {
     }
     void* internal = *reinterpret_cast<void* const*>(
         static_cast<const char*>(s.virtual_machine) + s.wrapper_internal_offset);
-    void* const* commands = *reinterpret_cast<void* const* const*>(
+    const void* commands = *reinterpret_cast<const void* const*>(
         static_cast<const char*>(s.command_implementer) + s.commands_offset);
     if (!internal || !platform::is_readable(internal, sizeof(void*)) || !commands ||
-        !platform::is_readable(commands, sizeof(void*) * count)) {
+        !platform::is_readable(commands, layout::kEngine.command_entry_bytes * count)) {
         error = "VM internal or command table is not readable";
         return false;
     }

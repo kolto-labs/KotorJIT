@@ -65,8 +65,15 @@
 #else
 #include <csignal>
 #include <fcntl.h>
-#include <ucontext.h>
 #include <unistd.h>
+#if defined(__APPLE__)
+// <ucontext.h> is the deprecated makecontext API on Darwin and refuses to
+// compile without _XOPEN_SOURCE; the machine context a SA_SIGINFO handler
+// receives is declared by <sys/ucontext.h>.
+#include <sys/ucontext.h>
+#else
+#include <ucontext.h>
+#endif
 #endif
 
 namespace kp::runtime {
@@ -120,7 +127,7 @@ std::size_t append_hex(char* out, std::size_t cap, std::size_t at, std::uintptr_
     static const char kDigits[] = "0123456789abcdef";
     at = append_str(out, cap, at, "0x");
     bool leading = true;
-    for (int shift = 28; shift >= 0; shift -= 4) {
+    for (int shift = static_cast<int>(sizeof(std::uintptr_t) * 8) - 4; shift >= 0; shift -= 4) {
         const unsigned nib = (v >> shift) & 0xfu;
         if (leading && nib == 0 && shift != 0) continue;
         leading = false;
@@ -341,12 +348,36 @@ void passthrough(int sig, siginfo_t* info, void* uc) {
     ::sigaction(sig, &dfl, nullptr);
 }
 
+// The program counter and stack pointer of the interrupted thread, per
+// kernel. Darwin hands a pointer to its mcontext (__ss is the thread state);
+// Linux embeds greg_t arrays indexed by REG_*.
+#if defined(__APPLE__) && defined(__x86_64__)
+std::uintptr_t context_pc(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext->__ss.__rip); }
+std::uintptr_t context_sp(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext->__ss.__rsp); }
+void set_context(ucontext_t* uc, std::uintptr_t pc, std::uintptr_t sp) {
+    uc->uc_mcontext->__ss.__rip = pc;
+    uc->uc_mcontext->__ss.__rsp = sp;
+}
+#elif defined(__x86_64__)
+std::uintptr_t context_pc(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext.gregs[REG_RIP]); }
+std::uintptr_t context_sp(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext.gregs[REG_RSP]); }
+void set_context(ucontext_t* uc, std::uintptr_t pc, std::uintptr_t sp) {
+    uc->uc_mcontext.gregs[REG_RIP] = static_cast<greg_t>(pc);
+    uc->uc_mcontext.gregs[REG_RSP] = static_cast<greg_t>(sp);
+}
+#else
+std::uintptr_t context_pc(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext.gregs[REG_EIP]); }
+std::uintptr_t context_sp(ucontext_t* uc) { return static_cast<std::uintptr_t>(uc->uc_mcontext.gregs[REG_ESP]); }
+void set_context(ucontext_t* uc, std::uintptr_t pc, std::uintptr_t) {
+    uc->uc_mcontext.gregs[REG_EIP] = static_cast<greg_t>(pc);
+}
+#endif
+
 void signal_handler(int sig, siginfo_t* info, void* ucontext) {
     auto* uc = static_cast<ucontext_t*>(ucontext);
     const std::uintptr_t addr =
         info != nullptr ? reinterpret_cast<std::uintptr_t>(info->si_addr) : 0;
-    const std::uintptr_t pc =
-        uc != nullptr ? static_cast<std::uintptr_t>(uc->uc_mcontext.gregs[REG_EIP]) : 0;
+    const std::uintptr_t pc = uc != nullptr ? context_pc(uc) : 0;
 
     const std::uintptr_t resume = uc != nullptr
         ? claim(addr, pc, static_cast<unsigned long>(sig))
@@ -356,9 +387,23 @@ void signal_handler(int sig, siginfo_t* info, void* ucontext) {
         return;
     }
 
-    // sigreturn will restore this context, so rewriting EIP here is the same
-    // move as the Windows side: the kernel performs the resume, not us.
-    uc->uc_mcontext.gregs[REG_EIP] = static_cast<greg_t>(resume);
+    // sigreturn will restore this context, so rewriting the PC here is the
+    // same move as the Windows side: the kernel performs the resume, not us.
+    //
+    // x86-64 also needs a stack the bail stub may run on. The System V ABI has
+    // a function entered with RSP == 8 (mod 16) -- a return address just
+    // pushed onto a 16-aligned stack -- and clang uses aligned SSE spills that
+    // fault otherwise. The faulting instruction's RSP can be anything, and the
+    // 128 bytes below it are the interrupted function's red zone. So: step
+    // past the red zone, align to 16, and leave one zeroed slot as the fake
+    // return address. The frame being abandoned is never returned to;
+    // kp_fault_bail longjmps to an older frame above all of this.
+    std::uintptr_t sp = context_sp(uc);
+    if (sizeof(void*) == 8) {
+        sp = ((sp - 256) & ~static_cast<std::uintptr_t>(15)) - 8;
+        *reinterpret_cast<std::uintptr_t*>(sp) = 0;
+    }
+    set_context(uc, resume, sp);
 }
 
 #endif

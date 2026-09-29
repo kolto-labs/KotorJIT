@@ -1,0 +1,666 @@
+{
+  "k1_image_sha256": "c1fcb8d37c702849882a17751c63ee0af7c2b9cbbc3b31b98a5f0edbc27c6d71",
+  "k2_image_sha256": "469067c416f1a3ff391df73c7ace2d44a8d0a246253e8ad5752f6413ea033be4",
+  "k1_i386_reference_sha256": "aa6283733d3c738d11d12453f77dfc6b7e87f95326a07ee97daab1a37734b032",
+  "rule": "a K1 function binding is emitted only with >=2 agreeing derivations and no disagreeing one",
+  "bindings": {
+    "vm.run_script": {
+      "addr": "0x100379326",
+      "derivations": [
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x100379326"
+        },
+        {
+          "how": "follow:CVirtualMachine::RunScript -> internal",
+          "addr": "0x100379326"
+        },
+        {
+          "how": "similar:0.93",
+          "addr": "0x100379326"
+        },
+        {
+          "how": "callees:8 in order",
+          "addr": "0x100379326"
+        }
+      ]
+    },
+    "vm.run_script_situation": {
+      "addr": "0x100379614",
+      "derivations": [
+        {
+          "how": "follow:CVirtualMachine::RunScriptSituation -> internal",
+          "addr": "0x100379614"
+        },
+        {
+          "how": "similar:0.85",
+          "addr": "0x100379614"
+        }
+      ]
+    },
+    "vm.execute_command": {
+      "addr": "0x1003c0fb6",
+      "derivations": [
+        {
+          "how": "vtable:25CSWVirtualMachineCommands[0] slot 3",
+          "addr": "0x1003c0fb6"
+        },
+        {
+          "how": "similar:0.95",
+          "addr": "0x1003c0fb6"
+        }
+      ]
+    },
+    "vm.save_script_situation": {
+      "addr": "0x100379a6e",
+      "derivations": [
+        {
+          "how": "k2match:strings+imports",
+          "addr": "0x100379a6e"
+        },
+        {
+          "how": "i386match:strings+imports",
+          "addr": "0x100379a6e"
+        },
+        {
+          "how": "follow:CVirtualMachine::SaveScriptSituation -> internal",
+          "addr": "0x100379a6e"
+        },
+        {
+          "how": "similar:1.00",
+          "addr": "0x100379a6e"
+        },
+        {
+          "how": "callees:14 in order",
+          "addr": "0x100379a6e"
+        }
+      ]
+    },
+    "vm.load_script_situation": {
+      "addr": "0x100379bfa",
+      "derivations": [
+        {
+          "how": "k2match:strings",
+          "addr": "0x100379bfa"
+        },
+        {
+          "how": "i386match:strings+imports",
+          "addr": "0x100379bfa"
+        },
+        {
+          "how": "follow:CVirtualMachine::LoadScriptSituation -> internal",
+          "addr": "0x100379bfa"
+        },
+        {
+          "how": "similar:0.93",
+          "addr": "0x100379bfa"
+        },
+        {
+          "how": "callees:15 in order",
+          "addr": "0x100379bfa"
+        }
+      ]
+    },
+    "vm.stack_pop_integer": {
+      "addr": "0x10037a002",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(30)",
+          "addr": "0x10037a002"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10037a002"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPopInteger ordinal 4",
+          "addr": "0x10037a002"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a002"
+        }
+      ]
+    },
+    "vm.stack_push_integer": {
+      "addr": "0x10037a010",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(16)",
+          "addr": "0x10037a010"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10037a010"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPushInteger ordinal 5",
+          "addr": "0x10037a010"
+        },
+        {
+          "how": "callsite:3 agreed caller(s)",
+          "addr": "0x10037a010"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a010"
+        }
+      ]
+    },
+    "vm.stack_pop_float": {
+      "addr": "0x10037a01e",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(6)",
+          "addr": "0x10037a01e"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10037a01e"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPopFloat ordinal 6",
+          "addr": "0x10037a01e"
+        },
+        {
+          "how": "callsite:2 agreed caller(s)",
+          "addr": "0x10037a01e"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a01e"
+        }
+      ]
+    },
+    "vm.stack_push_float": {
+      "addr": "0x10037a02c",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(2)",
+          "addr": "0x10037a02c"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPushFloat ordinal 7",
+          "addr": "0x10037a02c"
+        },
+        {
+          "how": "callsite:1 agreed caller(s)",
+          "addr": "0x10037a02c"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a02c"
+        }
+      ]
+    },
+    "vm.stack_pop_string": {
+      "addr": "0x10037a056",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(4)",
+          "addr": "0x10037a056"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10037a056"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPopString ordinal 10",
+          "addr": "0x10037a056"
+        },
+        {
+          "how": "callsite:4 agreed caller(s)",
+          "addr": "0x10037a056"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a056"
+        }
+      ]
+    },
+    "vm.stack_push_string": {
+      "addr": "0x10037a064",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(4)",
+          "addr": "0x10037a064"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10037a064"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPushString ordinal 11",
+          "addr": "0x10037a064"
+        },
+        {
+          "how": "callsite:4 agreed caller(s)",
+          "addr": "0x10037a064"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a064"
+        }
+      ]
+    },
+    "vm.stack_pop_object": {
+      "addr": "0x10037a08e",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(17)",
+          "addr": "0x10037a08e"
+        },
+        {
+          "how": "i386match:callgraph(3)",
+          "addr": "0x10037a08e"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPopObject ordinal 14",
+          "addr": "0x10037a08e"
+        },
+        {
+          "how": "callsite:5 agreed caller(s)",
+          "addr": "0x10037a08e"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a08e"
+        }
+      ]
+    },
+    "vm.stack_push_object": {
+      "addr": "0x10037a09c",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(1)",
+          "addr": "0x10037a09c"
+        },
+        {
+          "how": "block:CVirtualMachine::StackPushObject ordinal 15",
+          "addr": "0x10037a09c"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a09c"
+        }
+      ]
+    },
+    "vm.stack_pop_vector": {
+      "addr": "0x10037a03a",
+      "derivations": [
+        {
+          "how": "block:CVirtualMachine::StackPopVector ordinal 8",
+          "addr": "0x10037a03a"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a03a"
+        }
+      ]
+    },
+    "vm.stack_push_vector": {
+      "addr": "0x10037a048",
+      "derivations": [
+        {
+          "how": "block:CVirtualMachine::StackPushVector ordinal 9",
+          "addr": "0x10037a048"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a048"
+        }
+      ]
+    },
+    "vm.stack_pop_engine_structure": {
+      "addr": "0x10037a072",
+      "derivations": [
+        {
+          "how": "block:CVirtualMachine::StackPopEngineStructure ordinal 12",
+          "addr": "0x10037a072"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a072"
+        }
+      ]
+    },
+    "vm.stack_push_engine_structure": {
+      "addr": "0x10037a080",
+      "derivations": [
+        {
+          "how": "block:CVirtualMachine::StackPushEngineStructure ordinal 13",
+          "addr": "0x10037a080"
+        },
+        {
+          "how": "similar:0.91",
+          "addr": "0x10037a080"
+        }
+      ]
+    },
+    "vmcmd.destroy_game_defined_structure": {
+      "addr": "0x1003c143c",
+      "derivations": [
+        {
+          "how": "vtable:25CSWVirtualMachineCommands[0] slot 7",
+          "addr": "0x1003c143c"
+        },
+        {
+          "how": "callees:3 in order",
+          "addr": "0x1003c143c"
+        }
+      ]
+    },
+    "exo.string_dtor": {
+      "addr": "0x10034cdf2",
+      "derivations": [
+        {
+          "how": "k2match:shape",
+          "addr": "0x10034cdf2"
+        },
+        {
+          "how": "i386match:callgraph(430)",
+          "addr": "0x10034cdf2"
+        },
+        {
+          "how": "similar:1.00",
+          "addr": "0x10034cdf2"
+        }
+      ]
+    },
+    "event.creature": {
+      "addr": "0x10048c754",
+      "derivations": [
+        {
+          "how": "k2match:strings",
+          "addr": "0x10048c754"
+        },
+        {
+          "how": "i386match:strings+imports",
+          "addr": "0x10048c754"
+        },
+        {
+          "how": "vtable:12CSWSCreature[0] slot 31",
+          "addr": "0x10048c754"
+        },
+        {
+          "how": "similar:0.80",
+          "addr": "0x10048c754"
+        }
+      ]
+    },
+    "event.door": {
+      "addr": "0x10045987a",
+      "derivations": [
+        {
+          "how": "i386match:strings",
+          "addr": "0x10045987a"
+        },
+        {
+          "how": "vtable:8CSWSDoor[0] slot 31",
+          "addr": "0x10045987a"
+        }
+      ]
+    },
+    "event.placeable": {
+      "addr": "0x1004153ee",
+      "derivations": [
+        {
+          "how": "k2match:strings",
+          "addr": "0x1004153ee"
+        },
+        {
+          "how": "i386match:strings",
+          "addr": "0x1004153ee"
+        },
+        {
+          "how": "vtable:13CSWSPlaceable[0] slot 31",
+          "addr": "0x1004153ee"
+        }
+      ]
+    },
+    "event.trigger": {
+      "addr": "0x10043d8ce",
+      "derivations": [
+        {
+          "how": "k2match:strings",
+          "addr": "0x10043d8ce"
+        },
+        {
+          "how": "i386match:strings+imports",
+          "addr": "0x10043d8ce"
+        },
+        {
+          "how": "vtable:11CSWSTrigger[0] slot 31",
+          "addr": "0x10043d8ce"
+        }
+      ]
+    },
+    "event.module": {
+      "addr": "0x100461820",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(1)",
+          "addr": "0x100461820"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x100461820"
+        },
+        {
+          "how": "callsite:1 agreed caller(s)",
+          "addr": "0x100461820"
+        },
+        {
+          "how": "similar:0.87",
+          "addr": "0x100461820"
+        },
+        {
+          "how": "callees:20 in order",
+          "addr": "0x100461820"
+        }
+      ]
+    },
+    "event.area": {
+      "addr": "0x10041a2e4",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(1)",
+          "addr": "0x10041a2e4"
+        },
+        {
+          "how": "i386match:callgraph(1)",
+          "addr": "0x10041a2e4"
+        },
+        {
+          "how": "callsite:1 agreed caller(s)",
+          "addr": "0x10041a2e4"
+        },
+        {
+          "how": "similar:0.85",
+          "addr": "0x10041a2e4"
+        }
+      ]
+    },
+    "event.encounter": {
+      "addr": "0x10037d01c",
+      "derivations": [
+        {
+          "how": "vtable:13CSWSEncounter[0] slot 31",
+          "addr": "0x10037d01c"
+        },
+        {
+          "how": "callees:6 in order",
+          "addr": "0x10037d01c"
+        }
+      ]
+    },
+    "event.aoe": {
+      "addr": "0x100444586",
+      "derivations": [
+        {
+          "how": "vtable:22CSWSAreaOfEffectObject[0] slot 31",
+          "addr": "0x100444586"
+        },
+        {
+          "how": "similar:0.88",
+          "addr": "0x100444586"
+        },
+        {
+          "how": "callees:3 in order",
+          "addr": "0x100444586"
+        }
+      ]
+    },
+    "event.store": {
+      "addr": "0x1003c22ca",
+      "derivations": [
+        {
+          "how": "vtable:9CSWSStore[0] slot 31",
+          "addr": "0x1003c22ca"
+        },
+        {
+          "how": "similar:0.94",
+          "addr": "0x1003c22ca"
+        }
+      ]
+    },
+    "event.waypoint": {
+      "addr": "0x100380f90",
+      "derivations": [
+        {
+          "how": "vtable:12CSWSWaypoint[0] slot 31",
+          "addr": "0x100380f90"
+        },
+        {
+          "how": "similar:0.80",
+          "addr": "0x100380f90"
+        }
+      ]
+    },
+    "app.server_main_loop": {
+      "addr": "0x1003e788a",
+      "derivations": [
+        {
+          "how": "k2match:callgraph(1)",
+          "addr": "0x1003e788a"
+        },
+        {
+          "how": "i386match:strings",
+          "addr": "0x1003e788a"
+        }
+      ]
+    },
+    "app.client_main_loop": {
+      "addr": "0x1002677d4",
+      "derivations": [
+        {
+          "how": "i386match:strings",
+          "addr": "0x1002677d4"
+        },
+        {
+          "how": "similar:0.83",
+          "addr": "0x1002677d4"
+        }
+      ]
+    },
+    "console.do_console": {
+      "addr": "0x1004ad858",
+      "derivations": [
+        {
+          "how": "k2match:strings+imports",
+          "addr": "0x1004ad858"
+        },
+        {
+          "how": "i386match:strings",
+          "addr": "0x1004ad858"
+        },
+        {
+          "how": "callees:8 in order",
+          "addr": "0x1004ad858"
+        }
+      ]
+    }
+  },
+  "fields": {
+    "vm.wrapper_internal": {
+      "k1": 0,
+      "k2": 40,
+      "why": "forwarder mov 0x0(%rdi),%rdi"
+    },
+    "vm.internal_command_implementer": {
+      "k1": 1248,
+      "k2": 1248,
+      "why": "SetCommandImplementer stores %rsi at 0x4e0(%rdi)"
+    },
+    "vmcmd.commands": {
+      "k1": 24,
+      "k2": 24,
+      "why": "ExecuteCommand loads the member-pointer array from 0x18(%rdi); 16-byte {ptr,adj} entries; 772 commands"
+    },
+    "vmcmd.command_count": {
+      "k1": 772,
+      "k2": 877,
+      "why": "ExecuteCommand bound: cmpl $303,%esi; jg"
+    },
+    "vmcmd.has_caller": {
+      "k1": 8,
+      "k2": 8,
+      "why": "RunScript: movl %eax, 0x8(implementer)"
+    },
+    "vmcmd.caller_id": {
+      "k1": 16,
+      "k2": 16,
+      "why": "RunScript: movq %rax, 0x10(implementer)"
+    },
+    "area.game_object": {
+      "k1": 344,
+      "k2": 344,
+      "why": "RTTI offset-to-top of the 29-slot CGameObject vtable"
+    },
+    "module.game_object": {
+      "k1": 40,
+      "k2": 40,
+      "why": "RTTI offset-to-top of the 29-slot CGameObject vtable"
+    },
+    "g.app_manager": {
+      "k1": 4301749488,
+      "k2": 4301068448,
+      "why": "RunScriptCallback loads g_pAppManager"
+    },
+    "appmgr.server": {
+      "k1": 16,
+      "k2": 16,
+      "why": "RunScriptCallback reads ->server at 0x10"
+    },
+    "object.id": {
+      "k1": 8,
+      "k2": 8,
+      "why": "CGameObject(type,id) stores id (%rdx)"
+    },
+    "object.type": {
+      "k1": 16,
+      "k2": 16,
+      "why": "stores type (%sil)"
+    },
+    "script_event.objects": {
+      "k1": 56,
+      "k2": 56,
+      "why": "Get accessor reads list data at 38, size at +8, element 8 bytes"
+    },
+    "script_event.ints": {
+      "k1": 8,
+      "k2": 8,
+      "why": "Get accessor reads list data at 8, size at +8, element 4 bytes"
+    },
+    "script_event.floats": {
+      "k1": 24,
+      "k2": 24,
+      "why": "Get accessor reads list data at 18, size at +8, element 4 bytes"
+    },
+    "script_event.strings": {
+      "k1": 40,
+      "k2": 40,
+      "why": "the CExoString list sits one 16-byte CExoArrayList before objects (destructor frees +0x08, +0x18, +0x28(strings), +0x38)"
+    }
+  }
+}

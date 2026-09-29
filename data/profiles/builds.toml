@@ -64,3 +64,21 @@ format = "macho"
 status = "static_only"
 address_table = ""
 note = "32-bit K2 Mac Mach-O in corpus (md5 57d86b1c4a035dee6fead18a8548cfe8). Signature tables only until a Mach-O loader exists."
+
+[[profile]]
+id = "k1_mac_steam_x64"
+game = "K1"
+platform = "mac"
+format = "macho"
+status = "supported"
+address_table = "data/addresses/k1_mac_steam_x64.json"
+note = "x86_64 Steam macOS KOTOR 1 (KOTOR_Exe). Runs natively on Intel and under Rosetta 2 on Apple silicon. Stripped image; every function binding has >=2 agreeing derivations (data/adjudication/mac_x64_bindings.json). Injected via DYLD_INSERT_LIBRARIES; build with scripts/mac/build.sh."
+
+[[profile]]
+id = "k2_mac_steam_x64"
+game = "K2"
+platform = "mac"
+format = "macho"
+status = "supported"
+address_table = "data/addresses/k2_mac_steam_x64.json"
+note = "x86_64 Steam macOS KOTOR 2 (KOTOR2sub, the x86_64 slice of the universal binary). Functions bound from its own C++ symbol table. kp.model and kp.animation are also bound from the verified native profile; kp.struct is unavailable on 64-bit (raw kp.mem works)."

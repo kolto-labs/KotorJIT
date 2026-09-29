@@ -57,6 +57,10 @@ extern "C" {
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#elif defined(__APPLE__)
+#include <cstdlib>       // realpath
+#include <mach-o/dyld.h> // _NSGetExecutablePath
+#include <unistd.h>
 #else
 #include <unistd.h>
 #endif
@@ -251,6 +255,19 @@ std::string self_module_path() {
     char buf[MAX_PATH] = {0};
     const DWORD n = GetModuleFileNameA(nullptr, buf, sizeof buf);
     return n > 0 ? std::string(buf, n) : std::string();
+#elif defined(__APPLE__)
+    // The GAME executable, not this dylib: the runtime derives game_dir,
+    // script dir and log path from it. When KotorPhasor is loaded through
+    // DYLD_INSERT_LIBRARIES, _NSGetExecutablePath still names the host
+    // executable (KOTOR_Exe / KOTOR2sub), which is what we want. The path it
+    // returns may be non-canonical (symlinks, .. segments); realpath resolves
+    // it so directory_of() yields the real app-bundle MacOS directory.
+    char buf[4096] = {0};
+    std::uint32_t size = sizeof buf;
+    if (_NSGetExecutablePath(buf, &size) != 0) return {};
+    char resolved[4096] = {0};
+    if (::realpath(buf, resolved) != nullptr) return std::string(resolved);
+    return std::string(buf);
 #else
     char buf[4096] = {0};
     const ssize_t n = ::readlink("/proc/self/exe", buf, sizeof buf - 1);
@@ -542,8 +559,29 @@ bool Runtime::resolve(const Config& cfg) {
             generated_sites[i]=static_cast<api::model::Address>(site->addr);
         }
     }
+    // The generated-model path above is the Windows hook-pack route. The macOS
+    // x86_64 builds ship a JSON address table and no pack, but the native
+    // model backend already carries a by-hash profile for the K2 x86_64 image
+    // (api/model_profiles.cpp, macos-k2-x86_64), whose five site VAs and
+    // expected_bytes were recovered from the corpus (docs/research/
+    // mac-model-memory.md). Bind from that profile directly: its own site VAs
+    // are the "generated roles", and Operations::bind re-verifies each site's
+    // bytes at load, so a wrong image still refuses.
     if (!roles_resolved) {
-        log("model: unavailable; generated model-scale operation, exact pack image identity, and five resolved roles are required");
+        if (const api::model::Profile* mp = api::model::profile_for(image_sha256_)) {
+            bool complete = true;
+            for (std::size_t i = 0; i < generated_sites.size(); ++i) {
+                generated_sites[i] = mp->sites[i].va;
+                if (mp->sites[i].va == 0 || mp->sites[i].bytes == nullptr) complete = false;
+            }
+            roles_resolved = complete;
+            if (!complete)
+                log("model: profile %s has fewer than five sites; native model API unavailable", mp->name);
+        }
+    }
+    if (!roles_resolved) {
+        log("model: unavailable; needs the generated model-scale operation (Windows pack) or a "
+            "complete by-hash native profile (macOS)");
         return true;
     }
     std::string model_error;

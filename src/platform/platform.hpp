@@ -54,7 +54,8 @@ bool is_readable(const void* addr, std::size_t len);
 void flush_instruction_cache(void* addr, std::size_t len);
 
 // Base address of a loaded module. A null or empty name means the main
-// executable -- swkotor.exe under Wine, the kotor2 ELF natively. Returns 0 when
+// executable -- swkotor.exe under Wine, the kotor2 ELF natively, the
+// MH_EXECUTE image (its mach_header, slide included) on macOS. Returns 0 when
 // the module is not loaded.
 std::uintptr_t module_base(const char* name);
 
@@ -79,6 +80,24 @@ void set_log_sink(LogSink, void* user);
 #endif
 
 void log(LogLevel, const char* fmt, ...) KP_PRINTF_FMT(2, 3);
+
+#if defined(__APPLE__) || defined(KP_DARWIN_SHIM)
+// Current protection of the page holding `addr` as a VM_PROT_* mask, or -1
+// when it is unmapped. The x86_64 detour engine records this before a write
+// and restores exactly it afterwards.
+int page_protection(const void* addr);
+
+// What the process is running on, for the receipt: macOS version, model and
+// whether Rosetta 2 is translating it. One line, fixed keys:
+// "host: os=macos-<v> model=<m> rosetta=<yes|no> arch=x86_64".
+struct DarwinHost {
+    char os_version[32] = {};
+    char hw_model[64] = {};
+    bool translated = false;
+};
+DarwinHost darwin_host();
+void format_darwin_host(const DarwinHost&, char* out, std::size_t len);
+#endif
 
 #if defined(_WIN32)
 // What the process is really running on, for a receipt that has to tell a

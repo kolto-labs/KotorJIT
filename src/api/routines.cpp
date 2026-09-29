@@ -207,7 +207,7 @@ void push_argument(lua_State* L, const Routine& r, std::uint8_t param, int index
         // StackPushVector takes the Vector by value, which under __thiscall is
         // three stacked floats -- see the note in enginestruct.hpp, which cites
         // the thunk's own `ret 0xC`. This is NOT three separate scalar pushes.
-        ex.push_vector(self, v.x, v.y, v.z);
+        push_vector_value(ex, self, v);
         return;
     }
     default: break;
@@ -519,7 +519,9 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 
 // ------------------------------------------------------------ register ------
 
-// CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08.
+// CSWVirtualMachineCommands: vtable +0x00, has_caller +0x04, caller_id +0x08 on
+// i386; has_caller +0x08 and a 64-bit caller_id +0x10 on x86_64 (both Mac
+// builds' RunScript store them there; see api/abi_layout.hpp).
 // data/hostapi.toml `nwscript.with_caller`: write, call body, restore (including on error).
 int l_as(lua_State* L) {
     const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
@@ -528,16 +530,13 @@ int l_as(lua_State* L) {
     if (!vm_binding_live())
         return luaL_error(L, "nwscript.with_caller needs a live VM context");
 
-    struct Commands {
-        void*         vtable;
-        std::int32_t  has_caller;
-        std::uint32_t caller_id;
-    };
-    auto* cmds = static_cast<Commands*>(vm.command_implementer);
-    const std::int32_t old_has = cmds->has_caller;
-    const std::uint32_t old_id = cmds->caller_id;
-    cmds->has_caller = 1;
-    cmds->caller_id = id;
+    auto* cmds = static_cast<char*>(vm.command_implementer);
+    auto* has_caller = reinterpret_cast<std::int32_t*>(cmds + layout::kEngine.commands_has_caller);
+    auto* caller_id = reinterpret_cast<abi::ObjectId*>(cmds + layout::kEngine.commands_caller_id);
+    const std::int32_t old_has = *has_caller;
+    const abi::ObjectId old_id = *caller_id;
+    *has_caller = 1;
+    *caller_id = abi::ObjectId(id);
 
     const int extras = lua_gettop(L) - 2;
     const int base = lua_gettop(L);
@@ -546,8 +545,8 @@ int l_as(lua_State* L) {
     const int rc = lua_pcall(L, extras, LUA_MULTRET, 0);
     if (!vm_binding_live() || binding().command_implementer != cmds)
         return luaL_error(L, "nwscript.with_caller: VM context changed before caller restoration");
-    cmds->has_caller = old_has;
-    cmds->caller_id = old_id;
+    *has_caller = old_has;
+    *caller_id = old_id;
     if (rc != 0) return lua_error(L);
     return lua_gettop(L) - base;
 }

@@ -196,7 +196,8 @@ struct CExoString {
     char*         c_string;
     std::uint32_t length;
 };
-static_assert(sizeof(CExoString) == 8, "CExoString is two 32-bit fields");
+static_assert(sizeof(CExoString) == (sizeof(void*) == 8 ? 16 : 8),
+              "CExoString is {char*, uint32}: 8 bytes on i386, 16 (length at +8) on x86_64");
 
 constexpr std::uint32_t kMaxEngineString = 64 * 1024;
 

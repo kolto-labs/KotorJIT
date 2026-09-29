@@ -694,8 +694,9 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
 
         if (st != HookStatus::Ok) {
             error = "site \"" + p.request->site + "\" at 0x";
-            char buf[16];
-            std::snprintf(buf, sizeof(buf), "%08X", static_cast<unsigned>(p.addr));
+            char buf[24];
+            std::snprintf(buf, sizeof(buf), sizeof(void*) == 8 ? "%09llX" : "%08llX",
+                          static_cast<unsigned long long>(p.addr));
             error += buf;
             error += ": ";
             error += to_string(st);

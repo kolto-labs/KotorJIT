@@ -2,8 +2,16 @@
 #include "hooks/x64/trampoline.hpp"
 
 #include <sys/mman.h>
-#include <sys/syscall.h>
 #include <unistd.h>
+
+#if defined(__APPLE__) || defined(KP_DARWIN_SHIM)
+#define KP_X64_DARWIN 1
+#include <mach/mach.h>
+#include <mach/mach_vm.h>
+#else
+#define KP_X64_DARWIN 0
+#include <sys/syscall.h>
+#endif
 
 #include <cerrno>
 #include <cstdio>
@@ -21,6 +29,23 @@ testing::ProtectFn g_protect = nullptr;
 // slot would run ld.so's resolver inside that window) and must not touch
 // errno (__errno_location is another PLT call). The test seam keeps the
 // libc convention and is translated here.
+#if KP_X64_DARWIN
+// macOS: mach_vm_protect, and VM_PROT_COPY when a write is asked of a
+// file-backed code page (both retail images map __TEXT from a signed file
+// with maxprot rwx; the copy makes the page private first). PROT_* and
+// VM_PROT_* have the same bit values. Returns 0 or -EACCES.
+int protect(void* addr, std::size_t len, int prot) {
+    if (g_protect) {
+        if (g_protect(addr, len, prot) == 0) return 0;
+        return errno ? -errno : -EPERM;
+    }
+    const auto a = static_cast<mach_vm_address_t>(reinterpret_cast<std::uintptr_t>(addr));
+    kern_return_t kr = mach_vm_protect(mach_task_self(), a, len, FALSE, vm_prot_t(prot));
+    if (kr != KERN_SUCCESS && (prot & PROT_WRITE))
+        kr = mach_vm_protect(mach_task_self(), a, len, FALSE, vm_prot_t(prot) | VM_PROT_COPY);
+    return kr == KERN_SUCCESS ? 0 : -EACCES;
+}
+#else
 int protect(void* addr, std::size_t len, int prot) {
     if (g_protect) {
         if (g_protect(addr, len, prot) == 0) return 0;
@@ -33,6 +58,7 @@ int protect(void* addr, std::size_t len, int prot) {
                  : "rcx", "r11", "memory");
     return int(r);
 }
+#endif
 
 // jmp [rip+0] ; .quad destination
 void write_abs_jmp(std::uint8_t* at, std::uint64_t destination) {
@@ -66,6 +92,22 @@ Span span_of(const std::uint8_t* addr, std::size_t len) {
 
 // PROT_* of the mapping that contains `page`, from /proc/self/maps; -1 when
 // it is not listed. Runs before any protection changes.
+#if KP_X64_DARWIN
+// VM_PROT_* (== PROT_*) of the region that contains `page`, from the Mach VM
+// map; -1 when it is unmapped. Never reads the page.
+int page_prot(std::uintptr_t page) {
+    mach_vm_address_t region = page;
+    mach_vm_size_t size = 0;
+    vm_region_basic_info_data_64_t info{};
+    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
+    mach_port_t object = MACH_PORT_NULL;
+    const kern_return_t kr = mach_vm_region(mach_task_self(), &region, &size, VM_REGION_BASIC_INFO_64,
+                                            reinterpret_cast<vm_region_info_t>(&info), &count, &object);
+    if (object != MACH_PORT_NULL) mach_port_deallocate(mach_task_self(), object);
+    if (kr != KERN_SUCCESS || region > page) return -1;
+    return int(info.protection) & (PROT_READ | PROT_WRITE | PROT_EXEC);
+}
+#else
 int page_prot(std::uintptr_t page) {
     FILE* f = std::fopen("/proc/self/maps", "re");
     if (!f) return -1;
@@ -87,6 +129,7 @@ int page_prot(std::uintptr_t page) {
     std::fclose(f);
     return prot;
 }
+#endif
 
 // How many bytes from `code`, up to kMaxStolen, lie on pages that are
 // readable and executable now. Reads /proc/self/maps only, never the target.
@@ -154,13 +197,26 @@ const char* restore_refused(bool eacces, int outcome) {
 // page can still be written, and tries the restore again. On return,
 // `now_new` says whether memory holds `bytes` (true) or what was there
 // before (false). See FAILED RESTORE in trampoline.hpp.
+// The transient protection for the write. On Linux it is RW: the page is
+// briefly not executable, which is why the engine refuses a target page that
+// shares code with the write path. On macOS it is RWX first -- permitted for
+// these non-hardened x86_64 processes, natively and under Rosetta -- so a
+// thread that is running elsewhere on the same page during the write keeps
+// running; RW is the fallback if the kernel refuses RWX.
+int open_for_write(const Span& s) {
+#if KP_X64_DARWIN
+    if (protect(s.base(), s.bytes(), PROT_READ | PROT_WRITE | PROT_EXEC) == 0) return 0;
+#endif
+    return protect(s.base(), s.bytes(), PROT_READ | PROT_WRITE);
+}
+
 HookStatus write_code(std::uint8_t* addr, const std::uint8_t* bytes, std::size_t len, const int prot[2],
                       bool& now_new, const char** detail) {
     now_new = false;
     const Span s = span_of(addr, len);
     std::uint8_t previous[kMaxStolen];
     std::memcpy(previous, addr, len);  // page still has its recorded protection here
-    if (protect(s.base(), s.bytes(), PROT_READ | PROT_WRITE) != 0) {
+    if (open_for_write(s) != 0) {
         reseal(s, prot);  // a two-mapping span can be half changed
         if (detail) *detail = "mprotect RW refused; nothing written";
         return HookStatus::ProtectFailed;
@@ -207,7 +263,13 @@ __attribute__((noinline)) bool shares_engine_page(const std::uint8_t* addr, std:
         // restore. The real path is a bare syscall; these stay listed as a
         // cheap margin.
         reinterpret_cast<std::uintptr_t>(&::mprotect),
+#if KP_X64_DARWIN
+        reinterpret_cast<std::uintptr_t>(&::__error),
+        reinterpret_cast<std::uintptr_t>(&::mach_vm_protect),
+        reinterpret_cast<std::uintptr_t>(&open_for_write),
+#else
         reinterpret_cast<std::uintptr_t>(&::__errno_location),
+#endif
         reinterpret_cast<std::uintptr_t>(g_protect),
         // Detour::install itself, via the return address of this call.
         reinterpret_cast<std::uintptr_t>(__builtin_return_address(0)),
@@ -235,6 +297,16 @@ void* map_near(std::uintptr_t near, std::size_t size) {
                 hint = origin - d;
             }
             if (hint >= 0x0000800000000000ull) continue;  // user half only
+#if KP_X64_DARWIN
+            // mach_vm_allocate with VM_FLAGS_FIXED fails with KERN_NO_SPACE
+            // on an occupied range and never replaces anything: the
+            // NOREPLACE semantics Linux gets from MAP_FIXED_NOREPLACE.
+            // __PAGEZERO (the low 4 GiB of a Mach-O x86_64 process) is
+            // simply never free.
+            mach_vm_address_t want = hint;
+            if (mach_vm_allocate(mach_task_self(), &want, size, VM_FLAGS_FIXED) != KERN_SUCCESS) continue;
+            return reinterpret_cast<void*>(std::uintptr_t(want));
+#else
             void* p = mmap(reinterpret_cast<void*>(hint), size, PROT_READ | PROT_WRITE,
                            MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
             if (p == MAP_FAILED) continue;
@@ -243,6 +315,7 @@ void* map_near(std::uintptr_t near, std::size_t size) {
                 continue;
             }
             return p;
+#endif
         }
     }
     return nullptr;
@@ -405,7 +478,7 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
     for (std::size_t i = 0; i < 2; ++i) {
         prot[i] = page_prot(span.lo + (i < span.pages ? i : 0) * page_size());
         if (prot[i] < 0) {
-            if (detail) *detail = "target page is not listed in /proc/self/maps";
+            if (detail) *detail = "target page is not in the process's memory map";
             return HookStatus::ProtectFailed;
         }
         // Not code, or a page an earlier failed write left RW. Recording
@@ -443,7 +516,7 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
             return insn.ok() ? HookStatus::OutOfRange : HookStatus::DecodeFailed;
         }
         o += insn.len;
-        out += insn.len;
+        out += relocated_size(insn);
     }
     write_abs_jmp(tramp + out, at + pl.stolen);
     if (protect(page, size, PROT_READ | PROT_EXEC) != 0) {

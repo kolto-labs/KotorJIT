@@ -69,3 +69,47 @@ Incoming Lua/NW object IDs belong to the server ID space. The demonstrated engin
 Windows original PE SHA-256 is `9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435`, preferred base `0x400000`. Original bytes are under `K1__k1_win_gog_swkotor.exe/artifacts/raw_image` beside the Mac corpus originals. Windows calls use ECX-this; the scale setter returns a Boolean in AL and pops eight stack bytes. Its scale virtual slot is `+0xcc`, not Mac's `+0xd0`. Concrete setter `0x444d90`, Scene setter `0x44fcf0`, getter `0x44fd40`; effective/base/guard fields match K1 Mac (`+0x1b4/+0x1b8/+0x58`). These Windows sites were independently checked against original bytes, upgrading earlier catalog mapping candidates to instruction evidence.
 
 The typed creature wrappers preserve engine lookup semantics: object-array status zero means success, then a non-null and creature type check, then virtual base-to-creature conversion. On Windows type byte `+8` is 5 and conversion slot `+0x2c`; Mac i386 uses type byte `+8` and slot `+0x30`; Mac x86-64 uses type byte `+0x10` and slot `+0x60`. Use the wrapper rather than reimplementing the bucket table. The x86-64 ID domain is still 32-bit despite register width. Each model getter takes selector `0xff` and force-update zero. These sites support a native operation adapter; they do not establish a complete Mac loader or live execution.
+
+## K2 x86_64 native-API bindings recovered 2026-09-29 (this session)
+
+Verified against the KOTOR2sub x86_64 slice (sha256 469067c4…033be4, `__TEXT`
+base 0x100000000) by symbol and by disassembly. VAs are preferred; the runtime
+adds the loaded slide. All HIGH confidence (own C++ symbols present).
+
+### model (now wired: src/api/model_profiles.cpp macos-k2-x86_64, 5th site added)
+- `CServerExoApp::GetGameObject(unsigned long long)` @0x1002f9cd8, bytes
+  `554889e54883ec10488b470848c745f8` — the server-object lookup (role 5).
+  Chain: `->internal (+0x8) ->CGameObjectArray (+0x10098)`; `CAppManager::server`
+  is +0x10. Reuses the (this,id)->CGameObject* ABI of the client creature getter.
+
+### motion (evidence recorded; profile NOT yet wired — needs the full span/slot
+###         verification set that motion::Profile requires, as the K1 profile has)
+- `CSWSObject::SetPosition(Vector const&,int,int,int)` @0x1003ae1dc,
+  `554889e5415741564155415453504589`.
+- `CSWSObject::SetOrientation(Vector const&)` @0x1003ae27c,
+  `554889e58b46088987ec000000488b06`.
+- `CSWCObject::SetPosition(Vector const&)` @0x10020b75e,
+  `554889e54156534989f64889fb418b46`.
+- Fields (disassembled): server position vec `+0xd8` (x,y as a qword at +0xd8,
+  z as a dword at +0xe0); server orientation vec `+0xe4` (+0xec is z); dirty
+  byte `+0x2e4` (position sets bit 0x2 when the 3rd int arg is 0, orientation
+  sets bit 0x4); client position vec `+0x38` (z at +0x40). i386->x64 growth is
+  consistent (server pos i386 +0x94 -> x64 +0xd8; client pos +0x24 -> +0x38).
+
+### camera (evidence recorded; profile NOT yet wired — camera::Profile also
+###         needs vtable/type-id/pending-style spans this pass did not gather)
+- Chain: `_g_pAppManager` @0x1005d18a0 `->client (+0x8) ->internal (+0x8)
+  ->CSWCModule (+0x30) ->CSWCameraOnAStick (+0x58)`. Confirmed by
+  `CClientExoAppInternal::GetModule` @0x100172930 (`mov 0x30(%rdi),%rax`) and
+  `GetModuleCamera` @0x10017293a (`mov 0x30(%rdi),%rcx; mov 0x58(%rcx),%rax`).
+- `CSWCameraOnAStick` instance fields, from the property parser
+  `CSWCameraOnAStick::Message(char*)` @0x1001449dc and `Control(float)`
+  @0x100144b6c: m_fDist `+0x194`, m_fSpeed `+0x198`, m_fPresetPitch `+0x1a0`,
+  m_fHeight `+0x1a4` (each `lea <off>(%r14)` / `addq $off,%r14` beside its
+  `m_f…` string; Control writes `movss %xmm1,0x194(%rbx)`). Ordering matches the
+  Windows K1 camera profile (0x110/0x114/0x11c/0x120) with a 4-byte gap at +0x19c.
+
+Wiring motion and camera means completing their Profile span/slot tables to the
+K1 standard (placeable vtable + AsSWS* slots for motion; module/camera/chase
+vtables + chase type id + pending-style global for camera) and re-verifying each
+against this slice. Left as the next corpus pass so no half-verified offset ships.

@@ -19,6 +19,7 @@ namespace kp::image {
 namespace {
 
 #include "generated/builds.inc"
+#include "generated/builds_macho.inc"
 
 int hex_value(char c) {
     if (c >= '0' && c <= '9') return c - '0';
@@ -48,10 +49,19 @@ const BuildRecord* build_table(std::size_t& count) {
     return kBuilds;
 }
 
+const BuildRecord* macho_build_table(std::size_t& count) {
+    count = sizeof kBuildsMachO / sizeof kBuildsMachO[0];
+    return kBuildsMachO;
+}
+
 const BuildRecord* lookup_build(const std::string& sha256) {
     if (sha256.empty()) return nullptr;
     std::size_t n = 0;
     const BuildRecord* t = build_table(n);
+    for (std::size_t i = 0; i < n; ++i) {
+        if (sha256 == t[i].sha256) return &t[i];
+    }
+    t = macho_build_table(n);
     for (std::size_t i = 0; i < n; ++i) {
         if (sha256 == t[i].sha256) return &t[i];
     }

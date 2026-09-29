@@ -44,7 +44,7 @@ Start to finish: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Status
 
-KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today. Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today, and the x86_64 Steam macOS builds of both games are supported (Mach-O runtime, `scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
 
 ## Credits
 

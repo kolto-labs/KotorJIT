@@ -22,9 +22,28 @@ namespace {
 // The generated layout table. It is included here and nowhere else, so the only
 // way to reach a field is through the accessors below -- there is no path that
 // takes an offset from a script and an address and multiplies them together.
+//
+// The table is K1's, and every offset in it describes a 32-bit process, so it
+// is compiled in only on a 32-bit build. A 64-bit build (the macOS x86_64
+// runtime) has a different object layout for every one of these structs and a
+// 64-bit address space that address_arg below could not even express, so
+// typed struct access is reported unavailable there rather than answered with
+// a wrong offset. Raw kp.mem reads are unaffected. Recovering the x86_64
+// layouts is a separate corpus task; when it lands it adds a
+// structs_<build>_x64.inc and flips kStructsSupported.
+#if defined(__i386__) || defined(_M_IX86)
 #include "generated/structs_k1.inc"
+inline constexpr bool kStructsSupported = true;
+#else
+inline constexpr bool kStructsSupported = false;
+// One inert layout: C++ forbids a zero-length array, and the machinery below
+// (name_index, near_layouts) walks kLayouts. Its empty name never matches a
+// script's query, and every module entry point refuses before a lookup when
+// kStructsSupported is false.
+static constexpr Layout kLayouts[] = {{"", 0u, nullptr, 0u, "typed struct access is unavailable on this build"}};
+#endif
 
-constexpr std::size_t kLayoutCount = sizeof kLayouts / sizeof kLayouts[0];
+constexpr std::size_t kLayoutCount = kStructsSupported ? sizeof kLayouts / sizeof kLayouts[0] : 0;
 
 // 4 KiB on both targets. Only used to bound how far a string read walks before
 // asking the probe again, so that a CExoString running into an unmapped page
@@ -977,6 +996,9 @@ std::uintptr_t address_arg(lua_State* L, int index) {
 }
 
 int l_at(lua_State* L) {
+    if (!kStructsSupported)
+        return luaL_error(L, "kp.struct is unavailable on this build: its offsets are 32-bit K1 "
+                             "layouts. Use kp.mem for raw reads on 64-bit builds.");
     // A zero address is accepted rather than refused. It is what a failed
     // pointer chase yields, and every read through the resulting view returns
     // nil, which is the answer a script can branch on.
@@ -986,6 +1008,9 @@ int l_at(lua_State* L) {
 }
 
 int l_view(lua_State* L) {
+    if (!kStructsSupported)
+        return luaL_error(L, "kp.struct is unavailable on this build: its offsets are 32-bit K1 "
+                             "layouts. Use kp.mem for raw reads on 64-bit builds.");
     // Guarded the same way an address is. Converting a NaN or an out-of-range
     // double to an integer type is undefined, and an object id arrives from
     // wherever the script got it.

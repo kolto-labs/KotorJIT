@@ -19,7 +19,7 @@ per-build addresses are a cache. This is unrelated to the Unity game engine.
 
 - **supported** — required hook sites resolve; `install_to_game.sh` works today (Windows GOG/Steam K1, GOG Aspyr K2, …).
 - **registered** — binary is identified but not fully installable yet.
-- **static_only** — signature / corpus tables only. Mac K1/K2 are here until `src/image` gains a Mach-O loader (`Format` is PE/ELF today).
+- **static_only** — signature / corpus tables only. The 32-bit Mac K1/K2 corpus images stay here; the x86_64 Steam macOS builds are now **supported** (`src/image` has a Mach-O loader and the runtime builds as a dylib — see [`macos-install.md`](macos-install.md)).
 
 ## Packaging
 

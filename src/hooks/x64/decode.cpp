@@ -155,6 +155,19 @@ Insn decode(const std::uint8_t* code, std::size_t avail) {
         if (op != 0x8f) return refuse("VEX/EVEX encoding");
     }
 
+    // Short conditional and unconditional jumps. LOOP/JRCXZ (E0..E3) have no
+    // rel32 form and stay refused below.
+    if ((op >= 0x70 && op <= 0x7f) || op == 0xeb) {
+        if (opsize) return refuse("operand-size prefix on a short branch");
+        if (!need(1)) return refuse(too_long());
+        Insn insn;
+        insn.rel = Rel::Rel8;
+        insn.rel_offset = std::uint8_t(at);
+        insn.ends_flow = op == 0xeb;
+        insn.len = std::uint8_t(at + 1);
+        return insn;
+    }
+
     Shape shape;
     bool two = false;
     std::uint8_t op2 = 0;
@@ -172,14 +185,13 @@ Insn decode(const std::uint8_t* code, std::size_t avail) {
     }
     if (shape == Bad) {
         switch (op) {
-            case 0xeb: case 0xe0: case 0xe1: case 0xe2: case 0xe3:
-                return refuse("short branch (rel8)");
+            case 0xe0: case 0xe1: case 0xe2: case 0xe3:
+                return refuse("loop/jrcxz (rel8 with no rel32 form)");
             case 0xc2: case 0xc3: case 0xca: case 0xcb: case 0xcf:
                 return refuse("return");
             case 0xcc: case 0xcd: case 0xf1: case 0xf4:
                 return refuse("trap or halt");
             default:
-                if (op >= 0x70 && op <= 0x7f) return refuse("short branch (rel8)");
                 return refuse(two ? "unsupported two-byte opcode" : "unsupported opcode");
         }
     }
@@ -255,7 +267,14 @@ Insn decode(const std::uint8_t* code, std::size_t avail) {
 
 std::uint64_t referent(const std::uint8_t* code, const Insn& insn, std::uint64_t at) {
     if (insn.rel == Rel::None) return 0;
+    if (insn.rel == Rel::Rel8)
+        return at + insn.len + std::uint64_t(std::int64_t(std::int8_t(code[insn.rel_offset])));
     return at + insn.len + std::uint64_t(std::int64_t(read_i32(code + insn.rel_offset)));
+}
+
+std::size_t relocated_size(const Insn& insn) {
+    if (insn.rel != Rel::Rel8) return insn.len;
+    return insn.ends_flow ? 5 : 6;
 }
 
 bool relocate(const std::uint8_t* src, std::uint64_t src_at, const Insn& insn,
@@ -266,6 +285,24 @@ bool relocate(const std::uint8_t* src, std::uint64_t src_at, const Insn& insn,
         return true;
     }
     const std::uint64_t target = referent(src, insn, src_at);
+    if (insn.rel == Rel::Rel8) {
+        // Prefixes before a short branch are only branch hints (2E/3E); the
+        // widened form drops them.
+        const std::uint8_t op = src[insn.rel_offset - 1];
+        const std::size_t n = relocated_size(insn);
+        const std::int64_t wide = std::int64_t(target - (dst_at + n));
+        if (wide < INT32_MIN || wide > INT32_MAX) return false;
+        const std::int32_t w32 = std::int32_t(wide);
+        if (op == 0xeb) {
+            dst[0] = 0xe9;
+            std::memcpy(dst + 1, &w32, 4);
+        } else {
+            dst[0] = 0x0f;
+            dst[1] = std::uint8_t(0x80 | (op & 0x0f));
+            std::memcpy(dst + 2, &w32, 4);
+        }
+        return true;
+    }
     const std::int64_t disp = std::int64_t(target - (dst_at + insn.len));
     if (disp < INT32_MIN || disp > INT32_MAX) return false;
     const std::int32_t d32 = std::int32_t(disp);

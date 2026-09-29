@@ -12,8 +12,13 @@
 #include <cstring>
 
 #include "internal.hpp"
+#include "macho.hpp"
 #include "pe_elf.hpp"
 #include "sha256.hpp"
+
+#if defined(__APPLE__) || defined(KP_DARWIN_SHIM)
+#include "platform/platform.hpp"
+#endif
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -58,6 +63,16 @@ std::optional<std::uintptr_t> find_live_base(const std::string& module_path, For
     return reinterpret_cast<std::uintptr_t>(h);
 #else
     (void)module_path;
+#if defined(__APPLE__) || defined(KP_DARWIN_SHIM)
+    if (fmt == Format::MachO) {
+        // Where dyld put the MH_EXECUTE header. The retail images are not PIE,
+        // so this is their preferred 0x100000000; asking rather than assuming
+        // keeps a slid image a data question for parse_image().
+        const std::uintptr_t base = platform::module_base(nullptr);
+        if (base != 0) return base;
+        return std::nullopt;
+    }
+#endif
     if (record != nullptr) return record->image_base;
     if (fmt != Format::Elf32) return std::nullopt;
     // Unrecognised ELF: the file's own lowest PT_LOAD is the load address for a
@@ -348,13 +363,35 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
     } else if (elf::looks_like(head.data(), head.size())) {
         r.format = Format::Elf32;
     } else if (head.size() >= 4 &&
+               ((head[0] == 0xCF && head[1] == 0xFA && head[2] == 0xED && head[3] == 0xFE) ||
+                (head[0] == 0xCA && head[1] == 0xFE && head[2] == 0xBA && head[3] == 0xBE))) {
+        r.format = Format::MachO;
+        // A universal file is registered under its container digest and its
+        // x86_64 slice digest; a player whose install was thinned to one
+        // architecture has only the latter on disk.
+        if (record == nullptr) {
+            macho::Identity id;
+            std::string why;
+            if (macho::identify(head.data(), head.size(), 0x01000007u /* CPU_TYPE_X86_64 */,
+                                3u /* CPU_SUBTYPE_X86_64_ALL */, id, why)) {
+                record = lookup_build(id.slice_sha256);
+                if (record != nullptr) {
+                    r.identity.recognised = true;
+                    r.identity.build_alias = record->alias;
+                    r.identity.expected_encrypted = record->encrypted;
+                }
+            }
+        }
+    } else if (head.size() >= 4 &&
                ((head[0] == 0xCE && head[1] == 0xFA && head[2] == 0xED && head[3] == 0xFE) ||
                 (head[0] == 0xFE && head[1] == 0xED && head[2] == 0xFA && head[3] == 0xCE) ||
-                (head[0] == 0xCA && head[1] == 0xFE && head[2] == 0xBA && head[3] == 0xBE) ||
                 (head[0] == 0xBE && head[1] == 0xBA && head[2] == 0xFE && head[3] == 0xCA))) {
+        // 32-bit i386 Mach-O (the legacy corpus images) or a big-endian
+        // container: out of scope for this runtime, which only ever runs as
+        // an x86_64 process.
         r.format = Format::MachO;
         r.status = LoadStatus::ParseFailed;
-        r.detail = "Mach-O image recognized but loader not implemented yet: " + module_path;
+        r.detail = "32-bit or big-endian Mach-O is not supported: " + module_path;
         return r;
     } else {
         r.status = LoadStatus::ParseFailed;
@@ -479,6 +516,10 @@ bool dump_from(const LoadedImage& img, const LoadResult& result, const std::stri
                std::string& error) {
     error.clear();
     if (result.format == Format::Pe32) return dump_pe(img, out_path, error);
+    if (result.format == Format::MachO) {
+        error = "dump is not implemented for Mach-O: the mapped image is the file (no packer)";
+        return false;
+    }
     return dump_elf(img, out_path, error);
 }
 

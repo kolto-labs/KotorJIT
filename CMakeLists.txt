@@ -28,6 +28,46 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE
 # KOTOR install.
 enable_testing()
 
+# macOS is built by scripts/mac/build.sh, not by this CMake tree. The rest of
+# this file assumes a 32-bit-capable GCC/Clang and the mingw cross toolchain
+# (the Windows and Linux game ABIs are i386); an Apple host has neither, and
+# forcing a -m32 configure there fails before anything useful happens. So on
+# APPLE this file configures a single convenience target that shells out to the
+# build script, and stops. The macOS runtime, its address tables and its
+# offline verification live under scripts/mac/ and tools/mac/.
+if(APPLE)
+    add_custom_target(kphasor_mac ALL
+        COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_SOURCE_DIR}/scripts/mac/build.sh
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Building libkphasor.dylib via scripts/mac/build.sh (x86_64)"
+        VERBATIM USES_TERMINAL)
+    find_package(Python3 3.9 COMPONENTS Interpreter)
+    if(Python3_FOUND)
+        add_test(NAME mac_tables_test
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/mac/mac_tables_test.py)
+        set_tests_properties(mac_tables_test PROPERTIES LABELS "offline;mac" TIMEOUT 60)
+    endif()
+    # The x86_64 detour engine's self-test builds and runs on any x86_64 host,
+    # macOS included; it is the same binary the Linux CI runs.
+    add_executable(kp_hooktool_x64 tools/kp_hooktool_x64.cpp
+        src/hooks/x64/decode.cpp src/hooks/x64/trampoline.cpp)
+    target_include_directories(kp_hooktool_x64 PRIVATE src)
+    target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
+    add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
+    add_dependencies(kphasor_mac kp_hooktool_x64)
+    # The x86_64 engine-ABI unit test (layout widths, id truncation, the
+    # ExecuteCommand bound decoders). Runs on any x86_64 host.
+    add_executable(kp_mac_abitest tools/mac/kp_mac_abitest.cpp)
+    target_include_directories(kp_mac_abitest PRIVATE src)
+    target_compile_options(kp_mac_abitest PRIVATE -Wall -Wextra)
+    add_test(NAME kp_mac_abitest COMMAND kp_mac_abitest)
+    add_dependencies(kphasor_mac kp_mac_abitest)
+    message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
+                   "`ctest` runs the Mach-O table gate and the x86_64 detour self-test; "
+                   "run tools/mac/gen_mac_tables.py --check against the local images for full byte verification.")
+    return()
+endif()
+
 # These are offline fake-server/parser gates; no game, Wine or display is launched.
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
 foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test kpharness_physical_console_test kpharness_gamescope_backend_test)

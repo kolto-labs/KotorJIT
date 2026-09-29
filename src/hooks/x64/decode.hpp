@@ -34,6 +34,7 @@ enum class Rel : std::uint8_t {
     None,
     RipDisp32,   // memory operand [rip + disp32]
     Rel32,       // E8 / E9 / 0F 8x: branch target = end + rel32
+    Rel8,        // 70..7F / EB: branch target = end + rel8; widened when relocated
 };
 
 struct Insn {
@@ -57,6 +58,13 @@ std::uint64_t referent(const std::uint8_t* code, const Insn&, std::uint64_t at);
 // Copies one instruction to `dst` (which will execute at `dst_at`), re-aiming
 // its disp32/rel32 so it still names the same absolute address. Returns false,
 // writing nothing, when the new displacement does not fit in a signed 32 bits.
+// Bytes relocate() writes for this instruction. Equal to insn.len except for
+// a short branch, which is widened: Jcc rel8 -> 0F 8x rel32 (6), JMP rel8 ->
+// E9 rel32 (5). Retail x86_64 prologues open with `cmp; jne` often enough
+// (CSWSWaypoint::EventHandler on both Mac builds) that refusing rel8 would
+// leave real sites unhookable.
+std::size_t relocated_size(const Insn&);
+
 bool relocate(const std::uint8_t* src, std::uint64_t src_at, const Insn&,
               std::uint8_t* dst, std::uint64_t dst_at);
 
