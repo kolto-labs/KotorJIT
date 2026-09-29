@@ -647,6 +647,10 @@ void overlay_shutdown() {
   directinput = nullptr;
 }
 } // namespace kp::devtools
+#elif defined(__APPLE__) || defined(KP_DARWIN_SHIM)
+// The macOS overlay lives in overlay_darwin.cpp: it hooks the Cocoa/OpenGL
+// present and event paths through the Objective-C runtime rather than the
+// Win32 message pump and DirectInput. Nothing here.
 #else
 namespace kp::devtools {
 void overlay_tick() {}
