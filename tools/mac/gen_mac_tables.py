@@ -404,6 +404,29 @@ def main():
                                '{ptr,adj} entries; %d commands' % (int(mtab.group(1), 16), bound))
         f['vmcmd.command_count'] = ('CSWVirtualMachineCommands', 'command_count', bound, 4,
                                     'ExecuteCommand bound: cmpl $%s,%%esi; %s' % (mcmp.group(1), mcmp.group(2)))
+        # RunScript stores the caller through ->command_implementer: an int
+        # flag, then the 64-bit object id.
+        rs = addr_of('vm.run_script')
+        ins = insns(img.m, rs, rs + 0x200)
+        flag = oid = None
+        for i in range(len(ins) - 1):
+            ld = re.fullmatch(r'0x%x\(%%r(\w+)\), %%r(\w+)' % ci, ins[i][2])
+            if ins[i][1] != 'movq' or not ld:
+                continue
+            st = re.fullmatch(r'%%(e|r)ax, (0x[0-9a-f]+)\(%%r%s\)' % ld.group(2), ins[i + 1][2])
+            if not st:
+                continue
+            off = int(st.group(2), 16)
+            if ins[i + 1][1] == 'movl' and flag is None:
+                flag = off
+            elif ins[i + 1][1] == 'movq' and oid is None:
+                oid = off
+        if flag is None or oid is None:
+            die('RunScript caller stores through the command implementer not found')
+        f['vmcmd.has_caller'] = ('CSWVirtualMachineCommands', 'has_caller', flag, 4,
+                                 'RunScript: movl %%eax, %#x(implementer)' % flag)
+        f['vmcmd.caller_id'] = ('CSWVirtualMachineCommands', 'caller_id', oid, 8,
+                                'RunScript: movq %%rax, %#x(implementer)' % oid)
         return f
 
     k2.sci = k2.sym['_ZN23CVirtualMachineInternal21SetCommandImplementerEP29CVirtualMachineCmdImplementer']
@@ -498,6 +521,43 @@ def main():
         f['script_event.strings'] = ('CScriptEvent', 'strings', so - 0x10, 16,
                                      'the CExoString list sits one 16-byte CExoArrayList before objects '
                                      '(destructor frees +0x08, +0x18, +0x28(strings), +0x38)')
+
+    # --- the compiled-in x86_64 layout must be exactly what both images do ----
+    hdr = open(os.path.join(ROOT, 'src/api/abi_layout.hpp')).read()
+    body = hdr[hdr.index('inline constexpr EngineLayout kX64{'):]
+    body = body[:body.index('};')]
+    vals = [int(v, 0) if v not in ('true', 'false') else v == 'true'
+            for v in re.findall(r'\*/\s*(0x[0-9A-Fa-f]+|\d+|true|false)', body)]
+    names = ['exostring_length', 'arraylist_size_field', 'arraylist_bytes', 'script_event_bytes',
+             'script_event_ints', 'script_event_floats', 'script_event_strings', 'script_event_objects',
+             'object_id_bytes', 'game_object_id', 'commands_has_caller', 'commands_caller_id',
+             'commands_table', 'command_entry_bytes', 'area_game_object', 'module_game_object',
+             'module_game_object_is_pointer']
+    if len(vals) != len(names):
+        die('could not read kX64 from src/api/abi_layout.hpp (%d values)' % len(vals))
+    lay = dict(zip(names, vals))
+    for f in (f1, f2):
+        want = {
+            'script_event_ints': f['script_event.ints'][2], 'script_event_floats': f['script_event.floats'][2],
+            'script_event_strings': f['script_event.strings'][2], 'script_event_objects': f['script_event.objects'][2],
+            'object_id_bytes': f['script_event.objects'][3], 'game_object_id': f['object.id'][2],
+            'commands_has_caller': f['vmcmd.has_caller'][2], 'commands_caller_id': f['vmcmd.caller_id'][2],
+            'commands_table': f['vmcmd.commands'][2], 'area_game_object': f['area.game_object'][2],
+            'module_game_object': f['module.game_object'][2],
+        }
+        for k, v in want.items():
+            if lay[k] != v:
+                die('src/api/abi_layout.hpp kX64.%s = %#x, image says %#x' % (k, lay[k], v))
+    # CExoString {text@0, u32 length@8}: CExoString(char const*) stores
+    # strlen+1 at +8 and the buffer at +0 (K2 named; K1 via agreed match).
+    for img, ctor in ((k2, k2.sym['_ZN10CExoStringC2EPKc']), (k1, inv2.get(k2.sym['_ZN10CExoStringC2EPKc']))):
+        if ctor is None:
+            die('K1 has no match for CExoString(char const*)')
+        t = ' | '.join('%s %s' % (mn, o) for _, mn, o in insns(img.m, ctor, ctor + 0x40))
+        if not re.search(r'movl %eax, 0x8\(%r\w+\)', t) or not re.search(r'movq %rax, \(%r\w+\)', t):
+            die('CExoString(char const*) layout shape at %#x' % ctor)
+    if lay['exostring_length'] != 8:
+        die('kX64.exostring_length must be 8')
 
     # --- emit ----------------------------------------------------------------
     def table(alias, game, img, addrs, fields, file_path, how_k1):

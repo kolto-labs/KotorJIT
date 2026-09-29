@@ -51,7 +51,7 @@
 //     rules GCC applies to a struct return differ. Use an out-parameter.
 //   * Variadic methods. MSVC compiles those as __cdecl, not __thiscall, so the
 //     cleanup side flips. None of the M1 hook sites are variadic.
-//   * 64-bit anything. There is no __thiscall on x86-64.
+//   * 64-bit __thiscall. There is none on x86-64; see the x86_64 branch below.
 //
 // WHY NOT LUAJIT FFI
 // ==================
@@ -71,8 +71,21 @@ namespace kp::hooks {
 
 #if defined(__i386__) || defined(_M_IX86)
 #define KP_THISCALL __attribute__((thiscall))
+#elif defined(__x86_64__) || defined(_M_X64)
+// System V x86-64 (the macOS builds): `this` is simply the first integer
+// argument in RDI and the caller cleans, so a plain function pointer with
+// `void* self` first IS the method's ABI. There is nothing to spell; the macro
+// exists so every hook prototype stays one declaration for both targets.
+//
+// What does NOT carry over from i386 is the argument widths. Declare each
+// parameter with the width the x86_64 method really has (see
+// platform/target.hpp): a 32-bit parameter where the engine passes a 64-bit
+// object id receives the right low half but garbage in the high half of the
+// register when it is forwarded, and a 32-bit out-parameter where it writes
+// 64 bits is a stack overwrite.
+#define KP_THISCALL
 #else
-#error "the __thiscall bridge is x86-32 only"
+#error "the __thiscall bridge supports x86-32 and x86-64 only"
 #endif
 
 // A pointer to a game method. `this` is an ordinary first parameter here; the
@@ -83,11 +96,13 @@ namespace kp::hooks {
 template <typename Ret, typename... Args>
 using ThiscallFn = Ret(KP_THISCALL*)(void*, Args...);
 
+#if defined(__i386__) || defined(_M_IX86)
 // The documented fallback spelling, kept declared so the alternative is visible
 // rather than buried in a comment. The second parameter absorbs EDX and is
 // never read.
 template <typename Ret, typename... Args>
 using FastcallThisFn = Ret(__attribute__((fastcall)) *)(void*, void*, Args...);
+#endif
 
 // Invariant 1, at the boundary: no fault crosses back into game code.
 //

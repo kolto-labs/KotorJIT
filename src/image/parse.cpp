@@ -158,6 +158,78 @@ void elf_sections_from_segments(const elf::Headers& h, std::vector<Section>& out
     }
 }
 
+// The mapped Mach-O: dyld maps the header and load commands as the first
+// bytes of __TEXT, so both are readable at the image base. Only the 64-bit
+// little-endian form is parsed here -- the only Mach-O this runtime is ever
+// loaded into. `slide` is the distance between where the image asked to be
+// (__TEXT's vmaddr) and where it is (the header address).
+struct MachOLive {
+    std::uint64_t text_vmaddr = 0;
+    bool ok = false;
+};
+
+bool macho_sections(const LoadedImage& img, std::vector<Section>* out, MachOLive& live) {
+    std::uint32_t hdr[8] = {};
+    if (!img.read(img.base(), hdr, sizeof hdr)) return false;
+    if (hdr[0] != 0xFEEDFACFu) return false;                 // MH_MAGIC_64
+    const std::uint32_t ncmds = hdr[4], sizeofcmds = hdr[5];
+    if (ncmds == 0 || ncmds > 4096 || sizeofcmds > 1u << 20) return false;
+    std::vector<std::uint8_t> cmds;
+    if (!img.read_vector(img.base() + 32, sizeofcmds, cmds)) return false;
+    struct Seg { std::uint64_t vmaddr; std::string name; std::int32_t initprot; std::vector<Section> secs; };
+    std::vector<Seg> segs;
+    std::size_t off = 0;
+    for (std::uint32_t i = 0; i < ncmds; ++i) {
+        if (off + 8 > cmds.size()) return false;
+        std::uint32_t cmd = 0, cmdsize = 0;
+        std::memcpy(&cmd, cmds.data() + off, 4);
+        std::memcpy(&cmdsize, cmds.data() + off + 4, 4);
+        if (cmdsize < 8 || off + cmdsize > cmds.size()) return false;
+        if (cmd == 0x19) {                                     // LC_SEGMENT_64
+            if (cmdsize < 72) return false;
+            const std::uint8_t* c = cmds.data() + off;
+            Seg seg;
+            seg.name.assign(reinterpret_cast<const char*>(c + 8), strnlen(reinterpret_cast<const char*>(c + 8), 16));
+            std::memcpy(&seg.vmaddr, c + 24, 8);
+            std::memcpy(&seg.initprot, c + 60, 4);
+            std::uint32_t nsects = 0;
+            std::memcpy(&nsects, c + 64, 4);
+            if (72 + std::uint64_t(nsects) * 80 > cmdsize) return false;
+            for (std::uint32_t k = 0; k < nsects; ++k) {
+                const std::uint8_t* sp = c + 72 + 80 * k;
+                Section sec;
+                sec.name.assign(reinterpret_cast<const char*>(sp), strnlen(reinterpret_cast<const char*>(sp), 16));
+                std::uint64_t addr = 0, size = 0;
+                std::uint32_t flags = 0;
+                std::memcpy(&addr, sp + 32, 8);
+                std::memcpy(&size, sp + 40, 8);
+                std::memcpy(&flags, sp + 64, 4);
+                sec.va = static_cast<std::uintptr_t>(addr);   // unslid for now
+                sec.size = static_cast<std::size_t>(size);
+                // S_ATTR_PURE_INSTRUCTIONS | S_ATTR_SOME_INSTRUCTIONS, in an
+                // executable segment. __stubs and __stub_helper count; they
+                // are small, and code_section() prefers the largest.
+                sec.executable = (flags & 0x80000400u) != 0 && (seg.initprot & 4) != 0;
+                seg.secs.push_back(std::move(sec));
+            }
+            if (seg.name == "__TEXT") live.text_vmaddr = seg.vmaddr;
+            segs.push_back(std::move(seg));
+        }
+        off += cmdsize;
+    }
+    if (live.text_vmaddr == 0) return false;
+    live.ok = true;
+    if (out == nullptr) return true;
+    const std::uintptr_t slide = img.base() - static_cast<std::uintptr_t>(live.text_vmaddr);
+    for (Seg& seg : segs) {
+        for (Section& s : seg.secs) {
+            s.va += slide;
+            out->push_back(std::move(s));
+        }
+    }
+    return !out->empty();
+}
+
 }  // namespace
 
 const char* to_string(ParseRoute r) {
@@ -165,6 +237,7 @@ const char* to_string(ParseRoute r) {
         case ParseRoute::PeSectionTable:    return "pe section table";
         case ParseRoute::ElfSectionHeaders: return "elf section headers";
         case ParseRoute::ElfProgramHeaders: return "elf program headers (names synthesised)";
+        case ParseRoute::MachOLoadCommands: return "mach-o load commands";
     }
     return "unknown";
 }
@@ -174,9 +247,10 @@ std::optional<Format> detect_format(const LoadedImage& img) {
     if (!img.read(img.base(), magic, sizeof magic)) return std::nullopt;
     if (magic[0] == 'M' && magic[1] == 'Z') return Format::Pe32;
     if (magic[0] == 0x7f && magic[1] == 'E' && magic[2] == 'L' && magic[3] == 'F') return Format::Elf32;
-    // Mach-O 32-bit LE (0xFEEDFACE) or fat (0xCAFEBABE). Recognized so Mac
-    // profiles can bind; parse/load remain PE/ELF until a Mach-O loader exists.
+    // Mach-O thin LE (0xFEEDFACE / 0xFEEDFACF), or a fat container on disk
+    // (0xCAFEBABE; never what dyld maps, but a file image may start with it).
     if ((magic[0] == 0xCE && magic[1] == 0xFA && magic[2] == 0xED && magic[3] == 0xFE) ||
+        (magic[0] == 0xCF && magic[1] == 0xFA && magic[2] == 0xED && magic[3] == 0xFE) ||
         (magic[0] == 0xFE && magic[1] == 0xED && magic[2] == 0xFA && magic[3] == 0xCE) ||
         (magic[0] == 0xCA && magic[1] == 0xFE && magic[2] == 0xBA && magic[3] == 0xBE) ||
         (magic[0] == 0xBE && magic[1] == 0xBA && magic[2] == 0xFE && magic[3] == 0xCA)) {
@@ -186,6 +260,11 @@ std::optional<Format> detect_format(const LoadedImage& img) {
 }
 
 std::optional<std::uintptr_t> image_base_of(const LoadedImage& img, Format fmt) {
+    if (fmt == Format::MachO) {
+        MachOLive live;
+        if (!macho_sections(img, nullptr, live)) return std::nullopt;
+        return static_cast<std::uintptr_t>(live.text_vmaddr);
+    }
     if (fmt == Format::Pe32) {
         const std::optional<pe::Headers> h = read_pe_headers(img);
         if (!h) return std::nullopt;
@@ -202,6 +281,13 @@ std::optional<std::uintptr_t> image_base_of(const LoadedImage& img, Format fmt) 
 
 std::optional<std::vector<Section>> parse_image(const LoadedImage& img, Format fmt, ParseRoute* route) {
     std::vector<Section> out;
+
+    if (fmt == Format::MachO) {
+        MachOLive live;
+        if (!macho_sections(img, &out, live)) return std::nullopt;
+        if (route != nullptr) *route = ParseRoute::MachOLoadCommands;
+        return out;
+    }
 
     if (fmt == Format::Pe32) {
         const std::optional<pe::Headers> h = read_pe_headers(img);

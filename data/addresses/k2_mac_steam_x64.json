@@ -15,7 +15,7 @@
   },
   "format_kind": "macho64",
   "note": "Steam x86_64 slice of the universal KOTOR2sub. Functions from its own symbol table.",
-  "adjudicated_bindings": 46,
+  "adjudicated_bindings": 48,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -492,6 +492,36 @@
       "size": 4,
       "addr_hex": "0x0",
       "offset_hex": "0x36D"
+    },
+    "vmcmd.has_caller": {
+      "cls": "CSWVirtualMachineCommands",
+      "method": "has_caller",
+      "kind": "field",
+      "required": false,
+      "addr": 0,
+      "source": "machine-code",
+      "confidence": 1.0,
+      "method_detail": "RunScript: movl %eax, 0x8(implementer)",
+      "candidates": 1,
+      "offset": 8,
+      "size": 4,
+      "addr_hex": "0x0",
+      "offset_hex": "0x8"
+    },
+    "vmcmd.caller_id": {
+      "cls": "CSWVirtualMachineCommands",
+      "method": "caller_id",
+      "kind": "field",
+      "required": false,
+      "addr": 0,
+      "source": "machine-code",
+      "confidence": 1.0,
+      "method_detail": "RunScript: movq %rax, 0x10(implementer)",
+      "candidates": 1,
+      "offset": 16,
+      "size": 8,
+      "addr_hex": "0x0",
+      "offset_hex": "0x10"
     },
     "area.game_object": {
       "cls": "CSWSArea",

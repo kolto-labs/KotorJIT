@@ -50,8 +50,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "api/abi_layout.hpp"
 #include "api/routines.hpp"
 #include "hooks/thiscall.hpp"
+#include "platform/target.hpp"
 
 struct lua_State;
 
@@ -86,7 +88,18 @@ struct VmEngineAccess {
     // this way avoids relying on GCC and MSVC agreeing about how a 12-byte
     // struct is passed under __thiscall, which is the one case
     // hooks/thiscall.hpp explicitly does not vouch for.
+    //
+    // x86_64 is the opposite case: System V passes a 12-byte all-float struct
+    // by value as two SSE eightbytes (x,y packed in XMM0, z in XMM1), which is
+    // NOT what three float parameters produce (XMM0, XMM1, XMM2). There the
+    // accessor is declared with the struct itself and the compiler classifies
+    // it exactly as clang did when it compiled StackPushVector(Vector).
+    // Call it through push_vector_value() below, which picks the right one.
+#if defined(__x86_64__) || defined(_M_X64)
+    hooks::ThiscallFn<int, Vec3>                push_vector = nullptr;
+#else
     hooks::ThiscallFn<int, float, float, float> push_vector = nullptr;
+#endif
     hooks::ThiscallFn<int, Vec3*>               pop_vector  = nullptr;
 
     // The type argument is the bare engine-structure id, 0..3. The VM adds the
@@ -108,11 +121,28 @@ struct VmEngineAccess {
 
     // Snapshot identity plus layout for validating the live dispatcher table
     // before touching the VM stack. A changed table needs a trusted recapture.
-    void* const* commands = nullptr;
+    // Entries are `command_entry_bytes` apart: 4-byte function pointers on
+    // i386, 16-byte Itanium pointers-to-member on x86_64.
+    const void* commands = nullptr;
     std::uint32_t command_count = 0;
-    std::uint32_t commands_offset = 0x0C;
+    std::uint32_t commands_offset = static_cast<std::uint32_t>(layout::kEngine.commands_table);
     std::uint32_t wrapper_internal_offset = 0;
 };
+
+// Push a Vector argument with the calling convention the running build uses.
+inline int push_vector_value(const VmEngineAccess& a, void* self, const Vec3& v) {
+#if defined(__x86_64__) || defined(_M_X64)
+    return a.push_vector(self, v);
+#else
+    return a.push_vector(self, v.x, v.y, v.z);
+#endif
+}
+
+// Is command slot `routine` populated? i386: a non-null function pointer that
+// is mapped. x86_64: an Itanium member pointer { ptr, adj } whose ptr is
+// either a mapped function (even) or a vtable offset + 1 (odd); both are
+// real handlers, a zero ptr is an empty slot.
+bool command_slot_live(const void* table, std::uint32_t routine);
 
 void                  bind_engine_access(const VmEngineAccess&);
 const VmEngineAccess& engine_access();
@@ -160,13 +190,16 @@ struct VmSites {
     std::uintptr_t exostring_dtor                 = 0;  // exo.string_dtor
 
     // Where the command array sits inside CSWVirtualMachineCommands. 0x0C on
-    // both games: the K1 dispatcher at 0x52C0D0 reads `mov eax,[ecx+0xc]`, and
-    // the size-asserted recovered layout puts `void* commands` at +0xC of a
-    // 0x10-byte object. Carried as a field so a build where it moves is a data
-    // change at the bind site rather than an edit to a .cpp.
-    std::uint32_t commands_offset = 0x0C;
-    // The dispatcher's own bound: `cmp edx,0x304` at 0x52C0D6.
-    std::uint32_t commands_count = 0x304;
+    // both i386 games: the K1 dispatcher at 0x52C0D0 reads `mov eax,[ecx+0xc]`,
+    // and the size-asserted recovered layout puts `void* commands` at +0xC of a
+    // 0x10-byte object. 0x18 on both x86_64 Mac builds (`mov 0x18(%rdi),%r8`).
+    // Carried as a field so a build where it moves is a data change at the
+    // bind site rather than an edit to a .cpp.
+    std::uint32_t commands_offset = static_cast<std::uint32_t>(layout::kEngine.commands_table);
+    // The dispatcher's own bound: `cmp edx,0x304` at 0x52C0D6 on K1 i386. The
+    // x86_64 builds take it from the table's vmcmd.command_count field (K1
+    // 0x304, K2 0x36D) and confirm it against the live `cmp esi,imm32; jg`.
+    std::uint32_t commands_count = abi::kX64 ? 0 : 0x304;
 };
 
 bool bind_sites(const VmSites&, std::string& error);
@@ -175,6 +208,28 @@ bool bind_sites(const VmSites&, std::string& error);
 // to 1000 when it grows the table. Reading the live prologue is what keeps us
 // from assuming 772 and missing the extra slots, or walking off a stock table.
 std::uint32_t discover_command_count(const VmSites&);
+
+// x86_64 (clang, both Mac builds): `81 FE imm32` = cmp esi, imm32, followed
+// by `7F rel8` / `0F 8F rel32` (jg: ids 0..imm valid, count imm+1) or
+// `7D` / `0F 8D` (jge: count imm).
+inline bool decode_execute_command_bound_x64(const std::uint8_t* code, std::size_t len,
+                                             std::uint32_t& out) {
+    if (code == nullptr) return false;
+    for (std::size_t i = 0; i + 7 <= len; ++i) {
+        if (code[i] != 0x81 || code[i + 1] != 0xFE) continue;
+        const std::uint32_t imm = static_cast<std::uint32_t>(code[i + 2]) |
+                                  (static_cast<std::uint32_t>(code[i + 3]) << 8) |
+                                  (static_cast<std::uint32_t>(code[i + 4]) << 16) |
+                                  (static_cast<std::uint32_t>(code[i + 5]) << 24);
+        if (imm == 0 || imm > 2048) return false;
+        const std::uint8_t j = code[i + 6];
+        const std::uint8_t j2 = i + 7 < len ? code[i + 7] : 0;
+        if (j == 0x7F || (j == 0x0F && j2 == 0x8F)) { out = imm + 1; return true; }
+        if (j == 0x7D || (j == 0x0F && j2 == 0x8D)) { out = imm; return true; }
+        return false;
+    }
+    return false;
+}
 
 // `81 FA imm32` = cmp edx, imm32. Stock K1 is 0x304; KPM writes 1000.
 inline bool decode_execute_command_bound(const std::uint8_t* code, std::size_t len,

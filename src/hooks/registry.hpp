@@ -30,7 +30,7 @@
 #include <string_view>
 #include <vector>
 
-#include "hooks/trampoline.hpp"
+#include "hooks/native_detour.hpp"
 
 namespace kp::hooks {
 
