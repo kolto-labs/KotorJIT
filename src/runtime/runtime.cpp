@@ -57,6 +57,10 @@ extern "C" {
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#elif defined(__APPLE__)
+#include <cstdlib>       // realpath
+#include <mach-o/dyld.h> // _NSGetExecutablePath
+#include <unistd.h>
 #else
 #include <unistd.h>
 #endif
@@ -251,6 +255,19 @@ std::string self_module_path() {
     char buf[MAX_PATH] = {0};
     const DWORD n = GetModuleFileNameA(nullptr, buf, sizeof buf);
     return n > 0 ? std::string(buf, n) : std::string();
+#elif defined(__APPLE__)
+    // The GAME executable, not this dylib: the runtime derives game_dir,
+    // script dir and log path from it. When KotorPhasor is loaded through
+    // DYLD_INSERT_LIBRARIES, _NSGetExecutablePath still names the host
+    // executable (KOTOR_Exe / KOTOR2sub), which is what we want. The path it
+    // returns may be non-canonical (symlinks, .. segments); realpath resolves
+    // it so directory_of() yields the real app-bundle MacOS directory.
+    char buf[4096] = {0};
+    std::uint32_t size = sizeof buf;
+    if (_NSGetExecutablePath(buf, &size) != 0) return {};
+    char resolved[4096] = {0};
+    if (::realpath(buf, resolved) != nullptr) return std::string(resolved);
+    return std::string(buf);
 #else
     char buf[4096] = {0};
     const ssize_t n = ::readlink("/proc/self/exe", buf, sizeof buf - 1);

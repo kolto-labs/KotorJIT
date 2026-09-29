@@ -28,6 +28,24 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE
 # KOTOR install.
 enable_testing()
 
+# macOS is built by scripts/mac/build.sh, not by this CMake tree. The rest of
+# this file assumes a 32-bit-capable GCC/Clang and the mingw cross toolchain
+# (the Windows and Linux game ABIs are i386); an Apple host has neither, and
+# forcing a -m32 configure there fails before anything useful happens. So on
+# APPLE this file configures a single convenience target that shells out to the
+# build script, and stops. The macOS runtime, its address tables and its
+# offline verification live under scripts/mac/ and tools/mac/.
+if(APPLE)
+    add_custom_target(kphasor_mac ALL
+        COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_SOURCE_DIR}/scripts/mac/build.sh
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Building libkphasor.dylib via scripts/mac/build.sh (x86_64)"
+        VERBATIM USES_TERMINAL)
+    message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
+                   "run tools/mac/gen_mac_tables.py --check to verify the address tables.")
+    return()
+endif()
+
 # These are offline fake-server/parser gates; no game, Wine or display is launched.
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
 foreach(gate kpharness_offline_test kpharness_world_test kpharness_creative_test kpharness_physical_console_test kpharness_gamescope_backend_test)
