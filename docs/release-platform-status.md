@@ -36,3 +36,33 @@ Correction after visual inspection of final-profile run20260927-000933: eight ph
 Normal-completion correction accepted on K2 in run20260927-001824: rebuilt runtime loaded the copied save, retired the main menu (main_menu=0), bound the VM and passed eight physical-console commands including exact nonempty tag atton/length5. Controller visually inspected both the game world with F12 closed and the console over the world. Save hashes and asset receipts unchanged. This is one-save console/read-only bridge acceptance, not movement/combat/full-API coverage. K1 regression of the same rebuilt runtime is pending before combined packaging.
 
 Delivered combined archive: /home/brunner56/kp-release-20260927/kotorphasor-k1-k2-gog-console-preview.zip (10,168,030bytes), SHA2560388d0806c74c0ad158f7d120165a5d530798c14fbbaa1674b8c6c759ce867c9. K1 final44/44 regression passed on the same rebuilt DLL pair. ZIP CRC,17manifest entries,606source files, reviewedfix hashes, exactDLL-to-live equality and runtime profile-site equality passed controller verification. Old K1 archive preserved. Earlier pending/failed entries above document the investigation and are superseded only for these explicitly accepted gates. Full goal remains open.
+
+## macOS x86_64 runtime landed 2026-09-29 (this session)
+
+The K1 and K2 Mac targets in the table above are the legacy 32-bit corpus
+images. Separately, the **x86_64 Steam macOS builds** (K1 `KOTOR_Exe`, K2
+`KOTOR2sub` x86_64 slice) are now first-class:
+
+- `src/image` parses and identifies thin/fat 64-bit Mach-O from the mapped
+  image and verifies the code-section hash, like the PE/ELF path.
+- A Darwin platform layer (`mach_vm_*`, dyld image base, W^X with VM_PROT_COPY
+  for the signed code pages) and the x86_64 detour engine (14-byte absolute
+  jump, RIP/rel32/rel8 relocation, near-trampoline) carry the hooks.
+- The routine bridge, all sixteen event/VM hook sites, `kp.mem`, timers and the
+  F12 Lua console (Objective-C-runtime swizzle of `flushBuffer` and
+  `nextEventMatchingMask`) work on the System V ABI, with 64-bit object ids.
+- Address tables: K2 from its own symbols; K1 (stripped) from ≥2 agreeing
+  derivations per binding (`data/adjudication/mac_x64_bindings.json`). Both are
+  regenerated and verified by `tools/mac/gen_mac_tables.py [--check]`;
+  `tools/mac/mac_tables_test.py` is the binary-free structural gate.
+- `kp.model` and `kp.animation` bind on K2 x86_64 from a corpus-verified
+  profile. `kp.struct` is gated off on 64-bit (raw `kp.mem` unaffected).
+  Motion/camera native offsets are recovered and recorded but not yet wired.
+- Build: `scripts/mac/build.sh` (x86_64 dylib + vendored LuaJIT). Install:
+  `scripts/mac/install_to_game.sh` + a `DYLD_INSERT_LIBRARIES` launch option.
+
+Not yet done, and not claimed: execution on real macOS hardware. Everything
+above is static verification and cross-ABI compilation; the new code has not
+been run inside a game. The next gate is a live Rosetta/Intel bring-up (attach,
+identify, install hooks, fire an event, call a routine, open the console) with
+a receipt, matching how the Windows/Wine gates were taken.
