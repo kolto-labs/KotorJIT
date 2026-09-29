@@ -41,8 +41,23 @@ if(APPLE)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Building libkphasor.dylib via scripts/mac/build.sh (x86_64)"
         VERBATIM USES_TERMINAL)
+    find_package(Python3 3.9 COMPONENTS Interpreter)
+    if(Python3_FOUND)
+        add_test(NAME mac_tables_test
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/mac/mac_tables_test.py)
+        set_tests_properties(mac_tables_test PROPERTIES LABELS "offline;mac" TIMEOUT 60)
+    endif()
+    # The x86_64 detour engine's self-test builds and runs on any x86_64 host,
+    # macOS included; it is the same binary the Linux CI runs.
+    add_executable(kp_hooktool_x64 tools/kp_hooktool_x64.cpp
+        src/hooks/x64/decode.cpp src/hooks/x64/trampoline.cpp)
+    target_include_directories(kp_hooktool_x64 PRIVATE src)
+    target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
+    add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
+    add_dependencies(kphasor_mac kp_hooktool_x64)
     message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
-                   "run tools/mac/gen_mac_tables.py --check to verify the address tables.")
+                   "`ctest` runs the Mach-O table gate and the x86_64 detour self-test; "
+                   "run tools/mac/gen_mac_tables.py --check against the local images for full byte verification.")
     return()
 endif()
 
