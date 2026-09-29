@@ -443,7 +443,7 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
             return insn.ok() ? HookStatus::OutOfRange : HookStatus::DecodeFailed;
         }
         o += insn.len;
-        out += insn.len;
+        out += relocated_size(insn);
     }
     write_abs_jmp(tramp + out, at + pl.stolen);
     if (protect(page, size, PROT_READ | PROT_EXEC) != 0) {
