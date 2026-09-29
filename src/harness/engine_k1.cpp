@@ -1,3 +1,8 @@
+// The i386 harness adapter: Windows PE (MSVC __thiscall) and native Linux
+// ELF (stack-this cdecl) object layouts. Not compiled on x86_64, where
+// engine_unsupported.cpp stands in -- see that file. hooks/runtime cmake
+// lists exactly one.
+#if defined(__i386__) || defined(_M_IX86)
 // The engine adapter body, and the K1 (GOG 1.03 / Steam-unpacked, same .text)
 // parameters.
 //
@@ -2822,3 +2827,5 @@ std::unique_ptr<EngineAdapter> make_adapter(const hooks::AddressTable& table, st
 }
 
 }  // namespace kp::harness
+
+#endif  // i386

@@ -1,38 +1,54 @@
 #include "events/payload.hpp"
 
+#include <cstddef>
 #include <cstring>
 
+#include "api/abi_layout.hpp"
 #include "platform/platform.hpp"
+#include "platform/target.hpp"
 
 namespace kp::events {
 namespace {
 
-// CExoArrayList {void* data; int32 size; int32 capacity}. sizeof == 0xC.
+namespace L = kp::api::layout;
+
+// CExoArrayList {void* data; int32 size; int32 capacity}: 0xC bytes on i386,
+// 0x10 on x86_64 (size at +8). Natural alignment gives exactly that layout.
 struct ArrayList {
     const void*   data;
     std::int32_t  size;
     std::int32_t  capacity;
 };
-static_assert(sizeof(ArrayList) == 12, "CExoArrayList is three 32-bit fields");
+static_assert(sizeof(ArrayList) == L::kEngine.arraylist_bytes, "CExoArrayList width");
+static_assert(offsetof(ArrayList, size) == L::kEngine.arraylist_size_field, "CExoArrayList size field");
 
-// CScriptEvent, 52 bytes. See docs/event-semantics.md -- not the older
-// "three of each" reading, and not the phasor_structs fixed-slot layout.
-constexpr std::size_t kEventSize     = 0x34;
+// CScriptEvent. i386: 52 bytes (docs/event-semantics.md -- not the older
+// "three of each" reading, and not the phasor_structs fixed-slot layout).
+// x86_64: 0x48 bytes, the same four lists at 16-byte strides; object ids are
+// 8-byte elements there. Values in api/abi_layout.hpp, x86_64 ones verified
+// against both Mac images by tools/mac/gen_mac_tables.py.
+constexpr std::size_t kEventSize     = L::kEngine.script_event_bytes;
 constexpr std::size_t kOffType       = 0x00;
-constexpr std::size_t kOffInts       = 0x04;
-constexpr std::size_t kOffFloats     = 0x10;
-constexpr std::size_t kOffStrings    = 0x1C;
-constexpr std::size_t kOffObjects    = 0x28;
+constexpr std::size_t kOffInts       = L::kEngine.script_event_ints;
+constexpr std::size_t kOffFloats     = L::kEngine.script_event_floats;
+constexpr std::size_t kOffStrings    = L::kEngine.script_event_strings;
+constexpr std::size_t kOffObjects    = L::kEngine.script_event_objects;
+constexpr std::size_t kObjectBytes   = L::kEngine.object_id_bytes;
 
-// CGameObject.id is at +4. CSWSArea embeds that header at +284.
-constexpr std::size_t kIdOffset         = 4;
-constexpr std::size_t kAreaGameObject   = 284;
-constexpr std::size_t kModuleGameObject = 28;  // pointer, medium confidence
+// CGameObject.id: +4 on i386, +8 (64-bit) on x86_64. CSWSArea embeds the
+// CGameObject subobject at +284 / +0x158. CSWSModule holds it through a
+// pointer at +28 on i386 (medium confidence) and embeds it at +0x28 on x86_64
+// (RTTI offset-to-top of its CGameObject vtable).
+constexpr std::size_t kIdOffset         = L::kEngine.game_object_id;
+constexpr std::size_t kAreaGameObject   = L::kEngine.area_game_object;
+constexpr std::size_t kModuleGameObject = L::kEngine.module_game_object;
+constexpr bool        kModuleIsPointer  = L::kEngine.module_game_object_is_pointer;
 
 struct ExoString {
     const char*   c_string;
     std::uint32_t length;
 };
+static_assert(sizeof(ExoString) == (sizeof(void*) == 8 ? 16 : 8), "CExoString width");
 
 bool readable(const void* p, std::size_t n) {
     return p != nullptr && platform::is_readable(p, n);
@@ -68,12 +84,15 @@ T slot_or(const ScriptEventView& ev, std::size_t list_off, int index, T fallback
     return value;
 }
 
-std::uint32_t read_u32(const void* p, std::size_t off) {
+// An object id as the engine stores it (4 or 8 bytes), as the 32-bit value
+// scripts see. Little-endian, so the low half is the first four bytes either
+// way; the width only matters for the readability probe and the stride.
+std::uint32_t read_object_id(const void* p, std::size_t off) {
     const auto* base = static_cast<const std::uint8_t*>(p);
-    if (!readable(base + off, 4)) return kObjectInvalid;
-    std::uint32_t v = 0;
-    std::memcpy(&v, base + off, 4);
-    return v;
+    if (!readable(base + off, kObjectBytes)) return kObjectInvalid;
+    abi::ObjectId v = 0;
+    std::memcpy(&v, base + off, sizeof v);
+    return abi::script_id(v);
 }
 
 void* read_ptr(const void* p, std::size_t off) {
@@ -118,7 +137,8 @@ float script_event_float(const ScriptEventView& ev, int index) {
 }
 
 std::uint32_t script_event_object(const ScriptEventView& ev, int index) {
-    return slot_or<std::uint32_t>(ev, kOffObjects, index, kObjectInvalid);
+    static_assert(sizeof(abi::ObjectId) == kObjectBytes, "object list element width");
+    return abi::script_id(slot_or<abi::ObjectId>(ev, kOffObjects, index, abi::ObjectId(kObjectInvalid)));
 }
 
 std::string script_event_string(const ScriptEventView& ev, int index) {
@@ -149,13 +169,14 @@ bool payload_is_script_event(int outer_event_id) {
 std::uint32_t object_id_from_handler(void* self, std::string_view hook_site) {
     if (self == nullptr) return kObjectInvalid;
     if (hook_site == "event.area")
-        return read_u32(self, kAreaGameObject + kIdOffset);
+        return read_object_id(self, kAreaGameObject + kIdOffset);
     if (hook_site == "event.module") {
+        if (!kModuleIsPointer) return read_object_id(self, kModuleGameObject + kIdOffset);
         if (void* go = read_ptr(self, kModuleGameObject))
-            return read_u32(go, kIdOffset);
+            return read_object_id(go, kIdOffset);
         return kObjectInvalid;
     }
-    return read_u32(self, kIdOffset);
+    return read_object_id(self, kIdOffset);
 }
 
 std::vector<lua::Value> shape_handler_args(const EventContract& ev,
