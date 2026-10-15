@@ -23,6 +23,8 @@ set(KP_DEVTOOLS_WIN_SOURCES
     "${KP_SRC_ROOT}/../third_party/imgui/backends/imgui_impl_opengl2.cpp"
 )
 set(KP_RUNTIME_SOURCES
+    "${KP_SRC_ROOT}/hooks/lua_stub.cpp"
+    "${KP_SRC_ROOT}/hooks/lua_bridge.cpp"
     "${KP_RUNTIME_DIR}/runtime.cpp"
     "${KP_SRC_ROOT}/devtools/console.cpp"
     "${KP_SRC_ROOT}/devtools/overlay.cpp"

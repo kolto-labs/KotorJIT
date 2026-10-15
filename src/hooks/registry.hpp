@@ -51,7 +51,24 @@ enum class SiteKind {
 SiteKind site_kind_from_string(std::string_view);
 const char* to_string(SiteKind);
 
+// Missing numeric ABI fields remain -1, never silently become valid zeroes.
+struct AbiParam {
+    int index = -1, size = -1, stack = -1;
+    std::string c_type, lua, reg;
+};
+struct HookAbi {
+    std::string convention, confidence, cleanup_by, ret_storage, ret_type, ret_lua, this_reg;
+    int stack_bytes = -1, ret_pop = -1, stolen_len = -1;
+    bool variadic = true, struct_return = true;
+    bool engine_accept = false;
+    std::string hook_safe, lua_event, thread;
+    bool pre = false, post = false, rewrite = false, override_return = false, skip = false;
+    std::vector<AbiParam> params;
+    std::vector<int> observed_ret;
+};
+
 struct Site {
+    HookAbi abi;
     std::string    name;      // logical key, e.g. "vm.run_script"
     // Runtime adapter role emitted by AgentDecompile.  This is separate from
     // a logical display name: generated consumers bind roles, not labels.

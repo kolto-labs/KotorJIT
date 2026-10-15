@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
+#include <climits>
 #include <utility>
 #include <unordered_set>
 
@@ -261,6 +263,63 @@ bool as_bool(const JValue* v, bool fallback = false) {
     return (v && v->type == JType::Bool) ? v->boolean : fallback;
 }
 
+int as_int(const JValue* v) {
+    return v && v->type == JType::Number && std::isfinite(v->number) &&
+           v->number >= 0 && v->number <= INT_MAX && std::floor(v->number) == v->number
+               ? static_cast<int>(v->number) : -1;
+}
+
+void manifest_abi(const JValue& f, HookAbi& a) {
+    if (const auto* v = f.member("abi")) {
+        a.convention = as_string(v->member("convention"));
+        a.confidence = as_string(v->member("abi_confidence"));
+        a.stack_bytes = as_int(v->member("stack_arg_bytes"));
+        a.variadic = as_bool(v->member("variadic"), true);
+        a.struct_return = as_bool(v->member("struct_return"), true);
+        if (const auto* c = v->member("cleanup")) {
+            a.cleanup_by = as_string(c->member("by"));
+            a.ret_pop = as_int(c->member("ret_imm16"));
+        }
+        if (const auto* r = v->member("ret")) {
+            a.ret_storage = as_string(r->member("storage"));
+            a.ret_type = as_string(r->member("c_type"));
+            a.ret_lua = as_string(r->member("lua"));
+        }
+        if (const auto* t = v->member("this"))
+            if (const auto* s = t->member("storage")) a.this_reg = as_string(s->member("reg"));
+        if (const auto* p = v->member("params"); p && p->type == JType::Array) {
+            for (const auto& row : p->array) {
+                AbiParam param;
+                param.index = as_int(row.member("i"));
+                param.size = as_int(row.member("size"));
+                param.c_type = as_string(row.member("c_type"));
+                param.lua = as_string(row.member("lua"));
+                if (const auto* s = row.member("storage")) {
+                    param.stack = as_int(s->member("stack"));
+                    param.reg = as_string(s->member("reg"));
+                }
+                a.params.push_back(std::move(param));
+            }
+        }
+        if (const auto* e = v->member("evidence"))
+            if (const auto* r = e->member("ret_imm_observed"); r && r->type == JType::Array)
+                for (const auto& n : r->array) a.observed_ret.push_back(as_int(&n));
+    }
+    if (const auto* h = f.member("hook")) {
+        a.hook_safe = as_string(h->member("safe"));
+        a.engine_accept = as_bool(h->member("kp_engine_would_accept"));
+        a.stolen_len = as_int(h->member("stolen_len"));
+    }
+    if (const auto* l = f.member("lua")) {
+        a.lua_event = as_string(l->member("event"));
+        a.pre = as_bool(l->member("pre")); a.post = as_bool(l->member("post"));
+        a.rewrite = as_bool(l->member("can_rewrite_args"));
+        a.override_return = as_bool(l->member("can_override_return"));
+        a.skip = as_bool(l->member("can_skip_original"));
+    }
+    if (const auto* c = f.member("callable")) a.thread = as_string(c->member("thread"));
+}
+
 bool parse_hex_bytes(std::string_view hex, std::vector<std::uint8_t>& out) {
     out.clear();
     for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
@@ -354,6 +413,7 @@ bool parse_masked_pattern(std::string_view text, std::string_view mask_hex,
 // `entry_va`, `entry_rva`, `file_offset` or a `va_hint` fallback: in a
 // manifest table the address is an output of the scan, not an input.
 void manifest_function_to_site(const JValue& f, Site& s) {
+    manifest_abi(f, s.abi);
     const std::string kp_site = as_string(f.member("kp_site"));
     s.name = !kp_site.empty() ? kp_site : as_string(f.member("id"));
     s.adapter_key = as_string(f.member("adapter_key"));

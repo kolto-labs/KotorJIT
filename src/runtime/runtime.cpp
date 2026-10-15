@@ -22,6 +22,9 @@
 #include "events/contract.hpp"
 #include "events/table.hpp"
 #include "hooks/registry.hpp"
+#if defined(__i386__)
+#include "hooks/lua_bridge.hpp"
+#endif
 #include "image/image.hpp"
 #include "image/sha256.hpp"
 #include "api/enginestruct.hpp"
@@ -864,6 +867,33 @@ bool Runtime::install(bool multiplayer_enabled) {
 }
 
 bool Runtime::boot_scripts(const Config& cfg) {
+#if defined(__i386__)
+    hooks::lua_bridge::bind(table_.get(), runtime_base_,
+        +[] { return live() && on_engine_thread(); },
+        +[] { return on_engine_thread() || (!live() && !engine_thread_latched()); },
+        +[](hooks::lua_bridge::Entry& entry, void (*work)(void*), void* arg) {
+            bool healthy = true;
+            KP_HOOK_GUARD_BEGIN(entry.site.name.c_str(), entry.poisoned, healthy = false)
+                work(arg);
+            KP_HOOK_GUARD_END
+            return healthy;
+        },
+        +[](const hooks::Site& site) {
+            // Inferred ABI confidence is not independent proof. A reviewer must
+            // opt each exact site into this experimental bridge after checking
+            // its complete calling contract against the binary.
+            const char* configured = std::getenv("KOTORPHASOR_REVIEWED_LUA_HOOKS");
+            if (!configured) return false;
+            std::string_view ids(configured);
+            while (!ids.empty()) {
+                const auto end = ids.find(',');
+                if (ids.substr(0, end) == site.name) return true;
+                if (end == std::string_view::npos) break;
+                ids.remove_prefix(end + 1);
+            }
+            return false;
+        });
+#endif
     lua::HostConfig hc;
     hc.script_dir = cfg.script_dir;
     hc.error_budget = cfg.error_budget;
@@ -880,6 +910,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::open_engine_structs(L);      // effect/event/location/talent handles
         api::register_all(L);             // nwscript.call(name, ...), all 769
         api::memory::register_all(L);     // raw read/write, the escape hatch
+#if defined(__i386__)
+        hooks::lua_bridge::register_all(L);
+#endif
         api::structs::register_all(L);    // named typed field access
         api::animation::register_all(L);  // native named clip clocks
         api::projectiles::register_all(L);
@@ -899,6 +932,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
 
     // The console builds a state of its own and needs the same API on it.
     set_state_init(hc.on_state_created);
+#if defined(__i386__)
+    hc.on_state_closing = hooks::lua_bridge::close_state;
+#endif
 
     // Which routine table nwscript.call binds to. The choice latches the first time
     // a state registers the API, which load_all is about to do, so it has to
@@ -979,6 +1015,9 @@ bool Runtime::start(const Config& cfg) {
         // start from leaving a half-initialised runtime addressable.
         if (hooks_) clear_originals();
         hooks_.reset();
+#if defined(__i386__)
+        hooks::lua_bridge::shutdown();
+#endif
         table_.reset();
         if (host_) host_->unload_all();
         api::scripts::bind_host(nullptr);
@@ -1050,6 +1089,9 @@ void Runtime::stop() {
     // trampoline header says so and this cannot check it; stop() belongs at a
     // quiescent point, which in practice means process shutdown.
     if (hooks_) hooks_->uninstall();
+#if defined(__i386__)
+    hooks::lua_bridge::shutdown();
+#endif
 
     // Run unload callbacks while the host service is still bound.  The
     // callbacks may inspect kp.scripts; after unload_all the host is empty and

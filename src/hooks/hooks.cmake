@@ -73,6 +73,18 @@ if(UNIX AND NOT WIN32)
     target_link_libraries(kp_manifesttest PRIVATE kp_hooks kp_image
                           "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
     add_test(NAME kp_manifesttest.selftest COMMAND kp_manifesttest selftest)
+
+    add_executable(kp_luahooktest
+        "${KP_TOOLS_DIR}/kp_luahooktest.cpp"
+        "${KP_HOOKS_DIR}/lua_stub.cpp"
+        "${KP_HOOKS_DIR}/lua_bridge.cpp"
+        "${KP_SRC_DIR}/api/memory.cpp")
+    target_include_directories(kp_luahooktest PRIVATE "${CMAKE_BINARY_DIR}/luajit32/src")
+    target_link_libraries(kp_luahooktest PRIVATE kp_hooks kp_image
+                          "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
+    target_compile_options(kp_luahooktest PRIVATE -fcf-protection=none -fno-pie)
+    target_link_options(kp_luahooktest PRIVATE -no-pie)
+    add_test(NAME kp_luahooktest COMMAND kp_luahooktest)
 endif()
 
 # --- x86_64 detour engine --------------------------------------------------

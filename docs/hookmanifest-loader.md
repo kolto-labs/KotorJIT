@@ -52,8 +52,63 @@ if none exists, the existing hook pack / address table path is unchanged.
 
 ## Plan: gap 1 — Lua pre/post hooks with arg rewrite and return override
 
-Not implemented. Prerequisites: this loader (sites + `abi`), plus parsing the
-manifest `abi`, `hook` and `lua` blocks into `Site` (today they are skipped).
+Implementation checkpoint (2026-10-15), **not live-game acceptance**:
+`src/hooks/lua_stub.cpp`, `lua_bridge.cpp` and `lua_bridge.hpp` now implement
+the x86-32 path below. `Site::abi` retains the manifest ABI, hook, Lua and thread
+metadata. `tools/kp_luahooktest.cpp` exercises compiled synthetic targets and a
+real LuaJIT state. Continue review before enabling this in a game.
+
+Checkpoint receipts: direct native `g++ -m32 -O2 -fcf-protection=none -fno-pie
+-no-pie` build and `kp_luahooktest` exit 0 / `0 failures`; MinGW object
+compilation of both bridge sources succeeds; `runtime.cpp` passes native
+32-bit syntax checking. The synthetic checks cover all four conventions,
+1,000-call ESP balance, argument/this rewrites, pre/post/skip, error rollback,
+recursion, EDX:EAX and x87 passthrough, expired contexts, explicit ABI opt-in,
+Lua-state close, and signal recovery/poison. The state-close regression caught
+a sentinel/metatable registry-key collision and now passes. This does not
+stand in for full DLL linking, fault recovery inside real Lua VM internals,
+or live-game execution.
+
+Runtime installation is disabled unless an exact site ID appears in the
+comma-separated `KOTORPHASOR_REVIEWED_LUA_HOOKS` environment variable. This is
+an explicit operator assertion that the complete calling contract has been
+independently reviewed, **not** another inference score. The ABI-strengthening
+validation had 584/590 agreements, six disagreements and 7,061 abstentions
+against labels that are themselves not independently audited truth. Neither
+carried identity nor `proven`/`consistent` alone establishes safe execution.
+
+The checkpoint additionally refuses missing cleanup observations, conflicting
+RET evidence, incomplete/overlapping stack parameters, unsupported Lua types,
+and hook sites without `static_ok` plus engine acceptance. Its stack-copy bound
+is 256 bytes. Arguments use one-based Lua indices (`params[i=0]` is `args[1]`).
+Pointer arguments are numeric addresses, never implicitly dereferenced. Integer
+writes are range checked; 64-bit integer Lua access refuses values outside the
+exact number range (2^53-1). Unknown structured argument types are refused.
+
+Pre-handler failure restores the copied arguments/ECX/EDX and calls the original
+once. Post-handler failure restores the original result; it never calls the
+original twice, since native side effects cannot be rolled back. Skips still
+run post handlers. Contexts expire after each callback. A removed handle stops
+dispatch immediately but does not unpatch the prologue until shutdown. Lua
+states are detached through both the host close callback and a registry-owned
+finalizer; coroutine registration is refused. The production fault wrapper
+uses `KP_HOOK_GUARD`; offline signal recovery is only an equivalent fixture.
+
+Remaining review/acceptance work at this handoff:
+
+- Review Lua allocation-error, nested-dispatch, finalizer and faulted-state
+  paths independently; run the full offline suite in a fresh NVMe build.
+- Broaden Lua-level coverage to typed floating/int64 writes, `this`, multiple
+  states, cross-site nesting, coroutine refusal and all malformed ABI fields.
+- Verify Windows linking and execution, not just compilation; the current
+  build directory points at the MyBook checkout and must not be used to build.
+- Prove installation quiescence for the intended live sites. Detour publication
+  is all-or-nothing on ordinary refusal, **not thread-atomic**: the existing
+  five-byte patcher cannot guarantee safety against another executing thread.
+  The engine-thread gate alone does not establish global quiescence.
+- No game was launched and no live target was patched during this work.
+
+Original design checklist:
 
 1. **Parse ABI into a compact per-site record** (`convention`, `stack_arg_bytes`,
    `cleanup.ret_imm16`, param storages, `ret.storage`, `abi_confidence`,
