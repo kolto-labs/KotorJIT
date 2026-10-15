@@ -90,6 +90,27 @@ std::uintptr_t scan_base();
 // Unique exact hit in bound executable regions. 0 if none or not unique.
 std::uintptr_t find_unique(const std::uint8_t* bytes, std::size_t n);
 
+// One masked pattern for scan_masked(). A byte matches when
+// (byte & mask[i]) == (value[i] & mask[i]); mask 0x00 is a wildcard byte.
+// mask[0] must be 0xFF: patterns are bucketed by their first byte.
+struct MaskedPattern {
+    const std::uint8_t* value = nullptr;
+    const std::uint8_t* mask  = nullptr;
+    std::size_t         n     = 0;
+};
+
+// Per-pattern outcome. `count` saturates at 2, which is all a caller needs to
+// tell missing (0), unique (1) and ambiguous (2) apart.
+struct MaskedHit {
+    std::uintptr_t first = 0;
+    std::uint32_t  count = 0;
+};
+
+// Every pattern against the bound executable regions in ONE pass, so ten
+// thousand manifest patterns cost one walk of .text rather than ten thousand.
+// A pattern with n == 0 or mask[0] != 0xFF is reported as count 0.
+std::vector<MaskedHit> scan_masked(const std::vector<MaskedPattern>& patterns);
+
 // Every write, after it happened. This is the reporting half of "sharp writes":
 // the default sink is the platform log, and the runtime can add a journal on
 // top without this module knowing what a journal is.

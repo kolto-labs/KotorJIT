@@ -63,6 +63,16 @@ if(UNIX AND NOT WIN32)
     # `selftest` exits on its own g_failures counter; `lendis` is a manual
     # decode-and-print subcommand, not a test.
     add_test(NAME kp_hooktool.selftest COMMAND kp_hooktool selftest)
+
+    # hookmanifest/v1 masked-pattern resolution. `selftest` is synthetic;
+    # `image <swkotor.exe> <manifest>` is the manual real-image check.
+    add_executable(kp_manifesttest
+        "${KP_TOOLS_DIR}/kp_manifesttest.cpp"
+        "${KP_SRC_DIR}/api/memory.cpp")
+    target_include_directories(kp_manifesttest PRIVATE "${CMAKE_BINARY_DIR}/luajit32/src")
+    target_link_libraries(kp_manifesttest PRIVATE kp_hooks kp_image
+                          "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
+    add_test(NAME kp_manifesttest.selftest COMMAND kp_manifesttest selftest)
 endif()
 
 # --- x86_64 detour engine --------------------------------------------------

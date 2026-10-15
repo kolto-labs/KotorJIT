@@ -474,9 +474,17 @@ bool Runtime::resolve(const Config& cfg) {
         return false;
     }
 
-    // Hook pack first (logical sites + per-build instance cache), then the
-    // optional per-build overlay for expected_bytes / kind / required.
-    // Address JSON alone still works when no pack is staged.
+    // Hook manifest first (masked patterns, scan-only: no VA is trusted), then
+    // hook pack (logical sites + per-build instance cache), then the optional
+    // per-build overlay for expected_bytes / kind / required. Address JSON
+    // alone still works when neither is staged.
+    std::vector<std::string> manifest_candidates;
+    manifest_candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), "hookmanifest.json"));
+    if (const char* m = std::getenv("KOTORPHASOR_HOOKMANIFEST"); m != nullptr && *m != '\0')
+        manifest_candidates.insert(manifest_candidates.begin(), m);
+    if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
+        manifest_candidates.push_back(join(dir, "hookmanifest.json"));
+
     std::vector<std::string> pack_candidates;
     pack_candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), "hookpack.json"));
     if (const char* pack = std::getenv("KOTORPHASOR_HOOKPACK"); pack != nullptr && *pack != '\0')
@@ -490,16 +498,23 @@ bool Runtime::resolve(const Config& cfg) {
     if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
         candidates.push_back(join(dir, build_ + ".json"));
 
+    std::string manifest;
+    for (const std::string& p : manifest_candidates) {
+        if (file_exists(p)) { manifest = p; break; }
+    }
     std::string pack;
-    for (const std::string& p : pack_candidates) {
-        if (file_exists(p)) { pack = p; break; }
+    if (manifest.empty()) {
+        for (const std::string& p : pack_candidates) {
+            if (file_exists(p)) { pack = p; break; }
+        }
     }
     std::string chosen;
     for (const std::string& p : candidates) {
         if (file_exists(p)) { chosen = p; break; }
     }
-    if (pack.empty() && chosen.empty()) {
-        failure_ = "no hook pack or address table for build \"" + build_ + "\"; looked in";
+    if (manifest.empty() && pack.empty() && chosen.empty()) {
+        failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
+        for (const std::string& p : manifest_candidates) failure_ += " " + p;
         for (const std::string& p : pack_candidates) failure_ += " " + p;
         for (const std::string& p : candidates) failure_ += " " + p;
         return false;
@@ -507,7 +522,17 @@ bool Runtime::resolve(const Config& cfg) {
 
     auto table = std::make_unique<hooks::AddressTable>();
     std::string error;
-    if (!pack.empty()) {
+    if (!manifest.empty()) {
+        if (!hooks::AddressTable::load_manifest(manifest, build_, chosen, *table, error)) {
+            failure_ = "hook manifest " + manifest + ": " + error;
+            return false;
+        }
+        if (!table->expected_sha256().empty() && table->expected_sha256() != image_sha256_) {
+            log("hook manifest %s was generated from sha256 %s; this image is %s -- "
+                "binding by pattern only, ambiguous or missing sites refuse",
+                manifest.c_str(), table->expected_sha256().c_str(), image_sha256_.c_str());
+        }
+    } else if (!pack.empty()) {
         if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
             failure_ = "hook pack " + pack + ": " + error;
             return false;
@@ -519,23 +544,36 @@ bool Runtime::resolve(const Config& cfg) {
 
     table->resolve_from_signatures(runtime_base_);
     std::size_t bound = 0;
+    std::size_t missing_pattern = 0;
+    std::size_t ambiguous_pattern = 0;
     for (const hooks::Site& s : table->sites()) {
         if (s.resolved) ++bound;
-        if (s.bound_from_scan) {
+        if (s.locate_error == "missing") ++missing_pattern;
+        if (s.locate_error == "ambiguous") ++ambiguous_pattern;
+        if (s.bound_from_scan && !table->scan_only()) {
             log("signature resolve: %s bound from scan (hint stale or missing)", s.name.c_str());
         }
     }
     log("signature resolve: %zu/%zu sites bound (VA is a hint)", bound, table->sites().size());
+    if (table->scan_only()) {
+        log("pattern resolve: %zu missing, %zu ambiguous (refused, left unbound)",
+            missing_pattern, ambiguous_pattern);
+    }
 
     const std::vector<std::string> missing = table->unresolved_required();
     if (!missing.empty()) {
-        failure_ = "address table " + chosen + " leaves required sites unresolved:";
-        for (const std::string& m : missing) failure_ += " " + m;
+        failure_ = (manifest.empty() ? "address table " + chosen : "hook manifest " + manifest) +
+                   " leaves required sites unresolved:";
+        for (const std::string& m : missing) {
+            failure_ += " " + m;
+            if (const hooks::Site* s = table->find(m); s != nullptr && !s->locate_error.empty())
+                failure_ += "(" + s->locate_error + ")";
+        }
         return false;
     }
 
     table_ = std::move(table);
-    const std::string& source = pack.empty() ? chosen : pack;
+    const std::string& source = !manifest.empty() ? manifest : (pack.empty() ? chosen : pack);
     log("address table: %s (%zu sites, build %s, %s)", source.c_str(), table_->sites().size(),
         table_->build().c_str(), table_->platform_name().c_str());
 
