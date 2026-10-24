@@ -158,13 +158,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/hooks/hooks.cmake)
 
 # The runtime, and the two libraries it ships as: kphasor.dll and libkphasor.so.
 # After hooks.cmake because it links what image_win32 and hooks_win32 compile.
-# Host API modules. Each fragment is self-contained and order-independent.
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/routines.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/structs.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/vector.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/motion.cmake)
+# Host API libraries and source lists, in their established dependency order.
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api.cmake)
 
 # The headless harness control plane. Before runtime.cmake: it only publishes
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
@@ -174,10 +169,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/harness.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
 # After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/model.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/camera.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/animation.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api_luajit.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
 # After runtime.cmake: it links the native LuaJIT that target builds.

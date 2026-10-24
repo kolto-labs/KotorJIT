@@ -47,7 +47,7 @@ jobs:
       # g++-mingw-w64-i686 + binutils-mingw-w64-i686: cross-compiles
       # kphasor.dll and the proxy binkw32.dll.
       # luajit: configure-time find_program(... REQUIRED) in CMakeLists.txt,
-      # src/api/model.cmake and src/api/animation.cmake; the example, model
+      # src/api/api_luajit.cmake; the example, model
       # and animation tests run under it. lua5.1: kpharness_world_test runs
       # the emitted probe through a plain `lua` interpreter.
       run: |

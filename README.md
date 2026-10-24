@@ -42,6 +42,12 @@ is not a live or visual-quality pass; see [scene guidance](scripts/demos/README.
 
 Start to finish: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+API build rules are grouped in [`src/api/api.cmake`](src/api/api.cmake)
+(libraries and source lists, before the runtime) and
+[`src/api/api_luajit.cmake`](src/api/api_luajit.cmake)
+(tools that consume the runtime LuaJIT build, after the runtime).
+Their include order is defined in `CMakeLists.txt`.
+
 ## Status
 
 KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today, and the x86_64 Steam macOS builds of both games are supported (Mach-O runtime, `scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
