@@ -1,3 +1,0 @@
-{"widen": 0.3, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.704, "executed": ["play"]}
-{"widen": 0.05, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.25, "executed": ["play"]}
-{"widen": 0.02, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.22, "executed": ["play"]}

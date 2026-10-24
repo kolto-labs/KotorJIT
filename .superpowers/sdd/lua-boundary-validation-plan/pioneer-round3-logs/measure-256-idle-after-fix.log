@@ -1,7 +1,0 @@
-test_measure (__main__.M.test_measure) ... MEASURE slots=16 base(threads,fds)=(2, 7) peak_after_256_idle=(19, 24) status=idle in 0.012s
-ok
-
-----------------------------------------------------------------------
-Ran 1 test in 8.962s
-
-OK

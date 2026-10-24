@@ -1,0 +1,805 @@
+{
+  "source_commit": "88c9cccf86eb65e54f36b46cd26402137cf8f400",
+  "format": "verbatim-evidence-bundle/v1",
+  "offset_unit": "bytes",
+  "entries": [
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 399,
+      "length": 273,
+      "sha256": "879aadfa238b05fed48b307b8e2ceb18be62149c13ee486d44ff1e8b9163c632"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 994,
+      "length": 279,
+      "sha256": "6e054debe5853186eab04b81536ab8ca4bd821393ad006213ebe152b612de228"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-host-rerun.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 1587,
+      "length": 811,
+      "sha256": "86f6a4d6d01d42d8f4ccb86e67e48b0b790b02f956a2cdf35ab730eac0d92029"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 2717,
+      "length": 1838,
+      "sha256": "2266500706e54ef38db4fbe00f4f092f0164a7a32de57d6dc119494069246234"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 4876,
+      "length": 2766,
+      "sha256": "818d255a23410f20eb5e5b2fd2dcda000402c294d558d9a0ad72461bdfadfcbf"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host2.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 7959,
+      "length": 1943,
+      "sha256": "53c42a48aaf471b516296ba0900f4963cd1d2c7e79ceafa30085c7441aa345f3"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 10230,
+      "length": 125,
+      "sha256": "6193efc72878cc16250f56366052c6d33eed74bff16f703e56377fb4114b659e"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 10689,
+      "length": 130,
+      "sha256": "71d0c2670e2a2b66f604312b4217995d7eaa0c104fbf5a4e10ea770b867f78a4"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 11148,
+      "length": 4163,
+      "sha256": "6a7b30ba53798845dcc2ceacd826f2a2c28540a3755b75d4cb823ac054604536"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container3.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 15640,
+      "length": 4167,
+      "sha256": "16393e11811d3592c266158ae7c1af323a6da9811770e53f7fad89cb839e996d"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 20132,
+      "length": 15697,
+      "sha256": "116a2ab99fd4c51664769a8f5b4bf5eb83e851a2d2d359ce390fae7315618525"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host2.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 36148,
+      "length": 4358,
+      "sha256": "d2315f69a3b350e713fcb2d9401ad704408889b1a540e7b17a450afbd2b00491"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host3.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 40826,
+      "length": 4205,
+      "sha256": "79552d1c22cd5ea3199069dfd321a89479a8c841360b03a3562ef4818daa452d"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 45352,
+      "length": 3658,
+      "sha256": "2882960ab2a145692b35afa624252da098e3ed87550ba2cea2aaf1d494d3acec"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 49327,
+      "length": 3640,
+      "sha256": "0b752288583e5c4ee721a1c814cfcf2bedacf169fc5e0566ed3624854d0b429f"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 53273,
+      "length": 20073,
+      "sha256": "4aa49ef0651de23ed2021bc1b17f4cf58ef4216d6808fd009cf077f206bc05d0"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2-m2.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 73647,
+      "length": 932,
+      "sha256": "75c8a046dfd7c12e640872476d60de1fe95d941daafe147f1e156c2c5e49ae7c"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-evidence.log",
+      "offset": 74883,
+      "length": 10807,
+      "sha256": "292803d4ca394b755e403495c7ac63afe0a9f23797ea0ceb6f2f93088094afc1"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-final-kpharness_playback_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 406,
+      "length": 4458,
+      "sha256": "bd8cec95a728cfad5d15ac73c778f533318888468ec1054d23cc6e7ee1c26cdf"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-kpharness_creative_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 5197,
+      "length": 268,
+      "sha256": "1352a714cddb535500679f774c1b16419efc11858689e8d1ac8ae16a13d99725"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-kpharness_offline_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 5792,
+      "length": 1833,
+      "sha256": "6d25e051cbcc52a03cb8421f38adba884ec168f462acfb546748702724a5f537"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-kpharness_pioneer_policy_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 7957,
+      "length": 120,
+      "sha256": "bafad5a339c815573d7ff615b99f54b0aa74ebee94e12335b802281752711243"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-kpharness_playback_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 8411,
+      "length": 7374,
+      "sha256": "e8b60a6569863420603693928dbedaa2cca41e4b5f8af71cec6cbbe2b8d24fa2"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-rerun-kpharness_playback_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 16119,
+      "length": 4459,
+      "sha256": "6e4065656364dc78e464728c93e621ae2c9fdf222c27cfd0d1a5272db936d79d"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/container-summary.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 20896,
+      "length": 6356,
+      "sha256": "1eb9156da334c0c8a7f1b0624a2c44152d27cee1d1827744795ee1c163c78cff"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/green-round3-admission-after-fix.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 27562,
+      "length": 534,
+      "sha256": "5202f95445ac0930f096825db836957061c846b3b6a530cd3ce0e9c2d8aaba12"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-final-kpharness_playback_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 28424,
+      "length": 4498,
+      "sha256": "0a72ccc2984a79660385db8a4b800683eb1a49c732d3eb42730c0664e000c1f2"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-kpharness_creative_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 33245,
+      "length": 275,
+      "sha256": "63408f2c44c9b72d3daedf5ffd529a5ead628b69bf28f4c2e247e036a3fa183e"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-kpharness_offline_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 33837,
+      "length": 1739,
+      "sha256": "2386207e2b2f77bcfce48893c007645fc8bc4c43d4d730bc68d30a7086a8b4d5"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-kpharness_pioneer_policy_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 35898,
+      "length": 125,
+      "sha256": "96ec8555604250fd5c0dac58076dcd3792b6fa39066e4faac9ab0fa74d63f3f7"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-kpharness_playback_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 36347,
+      "length": 7685,
+      "sha256": "38af6ed249d40fea9115129d8f9101b1001c9a6e737480610275a60fbd0126b7"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/host-rerun-kpharness_offline_test.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 44355,
+      "length": 1837,
+      "sha256": "ff8fcf0484ca3310ca6b5b229412d32b61fa111ec0c7f8dcc8caa43155c1749e"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/measure-256-idle-after-fix.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 46512,
+      "length": 236,
+      "sha256": "1f27169723900281822449980c22ab9d92a2d620901f055897cf403ccf99df15"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/probe-container.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 47051,
+      "length": 4508,
+      "sha256": "586c27bbd5d34b070386c9d92c62dff26e544237a2723b08f3a23cf32b732fc9"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/probe-f-flake-diagnosis.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 51858,
+      "length": 718,
+      "sha256": "aec5c8e68bc97551acb0b5424b12a7a71e57ed87af422ced7950d024bfa3f6f5"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/probe-f-x8-after-alive-fix.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 52885,
+      "length": 24,
+      "sha256": "1b5c503665d84a3a1dd2d869460b9babcb4f0c7af674f75cd3062a6b6e751080"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/probe-host.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 53207,
+      "length": 3650,
+      "sha256": "73ad4bb8456c41a7c21aec53465131a5fdb841970faacd0859594b89bf436395"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/red-round3-admission-before-fix.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 57160,
+      "length": 1827,
+      "sha256": "9fdcf025be5dc8e8e2da71eb1a36a87ce262c63e522adaca1731a8386a279c6e"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/run2-summary.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 59292,
+      "length": 7117,
+      "sha256": "13f97a3fa1612138c807b22e3657c302141c279ecdc5abbabbe17520ae3ac1ec"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/run3-summary.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-evidence.log",
+      "offset": 66694,
+      "length": 265,
+      "sha256": "13061bf98e80a2063f892bb04676100952de3b1ae7090506f971b255defc0b21"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/green-container-r4.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 384,
+      "length": 546,
+      "sha256": "e153f529fb88bd811571251783a9e5a68aa62b54e977b025eb48e567704c66df"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-001.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 1233,
+      "length": 303,
+      "sha256": "1cf4fb470c0252dd7149d84b06500b75c50daca7df0a52a4d11809c1746dc46a"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-002.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 1845,
+      "length": 303,
+      "sha256": "61078842991bd7ae59a963a4c452312ddbd6f8998ee24325c6859f9358ab24d2"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-003.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 2457,
+      "length": 303,
+      "sha256": "b37274908ea9b4dba12044fbc29967c955c4331c04e38a77f82517a74c93820f"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-004.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 3069,
+      "length": 303,
+      "sha256": "716924b5137eabeb15e6129d7c731b153e7b03bc370330320af677bb3decff97"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-005.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 3681,
+      "length": 304,
+      "sha256": "dde93fafedcf7865d3a207a6f6a6bff96ea02ccdb08a450ca7d9b485318851ea"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-006.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 4294,
+      "length": 303,
+      "sha256": "ec1f778ccd778c83eebce4fe3ef416246fdfc46afe1f54f47c4dcb59b3be66f0"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-007.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 4906,
+      "length": 304,
+      "sha256": "6c63381492e59fe240f5f9f5f04ec940ef3ba73b8afc569ed92fd933dddfe39f"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-008.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 5519,
+      "length": 303,
+      "sha256": "8f13623425208fa4332e9a353a81c974e5da8c143cabec7ab5ef31319140b987"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-009.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 6131,
+      "length": 303,
+      "sha256": "0e87bb1ab2f1d695708a15b17f76937bd2119d9d07d50a75c1a026bd07bdefda"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-010.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 6743,
+      "length": 303,
+      "sha256": "c55b6296a962d991441468f6b1584413aa1ab444747086e23e9d4cb66645aae1"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-011.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 7355,
+      "length": 303,
+      "sha256": "c2afceaacf40e27bd829830158e1d92ef82cd62fa4d5da7712add5a34bc6784c"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-012.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 7967,
+      "length": 303,
+      "sha256": "058c45ec3a8bcacd27a38f6bb26f1345405a2abfa80430a0e7683485edf391a1"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-013.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 8579,
+      "length": 303,
+      "sha256": "2580cc54399681f03d5256b0be1563bfb0de551bedb91ffa815e9cf21a4ff830"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-014.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 9191,
+      "length": 304,
+      "sha256": "ec5da72e1d636ed9e4243ff51644d01622095623b72243dd241bb1d236e37659"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-015.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 9804,
+      "length": 304,
+      "sha256": "33309bb919c35bf8f8780759bbe1281404ea5634f2c5ecf07e9db3113dcf4932"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-016.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 10417,
+      "length": 304,
+      "sha256": "f71ab3665b118ad408b92f87c4effe2520f27ae0132a4db2e6f444e0d74c26f7"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-017.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 11030,
+      "length": 304,
+      "sha256": "0b1c3783a6b887f19d58a5ef8a73a9458e63333ca86d29b6f87bf979c12bc1b5"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-018.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 11643,
+      "length": 303,
+      "sha256": "d1369898b1160cb5ca625349572cbb3176aaf9fa8f241601e49a24034acbd078"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-019.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 12255,
+      "length": 304,
+      "sha256": "4c61802e97f66e226204afb69971a9b4827d594088669cd0b760e33e10e59114"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-020.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 12868,
+      "length": 304,
+      "sha256": "446f9667c529200470cb7ae337d2653f437f5e620eb34705baa84a05384f1061"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-021.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 13481,
+      "length": 304,
+      "sha256": "354be710336c2073ea8181bd2836025b0ff7debd60d62ed84039b01d921e6166"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-022.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 14094,
+      "length": 304,
+      "sha256": "337e6ce8370bb919c3a0317dc7e377d063e071678ad8b1d9589c311d12737ba3"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-023.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 14707,
+      "length": 304,
+      "sha256": "22294191ea88d6d138b055c2c134f190f47ef2e89cb43416aff2a0bc69e8590a"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-024.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 15320,
+      "length": 305,
+      "sha256": "c377a954d467af71703997cbe6fc350ad07dd09f4b046e530620617d82308ee0"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-025.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 15934,
+      "length": 305,
+      "sha256": "a1ec151f736a65ece4fd1d7e6689804a92d2d8593d298970e0675e2cf8c72354"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-026.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 16548,
+      "length": 305,
+      "sha256": "116edb643319cc7785e33942b26cf6d76d86ef7d9db8d130e9ca50ed8ffeae5c"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-027.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 17162,
+      "length": 305,
+      "sha256": "cdc19ebbaf60fd4faf3629c71f41b1810d3255e2b90e1ee54f07de9ed9b6a861"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-028.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 17776,
+      "length": 305,
+      "sha256": "a5a83b511a4f0246e793cc629b16fffb95955821463c1ab04683b6fca1f57ed6"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-029.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 18390,
+      "length": 305,
+      "sha256": "78098b1986ebba980060e8c64af48786d6a72288ac4fa85b4e57afb38f065078"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-030.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 19004,
+      "length": 304,
+      "sha256": "877628919d63510aa15ddc1f25b4ecb0fa6c56acc3a062a48c2cdfeb175f93ad"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-031.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 19617,
+      "length": 304,
+      "sha256": "8f82db755e002fa9a713a70c2c35e942430b12333106b2203d378270f11303fe"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-032.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 20230,
+      "length": 305,
+      "sha256": "0de666facb99585772aead48ba4232d82d95862368325157e5c08841bfddfa69"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-033.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 20844,
+      "length": 305,
+      "sha256": "0b00dc126148638b50ec6f0f6178d5c2a9425161d489929d5ee162075698821b"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-034.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 21458,
+      "length": 305,
+      "sha256": "3801ff5e05f337f067fd42b99de605e5089f1d6f15bbac766f501579c3925967"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-035.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 22072,
+      "length": 305,
+      "sha256": "3920a700db2eb8976d05f65f2d5a4ebc683dbf0f1a660ce56a2cf4d2d4022032"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-036.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 22686,
+      "length": 305,
+      "sha256": "30711618eef670fbad7f94768a5954cbd1a210bd3906fc189b067e1191125da7"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-037.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 23300,
+      "length": 304,
+      "sha256": "9f77e6c2f13c6cf3086a04ec35bdeb51a8ab269525e426235122571204de9c0f"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-038.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 23913,
+      "length": 305,
+      "sha256": "187e8381b40f23edb2e9aab65516d5510d86cfc1115772e2997b7d0cf0365484"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-039.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 24527,
+      "length": 304,
+      "sha256": "b8aa121df42286bb190619f95a5a3e3f9bcffa2f0bec3db6fc0eac3eae01afb5"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-040.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 25140,
+      "length": 305,
+      "sha256": "bbed2e4884b5538b76874d53dc0555ed8df9586204cd0822c8678cb582c1c752"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-041.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 25754,
+      "length": 305,
+      "sha256": "c596d946e6863b40e122da9b41da36f7a8ffb988af093f3b5ab8bcbae27bf94c"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-042.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 26368,
+      "length": 305,
+      "sha256": "42957187297d2702d2b43fbda35f3f35fb4b6c19e3fc77bf1e4171b2dd3e1a9e"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-043.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 26982,
+      "length": 305,
+      "sha256": "f384d39206be9bec35a7627b0a20eff3b890a398f2eedff09379a1f33077d7f4"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-044.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 27596,
+      "length": 305,
+      "sha256": "cc1182c7d44a62027a1ff689a3e4e1f7b02e11c7e944f4c8b42e62424b3e759b"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-045.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 28210,
+      "length": 305,
+      "sha256": "5e37368c0b078e8c31ce77c8634d8460eb2e48f91a7808f3eb8c9401dfae5c31"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-046.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 28824,
+      "length": 305,
+      "sha256": "2423af849a974966786f8ec5e00e3d8acf9e60209fe3d12c4dce9f459140a0f2"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-047.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 29438,
+      "length": 305,
+      "sha256": "f5a8a907b042ea708d5e9afe2799e72e353a2769c18779dac0b7c582fa9fada8"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-048.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 30052,
+      "length": 305,
+      "sha256": "5f539e5094cad91374948ee25712b95910e3f4d8cec618d8373969aa94c6044b"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-049.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 30666,
+      "length": 305,
+      "sha256": "296ad8d13d9d424357861c35c6cffc5b5553658e33fa40eada301d6c493d53fc"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-050.log",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 31280,
+      "length": 305,
+      "sha256": "8445766243c088ddbe6870cfe0e1234ec5d926ab2ff16e82f1ba0551e4432ab4"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 31887,
+      "length": 1942,
+      "sha256": "68b8c408abaaf30d954a197441949050d390402c2d0840a2cd53f753c53a1604"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe_f_loop.sh",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 34118,
+      "length": 1062,
+      "sha256": "a3625b2b999aa630ff9bf31fcda61ea074749fcb7fa0f123ae8a7480a4124cac"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/red-container.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 35466,
+      "length": 3363,
+      "sha256": "1bc9c12346e9f95f06159cf33d2e150148f3d18be7689f9be73da0e01751b48a"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-inproc-widen-after-fix.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 39134,
+      "length": 214,
+      "sha256": "9f4c9ea57800a22372e4ea00d0990d663abe06d752a361f0cda77916ee97d732"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-race-probe-after-fix.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 39669,
+      "length": 375,
+      "sha256": "972b47efcb4a96355a97d957cf0c6b5d90fff1265891110184d18da6bda6cf40"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-container.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 40350,
+      "length": 4906,
+      "sha256": "f267410da76bcf1e471ec0d2a0301e2e08d4b3479823b66d3cad033fb067ba74"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-host.txt",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-evidence.log",
+      "offset": 45543,
+      "length": 4925,
+      "sha256": "cbc22187bbed421644a3751beeb701e859c0fe0aac8e869be063716b46404afa"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 340,
+      "length": 3876,
+      "sha256": "d97d4178b8346e2864fff370fddf0b8b4f39300814d1a8fddb7042ebffc0d107"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-1-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 4308,
+      "length": 5587,
+      "sha256": "4f838e5b518d4f9ee3533c0f1ef2b353343a7d5896a511632b38432d381910c3"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-2-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 9987,
+      "length": 5129,
+      "sha256": "1ade54c35ef61034d4a66b15b56ce38b62e5b4b723f2eb31320f3236f900b7bd"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-3-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 15208,
+      "length": 4781,
+      "sha256": "d9c7fdf04fd386819266833a69c3a6d079162b4b42cc1c89a5436b45ccdeff65"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-4-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 20081,
+      "length": 5911,
+      "sha256": "7f381981db4b09ec937a023c4abcbcac33f78a6a0789918d84b385bbaacfd694"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-5-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 26084,
+      "length": 3225,
+      "sha256": "e778f6689154c56b820dae710f9c131568ff9d97a39c93d7ea8e84583e12fa7f"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-6-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 29401,
+      "length": 4735,
+      "sha256": "c6bf2f2ef6c34c6da240cb44c2c72347472ac3d20d91645936991f23f1f53c03"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-7-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 34228,
+      "length": 4567,
+      "sha256": "8a87bbc71e8cb40c48d0a7814ce40adfbc1b2ad6488801b96179bb66d2e01931"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-8-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 38887,
+      "length": 4799,
+      "sha256": "7e138a34c19d21a6aff62bde4aa6c37692b632d8491be3754c1b5274fb51db71"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-9-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 43778,
+      "length": 5679,
+      "sha256": "e2f351052a12d4a86ffbd34d9d735ce3b23964bd848f01a85b39f5bfb55db123"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-10-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 49551,
+      "length": 23215,
+      "sha256": "1c3925c3c44e747732ef4c2b25f6b8725fa84f8b59512e0fd1383f42daefaeef"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-11-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 72860,
+      "length": 24390,
+      "sha256": "50cd6adeaf6b4074d417cdf452d6d2894181a8a032666f88f89796284ec6ceea"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-12-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 97344,
+      "length": 23412,
+      "sha256": "20d2c1f4edb2dbaa4b44517eb471814f5d176a0fd44c47bb7875c0cf0c5bdee4"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-13-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 120850,
+      "length": 21100,
+      "sha256": "ae5329c02951cb029f2efff4750278b152bdeb5d67973c12b7bcc13fa034f05c"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-14-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 142044,
+      "length": 7599,
+      "sha256": "e76d688f82eca90de28e91df51102516bc97745be3ab7a572a365f0cfb397497"
+    },
+    {
+      "source": ".superpowers/sdd/lua-boundary-validation-plan/task-7-capture-cadence-fix-round-15-report.md",
+      "bundle": ".superpowers/sdd/lua-boundary-validation-plan/capture-cadence-history.md",
+      "offset": 149737,
+      "length": 3614,
+      "sha256": "217c080f3bfd94f5d6c3824a9f893de4f5b4ed701310eac10b8f211d7798b5a4"
+    }
+  ]
+}

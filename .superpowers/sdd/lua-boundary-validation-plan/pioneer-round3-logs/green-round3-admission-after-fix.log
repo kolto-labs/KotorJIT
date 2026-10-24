@@ -1,8 +1,0 @@
-test_idle_flood_keeps_threads_bounded_and_control_working (__main__.Round3AdmissionTests.test_idle_flood_keeps_threads_bounded_and_control_working) ... ok
-test_trickling_client_is_dropped_by_total_deadline (__main__.Round3AdmissionTests.test_trickling_client_is_dropped_by_total_deadline) ... ok
-test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 50.120s
-
-OK

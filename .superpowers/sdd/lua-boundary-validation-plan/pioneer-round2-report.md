@@ -160,7 +160,7 @@ Notes:
 ## Round 3
 
 Scope: review I6 (idle unauthenticated sockets exhaust owner threads before
-token check). Logs: `.superpowers/sdd/lua-boundary-validation-plan/pioneer-round3-logs/`.
+token check). Historical logs: [round 3 evidence bundle](pioneer-round3-evidence.log), with original paths and hashes in [the evidence index](evidence-index.json).
 
 ### Files changed (only these)
 
@@ -251,7 +251,7 @@ Open question: whether eviction ever drops a legitimate client under real host l
 
 ## Round 4
 
-Follows the round 3 review (`/home/brunner56/kp-live-20260922/pioneer-round3-review.md`, PASS with M1 and M2). Logs: `pioneer-round4-logs/`. Pre-edit copies: `/home/brunner56/kp-live-20260922/pioneer-r4-backup/`.
+Follows the round 3 review (`/home/brunner56/kp-live-20260922/pioneer-round3-review.md`, PASS with M1 and M2). Historical logs: [round 4 evidence bundle](pioneer-round4-evidence.log), with original paths and hashes in [the evidence index](evidence-index.json). Pre-edit copies: `/home/brunner56/kp-live-20260922/pioneer-r4-backup/`.
 
 ### Files changed (only these)
 

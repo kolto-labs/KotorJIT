@@ -1,7 +1,0 @@
-.RuntimeError: cleanup failed: session: RuntimeError: parent cleanup failed
-........RuntimeError: capture_binding_changed: late capture failure
-........................
-----------------------------------------------------------------------
-Ran 33 tests in 18.300s
-
-OK
