@@ -52,3 +52,9 @@ CLAUDE.md
 /swkotor.ini
 /kotorphasor.log
 /kotorphasor-proxy.log
+
+# Local agent caches, harness logs and session transcripts
+.skipper/
+scripts/harness/.harnesskit/
+codex-session-*.md
+*-pastedcontent-*.txt
