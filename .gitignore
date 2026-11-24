@@ -50,8 +50,8 @@ CLAUDE.md
 
 # Local runtime configuration and logs
 /swkotor.ini
-/kotorphasor.log
-/kotorphasor-proxy.log
+/hyperstim.log
+/hyperstim-proxy.log
 
 # Local agent caches, harness logs and session transcripts
 .skipper/

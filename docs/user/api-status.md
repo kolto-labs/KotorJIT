@@ -12,7 +12,7 @@ A game event hits one of the caves: `RunScript` â†’ `OnRunScript`, `MainLoop` â†
 
 | Tag | Meaning |
 |---|---|
-| **Live** | Seen working in `kotorphasor.log` or `lua exec` |
+| **Live** | Seen working in `hyperstim.log` or `lua exec` |
 | **Bound** | Installed or registered; not individually proven in-game |
 | **Dead name** | Listed in `events.toml`; C++ never calls that function |
 | **Unhooked** | Address known; no detour in 0.1.0 |

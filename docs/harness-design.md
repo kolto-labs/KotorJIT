@@ -1,6 +1,6 @@
 # Headless harness: design
 
-How KotorPhasor drives a live game with no screen, no keyboard, and no
+How Hyperstim drives a live game with no screen, no keyboard, and no
 person at the desk. The runtime already sits inside the process. The
 harness is a control plane on top of it, plus a driver outside it.
 
@@ -26,7 +26,7 @@ directions.
 |    server MainLoop ---> OnTick, timers, Lua                          |
 |    hooks -----------> event ring (RunScript, module, area, save...)  |
 |                                                                     |
-|  kphasor.dll / libkphasor.so                                        |
+|  hyperstim.dll / libhyperstim.so                                        |
 |    src/harness/channel   listener thread, 127.0.0.1 TCP, JSON lines |
 |    src/harness/commands  status, state, lua, events, screenshot...  |
 |    src/harness/engine_*  per-game adapters: load, warp, reply, speed |
@@ -64,12 +64,12 @@ Three properties fall out of this shape.
 The listener is off unless asked for. Players never run it.
 
 ```
-# <game>/kotorphasor.ini
+# <game>/hyperstim.ini
 harness_port = 27015        # 0 or absent: listener never starts
 harness_bind = 127.0.0.1    # loopback only; anything else is refused
 ```
 
-`KOTORPHASOR_HARNESS_PORT` overrides the file. INI section headers are ignored;
+`HYPERSTIM_HARNESS_PORT` overrides the file. INI section headers are ignored;
 `[harness] port` and `bind` are ineffective keys. The runtime does not read
 workspace or scenario TOML. See the separate [driver contract](harness-driver.md)
 and [scenario TOML contract](scenario-toml.md) for their ownership and precedence.
@@ -206,7 +206,7 @@ event name, and up to four scalar fields. `OnRunScript` records the
 script name and object id. Module, area, save and load handlers record
 their names. The ring never allocates after startup.
 
-This is how the harness tests KotorPhasor's own event functions:
+This is how the harness tests Hyperstim's own event functions:
 a scenario asserts that `OnModuleLoad` was followed by `OnAreaEnter`
 was followed by a `k_pend_*` `OnRunScript` after a warp to the Endar
 Spire, by cursor, not by sleeping.
@@ -322,14 +322,14 @@ scenarios/
    path.
 2. Stage a writable tree under `tmp/<target>_harness/`: real
    directories for anything the game or the runtime writes (`saves`,
-   `kotorphasor/`, the ini), symlinks for the rest. Copying the game is
+   `hyperstim/`, the ini), symlinks for the rest. Copying the game is
    not allowed; the K2 depot is 36 GB.
 3. Install the runtime from `build/` with `scripts/install_to_game.sh`,
-   write `kotorphasor.ini` with a free port, tune the game ini
+   write `hyperstim.ini` with a free port, tune the game ini
    (windowed, cheats on, movies off, frame buffer off under llvmpipe).
 4. Take the per-display lock (`lock.sh` semantics, reimplemented),
    start Xvfb, start the game: `wine <exe>` in an isolated desktop
-   session env for Windows builds; `LD_PRELOAD=libkphasor.so ./kotor2`
+   session env for Windows builds; `LD_PRELOAD=libhyperstim.so ./kotor2`
    with `XDG_DATA_HOME` pointed into the staged tree for the ELF.
 5. Connect to the port. Boot is complete when `status` answers and
    reports the expected build. There is no window scan.
@@ -498,7 +498,7 @@ These override anything above that disagrees with them.
 7. **Build wiring.** `src/harness/harness.cmake` is included before
    `src/runtime/runtime.cmake` and only sets `KP_HARNESS_SOURCES` and
    defines `kp_harnesstest`. `runtime.cmake` appends those sources to
-   the win32 object loop and to `libkphasor.so`, and adds `-lws2_32`
+   the win32 object loop and to `libhyperstim.so`, and adds `-lws2_32`
    to the DLL link. Object names are flat `rt_<basename>.obj`, so the
    harness basenames are `channel`, `commands`, `json`, `ring`,
    `engine_k1`, `engine_k2`. `channel.cpp` includes `<winsock2.h>`

@@ -1,14 +1,14 @@
-# KotorPhasor on macOS (Steam, x86_64)
+# Hyperstim on macOS (Steam, x86_64)
 
-KotorPhasor runs on the Steam macOS builds of KOTOR 1 (`KOTOR_Exe`) and KOTOR 2
+Hyperstim runs on the Steam macOS builds of KOTOR 1 (`KOTOR_Exe`) and KOTOR 2
 (`KOTOR2sub`, the x86_64 slice of its universal binary). Both are x86_64, so on
-Apple silicon they run — and KotorPhasor runs with them — under Rosetta 2. On an
+Apple silicon they run — and Hyperstim runs with them — under Rosetta 2. On an
 Intel Mac they run natively. Nothing here touches a 32-bit Mac build.
 
 ## What works
 
 - The `.lua` script model, exactly as on Windows: drop a file in
-  `<game>/kotorphasor/scripts`, register for events, return to observe/block.
+  `<game>/hyperstim/scripts`, register for events, return to observe/block.
 - Every NWScript event that funnels through `RunScript` and the ten object
   `EventHandler`s (creature, door, placeable, trigger, module, area, encounter,
   area-of-effect, store, waypoint), plus save/load situation and the console.
@@ -39,7 +39,7 @@ Intel Mac they run natively. Nothing here touches a 32-bit Mac build.
 On a Mac with Xcode Command Line Tools:
 
 ```sh
-scripts/mac/build.sh          # -> build-mac/libkphasor.dylib (x86_64, ad-hoc signed)
+scripts/mac/build.sh          # -> build-mac/libhyperstim.dylib (x86_64, ad-hoc signed)
 ```
 
 LuaJIT and Dear ImGui are vendored; no network is needed. `cmake --build` on a
@@ -52,14 +52,14 @@ scripts/mac/install_to_game.sh install "<KOTOR app or MacOS dir>"
 ```
 
 It identifies the build by its code-section hash, copies the dylib and the
-matching address table into `<game>/…/MacOS/kotorphasor/`, writes a starter
-`kotorphasor.ini` and an example script, and prints the launch line. No game
+matching address table into `<game>/…/MacOS/hyperstim/`, writes a starter
+`hyperstim.ini` and an example script, and prints the launch line. No game
 file is modified.
 
 Then set the game's **Steam launch options** to what the installer prints:
 
 ```
-DYLD_INSERT_LIBRARIES="…/MacOS/libkphasor.dylib" %command%
+DYLD_INSERT_LIBRARIES="…/MacOS/libhyperstim.dylib" %command%
 ```
 
 That is the whole install. The runtime identifies the executable by hashing its

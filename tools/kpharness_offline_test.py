@@ -2360,9 +2360,9 @@ class TestSessionUtilities(unittest.TestCase):
 
     def test_write_runtime_ini_keeps_other_keys(self):
         gd = self.tmp
-        (gd / "kotorphasor.ini").write_text("error_budget = 3\nharness_port = 1\n")
+        (gd / "hyperstim.ini").write_text("error_budget = 3\nharness_port = 1\n")
         write_runtime_ini(gd, 27015)
-        text = (gd / "kotorphasor.ini").read_text()
+        text = (gd / "hyperstim.ini").read_text()
         self.assertIn("error_budget = 3", text)
         self.assertEqual(text.count("harness_port"), 1)
         self.assertIn("harness_port = 27015", text)
@@ -2480,17 +2480,17 @@ class TestStaging(unittest.TestCase):
         (inst / "chitin.key").write_bytes(b"KEY V1  ")
         (inst / "swkotor.exe").write_bytes(b"MZ")
         (inst / "binkw32.dll").write_bytes(b"\0" * 300000)     # the real codec, by size
-        (inst / "kphasor.dll").write_bytes(b"source-runtime")
+        (inst / "hyperstim.dll").write_bytes(b"source-runtime")
         (inst / "steam_appid.txt").write_text("source-appid\n")
-        (inst / "kotorphasor.log").write_text("source-runtime-log\n")
-        (inst / "kotorphasor-proxy.log").write_text("source-proxy-log\n")
-        (inst / "kotorphasor.ini").write_text("error_budget = 3\n")
+        (inst / "hyperstim.log").write_text("source-runtime-log\n")
+        (inst / "hyperstim-proxy.log").write_text("source-proxy-log\n")
+        (inst / "hyperstim.ini").write_text("error_budget = 3\n")
         (inst / "swkotor.ini").write_text("[Game Options]\nEnableCheats=0\n"
                                           "[Graphics Options]\nFullScreen=1\nFrame Buffer=1\n")
         build = self.tmp / "build"
         build.mkdir()
-        (build / "kphasor.dll").write_bytes(b"dll")
-        (build / "binkw32.dll").write_bytes(b"proxy kphasor.dll")
+        (build / "hyperstim.dll").write_bytes(b"dll")
+        (build / "binkw32.dll").write_bytes(b"proxy hyperstim.dll")
         self.inst, self.build = inst, build
         self.saved_env = {k: os.environ.get(k) for k in ("KOTOR1_DIR", "KP_BUILD_DIR")}
         os.environ["KOTOR1_DIR"] = str(inst)
@@ -2520,16 +2520,16 @@ class TestStaging(unittest.TestCase):
         self.assertTrue((staged / "binkw32_real.dll").is_file())
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
         self.assertTrue(proxy_is_ours(staged / "binkw32.dll"))
-        self.assertTrue((staged / "kphasor.dll").is_file())
-        self.assertTrue((staged / "kotorphasor" / "addresses" / "k1_steam_103_unpacked.json").is_file())
-        self.assertTrue((staged / "kotorphasor" / "scripts").is_dir())
+        self.assertTrue((staged / "hyperstim.dll").is_file())
+        self.assertTrue((staged / "hyperstim" / "addresses" / "k1_steam_103_unpacked.json").is_file())
+        self.assertTrue((staged / "hyperstim" / "scripts").is_dir())
         self.assertTrue((staged / "steam_appid.txt").is_file())
         ini = (staged / "swkotor.ini").read_text()
         self.assertIn("EnableCheats=1", ini)
         self.assertIn("FullScreen=0", ini)
         self.assertIn("Frame Buffer=0", ini)
         self.assertIn("Disable Movies=1", ini)
-        self.assertIn("harness_port = 27015", (staged / "kotorphasor.ini").read_text())
+        self.assertIn("harness_port = 27015", (staged / "hyperstim.ini").read_text())
         self.assertEqual((self.inst / "swkotor.ini").read_text().count("EnableCheats=1"), 0)
         self.assertTrue((s.run_dir / "session.log").is_file())
         # A second stage() on the same tree is a no-op for the overlay and
@@ -2540,8 +2540,8 @@ class TestStaging(unittest.TestCase):
         self.assertEqual((staged / "binkw32_real.dll").stat().st_size, 300000)
 
     def test_stage_preserves_runtime_written_source_files_and_repairs_legacy_links(self):
-        names = ("kphasor.dll", "steam_appid.txt", "kotorphasor.ini",
-                 "kotorphasor.log", "kotorphasor-proxy.log", "swkotor.ini")
+        names = ("hyperstim.dll", "steam_appid.txt", "hyperstim.ini",
+                 "hyperstim.log", "hyperstim-proxy.log", "swkotor.ini")
         before = {name: (self.inst / name).read_bytes() for name in names}
         staged = self.tmp / "legacy-links"
         staged.mkdir()
@@ -2555,7 +2555,7 @@ class TestStaging(unittest.TestCase):
         for name in names:
             self.assertFalse((staged / name).is_symlink(), name)
             self.assertEqual((self.inst / name).read_bytes(), before[name], name)
-        self.assertEqual((staged / "kphasor.dll").read_bytes(), b"dll")
+        self.assertEqual((staged / "hyperstim.dll").read_bytes(), b"dll")
         self.assertEqual((staged / "steam_appid.txt").read_text(), "32370\n")
 
     def test_stage_refuses_source_install_even_through_symlink(self):
@@ -2582,7 +2582,7 @@ class TestStaging(unittest.TestCase):
     def test_lock_first_fresh_stage_initializes_overlay_and_private_ini(self):
         staged = self.tmp / "fresh-boot-order"
         source_ini = (self.inst / "swkotor.ini").read_bytes()
-        source_runtime_ini = (self.inst / "kotorphasor.ini").read_bytes()
+        source_runtime_ini = (self.inst / "hyperstim.ini").read_bytes()
         s = GameSession("k1", staged=str(staged), reset_saves=True, log=lambda _: None)
         s.acquire_stage_lock()
         try:
@@ -2593,9 +2593,9 @@ class TestStaging(unittest.TestCase):
             self.assertTrue((staged / "modules").is_symlink())
             self.assertTrue((staged / "binkw32_real.dll").is_file())
             self.assertFalse((staged / "swkotor.ini").is_symlink())
-            self.assertFalse((staged / "kotorphasor.ini").is_symlink())
+            self.assertFalse((staged / "hyperstim.ini").is_symlink())
             self.assertEqual((self.inst / "swkotor.ini").read_bytes(), source_ini)
-            self.assertEqual((self.inst / "kotorphasor.ini").read_bytes(), source_runtime_ini)
+            self.assertEqual((self.inst / "hyperstim.ini").read_bytes(), source_runtime_ini)
         finally:
             if s._session_log is not None:
                 s._session_log.close()
@@ -2732,7 +2732,7 @@ class TestStagingK2Native(unittest.TestCase):
         (inst / "libmilesmidi.so").write_bytes(b"milesmidi")
         build = self.tmp / "build"
         build.mkdir()
-        (build / "libkphasor.so").write_bytes(b"so")
+        (build / "libhyperstim.so").write_bytes(b"so")
         self.inst, self.build = inst, build
         self.saved_env = {k: os.environ.get(k) for k in ("KOTOR2_DIR", "KP_BUILD_DIR")}
         os.environ["KOTOR2_DIR"] = str(sa)

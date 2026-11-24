@@ -1,6 +1,6 @@
 # Cursed demo: necromancer
 # Runs with scripts/examples/cursed/30_necromancer.lua deployed into the game's
-# kotorphasor/scripts directory (scripts/harness/record_cursed.sh does that,
+# hyperstim/scripts directory (scripts/harness/record_cursed.sh does that,
 # records the display and collects the oracle lines). Arena: the Endar Spire
 # room3 checkpoint (its own fight is already over), then six Sith troopers
 # summoned in a ring around the player, at retail speed so the recording is

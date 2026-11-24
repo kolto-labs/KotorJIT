@@ -27,7 +27,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-88}"
 
 deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/20_sith_patrol_alarm.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
-rm -f "$GAME_DIR/kotorphasor.log"
+rm -f "$GAME_DIR/hyperstim.log"
 
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 
@@ -41,12 +41,12 @@ for round in 1 2 3; do
   send "#key w"; send "#sleep 1.3"
   send "#key w"; send "#sleep 3"
   send "#console"
-  grep -q '\[alarm\]' "$GAME_DIR/kotorphasor.log" 2>/dev/null && break
+  grep -q '\[alarm\]' "$GAME_DIR/hyperstim.log" 2>/dev/null && break
 done
 
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[probe\] script:k_def_percept01' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[probe\] script:k_def_percept01' \
   "the stock perception-script actually ran"
-if grep -q '\[alarm\] .* raised the alarm' "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
+if grep -q '\[alarm\] .* raised the alarm' "$GAME_DIR/hyperstim.log" 2>/dev/null; then
   ok "20_sith_patrol_alarm's own print line fired"
 else
   bad "20_sith_patrol_alarm never fired across 3 fresh encounters -- see the" \

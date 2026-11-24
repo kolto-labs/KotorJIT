@@ -946,8 +946,8 @@ void install(lua_State* L, const std::string& game_dir) {
     lua_setfield(L, -2, "events");
 
     lua_pushcfunction(L, lua_print_to_log); lua_setfield(L, -2, "print");
-    lua_pushstring(L, "KotorPhasor"); lua_setfield(L, -2, "host");
-    lua_pushstring(L, "KotorPhasor"); lua_setfield(L, -2, "serverapp");
+    lua_pushstring(L, "Hyperstim"); lua_setfield(L, -2, "host");
+    lua_pushstring(L, "Hyperstim"); lua_setfield(L, -2, "serverapp");
     lua_pushstring(L, "KOTOR"); lua_setfield(L, -2, "game");
     lua_pushinteger(L, 2); lua_setfield(L, -2, "api_version");
     lua_pushstring(L, KP_VERSION);

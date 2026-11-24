@@ -5,10 +5,10 @@
 - `nwscript.call(name, ...)` is the only public entry point for a direct
   NWScript routine.  It owns no Lua-host facilities and exports no routine
   names as Lua variables.
-- `kp.*` is the only public root for KotorPhasor-native Lua facilities:
+- `kp.*` is the only public root for Hyperstim-native Lua facilities:
   output, timers, memory, objects, structures, harness controls, events, and
   host metadata.
-- There are no normal bare KotorPhasor globals.  A script's own globals remain
+- There are no normal bare Hyperstim globals.  A script's own globals remain
   Lua's responsibility.
 - The runtime INI, operator/workspace TOML, and route TOML each have one
   documented owner.  Generated API metadata and hook data remain outside the
@@ -47,7 +47,7 @@ routine/support tests, generated routine documentation).
 5. Prove no generated routine is exported as a `kotor.*` member and that both
    script and console initialization use the same bridge.
 
-### Task 2: Put every KotorPhasor-native Lua facility under `kp.*`
+### Task 2: Put every Hyperstim-native Lua facility under `kp.*`
 
 Owner: native Lua registrations and compatibility only (`src/api/{memory,entity,
 structs,output,timers,strings,compat}.*`, related host API data/docs/tests).
@@ -68,7 +68,7 @@ structs,output,timers,strings,compat}.*`, related host API data/docs/tests).
 
 Owner: Python harness config/scenario parsing, scenario tests, and harness docs.
 
-1. Specify three scopes: runtime `<game>/kotorphasor.ini`, optional operator
+1. Specify three scopes: runtime `<game>/hyperstim.ini`, optional operator
    `kotorphasor.toml`, and immutable route `scenarios/**/*.toml`.
 2. Use one reader and precedence policy for optional workspace TOML; do not move
    supported-build facts into mutable configuration.

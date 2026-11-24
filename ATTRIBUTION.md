@@ -1,12 +1,12 @@
 # Attribution
 
-KotorPhasor stands on work other people did first. Who, and for what:
+Hyperstim stands on work other people did first. Who, and for what:
 
 ## Architectural model
 
 **[Phasor](https://github.com/urbanyoung/Phasor)**: urbanyoung, MIT.
 
-Phasor is a Lua scripting host for Halo servers. KotorPhasor borrows its shape, and the
+Phasor is a Lua scripting host for Halo servers. Hyperstim borrows its shape, and the
 borrowing is deliberate rather than incidental:
 
 - Scripts live in a folder and define only the event callbacks they care about.
@@ -34,8 +34,8 @@ decisions are reflected here: describing hooks as data (declared address, declar
 original-byte verification, per-version files gated on executable hash) and validating hook
 addresses for conflicts before install.
 
-KotorPhasor implements its own hook engine and address tables rather than reusing theirs.
-Its hook addresses were checked mechanically against every site KotorPhasor touches; there
+Hyperstim implements its own hook engine and address tables rather than reusing theirs.
+Its hook addresses were checked mechanically against every site Hyperstim touches; there
 are no collisions, so the two can be installed together.
 
 Individual patches in that project are credited to their own authors: Lane, Vriff, J,
@@ -55,7 +55,7 @@ cross-build identity layer that makes unnamed builds usable all come from that c
 ## The games
 
 KOTOR and KOTOR II are the work of BioWare, Obsidian Entertainment, LucasArts, and Aspyr.
-KotorPhasor is an unaffiliated fan project. It ships no game content and redistributes no
+Hyperstim is an unaffiliated fan project. It ships no game content and redistributes no
 game binaries. You need your own copy of the game.
 
 ## Dependencies

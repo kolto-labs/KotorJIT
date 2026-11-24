@@ -1,6 +1,6 @@
-# Install KotorPhasor
+# Install Hyperstim
 
-You need a legal copy of the game. See [CONTRIBUTING.md](../../CONTRIBUTING.md#supported-builds) in the repo root for which KOTOR 1 and KOTOR 2 builds are supported today. Build the runtime first, or use the `kphasor.dll` and proxy `binkw32.dll` from a release.
+You need a legal copy of the game. See [CONTRIBUTING.md](../../CONTRIBUTING.md#supported-builds) in the repo root for which KOTOR 1 and KOTOR 2 builds are supported today. Build the runtime first, or use the `hyperstim.dll` and proxy `binkw32.dll` from a release.
 
 ## Build
 
@@ -16,13 +16,13 @@ cmake -S . -B build
 cmake --build build
 ```
 
-That produces `build/kphasor.dll` and the proxy `build/binkw32.dll`.
+That produces `build/hyperstim.dll` and the proxy `build/binkw32.dll`.
 
 Or package those artifacts (plus address tables and the installer) into a zip:
 
 ```sh
 ./scripts/package_release.sh
-# -> dist/kotorphasor-0.1.0.zip  (sha256 printed; tools/check_release_zip.py validates members)
+# -> dist/hyperstim-0.1.0.zip  (sha256 printed; tools/check_release_zip.py validates members)
 ```
 
 Unpack the zip and install from its directory as the build dir:
@@ -41,9 +41,9 @@ The installer:
 
 1. Copies the original `binkw32.dll` to `binkw32_real.dll`
 2. Drops the proxy in as `binkw32.dll`
-3. Copies `kphasor.dll` next to the game
-4. Copies address tables into `kotorphasor/addresses/`
-5. Creates `kotorphasor/scripts/`
+3. Copies `hyperstim.dll` next to the game
+4. Copies address tables into `hyperstim/addresses/`
+5. Creates `hyperstim/scripts/`
 
 Nothing else in the game folder is rewritten.
 
@@ -52,15 +52,15 @@ Nothing else in the game folder is rewritten.
 ./scripts/install_to_game.sh uninstall /path/to/swkotor
 ```
 
-Uninstall restores the original `binkw32.dll` and removes `kphasor.dll`. Scripts and `kotorphasor.log` stay.
+Uninstall restores the original `binkw32.dll` and removes `hyperstim.dll`. Scripts and `hyperstim.log` stay.
 
 ## Optional config
 
-Create `kotorphasor.ini` next to the executable if you want to change defaults.
+Create `hyperstim.ini` next to the executable if you want to change defaults.
 
 ```ini
-script_dir = kotorphasor/scripts
-log_path = kotorphasor.log
+script_dir = hyperstim/scripts
+log_path = hyperstim.log
 error_budget = 8
 hot_reload = true
 ```
@@ -70,8 +70,8 @@ Paths are relative to the game directory. `error_budget` is how many errors a sc
 ## First check
 
 1. Start the game and load a save.
-2. Open `kotorphasor.log` and look for `KotorPhasor 0.1.0 starting` and `installed 15 hooks`.
+2. Open `hyperstim.log` and look for `Hyperstim 0.1.0 starting` and `installed 15 hooks`.
 3. In the cheat console type `lua status`. The same facts appear in the log.
-4. Drop a `.lua` file in `kotorphasor/scripts/` and type `lua reload`, or wait for hot reload.
+4. Drop a `.lua` file in `hyperstim/scripts/` and type `lua reload`, or wait for hot reload.
 
 Enable the cheat console the same way you always do for this game (in-game cheats). The runtime does not turn cheats on for you.

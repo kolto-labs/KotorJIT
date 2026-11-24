@@ -10,7 +10,7 @@ three targets:
   k2-wine    swkotor2.exe under Wine over the steamassets/ data tree. The
              exe is not shipped by the Linux depot; the harness expects one
              to have been placed in the staged tree (see discover.py).
-  k2-native  the kotor2 ELF with libkphasor.so preloaded. The ELF is the
+  k2-native  the kotor2 ELF with libhyperstim.so preloaded. The ELF is the
              parent of the data tree. The port writes its ini and saves
              under XDG_DATA_HOME/aspyr-media/<name>/; the name is not
              agreed on by the two public sources, so the session discovers
@@ -94,11 +94,11 @@ K1 = Target(
     ini_name="swkotor.ini", save_dir_name="Saves",
     start_module="end_m01aa", image_base=0x00400000,
     builds=("k1_steam_103_unpacked", "k1_gog_103"),
-    runtime_files=("kphasor.dll", "binkw32.dll"),
+    runtime_files=("hyperstim.dll", "binkw32.dll"),
     # futuregame is where the engine's own load path stages a save before the
     # server reads it, so the harness writes there too. A staged tree that
     # symlinks it instead of owning it fails the load with no useful error.
-    writable_dirs=("Saves", "kotorphasor", "currentgame", "gameinprogress",
+    writable_dirs=("Saves", "hyperstim", "currentgame", "gameinprogress",
                    "futuregame", "Temp", "logs"),
     steam_appid="32370",
 )
@@ -109,8 +109,8 @@ K2_WINE = Target(
     ini_name="swkotor2.ini", save_dir_name="saves",
     start_module="001EBO", image_base=0x00400000,
     builds=("k2_gog_aspyr", "k2_steam_aspyr"),
-    runtime_files=("kphasor.dll", "binkw32.dll"),
-    writable_dirs=("saves", "kotorphasor", "currentgame", "gameinprogress",
+    runtime_files=("hyperstim.dll", "binkw32.dll"),
+    writable_dirs=("saves", "hyperstim", "currentgame", "gameinprogress",
                    "futuregame", "temp", "logs"),
     steam_appid="208580",
 )
@@ -121,8 +121,8 @@ K2_NATIVE = Target(
     ini_name="swkotor2.ini", save_dir_name="saves",
     start_module="001EBO", image_base=0x08048000,
     builds=("k2_steam_linux",),
-    runtime_files=("libkphasor.so",),
-    writable_dirs=("kotorphasor",),
+    runtime_files=("libhyperstim.so",),
+    writable_dirs=("hyperstim",),
     steam_appid="208580",
     xdg_subdir=("aspyr-media", "KOTOR2"),
 )

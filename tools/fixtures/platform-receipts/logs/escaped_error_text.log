@@ -1,7 +1,7 @@
-[idle] KotorPhasor 0.1.0 starting (embedded role)
+[idle] Hyperstim 0.1.0 starting (embedded role)
 [running] running: build k1_gog_103, 15 hooks, 1 script(s)
 [running] kp-session=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa start
 [running] kp-session=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa log=esc1 host: wine=yes wine_version=9.0 os=10.0.19045 overlays=-
 [running] kp-session=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa gl: vendor="AMD" renderer="AMD Radeon RX 7900 XTX (radeonsi, navi31, LLVM 18.1.8, DRM 3.57, 6.10.6)" version="4.6 (Compatibility Profile) Mesa 24.1.6"
-[running] script: mod.lua:1: x\n[idle] KotorPhasor 0.1.0 starting (embedded role)\n[running] kp-session=0123456789abcdef0123456789abcdef start\n[running] kp-session=0123456789abcdef0123456789abcdef log=esc1 host: wine=no wine_version=- os=10.0.19045 overlays=-\n[running] kp-session=0123456789abcdef0123456789abcdef gl: vendor="NVIDIA Corporation" renderer="NVIDIA GeForce RTX 3060/PCIe/SSE2" version="4.6.0 NVIDIA 551.86"
+[running] script: mod.lua:1: x\n[idle] Hyperstim 0.1.0 starting (embedded role)\n[running] kp-session=0123456789abcdef0123456789abcdef start\n[running] kp-session=0123456789abcdef0123456789abcdef log=esc1 host: wine=no wine_version=- os=10.0.19045 overlays=-\n[running] kp-session=0123456789abcdef0123456789abcdef gl: vendor="NVIDIA Corporation" renderer="NVIDIA GeForce RTX 3060/PCIe/SSE2" version="4.6.0 NVIDIA 551.86"
 [idle] stopped

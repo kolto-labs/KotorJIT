@@ -1,6 +1,6 @@
 # Browser / WASM embed (low priority)
 
-KotorPhasor will eventually embed playable KotOR in a browser the way
+Hyperstim will eventually embed playable KotOR in a browser the way
 [KotOR.js](https://github.com/KobaltBlu/KotOR.js) does, but as a first-party
 target of this repo — not a fork of game assets.
 

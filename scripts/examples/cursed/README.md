@@ -3,7 +3,7 @@
 Nine retained Lua scripts that rewrite the rules of a fight from inside the engine, each
 tied to an engine event. They are demos of what the event layer plus the full
 NWScript routine table can do, not gameplay mods. Every one is a single file
-with no dependencies, so drop any of them into `kotorphasor/scripts/` and play.
+with no dependencies, so drop any of them into `hyperstim/scripts/` and play.
 
 | Script | Trigger | What happens |
 |---|---|---|

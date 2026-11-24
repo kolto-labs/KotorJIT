@@ -885,7 +885,7 @@ std::string poisoned_site_list() {
 
 void console_status() {
     Runtime& rt = Runtime::instance();
-    rt.log("status: KotorPhasor %s", KP_VERSION);
+    rt.log("status: Hyperstim %s", KP_VERSION);
     rt.log("status: phase=%s build=%s live=%s", to_string(rt.phase()),
            rt.build().empty() ? "(none)" : rt.build().c_str(), live() ? "yes" : "no");
     if (!rt.failure().empty()) rt.log("status: failure=%s", rt.failure().c_str());

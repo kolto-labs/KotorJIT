@@ -1,4 +1,4 @@
-"""Headless driver for the KotorPhasor harness channel.
+"""Headless driver for the Hyperstim harness channel.
 
 The runtime inside the game opens a loopback listener (see
 docs/harness-design.md). This package is the side outside the process: it

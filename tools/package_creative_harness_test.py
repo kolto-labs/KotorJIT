@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / 'scripts/harness'))
 import package_creative_harness as B  # noqa: E402
 from kpharness import gamescope_snapshot as S  # noqa: E402
 
-TOP = 'kotorphasor-creative-harness/'
+TOP = 'hyperstim-creative-harness/'
 MODULES = {
     '__init__.py': '',
     'creative.py': 'from .creative_accept import accept\nfrom . import shared\n',
@@ -823,13 +823,13 @@ class FollowupScanTests(unittest.TestCase):
     def test_s2_all_git_scopes_and_the_origin_owner_are_identities(self):
         config = {'user.name': 'Copilot\nQwv Plonk', 'user.email': 'bot4321@users.noreply.github.com\nqwvplonk@example.org'}
         with mock.patch.object(self.Z, '_git_config', side_effect=lambda key: config.get(key, '')), \
-                mock.patch.object(self.Z, '_origin_url', return_value='https://github.com/qwvowner/KotorPhasor.git'):
+                mock.patch.object(self.Z, '_origin_url', return_value='https://github.com/qwvowner/Hyperstim.git'):
             identities = self.Z.git_identities()
             markers = self.Z.privacy_markers()
         for value in ('Qwv Plonk', 'qwvplonk', 'qwvplonk@example.org', 'bot4321', 'qwvowner'):
             self.assertIn(value, identities)
         self.assertNotIn('Copilot', identities)  # generic name on the allow-list
-        for text in (b'by bot4321\n', b'github.com/QwvOwner/KotorPhasor\n', b'Qwv Plonk wrote this\n'):
+        for text in (b'by bot4321\n', b'github.com/QwvOwner/Hyperstim\n', b'Qwv Plonk wrote this\n'):
             with self.subTest(text=text):
                 self.assertTrue(self.Z.path_scan('x.md', text, markers), text)
         self.assertEqual(self.Z.path_scan('x.md', b'Suggested by GitHub Copilot.\n', markers), [])
@@ -921,8 +921,8 @@ class FollowupScanTests(unittest.TestCase):
             with self.subTest(names=names):
                 report = self.scan_raw(self.zip_of([(name, b'x = 1\n') for name in names]), markers=())
                 self.assertIn((names[0], kind), self.kinds(report))
-        wrapped = self.scan_raw(self.zip_of([('kotorphasor-preview/data/codecaves.toml', b'x = 1\n')]), markers=())
-        self.assertIn(('kotorphasor-preview/data/codecaves.toml', 'excluded file'), self.kinds(wrapped))
+        wrapped = self.scan_raw(self.zip_of([('hyperstim-preview/data/codecaves.toml', b'x = 1\n')]), markers=())
+        self.assertIn(('hyperstim-preview/data/codecaves.toml', 'excluded file'), self.kinds(wrapped))
         public = self.scan_raw(self.zip_of([('top/scripts/tmp/a.lua', b'-- a\n')]), markers=())
         self.assertEqual(public['findings'], [])
 

@@ -8,7 +8,7 @@ tests do not launch a game. `boot`, `run`, and Pioneer `step` are live operation
 
 | File | Reader and owner | Scope |
 | --- | --- | --- |
-| `<game>/kotorphasor.ini` | Native runtime | Runtime options, including the optional listener |
+| `<game>/hyperstim.ini` | Native runtime | Runtime options, including the optional listener |
 | `kotorphasor.toml` | `tools/kpdiscover.py:read_workspace_config`, shared by path discovery and Python harness | Optional operator paths for this workspace/machine |
 | `scripts/harness/scenarios/**/*.toml` or an explicit route path | `Scenario.parse`, also used by Pioneer | Immutable execution policy, declared resources, ordered actions and predicates |
 
@@ -22,14 +22,14 @@ outside this harness contract.
 ## Runtime listener
 
 ```ini
-# <game>/kotorphasor.ini
+# <game>/hyperstim.ini
 harness_port = 27015
 harness_bind = 127.0.0.1
 ```
 
 Section headers are ignored. `port` and `bind` inside `[harness]` do not enable
 anything. An absent/zero port disables the listener; only loopback is accepted.
-`KOTORPHASOR_HARNESS_PORT` takes precedence over the INI. The driver writes these
+`HYPERSTIM_HARNESS_PORT` takes precedence over the INI. The driver writes these
 prefixed keys into the staged game's INI with its selected/free port; ordinary
 driver users do not need to edit the source installation's INI.
 

@@ -1,4 +1,4 @@
-# KotorPhasor codecave manifest.
+# Hyperstim codecave manifest.
 #
 # A codecave is a span of genuinely unused bytes inside an executable
 # section -- compiler alignment padding between two real functions (a run of
@@ -37,7 +37,7 @@
 # three more Windows builds that are registered but NOT installable yet
 # (k1_amazongames, k2_win_cd_10, k2_win_cd_10b) -- codecave discovery is pure
 # static analysis of a binary's own bytes and does not depend on whether
-# KotorPhasor can hook into a running process, so this work is ready
+# Hyperstim can hook into a running process, so this work is ready
 # whenever those builds clear VM-site adjudication. A script cannot actually
 # run against those three today; see docs/user/codecaves.md.
 #
@@ -29153,7 +29153,7 @@ verified = [{ build = "k2_steam_aspyr", addr = "0x009420A1", sig_match_addr = "0
 # NOT installable yet (its donor for VM-site adjudication has no matchable
 # engine code -- see that file's note). Codecave discovery does not depend on
 # that: it is pure static analysis of this binary's own bytes, independent of
-# whether KotorPhasor can hook into a running process. A script targeting
+# whether Hyperstim can hook into a running process. A script targeting
 # this build cannot actually run against it today, but the caves below will
 # be ready whenever that changes.
 #
@@ -43757,11 +43757,11 @@ verified = [{ build = "k2_win_cd_10", addr = "0x007B4AF4", sig_match_addr = "0x0
 
 
 # =============================================================================
-# Other engines / architectures KotorPhasor does not target -- documented for
+# Other engines / architectures Hyperstim does not target -- documented for
 # future work only
 # =============================================================================
 #
-# A fifth pass, requested explicitly by the user after everything KotorPhasor
+# A fifth pass, requested explicitly by the user after everything Hyperstim
 # currently targets (see above) was already covered, and explicitly confirmed
 # after being asked directly: scan binaries this project's hook engine cannot
 # install on at all today, either because they run a different game engine

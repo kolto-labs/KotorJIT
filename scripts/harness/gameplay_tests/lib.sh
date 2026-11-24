@@ -57,9 +57,9 @@ test_capture() {
 # movement and never checks for [trace] lines can pass on a hang.
 deploy_scripts() {
   local game_dir="$1"; shift
-  mkdir -p "$game_dir/kotorphasor/scripts"
-  rm -f "$game_dir/kotorphasor/scripts"/*.lua
-  cp "$ROOT/scripts/examples/probe/00_probe.lua" "$@" "$game_dir/kotorphasor/scripts/"
+  mkdir -p "$game_dir/hyperstim/scripts"
+  rm -f "$game_dir/hyperstim/scripts"/*.lua
+  cp "$ROOT/scripts/examples/probe/00_probe.lua" "$@" "$game_dir/hyperstim/scripts/"
 }
 
 # start_live_session <game-dir> <out-dir> <display-num>

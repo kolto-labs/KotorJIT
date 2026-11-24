@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Install KotorPhasor into a native Windows game folder, or take it back out.
+Install Hyperstim into a native Windows game folder, or take it back out.
 
 .DESCRIPTION
 The Windows twin of scripts/install_to_game.sh, with stricter rules because a
@@ -8,9 +8,9 @@ native install has no Wine prefix to throw away.
 
 Install refuses unless the game executable is on the exe allowlist and the
 game's binkw32.dll is on the Bink allowlist. It copies the original Bink to a
-backup and to binkw32_real.dll, then drops in the proxy, kphasor.dll and the
+backup and to binkw32_real.dll, then drops in the proxy, hyperstim.dll and the
 address tables. Every file it writes is recorded in
-kotorphasor\install-manifest.json with its hash. If any step fails, the steps
+hyperstim\install-manifest.json with its hash. If any step fails, the steps
 already done are undone in reverse order.
 
 Uninstall reads that manifest. Before it touches anything, it checks every
@@ -18,7 +18,7 @@ value and path in it. Each value must be a single string, not a list. Paths may
 not be rooted, have a '.' or '..' segment, or resolve outside the game folder.
 Only the file names this script writes are allowed, each listed once, with
 exactly one binkw32.dll entry. The backup folder must be named exactly
-kotorphasor\backup\<timestamp>. No folder on the way to a file it removes may
+hyperstim\backup\<timestamp>. No folder on the way to a file it removes may
 be a junction or symbolic link. A manifest that fails any check is refused and
 nothing is removed. It removes a file only when the file still has the hash we
 wrote. It restores binkw32.dll first, from the backup, or from
@@ -41,15 +41,15 @@ setting. Install into Program Files needs an elevated window ("Run as
 administrator"). See docs\user\windows-native-install.md.
 
 .EXAMPLE
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
+.\Install-Hyperstim.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\Install-Hyperstim.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
+.\Install-Hyperstim.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$GameDir,
     [ValidateSet('Install', 'Uninstall', 'Status')][string]$Action = 'Install',
-    # Folder holding kphasor.dll and the proxy binkw32.dll.
+    # Folder holding hyperstim.dll and the proxy binkw32.dll.
     [string]$SourceDir = '',
     # Folder holding the per-build address tables (data\addresses in the repo).
     [string]$AddressDir = '',
@@ -61,9 +61,11 @@ param(
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
+# A format identifier, not the product name: it predates the KotorPhasor ->
+# Hyperstim rename and stays, so manifests written by older installs still read.
 $ManifestSchema = 'kotorphasor.install-manifest/v1'
 
-# Game executables KotorPhasor has an installable address table for. Values are
+# Game executables Hyperstim has an installable address table for. Values are
 # BuildRecord aliases from src\generated\builds.inc; the Python contract test
 # (tools\platform_receipt_test.py) fails if a hash here is not a BuildRecord.
 # k1_steam_103_unpacked is a harness artifact, not something a player runs.
@@ -88,12 +90,14 @@ function Get-Sha256([string]$Path) {
 }
 
 function Test-OurProxy([string]$Path) {
-    # Our proxy is small and names kphasor.dll; the real Bink is ~370 KB of codec.
+    # Our proxy is small and names the runtime DLL; the real Bink is ~370 KB of
+    # codec. Proxies built before the KotorPhasor -> Hyperstim rename name
+    # kphasor.dll; they are ours too and must never be taken for the original.
     $item = Get-Item -LiteralPath $Path
     if ($item.Length -ge 200000) { return $false }
     $bytes = [System.IO.File]::ReadAllBytes($Path)
     $text = [System.Text.Encoding]::ASCII.GetString($bytes)
-    return $text.Contains('kphasor.dll')
+    return ($text.Contains('hyperstim.dll') -or $text.Contains('kphasor.dll'))
 }
 
 function Test-KnownBink([string]$Sha) {
@@ -133,9 +137,10 @@ function Get-StringField($Object, [string]$Name, [string]$What) {
 # The backup folder this script creates, and nothing else. \z, not $: in .NET
 # '$' also matches before a final newline (review M7). -cmatch: this script
 # writes these names in exactly this case.
-$BackupDirPattern = '^kotorphasor[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
+# kotorphasor\ and kphasor.dll: what installs made before the rename recorded.
+$BackupDirPattern = '^(hyperstim|kotorphasor)[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
 # The files this script creates. A manifest naming anything else is not ours.
-$CreatedPattern = '^(binkw32_real\.dll|kphasor\.dll|kotorphasor[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
+$CreatedPattern = '^(binkw32_real\.dll|hyperstim\.dll|kphasor\.dll|(hyperstim|kotorphasor)[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
 $ShaPattern = '^[0-9a-f]{64}\z'
 
 function Resolve-Owned([object]$Rel, [string]$What) {
@@ -201,7 +206,7 @@ function Assert-Manifest($m) {
     # before anything is read or removed.
     $bd = Get-StringField $m 'backup_dir' 'backup_dir'
     if (($null -eq $bd) -or ($bd -cnotmatch $BackupDirPattern)) {
-        throw "manifest backup_dir '$bd' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed"
+        throw "manifest backup_dir '$bd' is not hyperstim\backup\<yyyyMMddTHHmmssZ> (or kotorphasor\backup\... from an older install); refusing, nothing removed"
     }
     [void](Resolve-Owned $bd 'backup_dir')
     $filesValue = Get-Field $m 'files'
@@ -253,8 +258,16 @@ $GameDir = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $GameDir).Pa
 $GameRoot = $GameDir.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
 $Proxy = Join-Path $GameDir 'binkw32.dll'
 $Real = Join-Path $GameDir 'binkw32_real.dll'
-$OwnDir = Join-Path $GameDir 'kotorphasor'
+$OwnDir = Join-Path $GameDir 'hyperstim'
 $ManifestPath = Join-Path $OwnDir 'install-manifest.json'
+# An install made under the old name keeps its manifest in kotorphasor\. Use
+# it when there is no current one, so Status and Uninstall manage that
+# install, and Install refuses to stack a second one on top of it.
+$LegacyManifest = Join-Path (Join-Path $GameDir 'kotorphasor') 'install-manifest.json'
+if (-not (Test-Path -LiteralPath $ManifestPath) -and (Test-Path -LiteralPath $LegacyManifest)) {
+    $OwnDir = Join-Path $GameDir 'kotorphasor'
+    $ManifestPath = $LegacyManifest
+}
 
 if ($TrustBinkSha256 -and ($TrustBinkSha256 -notmatch '^[0-9a-fA-F]{64}$')) {
     throw '-TrustBinkSha256 must be a 64-character SHA-256 hex string'
@@ -361,7 +374,7 @@ if ($Action -eq 'Uninstall') {
         }
     }
     # Our own bookkeeping, only once every game file is back. backup_dir was
-    # checked against kotorphasor\backup\<timestamp>, resolved inside the
+    # checked against hyperstim\backup\<timestamp>, resolved inside the
     # game folder and checked for links before pass 1.
     Remove-BackupDir $backupDir
     $backupParent = Join-Path $OwnDir 'backup'
@@ -395,7 +408,7 @@ if (-not $ExeAllowlist.ContainsKey($exeSha)) {
 $build = $ExeAllowlist[$exeSha]
 
 if (-not (Test-Path -LiteralPath $Proxy -PathType Leaf)) { throw "no binkw32.dll in $GameDir" }
-if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a KotorPhasor proxy but there is no manifest; restore the original by hand first' }
+if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a Hyperstim proxy but there is no manifest; restore the original by hand first' }
 $binkSha = Get-Sha256 $Proxy
 if (-not (Test-KnownBink $binkSha)) {
     throw "binkw32.dll sha256 $binkSha is not a known Bink build; pass -TrustBinkSha256 $binkSha only if you know it is the game's original"
@@ -406,15 +419,15 @@ if (Test-Path -LiteralPath $Real) {
     if ($realSha -ne $binkSha) { throw 'binkw32_real.dll differs from binkw32.dll; refusing to guess which is original' }
 }
 
-$srcDll = Join-Path $SourceDir 'kphasor.dll'
+$srcDll = Join-Path $SourceDir 'hyperstim.dll'
 $srcProxy = Join-Path $SourceDir 'binkw32.dll'
 foreach ($f in @($srcDll, $srcProxy)) {
     if (-not (Test-Path -LiteralPath $f -PathType Leaf)) { throw "missing $f; build first" }
 }
-if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a KotorPhasor proxy" }
+if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a Hyperstim proxy" }
 $table = Join-Path $AddressDir "$build.json"
 if (-not (Test-Path -LiteralPath $table -PathType Leaf)) { throw "missing address table $table" }
-if (Test-Path -LiteralPath (Join-Path $GameDir 'kphasor.dll')) { throw 'kphasor.dll already in the game folder and not ours; refusing' }
+if (Test-Path -LiteralPath (Join-Path $GameDir 'hyperstim.dll')) { throw 'hyperstim.dll already in the game folder and not ours; refusing' }
 
 # Program Files needs an elevated shell. Find out now, not halfway through.
 $probe = Join-Path $GameDir ('.kp-write-probe-' + [guid]::NewGuid().ToString('N'))
@@ -426,7 +439,7 @@ try {
 }
 
 $stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
-$backupRel = [System.IO.Path]::Combine('kotorphasor', 'backup', $stamp)
+$backupRel = [System.IO.Path]::Combine('hyperstim', 'backup', $stamp)
 $records = New-Object System.Collections.ArrayList
 $undo = New-Object System.Collections.ArrayList   # scriptblocks, run in reverse
 $createdDirs = New-Object System.Collections.ArrayList
@@ -460,9 +473,9 @@ try {
     if (-not (Test-Path -LiteralPath $Real)) { Add-Created 'binkw32_real.dll' $Proxy }
 
     # 2. Runtime and tables.
-    Add-Created 'kphasor.dll' $srcDll
+    Add-Created 'hyperstim.dll' $srcDll
     # Only the detected build's table: the runtime loads <build>.json.
-    Add-Created ([System.IO.Path]::Combine('kotorphasor', 'addresses', "$build.json")) $table
+    Add-Created ([System.IO.Path]::Combine('hyperstim', 'addresses', "$build.json")) $table
 
     # 3. The proxy last: until this point the game still starts unmodded.
     # The undo goes in first, so a copy that fails halfway is still put back.

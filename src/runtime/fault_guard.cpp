@@ -138,7 +138,7 @@ std::size_t append_hex(char* out, std::size_t cap, std::size_t at, std::uintptr_
 
 void emit(const char* line, std::size_t len) {
 #if defined(_WIN32)
-    HANDLE f = CreateFileA(g_log_path[0] ? g_log_path : "kotorphasor.log",
+    HANDLE f = CreateFileA(g_log_path[0] ? g_log_path : "hyperstim.log",
                            FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE,
                            nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (f == INVALID_HANDLE_VALUE) return;
@@ -146,7 +146,7 @@ void emit(const char* line, std::size_t len) {
     WriteFile(f, line, static_cast<DWORD>(len), &written, nullptr);
     CloseHandle(f);
 #else
-    const int fd = ::open(g_log_path[0] ? g_log_path : "kotorphasor.log",
+    const int fd = ::open(g_log_path[0] ? g_log_path : "hyperstim.log",
                           O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd < 0) return;
     const ssize_t ignored = ::write(fd, line, len);

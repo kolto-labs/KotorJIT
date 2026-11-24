@@ -469,7 +469,7 @@ def build_parser() -> argparse.ArgumentParser:
                        default=default, help="k1, k2-wine, or k2-native (k2 is k2-native)")
 
     def boot_args(p: argparse.ArgumentParser):
-        p.add_argument("--build-dir", help="where kphasor.dll / libkphasor.so were built")
+        p.add_argument("--build-dir", help="where hyperstim.dll / libhyperstim.so were built")
         p.add_argument("--staged", help="harness staging tree; KP_STAGED_DIR when omitted")
         p.add_argument("--wineprefix", help="dedicated Wine prefix; KP_WINEPREFIX when omitted")
         p.add_argument("--display", type=int, help="X display number; default: first free")

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install KotorPhasor into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
+# Install Hyperstim into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
 # it back out. No game file is modified: the runtime is delivered through
 # DYLD_INSERT_LIBRARIES, so uninstalling is deleting a folder.
 #
@@ -38,12 +38,12 @@ find_macos_dir() {
 MACOS="$(find_macos_dir "$TARGET")" || { echo "no KOTOR executable under: $TARGET" >&2; exit 1; }
 EXE=""
 for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && EXE="$e"; done
-KPDIR="$MACOS/kotorphasor"
-DYLIB="$MACOS/libkphasor.dylib"
+KPDIR="$MACOS/hyperstim"
+DYLIB="$MACOS/libhyperstim.dylib"
 
 case "$ACTION" in
 install)
-  [[ -f "$BUILD/libkphasor.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libkphasor.dylib)" >&2; exit 1; }
+  [[ -f "$BUILD/libhyperstim.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libhyperstim.dylib)" >&2; exit 1; }
   # Identify the build by the code-section hash so the right address table is
   # shipped, exactly as the runtime identifies it at load.
   local_sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
@@ -53,12 +53,25 @@ install)
     KOTOR_Exe|swkotor)   BUILDID=k1_mac_steam_x64;;
     KOTOR2sub|swkotor2)  BUILDID=k2_mac_steam_x64;;
   esac
+  # Upgrading an install made under the old name (KotorPhasor): keep its
+  # scripts by moving the data folder, and keep any Steam launch option that
+  # still says libkphasor.dylib working by pointing that name at the new
+  # runtime. Both runtimes are never present as separate files.
+  if [[ -d "$MACOS/kotorphasor" && ! -e "$KPDIR" ]]; then
+    mv "$MACOS/kotorphasor" "$KPDIR"
+    echo "moved kotorphasor/ -> hyperstim/ (scripts kept)"
+  fi
+  [[ -f "$MACOS/kotorphasor.ini" && ! -e "$MACOS/hyperstim.ini" ]] && mv "$MACOS/kotorphasor.ini" "$MACOS/hyperstim.ini"
   mkdir -p "$KPDIR/scripts" "$KPDIR/addresses"
-  cp "$BUILD/libkphasor.dylib" "$DYLIB"
+  cp "$BUILD/libhyperstim.dylib" "$DYLIB"
+  if [[ -e "$MACOS/libkphasor.dylib" || -L "$MACOS/libkphasor.dylib" ]]; then
+    ln -sf "libhyperstim.dylib" "$MACOS/libkphasor.dylib"
+    echo "libkphasor.dylib now points at libhyperstim.dylib (old launch options keep working)"
+  fi
   cp "$ROOT/data/addresses/$BUILDID.json" "$KPDIR/addresses/$BUILDID.json"
   # A starter ini and an example script, only if absent.
-  [[ -f "$MACOS/kotorphasor.ini" ]] || cat > "$MACOS/kotorphasor.ini" <<INI
-; KotorPhasor settings. Scripts live in kotorphasor/scripts/*.lua.
+  [[ -f "$MACOS/hyperstim.ini" ]] || cat > "$MACOS/hyperstim.ini" <<INI
+; Hyperstim settings. Scripts live in hyperstim/scripts/*.lua.
 ; harness_port is off (0) by default; it is a test surface, not for play.
 harness_port = 0
 INI
@@ -78,16 +91,16 @@ LUA
   echo "    DYLD_INSERT_LIBRARIES=\"$DYLIB\" \"$MACOS/$EXE\""
   ;;
 uninstall)
-  rm -f "$DYLIB"
+  rm -f "$DYLIB" "$MACOS/libkphasor.dylib"
   echo "removed $DYLIB"
-  echo "kotorphasor/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
+  echo "hyperstim/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
   echo "Clear the game's Steam launch options (remove the DYLD_INSERT_LIBRARIES line)."
   ;;
 status)
   echo "executable: $MACOS/${EXE:-<none found>}"
-  [[ -f "$DYLIB" ]] && echo "libkphasor.dylib: present" || echo "libkphasor.dylib: not installed"
-  [[ -d "$KPDIR" ]] && echo "kotorphasor/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
-  [[ -f "$MACOS/kotorphasor.log" ]] && echo "log: $MACOS/kotorphasor.log"
+  [[ -f "$DYLIB" ]] && echo "libhyperstim.dylib: present" || echo "libhyperstim.dylib: not installed"
+  [[ -d "$KPDIR" ]] && echo "hyperstim/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
+  [[ -f "$MACOS/hyperstim.log" ]] && echo "log: $MACOS/hyperstim.log"
   ;;
 *) usage;;
 esac

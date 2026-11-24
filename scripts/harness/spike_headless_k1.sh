@@ -52,7 +52,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-log "=== KotorPhasor Step 0 spike ==="
+log "=== Hyperstim Step 0 spike ==="
 
 # 0. writable working copy -----------------------------------------------------
 # The vanilla reference stays pristine; the game writes ini/saves/logs.

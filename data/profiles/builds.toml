@@ -1,4 +1,4 @@
-# Logical build profiles for KotorPhasor.
+# Logical build profiles for Hyperstim.
 # Identified by code-section hash / portable signatures at runtime.
 # status: supported | registered | static_only
 

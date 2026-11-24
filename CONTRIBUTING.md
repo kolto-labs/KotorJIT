@@ -1,4 +1,4 @@
-# Using KotorPhasor
+# Using Hyperstim
 
 Technical reference: build, install, supported builds, and where to go for scripting details. For what this is and why, see [README.md](README.md).
 
@@ -16,7 +16,7 @@ cmake -S . -B build
 cmake --build build
 ```
 
-That produces `build/kphasor.dll` and the proxy `build/binkw32.dll`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `kphasor.dll` needs to link against.
+That produces `build/hyperstim.dll` and the proxy `build/binkw32.dll`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `hyperstim.dll` needs to link against.
 
 On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, `binutils-mingw-w64-i686`, `luajit`, and `lua5.1` (configure requires a `luajit` interpreter; one harness test runs `lua`); see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
 
@@ -28,7 +28,7 @@ Full build, install, and first-run steps: [`docs/user/install.md`](docs/user/ins
 ./scripts/install_to_game.sh install /path/to/swkotor
 ```
 
-Scripts go in `<game>/kotorphasor/scripts`. The log is `<game>/kotorphasor.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
+Scripts go in `<game>/hyperstim/scripts`. The log is `<game>/hyperstim.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
 
 ## Supported builds
 
@@ -50,7 +50,7 @@ Machine-readable profile table: [`data/profiles/builds.toml`](data/profiles/buil
 
 "Supported" means every required hook site resolves and the runtime installs cleanly: the `nwscript.call(name, ...)` routine bridge and event dispatch both work. It does **not** yet mean every corner is verified — K2's struct field layouts (`kp.struct`) were researched against the K1 build only, so typed field access on a K2 build is unverified and may read the wrong offset. Raw `kp.mem.*` reads and writes are unaffected; they don't depend on struct research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
 
-The runtime identifies a build by hashing its code section, never by filename or file size. An executable it doesn't recognize is left completely unpatched — the game runs as if KotorPhasor weren't installed.
+The runtime identifies a build by hashing its code section, never by filename or file size. An executable it doesn't recognize is left completely unpatched — the game runs as if Hyperstim weren't installed.
 
 ## What fires today
 
@@ -122,7 +122,7 @@ Regenerating `data/addresses/*.json` or `src/generated/builds.inc` needs the loc
 ./scripts/install_to_game.sh uninstall /path/to/swkotor
 ```
 
-Restores the original `binkw32.dll` and removes `kphasor.dll`. Scripts and `kotorphasor.log` are left alone.
+Restores the original `binkw32.dll` and removes `hyperstim.dll`. Scripts and `hyperstim.log` are left alone.
 
 ## Further reading
 

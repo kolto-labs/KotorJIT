@@ -12,7 +12,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-87}"
 
 deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/10_ahto_city_law.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
-rm -f "$GAME_DIR/kotorphasor.log"
+rm -f "$GAME_DIR/hyperstim.log"
 
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 
@@ -32,12 +32,12 @@ send "lua exec local pc=nwscript.call('GetFirstPC'); local t=nwscript.call('GetN
 send "#console"
 send "#sleep 6"
 
-assert_contains_re "$GAME_DIR/kotorphasor.log" 'manm26ad|MOD=manm26ad' "warp landed on the Sith base module"
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[trace\]' \
+assert_contains_re "$GAME_DIR/hyperstim.log" 'manm26ad|MOD=manm26ad' "warp landed on the Sith base module"
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[trace\]' \
   "the #key presses actually moved the character (not a stuck-console or lost-focus false pass)"
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[probe\] script:k_def_attacked01' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[probe\] script:k_def_attacked01' \
   "real combat happened (proves the module has something hostile to walk into)"
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[ahto\] strike [0-9]+ witnessed on Manaan' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[ahto\] strike [0-9]+ witnessed on Manaan' \
   "10_ahto_city_law's own print line fired"
 
 summary_and_exit

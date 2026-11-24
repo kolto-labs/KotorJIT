@@ -4,6 +4,13 @@
 
 Everything below is merged to `main` but not yet cut into a numbered release.
 
+- **Renamed KotorPhasor to Hyperstim.** New names: `hyperstim.dll` / `libhyperstim.so` / `libhyperstim.dylib`, the `<game>/hyperstim/` data folder (scripts, hook packs, manifests, address overlays), `hyperstim.ini`, `hyperstim.log`, `hyperstim-proxy.log` and `HYPERSTIM_*` environment variables. Nothing an existing install relies on stops working:
+  - the proxy loads `hyperstim.dll` and falls back to `kphasor.dll`;
+  - the runtime uses `<game>/kotorphasor/` when that is the only data folder present, reads `kotorphasor.ini` when there is no `hyperstim.ini`, and accepts every `KOTORPHASOR_*` variable when its `HYPERSTIM_*` form is unset;
+  - the installers recognise old proxies as ours (never as the original Bink), move a legacy `kotorphasor/` folder to `hyperstim/`, and on macOS point an existing `libkphasor.dylib` at the new runtime so old Steam launch options keep working. The Windows installer reads and uninstalls installs recorded under `kotorphasor\`;
+  - receipt validation accepts both start banners.
+  - Unchanged on purpose: the Lua API (`kp.*`, `nwscript.*`), and serialized format ids such as `kotorphasor.native-receipt/v1` and `kotorphasor.install-manifest/v1`. One visible difference: the Phasor-compat `host` / `serverapp` values now read `"Hyperstim"`.
+
 - KOTOR 2 support: native Linux, GOG Aspyr (Windows), and Steam Aspyr (Windows) all install cleanly and run scripts. The routine bridge and event dispatch both work. `kotor.struct` field offsets are the one piece still unverified on K2 (researched against K1's build only). `kotor.mem.*` and everything else are unaffected.
 - A self-contained multiplayer example (`scripts/examples/multiplayer/10_avatar_sync.lua`): direct UDP sync between two game instances, no external process, using the engine's own socket library from Lua.
 - `data/codecaves.toml`: thousands of individually verified, signature-addressed unused-byte spans across every supported build, for scripts that need somewhere to inject raw code.

@@ -1,7 +1,7 @@
 # kp_lifecycletest and kp_scriptsapitest -- script load, unload, reload and the
 # kp.scripts surface, against the real lua::Host, without the game.
 #
-# Included from luahost.cmake inside its `TARGET kphasor` guard, so the native
+# Included from luahost.cmake inside its `TARGET hyperstim` guard, so the native
 # 32-bit LuaJIT (KP_LUATEST_LUAJIT) that runtime.cmake builds is available.
 # Sources rather than a link against the runtime libraries, for the reason
 # support.cmake gives: those are built without -fPIC.
@@ -37,7 +37,7 @@ foreach(kp_lifecycle_tool kp_lifecycletest kp_scriptsapitest)
     target_compile_options(${kp_lifecycle_tool} PRIVATE -m32 -Wall -Wextra)
     target_link_options(${kp_lifecycle_tool} PRIVATE -m32)
     target_compile_definitions(${kp_lifecycle_tool} PRIVATE KP_REPO="${CMAKE_SOURCE_DIR}")
-    add_dependencies(${kp_lifecycle_tool} kphasor)
+    add_dependencies(${kp_lifecycle_tool} hyperstim)
     target_link_libraries(${kp_lifecycle_tool} PRIVATE "${KP_LUATEST_LUAJIT}" m dl)
     add_test(NAME ${kp_lifecycle_tool}
              COMMAND ${kp_lifecycle_tool} "${CMAKE_BINARY_DIR}/test-tmp/${kp_lifecycle_tool}")

@@ -15,7 +15,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-85}"
 
 deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/30_battle_meditation.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
-rm -f "$GAME_DIR/kotorphasor.log"
+rm -f "$GAME_DIR/hyperstim.log"
 
 # Game37: Bastila is in the save; pull her into the active party if needed.
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
@@ -25,7 +25,7 @@ send "#sleep 2"
 send "lua exec nwscript.call('ExecuteScript','k_def_attacked01', nwscript.call('GetFirstPC'), 0)"
 send "#sleep 5"
 
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[meditation\] round [0-9]+: steadied' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[meditation\] round [0-9]+: steadied' \
   "30_battle_meditation fired when a party member was the k_def_attacked01 victim"
 
 # Optional combat footage on Manaan (warp closes console).
@@ -40,9 +40,9 @@ send "#key w"; send "#sleep 1.5"
 send "#key w"; send "#sleep 3"
 send "#console"
 
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[trace\]' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[trace\]' \
   "the #key presses actually moved the character"
-assert_contains_re "$GAME_DIR/kotorphasor.log" '\[probe\] script:k_def_attacked01' \
+assert_contains_re "$GAME_DIR/hyperstim.log" '\[probe\] script:k_def_attacked01' \
   "the stock attacked-script actually ran (proves real combat happened)"
 
 summary_and_exit

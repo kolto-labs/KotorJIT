@@ -147,7 +147,7 @@ class Bridge:
 
 
 class _Handler(http.server.BaseHTTPRequestHandler):
-    server_version = "KotorPhasorDevtools/1"
+    server_version = "HyperstimDevtools/1"
 
     def setup(self) -> None:
         super().setup()

@@ -7,7 +7,7 @@
 #
 # For each demo:
 #   1. deploy scripts/examples/cursed/<name>.lua (alone) into the game copy's
-#      kotorphasor/scripts directory, so the curse is armed when the VM binds;
+#      hyperstim/scripts directory, so the curse is armed when the VM binds;
 #   2. run scripts/harness/scenarios/cursed/<name>.toml through `kpharness run`
 #      in the background (it boots its own Xvfb and writes session.json);
 #   3. once session.json names the display, start x11grab on it;
@@ -42,9 +42,9 @@ TARGET="${1:-}"
 
 deploy() {
   local script="$1"
-  mkdir -p "$GAME_DIR/kotorphasor/scripts"
-  rm -f "$GAME_DIR/kotorphasor/scripts"/*.lua
-  cp "$script" "$GAME_DIR/kotorphasor/scripts/"
+  mkdir -p "$GAME_DIR/hyperstim/scripts"
+  rm -f "$GAME_DIR/hyperstim/scripts"/*.lua
+  cp "$script" "$GAME_DIR/hyperstim/scripts/"
 }
 
 # rec_mark hook: the run log is polled for the first oracle line so the gif
@@ -52,7 +52,7 @@ deploy() {
 watch_oracle() {
   local pid="$1"
   while kill -0 "$pid" 2>/dev/null; do
-    if grep -aq '\[cursed:' "$GAME_DIR/kotorphasor.log" 2>/dev/null; then
+    if grep -aq '\[cursed:' "$GAME_DIR/hyperstim.log" 2>/dev/null; then
       rec_mark "first curse"
       return
     fi
@@ -70,7 +70,7 @@ run_demo() {
   mkdir -p "$DEMO_DIR"
   local out="$DEMO_DIR/$base"
   rm -f "$out".{mp4,gif,oracle.txt,report.json,run.log,marks,ffmpeg.log}
-  rm -f "$GAME_DIR/kotorphasor.log"
+  rm -f "$GAME_DIR/hyperstim.log"
   deploy "$script"
 
   "$ROOT/scripts/harness/kpharness.sh" run "$route" >"$out.run.log" 2>&1 &
@@ -120,7 +120,7 @@ run_demo() {
   wait "$pid"
   local rc=$?
 
-  grep -a '\[cursed:' "$GAME_DIR/kotorphasor.log" > "$out.oracle.txt" 2>/dev/null
+  grep -a '\[cursed:' "$GAME_DIR/hyperstim.log" > "$out.oracle.txt" 2>/dev/null
   local run_dir
   run_dir=$(sed -n 's/.*-> \(.*\)\/report.json$/\1/p' "$out.run.log" | tail -1)
   [[ -n "$run_dir" && -f "$run_dir/report.json" ]] && cp "$run_dir/report.json" "$out.report.json"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Put KotorPhasor into a game directory, and take it back out again.
+# Put Hyperstim into a game directory, and take it back out again.
 #
 # Installing renames the game's binkw32.dll to binkw32_real.dll and drops our
 # proxy in its place. Nothing else in the game folder is touched, and no game
@@ -21,12 +21,15 @@ usage() { sed -n '2,12p' "$0"; exit 2; }
 
 PROXY="$GAME/binkw32.dll"
 REAL="$GAME/binkw32_real.dll"
-MARK="$GAME/kotorphasor/.installed"
+MARK="$GAME/hyperstim/.installed"
 
 is_ours() {
-  # Our proxy is small and imports kphasor; the real one is ~370 KB of codec.
+  # Our proxy is small and names the runtime DLL; the real one is ~370 KB of
+  # codec. Proxies built before the KotorPhasor -> Hyperstim rename name
+  # kphasor.dll instead -- those are still ours, and must never be mistaken
+  # for the original and saved as binkw32_real.dll.
   [[ -f "$PROXY" ]] && [[ $(stat -c%s "$PROXY") -lt 200000 ]] &&
-    grep -qa "kphasor.dll" "$PROXY" 2>/dev/null
+    grep -qaE "hyperstim\.dll|kphasor\.dll" "$PROXY" 2>/dev/null
 }
 
 case "$ACTION" in
@@ -37,7 +40,7 @@ install)
   fi
   [[ -f "$PROXY" ]] || { echo "no binkw32.dll in $GAME -- is this a game directory?" >&2; exit 1; }
 
-  for f in kphasor.dll binkw32.dll; do
+  for f in hyperstim.dll binkw32.dll; do
     [[ -f "$BUILD/$f" ]] || { echo "missing $BUILD/$f -- build first" >&2; exit 1; }
   done
 
@@ -48,17 +51,24 @@ install)
     echo "saved original binkw32.dll -> binkw32_real.dll"
   fi
 
-  install -D -m644 "$BUILD/kphasor.dll" "$GAME/kphasor.dll"
+  install -D -m644 "$BUILD/hyperstim.dll" "$GAME/hyperstim.dll"
   install -m644 "$BUILD/binkw32.dll" "$PROXY"
 
-  mkdir -p "$GAME/kotorphasor/scripts"
+  # An install made under the old name keeps its scripts: move the legacy data
+  # folder to the new name rather than creating an empty one beside it (the
+  # runtime would then prefer the empty one).
+  if [[ -d "$GAME/kotorphasor" && ! -e "$GAME/hyperstim" ]]; then
+    mv "$GAME/kotorphasor" "$GAME/hyperstim"
+    echo "moved kotorphasor/ -> hyperstim/ (scripts kept)"
+  fi
+  mkdir -p "$GAME/hyperstim/scripts"
   # Address tables and the event contract travel with the runtime; the build id
   # is chosen at load time from the executable's hash.
-  cp -r "$ROOT/data/addresses" "$GAME/kotorphasor/"
+  cp -r "$ROOT/data/addresses" "$GAME/hyperstim/"
   date -Iseconds > "$MARK"
 
   echo "installed into $GAME"
-  echo "  scripts go in $GAME/kotorphasor/scripts"
+  echo "  scripts go in $GAME/hyperstim/scripts"
   ;;
 
 uninstall)
@@ -68,7 +78,7 @@ uninstall)
   else
     echo "no binkw32_real.dll found; leaving binkw32.dll alone" >&2
   fi
-  rm -f "$GAME/kphasor.dll" "$MARK"
+  rm -f "$GAME/hyperstim.dll" "$GAME/kphasor.dll" "$MARK" "$GAME/kotorphasor/.installed"
   echo "uninstalled (scripts and logs left in place)"
   ;;
 
@@ -76,7 +86,7 @@ status)
   if is_ours; then
     echo "installed"
     [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$GAME/kotorphasor.log" ]] && echo "  log:   $GAME/kotorphasor.log"
+    [[ -f "$GAME/hyperstim.log" ]] && echo "  log:   $GAME/hyperstim.log"
   else
     echo "not installed"
   fi
