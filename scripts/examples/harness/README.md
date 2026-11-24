@@ -9,7 +9,7 @@ transition remains unvalidated. See [example validation](../../../docs/example-v
 ## Run one
 
 ```sh
-cd /path/to/KotorPhasor
+cd /path/to/ScriptForge
 PYTHONPATH=scripts/harness python3 -m kpharness.cli boot --target k1
 PYTHONPATH=scripts/harness python3 -m kpharness.cli exec --target k1 "$(cat scripts/examples/harness/10_world_probe.lua)"
 ```

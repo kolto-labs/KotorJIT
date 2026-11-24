@@ -1,13 +1,13 @@
 # Lua harness API
 
-This is the KotorPhasor API added for headless control. The generated routine
+This is the ScriptForge API added for headless control. The generated routine
 catalog in [`lua-api-complete.md`](lua-api-complete.md) is available only
 through `nwscript.call(name, ...)`; it is intentionally not repeated here.
 
 ## Script loading
 
 At process startup the runtime loads every `*.lua` file in
-`<game>/kotorphasor/scripts/`, once, in lexical filename order. A file may set
+`<game>/scriptforge/scripts/`, once, in lexical filename order. A file may set
 `priority` (higher values run first) and define any event callback. Errors put
 only that file into quarantine. `OnScriptLoad(game, build)` is called after
 registration; `OnScriptUnload()` runs on unload/reload.
@@ -15,7 +15,7 @@ registration; `OnScriptUnload()` runs on unload/reload.
 ```lua
 priority = 50
 function OnScriptLoad(game, build)
-  kp.print("KotorPhasor " .. game .. " / " .. build)
+  kp.print("ScriptForge " .. game .. " / " .. build)
 end
 ```
 
@@ -128,7 +128,7 @@ runs once per server frame and should remain short.
 
 ## Existing game API
 
-This page documents the KotorPhasor additions used by the harness. The
+This page documents the ScriptForge additions used by the harness. The
 NWScript-compatible routine catalog used by `nwscript.call(name, ...)` and the
 existing memory, struct, and entity APIs are listed in
 [`lua-api-complete.md`](lua-api-complete.md).
@@ -164,13 +164,13 @@ game callback has unwound.
 
 ## Optional channel
 
-Add this to `kotorphasor.ini` to enable the external controller:
+Add this to `scriptforge.ini` to enable the external controller:
 
 ```ini
 harness_port = 27015
 harness_bind = 127.0.0.1
 ```
 
-`KOTORPHASOR_HARNESS_PORT` overrides the port. Commands execute on the game
+`SCRIPTFORGE_HARNESS_PORT` overrides the port. Commands execute on the game
 thread; state reads are independent postconditions, not acknowledgements that
 an action completed.

@@ -2,7 +2,7 @@
 #
 # An include() fragment in the house style of src/hooks/hooks.cmake. It does
 # two things and nothing else: it publishes KP_HARNESS_SOURCES, which
-# src/runtime/runtime.cmake appends to kphasor.dll and libkphasor.so, and it
+# src/runtime/runtime.cmake appends to scriptforge.dll and libscriptforge.so, and it
 # defines kp_harnesstest, the offline proof of the channel, the codec and the
 # ring. It must be included BEFORE runtime.cmake so the source list is set
 # when that fragment reads it.
@@ -30,7 +30,7 @@ set(KP_HARNESS_SOURCES
 foreach(f ${KP_HARNESS_SOURCES})
     if(NOT EXISTS ${f})
         list(REMOVE_ITEM KP_HARNESS_SOURCES ${f})
-        message(STATUS "kphasor: ${f} not present yet, skipping")
+        message(STATUS "scriptforge: ${f} not present yet, skipping")
     endif()
 endforeach()
 
@@ -67,14 +67,14 @@ endif()
 # --- kp_harnessdrain_test ---------------------------------------------------
 #
 # This is the checked-in real-commands regression requested by the H0 review.
-# commands.cpp is already a source of the native kphasor target and is therefore
+# commands.cpp is already a source of the native scriptforge target and is therefore
 # rebuilt as part of this test's target dependency. Linking that target once is
 # deliberate: a second copy of channel.cpp or commands.cpp would make symbol
 # interposition decide which process-wide channel the test actually exercises.
 # Deferring target creation lets this fragment remain before runtime.cmake while
 # still depending on the library target that fragment defines.
 function(kp_define_harnessdrain_test)
-    if(UNIX AND NOT WIN32 AND TARGET kphasor)
+    if(UNIX AND NOT WIN32 AND TARGET scriptforge)
         add_executable(kp_harnessdrain_test
             "${KP_HARNESS_TOOLS}/kp_harnessdrain_test.cpp"
         )
@@ -82,12 +82,12 @@ function(kp_define_harnessdrain_test)
             "${KP_HARNESS_SRC_ROOT}")
         target_compile_options(kp_harnessdrain_test PRIVATE -m32 -Wall -Wextra)
         target_link_options(kp_harnessdrain_test PRIVATE -m32)
-        target_link_libraries(kp_harnessdrain_test PRIVATE kphasor)
-        add_dependencies(kp_harnessdrain_test kphasor)
+        target_link_libraries(kp_harnessdrain_test PRIVATE scriptforge)
+        add_dependencies(kp_harnessdrain_test scriptforge)
         add_test(NAME kp_harnessdrain_test COMMAND kp_harnessdrain_test)
         set_tests_properties(kp_harnessdrain_test PROPERTIES
             TIMEOUT 10
-            ENVIRONMENT "KOTORPHASOR_NO_AUTOSTART=1")
+            ENVIRONMENT "SCRIPTFORGE_NO_AUTOSTART=1")
     endif()
 endfunction()
 

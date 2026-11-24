@@ -284,7 +284,7 @@ def completed_receipt(run):
         'mtime_ns': route_info.st_mtime_ns, 'ctime_ns': route_info.st_ctime_ns,
         'links': route_info.st_nlink}}
     runtime = {}
-    for name in ('kphasor.dll', 'binkw32.dll'):
+    for name in ('scriptforge.dll', 'binkw32.dll'):
         runtime_path = run / name; runtime_path.write_bytes(('runtime-' + name).encode())
         runtime[name] = R.artifact(runtime_path)
     route_steps = [{"index": 1, "step": "do fixture", "status": "ok",

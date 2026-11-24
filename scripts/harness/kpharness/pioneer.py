@@ -87,7 +87,7 @@ class _SessionProbe:
 
     def read_new_runtime_log(self) -> str:
         game_dir = getattr(self.info, "game_dir", "") or ""
-        return self._read(Path(game_dir) / "kotorphasor.log") if game_dir else ""
+        return self._read(Path(game_dir) / "scriptforge.log") if game_dir else ""
 
     def stack_dump(self) -> str:
         return "(stack dump not available in pioneer mode; attach gdb/winedbg directly if needed)"

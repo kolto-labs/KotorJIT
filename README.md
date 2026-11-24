@@ -1,6 +1,8 @@
-# KotorPhasor
+# ScriptForge
 
-Drop a `.lua` file in `<game>/kotorphasor/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
+*Formerly KotorPhasor.* Existing installs keep working: the runtime still accepts the `kotorphasor/` folder, `kotorphasor.ini`, `KOTORPHASOR_*` variables and a `kphasor.dll`, and the Lua API (`kp.*`, `nwscript.*`) did not change. Details in [CHANGELOG.md](CHANGELOG.md).
+
+Drop a `.lua` file in `<game>/scriptforge/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
 
 The complete callback, compatibility, and generated routine reference is in [`docs/lua-api-complete.md`](docs/lua-api-complete.md).
 The harness-specific Lua surface and startup-loading details are in [`docs/lua-harness-api.md`](docs/lua-harness-api.md).
@@ -50,7 +52,7 @@ Their include order is defined in `CMakeLists.txt`.
 
 ## Status
 
-KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today, and the x86_64 Steam macOS builds of both games are supported (Mach-O runtime, `scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts via native Windows runtime injection (`scriptforge-launch.exe`), optional `binkw32.dll` proxy (for Wine/Proton or packed Steam K1), or [KotOR Patch Manager](https://github.com/LaneDibello/kotor-patch-manager) (`dist/scriptforge.kpatch`). The x86_64 Steam macOS builds of both games are supported (`scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). ScriptForge verifies exact bytes at every hook site and is strictly incompatible with other code patches. Other corpus builds remain fail-closed until target-native bindings are recovered; K2 `kp.struct` offsets remain unverified. See [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds) and [`docs/user/api-status.md`](docs/user/api-status.md).
 
 ## Credits
 

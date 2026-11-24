@@ -20,6 +20,7 @@
 // size; `sizeof` rows carry a record stride in size; g.app_manager carries the
 // global's VA in addr.
 #include "harness/fields.hpp"
+#include "platform/naming.hpp"
 #include "harness/chargen.hpp"
 
 #include <algorithm>
@@ -648,7 +649,7 @@ bool export_savegame_to_gameinprogress(const std::string& save_dir, const std::s
 
 bool GameAdapter::read_last_module(const std::string& dir, std::string* module, std::string* where) const {
     std::vector<std::string> roots;
-    if (const char* e = std::getenv("KOTORPHASOR_SAVES_DIR"); e != nullptr && *e != '\0') roots.emplace_back(e);
+    if (const char* e = kp::naming::env("SAVES_DIR"); e != nullptr && *e != '\0') roots.emplace_back(e);
     const std::string game_dir = runtime::directory_of(runtime::self_module_path());
     if (!game_dir.empty()) {
         roots.push_back(game_dir + "/saves");
@@ -677,7 +678,7 @@ bool GameAdapter::read_last_module(const std::string& dir, std::string* module, 
         *where += root;
     }
     *where = "no savenfo.res for '" + dir + "' under " + *where +
-             " (set KOTORPHASOR_SAVES_DIR to the saves directory)";
+             " (set SCRIPTFORGE_SAVES_DIR to the saves directory)";
     return false;
 }
 
@@ -724,7 +725,7 @@ Result GameAdapter::load_save(const std::string& dir) {
     //    keeps.
     const std::string save_dir = where.substr(0, where.find_last_of("/\\"));
     std::string dest = runtime::directory_of(runtime::self_module_path());
-    if (const char* e = std::getenv("KOTORPHASOR_GAMEINPROGRESS_DIR"); e != nullptr && *e != '\0')
+    if (const char* e = kp::naming::env("GAMEINPROGRESS_DIR"); e != nullptr && *e != '\0')
         dest = e;
     else
         dest += "/gameinprogress";

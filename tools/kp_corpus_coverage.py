@@ -98,7 +98,7 @@ def report(db_path: Path, tables_dir: Path) -> dict[str, object]:
     counts = {state: sum(target["state"] == state for target in targets)
               for state in ("multiplayer_bound", "runtime_bound", "unbound")}
     return {
-        "schema": "kotorphasor.corpus-coverage.v1",
+        "schema": "scriptforge.corpus-coverage.v1",
         "required_multiplayer_signature_sites": sorted(MULTIPLAYER_SIGNATURE_SITES),
         "required_multiplayer_resolved_sites": sorted(MULTIPLAYER_RESOLVED_SITES),
         "target_count": len(targets),

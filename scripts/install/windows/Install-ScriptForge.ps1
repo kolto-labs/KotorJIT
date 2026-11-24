@@ -1,30 +1,39 @@
 <#
 .SYNOPSIS
-Install KotorPhasor into a native Windows game folder, or take it back out.
+Install ScriptForge into a native Windows game folder, or take it back out.
 
 .DESCRIPTION
 The Windows twin of scripts/install_to_game.sh, with stricter rules because a
 native install has no Wine prefix to throw away.
 
-Install refuses unless the game executable is on the exe allowlist and the
-game's binkw32.dll is on the Bink allowlist. It copies the original Bink to a
-backup and to binkw32_real.dll, then drops in the proxy, kphasor.dll and the
-address tables. Every file it writes is recorded in
-kotorphasor\install-manifest.json with its hash. If any step fails, the steps
-already done are undone in reverse order.
+Install refuses unless the game executable is on the exe allowlist. It supports
+two native Windows deployment methods (-Method):
+  Inject -- Copy scriptforge.dll, scriptforge-launch.exe and the address table
+            without modifying binkw32.dll (default when scriptforge-launch.exe
+            is built and the build is not packed Steam K1).
+  Proxy  -- Copy the original binkw32.dll to a backup and binkw32_real.dll,
+            then drop in the proxy binkw32.dll, scriptforge.dll and table
+            (default for packed Steam K1 and required under Wine/Proton).
+  Auto   -- Picks Inject when scriptforge-launch.exe is present alongside
+            scriptforge.dll and the build is not packed k1_steam_103; otherwise
+            picks Proxy.
+
+Every file it writes is recorded in scriptforge\install-manifest.json with its
+hash. If any step fails, the steps already done are undone in reverse order.
 
 Uninstall reads that manifest. Before it touches anything, it checks every
 value and path in it. Each value must be a single string, not a list. Paths may
 not be rooted, have a '.' or '..' segment, or resolve outside the game folder.
-Only the file names this script writes are allowed, each listed once, with
-exactly one binkw32.dll entry. The backup folder must be named exactly
-kotorphasor\backup\<timestamp>. No folder on the way to a file it removes may
-be a junction or symbolic link. A manifest that fails any check is refused and
-nothing is removed. It removes a file only when the file still has the hash we
-wrote. It restores binkw32.dll first, from the backup, or from
-binkw32_real.dll if the backup is gone, and only when that copy's hash matches
-the recorded original. It never deletes a folder recursively. Scripts, logs
-and anything else you added stay put.
+Only the file names this script writes are allowed, each listed once; Proxy
+manifests require exactly one binkw32.dll replaced entry and backup_dir
+scriptforge\backup\<timestamp>, whereas Inject manifests require empty
+backup_dir and zero replaced entries. No folder on the way to a file it removes
+may be a junction or symbolic link. A manifest that fails any check is refused
+and nothing is removed. It removes a file only when the file still has the hash
+we wrote. For Proxy installs it restores binkw32.dll first, from the backup, or
+from binkw32_real.dll if the backup is gone, and only when that copy's hash
+matches the recorded original. It never deletes a folder recursively. Scripts,
+logs and anything else you added stay put.
 
 Targets Windows PowerShell 5.1, which every supported Windows ships.
 
@@ -41,15 +50,18 @@ setting. Install into Program Files needs an elevated window ("Run as
 administrator"). See docs\user\windows-native-install.md.
 
 .EXAMPLE
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
-.\Install-KotorPhasor.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
+.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
+.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$GameDir,
     [ValidateSet('Install', 'Uninstall', 'Status')][string]$Action = 'Install',
-    # Folder holding kphasor.dll and the proxy binkw32.dll.
+    # Deployment method: Auto picks Inject when scriptforge-launch.exe is present
+    # and the target is not packed Steam K1; otherwise Proxy.
+    [ValidateSet('Auto', 'Inject', 'Proxy')][string]$Method = 'Auto',
+    # Folder holding scriptforge.dll, scriptforge-launch.exe and/or binkw32.dll.
     [string]$SourceDir = '',
     # Folder holding the per-build address tables (data\addresses in the repo).
     [string]$AddressDir = '',
@@ -61,9 +73,11 @@ param(
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
+# A format identifier, not the product name: it predates the KotorPhasor ->
+# ScriptForge rename and stays, so manifests written by older installs still read.
 $ManifestSchema = 'kotorphasor.install-manifest/v1'
 
-# Game executables KotorPhasor has an installable address table for. Values are
+# Game executables ScriptForge has an installable address table for. Values are
 # BuildRecord aliases from src\generated\builds.inc; the Python contract test
 # (tools\platform_receipt_test.py) fails if a hash here is not a BuildRecord.
 # k1_steam_103_unpacked is a harness artifact, not something a player runs.
@@ -88,12 +102,14 @@ function Get-Sha256([string]$Path) {
 }
 
 function Test-OurProxy([string]$Path) {
-    # Our proxy is small and names kphasor.dll; the real Bink is ~370 KB of codec.
+    # Our proxy is small and names the runtime DLL; the real Bink is ~370 KB of
+    # codec. Proxies built before the KotorPhasor -> ScriptForge rename name
+    # kphasor.dll; they are ours too and must never be taken for the original.
     $item = Get-Item -LiteralPath $Path
     if ($item.Length -ge 200000) { return $false }
     $bytes = [System.IO.File]::ReadAllBytes($Path)
     $text = [System.Text.Encoding]::ASCII.GetString($bytes)
-    return $text.Contains('kphasor.dll')
+    return ($text.Contains('scriptforge.dll') -or $text.Contains('kphasor.dll'))
 }
 
 function Test-KnownBink([string]$Sha) {
@@ -133,9 +149,10 @@ function Get-StringField($Object, [string]$Name, [string]$What) {
 # The backup folder this script creates, and nothing else. \z, not $: in .NET
 # '$' also matches before a final newline (review M7). -cmatch: this script
 # writes these names in exactly this case.
-$BackupDirPattern = '^kotorphasor[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
+# kotorphasor\ and kphasor.dll: what installs made before the rename recorded.
+$BackupDirPattern = '^(scriptforge|kotorphasor)[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
 # The files this script creates. A manifest naming anything else is not ours.
-$CreatedPattern = '^(binkw32_real\.dll|kphasor\.dll|kotorphasor[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
+$CreatedPattern = '^(binkw32_real\.dll|scriptforge\.dll|scriptforge-launch\.exe|kphasor\.dll|(scriptforge|kotorphasor)[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
 $ShaPattern = '^[0-9a-f]{64}\z'
 
 function Resolve-Owned([object]$Rel, [string]$What) {
@@ -198,12 +215,24 @@ function Remove-BackupDir([string]$Dir) {
 
 function Assert-Manifest($m) {
     # Every value and path in the manifest, checked in the form it is used,
-    # before anything is read or removed.
-    $bd = Get-StringField $m 'backup_dir' 'backup_dir'
-    if (($null -eq $bd) -or ($bd -cnotmatch $BackupDirPattern)) {
-        throw "manifest backup_dir '$bd' is not kotorphasor\backup\<yyyyMMddTHHmmssZ>; refusing, nothing removed"
+    # before anything is read or removed. Manifests written before -Method was
+    # added omit method and default to proxy.
+    $manifestMethod = Get-StringField $m 'method' 'method'
+    if ($null -eq $manifestMethod) { $manifestMethod = 'proxy' }
+    if (($manifestMethod -cne 'proxy') -and ($manifestMethod -cne 'inject')) {
+        throw "manifest method '$manifestMethod' is unknown; refusing, nothing removed"
     }
-    [void](Resolve-Owned $bd 'backup_dir')
+    $bd = Get-StringField $m 'backup_dir' 'backup_dir'
+    if ($manifestMethod -ceq 'proxy') {
+        if (($null -eq $bd) -or ($bd -cnotmatch $BackupDirPattern)) {
+            throw "manifest backup_dir '$bd' is not scriptforge\backup\<yyyyMMddTHHmmssZ> (or kotorphasor\backup\... from an older install); refusing, nothing removed"
+        }
+        [void](Resolve-Owned $bd 'backup_dir')
+    } else {
+        if (($null -eq $bd) -or ($bd -cne '')) {
+            throw "manifest backup_dir '$bd' must be empty for inject method; refusing, nothing removed"
+        }
+    }
     $filesValue = Get-Field $m 'files'
     if (-not ($filesValue -is [array])) { throw 'manifest files is not a list; refusing, nothing removed' }
     $files = @($filesValue)
@@ -224,6 +253,7 @@ function Assert-Manifest($m) {
             if ($path -cnotmatch $CreatedPattern) { throw "manifest entry '$path' is not a file this script creates" }
         } elseif ($action -ceq 'replaced') {
             $replaced++
+            if ($manifestMethod -cne 'proxy') { throw "manifest inject entry '$path' cannot have replaced action" }
             if ($path -cne 'binkw32.dll') { throw "manifest replaced entry '$path' is not binkw32.dll" }
             $orig = Get-StringField $f 'original_sha256' 'original_sha256 of binkw32.dll'
             if (($null -eq $orig) -or ($orig -cnotmatch $ShaPattern)) { throw 'manifest binkw32.dll entry has no original_sha256' }
@@ -235,9 +265,13 @@ function Assert-Manifest($m) {
             throw "manifest entry '$path' has unknown action '$action'"
         }
     }
-    # Without the binkw32.dll entry, uninstall would leave the proxy in place
-    # and still report success (review M4).
-    if ($replaced -ne 1) { throw "manifest has $replaced binkw32.dll entries, want exactly 1; refusing, nothing removed" }
+    # Without the binkw32.dll entry, proxy uninstall would leave the proxy in
+    # place and still report success (review M4).
+    if ($manifestMethod -ceq 'proxy') {
+        if ($replaced -ne 1) { throw "manifest has $replaced binkw32.dll entries, want exactly 1; refusing, nothing removed" }
+    } elseif ($replaced -ne 0) {
+        throw "manifest has $replaced replaced entries for inject method, want 0; refusing, nothing removed"
+    }
 }
 
 function Read-Manifest([string]$Path) {
@@ -253,8 +287,16 @@ $GameDir = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $GameDir).Pa
 $GameRoot = $GameDir.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
 $Proxy = Join-Path $GameDir 'binkw32.dll'
 $Real = Join-Path $GameDir 'binkw32_real.dll'
-$OwnDir = Join-Path $GameDir 'kotorphasor'
+$OwnDir = Join-Path $GameDir 'scriptforge'
 $ManifestPath = Join-Path $OwnDir 'install-manifest.json'
+# An install made under the old name keeps its manifest in kotorphasor\. Use
+# it when there is no current one, so Status and Uninstall manage that
+# install, and Install refuses to stack a second one on top of it.
+$LegacyManifest = Join-Path (Join-Path $GameDir 'kotorphasor') 'install-manifest.json'
+if (-not (Test-Path -LiteralPath $ManifestPath) -and (Test-Path -LiteralPath $LegacyManifest)) {
+    $OwnDir = Join-Path $GameDir 'kotorphasor'
+    $ManifestPath = $LegacyManifest
+}
 
 if ($TrustBinkSha256 -and ($TrustBinkSha256 -notmatch '^[0-9a-fA-F]{64}$')) {
     throw '-TrustBinkSha256 must be a 64-character SHA-256 hex string'
@@ -264,10 +306,12 @@ if ($TrustBinkSha256 -and ($TrustBinkSha256 -notmatch '^[0-9a-fA-F]{64}$')) {
 if ($Action -eq 'Status') {
     if (Test-Path -LiteralPath $ManifestPath) {
         $m = Read-Manifest $ManifestPath
+        $manifestMethod = Get-StringField $m 'method' 'method'
+        if ($null -eq $manifestMethod) { $manifestMethod = 'proxy' }
         # pwsh 7 turns ISO strings into DateTime on the way in; print the string.
         $at = $m.installed_at
         if ($at -is [DateTime]) { $at = $at.ToUniversalTime().ToString('o') }
-        Write-Output "installed ($($m.game.build), since $at)"
+        Write-Output "installed ($($m.game.build), $manifestMethod, since $at)"
         foreach ($f in $m.files) {
             $p = Resolve-Owned $f.path 'file path'
             $state = 'missing'
@@ -291,6 +335,8 @@ if ($Action -eq 'Uninstall') {
     }
     try { $m = Read-Manifest $ManifestPath }
     catch { throw "uninstall refused, nothing removed; manifest kept: $($_.Exception.Message)" }
+    $manifestMethod = Get-StringField $m 'method' 'method'
+    if ($null -eq $manifestMethod) { $manifestMethod = 'proxy' }
     $files = @($m.files)
     [array]::Reverse($files)
 
@@ -299,9 +345,10 @@ if ($Action -eq 'Uninstall') {
     # Read-Manifest has already refused any path that is rooted, has a '.' or
     # '..' segment, or resolves outside the game folder, and any value that is
     # not a single string.
-    $backupDir = Resolve-Owned $m.backup_dir 'backup_dir'
+    $backupDir = $null
+    if ($manifestMethod -ceq 'proxy') { $backupDir = Resolve-Owned $m.backup_dir 'backup_dir' }
     try {
-        Assert-NoReparsePoint $backupDir 'backup folder'
+        if ($manifestMethod -ceq 'proxy') { Assert-NoReparsePoint $backupDir 'backup folder' }
         foreach ($f in $files) {
             Assert-NoReparsePoint (Resolve-Owned $f.path 'file path') 'file'
             if ($f.action -ceq 'replaced') { Assert-NoReparsePoint (Resolve-Owned $f.backup 'backup file') 'backup file' }
@@ -361,12 +408,14 @@ if ($Action -eq 'Uninstall') {
         }
     }
     # Our own bookkeeping, only once every game file is back. backup_dir was
-    # checked against kotorphasor\backup\<timestamp>, resolved inside the
+    # checked against scriptforge\backup\<timestamp>, resolved inside the
     # game folder and checked for links before pass 1.
-    Remove-BackupDir $backupDir
-    $backupParent = Join-Path $OwnDir 'backup'
-    if ((Test-Path -LiteralPath $backupParent) -and -not (Get-ChildItem -LiteralPath $backupParent -Force)) {
-        Remove-Item -LiteralPath $backupParent -Force
+    if ($manifestMethod -ceq 'proxy') {
+        Remove-BackupDir $backupDir
+        $backupParent = Join-Path $OwnDir 'backup'
+        if ((Test-Path -LiteralPath $backupParent) -and -not (Get-ChildItem -LiteralPath $backupParent -Force)) {
+            Remove-Item -LiteralPath $backupParent -Force
+        }
     }
     $addr = Join-Path $OwnDir 'addresses'
     if ((Test-Path -LiteralPath $addr) -and -not (Get-ChildItem -LiteralPath $addr -Force)) {
@@ -394,27 +443,45 @@ if (-not $ExeAllowlist.ContainsKey($exeSha)) {
 }
 $build = $ExeAllowlist[$exeSha]
 
-if (-not (Test-Path -LiteralPath $Proxy -PathType Leaf)) { throw "no binkw32.dll in $GameDir" }
-if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a KotorPhasor proxy but there is no manifest; restore the original by hand first' }
-$binkSha = Get-Sha256 $Proxy
-if (-not (Test-KnownBink $binkSha)) {
-    throw "binkw32.dll sha256 $binkSha is not a known Bink build; pass -TrustBinkSha256 $binkSha only if you know it is the game's original"
-}
-if (Test-Path -LiteralPath $Real) {
-    $realSha = Get-Sha256 $Real
-    if (-not (Test-KnownBink $realSha)) { throw "binkw32_real.dll sha256 $realSha is unknown; refusing" }
-    if ($realSha -ne $binkSha) { throw 'binkw32_real.dll differs from binkw32.dll; refusing to guess which is original' }
-}
-
-$srcDll = Join-Path $SourceDir 'kphasor.dll'
-$srcProxy = Join-Path $SourceDir 'binkw32.dll'
-foreach ($f in @($srcDll, $srcProxy)) {
-    if (-not (Test-Path -LiteralPath $f -PathType Leaf)) { throw "missing $f; build first" }
-}
-if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a KotorPhasor proxy" }
+$srcDll = Join-Path $SourceDir 'scriptforge.dll'
+if (-not (Test-Path -LiteralPath $srcDll -PathType Leaf)) { throw "missing $srcDll; build first" }
 $table = Join-Path $AddressDir "$build.json"
 if (-not (Test-Path -LiteralPath $table -PathType Leaf)) { throw "missing address table $table" }
-if (Test-Path -LiteralPath (Join-Path $GameDir 'kphasor.dll')) { throw 'kphasor.dll already in the game folder and not ours; refusing' }
+if (Test-Path -LiteralPath (Join-Path $GameDir 'scriptforge.dll')) { throw 'scriptforge.dll already in the game folder and not ours; refusing' }
+
+$srcLauncher = Join-Path $SourceDir 'scriptforge-launch.exe'
+if ($Method -eq 'Auto') {
+    if (($build -cne 'k1_steam_103') -and (Test-Path -LiteralPath $srcLauncher -PathType Leaf)) {
+        $Method = 'Inject'
+    } else {
+        $Method = 'Proxy'
+    }
+}
+
+$binkSha = $null
+$srcProxy = $null
+if ($Method -eq 'Proxy') {
+    if (-not (Test-Path -LiteralPath $Proxy -PathType Leaf)) { throw "no binkw32.dll in $GameDir" }
+    if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a ScriptForge proxy but there is no manifest; restore the original by hand first' }
+    $binkSha = Get-Sha256 $Proxy
+    if (-not (Test-KnownBink $binkSha)) {
+        throw "binkw32.dll sha256 $binkSha is not a known Bink build; pass -TrustBinkSha256 $binkSha only if you know it is the game's original"
+    }
+    if (Test-Path -LiteralPath $Real) {
+        $realSha = Get-Sha256 $Real
+        if (-not (Test-KnownBink $realSha)) { throw "binkw32_real.dll sha256 $realSha is unknown; refusing" }
+        if ($realSha -ne $binkSha) { throw 'binkw32_real.dll differs from binkw32.dll; refusing to guess which is original' }
+    }
+    $srcProxy = Join-Path $SourceDir 'binkw32.dll'
+    if (-not (Test-Path -LiteralPath $srcProxy -PathType Leaf)) { throw "missing $srcProxy; build first" }
+    if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a ScriptForge proxy" }
+} else {
+    if ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and (Test-OurProxy $Proxy)) {
+        throw 'binkw32.dll is already a ScriptForge proxy; restore original binkw32.dll before installing with -Method Inject'
+    }
+    if (-not (Test-Path -LiteralPath $srcLauncher -PathType Leaf)) { throw "missing $srcLauncher; build first" }
+    if (Test-Path -LiteralPath (Join-Path $GameDir 'scriptforge-launch.exe')) { throw 'scriptforge-launch.exe already in the game folder and not ours; refusing' }
+}
 
 # Program Files needs an elevated shell. Find out now, not halfway through.
 $probe = Join-Path $GameDir ('.kp-write-probe-' + [guid]::NewGuid().ToString('N'))
@@ -426,7 +493,8 @@ try {
 }
 
 $stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
-$backupRel = [System.IO.Path]::Combine('kotorphasor', 'backup', $stamp)
+$backupRel = ''
+if ($Method -eq 'Proxy') { $backupRel = [System.IO.Path]::Combine('scriptforge', 'backup', $stamp) }
 $records = New-Object System.Collections.ArrayList
 $undo = New-Object System.Collections.ArrayList   # scriptblocks, run in reverse
 $createdDirs = New-Object System.Collections.ArrayList
@@ -448,35 +516,45 @@ function Add-Created([string]$Rel, [string]$From) {
 
 try {
     Add-Dir $OwnDir
-    Add-Dir (Join-Path $OwnDir 'backup')
-    Add-Dir (Join-Path $GameDir $backupRel)
+    if ($Method -eq 'Proxy') {
+        Add-Dir (Join-Path $OwnDir 'backup')
+        Add-Dir (Join-Path $GameDir $backupRel)
+    }
     Add-Dir (Join-Path $OwnDir 'addresses')
     Add-Dir (Join-Path $OwnDir 'scripts')
 
-    # 1. The original Bink, copied (never moved) before anything is replaced.
-    $backupFile = [System.IO.Path]::Combine($backupRel, 'binkw32.dll')
-    Copy-Item -LiteralPath $Proxy -Destination (Join-Path $GameDir $backupFile)
-    if ((Get-Sha256 (Join-Path $GameDir $backupFile)) -ne $binkSha) { throw 'backup copy of binkw32.dll does not verify' }
-    if (-not (Test-Path -LiteralPath $Real)) { Add-Created 'binkw32_real.dll' $Proxy }
+    if ($Method -eq 'Proxy') {
+        # 1. The original Bink, copied (never moved) before anything is replaced.
+        $backupFile = [System.IO.Path]::Combine($backupRel, 'binkw32.dll')
+        Copy-Item -LiteralPath $Proxy -Destination (Join-Path $GameDir $backupFile)
+        if ((Get-Sha256 (Join-Path $GameDir $backupFile)) -ne $binkSha) { throw 'backup copy of binkw32.dll does not verify' }
+        if (-not (Test-Path -LiteralPath $Real)) { Add-Created 'binkw32_real.dll' $Proxy }
+    }
 
     # 2. Runtime and tables.
-    Add-Created 'kphasor.dll' $srcDll
+    Add-Created 'scriptforge.dll' $srcDll
+    if ($Method -eq 'Inject') {
+        Add-Created 'scriptforge-launch.exe' $srcLauncher
+    }
     # Only the detected build's table: the runtime loads <build>.json.
-    Add-Created ([System.IO.Path]::Combine('kotorphasor', 'addresses', "$build.json")) $table
+    Add-Created ([System.IO.Path]::Combine('scriptforge', 'addresses', "$build.json")) $table
 
-    # 3. The proxy last: until this point the game still starts unmodded.
-    # The undo goes in first, so a copy that fails halfway is still put back.
-    [void]$undo.Add({ Copy-Item -LiteralPath (Join-Path $GameDir $backupFile) -Destination $Proxy -Force }.GetNewClosure())
-    Copy-Item -LiteralPath $srcProxy -Destination $Proxy -Force
-    [void]$records.Add([ordered]@{
-        path = 'binkw32.dll'; action = 'replaced'; sha256 = (Get-Sha256 $Proxy)
-        original_sha256 = $binkSha; backup = $backupFile
-    })
+    if ($Method -eq 'Proxy') {
+        # 3. The proxy last: until this point the game still starts unmodded.
+        # The undo goes in first, so a copy that fails halfway is still put back.
+        [void]$undo.Add({ Copy-Item -LiteralPath (Join-Path $GameDir $backupFile) -Destination $Proxy -Force }.GetNewClosure())
+        Copy-Item -LiteralPath $srcProxy -Destination $Proxy -Force
+        [void]$records.Add([ordered]@{
+            path = 'binkw32.dll'; action = 'replaced'; sha256 = (Get-Sha256 $Proxy)
+            original_sha256 = $binkSha; backup = $backupFile
+        })
+    }
 
     $trusted = $null
-    if (-not $BinkAllowlist.ContainsKey($binkSha)) { $trusted = $binkSha }
+    if (($Method -eq 'Proxy') -and (-not $BinkAllowlist.ContainsKey($binkSha))) { $trusted = $binkSha }
     $manifest = [ordered]@{
         schema = $ManifestSchema
+        method = $Method.ToLowerInvariant()
         installed_at = (Get-Date).ToUniversalTime().ToString('o')
         game = [ordered]@{ exe = (Split-Path -Leaf $exe); sha256 = $exeSha; build = $build }
         bink_original_sha256 = $binkSha
@@ -490,11 +568,13 @@ try {
     $steps = @($undo)
     [array]::Reverse($steps)
     foreach ($s in $steps) { try { & $s } catch { Write-Warning "rollback step failed: $($_.Exception.Message)" } }
-    $backupAbs = Join-Path $GameDir $backupRel
-    if (Test-Path -LiteralPath $backupAbs) {
-        # Only after binkw32.dll is back, and only our own timestamped folder.
-        if ((Test-Path -LiteralPath $Proxy) -and ((Get-Sha256 $Proxy) -eq $binkSha)) {
-            try { Remove-BackupDir $backupAbs } catch { Write-Warning "backup folder left in place: $($_.Exception.Message)" }
+    if ($Method -eq 'Proxy') {
+        $backupAbs = Join-Path $GameDir $backupRel
+        if (Test-Path -LiteralPath $backupAbs) {
+            # Only after binkw32.dll is back, and only our own timestamped folder.
+            if ((Test-Path -LiteralPath $Proxy) -and ((Get-Sha256 $Proxy) -eq $binkSha)) {
+                try { Remove-BackupDir $backupAbs } catch { Write-Warning "backup folder left in place: $($_.Exception.Message)" }
+            }
         }
     }
     $dirs = @($createdDirs)
@@ -506,6 +586,9 @@ try {
     throw "install failed and was rolled back: $($err.Exception.Message)"
 }
 
-Write-Output "installed $build into $GameDir"
+Write-Output "installed $build ($($Method.ToLowerInvariant())) into $GameDir"
+if ($Method -eq 'Inject') {
+    Write-Output "  launch with: $(Join-Path $GameDir 'scriptforge-launch.exe')"
+}
 Write-Output "  scripts go in $(Join-Path $OwnDir 'scripts')"
 Write-Output "  manifest: $ManifestPath"

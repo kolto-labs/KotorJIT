@@ -24,7 +24,7 @@ GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"
 DEMO_DIR="${DEMO_DIR:-$ROOT/tmp/demos}"
 DISPLAY_NUM="${DISPLAY_NUM:-93}"
 TARGET="${1:-}"
-LOG="$GAME_DIR/kotorphasor.log"
+LOG="$GAME_DIR/scriptforge.log"
 
 [[ -f "$GAME_DIR/swkotor.exe" ]] || { echo "no game at $GAME_DIR" >&2; exit 1; }
 

@@ -5,7 +5,7 @@
 // and AurPostString to that creature. Three routes into the game, which is
 // why they are not one function with a channel argument:
 //
-//   log       src/platform logging, which the runtime points at kotorphasor.log.
+//   log       src/platform logging, which the runtime points at scriptforge.log.
 //             Always available, including before hooks are installed.
 //   console   the console.do_console detour, which owns the input line and its
 //             reply path. There is no engine routine for this surface, so the

@@ -19,6 +19,7 @@
 #include <string>
 
 #include "runtime/internal.hpp"
+#include "platform/naming.hpp"
 #include "runtime/runtime.hpp"
 
 #if defined(_WIN32)
@@ -106,7 +107,7 @@ __attribute__((constructor)) void kp_elf_entry() {
     // control its lifecycle themselves: an implicit startup worker would race
     // their Host bindings and engine-owner latch. The production preload path
     // keeps automatic startup unless explicitly disabled before process start.
-    const char* disabled = std::getenv("KOTORPHASOR_NO_AUTOSTART");
+    const char* disabled = kp::naming::env("NO_AUTOSTART");
     if (disabled != nullptr && std::strcmp(disabled, "1") == 0) return;
     pthread_t t{};
     if (pthread_create(&t, nullptr, &worker, nullptr) == 0) pthread_detach(t);

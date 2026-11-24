@@ -39,7 +39,7 @@ from scan_release_zip import (EXCLUDED_FILES, content_problems, name_collisions,
                               unsafe_name)
 
 KIND = 'kpharness.creative-harness-package.v1'
-TOP = 'kotorphasor-creative-harness'
+TOP = 'scriptforge-creative-harness'
 ZIP_NAME = TOP + '.zip'
 SCOPE = ('K1 GOG 1.03, Linux, Wine inside a private Gamescope display, KDE Plasma Wayland '
          'evidence host only. Capture (C7) is known-failing. Other hosts not attempted.')

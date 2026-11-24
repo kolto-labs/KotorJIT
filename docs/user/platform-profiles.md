@@ -1,6 +1,6 @@
 # Platform profiles
 
-KotorPhasor treats each shipped binary as a **profile**: a logical id bound by
+ScriptForge treats each shipped binary as a **profile**: a logical id bound by
 content identity (code-section hash / portable signatures), never by store shelf
 name or file path alone. That is the same separation AgentDecompile uses for
 **portable signatures** and **hook packs** — logical site names stay stable;

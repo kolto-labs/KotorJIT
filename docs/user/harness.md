@@ -10,7 +10,7 @@ calling the engine. A script asks the game to load a save, warp to a
 module, pick a dialog reply, or read the party. The game answers with
 its own state. Nothing waits on a pixel and nothing types a key.
 
-This is how KotorPhasor tests itself. It is also how a mod author can
+This is how ScriptForge tests itself. It is also how a mod author can
 find a soft-lock without playing to it.
 
 ## What you need
@@ -20,9 +20,9 @@ find a soft-lock without playing to it.
 - Xvfb and Wine, for KOTOR 1 and for KOTOR 2 on Windows.
 - A build of the runtime: `cmake -S . -B build && cmake --build build`.
   When the workspace is on a slow or contended drive, use an independent tmpfs
-  build without changing the default tree: `cmake -S . -B /tmp/kotorphasor-build
-  -G Ninja && cmake --build /tmp/kotorphasor-build -j3`.  Run the harness with
-  `KP_BUILD_DIR=/tmp/kotorphasor-build` (or `--build-dir /tmp/kotorphasor-build`)
+  build without changing the default tree: `cmake -S . -B /tmp/scriptforge-build
+  -G Ninja && cmake --build /tmp/scriptforge-build -j3`.  Run the harness with
+  `KP_BUILD_DIR=/tmp/scriptforge-build` (or `--build-dir /tmp/scriptforge-build`)
   so staging uses that runtime.
   If the source volume is congested, move both the *existing full* K1 staged
   tree and its dedicated prefix to tmpfs for an isolated live run, then pass
@@ -95,14 +95,14 @@ documents machine paths and precedence; the [scenario TOML contract](../scenario
 documents execution policy, resources, ordered steps, and legacy normalization.
 
 The game opens a loopback port only when asked. Add two lines to
-`<game>/kotorphasor.ini`:
+`<game>/scriptforge.ini`:
 
 ```
 harness_port = 27015
 harness_bind = 127.0.0.1
 ```
 
-`KOTORPHASOR_HARNESS_PORT` overrides the file. With no port the listener
+`SCRIPTFORGE_HARNESS_PORT` overrides the file. With no port the listener
 never starts, so a player's install is untouched.
 
 Commands run on the game's own main thread, inside the frame. That is

@@ -80,12 +80,12 @@ class OwnershipTests(TempCase):
             run_dir=run, staged=str(stage), wineprefix=str(self.root / 'prefix'))
         def staged(resources):
             session.game_dir=stage
-            (stage / 'kotorphasor/scripts').mkdir(parents=True)
-            (stage / 'kotorphasor.log').write_text('[cursed:wheel] stale success\n')
+            (stage / 'scriptforge/scripts').mkdir(parents=True)
+            (stage / 'scriptforge.log').write_text('[cursed:wheel] stale success\n')
         with mock.patch.object(W.GameSession, 'stage', side_effect=staged): session.stage()
-        self.assertEqual((stage / 'kotorphasor.log').read_bytes(), b'')
+        self.assertEqual((stage / 'scriptforge.log').read_bytes(), b'')
         prior = json.loads((run / 'prior-log-identities.json').read_text())
-        self.assertGreater(prior['kotorphasor.log']['bytes'], 0)
+        self.assertGreater(prior['scriptforge.log']['bytes'], 0)
 
 
 class CheckpointTests(TempCase):
@@ -292,7 +292,7 @@ class DriverIntegrationTests(TempCase):
                  launch_count=1, boot_record=True, dev_budget=None):
         source=self.root/'source';source.mkdir(exist_ok=True)
         build=self.root/'build';build.mkdir(exist_ok=True)
-        for name in ('kphasor.dll','binkw32.dll'):(build/name).write_bytes(name.encode())
+        for name in ('scriptforge.dll','binkw32.dll'):(build/name).write_bytes(name.encode())
         script=self.root/'demo.lua';script.write_text('priority=1')
         route=self.root/'route.toml';route.write_text('name="test"\ntarget="k1"\n[settings]\ngame_speed=1.0\n[[step]]\ndo="lua"\ncode="return true"\n')
         options=C.parser().parse_args(['--backend','linux-wine-k1','--script',str(script),'--route',str(route),'--output',str(self.root/'output')]
@@ -345,7 +345,7 @@ class DriverIntegrationTests(TempCase):
                     ledger = (self.run_dir/'ffprobe-cleanup-ledger.json').read_bytes()
                     case.boot_heads.append((lines, hashlib.sha256(ledger).hexdigest()))
                 self.save_dir.mkdir();(self.run_dir/'continuous.mp4').write_bytes(b'failed or passed raw video')
-                for name in ('kphasor.dll','binkw32.dll'):(self.game_dir/name).write_bytes((build/name).read_bytes())
+                for name in ('scriptforge.dll','binkw32.dll'):(self.game_dir/name).write_bytes((build/name).read_bytes())
                 if boot_cleanup_failure:
                     self._recorder_closed=False;self._session_closed=False;self._cleanup_errors=[]
                     self.teardown()
@@ -414,7 +414,7 @@ class DriverIntegrationTests(TempCase):
                 receipt=C.run_creative(options,adapter_factory=adapter,runner_factory=Runner,renderer=renderer)
         self.assertEqual(calls,['recorder-stop','game-stop'])
         self.assertTrue((Path(receipt['run_dir'])/'creative-run.json').is_file())
-        self.assertEqual(receipt['runtime']['kphasor.dll']['sha256'],R.sha256(build/'kphasor.dll'))
+        self.assertEqual(receipt['runtime']['scriptforge.dll']['sha256'],R.sha256(build/'scriptforge.dll'))
         return receipt,renderer
 
     def test_checkpoint_overlaps_rejected_before_claim_or_boot(self):

@@ -119,7 +119,7 @@ struct HostIdentity {
 
 HostIdentity host_identity();
 
-// One line, fixed keys, for kotorphasor.log. The receipt script and its test
+// One line, fixed keys, for scriptforge.log. The receipt script and its test
 // parse exactly these keys: "host: wine=<yes|no> wine_version=<v|-> os=<M.m.b>
 // overlays=<a,b|->".
 void format_host_identity(const HostIdentity&, char* out, std::size_t len);

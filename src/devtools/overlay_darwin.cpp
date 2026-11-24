@@ -264,7 +264,7 @@ void draw() {
     ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(760, 500), ImGuiCond_FirstUseEver);
     bool visible = true;
-    ImGui::Begin("KotorPhasor Lua console", &visible, ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("ScriptForge Lua console", &visible, ImGuiWindowFlags_NoCollapse);
     if (!visible) set_open(false);
     ImGui::TextUnformatted("F12 / Escape close | Enter run | Cmd+Enter newline | Tab complete | Cmd+Up/Down history");
     ImGui::Text("events intercepted: %lu", g_input_calls.load());
