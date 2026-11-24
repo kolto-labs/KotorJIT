@@ -248,7 +248,7 @@ EOF
 
 uninstall)
   REC=""
-  [[ -f "$METHOD_FILE" ]] && REC="$(cat "$METHOD_FILE")"
+  if [[ -f "$METHOD_FILE" ]]; then REC="$(cat "$METHOD_FILE")"; fi
 
   case "$REC" in
     linked:*)
@@ -291,28 +291,28 @@ uninstall)
 
 status)
   REC=""
-  [[ -f "$METHOD_FILE" ]] && REC="$(cat "$METHOD_FILE")"
+  if [[ -f "$METHOD_FILE" ]]; then REC="$(cat "$METHOD_FILE")"; fi
 
   if [[ "$REC" == linked:* ]]; then
     TARGET_EXE="${REC#linked:}"
     echo "installed (method: linked, target: $TARGET_EXE)"
-    [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$SO_DST" ]] && echo "  so:    $SO_DST" || echo "  so:    missing"
-    [[ -f "$GAME/scriptforge.log" ]] && echo "  log:   $GAME/scriptforge.log"
+    if [[ -f "$MARK" ]]; then echo "  since: $(cat "$MARK")"; fi
+    if [[ -f "$SO_DST" ]]; then echo "  so:    $SO_DST"; else echo "  so:    missing"; fi
+    if [[ -f "$GAME/scriptforge.log" ]]; then echo "  log:   $GAME/scriptforge.log"; fi
   elif [[ "$REC" == preload:* ]]; then
     TARGET_EXE="${REC#preload:}"
     echo "installed (method: preload, target: $TARGET_EXE)"
-    [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$PRELOAD_WRAPPER" ]] && echo "  run:   $PRELOAD_WRAPPER"
-    [[ -f "$GAME/scriptforge.log" ]] && echo "  log:   $GAME/scriptforge.log"
+    if [[ -f "$MARK" ]]; then echo "  since: $(cat "$MARK")"; fi
+    if [[ -f "$PRELOAD_WRAPPER" ]]; then echo "  run:   $PRELOAD_WRAPPER"; fi
+    if [[ -f "$GAME/scriptforge.log" ]]; then echo "  log:   $GAME/scriptforge.log"; fi
   elif [[ "$REC" == "inject" ]] || [[ -f "$LAUNCHER_DST" && -f "$GAME/scriptforge.dll" ]]; then
     echo "installed (method: inject)"
-    [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$GAME/scriptforge.log" ]] && echo "  log:   $GAME/scriptforge.log"
+    if [[ -f "$MARK" ]]; then echo "  since: $(cat "$MARK")"; fi
+    if [[ -f "$GAME/scriptforge.log" ]]; then echo "  log:   $GAME/scriptforge.log"; fi
   elif is_ours; then
     echo "installed (method: proxy)"
-    [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$GAME/scriptforge.log" ]] && echo "  log:   $GAME/scriptforge.log"
+    if [[ -f "$MARK" ]]; then echo "  since: $(cat "$MARK")"; fi
+    if [[ -f "$GAME/scriptforge.log" ]]; then echo "  log:   $GAME/scriptforge.log"; fi
   else
     echo "not installed"
   fi
