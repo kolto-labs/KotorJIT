@@ -28,12 +28,43 @@
 #endif
 #include <windows.h>
 #else
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <pthread.h>
+#include <unistd.h>
 #endif
 
 namespace {
+
+// One runtime per process, however many copies of this module get loaded.
+// The proxy, the launcher's injection, KPM's DLL-only patch, DT_NEEDED and
+// LD_PRELOAD can each bring the runtime in, and two of them can be set up at
+// once with different files (a game-folder scriptforge.dll and KPM's extracted
+// windows_x86.dll). Each copy would otherwise start its own runtime and hook
+// every site a second time. The first copy to reach its entry point claims the
+// process; a later copy stays loaded and inert. Claimed from the entry point,
+// which the loader runs one module at a time, so two copies cannot both win.
+// tools/kp_singleinstance_test.cpp.
+bool claim_process() {
+#if defined(_WIN32)
+    char name[64];
+    wsprintfA(name, "Local\\scriptforge-runtime-%lu", GetCurrentProcessId());
+    // Deliberately never closed: the claim lasts as long as the process.
+    HANDLE m = CreateMutexA(nullptr, FALSE, name);
+    return m != nullptr && GetLastError() != ERROR_ALREADY_EXISTS;
+#else
+    // The environment is one per process and shared by every copy loaded in
+    // it. The value is the pid, so a claim inherited from a parent process
+    // (which also hosted a runtime) is not taken for a claim on this one.
+    char pid[24];
+    std::snprintf(pid, sizeof pid, "%ld", static_cast<long>(getpid()));
+    const char* owner = std::getenv("SCRIPTFORGE_RUNTIME_PID");
+    if (owner != nullptr && std::strcmp(owner, pid) == 0) return false;
+    setenv("SCRIPTFORGE_RUNTIME_PID", pid, 1);
+    return true;
+#endif
+}
 
 // The whole startup sequence, off the loader lock.
 void run_startup() {
@@ -65,6 +96,7 @@ BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
         // acquisition on every thread the game creates, of which there are
         // many.
         DisableThreadLibraryCalls(self);
+        if (!claim_process()) break;   // another copy already runs in this process
 
         // CreateThread rather than std::thread: this is the one thing that is
         // documented as safe to do under the loader lock. The thread does not
@@ -109,6 +141,7 @@ __attribute__((constructor)) void kp_elf_entry() {
     // keeps automatic startup unless explicitly disabled before process start.
     const char* disabled = kp::naming::env("NO_AUTOSTART");
     if (disabled != nullptr && std::strcmp(disabled, "1") == 0) return;
+    if (!claim_process()) return;   // another copy already runs in this process
     pthread_t t{};
     if (pthread_create(&t, nullptr, &worker, nullptr) == 0) pthread_detach(t);
 }

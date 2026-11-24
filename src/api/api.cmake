@@ -31,6 +31,18 @@ if(UNIX AND NOT WIN32)
     target_link_options(kp_routinetest PRIVATE -m32)
     add_dependencies(kp_routinetest scriptforge)
     target_link_libraries(kp_routinetest PRIVATE scriptforge "${KP_ROUTINE_LUAJIT}" m dl)
+    # One runtime per process even when two copies of the library load
+    # (proxy + KPM, preload + DT_NEEDED). Loads the real libscriptforge.so.
+    add_executable(kp_singleinstance_test "${KP_API_SRC_ROOT}/../tools/kp_singleinstance_test.cpp")
+    target_compile_options(kp_singleinstance_test PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_singleinstance_test PRIVATE -m32)
+    target_compile_definitions(kp_singleinstance_test PRIVATE
+        KP_RUNTIME_SO="$<TARGET_FILE:scriptforge>")
+    target_link_libraries(kp_singleinstance_test PRIVATE dl)
+    add_dependencies(kp_singleinstance_test scriptforge)
+    add_test(NAME kp_singleinstance_test COMMAND kp_singleinstance_test)
+    set_tests_properties(kp_singleinstance_test PROPERTIES LABELS "offline;deploy" TIMEOUT 60)
+
     add_test(NAME kp_routinetest COMMAND kp_routinetest)
     set_tests_properties(kp_routinetest PROPERTIES
         ENVIRONMENT "SCRIPTFORGE_NO_AUTOSTART=1")
