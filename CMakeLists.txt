@@ -78,6 +78,15 @@ add_test(NAME gameplay_scheduler_test
     COMMAND bash ${CMAKE_SOURCE_DIR}/tools/gameplay_scheduler_test.sh)
 set_tests_properties(gameplay_scheduler_test PROPERTIES LABELS "offline;harness" TIMEOUT 60)
 
+# Deployment: the KPM-style loaders and packaging (docs/user/install.md).
+foreach(gate elf_needed_test package_kpatch_test install_to_game_test)
+    add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
+    set_tests_properties(${gate} PROPERTIES LABELS "offline;deploy" TIMEOUT 120)
+endforeach()
+add_test(NAME embedded_addresses_current
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_embedded_addresses.py --check)
+set_tests_properties(embedded_addresses_current PROPERTIES LABELS "offline;deploy" TIMEOUT 60)
+
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's
 # startup, so an optimised default is the honest one.
@@ -104,6 +113,11 @@ add_library(kp_image STATIC ${KP_IMAGE_SOURCES})
 target_include_directories(kp_image PUBLIC src)
 target_compile_options(kp_image PUBLIC -m32 -Wall -Wextra)
 target_link_options(kp_image PUBLIC -m32)
+
+add_executable(kp_buildlookup_test tools/kp_buildlookup_test.cpp)
+target_link_libraries(kp_buildlookup_test PRIVATE kp_image)
+add_test(NAME kp_buildlookup_test COMMAND kp_buildlookup_test)
+set_tests_properties(kp_buildlookup_test PROPERTIES LABELS "offline;deploy")
 
 # The offline proof that the module works: classification, identification and
 # parsing run against files, so the encrypted build can be checked without Steam.
