@@ -62,17 +62,8 @@ Then set the game's **Steam launch options** to what the installer prints:
 DYLD_INSERT_LIBRARIES="…/MacOS/libscriptforge.dylib" %command%
 ```
 
-That is the whole install. The runtime identifies the executable by hashing its
-code section at load; an executable it does not recognise is left completely
-unpatched. `install_to_game.sh status` and `uninstall` do what they say;
-uninstalling is deleting the dylib and clearing the launch option.
+That is the whole install. The runtime identifies the executable by hashing its code section (`__TEXT,__text`) at load — so an executable with an unmodified code section (including a binary whose `LC_LOAD_DYLIB` was edited by a loader like KotOR Patch Manager) still verifies cleanly, while any unexpected executable or modified hook site is left completely unpatched. `install_to_game.sh status` and `uninstall` do what they say; uninstalling is deleting the dylib and clearing the launch option. On KPM for macOS, `dist/scriptforge.kpatch` can also load `binaries/macos_x86_64.dylib` directly.
 
 ## Why DYLD_INSERT_LIBRARIES and not a Bink proxy
 
-The Windows build hijacks `binkw32.dll`. On macOS the same effect — load our
-code before the game's entry point — comes from `DYLD_INSERT_LIBRARIES`, which
-these builds allow because their code signature sets no library-validation or
-hardened-runtime flag. A dylib constructor starts the runtime on a worker
-thread, exactly as the Windows/Linux entry points do. No Bink dylib is
-replaced, so Steam's integrity check stays green and there is nothing to undo
-but a copied file and a launch-option line.
+On Windows, ScriptForge supports both runtime DLL injection (`scriptforge-launch.exe` / KPM `.kpatch`) and an optional `binkw32.dll` proxy. On macOS the equivalent preload route — load our code before the game's entry point — comes from `DYLD_INSERT_LIBRARIES`, which these builds allow because their code signature sets no library-validation or hardened-runtime flag (or via KPM's `LC_LOAD_DYLIB` loader). A dylib constructor starts the runtime on a worker thread, exactly as the Windows/Linux entry points do. No Bink dylib is replaced, so Steam's integrity check stays green.

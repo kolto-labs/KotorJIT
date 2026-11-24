@@ -1,0 +1,5 @@
+# ScriptForge uses KPM's DLL-only patch form: no [[hooks]] entries are
+# declared here. KotorPatcher loads binaries/<platform> via LoadModule, and
+# ScriptForge's own strict hook engine binds from its embedded address tables
+# (or <game>/scriptforge/addresses/<build>.json when staged on disk) and
+# refuses to install if any prologue byte differs from exact expectations.

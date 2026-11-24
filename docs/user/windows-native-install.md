@@ -24,11 +24,15 @@ If the game is under `Program Files`, open PowerShell with "Run as administrator
 
 ```powershell
 .\scripts\install\windows\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\scripts\install\windows\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Method Proxy -SourceDir .\build
+.\scripts\install\windows\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Method Inject -SourceDir .\build
 .\scripts\install\windows\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
 .\scripts\install\windows\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
 ```
 
-Install refuses a game exe or `binkw32.dll` it does not recognise. It copies only the address table for your build.
+`-Method Auto` (the default) uses `Inject` (`scriptforge-launch.exe` + `scriptforge.dll`, leaving `binkw32.dll` untouched) when `scriptforge-launch.exe` is built and the game executable is not packed Steam K1; it uses `Proxy` (`binkw32.dll`) for packed Steam K1, when `scriptforge-launch.exe` is absent, or under Wine/Proton. Alternatively, KPM users can load `dist/scriptforge.kpatch` (`python3 scripts/package_kpatch.py build`) directly through KotOR Patch Manager.
+
+Install refuses a game exe it does not recognise (and, in `Proxy` mode, an unrecognised `binkw32.dll`). It copies only the address table for your build, and the runtime refuses cleanly if another code patch has already modified any hook site.
 
 Uninstall reads `scriptforge\install-manifest.json`. It refuses the whole manifest, and removes nothing, if:
 
@@ -37,11 +41,11 @@ Uninstall reads `scriptforge\install-manifest.json`. It refuses the whole manife
 - a path points outside the game folder
 - a path names a file the installer never writes
 - a file is listed twice
-- `binkw32.dll` is not listed exactly once
+- `binkw32.dll` is not listed exactly once for a `Proxy` install (or appears in an `Inject` install)
 - a value is a list or number where the installer wrote text
 - a folder it would delete from is a junction or symbolic link
 
-It restores `binkw32.dll` first, from the backup. If the backup is gone, it uses `binkw32_real.dll`, but only when that file still matches the original. It deletes files one at a time and never deletes a folder with its contents. Your scripts and `scriptforge.log` stay.
+For `Proxy` installs, it restores `binkw32.dll` first, from the backup (or `binkw32_real.dll` if the backup is gone and still matches the original). It deletes files one at a time and never deletes a folder with its contents. Your scripts and `scriptforge.log` stay.
 
 ## Write a receipt
 

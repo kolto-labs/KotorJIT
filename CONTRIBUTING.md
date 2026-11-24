@@ -16,16 +16,17 @@ cmake -S . -B build
 cmake --build build
 ```
 
-That produces `build/scriptforge.dll` and the proxy `build/binkw32.dll`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `scriptforge.dll` needs to link against.
+That produces `build/scriptforge.dll`, the optional `build/binkw32.dll` proxy, `build/scriptforge-launch.exe` (Windows runtime-injection launcher), and `build/libscriptforge.so`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `scriptforge.dll` needs to link against.
 
 On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, `binutils-mingw-w64-i686`, `luajit`, and `lua5.1` (configure requires a `luajit` interpreter; one harness test runs `lua`); see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
 
-Full build, install, and first-run steps: [`docs/user/install.md`](docs/user/install.md).
+Full build, install (`inject` / `proxy` / `linked` / `preload` / `.kpatch`), and first-run steps: [`docs/user/install.md`](docs/user/install.md).
 
 ## Install into the game
 
 ```sh
 ./scripts/install_to_game.sh install /path/to/swkotor
+# Or explicitly choose: --method inject | --method proxy | --method linked | --method preload
 ```
 
 Scripts go in `<game>/scriptforge/scripts`. The log is `<game>/scriptforge.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
@@ -50,7 +51,7 @@ Machine-readable profile table: [`data/profiles/builds.toml`](data/profiles/buil
 
 "Supported" means every required hook site resolves and the runtime installs cleanly: the `nwscript.call(name, ...)` routine bridge and event dispatch both work. It does **not** yet mean every corner is verified — K2's struct field layouts (`kp.struct`) were researched against the K1 build only, so typed field access on a K2 build is unverified and may read the wrong offset. Raw `kp.mem.*` reads and writes are unaffected; they don't depend on struct research. Full detail: [`docs/user/api-status.md`](docs/user/api-status.md).
 
-The runtime identifies a build by hashing its code section, never by filename or file size. An executable it doesn't recognize is left completely unpatched — the game runs as if ScriptForge weren't installed.
+The runtime identifies a build by hashing its code section or executable image, never by filename or file size, and verifies exact expected prologue bytes at every hook site. Any executable it doesn't recognize — or any image already modified by another code patch — is refused cleanly and left unpatched.
 
 ## What fires today
 

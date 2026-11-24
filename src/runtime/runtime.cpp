@@ -23,6 +23,7 @@
 
 #include "events/contract.hpp"
 #include "events/table.hpp"
+#include "generated/embedded_addresses.inc"
 #include "hooks/registry.hpp"
 #if defined(__i386__)
 #include "hooks/lua_bridge.hpp"
@@ -536,12 +537,17 @@ bool Runtime::resolve(const Config& cfg) {
     for (const std::string& p : candidates) {
         if (file_exists(p)) { chosen = p; break; }
     }
+    std::string_view embedded;
     if (manifest.empty() && pack.empty() && chosen.empty()) {
-        failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
-        for (const std::string& p : manifest_candidates) failure_ += " " + p;
-        for (const std::string& p : pack_candidates) failure_ += " " + p;
-        for (const std::string& p : candidates) failure_ += " " + p;
-        return false;
+        embedded = kp::generated::find_embedded_address_table(build_);
+        if (embedded.empty()) {
+            failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
+            for (const std::string& p : manifest_candidates) failure_ += " " + p;
+            for (const std::string& p : pack_candidates) failure_ += " " + p;
+            for (const std::string& p : candidates) failure_ += " " + p;
+            failure_ += " (and no embedded table)";
+            return false;
+        }
     }
 
     auto table = std::make_unique<hooks::AddressTable>();
@@ -561,8 +567,13 @@ bool Runtime::resolve(const Config& cfg) {
             failure_ = "hook pack " + pack + ": " + error;
             return false;
         }
-    } else if (!hooks::AddressTable::load_file(chosen, *table, error)) {
-        failure_ = "address table " + chosen + ": " + error;
+    } else if (!chosen.empty()) {
+        if (!hooks::AddressTable::load_file(chosen, *table, error)) {
+            failure_ = "address table " + chosen + ": " + error;
+            return false;
+        }
+    } else if (!hooks::AddressTable::parse(embedded, *table, error)) {
+        failure_ = "embedded address table for " + build_ + ": " + error;
         return false;
     }
 
@@ -584,10 +595,17 @@ bool Runtime::resolve(const Config& cfg) {
             missing_pattern, ambiguous_pattern);
     }
 
+    const std::string source = !manifest.empty()
+        ? manifest
+        : (!pack.empty() ? pack : (!chosen.empty() ? chosen : ("embedded:" + build_)));
+    const std::string err_source = !manifest.empty()
+        ? ("hook manifest " + manifest)
+        : (!pack.empty() ? ("hook pack " + pack)
+                         : (!chosen.empty() ? ("address table " + chosen)
+                                            : ("embedded address table for " + build_)));
     const std::vector<std::string> missing = table->unresolved_required();
     if (!missing.empty()) {
-        failure_ = (manifest.empty() ? "address table " + chosen : "hook manifest " + manifest) +
-                   " leaves required sites unresolved:";
+        failure_ = err_source + " leaves required sites unresolved:";
         for (const std::string& m : missing) {
             failure_ += " " + m;
             if (const hooks::Site* s = table->find(m); s != nullptr && !s->locate_error.empty())
@@ -597,7 +615,6 @@ bool Runtime::resolve(const Config& cfg) {
     }
 
     table_ = std::move(table);
-    const std::string& source = !manifest.empty() ? manifest : (pack.empty() ? chosen : pack);
     log("address table: %s (%zu sites, build %s, %s)", source.c_str(), table_->sites().size(),
         table_->build().c_str(), table_->platform_name().c_str());
 

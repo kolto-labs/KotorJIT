@@ -52,7 +52,7 @@ Their include order is defined in `CMakeLists.txt`.
 
 ## Status
 
-KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts today, and the x86_64 Steam macOS builds of both games are supported (Mach-O runtime, `scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). Other corpus builds remain fail-closed until target-native bindings are recovered. The routine bridge and event dispatch both work. `kp.struct` on K2 is the one piece that is still unverified. The build table is in [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds). What fires is in [`docs/user/api-status.md`](docs/user/api-status.md).
+KOTOR 1 (Steam and GOG, Windows) and KOTOR 2 (GOG/Steam Aspyr on Windows) install and run scripts via native Windows runtime injection (`scriptforge-launch.exe`), optional `binkw32.dll` proxy (for Wine/Proton or packed Steam K1), or [KotOR Patch Manager](https://github.com/LaneDibello/kotor-patch-manager) (`dist/scriptforge.kpatch`). The x86_64 Steam macOS builds of both games are supported (`scripts/mac/build.sh`, `DYLD_INSERT_LIBRARIES` install — see [`docs/user/macos-install.md`](docs/user/macos-install.md)). ScriptForge verifies exact bytes at every hook site and is strictly incompatible with other code patches. Other corpus builds remain fail-closed until target-native bindings are recovered; K2 `kp.struct` offsets remain unverified. See [`CONTRIBUTING.md`](CONTRIBUTING.md#supported-builds) and [`docs/user/api-status.md`](docs/user/api-status.md).
 
 ## Credits
 

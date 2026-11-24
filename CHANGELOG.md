@@ -4,12 +4,13 @@
 
 Everything below is merged to `main` but not yet cut into a numbered release.
 
-- **Renamed KotorPhasor to ScriptForge.** New names: `scriptforge.dll` / `libscriptforge.so` / `libscriptforge.dylib`, the `<game>/scriptforge/` data folder (scripts, hook packs, manifests, address overlays), `scriptforge.ini`, `scriptforge.log`, `scriptforge-proxy.log` and `SCRIPTFORGE_*` environment variables. Nothing an existing install relies on stops working:
-  - the proxy loads `scriptforge.dll` and falls back to `kphasor.dll`;
-  - the runtime uses `<game>/kotorphasor/` when that is the only data folder present, reads `kotorphasor.ini` when there is no `scriptforge.ini`, and accepts every `KOTORPHASOR_*` variable when its `SCRIPTFORGE_*` form is unset;
-  - the installers recognise old proxies as ours (never as the original Bink), move a legacy `kotorphasor/` folder to `scriptforge/`, and on macOS point an existing `libkphasor.dylib` at the new runtime so old Steam launch options keep working. The Windows installer reads and uninstalls installs recorded under `kotorphasor\`;
-  - receipt validation accepts both start banners.
-  - Unchanged on purpose: the Lua API (`kp.*`, `nwscript.*`), and serialized format ids such as `kotorphasor.native-receipt/v1` and `kotorphasor.install-manifest/v1`. One visible difference: the Phasor-compat `host` / `serverapp` values now read `"ScriptForge"`.
+- **Renamed KotorPhasor to ScriptForge** (`scriptforge.dll` / `libscriptforge.so` / `libscriptforge.dylib`, `<game>/scriptforge/`, `scriptforge.ini`, `scriptforge.log`, `scriptforge-proxy.log`, `SCRIPTFORGE_*` environment variables), keeping `KotorPhasor` fallbacks (`kphasor.dll`, `kotorphasor/`, `kotorphasor.ini`, `KOTORPHASOR_*`, `libkphasor.dylib` symlink) and preserving the Lua API (`kp.*`, `nwscript.*`) and serialized schema ids (`kotorphasor.native-receipt/v1`, `kotorphasor.install-manifest/v1`).
+- **Strict exact-bytes hooking:** ScriptForge requires exact expected bytes at every hook site and refuses to install if another code patch has altered those bytes (never chains foreign detours).
+- **KPM-style deployment methods & optional `binkw32.dll` proxy:**
+  - Windows runtime-injection launcher (`scriptforge-launch.exe`): `CREATE_SUSPENDED` + remote `LoadLibraryA` (`direct` mode for GOG/unpacked/K2 Aspyr) plus delayed Steam/attach injection for SteamStub builds (`steam` / `attach` modes).
+  - Address-preserving ELF32 `DT_NEEDED` editor (`tools/elf_needed.py`) repurposing `PT_NOTE` into a read-write `PT_LOAD` segment, paired with exact `.text` / `__text` verification in `kp::image::load()` for loader-modified ELF32 and Mach-O executables.
+  - `--method` / `-Method` switches in `scripts/install_to_game.sh` (`auto|proxy|inject|linked|preload`) and `Install-ScriptForge.ps1` (`Auto|Inject|Proxy`), keeping `binkw32.dll` proxy support for Proton/Wine and packed Steam K1.
+  - DLL-only `.kpatch` package (`kpatch/`, `scripts/package_kpatch.py` -> `dist/scriptforge.kpatch`) and compiled-in embedded address-table fallback (`tools/gen_embedded_addresses.py` -> `src/generated/embedded_addresses.inc`) so KPM can load ScriptForge directly without an extracted `addresses/` folder.
 
 - KOTOR 2 support: native Linux, GOG Aspyr (Windows), and Steam Aspyr (Windows) all install cleanly and run scripts. The routine bridge and event dispatch both work. `kotor.struct` field offsets are the one piece still unverified on K2 (researched against K1's build only). `kotor.mem.*` and everything else are unaffected.
 - A self-contained multiplayer example (`scripts/examples/multiplayer/10_avatar_sync.lua`): direct UDP sync between two game instances, no external process, using the engine's own socket library from Lua.
