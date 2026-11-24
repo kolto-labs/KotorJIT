@@ -1,4 +1,5 @@
 #include "api/animation.hpp"
+#include <array>
 #include <cmath>
 #include <cstring>
 #include <iostream>
@@ -13,6 +14,13 @@ extern "C" {
 #define CHECK(x) do{if(!(x))throw std::runtime_error(std::string("line ")+std::to_string(__LINE__)+": "+#x);}while(0)
 #include "tests/model_backend_fixture.hpp"
 namespace A=kp::api::animation;
+// model::Operations::bind takes the VA resolved for each of the profile's five
+// sites (normally from a hookpack-admitted generated operation). As in
+// kp_modeltest, these controlled-backend checks hand back the Profile's own
+// compile-time sites.
+static std::array<Address,5> generated_from(const Profile& p){
+ std::array<Address,5> gen{};for(unsigned i=0;i<gen.size();++i)gen[i]=p.sites[i].va;return gen;
+}
 struct Anim: A::Backend {
  Fake& model;const A::Profile& profile;
  struct Clip{bool active;float time,duration,rate;};
@@ -45,7 +53,7 @@ struct Anim: A::Backend {
 };
 void test(unsigned index){
  Fake f(profiles()[index]);Anim backend(f,A::profiles()[index]);Operations models;std::string error;
- CHECK(models.bind(f.p.sha256,f.base,&f,error));Capture capture;CHECK(models.snapshot(42,capture,error));
+ auto gen=generated_from(f.p);CHECK(models.bind(f.p.sha256,f.base,&f,&gen,error));Capture capture;CHECK(models.snapshot(42,capture,error));
  A::Operations op;A::State state;
  CHECK(!op.bind("wrong",f.base,&models,&backend,error));
  f.host_width=f.p.width==4?8:4;CHECK(!op.bind(f.p.sha256,f.base,&models,&backend,error));f.host_width=f.p.width;
@@ -82,7 +90,7 @@ void test(unsigned index){
 }
 void lua_test(){
  Fake f(profiles().back());Anim backend(f,A::profiles().back());std::string error;
- CHECK(operations().bind(f.p.sha256,f.base,&f,error));CHECK(A::operations().bind(f.p.sha256,f.base,&operations(),&backend,error));
+ auto gen=generated_from(f.p);CHECK(operations().bind(f.p.sha256,f.base,&f,&gen,error));CHECK(A::operations().bind(f.p.sha256,f.base,&operations(),&backend,error));
  lua_State* L=luaL_newstate();luaL_openlibs(L);register_all(L);A::register_all(L);
  const char* script=R"(
  local c=assert(kp.model.snapshot(42));assert(kp.animation.capabilities().available)
