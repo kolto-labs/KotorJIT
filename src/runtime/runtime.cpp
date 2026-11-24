@@ -910,7 +910,7 @@ bool Runtime::boot_scripts(const Config& cfg) {
         +[] { return live() && on_engine_thread(); },
         +[] { return on_engine_thread() || (!live() && !engine_thread_latched()); },
         +[](hooks::lua_bridge::Entry& entry, void (*work)(void*), void* arg) {
-            bool healthy = true;
+            volatile bool healthy = true;   // written by the setjmp fault path (-Wclobbered)
             KP_HOOK_GUARD_BEGIN(entry.site.name.c_str(), entry.poisoned, healthy = false)
                 work(arg);
             KP_HOOK_GUARD_END
