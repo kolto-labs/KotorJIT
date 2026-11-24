@@ -53,7 +53,10 @@ struct BuildRecord {
     const char*      alias;
     const char*      sha256;      // of the file on disk
     Format           format;
-    std::uintptr_t   image_base;
+    // The file's preferred base, not a live pointer. 64-bit wide because the
+    // x86_64 Mach-O records (builds_macho.inc) declare 0x100000000, which does
+    // not fit a 32-bit uintptr_t -- and the PE/ELF tools and runtime are -m32.
+    std::uint64_t    image_base;
     bool             encrypted;
     // Empty bytes mean "nothing to wait for": the image is plaintext already.
     std::uintptr_t   sentinel_va;

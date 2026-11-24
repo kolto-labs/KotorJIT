@@ -73,7 +73,7 @@ std::optional<std::uintptr_t> find_live_base(const std::string& module_path, For
         return std::nullopt;
     }
 #endif
-    if (record != nullptr) return record->image_base;
+    if (record != nullptr) return static_cast<std::uintptr_t>(record->image_base);
     if (fmt != Format::Elf32) return std::nullopt;
     // Unrecognised ELF: the file's own lowest PT_LOAD is the load address for a
     // non-PIE image, which is the only ELF shape we target.
