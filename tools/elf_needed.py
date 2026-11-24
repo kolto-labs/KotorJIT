@@ -275,6 +275,16 @@ def add_needed(data: bytes, soname: str) -> tuple[bytes, bool]:
         p_align=dyn_phdr.p_align,
     )
 
+    # The new PT_LOAD has the highest p_vaddr, so it must also come last among
+    # the PT_LOADs: the ELF spec requires loadable entries sorted by p_vaddr,
+    # and the kernel sizes a PIE's reservation from the first and last of
+    # them. The repurposed PT_NOTE may have sat anywhere (before the loads, in
+    # an unusual layout), so move it to just after the last existing PT_LOAD.
+    # Only the table order changes; no segment's address or offset does.
+    new_load = phdrs.pop(note_idx)
+    last_load = max(i for i, p in enumerate(phdrs) if p.p_type == PT_LOAD)
+    phdrs.insert(last_load + 1, new_load)
+
     for i, ph in enumerate(phdrs):
         struct.pack_into(PHDR_FMT, out, eh.e_phoff + i * PHDR_SIZE, *struct.unpack(PHDR_FMT, ph.pack()))
 
