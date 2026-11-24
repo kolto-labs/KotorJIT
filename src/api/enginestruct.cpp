@@ -143,48 +143,18 @@ bool command_slot_live(const void* table, std::uint32_t routine) {
     return platform::is_readable(reinterpret_cast<const void*>(ptr), 1);
 }
 
-namespace {
-// The bytes the bound is read from. Normally the live prologue. When another
-// module's detour replaced the head, the original instructions are spliced
-// back in from the relocated copy, so nothing is ever decoded out of the
-// other module's jump; without that copy only the untouched tail is offered.
-std::size_t dispatcher_bytes(const VmSites& s, std::uint8_t* buf, std::size_t cap) {
-    if (s.execute_command == 0) return 0;
-    const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
-    if (!platform::is_readable(p, cap)) return 0;
-    std::memcpy(buf, p, cap);
-    if (!s.execute_command_foreign) return cap;
-    const std::size_t head = s.execute_command_head < cap ? s.execute_command_head : cap;
-    if (!s.execute_command_prologue.empty() && s.execute_command_prologue.size() == head) {
-        std::memcpy(buf, s.execute_command_prologue.data(), head);
-        return cap;
-    }
-    std::memmove(buf, buf + head, cap - head);
-    return cap - head;
-}
-}  // namespace
-
 std::uint32_t discover_command_count(const VmSites& s) {
 #if defined(__x86_64__) || defined(_M_X64)
     // The table's field (vmcmd.command_count) and the live dispatcher must
     // agree. There is no KPM-style table growth on the Mac builds; a
     // disagreement means the code is not what the table was generated from.
+    if (s.execute_command == 0) return 0;
+    const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
+    if (!platform::is_readable(p, 32)) return 0;
     std::uint8_t buf[32];
-    const std::size_t got = dispatcher_bytes(s, buf, sizeof buf);
-    if (got == 0) return 0;
+    std::memcpy(buf, p, sizeof buf);
     std::uint32_t live = 0;
-    if (!decode_execute_command_bound_x64(buf, got, live)) {
-        // Another module's detour hid the compare and its displaced original
-        // was not found. The table's count is the generator's verified figure
-        // for this exact build; use it rather than refuse.
-        if (s.execute_command_foreign && s.commands_count != 0) {
-            platform::log(platform::LogLevel::Warn,
-                          "vm: ExecuteCommand is detoured by another module; using the table's bound %u",
-                          s.commands_count);
-            return s.commands_count;
-        }
-        return 0;
-    }
+    if (!decode_execute_command_bound_x64(buf, sizeof buf, live)) return 0;
     if (s.commands_count != 0 && s.commands_count != live) {
         platform::log(platform::LogLevel::Error,
                       "vm: ExecuteCommand bound %u differs from the table's %u", live, s.commands_count);
@@ -193,17 +163,16 @@ std::uint32_t discover_command_count(const VmSites& s) {
     return live;
 #else
     std::uint32_t bound = s.commands_count ? s.commands_count : 0x304;
-    std::uint8_t buf[32];
-    if (const std::size_t got = dispatcher_bytes(s, buf, sizeof buf); got != 0) {
-        std::uint32_t imm = 0;
-        if (decode_execute_command_bound(buf, got, imm) && imm > bound)
-            bound = imm;
+    if (s.execute_command != 0) {
+        const auto* p = reinterpret_cast<const std::uint8_t*>(s.execute_command);
+        if (platform::is_readable(p, 32)) {
+            std::uint8_t buf[32];
+            std::memcpy(buf, p, sizeof buf);
+            std::uint32_t imm = 0;
+            if (decode_execute_command_bound(buf, sizeof buf, imm) && imm > bound)
+                bound = imm;
+        }
     }
-    if (s.execute_command_foreign && s.execute_command_prologue.empty())
-        platform::log(platform::LogLevel::Warn,
-                      "vm: ExecuteCommand is detoured by another module and its original compare was not "
-                      "found; assuming bound %u (routines a table-growing patch added past it are not "
-                      "reachable from Lua)", bound);
     return bound;
 #endif
 }

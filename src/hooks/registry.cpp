@@ -472,137 +472,6 @@ void manifest_function_to_site(const JValue& f, Site& s) {
     s.locate_error = "no_locator";
 }
 
-// ---------------------------------------------------------------------------
-// Foreign patches -- another module's detour at a site (hooks/foreign.hpp)
-// ---------------------------------------------------------------------------
-
-constexpr bool kX64 =
-#if defined(__x86_64__) || defined(_M_X64)
-    true;
-#else
-    false;
-#endif
-
-// Size of the jump the detour engine writes. Chaining over a foreign stub
-// shorter than this means our patch also covers whatever the other hook left
-// after its stub, which is only safe when that is filler.
-constexpr std::size_t kOurPatchSize = kX64 ? 14 : 5;
-
-void clear_foreign(Site& s) {
-    s.foreign_patched = false;
-    s.foreign_evidence = 0;
-    s.foreign_stub = {};
-    s.foreign_boundary = 0;
-    s.relocated_prologue = 0;
-    s.original_prologue.clear();
-}
-
-// Evidence B, C or D for a site whose head at `live` is not the recorded
-// bytes. `build_bound` says `live` came from a table selected by the
-// executable's own hash -- what evidence D rests on. On success the site is
-// marked foreign-patched; nothing is written to the game.
-bool accept_foreign(Site& s, std::uintptr_t live, bool build_bound) {
-    const std::size_t n = s.expected.size();
-    if (live == 0 || n == 0 || !platform::is_readable(reinterpret_cast<const void*>(live), n)) return false;
-    const auto* at = reinterpret_cast<const std::uint8_t*>(live);
-    const foreign::TolerantMatch m =
-        foreign::match_tolerant(at, s.expected.data(), n, live, kX64, /*require_tail=*/false);
-    // Anything but "matches, however thin the tail" means the bytes after the
-    // stub are not the function we expect -- or there is no stub at all.
-    if (!m.ok) return false;
-
-    char evidence = m.tail >= foreign::kMinTail ? 'B' : 0;
-    // Look for the relocated original even when B already holds: it is what
-    // lets prologue-derived facts be read. One scan per foreign site, at
-    // startup only.
-    const std::uintptr_t copy =
-        foreign::find_relocated_prologue(s.expected.data(), m.boundary, live + m.boundary, kX64);
-    if (copy != 0 && evidence == 0) evidence = 'C';
-    if (evidence == 0 && build_bound) evidence = 'D';
-    if (evidence == 0) return false;
-
-    s.foreign_patched = true;
-    s.foreign_evidence = evidence;
-    s.foreign_stub = m.stub;
-    s.foreign_boundary = m.boundary;
-    s.relocated_prologue = copy;
-    if (copy != 0)
-        s.original_prologue.assign(s.expected.begin(),
-                                   s.expected.begin() + static_cast<std::ptrdiff_t>(m.boundary));
-    return true;
-}
-
-// No usable recorded address: find the site by the original bytes that
-// survive after a displaced head, for every head length a detour stub can
-// have, then prove it with accept_foreign (B or C only -- a scan hit is not
-// build-bound). Unique-or-nothing, like every other scan. Returns the live
-// address, or 0.
-std::uintptr_t scan_foreign(Site& s) {
-    const std::size_t n = s.expected.size();
-    static constexpr std::size_t kStubLengths[] = {2, 5, 6, 7, 12, 13, 14};
-    std::vector<std::size_t> boundaries;
-    for (std::size_t len : kStubLengths) {
-        const std::size_t b = foreign::boundary_after(s.expected.data(), n, len);
-        if (b == 0 || n - b < foreign::kMinTail) continue;
-        if (std::find(boundaries.begin(), boundaries.end(), b) == boundaries.end()) boundaries.push_back(b);
-    }
-    std::uintptr_t found = 0;
-    for (std::size_t b : boundaries) {
-        const std::uintptr_t hit = api::memory::find_unique(s.expected.data() + b, n - b);
-        if (hit == 0 || hit < b) continue;
-        const std::uintptr_t cand = hit - b;
-        Site trial = s;
-        if (!accept_foreign(trial, cand, /*build_bound=*/false)) continue;
-        if (found != 0 && found != cand) return 0;   // two different answers: refuse
-        found = cand;
-        s = std::move(trial);
-    }
-    return found;
-}
-
-// The masked-pattern twin of scan_foreign, for hook-manifest sites.
-std::uintptr_t scan_foreign_pattern(Site& s) {
-    const std::size_t n = s.pattern.size();
-    if (n == 0 || s.pattern_mask.size() != n) return 0;
-    static constexpr std::size_t kStubLengths[] = {2, 5, 6, 7, 12, 13, 14};
-    std::uintptr_t found = 0;
-    std::vector<std::size_t> seen;
-    for (std::size_t len : kStubLengths) {
-        const std::size_t b = foreign::boundary_after(s.pattern.data(), n, len);
-        if (b == 0 || std::find(seen.begin(), seen.end(), b) != seen.end()) continue;
-        seen.push_back(b);
-        // scan_masked buckets on the first byte, so the tail must start on a
-        // fixed byte; skip leading wildcards and count only fixed bytes.
-        std::size_t start = b;
-        while (start < n && s.pattern_mask[start] != 0xFF) ++start;
-        std::size_t fixed = 0;
-        for (std::size_t j = start; j < n; ++j) fixed += s.pattern_mask[j] == 0xFF;
-        if (start >= n || fixed < foreign::kMinTail) continue;
-        const api::memory::MaskedPattern tail{s.pattern.data() + start, s.pattern_mask.data() + start, n - start};
-        const std::vector<api::memory::MaskedHit> hits = api::memory::scan_masked({tail});
-        if (hits.empty() || hits[0].count != 1 || hits[0].first < start) continue;
-        const std::uintptr_t cand = hits[0].first - start;
-        if (!platform::is_readable(reinterpret_cast<const void*>(cand), n)) continue;
-        foreign::Stub stub;
-        const auto* live = reinterpret_cast<const std::uint8_t*>(cand);
-        if (!foreign::decode_stub(live, n, cand, stub, kX64)) continue;
-        if (foreign::boundary_after(s.pattern.data(), n, stub.length) != b) continue;
-        bool filler_ok = true;
-        for (std::size_t j = stub.length; j < b; ++j) {
-            const bool original = ((live[j] ^ s.pattern[j]) & s.pattern_mask[j]) == 0;
-            if (!original && live[j] != 0xCC && live[j] != 0x90) { filler_ok = false; break; }
-        }
-        if (!filler_ok) continue;
-        if (found != 0 && found != cand) return 0;
-        found = cand;
-        s.foreign_patched = true;
-        s.foreign_evidence = 'B';
-        s.foreign_stub = stub;
-        s.foreign_boundary = b;
-    }
-    return found;
-}
-
 }  // namespace
 
 // ---------------------------------------------------------------------------
@@ -1043,7 +912,6 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         s.bound_from_pattern = false;
         s.addr = 0;
         s.locate_error.clear();
-        clear_foreign(s);
         if (s.pattern_mask.size() != s.pattern.size()) {
             s.locate_error = "no_locator";
             continue;
@@ -1066,24 +934,6 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
             s.bound_from_scan = s.resolved;
             s.bound_from_pattern = s.resolved;
         }
-        // A pattern with no hit at all may be a site whose head another
-        // module's detour replaced. Retry with the head masked out: the
-        // surviving tail locates the site (unique or nothing), then the head
-        // must decode as a detour stub. Never for "ambiguous" -- more hits are
-        // not fixed by masking more bytes.
-        if (foreign::policy() == foreign::Policy::Chain) {
-            for (Site* sp : batch_sites) {
-                Site& s = *sp;
-                if (s.resolved || s.locate_error != "missing") continue;
-                const std::uintptr_t live = scan_foreign_pattern(s);
-                if (live == 0) continue;
-                s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(live) - delta);
-                s.resolved = s.addr != 0;
-                s.bound_from_scan = s.resolved;
-                s.bound_from_pattern = s.resolved;
-                if (s.resolved) s.locate_error.clear();
-            }
-        }
     }
 
     for (Site& s : sites_) {
@@ -1100,7 +950,6 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         }
         if (s.expected.empty()) continue;
 
-        clear_foreign(s);
         const std::uintptr_t hint = (s.addr == 0) ? 0
             : static_cast<std::uintptr_t>(static_cast<std::intptr_t>(s.addr) + delta);
         if (hint != 0 &&
@@ -1111,29 +960,13 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         }
 
         const std::uintptr_t hit = api::memory::find_unique(s.expected.data(), s.expected.size());
-        if (hit != 0) {
-            s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hit) - delta);
-            s.resolved = s.addr != 0;
-            s.bound_from_scan = s.resolved;
+        if (hit == 0) {
+            s.resolved = false;
             continue;
         }
-
-        // Exact bytes are nowhere. Before refusing, ask whether another
-        // module's detour replaced the head (hooks/foreign.hpp). The recorded
-        // address first -- it comes from a table this executable's hash
-        // selected, so it may carry evidence D -- then a scan by the surviving
-        // tail.
-        s.resolved = false;
-        if (foreign::policy() != foreign::Policy::Chain) continue;
-        if (hint != 0 && accept_foreign(s, hint, /*build_bound=*/true)) {
-            s.resolved = true;
-            continue;
-        }
-        if (const std::uintptr_t live = scan_foreign(s); live != 0) {
-            s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(live) - delta);
-            s.resolved = s.addr != 0;
-            s.bound_from_scan = s.resolved;
-        }
+        s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hit) - delta);
+        s.resolved = s.addr != 0;
+        s.bound_from_scan = s.resolved;
     }
 }
 
@@ -1222,43 +1055,8 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
         // generator read the site's prologue straight out of a plaintext
         // reference image, so it is both wider and less likely to be stale
         // than a pattern typed at a call site.
-        std::vector<std::uint8_t> expect =
+        const std::vector<std::uint8_t>& expect =
             !p.site->expected.empty() ? p.site->expected : p.request->expect;
-
-        // Chaining over another module's detour (hooks/foreign.hpp). Our
-        // engine displaces whole instructions into its trampoline and
-        // re-aims relative jumps, so the other hook's stub moves into our
-        // trampoline and keeps working: game -> ours -> theirs -> original.
-        // What the engine verifies is what is there NOW: the stub as found,
-        // then the original tail resolve_from_signatures already proved.
-        if (p.site->foreign_patched) {
-            const std::size_t stub = p.site->foreign_stub.length;
-            const std::size_t boundary = p.site->foreign_boundary;
-            const auto* live = reinterpret_cast<const std::uint8_t*>(p.addr);
-            const bool readable =
-                !expect.empty() && boundary <= expect.size() &&
-                platform::is_readable(live, expect.size());
-            // Our jump must end on an instruction boundary of the CURRENT
-            // code. When the other stub is shorter than our jump, the bytes
-            // after it up to the original boundary must be filler (each a
-            // one-byte instruction); a half-overwritten original instruction
-            // there cannot be displaced safely.
-            bool safe = readable && stub > 0;
-            if (safe && stub < kOurPatchSize) {
-                for (std::size_t j = stub; j < boundary && j < expect.size(); ++j)
-                    if (live[j] != 0xCC && live[j] != 0x90) { safe = false; break; }
-            }
-            if (!safe) {
-                error = "site \"" + p.request->site + "\" is already detoured by another module (" +
-                        foreign::describe(p.site->foreign_stub) +
-                        ") in a way that cannot be chained safely";
-                uninstall();
-                return false;
-            }
-            for (std::size_t j = 0; j < boundary; ++j) expect[j] = live[j];
-            platform::log(platform::LogLevel::Info, "chaining %s over another module's detour: %s",
-                          p.request->site.c_str(), foreign::describe(p.site->foreign_stub).c_str());
-        }
 
         const HookStatus st = detour->install(
             reinterpret_cast<void*>(p.addr), p.request->detour,

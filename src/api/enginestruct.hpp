@@ -45,7 +45,6 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 #include <string>
 
 #include <cstddef>
@@ -170,15 +169,6 @@ struct VmSites {
     bool layout_resolved = false;
 
     std::uintptr_t execute_command    = 0;   // vm.execute_command
-    // Set when another module's detour replaced ExecuteCommand's head
-    // (hooks/foreign.hpp). Calls still go through the live entry -- that is
-    // what keeps the other module working -- but the bound is no longer
-    // readable there. `execute_command_head` is the first original byte still
-    // in place; `execute_command_prologue` the displaced original
-    // instructions when they were found relocated (empty otherwise).
-    bool           execute_command_foreign = false;
-    std::size_t    execute_command_head    = 0;
-    std::vector<std::uint8_t> execute_command_prologue;
     std::uintptr_t stack_push_integer = 0;   // vm.stack_push_integer
     std::uintptr_t stack_pop_integer  = 0;   // vm.stack_pop_integer
     std::uintptr_t stack_push_float   = 0;   // vm.stack_push_float

@@ -14,7 +14,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 
 namespace kp::platform {
 
@@ -53,29 +52,6 @@ bool is_readable(const void* addr, std::size_t len);
 // here because the contract "we wrote code, now it may be executed" should be
 // stated in one place rather than assumed by every caller.
 void flush_instruction_cache(void* addr, std::size_t len);
-
-// Executable memory that no loaded module's image owns: pages a module
-// allocated for code at run time. Hooking libraries put their trampolines
-// there (MinHook and Detours VirtualAlloc them; on POSIX they are anonymous
-// mappings), so this is where hooks/foreign.hpp looks for a function's
-// displaced original instructions. Module images (the game, system DLLs) are
-// deliberately left out: they hold no trampolines, and walking them would
-// read memory another thread may be unloading. Never used to choose an
-// address to patch.
-struct ExecRegion {
-    std::uintptr_t va   = 0;
-    std::size_t    size = 0;
-};
-// Committed, readable, executable private/anonymous regions, sorted by
-// address. On macOS, where image and private mappings are not told apart
-// cheaply, every executable region. Empty when the platform cannot
-// enumerate; callers treat that as "no evidence".
-std::vector<ExecRegion> executable_regions();
-
-// File name (no directory) of the loaded module containing `addr`, for log
-// lines that say WHO patched a site. False for anonymous memory or when the
-// platform cannot tell; `out` is then an empty string.
-bool module_name_of(const void* addr, char* out, std::size_t out_len);
 
 // Base address of a loaded module. A null or empty name means the main
 // executable -- swkotor.exe under Wine, the kotor2 ELF natively, the

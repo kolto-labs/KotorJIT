@@ -215,46 +215,4 @@ void format_host_identity(const HostIdentity& id, char* out, std::size_t len) {
                   id.overlays[0] ? id.overlays : "-");
 }
 
-std::vector<ExecRegion> executable_regions() {
-    std::vector<ExecRegion> out;
-    SYSTEM_INFO si{};
-    ::GetSystemInfo(&si);
-    auto cursor = static_cast<const std::uint8_t*>(si.lpMinimumApplicationAddress);
-    const auto* end = static_cast<const std::uint8_t*>(si.lpMaximumApplicationAddress);
-    const DWORD exec_mask = PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;
-    while (cursor < end) {
-        MEMORY_BASIC_INFORMATION info{};
-        if (::VirtualQuery(cursor, &info, sizeof(info)) == 0) break;
-        const auto* base = static_cast<const std::uint8_t*>(info.BaseAddress);
-        if (info.State == MEM_COMMIT && info.Type == MEM_PRIVATE && (info.Protect & exec_mask) != 0 &&
-            (info.Protect & (PAGE_GUARD | PAGE_NOACCESS)) == 0) {
-            out.push_back({reinterpret_cast<std::uintptr_t>(base), info.RegionSize});
-        }
-        const auto* next = base + info.RegionSize;
-        if (next <= cursor) break;   // wrapped; stop rather than loop forever
-        cursor = next;
-    }
-    return out;
-}
-
-bool module_name_of(const void* addr, char* out, std::size_t out_len) {
-    if (out == nullptr || out_len == 0) return false;
-    out[0] = '\0';
-    HMODULE m = nullptr;
-    if (addr == nullptr ||
-        !::GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-                                  GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                              static_cast<LPCSTR>(addr), &m) ||
-        m == nullptr)
-        return false;
-    char path[MAX_PATH] = {0};
-    const DWORD n = ::GetModuleFileNameA(m, path, sizeof path);
-    if (n == 0) return false;
-    const char* name = path;
-    for (const char* p = path; *p; ++p)
-        if (*p == '\\' || *p == '/') name = p + 1;
-    std::snprintf(out, out_len, "%s", name);
-    return *out != '\0';
-}
-
 }  // namespace kp::platform

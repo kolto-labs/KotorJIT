@@ -29,7 +29,6 @@
 #include <string>
 #include <utility>
 
-#include <dlfcn.h>
 #include <mach-o/dyld.h>
 #include <mach-o/loader.h>
 #include <mach/mach.h>
@@ -194,36 +193,6 @@ DarwinHost darwin_host() {
 void format_darwin_host(const DarwinHost& h, char* out, std::size_t len) {
     std::snprintf(out, len, "host: os=macos-%s model=%s rosetta=%s arch=x86_64", h.os_version,
                   h.hw_model, h.translated ? "yes" : "no");
-}
-
-std::vector<ExecRegion> executable_regions() {
-    std::vector<ExecRegion> out;
-    mach_vm_address_t address = 0;
-    for (;;) {
-        mach_vm_size_t size = 0;
-        vm_region_basic_info_data_64_t info{};
-        mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
-        mach_port_t object = MACH_PORT_NULL;
-        const kern_return_t kr = mach_vm_region(mach_task_self(), &address, &size, VM_REGION_BASIC_INFO_64,
-                                                reinterpret_cast<vm_region_info_t>(&info), &count, &object);
-        if (kr != KERN_SUCCESS) break;
-        if ((info.protection & VM_PROT_EXECUTE) != 0 && (info.protection & VM_PROT_READ) != 0)
-            out.push_back({static_cast<std::uintptr_t>(address), static_cast<std::size_t>(size)});
-        address += size;
-    }
-    return out;
-}
-
-bool module_name_of(const void* addr, char* out, std::size_t out_len) {
-    if (out == nullptr || out_len == 0) return false;
-    out[0] = '\0';
-    Dl_info info{};
-    if (addr == nullptr || ::dladdr(addr, &info) == 0 || info.dli_fname == nullptr) return false;
-    const char* name = std::strrchr(info.dli_fname, '/');
-    name = name ? name + 1 : info.dli_fname;
-    if (*name == '\0') return false;
-    std::snprintf(out, out_len, "%s", name);
-    return true;
 }
 
 }  // namespace kp::platform

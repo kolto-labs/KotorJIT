@@ -92,14 +92,6 @@ struct LoadResult {
     std::string           text_sha256;   // of the deciphered code section
     unsigned              waited_ms = 0;
     std::string           detail;        // human-readable failure explanation
-    // PlaintextMismatch for the one reason another module can cause: the build
-    // was identified by the executable's own sha256, the image sits at its
-    // preferred base and the code section read back in full -- it just does not
-    // hash to the reference, because something patched it in memory (another
-    // mod's detours). Everything else in the result is filled in. Whether to
-    // proceed, and then verify every site individually, is the caller's policy
-    // (hooks/foreign.hpp); image/ itself still reports the mismatch.
-    bool                  text_modified_in_memory = false;
 };
 
 // The whole load-time sequence, in order:
