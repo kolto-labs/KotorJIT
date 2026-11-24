@@ -34,6 +34,21 @@ if(UNIX AND NOT WIN32)
     add_test(NAME kp_routinetest COMMAND kp_routinetest)
     set_tests_properties(kp_routinetest PROPERTIES
         ENVIRONMENT "HYPERSTIM_NO_AUTOSTART=1")
+
+    # Coexistence with other modules' hooks (hooks/foreign.hpp): stub decoding,
+    # tolerant matching, evidence B/C/D resolution, chaining in front of a
+    # simulated MinHook-style detour, and the dispatcher bound read from a
+    # relocated prologue. Links the production runtime, like kp_routinetest.
+    add_executable(kp_foreigntest "${KP_API_SRC_ROOT}/../tools/kp_foreigntest.cpp")
+    target_include_directories(kp_foreigntest PRIVATE
+        "${KP_API_SRC_ROOT}" "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
+    target_compile_options(kp_foreigntest PRIVATE -m32 -Wall -Wextra)
+    target_link_options(kp_foreigntest PRIVATE -m32)
+    add_dependencies(kp_foreigntest hyperstim)
+    target_link_libraries(kp_foreigntest PRIVATE hyperstim "${KP_ROUTINE_LUAJIT}" m dl)
+    add_test(NAME kp_foreigntest COMMAND kp_foreigntest)
+    set_tests_properties(kp_foreigntest PROPERTIES
+        LABELS "offline;hooks" ENVIRONMENT "HYPERSTIM_NO_AUTOSTART=1")
 endif()
 
 # --- structs ---

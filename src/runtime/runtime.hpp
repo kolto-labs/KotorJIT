@@ -50,6 +50,11 @@ struct Config {
     std::string script_dir;    // defaults to <data_dir>/scripts
     std::string log_path;      // defaults to <game_dir>/hyperstim.log
     unsigned    error_budget = 8;
+    // What to do when another module has already detoured a site Hyperstim
+    // needs: "chain" (default) binds it on evidence and hooks on top of it;
+    // "refuse" keeps the strict exact-bytes behaviour. hooks/foreign.hpp.
+    // ini key `foreign_patches`, env HYPERSTIM_FOREIGN_PATCHES (env wins).
+    std::string foreign_patches = "chain";
     bool        hot_reload = true;
     multiplayer::Role role = multiplayer::Role::Embedded;
     std::string multiplayer_host = "127.0.0.1";

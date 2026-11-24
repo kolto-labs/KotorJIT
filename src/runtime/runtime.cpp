@@ -288,6 +288,10 @@ const events::EventContract* find_contract(std::string_view lua_name) {
     return events::find(lua_name);
 }
 
+static void apply_foreign_env(Config& c) {
+    if (const char* v = naming::env("FOREIGN_PATCHES"); v != nullptr) c.foreign_patches = v;
+}
+
 static bool is_directory(const std::string& path) {
     struct stat st {};
     return ::stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
@@ -318,6 +322,7 @@ Config Config::from_game_dir(const std::string& game_dir) {
     if (f == nullptr) f = std::fopen(join(game_dir, naming::kLegacyIniName).c_str(), "rb");
     apply_harness_env(c);
     apply_multiplayer_env(c);
+    apply_foreign_env(c);
     if (f == nullptr) return c;   // optional, and its absence is not a problem
 
     char line[1024];
@@ -339,6 +344,7 @@ Config Config::from_game_dir(const std::string& game_dir) {
         else if (key == "log_path")     c.log_path = resolve_against(game_dir, val);
         else if (key == "error_budget") c.error_budget = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
         else if (key == "hot_reload")   c.hot_reload = truthy(val);
+        else if (key == "foreign_patches") c.foreign_patches = val;
         // [harness] keys. Sections are ignored above, so these are global.
         else if (key == "harness_port") c.harness_port = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
         else if (key == "harness_bind") c.harness_bind = val;
@@ -348,6 +354,7 @@ Config Config::from_game_dir(const std::string& game_dir) {
     std::fclose(f);
     apply_harness_env(c);
     apply_multiplayer_env(c);
+    apply_foreign_env(c);
     return c;
 }
 
@@ -446,10 +453,26 @@ bool Runtime::await_and_verify(const Config& cfg) {
     log("classifying and, if encrypted, waiting for the code section to decipher");
 
     const image::LoadResult r = image::load(exe);
-    if (r.status != image::LoadStatus::Ok) {
+    // The one mismatch another mod can cause -- the build is identified by the
+    // executable's own hash, the image is at its preferred base, and only the
+    // in-memory code differs -- is survivable under the chain policy: every
+    // site is then verified on its own, exactly or on foreign-patch evidence,
+    // before a byte is written (hooks/foreign.hpp). Anything else still stops.
+    const bool tolerated = r.status == image::LoadStatus::PlaintextMismatch &&
+                           r.text_modified_in_memory && r.identity.recognised &&
+                           hooks::foreign::policy() == hooks::foreign::Policy::Chain;
+    if (r.status != image::LoadStatus::Ok && !tolerated) {
         failure_ = std::string("image: ") + image::to_string(r.status);
         if (!r.detail.empty()) failure_ += " -- " + r.detail;
+        if (r.text_modified_in_memory)
+            failure_ += " (another module patched the code; foreign_patches=refuse forbids continuing)";
         return false;
+    }
+    if (tolerated) {
+        log("code section differs from the reference: %s", r.detail.c_str());
+        log("continuing: the build is identified by its file hash and another module has patched "
+            "the code in memory; every hook site is verified individually instead "
+            "(set foreign_patches = refuse to stop here)");
     }
 
     build_ = r.identity.build_alias;
@@ -458,7 +481,7 @@ bool Runtime::await_and_verify(const Config& cfg) {
 
     log("build: %s (image base 0x%08lx, waited %ums)", build_.c_str(),
         static_cast<unsigned long>(runtime_base_), r.waited_ms);
-    log("code section verified: %s", r.text_sha256.c_str());
+    if (!tolerated) log("code section verified: %s", r.text_sha256.c_str());
     std::vector<api::memory::ScanRegion> regions;
     for (const image::Section& s : r.sections) {
         if (!s.executable) continue;
@@ -579,6 +602,16 @@ bool Runtime::resolve(const Config& cfg) {
         }
     }
     log("signature resolve: %zu/%zu sites bound (VA is a hint)", bound, table->sites().size());
+    for (const hooks::Site& s : table->sites()) {
+        if (!s.foreign_patched) continue;
+        const char* why = s.foreign_evidence == 'B' ? "the original bytes after it are intact"
+                        : s.foreign_evidence == 'C' ? "its displaced original was found relocated"
+                                                    : "it sits at this build's recorded address";
+        log("foreign patch: %s is already detoured by another module (%s); bound because %s%s",
+            s.name.c_str(), hooks::foreign::describe(s.foreign_stub).c_str(), why,
+            s.kind == hooks::SiteKind::Detour ? "; Hyperstim will chain in front of it"
+                                              : "; calls go through it, so that module keeps working");
+    }
     if (table->scan_only()) {
         log("pattern resolve: %zu missing, %zu ambiguous (refused, left unbound)",
             missing_pattern, ambiguous_pattern);
@@ -821,6 +854,12 @@ bool Runtime::install(bool multiplayer_enabled) {
             return (s != nullptr && s->resolved) ? s->addr : 0;
         };
         sites.execute_command    = at("vm.execute_command");
+        if (const hooks::Site* ec = table_->find("vm.execute_command");
+            ec != nullptr && ec->resolved && ec->foreign_patched) {
+            sites.execute_command_foreign = true;
+            sites.execute_command_head = ec->foreign_boundary;
+            sites.execute_command_prologue = ec->original_prologue;
+        }
         sites.stack_push_integer = at("vm.stack_push_integer");
         sites.stack_pop_integer  = at("vm.stack_pop_integer");
         sites.stack_push_float   = at("vm.stack_push_float");
@@ -1019,6 +1058,17 @@ bool Runtime::start(const Config& cfg) {
         dd.compare(dd.size() - std::strlen(naming::kLegacyDataDir), std::string::npos, naming::kLegacyDataDir) == 0)
         log("note: using the legacy data folder %s (KotorPhasor was renamed to Hyperstim); "
             "renaming it to '%s' is optional and changes nothing else", dd.c_str(), naming::kDataDir);
+
+    // Before identify(): await_and_verify() and resolve() both consult it.
+    {
+        hooks::foreign::Policy p = hooks::foreign::Policy::Chain;
+        if (!hooks::foreign::parse_policy(cfg.foreign_patches, p))
+            log("foreign_patches = '%s' is not chain or refuse; using chain", cfg.foreign_patches.c_str());
+        hooks::foreign::set_policy(p);
+        log("foreign patches: %s (hooks other modules installed first are %s)",
+            hooks::foreign::to_string(p),
+            p == hooks::foreign::Policy::Chain ? "bound on evidence and chained" : "refused");
+    }
 
     // Before anything can fault: the guard has to be in place before the first
     // hook body can run, and installing it is free when nothing faults.

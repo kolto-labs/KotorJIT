@@ -30,6 +30,7 @@
 #include <string_view>
 #include <vector>
 
+#include "hooks/foreign.hpp"
 #include "hooks/native_detour.hpp"
 
 namespace kp::hooks {
@@ -105,6 +106,21 @@ struct Site {
     // site with neither a valid pattern nor unique expected bytes). Empty
     // when resolved or never scanned.
     std::string    locate_error;
+
+    // Another module's detour sits at the head of this site (hooks/foreign.hpp).
+    // Set only by resolve_from_signatures under Policy::Chain.
+    bool           foreign_patched = false;
+    // Which evidence bound it: 'B' stub + intact tail, 'C' the displaced
+    // original found relocated, 'D' recorded VA of a build-selected table.
+    char           foreign_evidence = 0;
+    foreign::Stub  foreign_stub;
+    // First byte of `expected` (or `pattern`) that is still original at the site.
+    std::size_t    foreign_boundary = 0;
+    // Where the displaced original instructions were found (evidence C), and a
+    // copy of them, so facts read from a prologue -- the dispatcher bound --
+    // survive the head being replaced. Empty / 0 when not found.
+    std::uintptr_t relocated_prologue = 0;
+    std::vector<std::uint8_t> original_prologue;
 };
 
 // A parsed data/addresses/<build>.json, or an AgentDecompile hook pack

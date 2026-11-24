@@ -63,9 +63,14 @@ script_dir = hyperstim/scripts
 log_path = hyperstim.log
 error_budget = 8
 hot_reload = true
+foreign_patches = chain
 ```
 
 Paths are relative to the game directory. `error_budget` is how many errors a script may raise before it is unloaded. `hot_reload` re-reads changed `.lua` files about once a second.
+
+`foreign_patches` decides what happens when another mod (K1SE, KPM, an overlay) has already hooked a function Hyperstim needs. `chain` (the default) checks the function is still the right one and hooks in front of the other mod, so both work. Every such site gets a `foreign patch:` line in `hyperstim.log` naming the module that patched it. `refuse` restores the old strict behaviour: Hyperstim stops at the first patched site. Use it to check whether a conflict is the cause of a problem. The environment variable `HYPERSTIM_FOREIGN_PATCHES` overrides the ini.
+
+Upgrading from KotorPhasor: an existing `kotorphasor/` folder, `kotorphasor.ini` and `KOTORPHASOR_*` variables keep working. The install scripts move the folder to `hyperstim/` for you.
 
 ## First check
 

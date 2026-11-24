@@ -10,6 +10,7 @@
 #include <string>
 #include <utility>
 
+#include <dlfcn.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -152,6 +153,42 @@ std::uintptr_t module_base(const char* name) {
 
     std::fclose(f);
     return found;
+}
+
+std::vector<ExecRegion> executable_regions() {
+    std::vector<ExecRegion> out;
+    std::FILE* f = std::fopen("/proc/self/maps", "r");
+    if (f == nullptr) return out;
+    char line[512];
+    while (std::fgets(line, sizeof line, f) != nullptr) {
+        unsigned long lo = 0, hi = 0, offset = 0, inode = 0;
+        char perms[8] = {0};
+        char dev[16] = {0};
+        int path_at = 0;
+        if (std::sscanf(line, "%lx-%lx %7s %lx %15s %lu %n", &lo, &hi, perms, &offset, dev, &inode,
+                        &path_at) < 6)
+            continue;
+        if (perms[0] != 'r' || perms[2] != 'x' || hi <= lo) continue;
+        // Anonymous only: no backing file (inode 0) and no [vdso]/[vsyscall]
+        // pseudo-path. File-backed code is some module's image.
+        const char* path = path_at > 0 ? line + path_at : "";
+        if (inode != 0 || path[0] == '[') continue;
+        out.push_back({static_cast<std::uintptr_t>(lo), static_cast<std::size_t>(hi - lo)});
+    }
+    std::fclose(f);
+    return out;   // /proc/self/maps is already sorted by address
+}
+
+bool module_name_of(const void* addr, char* out, std::size_t out_len) {
+    if (out == nullptr || out_len == 0) return false;
+    out[0] = '\0';
+    Dl_info info{};
+    if (addr == nullptr || ::dladdr(addr, &info) == 0 || info.dli_fname == nullptr) return false;
+    const char* name = std::strrchr(info.dli_fname, '/');
+    name = name ? name + 1 : info.dli_fname;
+    if (*name == '\0') return false;
+    std::snprintf(out, out_len, "%s", name);
+    return true;
 }
 
 }  // namespace kp::platform

@@ -504,6 +504,8 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
             // merely reported.
             r.detail += "; the image is at 0x" + std::to_string(r.image_base) +
                         " rather than its preferred base, so .text was rebased";
+        } else {
+            r.text_modified_in_memory = true;
         }
         return r;
     }

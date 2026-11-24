@@ -17,6 +17,7 @@ set(KP_TOOLS_DIR     "${CMAKE_CURRENT_LIST_DIR}/../../tools")
 add_library(kp_hooks STATIC
     "${KP_HOOKS_DIR}/trampoline.cpp"
     "${KP_HOOKS_DIR}/registry.cpp"
+    "${KP_HOOKS_DIR}/foreign.cpp"
     "${KP_PLATFORM_DIR}/platform.cpp"
 )
 
@@ -117,6 +118,7 @@ if(KP_MINGW_CXX)
     set(KP_HOOKS_WIN32_SOURCES
         "${KP_HOOKS_DIR}/trampoline.cpp"
         "${KP_HOOKS_DIR}/registry.cpp"
+        "${KP_HOOKS_DIR}/foreign.cpp"
         "${KP_PLATFORM_DIR}/platform.cpp"
         "${KP_PLATFORM_DIR}/platform_win32.cpp"
     )
