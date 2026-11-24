@@ -48,6 +48,7 @@ mapfile -t SRCS < <(cd "$ROOT" && find src -name '*.cpp' \
   ! -path 'src/platform/platform_win32.cpp' \
   ! -path 'src/platform/platform_linux.cpp' \
   ! -path 'src/proxy/*' \
+  ! -path 'src/launcher/*' \
   ! -path 'src/hooks/trampoline.cpp' \
   ! -path 'src/hooks/arm32/*' \
   ! -path 'src/harness/engine_k1.cpp' \

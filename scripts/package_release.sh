@@ -21,13 +21,17 @@ die() { echo "package_release: $*" >&2; exit 1; }
 [[ -f "$BUILD/binkw32.dll" ]] || die "missing $BUILD/binkw32.dll — build first"
 
 rm -rf "$STAGE"
-mkdir -p "$STAGE"/{bin,data,docs/user,scripts,examples}
+mkdir -p "$STAGE"/{bin,data,docs/user,scripts/install/windows,tools,examples}
 
 install -m644 "$BUILD/scriptforge.dll" "$STAGE/bin/scriptforge.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/bin/binkw32.dll"
 # Flat copies at package root so install_to_game.sh can treat STAGE as build-dir.
 install -m644 "$BUILD/scriptforge.dll" "$STAGE/scriptforge.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/binkw32.dll"
+if [[ -f "$BUILD/scriptforge-launch.exe" ]]; then
+  install -m755 "$BUILD/scriptforge-launch.exe" "$STAGE/bin/scriptforge-launch.exe"
+  install -m755 "$BUILD/scriptforge-launch.exe" "$STAGE/scriptforge-launch.exe"
+fi
 if [[ -f "$BUILD/libscriptforge.so" ]]; then
   install -m644 "$BUILD/libscriptforge.so" "$STAGE/bin/libscriptforge.so"
   install -m644 "$BUILD/libscriptforge.so" "$STAGE/libscriptforge.so"
@@ -35,6 +39,9 @@ fi
 
 install -m755 "$ROOT/scripts/install_to_game.sh" "$STAGE/install_to_game.sh"
 install -m755 "$ROOT/scripts/install_to_game.sh" "$STAGE/scripts/install_to_game.sh"
+install -m644 "$ROOT/scripts/install/windows/Install-ScriptForge.ps1" "$STAGE/Install-ScriptForge.ps1"
+install -m644 "$ROOT/scripts/install/windows/Install-ScriptForge.ps1" "$STAGE/scripts/install/windows/Install-ScriptForge.ps1"
+install -m755 "$ROOT/tools/elf_needed.py" "$STAGE/tools/elf_needed.py"
 
 cp -a "$ROOT/data/addresses" "$STAGE/data/addresses"
 if [[ -d "$ROOT/data/profiles" ]]; then
@@ -48,6 +55,8 @@ cp -a "$ROOT/scripts/examples/cursed" "$STAGE/examples/cursed"
 install -m644 "$ROOT/README.md" "$STAGE/README.md"
 install -m644 "$ROOT/CONTRIBUTING.md" "$STAGE/CONTRIBUTING.md"
 install -m644 "$ROOT/docs/user/install.md" "$STAGE/docs/user/install.md"
+[[ -f "$ROOT/docs/user/windows-native-install.md" ]] && install -m644 "$ROOT/docs/user/windows-native-install.md" "$STAGE/docs/user/windows-native-install.md"
+[[ -f "$ROOT/docs/user/macos-install.md" ]] && install -m644 "$ROOT/docs/user/macos-install.md" "$STAGE/docs/user/macos-install.md"
 [[ -f "$ROOT/LICENSE" ]] && install -m644 "$ROOT/LICENSE" "$STAGE/LICENSE"
 [[ -f "$ROOT/ATTRIBUTION.md" ]] && install -m644 "$ROOT/ATTRIBUTION.md" "$STAGE/ATTRIBUTION.md"
 [[ -f "$ROOT/CHANGELOG.md" ]] && install -m644 "$ROOT/CHANGELOG.md" "$STAGE/CHANGELOG.md"

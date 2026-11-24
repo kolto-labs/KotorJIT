@@ -189,6 +189,9 @@ endif()
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
 
+# Windows 32-bit runtime-injection launcher (alternative to the binkw32 proxy).
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/launcher.cmake)
+
 if(UNIX AND NOT WIN32)
     add_executable(kp_projectilestest tools/kp_projectilestest.cpp src/api/projectiles.cpp
         src/api/projectiles_lua.cpp src/api/projectiles_entry.cpp ${KP_LUAJIT_LINUX_LIB})

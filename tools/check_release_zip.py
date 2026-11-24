@@ -18,6 +18,11 @@ REQUIRED_SUFFIXES = (
     "/CONTRIBUTING.md",
 )
 
+ALLOWED_EXE_SUFFIXES = (
+    "/scriptforge-launch.exe",
+    "/bin/scriptforge-launch.exe",
+)
+
 FORBIDDEN_SUBSTRINGS = (
     "corpus.sqlite",
     "scriptforge.log",
@@ -52,8 +57,9 @@ def check(path: Path) -> list[str]:
             for bad in FORBIDDEN_SUBSTRINGS:
                 if bad in low:
                     errs.append(f"forbidden member: {n}")
-            # Game PE payloads must never ship; our proxy binkw32.dll is allowed by name.
-            if low.endswith(".exe") or low.endswith(".app/") or "/swkotor" in low:
+            # Game PE payloads must never ship; our proxy binkw32.dll and launcher are allowed by name.
+            exe_allowed = any(low.endswith(s) for s in ALLOWED_EXE_SUFFIXES)
+            if (low.endswith(".exe") and not exe_allowed) or low.endswith(".app/") or "/swkotor" in low:
                 errs.append(f"forbidden game path: {n}")
     return errs
 

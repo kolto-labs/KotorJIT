@@ -68,4 +68,36 @@ const BuildRecord* lookup_build(const std::string& sha256) {
     return nullptr;
 }
 
+const BuildRecord* lookup_build_by_text(Format fmt, const std::string& section,
+                                        const std::string& text_sha256) {
+    if (section.empty() || text_sha256.empty()) return nullptr;
+    if (fmt != Format::Elf32 && fmt != Format::MachO) return nullptr;
+
+    const BuildRecord* match = nullptr;
+    auto scan = [&](const BuildRecord* tbl, std::size_t count) -> bool {
+        for (std::size_t i = 0; i < count; ++i) {
+            const BuildRecord& rec = tbl[i];
+            if (rec.format != fmt || rec.encrypted) continue;
+            for (std::size_t j = 0; j < rec.text_count; ++j) {
+                if (section == rec.texts[j].section && text_sha256 == rec.texts[j].sha256) {
+                    if (match == nullptr) {
+                        match = &rec;
+                    } else if (std::string(match->alias) != rec.alias) {
+                        return false;
+                    }
+                    break;
+                }
+            }
+        }
+        return true;
+    };
+
+    std::size_t n = 0;
+    const BuildRecord* primary = build_table(n);
+    if (!scan(primary, n)) return nullptr;
+    const BuildRecord* macho = macho_build_table(n);
+    if (!scan(macho, n)) return nullptr;
+    return match;
+}
+
 }  // namespace kp::image
