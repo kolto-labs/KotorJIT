@@ -1,4 +1,4 @@
-# Hyperstim's actual build, not the generic starter template this file
+# ScriptForge's actual build, not the generic starter template this file
 # began as. Both game targets are 32-bit (see CMakeLists.txt's header), and
 # the "Windows half" is cross-compiled from Linux with mingw-w64 rather than
 # built natively with MSVC -- there is no MSVC-compatible code path anywhere
@@ -42,10 +42,10 @@ jobs:
 
     - name: Install 32-bit and mingw-w64 toolchains
       # gcc-multilib/g++-multilib: the native halves (kp_image, kp_hooks,
-      # libhyperstim.so, every native test tool) are all built -m32, and
+      # libscriptforge.so, every native test tool) are all built -m32, and
       # ubuntu-latest's default g++/clang++ only carry 64-bit headers.
       # g++-mingw-w64-i686 + binutils-mingw-w64-i686: cross-compiles
-      # hyperstim.dll and the proxy binkw32.dll.
+      # scriptforge.dll and the proxy binkw32.dll.
       # luajit: configure-time find_program(... REQUIRED) in CMakeLists.txt,
       # src/api/api_luajit.cmake; the example, model
       # and animation tests run under it. lua5.1: kpharness_world_test runs
@@ -59,17 +59,17 @@ jobs:
     - name: Fetch LuaJIT
       # Not a submodule -- third_party/ is gitignored, same as a developer's
       # own checkout per docs/user/install.md. CMake's own custom command
-      # copies this tree and builds it natively for libhyperstim.so; the
-      # Windows-target build below is needed separately for hyperstim.dll,
+      # copies this tree and builds it natively for libscriptforge.so; the
+      # Windows-target build below is needed separately for scriptforge.dll,
       # which links a prebuilt PE archive rather than building one itself.
       run: git clone --branch v2.1 --depth 1 https://github.com/LuaJIT/LuaJIT third_party/luajit
 
     - name: Build LuaJIT for the Windows target
       # BUILDMODE=static matters: without it this only produces lua51.dll,
       # not libluajit.a, and CMakeLists' guard on that file silently skips
-      # hyperstim.dll rather than failing loudly. docs/user/install.md was
+      # scriptforge.dll rather than failing loudly. docs/user/install.md was
       # missing this flag too, until this same investigation caught it --
-      # the documented recipe would never have produced hyperstim.dll either.
+      # the documented recipe would never have produced scriptforge.dll either.
       run: |
         make -C third_party/luajit \
           HOST_CC="gcc -m32" CROSS=i686-w64-mingw32- TARGET_SYS=Windows BUILDMODE=static

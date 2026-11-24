@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
-# Stage a redistributable Hyperstim package from artifacts that already work.
+# Stage a redistributable ScriptForge package from artifacts that already work.
 #
 #   ./scripts/package_release.sh [build-dir]
 #
-# Requires build/hyperstim.dll and build/binkw32.dll. Optionally includes
-# libhyperstim.so when present. Emits dist/hyperstim-<version>.zip and prints
+# Requires build/scriptforge.dll and build/binkw32.dll. Optionally includes
+# libscriptforge.so when present. Emits dist/scriptforge-<version>.zip and prints
 # its path and sha256. Does not ship game assets or corpus data.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD="${1:-$ROOT/build}"
 VERSION="${KP_PACKAGE_VERSION:-0.1.0}"
-NAME="hyperstim-${VERSION}"
+NAME="scriptforge-${VERSION}"
 STAGE="$ROOT/dist/$NAME"
 ZIP="$ROOT/dist/${NAME}.zip"
 
 die() { echo "package_release: $*" >&2; exit 1; }
 
-[[ -f "$BUILD/hyperstim.dll" ]] || die "missing $BUILD/hyperstim.dll — build first"
+[[ -f "$BUILD/scriptforge.dll" ]] || die "missing $BUILD/scriptforge.dll — build first"
 [[ -f "$BUILD/binkw32.dll" ]] || die "missing $BUILD/binkw32.dll — build first"
 
 rm -rf "$STAGE"
 mkdir -p "$STAGE"/{bin,data,docs/user,scripts,examples}
 
-install -m644 "$BUILD/hyperstim.dll" "$STAGE/bin/hyperstim.dll"
+install -m644 "$BUILD/scriptforge.dll" "$STAGE/bin/scriptforge.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/bin/binkw32.dll"
 # Flat copies at package root so install_to_game.sh can treat STAGE as build-dir.
-install -m644 "$BUILD/hyperstim.dll" "$STAGE/hyperstim.dll"
+install -m644 "$BUILD/scriptforge.dll" "$STAGE/scriptforge.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/binkw32.dll"
-if [[ -f "$BUILD/libhyperstim.so" ]]; then
-  install -m644 "$BUILD/libhyperstim.so" "$STAGE/bin/libhyperstim.so"
-  install -m644 "$BUILD/libhyperstim.so" "$STAGE/libhyperstim.so"
+if [[ -f "$BUILD/libscriptforge.so" ]]; then
+  install -m644 "$BUILD/libscriptforge.so" "$STAGE/bin/libscriptforge.so"
+  install -m644 "$BUILD/libscriptforge.so" "$STAGE/libscriptforge.so"
 fi
 
 install -m755 "$ROOT/scripts/install_to_game.sh" "$STAGE/install_to_game.sh"
@@ -53,12 +53,12 @@ install -m644 "$ROOT/docs/user/install.md" "$STAGE/docs/user/install.md"
 [[ -f "$ROOT/CHANGELOG.md" ]] && install -m644 "$ROOT/CHANGELOG.md" "$STAGE/CHANGELOG.md"
 
 cat > "$STAGE/INSTALL.txt" <<EOF
-Hyperstim ${VERSION}
+ScriptForge ${VERSION}
 
 Windows (K1/K2 GOG or Steam PE):
   ./install_to_game.sh install /path/to/game/dir .
 
-That copies hyperstim.dll + proxy binkw32.dll and address tables into the game
+That copies scriptforge.dll + proxy binkw32.dll and address tables into the game
 folder. Bring your own legal game install. This package ships no game content.
 
 See docs/user/install.md and CONTRIBUTING.md (Supported builds).

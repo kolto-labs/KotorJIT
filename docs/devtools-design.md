@@ -120,7 +120,7 @@ A syntax pass, mock, successful command submission, engine-state predicate and c
 
 Additional user requirements: draw on powerful Lua integrations such as Garry's Mod, and support idiomatic Ren'Py-like pause/play, save states and returning to prior dialog choices. These extend the same product; they do not replace the immediate F12 console acceptance.
 
-Research should map familiar entities, hooks, timers and math patterns onto supported Hyperstim capabilities. Prefer consistent scoped modules, owned subscriptions and cancelable work. Do not clone every GMod global, shadow existing Lua facilities, introduce a parallel scheduler, or rename NWScript routines into a second engine facade. Unsupported operations must be explicit capabilities.
+Research should map familiar entities, hooks, timers and math patterns onto supported ScriptForge capabilities. Prefer consistent scoped modules, owned subscriptions and cancelable work. Do not clone every GMod global, shadow existing Lua facilities, introduce a parallel scheduler, or rename NWScript routines into a second engine facade. Unsupported operations must be explicit capabilities.
 
 Playback needs a stronger state contract than a console transcript. A dialog checkpoint must identify the actual pre-choice game state, active module, resource/build identity and associated mod session. Returning to a choice may need restoration of quest variables, inventory, spawned/destroyed objects, party state, script state, timers and random state. A native save/load boundary can provide a coarse checkpoint where the game supports saving; it is not automatically a frame-accurate memory snapshot. Arbitrary Lua closure/FFI/native state cannot be promised serializable.
 

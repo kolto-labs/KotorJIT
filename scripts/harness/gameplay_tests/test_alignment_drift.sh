@@ -13,7 +13,7 @@ OUT="${OUT:-$ROOT/tmp/gameplay-test-alignment-drift}"
 DISPLAY_NUM="${DISPLAY_NUM:-86}"
 
 deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/40_alignment_drift.lua"
-rm -f "$GAME_DIR/hyperstim.log"
+rm -f "$GAME_DIR/scriptforge.log"
 
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 
@@ -23,7 +23,7 @@ start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 send "lua exec nwscript.call('AdjustAlignment',nwscript.call('GetFirstPC'), 2, 30)"
 send "#sleep 90"
 
-assert_contains_re "$GAME_DIR/hyperstim.log" '\[conscience\] \+[0-9]+, now [0-9]+' \
+assert_contains_re "$GAME_DIR/scriptforge.log" '\[conscience\] \+[0-9]+, now [0-9]+' \
   "40_alignment_drift's own print line fired after crossing a decade boundary"
 
 summary_and_exit

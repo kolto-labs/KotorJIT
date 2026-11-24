@@ -3724,7 +3724,7 @@
       "offset_hex": "0x24"
     }
   },
-  "reference_image": "/run/media/brunner56/MyBook/Workspaces/Hyperstim/tmp/k1_harness/swkotor.exe",
+  "reference_image": "/run/media/brunner56/MyBook/Workspaces/ScriptForge/tmp/k1_harness/swkotor.exe",
   "reference_sha256": "2719ed2cb678e2c1ff5b2a787f9804d8e5f8dd52a02c2279080f031636e03a05",
   "sentinel": {
     "va": 5423312,

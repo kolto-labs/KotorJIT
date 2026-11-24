@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Put Hyperstim into a game directory, and take it back out again.
+# Put ScriptForge into a game directory, and take it back out again.
 #
 # Installing renames the game's binkw32.dll to binkw32_real.dll and drops our
 # proxy in its place. Nothing else in the game folder is touched, and no game
@@ -21,15 +21,15 @@ usage() { sed -n '2,12p' "$0"; exit 2; }
 
 PROXY="$GAME/binkw32.dll"
 REAL="$GAME/binkw32_real.dll"
-MARK="$GAME/hyperstim/.installed"
+MARK="$GAME/scriptforge/.installed"
 
 is_ours() {
   # Our proxy is small and names the runtime DLL; the real one is ~370 KB of
-  # codec. Proxies built before the KotorPhasor -> Hyperstim rename name
+  # codec. Proxies built before the KotorPhasor -> ScriptForge rename name
   # kphasor.dll instead -- those are still ours, and must never be mistaken
   # for the original and saved as binkw32_real.dll.
   [[ -f "$PROXY" ]] && [[ $(stat -c%s "$PROXY") -lt 200000 ]] &&
-    grep -qaE "hyperstim\.dll|kphasor\.dll" "$PROXY" 2>/dev/null
+    grep -qaE "scriptforge\.dll|kphasor\.dll" "$PROXY" 2>/dev/null
 }
 
 case "$ACTION" in
@@ -40,7 +40,7 @@ install)
   fi
   [[ -f "$PROXY" ]] || { echo "no binkw32.dll in $GAME -- is this a game directory?" >&2; exit 1; }
 
-  for f in hyperstim.dll binkw32.dll; do
+  for f in scriptforge.dll binkw32.dll; do
     [[ -f "$BUILD/$f" ]] || { echo "missing $BUILD/$f -- build first" >&2; exit 1; }
   done
 
@@ -51,24 +51,24 @@ install)
     echo "saved original binkw32.dll -> binkw32_real.dll"
   fi
 
-  install -D -m644 "$BUILD/hyperstim.dll" "$GAME/hyperstim.dll"
+  install -D -m644 "$BUILD/scriptforge.dll" "$GAME/scriptforge.dll"
   install -m644 "$BUILD/binkw32.dll" "$PROXY"
 
   # An install made under the old name keeps its scripts: move the legacy data
   # folder to the new name rather than creating an empty one beside it (the
   # runtime would then prefer the empty one).
-  if [[ -d "$GAME/kotorphasor" && ! -e "$GAME/hyperstim" ]]; then
-    mv "$GAME/kotorphasor" "$GAME/hyperstim"
-    echo "moved kotorphasor/ -> hyperstim/ (scripts kept)"
+  if [[ -d "$GAME/kotorphasor" && ! -e "$GAME/scriptforge" ]]; then
+    mv "$GAME/kotorphasor" "$GAME/scriptforge"
+    echo "moved kotorphasor/ -> scriptforge/ (scripts kept)"
   fi
-  mkdir -p "$GAME/hyperstim/scripts"
+  mkdir -p "$GAME/scriptforge/scripts"
   # Address tables and the event contract travel with the runtime; the build id
   # is chosen at load time from the executable's hash.
-  cp -r "$ROOT/data/addresses" "$GAME/hyperstim/"
+  cp -r "$ROOT/data/addresses" "$GAME/scriptforge/"
   date -Iseconds > "$MARK"
 
   echo "installed into $GAME"
-  echo "  scripts go in $GAME/hyperstim/scripts"
+  echo "  scripts go in $GAME/scriptforge/scripts"
   ;;
 
 uninstall)
@@ -78,7 +78,7 @@ uninstall)
   else
     echo "no binkw32_real.dll found; leaving binkw32.dll alone" >&2
   fi
-  rm -f "$GAME/hyperstim.dll" "$GAME/kphasor.dll" "$MARK" "$GAME/kotorphasor/.installed"
+  rm -f "$GAME/scriptforge.dll" "$GAME/kphasor.dll" "$MARK" "$GAME/kotorphasor/.installed"
   echo "uninstalled (scripts and logs left in place)"
   ;;
 
@@ -86,7 +86,7 @@ status)
   if is_ours; then
     echo "installed"
     [[ -f "$MARK" ]] && echo "  since: $(cat "$MARK")"
-    [[ -f "$GAME/hyperstim.log" ]] && echo "  log:   $GAME/hyperstim.log"
+    [[ -f "$GAME/scriptforge.log" ]] && echo "  log:   $GAME/scriptforge.log"
   else
     echo "not installed"
   fi

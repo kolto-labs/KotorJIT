@@ -1,8 +1,8 @@
-# Hyperstim
+# ScriptForge
 
 *Formerly KotorPhasor.* Existing installs keep working: the runtime still accepts the `kotorphasor/` folder, `kotorphasor.ini`, `KOTORPHASOR_*` variables and a `kphasor.dll`, and the Lua API (`kp.*`, `nwscript.*`) did not change. Details in [CHANGELOG.md](CHANGELOG.md).
 
-Drop a `.lua` file in `<game>/hyperstim/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
+Drop a `.lua` file in `<game>/scriptforge/scripts`. It loads once at startup, picks the events it cares about, and can call almost every engine routine. No GFF field. No resref. No slot to claim.
 
 The complete callback, compatibility, and generated routine reference is in [`docs/lua-api-complete.md`](docs/lua-api-complete.md).
 The harness-specific Lua surface and startup-loading details are in [`docs/lua-harness-api.md`](docs/lua-harness-api.md).

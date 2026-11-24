@@ -76,7 +76,7 @@ function OnConsoleCommand(line, relevant)
         if not valid(npc) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
         elseif not nwscript or not nwscript.with_caller then
-            kp.print("[cover] nwscript.with_caller missing — rebuild hyperstim.dll")
+            kp.print("[cover] nwscript.with_caller missing — rebuild scriptforge.dll")
         else
             local dlg = w[4] or ""
             nwscript.with_caller(pc, function()
@@ -90,7 +90,7 @@ function OnConsoleCommand(line, relevant)
         if not valid(dest) or not valid(pc) then
             kp.print("[cover] no object " .. w[3])
         elseif not nwscript or not nwscript.with_caller then
-            kp.print("[cover] nwscript.with_caller missing — rebuild hyperstim.dll")
+            kp.print("[cover] nwscript.with_caller missing — rebuild scriptforge.dll")
         else
             nwscript.with_caller(pc, function()
                 q("JumpToObject", dest, 1)
@@ -110,7 +110,7 @@ function OnConsoleCommand(line, relevant)
         kp.print("[cover] active=" .. tostring(q("GetIsConversationActive")))
     elseif cmd == "haste" then
         if not kp or not kp.speed then
-            kp.print("[cover] kp.speed missing — rebuild hyperstim.dll")
+            kp.print("[cover] kp.speed missing — rebuild scriptforge.dll")
         else
             local n = tonumber(w[3] or "4") or 4
             kp.print("[cover] speed=" .. tostring(kp.speed(n)))

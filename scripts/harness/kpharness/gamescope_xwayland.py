@@ -27,7 +27,7 @@ _SOFTWARE = re.compile(r"llvmpipe|softpipe|swrast|software rasterizer", re.I)
 _SOFTWARE_KEYS = {"LIBGL_ALWAYS_SOFTWARE", "GALLIUM_DRIVER", "LP_NUM_THREADS"}
 _ENV_EXACT = {"PATH", "HOME", "USER", "LOGNAME", "LANG", "TZ", "TMPDIR", "XDG_RUNTIME_DIR",
               "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "WINEPREFIX", "WINEARCH",
-              "WINEDEBUG", "WINEDLLOVERRIDES", "HYPERSTIM_HARNESS_PORT", "SDL_VIDEODRIVER"}
+              "WINEDEBUG", "WINEDLLOVERRIDES", "SCRIPTFORGE_HARNESS_PORT", "SDL_VIDEODRIVER"}
 
 
 def isolated_environment(source: Mapping[str, str], authority: Mapping[str, str]) -> Mapping[str, str]:

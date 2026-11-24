@@ -7,7 +7,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT/scripts/harness/gameplay_tests/lib.sh"
 
 wait_log() {
-  local re="$1" secs="${2:-90}" log="${3:-$GAME_DIR/hyperstim.log}"
+  local re="$1" secs="${2:-90}" log="${3:-$GAME_DIR/scriptforge.log}"
   for _ in $(seq 1 "$secs"); do
     grep -qE "$re" "$log" 2>/dev/null && return 0
     sleep 1

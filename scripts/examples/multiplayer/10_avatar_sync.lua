@@ -1,10 +1,10 @@
--- Direct-UDP avatar sync: see another Hyperstim player walk around your game.
+-- Direct-UDP avatar sync: see another ScriptForge player walk around your game.
 --
 -- KOTOR's engine already treats a single-player game as a server with one
 -- connected client. A DLL-injection mod that wants multiplayer normally
 -- needs a proxy hook DLL, a side channel to reach native code from compiled
 -- NWScript, shared memory, and satellite processes, because a slim injected
--- DLL has no other way in. Hyperstim doesn't have that problem -- Lua
+-- DLL has no other way in. ScriptForge doesn't have that problem -- Lua
 -- already sits where a native hook would -- so this file is: OnTick, the
 -- routine bridge, and LuaJIT's ffi calling ws2_32 directly. One script,
 -- nothing external, no dedicated server process.
@@ -29,7 +29,7 @@ priority = 0
 -- LISTEN_PORT and its own idea of where its peers are.
 -- =============================================================================
 
-local LOCAL_NAME    = "Player"        -- shown in hyperstim.log, not in-game
+local LOCAL_NAME    = "Player"        -- shown in scriptforge.log, not in-game
 local LISTEN_PORT   = 39131           -- UDP port this instance listens on
 local PEERS = {
     -- One entry per other player. Symmetric: if A lists B, B must list A.
@@ -250,7 +250,7 @@ local function build_ghost_utc()
         { label = "TemplateResRef", type = T.RESREF, value = GHOST_TEMPLATE_RESREF },
         { label = "Tag", type = T.CEXOSTRING, value = "KP_MP_GHOST" },
         { label = "Comment", type = T.CEXOSTRING,
-          value = "Hyperstim multiplayer avatar placeholder. Generated at "
+          value = "ScriptForge multiplayer avatar placeholder. Generated at "
                 .. "runtime by 10_avatar_sync.lua; no vanilla game assets included." },
         { label = "FirstName", type = T.CEXOLOCSTRING,
           value = { strref = -1, strings = { { lang = 0, gender = 0, text = "MP Ghost" } } } },
@@ -296,7 +296,7 @@ end
 
 -- kp.gamedir is bound as of this build (docs/user/api-status.md). The
 -- fallback below stays anyway: this script also has to run against older
--- Hyperstim builds where it was spec-only, and "." -- relative to the
+-- ScriptForge builds where it was spec-only, and "." -- relative to the
 -- process's own working directory, which is the game install directory on
 -- every normal launch (Windows sets cwd to the exe's own folder, and so
 -- does Steam) -- resolves Override/ correctly without a bound path API.

@@ -28,8 +28,8 @@ a time (a K1 GOG manifest is 51 MB) and builds a **scan-only** table:
   `expected_bytes` gets them as an exact, unique-or-refuse pattern.
 - Overloaded ids get `#2`, `#3`… suffixes; the first keeps the bare name.
 
-Runtime lookup order: `HYPERSTIM_HOOKMANIFEST`, then
-`<game>/hyperstim/hookmanifest.json`, then `$HYPERSTIM_ADDRESSES/hookmanifest.json`;
+Runtime lookup order: `SCRIPTFORGE_HOOKMANIFEST`, then
+`<game>/scriptforge/hookmanifest.json`, then `$SCRIPTFORGE_ADDRESSES/hookmanifest.json`;
 if none exists, the existing hook pack / address table path is unchanged.
 
 ## Checks
@@ -70,7 +70,7 @@ stand in for full DLL linking, fault recovery inside real Lua VM internals,
 or live-game execution.
 
 Runtime installation is disabled unless an exact site ID appears in the
-comma-separated `HYPERSTIM_REVIEWED_LUA_HOOKS` environment variable. This is
+comma-separated `SCRIPTFORGE_REVIEWED_LUA_HOOKS` environment variable. This is
 an explicit operator assertion that the complete calling contract has been
 independently reviewed, **not** another inference score. The ABI-strengthening
 validation had 584/590 agreements, six disagreements and 7,061 abstentions

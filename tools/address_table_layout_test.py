@@ -223,11 +223,11 @@ def _tracked_files() -> list[str]:
 def committed_hookpacks() -> list[str]:
     """Repo files the runtime could read as a hook pack.
 
-    runtime.cpp Runtime::resolve reads <game>/hyperstim/hookpack.json,
-    $HYPERSTIM_HOOKPACK, and $HYPERSTIM_ADDRESSES/hookpack.json, and
+    runtime.cpp Runtime::resolve reads <game>/scriptforge/hookpack.json,
+    $SCRIPTFORGE_HOOKPACK, and $SCRIPTFORGE_ADDRESSES/hookpack.json, and
     registry.cpp AddressTable::parse treats any file whose `format` is the
     hook-pack format as a pack. The harness copies data/addresses into
-    <game>/hyperstim/addresses, and HYPERSTIM_ADDRESSES may point at it.
+    <game>/scriptforge/addresses, and SCRIPTFORGE_ADDRESSES may point at it.
     """
     found = [f for f in _tracked_files() if Path(f).name == "hookpack.json"]
     if (ADDRESSES / "hookpack.json").exists():

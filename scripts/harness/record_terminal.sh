@@ -50,7 +50,7 @@ cat > "$DRIVER" <<DRIVER_EOF
 cd "$ROOT" || exit 1
 export TERM=xterm-256color
 G=\$'\e[38;5;114m'; D=\$'\e[38;5;244m'; C=\$'\e[38;5;81m'; R=\$'\e[0m'
-PS="\${G}hyperstim\${R} \${C}\\\$\${R} "
+PS="\${G}scriptforge\${R} \${C}\\\$\${R} "
 
 type_out() {   # one character at a time, with a slight stumble so it reads human
   local s="\$1" i c
@@ -101,7 +101,7 @@ xterm -display "$DISPLAY" \
       -fa "${FONT_NAME:-Noto Sans Mono}" -fs "$FONT_SIZE" \
       -bg '#0b0e14' -fg '#c8d3e0' -cr '#7ee787' \
       -geometry 200x60+0+0 -b 14 -bc -sb -si -sk \
-      -title "hyperstim" \
+      -title "scriptforge" \
       -e "$DRIVER" &
 XTERM_PID=$!
 

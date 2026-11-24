@@ -15,7 +15,7 @@
 //   1. a fault inside a guarded hook body is caught: the fallback statement
 //      runs, that site's poison flag is set, and the whole runtime's live()
 //      flag flips false -- not "that one routine", the whole runtime. This is
-//      the corrected understanding from docs/ideation/2026-08-31-hyperstim-
+//      the corrected understanding from docs/ideation/2026-08-31-kotorphasor-
 //      ideation.html's idea 1: the poison flag is per site, but the recovery
 //      it enables is global.
 //   2. poison does not lift when live() is manually restored (the `lua

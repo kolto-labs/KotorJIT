@@ -1,6 +1,6 @@
 # Write a script
 
-Put a `.lua` file in `<game>/hyperstim/scripts/`. Each file is its own Lua state. Scripts do not share globals.
+Put a `.lua` file in `<game>/scriptforge/scripts/`. Each file is its own Lua state. Scripts do not share globals.
 
 Define only the callbacks you need. A missing callback costs a lookup, not a Lua call.
 
@@ -18,7 +18,7 @@ function OnRunScript(script_name, object_id, has_object, relevant)
 end
 ```
 
-`kp.print` writes to `hyperstim.log`.
+`kp.print` writes to `scriptforge.log`.
 
 Native facilities are owned by `kp`; direct engine routines are available only
 through `nwscript.call(name, ...)`. Lua's standard `print` keeps its normal stdout

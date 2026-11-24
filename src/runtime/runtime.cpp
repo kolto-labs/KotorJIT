@@ -158,7 +158,7 @@ std::string resolve_against(const std::string& base, const std::string& value) {
     return join(base, value);
 }
 
-// HYPERSTIM_HARNESS_PORT wins over the ini, and it has to win whether or
+// SCRIPTFORGE_HARNESS_PORT wins over the ini, and it has to win whether or
 // not the ini exists: it is how a build directory is driven without staging
 // a file next to the game. Applied on both exits from from_game_dir.
 void apply_harness_env(Config& c) {
@@ -262,7 +262,7 @@ std::string self_module_path() {
     return n > 0 ? std::string(buf, n) : std::string();
 #elif defined(__APPLE__)
     // The GAME executable, not this dylib: the runtime derives game_dir,
-    // script dir and log path from it. When Hyperstim is loaded through
+    // script dir and log path from it. When ScriptForge is loaded through
     // DYLD_INSERT_LIBRARIES, _NSGetExecutablePath still names the host
     // executable (KOTOR_Exe / KOTOR2sub), which is what we want. The path it
     // returns may be non-canonical (symlinks, .. segments); realpath resolves
@@ -393,7 +393,7 @@ void Runtime::log(const char* fmt, ...) {
     body[n] = '\0';
 
     while (g_log_lock.test_and_set(std::memory_order_acquire)) {}
-    std::FILE* f = std::fopen(log_path_.empty() ? "hyperstim.log" : log_path_.c_str(), "ab");
+    std::FILE* f = std::fopen(log_path_.empty() ? "scriptforge.log" : log_path_.c_str(), "ab");
     if (f != nullptr) {
         std::fprintf(f, "[%s] %s\n", to_string(phase_), body);
         std::fclose(f);
@@ -1013,11 +1013,11 @@ bool Runtime::start(const Config& cfg) {
     set_fault_log_path(log_path_.c_str());
     platform::set_log_sink(&runtime_log_sink, nullptr);
 
-    log("Hyperstim %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
+    log("ScriptForge %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
     if (const std::string dd = data_dir_of(cfg);
         dd.size() >= std::strlen(naming::kLegacyDataDir) &&
         dd.compare(dd.size() - std::strlen(naming::kLegacyDataDir), std::string::npos, naming::kLegacyDataDir) == 0)
-        log("note: using the legacy data folder %s (KotorPhasor was renamed to Hyperstim); "
+        log("note: using the legacy data folder %s (KotorPhasor was renamed to ScriptForge); "
             "renaming it to '%s' is optional and changes nothing else", dd.c_str(), naming::kDataDir);
 
     // Before anything can fault: the guard has to be in place before the first

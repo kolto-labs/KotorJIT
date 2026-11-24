@@ -397,7 +397,7 @@ void draw() {
     ImGui::SetNextWindowPos({20, 20}, ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize({760, 500}, ImGuiCond_FirstUseEver);
     bool visible = true;
-    ImGui::Begin("Hyperstim Lua console", &visible,
+    ImGui::Begin("ScriptForge Lua console", &visible,
                  ImGuiWindowFlags_NoCollapse);
     if (!visible)
       set_open(false);

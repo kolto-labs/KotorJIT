@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve Hyperstim's logical hook sites to concrete addresses, per game build.
+"""Resolve ScriptForge's logical hook sites to concrete addresses, per game build.
 
 Addresses are data. Nothing in src/ ever hardcodes a VA; this script reads the
 logical site manifest (data/hooksites.toml) and the reverse-engineering corpus,

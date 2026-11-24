@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install Hyperstim into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
+# Install ScriptForge into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
 # it back out. No game file is modified: the runtime is delivered through
 # DYLD_INSERT_LIBRARIES, so uninstalling is deleting a folder.
 #
@@ -38,12 +38,12 @@ find_macos_dir() {
 MACOS="$(find_macos_dir "$TARGET")" || { echo "no KOTOR executable under: $TARGET" >&2; exit 1; }
 EXE=""
 for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && EXE="$e"; done
-KPDIR="$MACOS/hyperstim"
-DYLIB="$MACOS/libhyperstim.dylib"
+KPDIR="$MACOS/scriptforge"
+DYLIB="$MACOS/libscriptforge.dylib"
 
 case "$ACTION" in
 install)
-  [[ -f "$BUILD/libhyperstim.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libhyperstim.dylib)" >&2; exit 1; }
+  [[ -f "$BUILD/libscriptforge.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libscriptforge.dylib)" >&2; exit 1; }
   # Identify the build by the code-section hash so the right address table is
   # shipped, exactly as the runtime identifies it at load.
   local_sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
@@ -59,19 +59,19 @@ install)
   # runtime. Both runtimes are never present as separate files.
   if [[ -d "$MACOS/kotorphasor" && ! -e "$KPDIR" ]]; then
     mv "$MACOS/kotorphasor" "$KPDIR"
-    echo "moved kotorphasor/ -> hyperstim/ (scripts kept)"
+    echo "moved kotorphasor/ -> scriptforge/ (scripts kept)"
   fi
-  [[ -f "$MACOS/kotorphasor.ini" && ! -e "$MACOS/hyperstim.ini" ]] && mv "$MACOS/kotorphasor.ini" "$MACOS/hyperstim.ini"
+  [[ -f "$MACOS/kotorphasor.ini" && ! -e "$MACOS/scriptforge.ini" ]] && mv "$MACOS/kotorphasor.ini" "$MACOS/scriptforge.ini"
   mkdir -p "$KPDIR/scripts" "$KPDIR/addresses"
-  cp "$BUILD/libhyperstim.dylib" "$DYLIB"
+  cp "$BUILD/libscriptforge.dylib" "$DYLIB"
   if [[ -e "$MACOS/libkphasor.dylib" || -L "$MACOS/libkphasor.dylib" ]]; then
-    ln -sf "libhyperstim.dylib" "$MACOS/libkphasor.dylib"
-    echo "libkphasor.dylib now points at libhyperstim.dylib (old launch options keep working)"
+    ln -sf "libscriptforge.dylib" "$MACOS/libkphasor.dylib"
+    echo "libkphasor.dylib now points at libscriptforge.dylib (old launch options keep working)"
   fi
   cp "$ROOT/data/addresses/$BUILDID.json" "$KPDIR/addresses/$BUILDID.json"
   # A starter ini and an example script, only if absent.
-  [[ -f "$MACOS/hyperstim.ini" ]] || cat > "$MACOS/hyperstim.ini" <<INI
-; Hyperstim settings. Scripts live in hyperstim/scripts/*.lua.
+  [[ -f "$MACOS/scriptforge.ini" ]] || cat > "$MACOS/scriptforge.ini" <<INI
+; ScriptForge settings. Scripts live in scriptforge/scripts/*.lua.
 ; harness_port is off (0) by default; it is a test surface, not for play.
 harness_port = 0
 INI
@@ -93,14 +93,14 @@ LUA
 uninstall)
   rm -f "$DYLIB" "$MACOS/libkphasor.dylib"
   echo "removed $DYLIB"
-  echo "hyperstim/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
+  echo "scriptforge/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
   echo "Clear the game's Steam launch options (remove the DYLD_INSERT_LIBRARIES line)."
   ;;
 status)
   echo "executable: $MACOS/${EXE:-<none found>}"
-  [[ -f "$DYLIB" ]] && echo "libhyperstim.dylib: present" || echo "libhyperstim.dylib: not installed"
-  [[ -d "$KPDIR" ]] && echo "hyperstim/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
-  [[ -f "$MACOS/hyperstim.log" ]] && echo "log: $MACOS/hyperstim.log"
+  [[ -f "$DYLIB" ]] && echo "libscriptforge.dylib: present" || echo "libscriptforge.dylib: not installed"
+  [[ -d "$KPDIR" ]] && echo "scriptforge/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
+  [[ -f "$MACOS/scriptforge.log" ]] && echo "log: $MACOS/scriptforge.log"
   ;;
 *) usage;;
 esac

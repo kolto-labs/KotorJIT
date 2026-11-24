@@ -124,7 +124,7 @@ Use a new snapshot folder each time.
 
 ## Run the route *(pending)*
 
-Put `hyperstim.dll` and `binkw32.dll` from the release ZIP in one folder.
+Put `scriptforge.dll` and `binkw32.dll` from the release ZIP in one folder.
 Pass that folder with `--build-dir`.
 These DLLs have not been used in a creative run yet. The one live run used a different build.
 

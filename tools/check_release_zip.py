@@ -8,7 +8,7 @@ import zipfile
 from pathlib import Path
 
 REQUIRED_SUFFIXES = (
-    "/hyperstim.dll",
+    "/scriptforge.dll",
     "/binkw32.dll",
     "/install_to_game.sh",
     "/data/addresses/k1_gog_103.json",
@@ -20,8 +20,8 @@ REQUIRED_SUFFIXES = (
 
 FORBIDDEN_SUBSTRINGS = (
     "corpus.sqlite",
-    "hyperstim.log",
-    "hyperstim-proxy.log",
+    "scriptforge.log",
+    "scriptforge-proxy.log",
     "/.git/",
     "agentdecompile",
 )

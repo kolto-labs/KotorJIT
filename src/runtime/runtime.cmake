@@ -2,8 +2,8 @@
 #
 # An include() fragment in the house style of src/hooks/hooks.cmake.
 #
-#   hyperstim.dll     Windows, 32-bit, everything statically linked
-#   libhyperstim.so   Linux, 32-bit, the same runtime for the TSL ELF
+#   scriptforge.dll     Windows, 32-bit, everything statically linked
+#   libscriptforge.so   Linux, 32-bit, the same runtime for the TSL ELF
 #
 # Both carry image/, hooks/, lua/ and LuaJIT inside them. Nothing is shipped
 # alongside: a player drops two files next to the game, and a missing runtime
@@ -87,13 +87,13 @@ set(KP_API_SOURCES
 foreach(f ${KP_API_SOURCES})
     if(NOT EXISTS ${f})
         list(REMOVE_ITEM KP_API_SOURCES ${f})
-        message(STATUS "hyperstim: ${f} not present yet, skipping")
+        message(STATUS "scriptforge: ${f} not present yet, skipping")
     endif()
 endforeach()
 
 set(KP_LUAJIT_WIN_DIR "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
 
-# --- hyperstim.dll -------------------------------------------------------------
+# --- scriptforge.dll -------------------------------------------------------------
 
 if(NOT KP_MINGW_CXX)
     find_program(KP_MINGW_CXX i686-w64-mingw32-g++)
@@ -140,11 +140,11 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
     # image_win32 and hooks_win32 already compile their halves for Windows.
     # Reusing their objects is what keeps one definition of how those modules
     # are built; recompiling them here would let the two drift.
-    set(KP_HYPERSTIM_DLL "${CMAKE_BINARY_DIR}/hyperstim.dll")
+    set(KP_SCRIPTFORGE_DLL "${CMAKE_BINARY_DIR}/scriptforge.dll")
     add_custom_command(
-        OUTPUT ${KP_HYPERSTIM_DLL}
+        OUTPUT ${KP_SCRIPTFORGE_DLL}
         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
-                ${KP_MINGW_CXX} -shared -o ${KP_HYPERSTIM_DLL}
+                ${KP_MINGW_CXX} -shared -o ${KP_SCRIPTFORGE_DLL}
                 ${KP_RT_WIN32_OBJECTS} ${KP_WIN32_OBJECTS} ${KP_HOOKS_WIN32_OBJECTS}
                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
                 # Static, and this is not a preference. A dynamic dependency on
@@ -162,18 +162,18 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
                 -lws2_32 -lopengl32 -lgdi32 -limm32 -ldwmapi -ldinput8 -ldxguid
         DEPENDS ${KP_RT_WIN32_OBJECTS} image_win32 hooks_win32
                 "${KP_LUAJIT_WIN_DIR}/libluajit.a"
-        COMMENT "i686-w64-mingw32-g++ hyperstim.dll"
+        COMMENT "i686-w64-mingw32-g++ scriptforge.dll"
         VERBATIM)
 
-    add_custom_target(hyperstim_dll ALL DEPENDS ${KP_HYPERSTIM_DLL})
+    add_custom_target(scriptforge_dll ALL DEPENDS ${KP_SCRIPTFORGE_DLL})
 elseif(NOT KP_MINGW_CXX)
-    message(WARNING "i686-w64-mingw32-g++ not found: hyperstim.dll is not being built")
+    message(WARNING "i686-w64-mingw32-g++ not found: scriptforge.dll is not being built")
 else()
     message(WARNING "third_party/luajit/src/libluajit.a (Windows) not found: "
-                    "hyperstim.dll is not being built")
+                    "scriptforge.dll is not being built")
 endif()
 
-# --- libhyperstim.so -----------------------------------------------------------
+# --- libscriptforge.so -----------------------------------------------------------
 #
 # LuaJIT is built into the build tree rather than in third_party, because
 # third_party already holds the Windows libluajit.a and an in-tree native build
@@ -210,26 +210,26 @@ if(UNIX AND NOT WIN32)
     get_target_property(KP_IMAGE_SRC kp_image SOURCES)
     get_target_property(KP_HOOKS_SRC kp_hooks SOURCES)
 
-    add_library(hyperstim SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES}
+    add_library(scriptforge SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES}
                                ${KP_IMAGE_SRC} ${KP_HOOKS_SRC}
                                ${KP_HARNESS_SOURCES}
                                ${KP_LUAJIT_LINUX_LIB})
-    set_target_properties(hyperstim PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(scriptforge PROPERTIES POSITION_INDEPENDENT_CODE ON)
     # Both LuaJIT header paths. The build-time copy is what the archive is built
     # from, but it does not exist until its custom command runs, and object
     # compiles do not all order after that. The pristine source tree has the same
     # headers and is always there, so listing it second removes the race without
     # changing which archive is linked.
-    target_include_directories(hyperstim PRIVATE "${KP_SRC_ROOT}"
+    target_include_directories(scriptforge PRIVATE "${KP_SRC_ROOT}"
                                                "${KP_LUAJIT_LINUX_DIR}/src"
                                                "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
-    target_compile_options(hyperstim PRIVATE -m32 -Wall -Wextra)
-    target_link_options(hyperstim PRIVATE -m32)
+    target_compile_options(scriptforge PRIVATE -m32 -Wall -Wextra)
+    target_link_options(scriptforge PRIVATE -m32)
     # LuaJIT's own two dependencies on Linux. Nothing else we link pulls them
     # in, and the failure without them is a pile of undefined symbols at link.
-    target_link_libraries(hyperstim PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl)
+    target_link_libraries(scriptforge PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl)
     # The harness channel's listener thread. Threads::Threads rather than a
     # bare -lpthread so the 32-bit link gets whatever this glibc needs.
     find_package(Threads REQUIRED)
-    target_link_libraries(hyperstim PRIVATE Threads::Threads)
+    target_link_libraries(scriptforge PRIVATE Threads::Threads)
 endif()
