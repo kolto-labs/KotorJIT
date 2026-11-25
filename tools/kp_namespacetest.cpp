@@ -113,33 +113,32 @@ int main(int argc, char**) {
     }
     }
 
-    // events::dispatchable is the source of truth kp.events.register leans on
-    // to refuse a handler that can never fire. Pin it against the exact 14
-    // names docs/user/api-status.md documents as "Dead names" -- every one of
-    // them has outer_event_id == -1 in the generated table and none of them
-    // is a name any hook body looks up directly (see kDirectDispatchNames in
-    // src/events/table.cpp). Same table for K1 and K2, so this runs once.
+    // All 14 formerly-dead events + OnPlayerSpawn + OnScriptSituation are now
+    // wired and dispatchable in both K1 and K2.
     {
-        static const char* kExpectedDead[] = {
+        static const char* kFormerlyDead[] = {
             "OnCreatureHeartbeat", "OnCreatureSpawn", "OnCreatureDamaged",
             "OnCreatureDeath", "OnCreatureEndCombatRound", "OnCreatureEndDialogue",
             "OnPlaceableEndDialogue", "OnTriggerTrapTriggered", "OnTriggerHeartbeat",
             "OnCreatureStateScript", "OnAreaTransitionFail", "OnItemUse",
             "OnClientRequestedScript", "OnDialogConditional",
+            "OnPlayerSpawn", "OnScriptSituation",
         };
         std::size_t found = 0;
         for (const auto& ev : kp::events::table()) {
-            const bool expected_dead =
-                std::find_if(std::begin(kExpectedDead), std::end(kExpectedDead),
+            const bool expected_wired =
+                std::find_if(std::begin(kFormerlyDead), std::end(kFormerlyDead),
                              [&](const char* n) { return ev.lua_name == n; }) !=
-                std::end(kExpectedDead);
-            const std::string msg = "events::dispatchable(" + ev.lua_name +
-                                    ") disagrees with api-status.md Dead names";
-            check(kp::events::dispatchable(ev) == !expected_dead, msg.c_str());
-            if (expected_dead) ++found;
+                std::end(kFormerlyDead);
+            if (expected_wired) {
+                const std::string msg = "events::dispatchable(" + ev.lua_name +
+                                        ") should be true now that it is wired";
+                check(kp::events::dispatchable(ev), msg.c_str());
+                ++found;
+            }
         }
-        check(found == std::size(kExpectedDead),
-              "every documented dead name is present in the generated table");
+        check(found == std::size(kFormerlyDead),
+              "every formerly dead / newly wired event is present in the generated table");
     }
     for (bool bridge : {false, true}) {
         lua_State* isolated = luaL_newstate();
@@ -178,7 +177,7 @@ int main(int argc, char**) {
                 assert(kp.mem == mem and kp.obj == obj and kp.struct == struct)
                 assert(kp.events == events and kp.harness == harness)
                 for k,v in pairs(nwscript) do
-                    assert((k == 'call' or k == 'with_caller' or k == 'last_trace')
+                    assert((k == 'call' or k == 'with_caller' or k == 'last_trace' or k == 'last_stack_balance')
                            and type(v) == 'function', 'engine export: ' .. k)
                 end
                 assert(type(nwscript.call) == 'function')
@@ -258,16 +257,16 @@ int main(int argc, char**) {
         run(L, "local ok,err = pcall(kp.events.register, -1, function() end); "
                "assert(not ok and err:find('kp.events.On', 1, true))");
 
-        // OnCreatureDamaged is a real script slot (ScriptDamaged) but no hook
-        // body raises it -- its contract has outer_event_id == -1 and it is
-        // not one of the names RunScript/console/save/load/tick look up
-        // directly. Registration must say so rather than pretend the handler
-        // is armed. OnDialogConditional shares OnCreatureDamaged's dead
-        // vm.run_script site and its arg shape ("arg1 CExoString*", same as
-        // the live OnRunScript) -- it is dead too, which is why dispatchable()
-        // cannot be a hook_site or arg-source heuristic.
-        run(L, "assert(kp.events.register(kp.events.OnCreatureDamaged, function() end) == false)");
-        run(L, "assert(kp.events.register(kp.events.OnDialogConditional, function() end) == false)");
+        // Formerly dead script slots and conditional checks are now wired
+        // and register/unregister cleanly.
+        run(L, "assert(kp.events.register(kp.events.OnCreatureDamaged, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnCreatureDamaged) == true)");
+        run(L, "assert(kp.events.register(kp.events.OnDialogConditional, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnDialogConditional) == true)");
+        run(L, "assert(kp.events.register(kp.events.OnPlayerSpawn, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnPlayerSpawn) == true)");
+        run(L, "assert(kp.events.register(kp.events.OnScriptSituation, function() end) == true)");
+        run(L, "assert(kp.events.unregister(kp.events.OnScriptSituation) == true)");
 
         // A live EventHandler-routed event (find_by_site on hook_site +
         // outer_event_id, no script_event_type) still registers.

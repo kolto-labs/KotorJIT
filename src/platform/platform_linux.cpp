@@ -106,6 +106,35 @@ bool is_readable(const void* addr, std::size_t len) {
     return ::msync(start, span, MS_ASYNC) == 0 || errno != ENOMEM;
 }
 
+bool is_writable(const void* addr, std::size_t len) {
+    if (!addr || len == 0) return false;
+    const auto raw = reinterpret_cast<std::uintptr_t>(addr);
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len - 1 > static_cast<std::size_t>(max_addr - raw)) return false;
+    const unsigned long long want_start = raw;
+    const unsigned long long want_end = raw + (len - 1);
+
+    std::FILE* f = std::fopen("/proc/self/maps", "r");
+    if (!f) return false;
+    unsigned long long cursor = want_start;
+    char line[1024];
+    while (std::fgets(line, sizeof(line), f)) {
+        unsigned long long start = 0, end = 0;
+        char perms[8] = {0};
+        if (std::sscanf(line, "%llx-%llx %7s", &start, &end, perms) < 3) continue;
+        if (end <= cursor) continue;
+        if (start > cursor) break;
+        if (perms[1] != 'w') break;
+        if (end - 1 >= want_end) {
+            std::fclose(f);
+            return true;
+        }
+        cursor = end;
+    }
+    std::fclose(f);
+    return false;
+}
+
 void flush_instruction_cache(void* addr, std::size_t len) {
     auto* p = static_cast<char*>(addr);
     __builtin___clear_cache(p, p + len);

@@ -48,6 +48,9 @@ void  free_exec(void* addr, std::size_t len);
 // first and a bad address is refused, not read.
 bool is_readable(const void* addr, std::size_t len);
 
+// Is [addr, addr+len) mapped and writable right now without changing protection?
+bool is_writable(const void* addr, std::size_t len);
+
 // x86 has a coherent instruction cache, so this is a formality there. It is
 // here because the contract "we wrote code, now it may be executed" should be
 // stated in one place rather than assumed by every caller.

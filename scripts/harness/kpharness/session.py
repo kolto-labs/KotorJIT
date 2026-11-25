@@ -915,6 +915,8 @@ class GameSession:
         if any(p.is_dir() for p in self.save_dir.iterdir()):
             return
         cloud = self.staged / "cloudsaves"
+        if not cloud.is_dir() and self.data_dir is not None:
+            cloud = self.data_dir.parent / "cloudsaves"
         if not cloud.is_dir():
             return
         n = 0

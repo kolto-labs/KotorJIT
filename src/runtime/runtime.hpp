@@ -62,6 +62,7 @@ struct Config {
     // refused when the listener starts.
     unsigned    harness_port = 0;
     std::string harness_bind = "127.0.0.1";
+    bool        hook_all_events = false;
 
     // Read from kotorjit.ini next to the game if present, so a player can
     // change these without rebuilding.
@@ -86,6 +87,7 @@ public:
     lua::Host*              host()  { return host_.get(); }
     hooks::HookSet*         hooks() { return hooks_.get(); }
     const hooks::AddressTable* table() const { return table_.get(); }
+    void sync_demand_hooks();
 
     // Appends to the log file. Cheap and unconditional: when something goes
     // wrong inside somebody else's process, the log is usually all there is.
@@ -108,7 +110,11 @@ private:
     multiplayer::Role role_ = multiplayer::Role::Embedded;
     std::string log_path_;
     std::uintptr_t runtime_base_ = 0;
+    bool        hook_all_events_ = false;
+    bool        harness_active_ = false;
+    bool        multiplayer_active_ = false;
 
+    std::unique_ptr<hooks::AddressTable> probed_table_;
     std::unique_ptr<hooks::AddressTable> table_;
     std::unique_ptr<hooks::HookSet>      hooks_;
     std::unique_ptr<lua::Host>           host_;

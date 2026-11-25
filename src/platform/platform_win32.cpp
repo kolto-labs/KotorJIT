@@ -131,6 +131,32 @@ bool is_readable(const void* addr, std::size_t len) {
     return true;
 }
 
+bool is_writable(const void* addr, std::size_t len) {
+    if (!addr || len == 0) return false;
+    std::uintptr_t cursor = reinterpret_cast<std::uintptr_t>(addr);
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len > static_cast<std::size_t>(max_addr - cursor)) return false;
+    const std::uintptr_t end = cursor + len;
+    constexpr DWORD kWritableProt = PAGE_READWRITE | PAGE_WRITECOPY |
+                                    PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;
+    while (cursor < end) {
+        MEMORY_BASIC_INFORMATION info{};
+        if (::VirtualQuery(reinterpret_cast<LPCVOID>(cursor), &info, sizeof(info)) == 0)
+            return false;
+        if (info.State != MEM_COMMIT) return false;
+        const DWORD prot = info.Protect;
+        if (prot & (PAGE_NOACCESS | PAGE_GUARD)) return false;
+        if ((prot & kWritableProt) == 0) return false;
+        const std::uintptr_t base = reinterpret_cast<std::uintptr_t>(info.BaseAddress);
+        if (info.RegionSize == 0) return false;
+        if (info.RegionSize > static_cast<std::size_t>(max_addr - base)) return true;
+        const std::uintptr_t next = base + info.RegionSize;
+        if (next <= cursor) return false;
+        cursor = next;
+    }
+    return true;
+}
+
 void flush_instruction_cache(void* addr, std::size_t len) {
     ::FlushInstructionCache(::GetCurrentProcess(), addr, len);
 }

@@ -1,0 +1,6069 @@
+{
+  "format": "kotorjit.native-manifest/v1",
+  "site_count": 133,
+  "entries": [
+    {
+      "name": "app.client_main_loop",
+      "kind": "detour",
+      "class": "CClientExoAppInternal",
+      "method": "MainLoop",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff68a873720064a100000000506489250000000083ec445355568bf18b4e40",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff68a873720064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff689b87940064a1000000005081ec5c030000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff689b87940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff685b58960064a1000000005081ec5c030000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff685b58960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575681ecbc0000008bac24d00000008b4540",
+            "mask": "ffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575681ecbc0000008bac24d00000",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.create_server",
+      "kind": "call",
+      "class": "CAppManager",
+      "method": "CreateServer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff68fb3e710064a100000000506489250000000051568bf18b4e08",
+            "mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffffffff",
+            "expected_bytes": "6aff68fb3e710064a100000000506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff686bca960064a1000000005083ec10a16002a10033c5508d45f464a300000000894de88b45e883780800",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec6aff686bca960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff687b1f960064a1000000005083ec10a1201fa10033c5508d45f464a300000000894de88b45e883780800",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec6aff687b1f960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.get_global_variable_table",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetGlobalVariableTable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b410405fc000100c3",
+            "mask": "ffffffffffffffffff",
+            "expected_bytes": "8b410405fc000100c390909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc8b400405fc000100",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc8b400405fc00",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.get_module",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetModule",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "51568bf18b8660000100398618b90100",
+              "target_mask": "ffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9382e00009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec83ec0c894df48b45f48b4df4",
+              "target_mask": "ffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e87e70",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec83ec0c894df48b45f48b4df4",
+              "target_mask": "ffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e81e37",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.get_party_table",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetPartyTable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41040570b70100c3",
+            "mask": "ffffffffffffffffff",
+            "expected_bytes": "8b41040570b70100c390909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.load_module",
+      "kind": "call",
+      "class": "CServerExoAppInternal",
+      "method": "LoadModule",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff687f92710064a100000000506489250000000081ece000000053568bd9",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff687f92710064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff682e98970064a1000000005081eca8070000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff682e98970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff683eea940064a1000000005081eca8070000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff683eea940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.server_main_loop",
+      "kind": "detour",
+      "class": "CServerExoAppInternal",
+      "method": "MainLoop",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff683393710064a100000000506489250000000083ec54535556578bf1",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff683393710064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff683a99970064a1000000005081ec9c010000a16002a10033c5508d45f464a300000000898d60feffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff683a99970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff684aeb940064a1000000005081ec9c010000a1201fa10033c5508d45f464a300000000898d60feffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff684aeb940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575681ecac0000008bac24c0000000892c24e8df0a0000a120b09008",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff00000000ff00000000",
+            "expected_bytes": "5553575681ecac0000008bac24c00000",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.set_load_from_savegame",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "SetLoadFromSaveGame",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4c24048988c4000100",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b41048b4c24048988c4000100c20400",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b45088982c4000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.set_move_to_module_pending",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "SetMoveToModulePending",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4c2404898880000100",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b41048b4c2404898880000100c20400",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b4508898280000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.set_move_to_module_start_waypoint",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "SetMoveToModuleStartWaypoint",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b490481c18c000100e9126f1300",
+            "mask": "ffffffffffffffffffff00000000",
+            "expected_bytes": "8b490481c18c000100e9126f13009090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c18c000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.set_move_to_module_string",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "SetMoveToModuleString",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b490481c184000100e9726f1300",
+            "mask": "ffffffffffffffffffff00000000",
+            "expected_bytes": "8b490481c184000100e9726f13009090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c184000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.start_new_module",
+      "kind": "call",
+      "class": "CServerExoAppInternal",
+      "method": "StartNewModule",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff64a10000000068f3927100506489250000000083ec1853555657",
+            "mask": "ffffffff00000000ff00000000ffffffff00000000ffffffffffffff",
+            "expected_bytes": "6aff64a10000000068f3927100506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff684393970064a1000000005081ec88000000a16002a10033c5508d45f464a300000000898d78ffffff8b8578ffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff684393970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff6853e5940064a1000000005081ec88000000a1201fa10033c5508d45f464a300000000898d78ffffff8b8578ffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff6853e5940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "app.update_client_game_objects",
+      "kind": "call",
+      "class": "CServerExoAppInternal",
+      "method": "UpdateClientGameObjects",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "51a1e0397a0053568bf18b4804",
+            "mask": "ffff00000000ffffffffffffff",
+            "expected_bytes": "51a1e0397a0053568bf18b480457e8fd",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894deca1e81ba1008b4804e8dadbe4ff",
+            "mask": "ffffffffffffffffffff00000000ffffffff00000000",
+            "expected_bytes": "558bec83ec14894deca1e81ba1008b48",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894deca188b4a1008b4804e8faec1f00",
+            "mask": "ffffffffffffffffffff00000000ffffffff00000000",
+            "expected_bytes": "558bec83ec14894deca188b4a1008b48",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "camera.vtable",
+      "kind": "reference",
+      "class": "CAurCamera",
+      "method": "vtable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "camera_chase.vtable",
+      "kind": "reference",
+      "class": "CSWCameraOnAStick",
+      "method": "vtable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "client.area_get_server_area",
+      "kind": "detour",
+      "class": "CSWCArea",
+      "method": "GetServerArea",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b867c02000085c07532",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "568bf18b867c02000085c07532a1fc39",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df48b45f483b88002000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df48b45f483b88002",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.disable_input",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "DisableInput",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "c781bc02000001000000c3",
+              "target_mask": "ffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9d81b03009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec51894dfc8b45fcc780bc02000001000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e8de27",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec51894dfc8b45fcc780bc02000001000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e88e30",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_animation_timer",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetAnimationTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4030c3",
+            "mask": "ffffffffffffff",
+            "expected_bytes": "8b41048b4030c3909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b5130",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_client_name",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetClientName",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "518b4104568b74240c053c010000",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "518b4104568b74240c053c010000508b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df4c745fc000000008b45f48b480481c140010000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_creature_by_object_id",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetCreatureByGameObjectID",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "518b5424088b49148d4424005052c744240800000000e89570eeff3a056c667400751c8b4c240085c974148a41083a053466740075098b11ff522c",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffff00000000ffff00000000ffffffffffffffffffffffffffffff00000000ffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9c83b00009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b4814894df88d55fc528b4508508b4df8e8271803000fb6c80fb615f77d98003bca7527837dfc0074210fb605ec7d98008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b422c",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b4814894df88d55fc528b4508508b4df8e89721dbff0fb6c80fb6157f4499003bca7527837dfc0074210fb605744499008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b422c",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_game_over",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetGameOver",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b80c0020000c3",
+            "mask": "ffffffffffffffffffff",
+            "expected_bytes": "8b41048b80c0020000c3909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b91c0020000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_in_game_gui",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetInGameGui",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4040c3",
+            "mask": "ffffffffffffff",
+            "expected_bytes": "8b41048b4040c3909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b5140",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_message_handler",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetSWCMessage",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b804c010000c3",
+            "mask": "ffffffffffffffffffff",
+            "expected_bytes": "8b41048b804c010000c3909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b9150010000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_net_layer",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetNetLayer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4010c3",
+            "mask": "ffffffffffffff",
+            "expected_bytes": "8b41048b4010c3909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b5110",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_pause_timer",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetPauseTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b402cc3",
+            "mask": "ffffffffffffff",
+            "expected_bytes": "8b41048b402cc3909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b512c",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_sw_party",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetSWParty",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b8070020000c3",
+            "mask": "ffffffffffffffffffff",
+            "expected_bytes": "8b41048b8070020000c3909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b9170020000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.get_world_timer",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "GetWorldTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4024c3",
+            "mask": "ffffffffffffff",
+            "expected_bytes": "8b41048b4024c3909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b5124",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.is_movie_playing",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "IsMoviePlaying",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "8b892c01000085c9750333c0",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9885000009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec51894dfc8b45fc83b830010000007504",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e8ee7b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec51894dfc8b45fc83b830010000007504",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e88e8a",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.play_movies",
+      "kind": "detour",
+      "class": "CClientExoAppInternal",
+      "method": "PlayMoviesInExoArrayList",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b86f801000085c0740633c05ec21400",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "568bf18b86f801000085c0740633c05e",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894dec8b45ec8b88f8010000",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec14894dec8b45ec8b88f801",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.send_load_game_request",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "SendLoadGameRequest",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "client.send_save_game_request",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "SendSaveGameRequest",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "client.set_game_speed",
+      "kind": "detour",
+      "class": "CClientExoAppInternal",
+      "method": "SetGameSpeed",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "a1fc397a0085c074748b4804",
+            "mask": "ff00000000ffffffffffffff",
+            "expected_bytes": "a1fc397a0085c074748b480485c9568b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec20894de0833d041ca100000f84cb000000",
+            "mask": "ffffffffffffffffffffff00000000ffffff00000000",
+            "expected_bytes": "558bec83ec20894de0833d041ca10000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec20894de0833da4b4a100000f84cb000000",
+            "mask": "ffffffffffffffffffffff00000000ffffff00000000",
+            "expected_bytes": "558bec83ec20894de0833da4b4a10000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.set_input_class",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "SetInputClass",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "83ec0c568bf18b869c000000",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9782603009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a04",
+              "suffix": "8be55dc20800",
+              "target_pattern": "558bec83ec5c894dac8b45ac8b889c000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.set_loading_savegame",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "SetLoadingSaveGame",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b4c240489883c030000",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b41048b4c240489883c030000c20400",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b450889823c030000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client.set_player_character_name",
+      "kind": "call",
+      "class": "CClientExoApp",
+      "method": "SetPlayerCharacterName",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "8b442404568bf1508d8e94020000",
+              "target_mask": "ffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9585000009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec51894dfc8b4508508b4dfc81c194020000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client_area.attach_from_server",
+      "kind": "call",
+      "class": "CSWCArea",
+      "method": "AttachmentFromServerArea",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240489817c020000c20400",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b44240489817c020000c20400909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc8b4d08898880020000",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc8b4d08898880",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client_creature.get_server_creature",
+      "kind": "call",
+      "class": "CSWCCreature",
+      "method": "GetServerCreature",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf1e888d9020085c0740f8bcee87dd902008b108bc85eff6230",
+            "mask": "ffffffff00000000ffffffffffffff00000000ffffffffffffffff",
+            "expected_bytes": "568bf1e888d9020085c0740f8bcee87d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894dfc8b4dfce84fdf040085c0741a8b4dfce843df04008945f88b45f88b108b4df88b4230",
+            "mask": "ffffffffffffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894dfc8b4dfce84fdf04",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894dfc8b4dfce82f4d070085c0741a8b4dfce8234d07008945f88b45f88b108b4df88b4230",
+            "mask": "ffffffffffffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894dfc8b4dfce82f4d07",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client_creature.party_menu_use_item",
+      "kind": "call",
+      "class": "CSWCCreature",
+      "method": "PartyMenuUseItem",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240883ec0c538b5c2414",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "8b44240883ec0c538b5c2414568bf18b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec18894de88b45e88b4804894dfc",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec18894de88b45e88b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "client_module.vtable",
+      "kind": "reference",
+      "class": "CSWCModule",
+      "method": "vtable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "console.do_console",
+      "kind": "detour",
+      "class": "",
+      "method": "DoConsole",
+      "convention": "cdecl",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff68683f710064a100000000506489250000000083ec0c535533ed",
+            "mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffffffff",
+            "expected_bytes": "6aff68683f710064a100000000506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68d875940064a1000000005083ec38a16002a10033c5508d45f464a3000000006a00",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffff",
+            "expected_bytes": "558bec6aff68d875940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff680880940064a1000000005083ec38a1201fa10033c5508d45f464a3000000006a00",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffff",
+            "expected_bytes": "558bec6aff680880940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "console.funcs_add",
+      "kind": "call",
+      "class": "",
+      "method": "ConsoleFuncs_Add",
+      "convention": "cdecl",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "a1b88f7b005533ed85c07e68",
+            "mask": "ff00000000ffffffffffffff",
+            "expected_bytes": "a1b88f7b005533ed85c07e688b542408",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "creature.add_move_to_point_action",
+      "kind": "detour",
+      "class": "CSWSCreature",
+      "method": "AddMoveToPointAction",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "creature.ai_action_move_to_point",
+      "kind": "detour",
+      "class": "CSWSCreature",
+      "method": "AIActionMoveToPoint",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff64a10000000068f2c27100506489250000000081ec1c010000",
+            "mask": "ffffffff00000000ff00000000ffffffff00000000ffffffffffff",
+            "expected_bytes": "6aff64a10000000068f2c27100506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68f51f970064a1000000005081ecdc050000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff68f51f970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff689534950064a1000000005081ecdc050000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff689534950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "creature.run_equip",
+      "kind": "call",
+      "class": "CSWSCreature",
+      "method": "RunEquip",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec145355568bf18b46048b0dfc397a00",
+            "mask": "ffffffffffffffffffffffffff00000000",
+            "expected_bytes": "83ec145355568bf18b46048b0dfc397a",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81ec20010000898df8feffff",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec81ec20010000898df8feffffc7",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "dialog.check_script",
+      "kind": "detour",
+      "class": "CSWSDialog",
+      "method": "CheckScript",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff6838177200506489250000000083ec08568b742420681cd773008bcee81774e6ff85c07417",
+            "mask": "ffff00000000ffffff00000000ffffffff00000000ffffffffffffffffff00000000ffffff00000000ffffffff",
+            "expected_bytes": "64a1000000006aff6838177200506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68688e970064a1000000005083ec20a16002a10033c5508d45f464a300000000894dd468f55898008b4d0c",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffff00000000ffffff",
+            "expected_bytes": "558bec6aff68688e970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68582f970064a1000000005083ec20a1201fa10033c5508d45f464a300000000894dd468256998008b4d0c",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffff00000000ffffff",
+            "expected_bytes": "558bec6aff68582f970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "53575683ec208b5c2438891c24",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "53575683ec208b5c2438891c24c74424",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "dialog.handle_reply",
+      "kind": "reference",
+      "class": "CSWSDialog",
+      "method": "HandleReply",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "dialog.reply_dialog",
+      "kind": "reference",
+      "class": "CSWSObject",
+      "method": "ReplyDialog",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "dialog.select_reply",
+      "kind": "call",
+      "class": "CSWGuiDialog",
+      "method": "SelectReply",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b416c8b5424043bd07d368b0dfc397a00",
+            "mask": "ffffffffffffffffffffffffff00000000",
+            "expected_bytes": "8b416c8b5424043bd07d368b0dfc397a",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df48b45f48b4d083b4870",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df48b45f48b4d083b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "dialog.skip_past",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "SkipPastDialog",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "518b5424088b895c0001008d4424005052c744240800000000e8826202003a056c6674007526",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffff00000000ffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9183600009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec14894decc745f8000000008b45ec8b885c000100",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "door.move_to_next_open_state",
+      "kind": "call",
+      "class": "CSWSDoor",
+      "method": "MoveToNextOpenState",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18a8ecc0200008a86cd020000",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "568bf18a8ecc0200008a86cd0200003a",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894dec8b45ec8a881c030000",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec14894dec8b45ec8a881c03",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.aoe",
+      "kind": "detour",
+      "class": "CSWSAreaOfEffectObject",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b442404568bf13b05b84174007522",
+            "mask": "ffffffffffffffffff00000000ffff",
+            "expected_bytes": "8b442404568bf13b05b841740075228b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec3c894dcc8b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec3c894dcc8b45083b05808b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec3c894dcc8b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec3c894dcc8b45083b05f823",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "575683ec148b74242c8b442424",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "575683ec148b74242c8b4424248b7c24",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.area",
+      "kind": "detour",
+      "class": "CSWSArea",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff68bbbe710064a100000000506489250000000083ec388b450853568bf1",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff68bbbe710064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68b73a970064a1000000005081ec54010000a16002a10033c5508d45f464a300000000898dccfeffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff68b73a970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff6837dc940064a1000000005081ec54010000a1201fa10033c5508d45f464a300000000898dccfeffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff6837dc940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575681ecac0000008bbc24cc0000008bac24c40000008b9c24c0000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575681ecac0000008bbc24cc0000",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.creature",
+      "kind": "detour",
+      "class": "CSWSCreature",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff64a10000000068a6b67100506489250000000083ec205355568bf1",
+            "mask": "ffffffff00000000ff00000000ffffffff00000000ffffffffffffffff",
+            "expected_bytes": "6aff64a10000000068a6b67100506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68e807970064a1000000005081ec24030000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff68e807970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68a80d950064a1000000005081ec24030000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff68a80d950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575683ec6c8bb424840000008bac2480000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575683ec6c8bb424840000008bac",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.door",
+      "kind": "detour",
+      "class": "CSWSDoor",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff6864087200508b4424106489250000000083ec34",
+            "mask": "ffff00000000ffffff00000000ffffffffffffffff00000000ffffff",
+            "expected_bytes": "64a1000000006aff6864087200508b44",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68786e970064a1000000005081ec84030000a16002a10033c5508d45f464a300000000898df8fcffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff68786e970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff687871950064a1000000005081ec84030000a1201fa10033c5508d45f464a300000000898df8fcffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff687871950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575681ecac0000008b9c24cc000000",
+            "mask": "ffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575681ecac0000008b9c24cc0000",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.encounter",
+      "kind": "detour",
+      "class": "CSWSEncounter",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b442404568bf13b05dc4174000f85d2000000",
+            "mask": "ffffffffffffffffff00000000ffff00000000",
+            "expected_bytes": "8b442404568bf13b05dc4174000f85d2",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec48894dbc8b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec48894dbc8b45083b05a48b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec48894dbc8b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec48894dbc8b45083b051c24",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "575683ec14a1c49178083b442424",
+            "mask": "ffffffffffff00000000ffffffff",
+            "expected_bytes": "575683ec14a1c49178083b4424240f85",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.module",
+      "kind": "detour",
+      "class": "CSWSModule",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240483ec0c568bf13b05b8417400",
+            "mask": "ffffffffffffffffffffffff00000000",
+            "expected_bytes": "8b44240483ec0c568bf13b05b8417400",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81ece8000000898d20ffffff",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec81ece8000000898d20ffffff8b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "53575683ec308b74244c8b442444",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "53575683ec308b74244c8b4424448b7c",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.placeable",
+      "kind": "detour",
+      "class": "CSWSPlaceable",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff68ae057200508b4424106489250000000083ec18568bf1",
+            "mask": "ffff00000000ffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "64a1000000006aff68ae057200508b44",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff685b74970064a1000000005081eca0020000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff685b74970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff688b45950064a1000000005081eca0020000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff688b45950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575683ec5c8b5c247c8b742478",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575683ec5c8b5c247c8b7424788b",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.store",
+      "kind": "detour",
+      "class": "CSWSStore",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b4424043b05dc4174007541",
+            "mask": "ffffffffffff00000000ffff",
+            "expected_bytes": "8b4424043b05dc4174007541568b7424",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec2c894de08b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec2c894de08b45083b05a48b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec2c894de08b4508",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec2c894de08b45083b051c24",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5683ec188b74242c8b4c2424",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "5683ec188b74242c8b4c24248b442420",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.trigger",
+      "kind": "detour",
+      "class": "CSWSTrigger",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff680b0b7200508b4424106489250000000083ec14",
+            "mask": "ffff00000000ffffff00000000ffffffffffffffff00000000ffffff",
+            "expected_bytes": "64a1000000006aff680b0b7200508b44",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68eb6a970064a1000000005081ecf4000000a16002a10033c5508d45f464a300000000898d10ffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff68eb6a970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff688b75950064a1000000005081ecf4000000a1201fa10033c5508d45f464a300000000898d10ffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff688b75950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575683ec4c8b5c246c8b7c2464",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575683ec4c8b5c246c8b7c24648b",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event.waypoint",
+      "kind": "detour",
+      "class": "CSWSWaypoint",
+      "method": "EventHandler",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b4424043b05e04174007510",
+            "mask": "ffffffffffff00000000ffff",
+            "expected_bytes": "8b4424043b05e041740075108b81ec00",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894df08b45083b05a88b9900",
+            "mask": "ffffffffffffffffffffffffffff00000000",
+            "expected_bytes": "558bec83ec14894df08b45083b05a88b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894df08b45083b0520249900",
+            "mask": "ffffffffffffffffffffffffffff00000000",
+            "expected_bytes": "558bec83ec14894df08b45083b052024",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "a1c89178083b44240875118b442404",
+            "mask": "ff00000000ffffffffffffffffffff",
+            "expected_bytes": "a1c89178083b44240875118b44240483",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "exo.string_dtor",
+      "kind": "call",
+      "class": "CExoString",
+      "method": "~CExoString",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b0685c0741650c7460400000000",
+            "mask": "ffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "568bf18b0685c0741650c74604000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f883380074278b4df8c7410400000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f883380074",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5683ec088b7424108b0685c07415c7460400000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5683ec088b7424108b0685c07415c746",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.class_selection_select_button",
+      "kind": "call",
+      "class": "CSWGuiClassSelection",
+      "method": "OnSelectButton",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff68fb627300506489250000000056578b7c24188b474c",
+            "mask": "ffff00000000ffffff00000000ffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "64a1000000006aff68fb627300506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68cba5970064a1000000005083ec24a16002a10033c5508d45f464a300000000894dd48b45088b4850894de0",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff68cba5970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff686b9c960064a1000000005083ec24a1201fa10033c5508d45f464a300000000894dd48b45088b4850894de0",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff686b9c960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.close_dialog",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "CloseDialog",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec1053568bf18b8608010000",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "83ec1053568bf18b860801000033db3b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81eca8000000a16002a10033c58945ec",
+            "mask": "ffffffffffffffffffff00000000ffffffffff",
+            "expected_bytes": "558bec81eca8000000a16002a10033c5",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81eca8000000a1201fa10033c58945ec",
+            "mask": "ffffffffffffffffffff00000000ffffffffff",
+            "expected_bytes": "558bec81eca8000000a1201fa10033c5",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.container_handle_input",
+      "kind": "call",
+      "class": "CSWGuiContainer",
+      "method": "HandleInputEvent",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558b6c240c85ed568bf10f84100100008b44240c",
+            "mask": "ffffffffffffffffffffffff00000000ffffffff",
+            "expected_bytes": "558b6c240c85ed568bf10f8410010000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec1c894de8837d0c000f843c0100008b45088945e48b4de483e927894de4837de4070f87230100008b55e4ff249558655a00",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000",
+            "expected_bytes": "558bec83ec1c894de8837d0c000f843c",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec1c894de8837d0c000f843c0100008b45088945e48b4de483e927894de4837de4070f87230100008b55e4ff2495b8298b00",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000",
+            "expected_bytes": "558bec83ec1c894de8837d0c000f843c",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.handle_dialog_selection",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "HandleDialogSelection",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff68e8977200506489250000000083ec5c",
+            "mask": "ffff00000000ffffff00000000ffffffff00000000ffffff",
+            "expected_bytes": "64a1000000006aff68e8977200506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68581e950064a1000000005081ecc0000000a16002a10033c5508d45f464a300000000898d3cffffff8b853cffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff68581e950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68289a960064a1000000005081ecc0000000a1201fa10033c5508d45f464a300000000898d3cffffff8b853cffffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff68289a960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.hide_sw_in_game_gui",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "HideSWInGameGui",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b860801000085c0570f8415010000a1fc397a008b4804e8810efcff8bf885ff0f84fe0000008b8798000000",
+            "mask": "ffffffffffffffffffffffffffff00000000ff00000000ffffffff00000000ffffffffffff00000000ffffffffffff",
+            "expected_bytes": "568bf18b860801000085c0570f841501",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec2c894dd48b45d483b82801000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec2c894dd48b45d483b82801",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.main_chargen_begin_play",
+      "kind": "call",
+      "class": "CSWGuiMainCharGen",
+      "method": "BeginPlayGame",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf1e808f5ffff8b4e685e",
+            "mask": "ffffffff00000000ffffffff",
+            "expected_bytes": "568bf1e808f5ffff8b4e685ee9bf0aff",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4dfce8c1edffff8b45fc8b486c",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec6aff687056960064a1000000005081eca4000000a16002a10033c5508d45f464a300000000898d60ffffffa1041ca100",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffff00000000",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4dfce8c1edffff8b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4dfce8c1edffff8b45fc8b486c",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec6aff6830ef970064a1000000005081eca4000000a1201fa10033c5508d45f464a300000000898d60ffffffa1a4b4a100",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffff00000000",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4dfce8c1edffff8b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.main_chargen_set_visible_panel",
+      "kind": "call",
+      "class": "CSWGuiMainCharGen",
+      "method": "SetVisiblePanel",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "538b5c2408568bf13b9ec8220000",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "538b5c2408568bf13b9ec82200000f84",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894dfc8b45fc8b4d083b88582b0000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894dfc8b45fc8b4d083b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.main_menu_new_game",
+      "kind": "call",
+      "class": "CSWGuiMainMenu",
+      "method": "OnNewGamePicked",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff68f3e27200506489250000000083ec28568bf18b4644",
+            "mask": "ffff00000000ffffff00000000ffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "64a1000000006aff68f3e27200506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff680b7d950064a1000000005083ec78a16002a10033c5508d45f464a300000000894d808b45808b4848",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "558bec6aff680b7d950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff688b4a970064a1000000005083ec78a1201fa10033c5508d45f464a300000000894d808b45808b4848",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "558bec6aff688b4a970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.messagebox_handle_input",
+      "kind": "call",
+      "class": "CSWGuiMessageBox",
+      "method": "HandleInputEvent",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "538b5c240c85db56578b7c24108bf10f84e000000083ff3a",
+            "mask": "ffffffffffffffffffffffffffffffffff00000000ffffff",
+            "expected_bytes": "538b5c240c85db56578b7c24108bf10f",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec14894df0837d0c000f848d010000c745fc00000000",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffff",
+            "expected_bytes": "558bec83ec14894df0837d0c000f848d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.panel_exists",
+      "kind": "call",
+      "class": "CSWGuiManager",
+      "method": "PanelExists",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240450e826eeffff33c9",
+            "mask": "ffffffffffff00000000ffff",
+            "expected_bytes": "8b44240450e826eeffff33c983f8ff0f",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b4508508b4dfce87d00000033c9",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffff",
+            "expected_bytes": "558bec51894dfc8b4508508b4dfce87d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.party_selection_accept_party",
+      "kind": "call",
+      "class": "CSWGuiPartySelection",
+      "method": "AcceptParty",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "81ecc4000000a1fc397a0053",
+            "mask": "ffffffffffffff00000000ff",
+            "expected_bytes": "81ecc4000000a1fc397a00535556c744",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81ec9401000056898d6cfeffff",
+            "mask": "ffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec81ec9401000056898d6cfeffff",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.party_selection_vtable",
+      "kind": "reference",
+      "class": "CSWGuiPartySelection",
+      "method": "vtable",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "gui.remove_panel",
+      "kind": "call",
+      "class": "CSWGuiManager",
+      "method": "RemovePanel",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "56578b7c240c85ff8bf1744c",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "56578b7c240c85ff8bf1744c57e85ee3",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec10894df0837d08007507",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec10894df0837d0800750733",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.set_dialog_selection",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "SetDialogSelection",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b4424048b5424088981c8000000",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "8b4424048b5424088981c80000008b44",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc8b4d088988e00000008b55fc",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc8b4d088988e0",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.show_sw_in_game_gui",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "ShowSWInGameGui",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "64a1000000006aff6810937200506489250000000083ec10568bf18b8608010000",
+            "mask": "ffff00000000ffffff00000000ffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "64a1000000006aff6810937200506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68d01e950064a1000000005083ec40a16002a10033c5508d45f464a300000000894db48b45b4",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff68d01e950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68a09a960064a1000000005083ec40a1201fa10033c5508d45f464a300000000894db48b45b4",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "558bec6aff68a09a960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.status_summary_handle_input",
+      "kind": "call",
+      "class": "CSWGuiStatusSummary",
+      "method": "HandleInputEvent",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "538b5c240856578b7c241485ff8bf17455",
+            "mask": "ffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "538b5c240856578b7c241485ff8bf174",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec1c894de8837d0c000f84bd0000008b45088945e48b4de483e927894de4837de4070f87a40000008b55e40fb68240f05200",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000",
+            "expected_bytes": "558bec83ec1c894de8837d0c000f84bd",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec1c894de8837d0c000f84bd0000008b45088945e48b4de483e927894de4837de4070f87a40000008b55e40fb68240da7500",
+            "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000",
+            "expected_bytes": "558bec83ec1c894de8837d0c000f84bd",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.tutorial_handle_input",
+      "kind": "call",
+      "class": "CSWGuiTutorialBox",
+      "method": "HandleInputEvent",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "538b5c240c85db568b74240c",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "538b5c240c85db568b74240c578bf974",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894dfc837d0c007439",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894dfc837d0c0074398b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.tutorial_unpause",
+      "kind": "call",
+      "class": "CSWGuiTutorialBox",
+      "method": "MessageBoxUnpause",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b869009000085c07513a1fc397a008b48046a006a026a00e8d039f4ffc78690090000000000005e",
+            "mask": "ffffffffffffffffffffffffffff00000000ffffffffffffffffffff00000000ffffffffffffffffffffff",
+            "expected_bytes": "568bf18b869009000085c07513a1fc39",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f883b8d409000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f883b8d409",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.unpack_game",
+      "kind": "call",
+      "class": "CSWGuiSaveLoad",
+      "method": "UnpackGame",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff686053730064a100000000506489250000000083ec6853568b7508578b7d0c5756e872efffff85c00f8481010000684c5174008d4c2434e85caff1ff8b15e0397a0068ffff00008d442434508d4c2420518b4a0cc784248800000000000000e844bdf1ff8d4c2430c644247c02e8b6b0f1ff68cc1375008d4c243ce818aff1ff8b15e0397a0068ffff00008d44243c508d4c2418518b4a0cc684248800000003e803bdf1ffb3058d4c2438885c247ce874b0f1ff684c5174008d4c2444e8d6aef1ff8b0de8397a006a016a018d44244850c684248800000006e8aae8d3ff8d4c2440885c247ce83db0f1ff8d4c2410e8a4abf1ff48508d4c2444518d4c2418e874b3f1ff508d4c2414c684248000000007e842b0f1ff8d4c2440885c247ce805b0f1ff8d4c2418e86cabf1ff48508d542444528d4c2420e83cb3f1ff508d4c241cc684248000000008e80ab0f1ff885c247c8d4c2440e8cdaff1ff8d4c2418e814aaf1ff508d4c2414e80aaaf1ff50e85a39030083c4088d4c2410c644247c02e8a3aff1ff8d4c2418c744247cffffffffe892aff1ffb8010000008b4c247464890d000000005f5e5b8be55dc20c00",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffffffffffffffff00000000ffffffff00000000ff00000000ffffffffff00000000ffff00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffff00000000ff00000000ffffffffff00000000ffff00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffff00000000ff00000000ffffffffff00000000ffff00000000ffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffff00000000ffffffffff00000000ffffffffffffffffffffffff00000000ffffffffffffffffffffffffffff00000000ffffffffffffffffff00000000ffffffffff00000000ffffffffffffffffffffffff00000000ffffffffffffffffffffffffffff00000000ffffffffffffffffff00000000ffffffffff00000000ffffffffffff00000000ffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff686053730064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "gui.update_dialog",
+      "kind": "call",
+      "class": "CGuiInGame",
+      "method": "UpdateDialog",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec10568bf18b86b4000000",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "83ec10568bf18b86b40000005733ff3b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec78894d8c8b458c8b88cc000000",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec78894d8c8b458c8b88cc00",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "inventory.get_item_in_slot",
+      "kind": "call",
+      "class": "CSWInventory",
+      "method": "GetItemInSlot",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240450e896fdffff85c07414",
+            "mask": "ffffffffffff00000000ffffffff",
+            "expected_bytes": "8b44240450e896fdffff85c074148b0d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df48b4508508b4df4e83b0000008945fc837dfc00741e",
+            "mask": "ffffffffffffffffffffffffffffffffff00000000ffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df48b4508508b4df4",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "module.get_area",
+      "kind": "call",
+      "class": "CSWSModule",
+      "method": "GetArea",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf18b464039861c020000",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "568bf18b464039861c02000074158b0d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b4df88b903c020000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b4df88b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "module.load_start",
+      "kind": "detour",
+      "class": "CSWSModule",
+      "method": "LoadModuleStart",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83e4f86aff68df9b710064a100000000506489250000000081eca800000053568bf1578d4c2440",
+            "mask": "ffffffffffffffffff00000000ffff00000000ffffffff00000000ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83e4f86aff68df9b710064a100",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68c545970064a1000000005081ec74050000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff68c545970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff680500950064a1000000005081ec74050000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffff",
+            "expected_bytes": "558bec6aff680500950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "msg.area_loaded",
+      "kind": "call",
+      "class": "CSWCMessage",
+      "method": "SendPlayerToServerArea_AreaLoaded",
+      "convention": "stdcall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "566a03e8ee2e08008bf083c40485f675025ec357c60670c6460104",
+            "mask": "ffffffff00000000ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "566a03e8ee2e08008bf083c40485f675",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc6a006a006a03",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc6a006a006a036a048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "msg.attack",
+      "kind": "call",
+      "class": "CSWCMessage",
+      "method": "SendPlayerToServerInput_Attack",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec08566a016aff6a068bf1c744241400000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "83ec08566a016aff6a068bf1c7442414",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df4c745fc00000000c745f806000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "msg.change_door_state",
+      "kind": "call",
+      "class": "CSWCMessage",
+      "method": "SendPlayerToServerInput_ChangeDoorState",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec08566a016aff6a068bf1c744241006000000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "83ec08566a016aff6a068bf1c7442410",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df4c745f806000000",
+            "mask": "ffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df4c745f806000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "msg.request_status",
+      "kind": "call",
+      "class": "CSWCMessage",
+      "method": "SendPlayerToServerStatus_RequestStatus",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "566a03e8fe3108008bf033c0",
+            "mask": "ffffffff00000000ffffffff",
+            "expected_bytes": "566a03e8fe3108008bf033c083c4043b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc6a006a006a006a01",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc6a006a006a006a018b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "net.initialize",
+      "kind": "reference",
+      "class": "CNetLayer",
+      "method": "Initialize",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "net.non_window_messages",
+      "kind": "reference",
+      "class": "CNetLayer",
+      "method": "NonWindowMessages",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "net.process_received_frames",
+      "kind": "detour",
+      "class": "CNetLayer",
+      "method": "ProcessReceivedFrames",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240485c0568bf10f84870000008b8600000200",
+            "mask": "ffffffffffffffffffffff00000000ffffffffffff",
+            "expected_bytes": "8b44240485c0568bf10f84870000008b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c56894df4837d0800",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c56894df4837d08000f84",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "net.send_message_to_player",
+      "kind": "detour",
+      "class": "CNetLayer",
+      "method": "SendMessageToPlayer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff68383f720064a100000000506489250000000083ec3455",
+            "mask": "ffffff00000000ffff00000000ffffffff00000000ffffffff",
+            "expected_bytes": "6aff68383f720064a100000000506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68c8cd960064a1000000005083ec7456",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff",
+            "expected_bytes": "558bec6aff68c8cd960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff6868f3950064a1000000005083ec7456",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff",
+            "expected_bytes": "558bec6aff6868f3950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "net.shutdown",
+      "kind": "reference",
+      "class": "CNetLayer",
+      "method": "ShutDown",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "net.start_connect_to_session",
+      "kind": "detour",
+      "class": "CNetLayer",
+      "method": "StartConnectToSession",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "51538bd983bb60000200017507",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "51538bd983bb6000020001750733c05b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec20894de08b45e083b86000020001",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec20894de08b45e083b86000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "net.start_server_mode",
+      "kind": "detour",
+      "class": "CNetLayer",
+      "method": "StartServerMode",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "568bf183be3c000200017506",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "568bf183be3c00020001750633c05ec2",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc83b83c00020001",
+            "mask": "ffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc83b83c000200",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "object.stop_dialog",
+      "kind": "call",
+      "class": "CSWSObject",
+      "method": "StopDialog",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "51568bf18b0657ff503033ff",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "51568bf18b0657ff503033ff85c07416",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec24894de08b45e08b10",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec24894de08b45e08b108b4d",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "party.get_player_character",
+      "kind": "call",
+      "class": "CSWParty",
+      "method": "GetPlayerCharacter",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8339007e138b41248b0dfc397a00",
+            "mask": "ffffffffffffffffffff00000000",
+            "expected_bytes": "8339007e138b41248b0dfc397a008b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc6a008b4dfc",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec83ec0c894df4837d08007c37",
+              "target_mask": "ffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc6a008b4dfce80f0000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "party.set_leader",
+      "kind": "call",
+      "class": "CSWParty",
+      "method": "SetLeader",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff68d898720064a100000000506489250000000083ec2c8b15fc397a00558be9",
+            "mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffff00000000ffffff",
+            "expected_bytes": "6aff68d898720064a100000000506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68b1c9940064a1000000005081ec24010000a16002a10033c5508d45f464a300000000898dd4feffff8b85d4feffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff68b1c9940064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff6821b8960064a1000000005081ec24010000a1201fa10033c5508d45f464a300000000898dd4feffff8b85d4feffff",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff",
+            "expected_bytes": "558bec6aff6821b8960064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.client_to_server_object_id",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "ClientToServerObjectId",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "8b4c240481f90000007f740c",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9383500009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec51894dfc817d080000007f740c",
+              "target_mask": "ffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_client_object_by_object_id",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetClientObjectByObjectId",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "538b5c240881fb0000007f57",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9384100009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec14894decc745fc00000000817d080000007f",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_game_object",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetGameObject",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "518b5424088b895c0001008d4424005052c744240800000000e8126b02008a156c667400",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffff00000000",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9a82f00009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec10894df08b45f08b4804894df4c745fc000000008b55f48b825c000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec10894df08b45f08b480489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_item_by_object_id",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetItemByGameObjectID",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "518b5424088b895c0001008d4424005052c744240800000000e8d26a02003a056c667400751c8b4c240085c974148a41083a053566740075098b11ff5238",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffff00000000ffffffffffffffffffffffffffffff00000000ffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9d82f00009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b885c000100894df88d55fc528b4508508b4df8e8a4eecaff0fb6c80fb615f77d98003bca7527837dfc0074210fb605ed7d98008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b4238",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b885c000100894df88d55fc528b4508508b4df8e8846400000fb6c80fb6157f4499003bca7527837dfc0074210fb605754499008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b4238",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_pause_timer",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetPauseTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b8050000100c3",
+            "mask": "ffffffffffffffffffff",
+            "expected_bytes": "8b41048b8050000100c3909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b9150000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_player_creature_id",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetPlayerCreatureId",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b4904",
+              "suffix": "",
+              "target_pattern": "a1fc397a008b4808566a016a00",
+              "target_mask": "ff00000000ffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b4904e9686200009090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec83ec14894deca1041ca1008b4808894df86a01",
+              "target_mask": "ffffffffffffffffffff00000000ffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e88e0c",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b45fc8b4804",
+              "suffix": "8be55dc3",
+              "target_pattern": "558bec83ec14894deca1a4b4a1008b4808894df86a01",
+              "target_mask": "ffffffffffffffffffff00000000ffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b45fc8b4804e85ed4",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server.get_world_timer",
+      "kind": "call",
+      "class": "CServerExoApp",
+      "method": "GetWorldTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b41048b8048000100c3",
+            "mask": "ffffffffffffffffffff",
+            "expected_bytes": "8b41048b8048000100c3909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b45f88b48048b9148000100",
+            "mask": "ffffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server_area.attach_from_client",
+      "kind": "call",
+      "class": "CSWSArea",
+      "method": "AttachmentFromClientArea",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b4424048981d0020000c20400",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b4424048981d0020000c20400909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc8b4d08898834030000",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc8b4d08898834",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "server_object.set_position",
+      "kind": "call",
+      "class": "CSWSObject",
+      "method": "SetPosition",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "538b5c240856578bf18dbe90000000",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "538b5c240856578bf18dbe9000000053",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec81eca4000000898d5cffffff8b450850",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec81eca4000000898d5cffffff8b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "stats.auto_levelup",
+      "kind": "call",
+      "class": "CSWSCreatureStats",
+      "method": "AutoLevelup",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "6aff68eb22720064a100000000506489250000000083ec44535533ed",
+            "mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffffffff",
+            "expected_bytes": "6aff68eb22720064a100000000506489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68fe2f970064a1000000005081ecb801000056",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff",
+            "expected_bytes": "558bec6aff68fe2f970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff688ec4950064a1000000005081ecb801000056",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff",
+            "expected_bytes": "558bec6aff688ec4950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "stats.can_level_up",
+      "kind": "call",
+      "class": "CSWSCreatureStats",
+      "method": "CanLevelUp",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "a1fc397a005356578b78086a00",
+            "mask": "ff00000000ffffffffffffffff",
+            "expected_bytes": "a1fc397a005356578b78086a008bf1e8",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec2056894de4a1041ca100",
+            "mask": "ffffffffffffffffffffff00000000",
+            "expected_bytes": "558bec83ec2056894de4a1041ca1008b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec2056894de4a1a4b4a100",
+            "mask": "ffffffffffffffffffffff00000000",
+            "expected_bytes": "558bec83ec2056894de4a1a4b4a1008b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "stats.get_level",
+      "kind": "call",
+      "class": "CSWSCreatureStats",
+      "method": "GetLevel",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec08550fb6a98900000033d2",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "83ec08550fb6a98900000033d233c085",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff68a025970064a1000000005083ec5ca16002a10033c5508d45f464a300000000894da0c745e400000000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec6aff68a025970064a100000000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec6aff6800ba950064a1000000005083ec5ca1201fa10033c5508d45f464a300000000894da0c745e400000000",
+            "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff",
+            "expected_bytes": "558bec6aff6800ba950064a100000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "timer.pause_world_timer",
+      "kind": "call",
+      "class": "CWorldTimer",
+      "method": "PauseWorldTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec08568bf18b462485c07526",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "83ec08568bf18b462485c075268d4424",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec0c894df48b45f483782400752c",
+            "mask": "ffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec0c894df48b45f483782400",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "timer.set_fixed_snapshot_rate",
+      "kind": "call",
+      "class": "CWorldTimer",
+      "method": "SetFixedSnapshotRate",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b54240833c089410c894110",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "8b54240833c089410c89411089411489",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fcc7400c00000000",
+            "mask": "ffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fcc7400c000000",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "timer.set_snapshot_scale",
+      "kind": "call",
+      "class": "CWorldTimer",
+      "method": "SetSnapshotScale",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "d944240456d80d381874008bf1",
+            "mask": "ffffffffffffff00000000ffff",
+            "expected_bytes": "d944240456d80d381874008bf1e8eacc",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "timer.unpause_world_timer",
+      "kind": "call",
+      "class": "CWorldTimer",
+      "method": "UnpauseWorldTimer",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "83ec08568bf1837e24017540",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "83ec08568bf1837e240175408b46108b",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc8b45fc83782401",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc8b45fc837824017522",
+            "platforms": [
+              "win"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.execute_code",
+      "kind": "reference",
+      "class": "CVirtualMachineInternal",
+      "method": "ExecuteCode",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "vm.execute_command",
+      "kind": "reference",
+      "class": "CSWVirtualMachineCommands",
+      "method": "ExecuteCommand",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {}
+    },
+    {
+      "name": "vm.load_script_situation",
+      "kind": "detour",
+      "class": "CVirtualMachine",
+      "method": "LoadScriptSituation",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "6aff681b3e720064a100000000506489250000000083ec1c5356576a28",
+              "target_mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e9e9150000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4510508b4d0c518b5508528b45fc8b481c",
+              "suffix": "8be55dc20c00",
+              "target_pattern": "558bec6aff6886d2960064a1000000005083ec44a16002a10033c5508d45f464a300000000894dc06a28",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4510508b4d0c518b5508528b45fc8b481c",
+              "suffix": "8be55dc20c00",
+              "target_pattern": "558bec6aff6856f2950064a1000000005083ec44a1201fa10033c5508d45f464a300000000894dc06a28",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "5683ec188b4424248b4c24288b54242c8b7424208b761c8954240c894c240889442404893424",
+              "suffix": "83c4185ec3",
+              "target_pattern": "5553575683ec3cc7042428000000",
+              "target_mask": "ffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "5683ec188b4424248b4c24288b54242c",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.run_script",
+      "kind": "detour",
+      "class": "CVirtualMachineInternal",
+      "method": "RunScript",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "535556578b7c241433ed3bfd",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "535556578b7c241433ed3bfd8bf10f84",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec10894df4837d0800742a",
+            "mask": "ffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec10894df4837d0800742a8b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575683ec0c8b6c242431f685ed0f84320100008b4500",
+            "mask": "ffffffffffffffffffffffffffffffffff00000000ffffff",
+            "expected_bytes": "5553575683ec0c8b6c242431f685ed0f",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.run_script_situation",
+      "kind": "detour",
+      "class": "CVirtualMachineInternal",
+      "method": "RunScriptSituation",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "53568bf18d9eac010000578bcb",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "53568bf18d9eac010000578bcbe85ed6",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec5c894db48b4db4",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec5c894db48b4db481c1ac01",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "53575683ec108b7c24248b5c24208db3ac010000",
+            "mask": "ffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "53575683ec108b7c24248b5c24208db3",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.save_script_situation",
+      "kind": "detour",
+      "class": "CVirtualMachineInternal",
+      "method": "SaveScriptSituation",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "53558b6c240c8b451085c056",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "53558b6c240c8b451085c056578bf174",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec08894df88b450883781000",
+            "mask": "ffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec08894df88b450883781000",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5553575683ec1c8b5c243c8b7424388b7c2434",
+            "mask": "ffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "5553575683ec1c8b5c243c8b7424388b",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_engine_structure",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopEngineStructure",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "568bb1ac01000085f6578db9ac0100007f07",
+              "target_mask": "ffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e989150000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+              "suffix": "8be55dc20800",
+              "target_pattern": "558bec83ec10894df08b4df081c1ac010000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24188b5424108b521c894c240889442404891424",
+              "suffix": "83c40cc3",
+              "target_pattern": "5553575683ec0c8b7424208bbeac010000",
+              "target_mask": "ffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24188b5424108b",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_float",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopFloat",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "8b81ac01000085c08d91ac0100007f0533c0c2040053568bb1b80100008a5c30ff4880fb04",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e9e9140000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e899c7ffff8945fc837dfc007f0433c0eb55",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8f9c7ffff8945fc837dfc007f0433c0eb55",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "5683ec088b4c24108b91ac01000031c085d27e39",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_integer",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopInteger",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "8b81ac01000085c08d91ac0100007f0533c0c2040053568bb1b80100008a5c30ff4880fb03",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e9b9140000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec08894df88b4df881c1ac010000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "5683ec088b4c24108b91ac01000031c085d27e358bb1b8010000807c16ff03",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_object",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopObject",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "8b81ac01000085c08d91ac0100007f0533c0c2040053568bb1b80100008a5c30ff4880fb06",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e9d9150000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e859c3ffff8945f8",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8b9c3ffff8945f8",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "5683ec088b4c24108b91ac01000031c085d27e358bb1b8010000807c16ff06",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_string",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopString",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "568bb1ac01000085f6578db9ac0100007e10",
+              "target_mask": "ffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e959150000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8f9c5ffff8945fc837dfc007f0433c0eb57",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e859c6ffff8945fc837dfc007f0433c0eb57",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "575683ec148b7424208bbeac010000",
+              "target_mask": "ffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_pop_vector",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPopVector",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "51568bf18b86ac01000085c0",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e919150000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec0c894df48d45fc508b4df4",
+              "target_mask": "ffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "53575683ec108b7424208d5c240c",
+              "target_mask": "ffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_engine_structure",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushEngineStructure",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "578bf98b8fd403000085c97506",
+              "target_mask": "ffffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e909090000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+              "suffix": "8be55dc20800",
+              "target_pattern": "558bec83ec0c894df48b45f483b8d403000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24188b5424108b521c894c240889442404891424",
+              "suffix": "83c40cc3",
+              "target_pattern": "53575683ec108b7c24208b8fd4030000",
+              "target_mask": "ffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24188b5424108b",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_float",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushFloat",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "568bf1578dbeac0100006a04",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e949080000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc51d94508d91c248b45fc8b481c",
+            "mask": "ffffffffffffffffffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc51d94508d91c248b45",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "83ec0cf30f104424148b4424108b401c",
+            "mask": "ffffffffffffffffffffffffffffffff",
+            "expected_bytes": "83ec0cf30f104424148b4424108b401c",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_integer",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushInteger",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "568bf1578dbeac0100006a03",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e939080000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec08894df86a038b4df8",
+              "target_mask": "ffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "575683ec148b7424248b7c24208d87ac010000890424c744240403000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_object",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushObject",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "568bf1578dbeac0100006a06",
+              "target_mask": "ffffffffffffffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e939090000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec83ec08894df86a068b4df8",
+              "target_mask": "ffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "575683ec148b7424248b7c24208d87ac010000890424c744240406000000",
+              "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_string",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushString",
+      "convention": "thiscall",
+      "required": true,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e9",
+              "prefix": "8b09",
+              "suffix": "",
+              "target_pattern": "6aff687b3d720064a1000000005064892500000000515356576a08",
+              "target_mask": "ffffff00000000ffff00000000ffffffff00000000ffffffffffff",
+              "kind_detail": "tail_jmp_thunk"
+            },
+            "expected_bytes": "8b09e999080000909090909090909090",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec6aff685ba3960064a1000000005083ec18a16002a10033c5508d45f464a300000000894de06a08",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+              "suffix": "8be55dc20400",
+              "target_pattern": "558bec6aff68cbf1950064a1000000005083ec18a1201fa10033c5508d45f464a300000000894de06a08",
+              "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "xref_thunk",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "xref_thunk": {
+              "opcode": "e8",
+              "prefix": "83ec0c8b4424148b4c24108b491c89442404890c24",
+              "suffix": "83c40cc3",
+              "target_pattern": "575683ec148b7c2424c7042408000000e8cc69d2ff89c6893c24",
+              "target_mask": "ffffffffffffffffffffffffffffffffff00000000ffffffffff",
+              "kind_detail": "call_forwarder_xref"
+            },
+            "expected_bytes": "83ec0c8b4424148b4c24108b491c8944",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm.stack_push_vector",
+      "kind": "call",
+      "class": "CVirtualMachine",
+      "method": "StackPushVector",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b5424048b0983ec0c8bc48910",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b5424048b0983ec0c8bc489108b5424",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec51894dfc83ec0c8bc4",
+            "mask": "ffffffffffffffffffffffff",
+            "expected_bytes": "558bec51894dfc83ec0c8bc48b4d0889",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "83ec1c8b4424208b401c8b4c242c",
+            "mask": "ffffffffffffffffffffffffffff",
+            "expected_bytes": "83ec1c8b4424208b401c8b4c242c894c",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "vmcmd.destroy_game_defined_structure",
+      "kind": "call",
+      "class": "CSWVirtualMachineCommands",
+      "method": "DestroyGameDefinedStructure",
+      "convention": "thiscall",
+      "required": false,
+      "resolved_builds": [],
+      "locators": {
+        "k1": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "8b44240485c056751c8b74240c",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "8b44240485c056751c8b74240c85f674",
+            "platforms": [
+              "win"
+            ]
+          }
+        ],
+        "k2": [
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "pe",
+            "platform": "win",
+            "pattern": "558bec83ec44894dcc837d0800",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "558bec83ec44894dcc837d080075458b",
+            "platforms": [
+              "win"
+            ]
+          },
+          {
+            "type": "pattern",
+            "arch": "x86",
+            "format": "elf",
+            "platform": "linux",
+            "pattern": "5756508b7424188b7c241485ff",
+            "mask": "ffffffffffffffffffffffffff",
+            "expected_bytes": "5756508b7424188b7c241485ff751485",
+            "platforms": [
+              "linux"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

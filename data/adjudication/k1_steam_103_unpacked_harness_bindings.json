@@ -3911,6 +3911,28 @@
      "accessor or consumer immediate in the raw image"
     ]
    }
+  },
+  {
+   "name": "CVirtualMachineInternal::stack_pointer",
+   "kind": "field",
+   "owner": "CVirtualMachineInternal",
+   "addr": "0x00000000",
+   "offset": "0x1ac",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "K1 Steam unpacked .textU is byte-identical to K1 GOG .text; StackPopInteger internal 0x005d24c0 reads m_nStackPointer at [ecx+0x1ac]."
+   }
+  },
+  {
+   "name": "CExoString::~CExoString",
+   "addr": "0x005e5c20",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "Confirmed byte-identical to K1 GOG 0x005e5c20 directly on K1__k1_win_steam_swkotor.exe raw image."
+   }
   }
  ]
 }

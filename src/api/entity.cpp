@@ -2,8 +2,10 @@
 
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <string>
 
+#include "api/abi_layout.hpp"
 #include "api/routines.hpp"
 
 extern "C" {
@@ -37,6 +39,15 @@ const char* const kIsPartyMember = "IsObjectPartyMember";
 const char* const kIsPC          = "GetIsPC";
 const char* const kObjectByTag   = "GetObjectByTag";
 const char* const kFaction       = "GetStandardFaction";
+const char* const kGetModule     = "GetModule";
+const char* const kFirstInArea   = "GetFirstObjectInArea";
+const char* const kNextInArea    = "GetNextObjectInArea";
+const char* const kFirstInShape  = "GetFirstObjectInShape";
+const char* const kNextInShape   = "GetNextObjectInShape";
+const char* const kLocation      = "Location";
+const char* const kCreateObject  = "CreateObject";
+const char* const kDestroyObject = "DestroyObject";
+constexpr int kObjectTypeAll     = 32767;
 
 // ------------------------------------------------------- the routine call ---
 
@@ -370,6 +381,187 @@ int l_find(lua_State* L) {
     return 1;
 }
 
+int l_self(lua_State* L) {
+    const VmBinding& vm = binding();
+    if (!vm.usable() || vm.command_implementer == nullptr) {
+        lua_pushnil(L);
+        return 1;
+    }
+    const auto* cmds = static_cast<const char*>(vm.command_implementer);
+    std::int32_t has_caller = 0;
+    abi::ObjectId caller_id = 0;
+    std::memcpy(&has_caller, cmds + layout::kEngine.commands_has_caller, sizeof(has_caller));
+    std::memcpy(&caller_id, cmds + layout::kEngine.commands_caller_id, sizeof(caller_id));
+    if (has_caller == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    Handle h;
+    if (resolve(L, abi::script_id(caller_id), h)) push_handle(L, h);
+    else                                           lua_pushnil(L);
+    return 1;
+}
+
+int l_module(lua_State* L) {
+    std::uint32_t id = 0;
+    Handle h;
+    if (call_object(L, kGetModule, 0, id) && resolve(L, id, h)) push_handle(L, h);
+    else                                                       lua_pushnil(L);
+    return 1;
+}
+
+int l_empty_iter(lua_State*) { return 0; }
+
+int l_in_area_iter(lua_State* L) {
+    std::uint32_t area = 0;
+    if (!object_id_at(L, lua_upvalueindex(1), area)) return 0;
+    const int filter = static_cast<int>(lua_tointeger(L, lua_upvalueindex(2)));
+    const bool started = lua_toboolean(L, lua_upvalueindex(3)) != 0;
+    if (!started) {
+        lua_pushboolean(L, 1);
+        lua_replace(L, lua_upvalueindex(3));
+    }
+
+    const char* fn = started ? kNextInArea : kFirstInArea;
+    for (;;) {
+        push_object_id(L, area);
+        lua_pushinteger(L, filter);
+        std::uint32_t found = 0;
+        if (!call_object(L, fn, 2, found) || found == 0 || found == kInvalidObject)
+            return 0;
+        Handle h;
+        if (resolve(L, found, h)) {
+            push_handle(L, h);
+            return 1;
+        }
+        fn = kNextInArea;
+    }
+}
+
+int l_in_area(lua_State* L) {
+    if (!ready()) {
+        lua_pushcfunction(L, l_empty_iter);
+        return 1;
+    }
+    std::uint32_t area = kInvalidObject;
+    if (lua_gettop(L) >= 1 && !lua_isnil(L, 1)) {
+        area = object_arg_checked(L, 1);
+    } else {
+        std::uint32_t pc = 0;
+        if (call_object(L, kFirstPC, 0, pc) && is_live(L, pc)) {
+            push_object_id(L, pc);
+            if (!call_object(L, kGetArea, 1, area)) area = kInvalidObject;
+        }
+    }
+    const int filter = (lua_gettop(L) >= 2 && !lua_isnil(L, 2))
+                           ? static_cast<int>(luaL_checkinteger(L, 2))
+                           : kObjectTypeAll;
+    if (area == 0 || area == kInvalidObject || !is_live(L, area)) {
+        lua_pushcfunction(L, l_empty_iter);
+        return 1;
+    }
+    push_object_id(L, area);
+    lua_pushinteger(L, filter);
+    lua_pushboolean(L, 0);
+    lua_pushcclosure(L, l_in_area_iter, 3);
+    return 1;
+}
+
+int l_near(lua_State* L) {
+    const std::uint32_t target = object_arg_checked(L, 1);
+    const double radius = luaL_checknumber(L, 2);
+    const int filter = (lua_gettop(L) >= 3 && !lua_isnil(L, 3))
+                           ? static_cast<int>(luaL_checkinteger(L, 3))
+                           : kObjectTypeAll;
+    const int los = lua_toboolean(L, 4) != 0 ? 1 : 0;
+
+    lua_newtable(L);
+    const int out_tbl = lua_gettop(L);
+    if (!ready() || !is_live(L, target)) return 1;
+
+    push_object_id(L, target);
+    if (!call_one(L, kGetPosition, 1)) return 1;
+    lua_pushnumber(L, 0.0);
+    if (!call_one(L, kLocation, 2)) {
+        lua_settop(L, out_tbl);
+        return 1;
+    }
+    const int loc_idx = lua_gettop(L);
+
+    int written = 0;
+    const char* fn = kFirstInShape;
+    for (;;) {
+        lua_pushinteger(L, 0); // SHAPE_SPHERE
+        lua_pushnumber(L, radius);
+        lua_pushvalue(L, loc_idx);
+        lua_pushinteger(L, los);
+        lua_pushinteger(L, filter);
+        std::uint32_t found = 0;
+        if (!call_object(L, fn, 5, found) || found == 0 || found == kInvalidObject)
+            break;
+        Handle h;
+        if (resolve(L, found, h)) {
+            push_handle(L, h);
+            lua_rawseti(L, out_tbl, ++written);
+        }
+        fn = kNextInShape;
+    }
+    lua_settop(L, out_tbl);
+    return 1;
+}
+
+int l_create(lua_State* L) {
+    const int obj_type = static_cast<int>(luaL_checkinteger(L, 1));
+    const char* tmpl = luaL_checkstring(L, 2);
+    luaL_checktype(L, 3, LUA_TTABLE);
+    const double facing = luaL_optnumber(L, 4, 0.0);
+    const int appear = lua_toboolean(L, 5) != 0 ? 1 : 0;
+
+    if (!ready()) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_pushvalue(L, 3);
+    lua_pushnumber(L, facing);
+    if (!call_one(L, kLocation, 2)) {
+        lua_pushnil(L);
+        return 1;
+    }
+    const int loc_idx = lua_gettop(L);
+    lua_pushinteger(L, obj_type);
+    lua_pushstring(L, tmpl);
+    lua_pushvalue(L, loc_idx);
+    lua_pushinteger(L, appear);
+    std::uint32_t created = 0;
+    Handle h;
+    if (call_object(L, kCreateObject, 4, created) && resolve(L, created, h))
+        push_handle(L, h);
+    else
+        lua_pushnil(L);
+    return 1;
+}
+
+int l_destroy(lua_State* L) {
+    std::uint32_t id = 0;
+    if (Handle* h = to_handle(L, 1)) id = h->id;
+    else if (!object_id_at(L, 1, id))
+        return luaL_argerror(L, 1, "expected an object handle or an object id");
+    const double delay = luaL_optnumber(L, 2, 0.0);
+
+    const Routine* r = ready() ? find(std::string(kDestroyObject)) : nullptr;
+    if (r == nullptr || !is_live(L, id)) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    const int base = lua_gettop(L);
+    push_object_id(L, id);
+    lua_pushnumber(L, delay);
+    call(L, *r, base + 1);
+    lua_settop(L, base);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 int l_name(lua_State* L)     { return push_name(L, object_arg_checked(L, 1)); }
 int l_tag(lua_State* L)      { return push_tag(L, object_arg_checked(L, 1)); }
 int l_position(lua_State* L) { return push_position(L, object_arg_checked(L, 1)); }
@@ -445,6 +637,12 @@ const Entry kModule[] = {
     {"area",            l_area},
     {"faction",         l_faction},
     {"find",            l_find},
+    {"self",            l_self},
+    {"module",          l_module},
+    {"in_area",         l_in_area},
+    {"near",            l_near},
+    {"create",          l_create},
+    {"destroy",         l_destroy},
 };
 
 const Entry kMethods[] = {

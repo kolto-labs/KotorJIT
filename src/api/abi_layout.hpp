@@ -43,6 +43,7 @@ struct EngineLayout {
     std::size_t area_game_object;
     std::size_t module_game_object;
     bool module_game_object_is_pointer;
+    bool itanium_memptr;
 };
 
 inline constexpr EngineLayout kI386{
@@ -52,8 +53,17 @@ inline constexpr EngineLayout kI386{
     /*object_id_bytes*/ 4,
     /*game_object_id*/ 4,
     /*commands_has_caller*/ 4, /*commands_caller_id*/ 8, /*commands_table*/ 0x0C,
+#if defined(_WIN32)
     /*command_entry_bytes*/ 4,
+#else
+    /*command_entry_bytes*/ 8,
+#endif
     /*area_game_object*/ 284, /*module_game_object*/ 28, /*module_game_object_is_pointer*/ true,
+#if defined(_WIN32)
+    /*itanium_memptr*/ false,
+#else
+    /*itanium_memptr*/ true,
+#endif
 };
 
 inline constexpr EngineLayout kX64{
@@ -65,6 +75,7 @@ inline constexpr EngineLayout kX64{
     /*commands_has_caller*/ 8, /*commands_caller_id*/ 0x10, /*commands_table*/ 0x18,
     /*command_entry_bytes*/ 16,
     /*area_game_object*/ 0x158, /*module_game_object*/ 0x28, /*module_game_object_is_pointer*/ false,
+    /*itanium_memptr*/ true,
 };
 
 inline constexpr const EngineLayout& kEngine = abi::kX64 ? kX64 : kI386;

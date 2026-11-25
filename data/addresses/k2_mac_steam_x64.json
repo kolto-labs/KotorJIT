@@ -28,7 +28,9 @@
       "method_detail": "mangled symbol _ZN23CVirtualMachineInternal9RunScriptEP10CExoStringyi",
       "candidates": 1,
       "addr_hex": "0x1002F451E",
-      "expected_bytes": "554889e5415741564155415453504189"
+      "expected_bytes": "554889e5415741564155415453504189",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -41,7 +43,9 @@
       "method_detail": "mangled symbol _ZN23CVirtualMachineInternal18RunScriptSituationEP21CVirtualMachineScriptyi",
       "candidates": 1,
       "addr_hex": "0x1002F481E",
-      "expected_bytes": "554889e5415741564155415453504189"
+      "expected_bytes": "554889e5415741564155415453504189",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.execute_command": {
       "cls": "CSWVirtualMachineCommands",
@@ -54,7 +58,9 @@
       "method_detail": "mangled symbol _ZN25CSWVirtualMachineCommands14ExecuteCommandEii",
       "candidates": 1,
       "addr_hex": "0x100327914",
-      "expected_bytes": "554889e581fe6c0300007f284863ce4c"
+      "expected_bytes": "554889e581fe6c0300007f284863ce4c",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -67,7 +73,9 @@
       "method_detail": "mangled symbol _ZN23CVirtualMachineInternal19SaveScriptSituationEP21CVirtualMachineScriptP7CResGFFP10CResStruct",
       "candidates": 1,
       "addr_hex": "0x1002F4CB2",
-      "expected_bytes": "554889e5415741564155415453504989"
+      "expected_bytes": "554889e5415741564155415453504989",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.load_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -80,7 +88,9 @@
       "method_detail": "mangled symbol _ZN23CVirtualMachineInternal19LoadScriptSituationEPP21CVirtualMachineScriptP7CResGFFP10CResStruct",
       "candidates": 1,
       "addr_hex": "0x1002F4E3E",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_integer": {
       "cls": "CVirtualMachine",
@@ -93,7 +103,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine15StackPopIntegerEPi",
       "candidates": 1,
       "addr_hex": "0x1002F59A4",
-      "expected_bytes": "554889e5488b7f285de9eee6ffff5548"
+      "expected_bytes": "554889e5488b7f285de9eee6ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
@@ -106,7 +118,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine16StackPushIntegerEi",
       "candidates": 1,
       "addr_hex": "0x1002F59B2",
-      "expected_bytes": "554889e5488b7f285de9e8e4ffff5548"
+      "expected_bytes": "554889e5488b7f285de9e8e4ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
@@ -119,7 +133,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine13StackPopFloatEPf",
       "candidates": 1,
       "addr_hex": "0x1002F59C0",
-      "expected_bytes": "554889e5488b7f285de91ce7ffff5548"
+      "expected_bytes": "554889e5488b7f285de91ce7ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -132,7 +148,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine14StackPushFloatEf",
       "candidates": 1,
       "addr_hex": "0x1002F59CE",
-      "expected_bytes": "554889e5488b7f285de91ee5ffff5548"
+      "expected_bytes": "554889e5488b7f285de91ee5ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
@@ -145,7 +163,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine14StackPopStringEP10CExoString",
       "candidates": 1,
       "addr_hex": "0x1002F59F8",
-      "expected_bytes": "554889e5488b7f285de932e7ffff5548"
+      "expected_bytes": "554889e5488b7f285de932e7ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
@@ -158,7 +178,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine15StackPushStringERK10CExoString",
       "candidates": 1,
       "addr_hex": "0x1002F5A06",
-      "expected_bytes": "554889e5488b7f285de93ae5ffff5548"
+      "expected_bytes": "554889e5488b7f285de93ae5ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -171,7 +193,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine14StackPopObjectEPy",
       "candidates": 1,
       "addr_hex": "0x1002F5A30",
-      "expected_bytes": "554889e5488b7f285de9caf0ffff5548"
+      "expected_bytes": "554889e5488b7f285de9caf0ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
@@ -184,7 +208,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine15StackPushObjectEy",
       "candidates": 1,
       "addr_hex": "0x1002F5A3E",
-      "expected_bytes": "554889e5488b7f285de98ee5ffff5548"
+      "expected_bytes": "554889e5488b7f285de98ee5ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
@@ -197,7 +223,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine14StackPopVectorEP6Vector",
       "candidates": 1,
       "addr_hex": "0x1002F59DC",
-      "expected_bytes": "554889e5488b7f285de9b0e7ffff5548"
+      "expected_bytes": "554889e5488b7f285de9b0e7ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
@@ -210,7 +238,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine15StackPushVectorE6Vector",
       "candidates": 1,
       "addr_hex": "0x1002F59EA",
-      "expected_bytes": "554889e5488b7f285de912e8ffff5548"
+      "expected_bytes": "554889e5488b7f285de912e8ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
@@ -223,7 +253,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine23StackPopEngineStructureEiPPv",
       "candidates": 1,
       "addr_hex": "0x1002F5A14",
-      "expected_bytes": "554889e5488b7f285de96cf0ffff5548"
+      "expected_bytes": "554889e5488b7f285de96cf0ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
@@ -236,7 +268,9 @@
       "method_detail": "mangled symbol _ZN15CVirtualMachine24StackPushEngineStructureEiPv",
       "candidates": 1,
       "addr_hex": "0x1002F5A22",
-      "expected_bytes": "554889e5488b7f285de9fce5ffff5548"
+      "expected_bytes": "554889e5488b7f285de9fce5ffff5548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vmcmd.destroy_game_defined_structure": {
       "cls": "CSWVirtualMachineCommands",
@@ -249,7 +283,9 @@
       "method_detail": "mangled symbol _ZN25CSWVirtualMachineCommands27DestroyGameDefinedStructureEiPv",
       "candidates": 1,
       "addr_hex": "0x100327CFC",
-      "expected_bytes": "554889e54156534889d34189f64585f6"
+      "expected_bytes": "554889e54156534889d34189f64585f6",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "exo.string_dtor": {
       "cls": "CExoString",
@@ -262,7 +298,9 @@
       "method_detail": "mangled symbol _ZN10CExoStringD1Ev",
       "candidates": 1,
       "addr_hex": "0x1002C46C4",
-      "expected_bytes": "554889e553504889fb488b3b4885ff74"
+      "expected_bytes": "554889e553504889fb488b3b4885ff74",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.creature": {
       "cls": "CSWSCreature",
@@ -275,7 +313,9 @@
       "method_detail": "mangled symbol _ZN12CSWSCreature12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x100386770",
-      "expected_bytes": "554889e54157415641554154534881ec"
+      "expected_bytes": "554889e54157415641554154534881ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.door": {
       "cls": "CSWSDoor",
@@ -288,7 +328,9 @@
       "method_detail": "mangled symbol _ZN8CSWSDoor12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x10042CD84",
-      "expected_bytes": "554889e54157415641554154534881ec"
+      "expected_bytes": "554889e54157415641554154534881ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.placeable": {
       "cls": "CSWSPlaceable",
@@ -301,7 +343,9 @@
       "method_detail": "mangled symbol _ZN13CSWSPlaceable12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x10039CD96",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.trigger": {
       "cls": "CSWSTrigger",
@@ -314,7 +358,9 @@
       "method_detail": "mangled symbol _ZN11CSWSTrigger12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x100413D12",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.module": {
       "cls": "CSWSModule",
@@ -327,7 +373,9 @@
       "method_detail": "mangled symbol _ZN10CSWSModule12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x1003BEC52",
-      "expected_bytes": "554889e541574156534883ec184989cf"
+      "expected_bytes": "554889e541574156534883ec184989cf",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.area": {
       "cls": "CSWSArea",
@@ -340,7 +388,9 @@
       "method_detail": "mangled symbol _ZN8CSWSArea12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x1003E3CFC",
-      "expected_bytes": "554889e54157415641554154534881ec"
+      "expected_bytes": "554889e54157415641554154534881ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.encounter": {
       "cls": "CSWSEncounter",
@@ -353,7 +403,9 @@
       "method_detail": "mangled symbol _ZN13CSWSEncounter12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x100330AAA",
-      "expected_bytes": "554889e54156534889cb4989fe488d05"
+      "expected_bytes": "554889e54156534889cb4989fe488d05",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.aoe": {
       "cls": "CSWSAreaOfEffectObject",
@@ -366,7 +418,9 @@
       "method_detail": "mangled symbol _ZN22CSWSAreaOfEffectObject12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x10034C9E0",
-      "expected_bytes": "554889e54156534889cb4989fe488d05"
+      "expected_bytes": "554889e54156534889cb4989fe488d05",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.store": {
       "cls": "CSWSStore",
@@ -379,7 +433,9 @@
       "method_detail": "mangled symbol _ZN9CSWSStore12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x1003FE1EA",
-      "expected_bytes": "554889e553504889cb4889f8488d0d3f"
+      "expected_bytes": "554889e553504889cb4889f8488d0d3f",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.waypoint": {
       "cls": "CSWSWaypoint",
@@ -392,7 +448,9 @@
       "method_detail": "mangled symbol _ZN12CSWSWaypoint12EventHandlerEjyPvjj",
       "candidates": 1,
       "addr_hex": "0x10033436C",
-      "expected_bytes": "554889e5488d05c9491d003930751583"
+      "expected_bytes": "554889e5488d05c9491d003930751583",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "app.server_main_loop": {
       "cls": "CServerExoAppInternal",
@@ -405,7 +463,9 @@
       "method_detail": "mangled symbol _ZN21CServerExoAppInternal8MainLoopEv",
       "candidates": 1,
       "addr_hex": "0x100367800",
-      "expected_bytes": "554889e54157415641554154534881ec"
+      "expected_bytes": "554889e54157415641554154534881ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -418,7 +478,9 @@
       "method_detail": "mangled symbol _ZN21CClientExoAppInternal8MainLoopEv",
       "candidates": 1,
       "addr_hex": "0x10017557A",
-      "expected_bytes": "554889e54157415641554154534881ec"
+      "expected_bytes": "554889e54157415641554154534881ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "console.do_console": {
       "cls": "",
@@ -431,7 +493,9 @@
       "method_detail": "mangled symbol _Z9DoConsolec",
       "candidates": 1,
       "addr_hex": "0x1004637AD",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.wrapper_internal": {
       "cls": "CVirtualMachine",
@@ -446,7 +510,9 @@
       "offset": 40,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x28"
+      "offset_hex": "0x28",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vm.internal_command_implementer": {
       "cls": "CVirtualMachineInternal",
@@ -461,7 +527,9 @@
       "offset": 1248,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x4E0"
+      "offset_hex": "0x4E0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.commands": {
       "cls": "CSWVirtualMachineCommands",
@@ -476,7 +544,9 @@
       "offset": 24,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x18"
+      "offset_hex": "0x18",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.command_count": {
       "cls": "CSWVirtualMachineCommands",
@@ -491,7 +561,9 @@
       "offset": 877,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x36D"
+      "offset_hex": "0x36D",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.has_caller": {
       "cls": "CSWVirtualMachineCommands",
@@ -506,7 +578,9 @@
       "offset": 8,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.caller_id": {
       "cls": "CSWVirtualMachineCommands",
@@ -521,7 +595,9 @@
       "offset": 16,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "area.game_object": {
       "cls": "CSWSArea",
@@ -536,7 +612,9 @@
       "offset": 344,
       "size": 0,
       "addr_hex": "0x0",
-      "offset_hex": "0x158"
+      "offset_hex": "0x158",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "module.game_object": {
       "cls": "CSWSModule",
@@ -551,7 +629,9 @@
       "offset": 40,
       "size": 0,
       "addr_hex": "0x0",
-      "offset_hex": "0x28"
+      "offset_hex": "0x28",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "g.app_manager": {
       "cls": "",
@@ -566,7 +646,9 @@
       "offset": 0,
       "size": 8,
       "addr_hex": "0x1005D18A0",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.server": {
       "cls": "CAppManager",
@@ -581,7 +663,9 @@
       "offset": 16,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.id": {
       "cls": "CGameObject",
@@ -596,7 +680,9 @@
       "offset": 8,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.type": {
       "cls": "CGameObject",
@@ -611,7 +697,9 @@
       "offset": 16,
       "size": 1,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.objects": {
       "cls": "CScriptEvent",
@@ -626,7 +714,9 @@
       "offset": 56,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x38"
+      "offset_hex": "0x38",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.ints": {
       "cls": "CScriptEvent",
@@ -641,7 +731,9 @@
       "offset": 8,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.floats": {
       "cls": "CScriptEvent",
@@ -656,7 +748,9 @@
       "offset": 24,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x18"
+      "offset_hex": "0x18",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.strings": {
       "cls": "CScriptEvent",
@@ -671,7 +765,9 @@
       "offset": 40,
       "size": 16,
       "addr_hex": "0x0",
-      "offset_hex": "0x28"
+      "offset_hex": "0x28",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     }
   }
 }

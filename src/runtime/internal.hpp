@@ -119,6 +119,8 @@ void* store_event_detour();
 void* waypoint_event_detour();
 void* save_situation_detour();
 void* load_situation_detour();
+void* run_script_situation_detour();
+void* dialog_check_script_detour();
 void* creature_move_to_point_detour();
 void* add_move_to_point_detour();
 void* net_start_connect_detour();
@@ -173,6 +175,10 @@ private:
     std::atomic<bool>* poison_;
     int                slot_;
 };
+
+// Scoped hardware-fault guard for arbitrary calls (e.g. kp.native.call).
+// Catches faults cleanly without poisoning or disabling the Lua runtime.
+bool guard_call(const char* label, void (*work)(void*), void* ctx);
 
 }  // namespace kp::runtime
 

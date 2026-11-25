@@ -28,6 +28,11 @@ struct Timer {
     int           callback_ref = LUA_NOREF;  // registry ref to the function, if one was passed
     std::uint64_t delay_ms = 0;
     std::uint64_t due_ms = 0;
+    std::uint64_t delay_ticks = 0;
+    std::uint64_t due_tick = 0;
+    bool          auto_repeat = false;
+    bool          tick_based = false;
+    bool          cancelled_in_cb = false;
     unsigned      call_count = 0;
     int           userdata_ref = LUA_NOREF;
 };
@@ -51,6 +56,7 @@ unsigned g_budget = 8;   // matches HostConfig::error_budget
 // the pump compares it against.
 std::uint64_t g_clock = 0;
 bool          g_clock_set = false;
+std::uint64_t g_tick = 0;
 
 // A private registry key. Its address is the key, so a script cannot collide
 // with it by writing to the registry.
@@ -166,7 +172,9 @@ void report_error(lua_State* L, const std::string& callback,
 bool fire_one(std::uint64_t id, std::uint64_t now, std::uint64_t game_tick) {
     auto it = g_timers.find(id);
     if (it == g_timers.end()) return false;      // an earlier callback cancelled it
-    if (it->second.due_ms > now) return false;   // or rescheduled it past this pump
+    const bool ready = it->second.tick_based ? (it->second.due_tick <= game_tick)
+                                             : (it->second.due_ms <= now);
+    if (!ready) return false;   // or rescheduled it past this pump
 
     lua_State* L = it->second.L;
 
@@ -254,8 +262,21 @@ bool fire_one(std::uint64_t id, std::uint64_t now, std::uint64_t game_tick) {
 
     auto again = g_timers.find(id);
     if (again == g_timers.end()) return true;
-    if (renew) again->second.due_ms = now + again->second.delay_ms;
-    else       cancel_timer(id);
+    if (again->second.cancelled_in_cb) {
+        cancel_timer(id);
+        return true;
+    }
+    if (!renew && again->second.auto_repeat && lua_isnoneornil(L, base + 1)) {
+        renew = true;
+    }
+    if (renew) {
+        if (again->second.tick_based)
+            again->second.due_tick = game_tick + again->second.delay_ticks;
+        else
+            again->second.due_ms = now + again->second.delay_ms;
+    } else {
+        cancel_timer(id);
+    }
     return true;
 }
 
@@ -366,6 +387,146 @@ int l_removetimer(lua_State* L) {
     return 0;
 }
 
+int create_timer(lua_State* L, bool auto_repeat, bool tick_based, const char* fn_name) {
+    const int argc = lua_gettop(L);
+    if (argc < 2)
+        return luaL_error(L, "%s expects at least 2 arguments (got %d)", fn_name, argc);
+    if (argc > 3)
+        return luaL_error(L, "%s expects at most 3 arguments (got %d)", fn_name, argc);
+
+    const lua_Number delay = luaL_checknumber(L, 1);
+    if (tick_based) {
+        if (!std::isfinite(delay) || delay < 1.0 || std::floor(delay) != delay ||
+            delay > lua_Number(timers::kMaxDelayMs))
+            return luaL_argerror(L, 1, "ticks must be one or more");
+    } else if (auto_repeat) {
+        if (!std::isfinite(delay) || delay < 1.0 || delay > lua_Number(timers::kMaxDelayMs))
+            return luaL_argerror(L, 1, "interval must be one or more");
+    } else {
+        if (!std::isfinite(delay) || !(delay >= 0) || delay > lua_Number(timers::kMaxDelayMs))
+            return luaL_argerror(L, 1, "delay must be zero or more");
+    }
+
+    const int cb_type = lua_type(L, 2);
+    if (cb_type != LUA_TSTRING && cb_type != LUA_TFUNCTION)
+        return luaL_argerror(L, 2, lua_pushfstring(L, "expected string or function, got %s",
+                                                   luaL_typename(L, 2)));
+    if (Sentinel* s = sentinel_of(L); s != nullptr && s->closing)
+        return luaL_error(L, "%s: this script's state is closing", fn_name);
+
+    const char* name = nullptr;
+    if (cb_type == LUA_TFUNCTION) {
+        if (lua_iscfunction(L, 2)) {
+            name = lua_pushfstring(L, "function [C] %p", lua_topointer(L, 2));
+        } else {
+            lua_Debug ar;
+            lua_pushvalue(L, 2);
+            lua_getinfo(L, ">S", &ar);
+            name = lua_pushfstring(L, "function %s:%d", ar.short_src, ar.linedefined);
+        }
+    } else {
+        name = lua_tostring(L, 2);
+    }
+
+    lua_State* owner = owner_state(L);
+    int ref = LUA_NOREF;
+    if (argc == 3 && !lua_isnil(L, 3)) {
+        lua_pushvalue(L, 3);
+        ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    int fn_ref = LUA_NOREF;
+    if (cb_type == LUA_TFUNCTION) {
+        lua_pushvalue(L, 2);
+        fn_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+
+    const std::uint64_t id = g_next_id++;
+    Timer t;
+    t.id = id;
+    t.L = owner;
+    t.callback = name;
+    t.callback_ref = fn_ref;
+    t.userdata_ref = ref;
+    t.auto_repeat = auto_repeat;
+    t.tick_based = tick_based;
+    if (tick_based) {
+        t.delay_ticks = std::uint64_t(delay);
+        t.due_tick = g_tick + t.delay_ticks;
+    } else {
+        t.delay_ms = std::uint64_t(delay);
+        t.due_ms = timers::clock() + t.delay_ms;
+    }
+    g_timers.emplace(id, std::move(t));
+
+    lua_pushnumber(L, lua_Number(id));
+    return 1;
+}
+
+int l_timer_after(lua_State* L)       { return create_timer(L, false, false, "kp.timer.after"); }
+int l_timer_every(lua_State* L)       { return create_timer(L, true,  false, "kp.timer.every"); }
+int l_timer_after_ticks(lua_State* L) { return create_timer(L, false, true,  "kp.timer.after_ticks"); }
+
+int l_timer_cancel(lua_State* L) {
+    if (lua_gettop(L) == 0 || lua_isnil(L, 1) || !lua_isnumber(L, 1)) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    const lua_Number raw = lua_tonumber(L, 1);
+    if (!(raw >= 0) || !(raw < 18446744073709551616.0)) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    const auto id = std::uint64_t(raw);
+    auto it = g_timers.find(id);
+    if (it == g_timers.end() || it->second.L != owner_state(L)) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    if (g_firing_id == id) {
+        it->second.cancelled_in_cb = true;
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+    cancel_timer(id);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+int l_timer_list(lua_State* L) {
+    lua_State* owner = owner_state(L);
+    const std::uint64_t now = timers::clock();
+    lua_newtable(L);
+    int n = 0;
+    for (const auto& entry : g_timers) {
+        const Timer& t = entry.second;
+        if (t.L != owner) continue;
+        lua_createtable(L, 0, 4);
+        lua_pushnumber(L, lua_Number(t.id));
+        lua_setfield(L, -2, "id");
+        const lua_Number due_in = t.tick_based
+            ? lua_Number(t.due_tick > g_tick ? (t.due_tick - g_tick) : 0)
+            : lua_Number(t.due_ms > now ? (t.due_ms - now) : 0);
+        lua_pushnumber(L, due_in);
+        lua_setfield(L, -2, "due_in_ms");
+        lua_pushboolean(L, t.auto_repeat ? 1 : 0);
+        lua_setfield(L, -2, "repeating");
+        lua_pushinteger(L, int(t.call_count));
+        lua_setfield(L, -2, "fired");
+        lua_rawseti(L, -2, ++n);
+    }
+    return 1;
+}
+
+int l_timer_tick(lua_State* L) {
+    lua_pushnumber(L, static_cast<lua_Number>(g_tick));
+    return 1;
+}
+
+int l_timer_clock(lua_State* L) {
+    lua_pushnumber(L, static_cast<lua_Number>(timers::clock()));
+    return 1;
+}
+
 }  // namespace
 
 namespace timers {
@@ -383,18 +544,27 @@ std::uint64_t clock() {
     return g_clock;
 }
 
+std::uint64_t tick() { return g_tick; }
+
 void set_error_budget(unsigned budget) { g_budget = budget; }
 
 unsigned pump(std::uint64_t now, std::uint64_t game_tick) {
     set_clock(now);
+    g_tick = game_tick;
 
     // Snapshot first. A callback may register timers, cancel timers, or get its
     // script quarantined, and none of that is allowed to invalidate the walk.
     // Newly registered timers land in the next pump, which also bounds a timer
     // that renews itself with a zero delay to one firing per frame.
-    std::vector<std::pair<std::uint64_t, std::uint64_t>> due;   // (due_ms, id)
-    for (const auto& entry : g_timers)
-        if (entry.second.due_ms <= now) due.emplace_back(entry.second.due_ms, entry.first);
+    std::vector<std::pair<std::uint64_t, std::uint64_t>> due;   // (due_key, id)
+    for (const auto& entry : g_timers) {
+        const Timer& t = entry.second;
+        if (t.tick_based) {
+            if (t.due_tick <= game_tick) due.emplace_back(t.due_tick, entry.first);
+        } else {
+            if (t.due_ms <= now) due.emplace_back(t.due_ms, entry.first);
+        }
+    }
     std::sort(due.begin(), due.end());
 
     unsigned fired = 0;
@@ -427,7 +597,22 @@ void register_timers(lua_State* L) {
     push_kp_table(L);
     lua_pushcfunction(L, l_registertimer); lua_setfield(L, -2, "registertimer");
     lua_pushcfunction(L, l_removetimer);   lua_setfield(L, -2, "removetimer");
-    lua_pop(L, 1);
+
+    lua_getfield(L, -1, "timer");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_createtable(L, 0, 7);
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -3, "timer");
+    }
+    lua_pushcfunction(L, l_timer_after);       lua_setfield(L, -2, "after");
+    lua_pushcfunction(L, l_timer_every);       lua_setfield(L, -2, "every");
+    lua_pushcfunction(L, l_timer_after_ticks); lua_setfield(L, -2, "after_ticks");
+    lua_pushcfunction(L, l_timer_cancel);      lua_setfield(L, -2, "cancel");
+    lua_pushcfunction(L, l_timer_list);        lua_setfield(L, -2, "list");
+    lua_pushcfunction(L, l_timer_tick);        lua_setfield(L, -2, "tick");
+    lua_pushcfunction(L, l_timer_clock);       lua_setfield(L, -2, "clock");
+    lua_pop(L, 2);
 }
 
 }  // namespace kp::api

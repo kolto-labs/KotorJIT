@@ -362,18 +362,17 @@ const JValue* pick_instance(const JValue& entry, const std::string& slug) {
     return &inst->array[0];
 }
 
-// hookmanifest/v1 `locate.primary.pattern` ("6a ff 68 ?? ?? ?? ??") plus its
-// per-byte hex `mask` ("ffffff00000000"). Both must agree on length, every
-// wildcard in the text must be a zero mask byte, the first byte must be
-// concrete and at least half the bytes concrete -- SPEC §3.3's validity rule,
-// re-checked here because a pattern that passes it at generation time but not
-// here is a corrupted manifest, and a corrupted locator must not bind.
+// Parse `pattern` (either space-separated hex with optional `??` wildcards, or
+// continuous hex bytes) together with its per-byte hex `mask` (`ff` / `00`).
+// Enforces `mask[0] == 0xFF` and >= 50% concrete bytes so the bucketed scanner
+// stays fast and never degrades into an unbounded wildcard walk.
 bool parse_masked_pattern(std::string_view text, std::string_view mask_hex,
                           std::vector<std::uint8_t>& value,
                           std::vector<std::uint8_t>& mask) {
     value.clear();
     mask.clear();
     std::vector<bool> wild;
+    bool saw_question_wild = false;
     std::size_t i = 0;
     auto nib = [](char ch) -> int {
         if (ch >= '0' && ch <= '9') return ch - '0';
@@ -388,6 +387,7 @@ bool parse_masked_pattern(std::string_view text, std::string_view mask_hex,
         if (c == '?' && text[i + 1] == '?') {
             value.push_back(0);
             wild.push_back(true);
+            saw_question_wild = true;
         } else {
             const int hi = nib(c), lo = nib(text[i + 1]);
             if (hi < 0 || lo < 0) return false;
@@ -401,12 +401,62 @@ bool parse_masked_pattern(std::string_view text, std::string_view mask_hex,
     std::size_t concrete = 0;
     for (std::size_t k = 0; k < value.size(); ++k) {
         if (mask[k] != 0x00 && mask[k] != 0xFF) return false;
-        if (wild[k] != (mask[k] == 0x00)) return false;
-        if (mask[k] == 0xFF) ++concrete;
+        if (saw_question_wild && wild[k] != (mask[k] == 0x00)) return false;
+        if (mask[k] == 0x00) value[k] = 0;
+        else ++concrete;
     }
     if (mask[0] != 0xFF) return false;
     if (concrete * 2 < value.size()) return false;
     return true;
+}
+
+bool parse_xref_thunk(const JValue* xt, XrefThunk& out) {
+    out = XrefThunk{};
+    if (!xt || xt->type != JType::Object) return false;
+    const std::string op_hex = as_string(xt->member("opcode"));
+    std::vector<std::uint8_t> op_bytes;
+    if (!op_hex.empty() && (!parse_hex_bytes(op_hex, op_bytes) || op_bytes.size() != 1)) return false;
+    if (!op_bytes.empty()) out.opcode = op_bytes[0];
+    const std::string pre_hex = as_string(xt->member("prefix"));
+    const std::string suf_hex = as_string(xt->member("suffix"));
+    if (!pre_hex.empty() && !parse_hex_bytes(pre_hex, out.prefix)) return false;
+    if (!suf_hex.empty() && !parse_hex_bytes(suf_hex, out.suffix)) return false;
+    if (!parse_masked_pattern(as_string(xt->member("target_pattern")),
+                              as_string(xt->member("target_mask")),
+                              out.target_pattern, out.target_mask)) {
+        out = XrefThunk{};
+        return false;
+    }
+    return out.valid();
+}
+
+std::uintptr_t find_unique_thunk_to(const XrefThunk& xt, std::uintptr_t target_va) {
+    if (!xt.valid() || target_va == 0) return 0;
+    const std::size_t plen = xt.prefix.size();
+    const std::size_t slen = xt.suffix.size();
+    const std::size_t need = plen + 5 + slen;
+    std::uintptr_t found = 0;
+    for (const api::memory::ScanRegion& r : api::memory::scan_regions()) {
+        if (r.size < need || r.va == 0) continue;
+        if (!platform::is_readable(reinterpret_cast<const void*>(r.va), r.size)) continue;
+        const auto* base = reinterpret_cast<const std::uint8_t*>(r.va);
+        const std::size_t limit = r.size - need;
+        for (std::size_t i = 0; i <= limit; ++i) {
+            if (base[i + plen] != xt.opcode) continue;
+            if (plen != 0 && std::memcmp(base + i, xt.prefix.data(), plen) != 0) continue;
+            if (slen != 0 && std::memcmp(base + i + plen + 5, xt.suffix.data(), slen) != 0) continue;
+            std::int32_t rel = 0;
+            std::memcpy(&rel, base + i + plen + 1, sizeof rel);
+            const std::uintptr_t insn_va = r.va + i + plen;
+            const std::uintptr_t dst = static_cast<std::uintptr_t>(
+                static_cast<std::intptr_t>(insn_va + 5) + rel);
+            if (dst == target_va) {
+                if (found != 0) return 0;  // ambiguous
+                found = r.va + i;
+            }
+        }
+    }
+    return found;
 }
 
 // One element of hookmanifest/v1 `functions[]` -> one Site. Never reads
@@ -674,6 +724,14 @@ bool AddressTable::parse(std::string_view json, const std::string& build_slug,
         if (const JValue* e = entry.member("expected_bytes"); e && e->type == JType::String) {
             parse_hex_bytes(e->str, s.expected);
         }
+        if (const JValue* pat = entry.member("pattern"), *msk = entry.member("mask");
+            pat && pat->type == JType::String && msk && msk->type == JType::String) {
+            if (!parse_masked_pattern(pat->str, msk->str, s.pattern, s.pattern_mask)) {
+                s.pattern.clear();
+                s.pattern_mask.clear();
+            }
+        }
+        parse_xref_thunk(entry.member("xref_thunk"), s.xref_thunk);
         if (const JValue* c = entry.member("confidence"); c && c->type == JType::Number) {
             s.confidence = c->number;
         }
@@ -900,16 +958,28 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
     const std::uintptr_t live = (runtime_base == 0) ? image_base_ : runtime_base;
     const std::intptr_t delta = static_cast<std::intptr_t>(live - image_base_);
 
-    // Masked sites first, all in one pass. No VA hint: a pattern site binds on
-    // exactly one hit or not at all, and a site that bound before is cleared
-    // first so a rescan can never keep a stale address.
+    auto verify_hint = [delta](Site& s, std::uintptr_t hint_va) -> bool {
+        if (hint_va == 0 || s.expected.empty()) return false;
+        const std::uintptr_t live_va = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hint_va) + delta);
+        if (!platform::is_readable(reinterpret_cast<const void*>(live_va), s.expected.size())) return false;
+        if (std::memcmp(reinterpret_cast<const void*>(live_va), s.expected.data(), s.expected.size()) != 0)
+            return false;
+        s.addr = hint_va;
+        s.resolved = true;
+        return true;
+    };
+
+    // Pass 1: Masked patterns in one scan pass (signature-first!).
     std::vector<api::memory::MaskedPattern> batch;
     std::vector<Site*> batch_sites;
+    std::vector<std::uintptr_t> saved_hints;
     for (Site& s : sites_) {
         if (s.kind == SiteKind::Field || s.pattern.empty()) continue;
+        saved_hints.push_back(s.addr);
         s.resolved = false;
         s.bound_from_scan = false;
         s.bound_from_pattern = false;
+        s.bound_from_xref = false;
         s.addr = 0;
         s.locate_error.clear();
         if (s.pattern_mask.size() != s.pattern.size()) {
@@ -923,24 +993,74 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         const std::vector<api::memory::MaskedHit> hits = api::memory::scan_masked(batch);
         for (std::size_t k = 0; k < batch_sites.size(); ++k) {
             Site& s = *batch_sites[k];
-            if (hits[k].count == 0) { s.locate_error = "missing"; continue; }
-            if (hits[k].count > 1)  { s.locate_error = "ambiguous"; continue; }
-            const std::uintptr_t hit = hits[k].first;
-            // expected_bytes stay the detour's prologue check at install time;
-            // they are not re-applied here, so a reference/call site keeps
-            // binding when only masked operands (relocated targets) differ.
-            s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hit) - delta);
-            s.resolved = s.addr != 0;
-            s.bound_from_scan = s.resolved;
-            s.bound_from_pattern = s.resolved;
+            const std::uintptr_t orig_hint = saved_hints[k];
+            if (hits[k].count == 1) {
+                const std::uintptr_t unrel = static_cast<std::uintptr_t>(
+                    static_cast<std::intptr_t>(hits[k].first) - delta);
+                s.addr = unrel;
+                s.resolved = s.addr != 0;
+                s.bound_from_pattern = s.resolved;
+                s.bound_from_scan = s.resolved && (orig_hint != unrel);
+                continue;
+            }
+            if (!scan_only_ && !s.xref_thunk.valid() && verify_hint(s, orig_hint)) {
+                s.locate_error = (hits[k].count == 0) ? "missing_fallback_hint" : "ambiguous_fallback_hint";
+                continue;
+            }
+            // Defer ambiguous/missing pattern sites that also have xref_thunk or fail closed.
+            s.addr = scan_only_ ? 0 : orig_hint;
+            s.locate_error = (hits[k].count == 0) ? "missing" : "ambiguous";
         }
     }
 
+    // Pass 2: Xref-thunk locators (`target_pattern` -> unique target -> unique rel32 thunk).
+    std::vector<api::memory::MaskedPattern> xref_batch;
+    std::vector<Site*> xref_sites;
     for (Site& s : sites_) {
-        // A field has no bytes of its own; its resolution is the offset it
-        // carries. Scanning would only ever clear it.
+        if (s.kind == SiteKind::Field || s.resolved || !s.xref_thunk.valid()) continue;
+        xref_batch.push_back({
+            s.xref_thunk.target_pattern.data(),
+            s.xref_thunk.target_mask.data(),
+            s.xref_thunk.target_pattern.size(),
+        });
+        xref_sites.push_back(&s);
+    }
+    if (!xref_batch.empty()) {
+        const std::vector<api::memory::MaskedHit> thits = api::memory::scan_masked(xref_batch);
+        for (std::size_t k = 0; k < xref_sites.size(); ++k) {
+            Site& s = *xref_sites[k];
+            const std::uintptr_t orig_hint = scan_only_ ? 0 : s.addr;
+            s.resolved = false;
+            s.addr = 0;
+            if (thits[k].count != 1) {
+                if (!scan_only_ && verify_hint(s, orig_hint)) {
+                    s.locate_error = (thits[k].count == 0) ? "xref_target_missing_hint" : "xref_target_ambiguous_hint";
+                } else {
+                    s.locate_error = (thits[k].count == 0) ? "missing" : "ambiguous";
+                }
+                continue;
+            }
+            const std::uintptr_t thunk_hit = find_unique_thunk_to(s.xref_thunk, thits[k].first);
+            if (thunk_hit != 0) {
+                const std::uintptr_t unrel = static_cast<std::uintptr_t>(
+                    static_cast<std::intptr_t>(thunk_hit) - delta);
+                s.addr = unrel;
+                s.resolved = s.addr != 0;
+                s.bound_from_xref = s.resolved;
+                s.bound_from_scan = s.resolved && (orig_hint != unrel);
+                s.locate_error.clear();
+            } else if (!scan_only_ && verify_hint(s, orig_hint)) {
+                s.locate_error = "xref_thunk_missing_hint";
+            } else {
+                s.locate_error = "missing";
+            }
+        }
+    }
+
+    // Pass 3: Remaining non-pattern, non-xref_thunk sites (exact expected bytes / VA hint).
+    for (Site& s : sites_) {
         if (s.kind == SiteKind::Field) continue;
-        if (!s.pattern.empty()) continue;   // handled by the masked pass
+        if (!s.pattern.empty() || s.xref_thunk.valid()) continue;
         s.bound_from_scan = false;
         if (scan_only_) {
             s.resolved = false;
@@ -950,14 +1070,7 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         }
         if (s.expected.empty()) continue;
 
-        const std::uintptr_t hint = (s.addr == 0) ? 0
-            : static_cast<std::uintptr_t>(static_cast<std::intptr_t>(s.addr) + delta);
-        if (hint != 0 &&
-            platform::is_readable(reinterpret_cast<const void*>(hint), s.expected.size()) &&
-            std::memcmp(reinterpret_cast<const void*>(hint), s.expected.data(), s.expected.size()) == 0) {
-            s.resolved = true;
-            continue;
-        }
+        if (verify_hint(s, s.addr)) continue;
 
         const std::uintptr_t hit = api::memory::find_unique(s.expected.data(), s.expected.size());
         if (hit == 0) {
@@ -968,6 +1081,126 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
         s.resolved = s.addr != 0;
         s.bound_from_scan = s.resolved;
     }
+}
+
+bool AddressTable::probe_unified(std::string_view unified_json,
+                                 std::string_view format,
+                                 std::uintptr_t runtime_base,
+                                 std::uintptr_t image_base,
+                                 AddressTable& out,
+                                 std::string& error) {
+    JValue root;
+    if (!JParser(unified_json).parse(root, error)) return false;
+    const JValue* games = root.member("games");
+    if (!games || games->type != JType::Object) {
+        error = "unified signature catalog missing \"games\" object";
+        return false;
+    }
+
+#if defined(_WIN32)
+    constexpr std::string_view kPlat = "win";
+#elif defined(__APPLE__)
+    constexpr std::string_view kPlat = "mac";
+#else
+    constexpr std::string_view kPlat = "linux";
+#endif
+#if defined(__x86_64__) || defined(_M_X64)
+    constexpr std::string_view kArch = "x86_64";
+#else
+    constexpr std::string_view kArch = "x86";
+#endif
+
+    struct Candidate {
+        std::string game_label;
+        AddressTable table;
+        std::size_t resolved_count = 0;
+    };
+    std::vector<Candidate> matches;
+
+    for (const char* game_key : {"k1", "k2"}) {
+        const JValue* game_sites = games->member(game_key);
+        if (!game_sites || game_sites->type != JType::Object) continue;
+
+        AddressTable tbl;
+        tbl.build_ = std::string("spinoff_") + game_key;
+        tbl.game_ = (std::string_view(game_key) == "k2") ? "K2" : "K1";
+        tbl.platform_ = std::string(kPlat);
+        tbl.image_base_ = (image_base != 0) ? image_base : runtime_base;
+        tbl.scan_only_ = true;
+
+        for (const auto& [name, entry] : game_sites->object) {
+            if (entry.type != JType::Object) continue;
+            const JValue* locs = entry.member("locators");
+            if (!locs || locs->type != JType::Array) continue;
+
+            // Pick best matching locator for this (arch, format, platform), or
+            // fallback to matching arch for cross-format compatibility.
+            const JValue* best = nullptr;
+            int best_score = -1;
+            for (const JValue& loc : locs->array) {
+                if (loc.type != JType::Object) continue;
+                if (as_string(loc.member("arch")) != kArch) continue;
+                int score = 0;
+                if (as_string(loc.member("format")) == format) score += 4;
+                if (const JValue* ps = loc.member("platforms"); ps && ps->type == JType::Array) {
+                    for (const JValue& pv : ps->array) {
+                        if (as_string(&pv) == kPlat) { score += 2; break; }
+                    }
+                } else if (as_string(loc.member("platform")) == kPlat) {
+                    score += 2;
+                }
+                const std::string ltype = as_string(loc.member("type"));
+                if (ltype == "pattern") score += 1;
+                if (score > best_score) {
+                    best_score = score;
+                    best = &loc;
+                }
+            }
+            if (best == nullptr) continue;
+
+            Site s;
+            s.name = name;
+            s.cls = as_string(entry.member("cls"));
+            s.method = as_string(entry.member("method"));
+            s.kind = site_kind_from_string(as_string(entry.member("kind")));
+            s.required = as_bool(entry.member("required"));
+            // console.do_console is optional on ELF/spinoff builds.
+            if (kPlat == "linux" && name == "console.do_console") s.required = false;
+
+            const std::string ltype = as_string(best->member("type"));
+            if (ltype == "pattern") {
+                parse_masked_pattern(as_string(best->member("pattern")),
+                                     as_string(best->member("mask")),
+                                     s.pattern, s.pattern_mask);
+            } else if (ltype == "xref_thunk") {
+                parse_xref_thunk(best->member("xref_thunk"), s.xref_thunk);
+            } else if (ltype == "field") {
+                parse_field_extent(*best, s);
+            }
+            if (const JValue* eb = best->member("expected_bytes"); eb && eb->type == JType::String) {
+                parse_hex_bytes(eb->str, s.expected);
+            }
+            tbl.sites_.push_back(std::move(s));
+        }
+
+        tbl.resolve_from_signatures(runtime_base);
+        if (tbl.unresolved_required().empty()) {
+            std::size_t n = 0;
+            for (const Site& s : tbl.sites_) if (s.resolved) ++n;
+            matches.push_back({game_key, std::move(tbl), n});
+        }
+    }
+
+    if (matches.empty()) {
+        error = "unified signature probe matched no supported K1/K2 game";
+        return false;
+    }
+    if (matches.size() > 1) {
+        error = "unified signature probe matched both K1 and K2 ambiguously";
+        return false;
+    }
+    out = std::move(matches[0].table);
+    return true;
 }
 
 std::vector<std::string> AddressTable::unresolved_required() const {
@@ -1099,6 +1332,87 @@ void HookSet::uninstall() {
         if (it->detour) it->detour->uninstall();
     }
     installed_.clear();
+}
+
+bool HookSet::install_one(const HookRequest& r, const AddressTable& table,
+                          std::uintptr_t runtime_base, std::string& error) {
+    if (has(r.site)) return true;
+    const Site* site = table.find(r.site);
+    if (!site) {
+        error = "site \"" + r.site + "\" is not in build " + table.build();
+        return false;
+    }
+    if (!site->resolved) {
+        error = "site \"" + r.site + "\" is unresolved in build " + table.build();
+        return false;
+    }
+    if (site->kind != SiteKind::Detour) {
+        error = "site \"" + r.site + "\" is kind=" + to_string(site->kind) +
+                " and cannot be detoured";
+        return false;
+    }
+    if (!r.detour) {
+        error = "site \"" + r.site + "\" has no detour function";
+        return false;
+    }
+    const std::intptr_t delta =
+        (runtime_base == 0) ? 0
+                            : static_cast<std::intptr_t>(runtime_base - table.image_base());
+    const std::uintptr_t addr = static_cast<std::uintptr_t>(site->addr + delta);
+
+    auto detour = std::make_unique<Detour>();
+    std::string detail;
+    const std::vector<std::uint8_t>& expect =
+        !site->expected.empty() ? site->expected : r.expect;
+
+    const auto publish = +[](void* o, void* u) {
+        if (u != nullptr) static_cast<std::atomic<void*>*>(u)->store(o, std::memory_order_release);
+    };
+    const HookStatus st = detour->install(
+        reinterpret_cast<void*>(addr), r.detour,
+        expect.empty() ? nullptr : expect.data(), expect.size(), &detail,
+        r.original_slot != nullptr ? publish : nullptr, r.original_slot);
+
+    if (st != HookStatus::Ok) {
+        error = "site \"" + r.site + "\" at 0x";
+        char buf[24];
+        std::snprintf(buf, sizeof(buf), sizeof(void*) == 8 ? "%09llX" : "%08llX",
+                      static_cast<unsigned long long>(addr));
+        error += buf;
+        error += ": ";
+        error += to_string(st);
+        if (!detail.empty()) error += " (" + detail + ")";
+        return false;
+    }
+    installed_.push_back({r.site, std::move(detour), r.original_slot});
+    return true;
+}
+
+bool HookSet::uninstall_one(std::string_view site) {
+    for (auto it = installed_.begin(); it != installed_.end(); ++it) {
+        if (it->name != site) continue;
+        if (it->original_slot != nullptr) {
+            it->original_slot->store(nullptr, std::memory_order_release);
+        }
+        if (it->detour) it->detour->uninstall();
+        installed_.erase(it);
+        return true;
+    }
+    return false;
+}
+
+bool HookSet::has(std::string_view site) const {
+    for (const Installed& i : installed_) {
+        if (i.name == site) return true;
+    }
+    return false;
+}
+
+std::vector<std::string> HookSet::active_names() const {
+    std::vector<std::string> names;
+    names.reserve(installed_.size());
+    for (const Installed& i : installed_) names.push_back(i.name);
+    return names;
 }
 
 void* HookSet::original(std::string_view site) const {

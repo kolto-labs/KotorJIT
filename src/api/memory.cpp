@@ -670,6 +670,74 @@ int l_findsig(lua_State* L) {
     return 1;
 }
 
+int l_readbytes(lua_State* L) {
+    check_arity(L, "readbytes", 2, 2);
+    const std::uintptr_t a = arg_address(L, 1);
+    const lua_Number raw_n = arg_number(L, 2);
+    if (!std::isfinite(raw_n) || raw_n < 0.0 || std::floor(raw_n) != raw_n)
+        luaL_argerror(L, 2, "count must be a non-negative integer");
+    if (raw_n > 65536.0)
+        return luaL_error(L, "count above 65536");
+    const auto count = static_cast<std::size_t>(raw_n);
+    if (count == 0) {
+        lua_pushlstring(L, "", 0);
+        return 1;
+    }
+    std::vector<std::uint8_t> buf(count);
+    if (!probe_read(a, buf.data(), count))
+        return luaL_error(L, "invalid read: %d bytes from %s", int(count), hex32(a).c_str());
+    lua_pushlstring(L, reinterpret_cast<const char*>(buf.data()), count);
+    return 1;
+}
+
+int l_writebytes(lua_State* L) {
+    check_arity(L, "writebytes", 2, 2);
+    const std::uintptr_t a = arg_address(L, 1);
+    if (lua_type(L, 2) != LUA_TSTRING)
+        luaL_argerror(L, 2, lua_pushfstring(L, "expected string, got %s",
+                                            luaL_typename(L, 2)));
+    std::size_t len = 0;
+    const char* bytes = lua_tolstring(L, 2, &len);
+    char shown[48];
+    std::snprintf(shown, sizeof shown, "%zu raw byte(s)", len);
+    store(L, a, bytes, len, "bytes", shown);
+    return 0;
+}
+
+std::size_t span_count_arg(lua_State* L) {
+    if (lua_gettop(L) < 2 || lua_isnoneornil(L, 2)) return 1;
+    const lua_Number n = arg_number(L, 2);
+    if (!std::isfinite(n) || n < 1.0 || std::floor(n) != n ||
+        n > static_cast<lua_Number>(std::numeric_limits<std::size_t>::max())) {
+        luaL_argerror(L, 2, "count must be a positive integer");
+    }
+    return static_cast<std::size_t>(n);
+}
+
+int l_readable(lua_State* L) {
+    check_arity(L, "readable", 1, 2);
+    const std::uintptr_t a = arg_address(L, 1);
+    const std::size_t count = span_count_arg(L);
+    lua_pushboolean(L, platform::is_readable(reinterpret_cast<const void*>(a), count) ? 1 : 0);
+    return 1;
+}
+
+int l_writable(lua_State* L) {
+    check_arity(L, "writable", 1, 2);
+    const std::uintptr_t a = arg_address(L, 1);
+    const std::size_t count = span_count_arg(L);
+    lua_pushboolean(L, platform::is_writable(reinterpret_cast<const void*>(a), count) ? 1 : 0);
+    return 1;
+}
+
+int l_base(lua_State* L) {
+    check_arity(L, "base", 0, 0);
+    std::uintptr_t b = scan_base();
+    if (b == 0) b = platform::module_base(nullptr);
+    lua_pushnumber(L, static_cast<lua_Number>(b));
+    return 1;
+}
+
 // ----------------------------------------------------------- registration --
 
 struct Entry {
@@ -689,6 +757,7 @@ const Entry kFunctions[] = {
     {"readdouble",      l_readdouble},
     {"readstring",      l_readstring},
     {"readwidestring",  l_readwidestring},
+    {"readbytes",       l_readbytes},
     {"writebit",        l_writebit},
     {"writebyte",       l_writebyte},
     {"writechar",       l_writechar},
@@ -700,6 +769,10 @@ const Entry kFunctions[] = {
     {"writedouble",     l_writedouble},
     {"writestring",     l_writestring},
     {"writewidestring", l_writewidestring},
+    {"writebytes",      l_writebytes},
+    {"readable",        l_readable},
+    {"writable",        l_writable},
+    {"base",            l_base},
     {"findsig",         l_findsig},
 };
 

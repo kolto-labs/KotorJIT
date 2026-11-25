@@ -128,8 +128,7 @@ BUILDS = {
         # optional here: the runtime loses the in-game `lua` command on this
         # build and keeps everything else, rather than refusing to install.
         "optional_sites": ["console.do_console"],
-        "reject_cross_placed": True,
-        "note": "Native Aspyr ELF, EXEC (not PIE). VM entry points hand-adjudicated.",
+        "note": "Native Aspyr ELF, EXEC (not PIE). VM, event, dialog, and main-loop entry points adjudicated and signature-bound.",
     },
     "k2_mac": {
         "symbol_source": "TSL__k2_mac_swkotor2.app",

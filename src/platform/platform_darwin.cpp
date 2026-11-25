@@ -146,6 +146,30 @@ bool is_readable(const void* addr, std::size_t len) {
     return true;
 }
 
+bool is_writable(const void* addr, std::size_t len) {
+    if (!addr || len == 0) return false;
+    auto [cur, span] = page_span(addr, len);
+    if (span == 0) return false;
+    const mach_vm_address_t end = cur + span;
+    while (cur < end) {
+        mach_vm_address_t region = cur;
+        mach_vm_size_t size = 0;
+        vm_region_basic_info_data_64_t info{};
+        mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
+        mach_port_t object = MACH_PORT_NULL;
+        const kern_return_t kr = mach_vm_region(mach_task_self(), &region, &size,
+                                                VM_REGION_BASIC_INFO_64,
+                                                reinterpret_cast<vm_region_info_t>(&info),
+                                                &count, &object);
+        if (object != MACH_PORT_NULL) mach_port_deallocate(mach_task_self(), object);
+        if (kr != KERN_SUCCESS || region > cur || size == 0) return false;
+        if ((info.protection & VM_PROT_WRITE) == 0) return false;
+        if (size >= end - region) return true;
+        cur = region + size;
+    }
+    return true;
+}
+
 int page_protection(const void* addr) {
     mach_vm_address_t region = reinterpret_cast<std::uintptr_t>(addr);
     const mach_vm_address_t want = region;

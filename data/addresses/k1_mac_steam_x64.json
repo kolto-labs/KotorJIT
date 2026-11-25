@@ -28,7 +28,9 @@
       "method_detail": "i386match:callgraph(1); follow:CVirtualMachine::RunScript -> internal; similar:0.93; callees:8 in order",
       "candidates": 1,
       "addr_hex": "0x100379326",
-      "expected_bytes": "554889e5415741564155415453504189"
+      "expected_bytes": "554889e5415741564155415453504189",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -41,7 +43,9 @@
       "method_detail": "follow:CVirtualMachine::RunScriptSituation -> internal; similar:0.85",
       "candidates": 1,
       "addr_hex": "0x100379614",
-      "expected_bytes": "554889e5415741564155415453504189"
+      "expected_bytes": "554889e5415741564155415453504189",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.execute_command": {
       "cls": "CSWVirtualMachineCommands",
@@ -54,7 +58,9 @@
       "method_detail": "vtable:25CSWVirtualMachineCommands[0] slot 3; similar:0.95",
       "candidates": 1,
       "addr_hex": "0x1003C0FB6",
-      "expected_bytes": "554889e581fe030300007f284c8b4718"
+      "expected_bytes": "554889e581fe030300007f284c8b4718",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -67,7 +73,9 @@
       "method_detail": "k2match:strings+imports; i386match:strings+imports; follow:CVirtualMachine::SaveScriptSituation -> internal; similar:1.00; callees:14 in order",
       "candidates": 1,
       "addr_hex": "0x100379A6E",
-      "expected_bytes": "554889e5415741564155415453504989"
+      "expected_bytes": "554889e5415741564155415453504989",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.load_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -80,7 +88,9 @@
       "method_detail": "k2match:strings; i386match:strings+imports; follow:CVirtualMachine::LoadScriptSituation -> internal; similar:0.93; callees:15 in order",
       "candidates": 1,
       "addr_hex": "0x100379BFA",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_integer": {
       "cls": "CVirtualMachine",
@@ -93,7 +103,9 @@
       "method_detail": "k2match:callgraph(30); i386match:callgraph(1); block:CVirtualMachine::StackPopInteger ordinal 4; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A002",
-      "expected_bytes": "554889e5488b3f5de97fedffff905548"
+      "expected_bytes": "554889e5488b3f5de97fedffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
@@ -106,7 +118,9 @@
       "method_detail": "k2match:callgraph(16); i386match:callgraph(1); block:CVirtualMachine::StackPushInteger ordinal 5; callsite:3 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A010",
-      "expected_bytes": "554889e5488b3f5de977ebffff905548"
+      "expected_bytes": "554889e5488b3f5de977ebffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
@@ -119,7 +133,9 @@
       "method_detail": "k2match:callgraph(6); i386match:callgraph(1); block:CVirtualMachine::StackPopFloat ordinal 6; callsite:2 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A01E",
-      "expected_bytes": "554889e5488b3f5de9a9edffff905548"
+      "expected_bytes": "554889e5488b3f5de9a9edffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -132,7 +148,9 @@
       "method_detail": "k2match:callgraph(2); block:CVirtualMachine::StackPushFloat ordinal 7; callsite:1 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A02C",
-      "expected_bytes": "554889e5488b3f5de9adebffff905548"
+      "expected_bytes": "554889e5488b3f5de9adebffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
@@ -145,7 +163,9 @@
       "method_detail": "k2match:callgraph(4); i386match:callgraph(1); block:CVirtualMachine::StackPopString ordinal 10; callsite:4 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A056",
-      "expected_bytes": "554889e5488b3f5de9b7edffff905548"
+      "expected_bytes": "554889e5488b3f5de9b7edffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
@@ -158,7 +178,9 @@
       "method_detail": "k2match:callgraph(4); i386match:callgraph(1); block:CVirtualMachine::StackPushString ordinal 11; callsite:4 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A064",
-      "expected_bytes": "554889e5488b3f5de9c9ebffff905548"
+      "expected_bytes": "554889e5488b3f5de9c9ebffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -171,7 +193,9 @@
       "method_detail": "k2match:callgraph(17); i386match:callgraph(3); block:CVirtualMachine::StackPopObject ordinal 14; callsite:5 agreed caller(s); similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A08E",
-      "expected_bytes": "554889e5488b3f5de943f8ffff905548"
+      "expected_bytes": "554889e5488b3f5de943f8ffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
@@ -184,7 +208,9 @@
       "method_detail": "k2match:callgraph(1); block:CVirtualMachine::StackPushObject ordinal 15; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A09C",
-      "expected_bytes": "554889e5488b3f5de91decffff905548"
+      "expected_bytes": "554889e5488b3f5de91decffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
@@ -197,7 +223,9 @@
       "method_detail": "block:CVirtualMachine::StackPopVector ordinal 8; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A03A",
-      "expected_bytes": "554889e5488b3f5de931eeffff905548"
+      "expected_bytes": "554889e5488b3f5de931eeffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
@@ -210,7 +238,9 @@
       "method_detail": "block:CVirtualMachine::StackPushVector ordinal 9; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A048",
-      "expected_bytes": "554889e5488b3f5de985eeffff905548"
+      "expected_bytes": "554889e5488b3f5de985eeffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
@@ -223,7 +253,9 @@
       "method_detail": "block:CVirtualMachine::StackPopEngineStructure ordinal 12; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A072",
-      "expected_bytes": "554889e5488b3f5de9e5f7ffff905548"
+      "expected_bytes": "554889e5488b3f5de9e5f7ffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
@@ -236,7 +268,9 @@
       "method_detail": "block:CVirtualMachine::StackPushEngineStructure ordinal 13; similar:0.91",
       "candidates": 1,
       "addr_hex": "0x10037A080",
-      "expected_bytes": "554889e5488b3f5de98becffff905548"
+      "expected_bytes": "554889e5488b3f5de98becffff905548",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vmcmd.destroy_game_defined_structure": {
       "cls": "CSWVirtualMachineCommands",
@@ -249,7 +283,9 @@
       "method_detail": "vtable:25CSWVirtualMachineCommands[0] slot 7; callees:3 in order",
       "candidates": 1,
       "addr_hex": "0x1003C143C",
-      "expected_bytes": "554889e553504889d383fe03775a89f0"
+      "expected_bytes": "554889e553504889d383fe03775a89f0",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "exo.string_dtor": {
       "cls": "CExoString",
@@ -262,7 +298,9 @@
       "method_detail": "k2match:shape; i386match:callgraph(430); similar:1.00",
       "candidates": 1,
       "addr_hex": "0x10034CDF2",
-      "expected_bytes": "554889e553504889fb488b3b4885ff74"
+      "expected_bytes": "554889e553504889fb488b3b4885ff74",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.creature": {
       "cls": "CSWSCreature",
@@ -275,7 +313,9 @@
       "method_detail": "k2match:strings; i386match:strings+imports; vtable:12CSWSCreature[0] slot 31; similar:0.80",
       "candidates": 1,
       "addr_hex": "0x10048C754",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.door": {
       "cls": "CSWSDoor",
@@ -288,7 +328,9 @@
       "method_detail": "i386match:strings; vtable:8CSWSDoor[0] slot 31",
       "candidates": 1,
       "addr_hex": "0x10045987A",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.placeable": {
       "cls": "CSWSPlaceable",
@@ -301,7 +343,9 @@
       "method_detail": "k2match:strings; i386match:strings; vtable:13CSWSPlaceable[0] slot 31",
       "candidates": 1,
       "addr_hex": "0x1004153EE",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.trigger": {
       "cls": "CSWSTrigger",
@@ -314,7 +358,9 @@
       "method_detail": "k2match:strings; i386match:strings+imports; vtable:11CSWSTrigger[0] slot 31",
       "candidates": 1,
       "addr_hex": "0x10043D8CE",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.module": {
       "cls": "CSWSModule",
@@ -327,7 +373,9 @@
       "method_detail": "k2match:callgraph(1); i386match:callgraph(1); callsite:1 agreed caller(s); similar:0.87; callees:20 in order",
       "candidates": 1,
       "addr_hex": "0x100461820",
-      "expected_bytes": "554889e5415741564154534883ec1049"
+      "expected_bytes": "554889e5415741564154534883ec1049",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.area": {
       "cls": "CSWSArea",
@@ -340,7 +388,9 @@
       "method_detail": "k2match:callgraph(1); i386match:callgraph(1); callsite:1 agreed caller(s); similar:0.85",
       "candidates": 1,
       "addr_hex": "0x10041A2E4",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.encounter": {
       "cls": "CSWSEncounter",
@@ -353,7 +403,9 @@
       "method_detail": "vtable:13CSWSEncounter[0] slot 31; callees:6 in order",
       "candidates": 1,
       "addr_hex": "0x10037D01C",
-      "expected_bytes": "554889e54156534989ce4889fb488d05"
+      "expected_bytes": "554889e54156534989ce4889fb488d05",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.aoe": {
       "cls": "CSWSAreaOfEffectObject",
@@ -366,7 +418,9 @@
       "method_detail": "vtable:22CSWSAreaOfEffectObject[0] slot 31; similar:0.88; callees:3 in order",
       "candidates": 1,
       "addr_hex": "0x100444586",
-      "expected_bytes": "554889e54156534889cb4989fe488d05"
+      "expected_bytes": "554889e54156534889cb4989fe488d05",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.store": {
       "cls": "CSWSStore",
@@ -379,7 +433,9 @@
       "method_detail": "vtable:9CSWSStore[0] slot 31; similar:0.94",
       "candidates": 1,
       "addr_hex": "0x1003C22CA",
-      "expected_bytes": "554889e553504889cb4889f8488d0ddf"
+      "expected_bytes": "554889e553504889cb4889f8488d0ddf",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "event.waypoint": {
       "cls": "CSWSWaypoint",
@@ -392,7 +448,9 @@
       "method_detail": "vtable:12CSWSWaypoint[0] slot 31; similar:0.80",
       "candidates": 1,
       "addr_hex": "0x100380F90",
-      "expected_bytes": "554889e5488d0525221f003930751648"
+      "expected_bytes": "554889e5488d0525221f003930751648",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "app.server_main_loop": {
       "cls": "CServerExoAppInternal",
@@ -405,7 +463,9 @@
       "method_detail": "k2match:callgraph(1); i386match:strings",
       "candidates": 1,
       "addr_hex": "0x1003E788A",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -418,7 +478,9 @@
       "method_detail": "i386match:strings; similar:0.83",
       "candidates": 1,
       "addr_hex": "0x1002677D4",
-      "expected_bytes": "554889e54157415641554154534883ec"
+      "expected_bytes": "554889e54157415641554154534883ec",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "console.do_console": {
       "cls": "",
@@ -431,7 +493,9 @@
       "method_detail": "k2match:strings+imports; i386match:strings; callees:8 in order",
       "candidates": 1,
       "addr_hex": "0x1004AD858",
-      "expected_bytes": "554889e5534883ec1889fb0f57c00f29"
+      "expected_bytes": "554889e5534883ec1889fb0f57c00f29",
+      "signature_kind": "data_ref",
+      "signature_reason": "rdata_vtable_or_data_pointer (not executable code; locate via code xref)"
     },
     "vm.wrapper_internal": {
       "cls": "CVirtualMachine",
@@ -446,7 +510,9 @@
       "offset": 0,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vm.internal_command_implementer": {
       "cls": "CVirtualMachineInternal",
@@ -461,7 +527,9 @@
       "offset": 1248,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x4E0"
+      "offset_hex": "0x4E0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.commands": {
       "cls": "CSWVirtualMachineCommands",
@@ -476,7 +544,9 @@
       "offset": 24,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x18"
+      "offset_hex": "0x18",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.command_count": {
       "cls": "CSWVirtualMachineCommands",
@@ -491,7 +561,9 @@
       "offset": 772,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x304"
+      "offset_hex": "0x304",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.has_caller": {
       "cls": "CSWVirtualMachineCommands",
@@ -506,7 +578,9 @@
       "offset": 8,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vmcmd.caller_id": {
       "cls": "CSWVirtualMachineCommands",
@@ -521,7 +595,9 @@
       "offset": 16,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "area.game_object": {
       "cls": "CSWSArea",
@@ -536,7 +612,9 @@
       "offset": 344,
       "size": 0,
       "addr_hex": "0x0",
-      "offset_hex": "0x158"
+      "offset_hex": "0x158",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "module.game_object": {
       "cls": "CSWSModule",
@@ -551,7 +629,9 @@
       "offset": 40,
       "size": 0,
       "addr_hex": "0x0",
-      "offset_hex": "0x28"
+      "offset_hex": "0x28",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "g.app_manager": {
       "cls": "",
@@ -566,7 +646,9 @@
       "offset": 0,
       "size": 8,
       "addr_hex": "0x100677CF0",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.server": {
       "cls": "CAppManager",
@@ -581,7 +663,9 @@
       "offset": 16,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.id": {
       "cls": "CGameObject",
@@ -596,7 +680,9 @@
       "offset": 8,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.type": {
       "cls": "CGameObject",
@@ -611,7 +697,9 @@
       "offset": 16,
       "size": 1,
       "addr_hex": "0x0",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.objects": {
       "cls": "CScriptEvent",
@@ -626,7 +714,9 @@
       "offset": 56,
       "size": 8,
       "addr_hex": "0x0",
-      "offset_hex": "0x38"
+      "offset_hex": "0x38",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.ints": {
       "cls": "CScriptEvent",
@@ -641,7 +731,9 @@
       "offset": 8,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.floats": {
       "cls": "CScriptEvent",
@@ -656,7 +748,9 @@
       "offset": 24,
       "size": 4,
       "addr_hex": "0x0",
-      "offset_hex": "0x18"
+      "offset_hex": "0x18",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "script_event.strings": {
       "cls": "CScriptEvent",
@@ -671,7 +765,9 @@
       "offset": 40,
       "size": 16,
       "addr_hex": "0x0",
-      "offset_hex": "0x28"
+      "offset_hex": "0x28",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     }
   }
 }

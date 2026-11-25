@@ -26,17 +26,17 @@ VmEngineAccess g_access;
 //
 // Code addresses are process-wide. Object pointers can be refreshed from a
 // trusted RunScript context; publication happens on the same game thread.
-hooks::ThiscallFn<int, int, int>            g_execute_command = nullptr;
-hooks::ThiscallFn<int, int>                 g_push_int    = nullptr;
-hooks::ThiscallFn<int, float>               g_push_float  = nullptr;
-hooks::ThiscallFn<int, const void*>         g_push_string = nullptr;
+hooks::EngineMethodFn<int, int, int>            g_execute_command = nullptr;
+hooks::EngineMethodFn<int, int>                 g_push_int    = nullptr;
+hooks::EngineMethodFn<int, float>               g_push_float  = nullptr;
+hooks::EngineMethodFn<int, const void*>         g_push_string = nullptr;
 // Object ids cross this boundary at the engine's width (abi::ObjectId): 32
 // bits on i386, 64 on x86_64, where StackPopObject writes a full 8 bytes.
-hooks::ThiscallFn<int, abi::ObjectId>       g_push_object = nullptr;
-hooks::ThiscallFn<int, int*>                g_pop_int     = nullptr;
-hooks::ThiscallFn<int, float*>              g_pop_float   = nullptr;
-hooks::ThiscallFn<int, void*>               g_pop_string  = nullptr;
-hooks::ThiscallFn<int, abi::ObjectId*>      g_pop_object  = nullptr;
+hooks::EngineMethodFn<int, abi::ObjectId>       g_push_object = nullptr;
+hooks::EngineMethodFn<int, int*>                g_pop_int     = nullptr;
+hooks::EngineMethodFn<int, float*>              g_pop_float   = nullptr;
+hooks::EngineMethodFn<int, void*>               g_pop_string  = nullptr;
+hooks::EngineMethodFn<int, abi::ObjectId*>      g_pop_object  = nullptr;
 
 int shim_execute(void* self, int id, int argc) { return g_execute_command(self, id, argc); }
 int shim_push_int(void* vm, int v)             { return g_push_int(vm, v); }
@@ -139,7 +139,7 @@ bool command_slot_live(const void* table, std::uint32_t routine) {
     std::uintptr_t ptr = 0;
     std::memcpy(&ptr, entry, sizeof ptr);
     if (ptr == 0) return false;
-    if (abi::kX64 && (ptr & 1u) != 0) return true;   // virtual: vtable offset + 1
+    if ((abi::kX64 || layout::kEngine.itanium_memptr) && (ptr & 1u) != 0) return true;   // virtual: vtable offset + 1
     return platform::is_readable(reinterpret_cast<const void*>(ptr), 1);
 }
 
@@ -268,6 +268,7 @@ bool bind_sites(const VmSites& s, std::string& error) {
     a.command_count = count;
     a.commands_offset = s.commands_offset;
     a.wrapper_internal_offset = s.wrapper_internal_offset;
+    a.stack_pointer_offset = s.stack_pointer_offset;
     // No engine call or callback between these assignments: game-thread
     // consumers observe one complete context, including all stack accessors.
     bind_engine_access(a);

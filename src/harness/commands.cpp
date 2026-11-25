@@ -767,6 +767,7 @@ void cmd_reload(const Json&, Outcome& out) {
         std::vector<std::string> errs;
         loaded = h->load_all(errs);
         for (const std::string& e : errs) errors.push(Json::string(e));
+        Runtime::instance().sync_demand_hooks();
         close_harness_state();
         faulted = false;
     }

@@ -1146,6 +1146,19 @@
         ],
         "limits": "No types.h declaration asserted. Field resolution is not save-load completion or K2 runtime parity proof."
       }
+    },
+    {
+      "name": "CVirtualMachineInternal::stack_pointer",
+      "kind": "field",
+      "owner": "CVirtualMachineInternal",
+      "addr": "0x00000000",
+      "offset": "0x1ac",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 GOG StackPopInteger internal 0x00645e00 computes add ecx, 0x1ac (CVirtualMachineStack::m_nStackPointer at [this+0x1ac]) before calling StackPopInteger helper 0x00642680."
+      }
     }
   ]
 }

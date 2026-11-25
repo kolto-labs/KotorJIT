@@ -523,4 +523,22 @@ void FaultFrame::note_fault() {
                             static_cast<unsigned long>(tf.fault_code));
 }
 
+bool guard_call(const char* label, void (*work)(void*), void* ctx) {
+    if (work == nullptr) return false;
+    FaultFrame frame(label, nullptr);
+    volatile bool ok = true;
+    if (setjmp(*static_cast<jmp_buf*>(frame.buf())) != 0) {
+        ok = false;
+        const ThreadFrames& tf = t_frames;
+        Runtime::instance().log("kp.native fault in \"%s\": address 0x%08lx, pc 0x%08lx, code 0x%lx",
+                                label != nullptr ? label : "(unnamed)",
+                                static_cast<unsigned long>(tf.fault_addr),
+                                static_cast<unsigned long>(tf.fault_pc),
+                                static_cast<unsigned long>(tf.fault_code));
+    } else {
+        work(ctx);
+    }
+    return ok;
+}
+
 }  // namespace kp::runtime

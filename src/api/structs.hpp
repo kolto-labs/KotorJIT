@@ -195,6 +195,11 @@ using AddressResolver = std::uintptr_t (*)(std::uint32_t object_id,
                                            const char** type_name_out);
 void set_address_resolver(AddressResolver);
 
+// Runtime gate: true on 32-bit K1 builds where kLayouts offsets match; false
+// on K2 or 64-bit builds so kp.struct.* refuses cleanly instead of reading wrong offsets.
+void set_supported(bool supported);
+bool is_supported();
+
 // How many typed writes this process has performed.
 //
 // Writes here are as sharp as kp.mem's -- the field table decides the width

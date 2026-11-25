@@ -805,6 +805,77 @@ static const Param kP_802[] = {{Type::Object, "oCreature", false}, {Type::Int, "
 static const Param kP_803[] = {{Type::Object, "oCreature", false}};
 static const Param kP_804[] = {{Type::Float, "fSpeed", false}};
 static const Param* const kP_805 = nullptr;
+static const Param kP_806[] = {{Type::String, "sMovie", false}, {Type::Int, "nSkippable", true}};
+static const Param kP_807[] = {{Type::Int, "nAllowSkips", true}};
+static const Param kP_808[] = {{Type::Object, "oCreature", false}};
+static const Param* const kP_809 = nullptr;
+static const Param kP_810[] = {{Type::Object, "oCreature", false}};
+static const Param kP_811[] = {{Type::Object, "oCreature", false}};
+static const Param kP_812[] = {{Type::Object, "oCreature", false}};
+static const Param kP_813[] = {{Type::Object, "oidHealer", false}, {Type::Object, "oidTarget", false}};
+static const Param kP_814[] = {{Type::Object, "oidHealer", false}};
+static const Param kP_815[] = {{Type::Object, "oCreature", false}, {Type::Int, "rangeLimit", false}};
+static const Param kP_816[] = {{Type::Object, "oCreature", false}, {Type::Int, "nFormID", false}};
+static const Param kP_817[] = {{Type::Int, "nSpellID", false}};
+static const Param kP_818[] = {{Type::Int, "nSpellID", false}};
+static const Param kP_819[] = {{Type::Int, "nStealthState", false}};
+static const Param kP_820[] = {{Type::Vector, "vSource", false}, {Type::Vector, "vTarget", false}, {Type::Object, "oSource", true}, {Type::Object, "oTarget", true}};
+static const Param kP_821[] = {{Type::String, "sTexture", false}, {Type::Int, "nTimeout", false}, {Type::Int, "nDisplayString", false}, {Type::Int, "nDisplayX", false}, {Type::Int, "nDisplayY", false}};
+static const Param kP_822[] = {{Type::Object, "oCreature", false}};
+static const Param* const kP_823 = nullptr;
+static const Param kP_824[] = {{Type::Object, "oCreature", false}};
+static const Param kP_825[] = {{Type::Vector, "vForce", false}};
+static const Param kP_826[] = {{Type::Int, "nForfeitFlags", false}};
+static const Param* const kP_827 = nullptr;
+static const Param kP_828[] = {{Type::Object, "aObject", false}, {Type::Int, "aModValue", false}};
+static const Param kP_829[] = {{Type::Object, "aObject", false}, {Type::Int, "aModValue", false}};
+static const Param kP_830[] = {{Type::Object, "aObject", false}, {Type::Int, "aModValue", false}};
+static const Param* const kP_831 = nullptr;
+static const Param kP_832[] = {{Type::Object, "aObject", false}};
+static const Param kP_833[] = {{Type::Object, "oObject", false}, {Type::Int, "nAttribute", false}, {Type::Int, "nAmount", false}};
+static const Param kP_834[] = {{Type::Object, "oObject", false}, {Type::Int, "nPriority", false}};
+static const Param kP_835[] = {{Type::Object, "oObject", false}};
+static const Param kP_836[] = {{Type::Int, "nPUP", false}, {Type::String, "sTemplate", false}};
+static const Param kP_837[] = {{Type::Int, "nPUP", false}, {Type::Object, "oPuppet", false}};
+static const Param kP_838[] = {{Type::Int, "nPUP", false}, {Type::Int, "nNPC", false}};
+static const Param kP_839[] = {{Type::Int, "nPUP", false}, {Type::Location, "lLocation", false}};
+static const Param kP_840[] = {{Type::Int, "nPUP", false}, {Type::Object, "oidCreature", false}};
+static const Param kP_841[] = {{Type::Object, "oPUP", true}};
+static const Param kP_842[] = {{Type::Object, "oPUP", true}};
+static const Param kP_843[] = {{Type::Float, "fRange", true}};
+static const Param kP_844[] = {{Type::Object, "oCharacter", true}};
+static const Param* const kP_845 = nullptr;
+static const Param kP_846[] = {{Type::Int, "nNPC", false}};
+static const Param kP_847[] = {{Type::Object, "oObject", false}};
+static const Param* const kP_848 = nullptr;
+static const Param kP_849[] = {{Type::Int, "nNewFaction", false}};
+static const Param kP_850[] = {{Type::Object, "oObjectToChange", false}, {Type::Int, "nAppearance", false}};
+static const Param* const kP_851 = nullptr;
+static const Param* const kP_852 = nullptr;
+static const Param* const kP_853 = nullptr;
+static const Param kP_854[] = {{Type::Object, "oTarget", false}, {Type::Int, "nAnimation", false}};
+static const Param* const kP_855 = nullptr;
+static const Param kP_856[] = {{Type::Int, "nFlag", true}};
+static const Param kP_857[] = {{Type::Object, "oMine", false}};
+static const Param kP_858[] = {{Type::Int, "nFlag", true}};
+static const Param kP_859[] = {{Type::Object, "oCreature", false}, {Type::Int, "nFormID", false}};
+static const Param kP_860[] = {{Type::Int, "nFlag", true}};
+static const Param kP_861[] = {{Type::Int, "nClass", false}};
+static const Param kP_862[] = {{Type::Object, "oObject", false}, {Type::Int, "nFlag", false}};
+static const Param kP_863[] = {{Type::Int, "nFlag", false}};
+static const Param kP_864[] = {{Type::Int, "nStrRef", false}, {Type::String, "sIcon", true}};
+static const Param kP_865[] = {{Type::Object, "oDatapad", false}};
+static const Param kP_866[] = {{Type::Object, "oPlaceable", false}};
+static const Param kP_867[] = {{Type::Object, "oCreature", false}, {Type::Int, "nEffectID", false}};
+static const Param kP_868[] = {{Type::Object, "oCreature", false}, {Type::Effect, "eEffect", false}};
+static const Param kP_869[] = {{Type::Object, "oObject", false}, {Type::Int, "nSkill", false}, {Type::Int, "nAmount", false}};
+static const Param kP_870[] = {{Type::Int, "nSkill", false}, {Type::Object, "oObject", true}};
+static const Param kP_871[] = {{Type::Object, "oObject", false}, {Type::Int, "bEnable", false}};
+static const Param kP_872[] = {{Type::Object, "oCreature", false}};
+static const Param kP_873[] = {{Type::Int, "nNPC", false}, {Type::Object, "oidCharacter", false}};
+static const Param kP_874[] = {{Type::Int, "nPUP", false}, {Type::Object, "oidPuppet", false}};
+static const Param kP_875[] = {{Type::Object, "oidCharacter", false}};
+static const Param* const kP_876 = nullptr;
 
 static const Routine kRoutines[] = {
   {0, "Random", Type::Int, kP_0, 1, 1},
@@ -1610,5 +1681,76 @@ static const Routine kRoutines[] = {
   {803, "GetBonusForcePoints", Type::Void, kP_803, 1, 1},
   {804, "SWMG_SetJumpSpeed", Type::Void, kP_804, 1, 1},
   {805, "IsMoviePlaying", Type::Int, kP_805, 0, 0},
+  {806, "QueueMovie", Type::Void, kP_806, 2, 1},
+  {807, "PlayMovieQueue", Type::Void, kP_807, 1, 0},
+  {808, "YavinHackDoorClose", Type::Void, kP_808, 1, 1},
+  {809, "EffectDroidConfused", Type::Effect, kP_809, 0, 0},
+  {810, "IsStealthed", Type::Int, kP_810, 1, 1},
+  {811, "IsMeditating", Type::Int, kP_811, 1, 1},
+  {812, "IsInTotalDefense", Type::Int, kP_812, 1, 1},
+  {813, "SetHealTarget", Type::Void, kP_813, 2, 2},
+  {814, "GetHealTarget", Type::Object, kP_814, 1, 1},
+  {815, "GetRandomDestination", Type::Vector, kP_815, 2, 2},
+  {816, "IsFormActive", Type::Int, kP_816, 2, 2},
+  {817, "GetSpellFormMask", Type::Int, kP_817, 1, 1},
+  {818, "GetSpellBaseForcePointCost", Type::Int, kP_818, 1, 1},
+  {819, "SetKeepStealthInDialog", Type::Void, kP_819, 1, 1},
+  {820, "HasLineOfSight", Type::Int, kP_820, 4, 2},
+  {821, "ShowDemoScreen", Type::Int, kP_821, 5, 5},
+  {822, "ForceHeartbeat", Type::Void, kP_822, 1, 1},
+  {823, "EffectForceSight", Type::Effect, kP_823, 0, 0},
+  {824, "IsRunning", Type::Int, kP_824, 1, 1},
+  {825, "SWMG_PlayerApplyForce", Type::Void, kP_825, 1, 1},
+  {826, "SetForfeitConditions", Type::Void, kP_826, 1, 1},
+  {827, "GetLastForfeitViolation", Type::Int, kP_827, 0, 0},
+  {828, "ModifyReflexSavingThrowBase", Type::Void, kP_828, 2, 2},
+  {829, "ModifyFortitudeSavingThrowBase", Type::Void, kP_829, 2, 2},
+  {830, "ModifyWillSavingThrowBase", Type::Void, kP_830, 2, 2},
+  {831, "GetScriptStringParameter", Type::String, kP_831, 0, 0},
+  {832, "GetObjectPersonalSpace", Type::Float, kP_832, 1, 1},
+  {833, "AdjustCreatureAttributes", Type::Void, kP_833, 3, 3},
+  {834, "SetCreatureAILevel", Type::Void, kP_834, 2, 2},
+  {835, "ResetCreatureAILevel", Type::Void, kP_835, 1, 1},
+  {836, "AddAvailablePUPByTemplate", Type::Int, kP_836, 2, 2},
+  {837, "AddAvailablePUPByObject", Type::Int, kP_837, 2, 2},
+  {838, "AssignPUP", Type::Int, kP_838, 2, 2},
+  {839, "SpawnAvailablePUP", Type::Object, kP_839, 2, 2},
+  {840, "AddPartyPuppet", Type::Int, kP_840, 2, 2},
+  {841, "GetPUPOwner", Type::Object, kP_841, 1, 0},
+  {842, "GetIsPuppet", Type::Int, kP_842, 1, 0},
+  {843, "ActionFollowOwner", Type::Void, kP_843, 1, 0},
+  {844, "GetIsPartyLeader", Type::Int, kP_844, 1, 0},
+  {845, "GetPartyLeader", Type::Object, kP_845, 0, 0},
+  {846, "RemoveNPCFromPartyToBase", Type::Int, kP_846, 1, 1},
+  {847, "CreatureFlourishWeapon", Type::Void, kP_847, 1, 1},
+  {848, "EffectMindTrick", Type::Effect, kP_848, 0, 0},
+  {849, "EffectFactionModifier", Type::Effect, kP_849, 1, 1},
+  {850, "ChangeObjectAppearance", Type::Void, kP_850, 2, 2},
+  {851, "GetIsXBox", Type::Int, kP_851, 0, 0},
+  {852, "EffectDroidScramble", Type::Effect, kP_852, 0, 0},
+  {853, "ActionSwitchWeapons", Type::Void, kP_853, 0, 0},
+  {854, "PlayOverlayAnimation", Type::Void, kP_854, 2, 2},
+  {855, "UnlockAllSongs", Type::Void, kP_855, 0, 0},
+  {856, "DisableMap", Type::Void, kP_856, 1, 0},
+  {857, "DetonateMine", Type::Void, kP_857, 1, 1},
+  {858, "DisableHealthRegen", Type::Void, kP_858, 1, 0},
+  {859, "SetCurrentForm", Type::Void, kP_859, 2, 2},
+  {860, "SetDisableTransit", Type::Void, kP_860, 1, 0},
+  {861, "SetInputClass", Type::Void, kP_861, 1, 1},
+  {862, "SetForceAlwaysUpdate", Type::Void, kP_862, 2, 2},
+  {863, "EnableRain", Type::Void, kP_863, 1, 1},
+  {864, "DisplayMessageBox", Type::Void, kP_864, 2, 1},
+  {865, "DisplayDatapad", Type::Void, kP_865, 1, 1},
+  {866, "RemoveHeartbeat", Type::Void, kP_866, 1, 1},
+  {867, "RemoveEffectByID", Type::Void, kP_867, 2, 2},
+  {868, "RemoveEffectByExactMatch", Type::Void, kP_868, 2, 2},
+  {869, "AdjustCreatureSkills", Type::Void, kP_869, 3, 3},
+  {870, "GetSkillRankBase", Type::Int, kP_870, 2, 1},
+  {871, "EnableRendering", Type::Void, kP_871, 2, 2},
+  {872, "GetCombatActionsPending", Type::Int, kP_872, 1, 1},
+  {873, "SaveNPCByObject", Type::Void, kP_873, 2, 2},
+  {874, "SavePUPByObject", Type::Void, kP_874, 2, 2},
+  {875, "GetIsPlayerMadeCharacter", Type::Int, kP_875, 1, 1},
+  {876, "RebuildPartyTable", Type::Void, kP_876, 0, 0},
 };
 // clang-format on

@@ -96,6 +96,20 @@ namespace kp::hooks {
 template <typename Ret, typename... Args>
 using ThiscallFn = Ret(KP_THISCALL*)(void*, Args...);
 
+// Native engine C++ member convention for the running binary: MSVC __thiscall
+// on Windows i386 builds, SysV i386 cdecl (`this` as first stack arg) on
+// GCC-compiled Linux i386 builds, and System V / MS x64 on 64-bit targets.
+#if defined(_WIN32) && (defined(__i386__) || defined(_M_IX86))
+#define KP_ENGINE_METHOD_CALL __attribute__((thiscall))
+#elif defined(__i386__)
+#define KP_ENGINE_METHOD_CALL __attribute__((cdecl))
+#else
+#define KP_ENGINE_METHOD_CALL
+#endif
+
+template <typename Ret, typename... Args>
+using EngineMethodFn = Ret(KP_ENGINE_METHOD_CALL*)(void*, Args...);
+
 #if defined(__i386__) || defined(_M_IX86)
 // The documented fallback spelling, kept declared so the alternative is visible
 // rather than buried in a comment. The second parameter absorbs EDX and is

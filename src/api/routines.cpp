@@ -61,9 +61,35 @@ struct DispatchTrace {
     bool pop_attempted = false;
     int pop_status = 0;
     bool pop_bound = false;
+    bool stack_checked = false;
+    bool stack_balanced = true;
+    std::int32_t sp_before = 0;
+    std::int32_t sp_after = 0;
+};
+
+struct StackBalanceTrace {
+    bool active = false;
+    std::uint16_t routine = 0;
+    bool checked = false;
+    bool balanced = true;
+    std::int32_t sp_before = 0;
+    std::int32_t sp_after = 0;
 };
 
 thread_local DispatchTrace g_trace;
+thread_local StackBalanceTrace g_balance;
+
+bool read_vm_stack_pointer(const VmBinding& vm, const VmEngineAccess& ex, std::int32_t& out) {
+    if (ex.stack_pointer_offset == 0 || vm.virtual_machine == nullptr) return false;
+    const auto* wrapper_ptr = static_cast<const char*>(vm.virtual_machine) + ex.wrapper_internal_offset;
+    if (!platform::is_readable(wrapper_ptr, sizeof(void*))) return false;
+    const void* internal = *reinterpret_cast<void* const*>(wrapper_ptr);
+    if (internal == nullptr) return false;
+    const auto* sp_ptr = static_cast<const char*>(internal) + ex.stack_pointer_offset;
+    if (!platform::is_readable(sp_ptr, sizeof(std::int32_t))) return false;
+    std::memcpy(&out, sp_ptr, sizeof(std::int32_t));
+    return true;
+}
 
 bool trace_this(const Routine& r) {
     return r.id == 28 && std::strcmp(r.name, "GetFacing") == 0;
@@ -414,6 +440,199 @@ int l_last_routine_trace(lua_State* L) {
     boolean("pop_bound", g_trace.pop_bound);
     boolean("pop_attempted", g_trace.pop_attempted);
     integer("pop_status", g_trace.pop_status);
+    boolean("stack_checked", g_trace.stack_checked);
+    boolean("stack_balanced", g_trace.stack_balanced);
+    integer("sp_before", g_trace.sp_before);
+    integer("sp_after", g_trace.sp_after);
+    return 1;
+}
+
+int l_last_stack_balance(lua_State* L) {
+    if (!g_balance.active) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_createtable(L, 0, 5);
+    lua_pushnumber(L, g_balance.routine);
+    lua_setfield(L, -2, "routine");
+    lua_pushboolean(L, g_balance.checked ? 1 : 0);
+    lua_setfield(L, -2, "checked");
+    lua_pushboolean(L, g_balance.balanced ? 1 : 0);
+    lua_setfield(L, -2, "balanced");
+    lua_pushinteger(L, g_balance.sp_before);
+    lua_setfield(L, -2, "sp_before");
+    lua_pushinteger(L, g_balance.sp_after);
+    lua_setfield(L, -2, "sp_after");
+    return 1;
+}
+
+int l_vm_ready(lua_State* L) {
+    lua_pushboolean(L, vm_binding_live() ? 1 : 0);
+    return 1;
+}
+
+int l_engine_type(lua_State* L) {
+    if (lua_gettop(L) < 1 || !lua_isuserdata(L, 1) || !lua_getmetatable(L, 1)) {
+        lua_pushnil(L);
+        return 1;
+    }
+    static const struct { const char* mt; const char* name; } kKinds[] = {
+        {"kp.effect", "effect"},
+        {"kp.event", "event"},
+        {"kp.location", "location"},
+        {"kp.talent", "talent"},
+    };
+    for (const auto& k : kKinds) {
+        luaL_getmetatable(L, k.mt);
+        const bool eq = !lua_isnil(L, -1) && lua_rawequal(L, -1, -2) != 0;
+        lua_pop(L, 1);
+        if (eq) {
+            lua_pop(L, 1);
+            lua_pushstring(L, k.name);
+            return 1;
+        }
+    }
+    lua_pop(L, 1);
+    lua_pushnil(L);
+    return 1;
+}
+
+int l_routine(lua_State* L) {
+    const Routine* r = nullptr;
+    if (lua_type(L, 1) == LUA_TNUMBER) {
+        const lua_Number raw = lua_tonumber(L, 1);
+        if (std::isfinite(raw) && raw >= 0.0 && raw <= 65535.0 && std::floor(raw) == raw) {
+            r = find(static_cast<std::uint16_t>(raw));
+        }
+    } else if (lua_type(L, 1) == LUA_TSTRING) {
+        r = find(std::string(lua_tostring(L, 1)));
+    } else {
+        return luaL_argerror(L, 1, "expected routine name or integer id");
+    }
+    if (r == nullptr) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    const VmEngineAccess& ex = engine_access();
+    bool needs_vec = r->returns == Type::Vector;
+    bool needs_struct = r->returns == Type::Effect || r->returns == Type::Event ||
+                        r->returns == Type::Location || r->returns == Type::Talent;
+    for (std::uint8_t i = 0; i < r->param_count; ++i) {
+        const Type t = r->params[i].type;
+        if (t == Type::Vector) needs_vec = true;
+        if (t == Type::Effect || t == Type::Event || t == Type::Location || t == Type::Talent)
+            needs_struct = true;
+    }
+
+    bool callable = true;
+    const char* why_not = nullptr;
+    if (ex.virtual_machine != nullptr) {
+        if (needs_vec && (!ex.push_vector || !ex.pop_vector)) {
+            callable = false;
+            why_not = "vector marshallers unresolved (vm.stack_push_vector / vm.stack_pop_vector)";
+        } else if (needs_struct && (!ex.push_engine_structure || !ex.pop_engine_structure)) {
+            callable = false;
+            why_not = "engine structure marshallers unresolved (vm.stack_push_engine_structure / vm.stack_pop_engine_structure)";
+        } else if (ex.commands != nullptr && !vm_binding_live(r->id)) {
+            callable = false;
+            why_not = "command slot unavailable on live dispatcher table";
+        }
+    }
+
+    lua_createtable(L, 0, 7);
+    lua_pushinteger(L, r->id);
+    lua_setfield(L, -2, "id");
+    lua_pushstring(L, r->name);
+    lua_setfield(L, -2, "name");
+    lua_pushstring(L, type_name(r->returns));
+    lua_setfield(L, -2, "returns");
+    lua_pushinteger(L, r->required_count);
+    lua_setfield(L, -2, "required");
+    lua_pushboolean(L, callable ? 1 : 0);
+    lua_setfield(L, -2, "callable");
+    if (why_not != nullptr) {
+        lua_pushstring(L, why_not);
+        lua_setfield(L, -2, "why_not");
+    }
+    lua_createtable(L, r->param_count, 0);
+    for (std::uint8_t i = 0; i < r->param_count; ++i) {
+        lua_createtable(L, 0, 3);
+        lua_pushstring(L, r->params[i].name);
+        lua_setfield(L, -2, "name");
+        lua_pushstring(L, type_name(r->params[i].type));
+        lua_setfield(L, -2, "type");
+        lua_pushboolean(L, r->params[i].has_default ? 1 : 0);
+        lua_setfield(L, -2, "has_default");
+        lua_rawseti(L, -2, int(i) + 1);
+    }
+    lua_setfield(L, -2, "params");
+    return 1;
+}
+
+int l_routines(lua_State* L) {
+    const auto& tbl = table();
+    lua_createtable(L, int(tbl.size()), 0);
+    for (std::size_t i = 0; i < tbl.size(); ++i) {
+        lua_pushstring(L, tbl[i].name);
+        lua_rawseti(L, -2, int(i) + 1);
+    }
+    return 1;
+}
+
+int l_gametime_inner(lua_State* L) {
+    const Routine* r_mod = find("GetModule");
+    const Routine* r_hr  = find("GetTimeHour");
+    const Routine* r_min = find("GetTimeMinute");
+    const Routine* r_sec = find("GetTimeSecond");
+    const Routine* r_ms  = find("GetTimeMillisecond");
+    if (!r_mod || !r_hr || !r_min || !r_sec || !r_ms) {
+        lua_pushnil(L);
+        return 1;
+    }
+    const int base = lua_gettop(L);
+    if (call(L, *r_mod, base + 1) < 1 || !lua_isnumber(L, -1) ||
+        lua_tonumber(L, -1) == 2130706432.0 /* OBJECT_INVALID */) {
+        lua_settop(L, base);
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_pop(L, 1);
+
+    auto read_int = [&](const Routine* r, int& out) -> bool {
+        const int top = lua_gettop(L);
+        if (call(L, *r, top + 1) < 1 || !lua_isnumber(L, -1)) {
+            lua_settop(L, top);
+            return false;
+        }
+        out = static_cast<int>(lua_tointeger(L, -1));
+        lua_settop(L, top);
+        return true;
+    };
+    int hr = 0, min = 0, sec = 0, ms = 0;
+    if (!read_int(r_hr, hr) || !read_int(r_min, min) ||
+        !read_int(r_sec, sec) || !read_int(r_ms, ms)) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_createtable(L, 0, 4);
+    lua_pushinteger(L, hr);  lua_setfield(L, -2, "hour");
+    lua_pushinteger(L, min); lua_setfield(L, -2, "minute");
+    lua_pushinteger(L, sec); lua_setfield(L, -2, "second");
+    lua_pushinteger(L, ms);  lua_setfield(L, -2, "millisecond");
+    return 1;
+}
+
+int l_gametime(lua_State* L) {
+    if (!vm_binding_live()) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_pushcfunction(L, l_gametime_inner);
+    if (lua_pcall(L, 0, 1, 0) != 0) {
+        lua_pop(L, 1);
+        lua_pushnil(L);
+    }
     return 1;
 }
 
@@ -484,6 +703,10 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 
     begin_trace(r, vm);
 
+    const VmEngineAccess& ex = engine_access();
+    std::int32_t sp_before = 0;
+    const bool sp_before_ok = read_vm_stack_pointer(vm, ex, sp_before);
+
     // LAST declared parameter first. See the header note; reversing this is
     // invisible for symmetric signatures and silently wrong for the rest.
     for (int i = int(r.param_count) - 1; i >= 0; --i) {
@@ -514,7 +737,24 @@ int call(lua_State* L, const Routine& r, int first_arg) {
         return luaL_error(L, "%s (routine %d) failed: VM error %d",
                           r.name, int(r.id), rc);
     }
-    return push_result(L, r);
+    const int nres = push_result(L, r);
+    std::int32_t sp_after = 0;
+    const bool sp_after_ok = sp_before_ok && read_vm_stack_pointer(vm, ex, sp_after);
+    const bool checked = sp_before_ok && sp_after_ok;
+    const bool balanced = !checked || sp_before == sp_after;
+    g_balance = StackBalanceTrace{true, r.id, checked, balanced, sp_before, sp_after};
+    if (g_trace.active) {
+        g_trace.stack_checked = checked;
+        g_trace.stack_balanced = balanced;
+        g_trace.sp_before = sp_before;
+        g_trace.sp_after = sp_after;
+    }
+    if (checked && !balanced) {
+        platform::log(platform::LogLevel::Warn,
+                      "%s (routine %u): VM stack imbalance (sp_before=%d, sp_after=%d)",
+                      r.name, unsigned(r.id), int(sp_before), int(sp_after));
+    }
+    return nres;
 }
 
 // ------------------------------------------------------------ register ------
@@ -562,7 +802,7 @@ void register_all(lua_State* L) {
     lua_getglobal(L, "nwscript");
     if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
-        lua_createtable(L, 0, 3);
+        lua_createtable(L, 0, 4);
         lua_pushvalue(L, -1);
         lua_setglobal(L, "nwscript");
     }
@@ -572,10 +812,28 @@ void register_all(lua_State* L) {
     lua_setfield(L, -2, "with_caller");
     lua_pushcfunction(L, l_last_routine_trace);
     lua_setfield(L, -2, "last_trace");
+    lua_pushcfunction(L, l_last_stack_balance);
+    lua_setfield(L, -2, "last_stack_balance");
     lua_pop(L, 1);
 
     platform::log(platform::LogLevel::Info,
                   "api: registered nwscript.call for %zu engine routines", table().size());
+}
+
+void register_kp_routines(lua_State* L) {
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_createtable(L, 0, 5);
+        lua_pushvalue(L, -1);
+        lua_setglobal(L, "kp");
+    }
+    lua_pushcfunction(L, l_vm_ready);    lua_setfield(L, -2, "vm_ready");
+    lua_pushcfunction(L, l_routine);     lua_setfield(L, -2, "routine");
+    lua_pushcfunction(L, l_routines);    lua_setfield(L, -2, "routines");
+    lua_pushcfunction(L, l_engine_type); lua_setfield(L, -2, "engine_type");
+    lua_pushcfunction(L, l_gametime);    lua_setfield(L, -2, "gametime");
+    lua_pop(L, 1);
 }
 
 }  // namespace kp::api

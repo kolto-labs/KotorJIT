@@ -112,3 +112,5 @@
 "OnAreaTransitionFail",
 "OnItemUse",
 "OnClientRequestedScript",
+"OnScriptSituation",
+"OnPlayerSpawn",

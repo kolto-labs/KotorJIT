@@ -11,7 +11,7 @@
   },
   "format_kind": "pe",
   "note": "Required VM/stack and multiplayer sites are adjudicated against the exact Steam image and the K2 GOG donor. Bound executable sites carry target-derived expected bytes; field bindings carry measured offsets. Unresolved optional sites remain fail-closed.",
-  "adjudicated_bindings": 39,
+  "adjudicated_bindings": 43,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -24,18 +24,26 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x007022A0",
-      "expected_bytes": "558bec83ec10894df4837d0800742a8b"
+      "expected_bytes": "558bec83ec10894df4837d0800742a8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df4837d0800742a",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
       "method": "RunScriptSituation",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'RunScriptSituation' bindings, class unknown",
-      "candidates": 1
+      "addr": 7349648,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00702590",
+      "expected_bytes": "558bec83ec5c894db48b4db481c1ac01",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec5c894db48b4db4",
+      "mask": "ffffffffffffffffffffffff"
     },
     "vm.execute_code": {
       "cls": "CVirtualMachineInternal",
@@ -46,7 +54,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "vm.execute_command": {
       "cls": "CSWVirtualMachineCommands",
@@ -59,7 +69,9 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00668FD0",
-      "expected_bytes": "558bec83ec08894df8817d086d030000"
+      "expected_bytes": "558bec83ec08894df8817d086d030000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "vm.wrapper_internal": {
       "cls": "CVirtualMachine",
@@ -75,7 +87,9 @@
       "size": 4,
       "owner": "CVirtualMachine",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x1C"
+      "offset_hex": "0x1C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vm.internal_command_implementer": {
       "cls": "CVirtualMachineInternal",
@@ -91,29 +105,97 @@
       "size": 4,
       "owner": "CVirtualMachineInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x3D4"
+      "offset_hex": "0x3D4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "vm.stack_pointer": {
+      "cls": "CVirtualMachineInternal",
+      "method": "stack_pointer",
+      "kind": "field",
+      "required": false,
+      "addr": 0,
+      "source": "adjudicated",
+      "confidence": 1.0,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "offset": 428,
+      "size": 4,
+      "owner": "CVirtualMachineInternal",
+      "addr_hex": "0x00000000",
+      "offset_hex": "0x1AC",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "vmcmd.destroy_game_defined_structure": {
+      "cls": "CSWVirtualMachineCommands",
+      "method": "DestroyGameDefinedStructure",
+      "kind": "call",
+      "required": false,
+      "addr": 6723152,
+      "source": "adjudicated",
+      "confidence": 1.0,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x00669650",
+      "expected_bytes": "558bec83ec44894dcc837d080075458b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec44894dcc837d0800",
+      "mask": "ffffffffffffffffffffffffff"
+    },
+    "exo.string_dtor": {
+      "cls": "CExoString",
+      "method": "~CExoString",
+      "kind": "call",
+      "required": false,
+      "addr": 7550848,
+      "source": "adjudicated",
+      "confidence": 1.0,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x00733780",
+      "expected_bytes": "558bec83ec08894df88b45f883380074",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f883380074278b4df8c7410400000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
       "method": "SaveScriptSituation",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'SaveScriptSituation' bindings, class unknown",
-      "candidates": 1
+      "addr": 7353200,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00703370",
+      "expected_bytes": "558bec83ec08894df88b450883781000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b450883781000",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "vm.load_script_situation": {
       "cls": "CVirtualMachine",
       "method": "LoadScriptSituation",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'LoadScriptSituation' bindings, class unknown",
-      "candidates": 1
+      "addr": 7330688,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x006FDB80",
+      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4510508b4d0c518b5508528b45fc8b481c",
+        "suffix": "8be55dc20c00",
+        "target_pattern": "558bec6aff6856f2950064a1000000005083ec44a1201fa10033c5508d45f464a300000000894dc06a28",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_integer": {
       "cls": "CVirtualMachine",
@@ -126,7 +208,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FD9A0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df88b4df881c1ac010000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
@@ -139,7 +230,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FD9C0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df86a038b4df8",
+        "target_mask": "ffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
@@ -152,7 +252,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FD9E0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8f9c7ffff8945fc837dfc007f0433c0eb55",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -165,7 +274,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDA00",
-      "expected_bytes": "558bec51894dfc51d94508d91c248b45"
+      "expected_bytes": "558bec51894dfc51d94508d91c248b45",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc51d94508d91c248b45fc8b481c",
+      "mask": "ffffffffffffffffffffffffffffffffffffffff"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
@@ -178,7 +290,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDA70",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e859c6ffff8945fc837dfc007f0433c0eb57",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
@@ -191,7 +312,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDA90",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec6aff68cbf1950064a1000000005083ec18a1201fa10033c5508d45f464a300000000894de06a08",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -204,7 +334,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDAF0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8b9c3ffff8945f8",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
@@ -217,7 +356,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDB10",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df86a068b4df8",
+        "target_mask": "ffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
@@ -230,7 +378,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDA20",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48d45fc508b4df4",
+        "target_mask": "ffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
@@ -243,7 +400,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDA40",
-      "expected_bytes": "558bec51894dfc83ec0c8bc48b4d0889"
+      "expected_bytes": "558bec51894dfc83ec0c8bc48b4d0889",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc83ec0c8bc4",
+      "mask": "ffffffffffffffffffffffff"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
@@ -256,7 +416,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDAB0",
-      "expected_bytes": "558bec51894dfc8b450c508b4d08518b"
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec10894df08b4df081c1ac010000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
@@ -269,117 +438,176 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x006FDAD0",
-      "expected_bytes": "558bec51894dfc8b450c508b4d08518b"
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec0c894df48b45f483b8d403000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "event.creature": {
       "cls": "CSWSCreature",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 5697488,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0056EFD0",
+      "expected_bytes": "558bec6aff68a80d950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68a80d950064a1000000005081ec24030000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "event.door": {
       "cls": "CSWSDoor",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6388544,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00617B40",
+      "expected_bytes": "558bec6aff687871950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff687871950064a1000000005081ec84030000a1201fa10033c5508d45f464a300000000898df8fcffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.placeable": {
       "cls": "CSWSPlaceable",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6238176,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x005F2FE0",
+      "expected_bytes": "558bec6aff688b45950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff688b45950064a1000000005081eca0020000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "event.trigger": {
       "cls": "CSWSTrigger",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6418800,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0061F170",
+      "expected_bytes": "558bec6aff688b75950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff688b75950064a1000000005081ecf4000000a1201fa10033c5508d45f464a300000000898d10ffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.module": {
       "cls": "CSWSModule",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 5600320,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00557440",
+      "expected_bytes": "558bec81ece8000000898d20ffffff8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ece8000000898d20ffffff",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "event.area": {
       "cls": "CSWSArea",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 5382576,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x005221B0",
+      "expected_bytes": "558bec6aff6837dc940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff6837dc940064a1000000005081ec54010000a1201fa10033c5508d45f464a300000000898dccfeffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.encounter": {
       "cls": "CSWSEncounter",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6436496,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00623690",
+      "expected_bytes": "558bec83ec48894dbc8b45083b051c24",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec48894dbc8b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.aoe": {
       "cls": "CSWSAreaOfEffectObject",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6473264,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0062C630",
+      "expected_bytes": "558bec83ec3c894dcc8b45083b05f823",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec3c894dcc8b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.store": {
       "cls": "CSWSStore",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6469856,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0062B8E0",
+      "expected_bytes": "558bec83ec2c894de08b45083b051c24",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2c894de08b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.waypoint": {
       "cls": "CSWSWaypoint",
       "method": "EventHandler",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "10 bare 'EventHandler' bindings, class unknown",
-      "candidates": 10
+      "addr": 6458336,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00628BE0",
+      "expected_bytes": "558bec83ec14894df08b45083b052024",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894df08b45083b0520249900",
+      "mask": "ffffffffffffffffffffffffffff00000000"
     },
     "app.server_main_loop": {
       "cls": "CServerExoAppInternal",
@@ -392,7 +620,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00533830",
-      "expected_bytes": "558bec6aff684aeb940064a100000000"
+      "expected_bytes": "558bec6aff684aeb940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff684aeb940064a1000000005081ec9c010000a1201fa10033c5508d45f464a300000000898d60feffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -405,7 +636,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00781BE0",
-      "expected_bytes": "558bec6aff685b58960064a100000000"
+      "expected_bytes": "558bec6aff685b58960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff685b58960064a1000000005081ec5c030000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "console.do_console": {
       "cls": "",
@@ -418,7 +652,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00408EE0",
-      "expected_bytes": "558bec6aff680880940064a100000000"
+      "expected_bytes": "558bec6aff680880940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff680880940064a1000000005083ec38a1201fa10033c5508d45f464a3000000006a00",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffff"
     },
     "console.funcs_add": {
       "cls": "",
@@ -429,51 +666,73 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "module.load_start": {
       "cls": "CSWSModule",
       "method": "LoadModuleStart",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'LoadModuleStart' bindings, class unknown",
-      "candidates": 1
+      "addr": 5604080,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x005582F0",
+      "expected_bytes": "558bec6aff680500950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff680500950064a1000000005081ec74050000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "client.set_game_speed": {
       "cls": "CClientExoAppInternal",
       "method": "SetGameSpeed",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7980016,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0079C3F0",
+      "expected_bytes": "558bec83ec20894de0833da4b4a10000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec20894de0833da4b4a100000f84cb000000",
+      "mask": "ffffffffffffffffffffff00000000ffffff00000000"
     },
     "client.play_movies": {
       "cls": "CClientExoAppInternal",
       "method": "PlayMoviesInExoArrayList",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'PlayMoviesInExoArrayList' bindings, class unknown",
-      "candidates": 1
+      "addr": 7999408,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007A0FB0",
+      "expected_bytes": "558bec83ec14894dec8b45ec8b88f801",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894dec8b45ec8b88f8010000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "creature.ai_action_move_to_point": {
       "cls": "CSWSCreature",
       "method": "AIActionMoveToPoint",
       "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'AIActionMoveToPoint' bindings, class unknown",
-      "candidates": 1
+      "addr": 6028288,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x005BFC00",
+      "expected_bytes": "558bec6aff689534950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff689534950064a1000000005081ecdc050000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "creature.add_move_to_point_action": {
       "cls": "CSWSCreature",
@@ -486,7 +745,9 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00564770",
-      "expected_bytes": "558bec83ec0c894df4c745fc00000000"
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "unresolved_code",
+      "signature_reason": "comdat_identical_code_folding (2 byte-identical executable functions share entire body)"
     },
     "server_object.set_position": {
       "cls": "CSWSObject",
@@ -499,18 +760,26 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00543F50",
-      "expected_bytes": "558bec81eca4000000898d5cffffff8b"
+      "expected_bytes": "558bec81eca4000000898d5cffffff8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec81eca4000000898d5cffffff8b450850",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "app.create_server": {
       "cls": "CAppManager",
       "method": "CreateServer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 4201408,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00401BC0",
+      "expected_bytes": "558bec6aff687b1f960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff687b1f960064a1000000005083ec10a1201fa10033c5508d45f464a300000000894de88b45e883780800",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff"
     },
     "net.start_connect_to_session": {
       "cls": "CNetLayer",
@@ -523,7 +792,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x007045B0",
-      "expected_bytes": "558bec83ec20894de08b45e083b86000"
+      "expected_bytes": "558bec83ec20894de08b45e083b86000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec20894de08b45e083b86000020001",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "net.initialize": {
       "cls": "CNetLayer",
@@ -536,7 +808,9 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00703D70",
-      "expected_bytes": "558bec6aff6844f3950064a100000000"
+      "expected_bytes": "558bec6aff6844f3950064a100000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "net.shutdown": {
       "cls": "CNetLayer",
@@ -549,7 +823,9 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00703C50",
-      "expected_bytes": "558bec51894dfc8b45fcc70000000000"
+      "expected_bytes": "558bec51894dfc8b45fcc70000000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "net.send_message_to_player": {
       "cls": "CNetLayer",
@@ -562,7 +838,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00704060",
-      "expected_bytes": "558bec6aff6868f3950064a100000000"
+      "expected_bytes": "558bec6aff6868f3950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff6868f3950064a1000000005083ec7456",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff"
     },
     "net.process_received_frames": {
       "cls": "CNetLayer",
@@ -575,7 +854,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00703F30",
-      "expected_bytes": "558bec83ec0c56894df4837d08000f84"
+      "expected_bytes": "558bec83ec0c56894df4837d08000f84",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c56894df4837d0800",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "net.non_window_messages": {
       "cls": "CNetLayer",
@@ -588,7 +870,9 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00704880",
-      "expected_bytes": "558bec83ec08894df8c745fc00000000"
+      "expected_bytes": "558bec83ec08894df8c745fc00000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "client.area_get_server_area": {
       "cls": "CSWCArea",
@@ -601,7 +885,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x007AAE00",
-      "expected_bytes": "558bec83ec0c894df48b45f483b88002"
+      "expected_bytes": "558bec83ec0c894df48b45f483b88002",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f483b88002000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "module.get_area": {
       "cls": "CSWSModule",
@@ -614,7 +901,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00557EF0",
-      "expected_bytes": "558bec83ec08894df88b45f88b4df88b"
+      "expected_bytes": "558bec83ec08894df88b45f88b4df88b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4df88b903c020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client_area.attach_from_server": {
       "cls": "CSWCArea",
@@ -627,7 +917,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x007AAE80",
-      "expected_bytes": "558bec51894dfc8b45fc8b4d08898880"
+      "expected_bytes": "558bec51894dfc8b45fc8b4d08898880",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d08898880020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "server_area.attach_from_client": {
       "cls": "CSWSArea",
@@ -640,7 +933,10 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x0052DC10",
-      "expected_bytes": "558bec51894dfc8b45fc8b4d08898834"
+      "expected_bytes": "558bec51894dfc8b45fc8b4d08898834",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d08898834030000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "net.destination_net_layer": {
       "cls": "CNetLayer",
@@ -656,7 +952,9 @@
       "size": 4,
       "owner": "CNetLayer",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x2000C"
+      "offset_hex": "0x2000C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "net.start_server_mode": {
       "cls": "CNetLayer",
@@ -669,73 +967,124 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x00704500",
-      "expected_bytes": "558bec51894dfc8b45fc83b83c000200"
+      "expected_bytes": "558bec51894dfc8b45fc83b83c000200",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc83b83c00020001",
+      "mask": "ffffffffffffffffffffffffffffffffff"
     },
     "msg.request_status": {
       "cls": "CSWCMessage",
       "method": "SendPlayerToServerStatus_RequestStatus",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8889648,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0087A530",
+      "expected_bytes": "558bec51894dfc6a006a006a006a018b",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc6a006a006a006a01",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "client.set_player_character_name": {
       "cls": "CClientExoApp",
       "method": "SetPlayerCharacterName",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7602112,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073FFC0",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec51894dfc8b4508508b4dfc81c194020000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.set_input_class": {
       "cls": "CClientExoApp",
       "method": "SetInputClass",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'SetInputClass' bindings, class unknown",
-      "candidates": 2
+      "addr": 7601888,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073FEE0",
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a04",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec5c894dac8b45ac8b889c000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.disable_input": {
       "cls": "CClientExoApp",
       "method": "DisableInput",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7602896,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007402D0",
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e88e30",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec51894dfc8b45fcc780bc02000001000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "app.set_load_from_savegame": {
       "cls": "CServerExoApp",
       "method": "SetLoadFromSaveGame",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 5361152,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051CE00",
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b45088982c4000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.set_loading_savegame": {
       "cls": "CClientExoApp",
       "method": "SetLoadingSaveGame",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'SetLoadingSaveGame' bindings, class unknown",
-      "candidates": 1
+      "addr": 7605248,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00740C00",
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b450889823c030000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.send_load_game_request": {
       "cls": "CClientExoApp",
@@ -746,7 +1095,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "client.send_save_game_request": {
       "cls": "CClientExoApp",
@@ -757,40 +1108,57 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "msg.attack": {
       "cls": "CSWCMessage",
       "method": "SendPlayerToServerInput_Attack",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8886688,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x008799A0",
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745fc00000000c745f806000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "msg.change_door_state": {
       "cls": "CSWCMessage",
       "method": "SendPlayerToServerInput_ChangeDoorState",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8887584,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00879D20",
+      "expected_bytes": "558bec83ec0c894df4c745f806000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745f806000000",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "door.move_to_next_open_state": {
       "cls": "CSWSDoor",
       "method": "MoveToNextOpenState",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'MoveToNextOpenState' bindings, class unknown",
-      "candidates": 1
+      "addr": 6412208,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0061D7B0",
+      "expected_bytes": "558bec83ec14894dec8b45ec8a881c03",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894dec8b45ec8a881c030000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "door.open_state": {
       "cls": "CSWSDoor",
@@ -804,7 +1172,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "door.also_open_state": {
       "cls": "CSWSDoor",
@@ -818,7 +1188,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "door.animation": {
       "cls": "CSWSDoor",
@@ -832,18 +1204,25 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "msg.area_loaded": {
       "cls": "CSWCMessage",
       "method": "SendPlayerToServerArea_AreaLoaded",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8886432,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x008798A0",
+      "expected_bytes": "558bec51894dfc6a006a006a036a048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc6a006a006a03",
+      "mask": "ffffffffffffffffffffffffff"
     },
     "gui.unpack_game": {
       "cls": "CSWGuiSaveLoad",
@@ -854,117 +1233,169 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "app.start_new_module": {
       "cls": "CServerExoAppInternal",
       "method": "StartNewModule",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'StartNewModule' bindings, class unknown",
-      "candidates": 1
+      "addr": 5438880,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0052FDA0",
+      "expected_bytes": "558bec6aff6853e5940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff6853e5940064a1000000005081ec88000000a1201fa10033c5508d45f464a300000000898d78ffffff8b8578ffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "app.load_module": {
       "cls": "CServerExoAppInternal",
       "method": "LoadModule",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'LoadModule' bindings, class unknown",
-      "candidates": 2
+      "addr": 5446736,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00531C50",
+      "expected_bytes": "558bec6aff683eea940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff683eea940064a1000000005081eca8070000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "app.set_move_to_module_pending": {
       "cls": "CServerExoApp",
       "method": "SetMoveToModulePending",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 5357136,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051BE50",
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b4508898280000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.set_move_to_module_string": {
       "cls": "CServerExoApp",
       "method": "SetMoveToModuleString",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'SetMoveToModuleString' bindings, class unknown",
-      "candidates": 1
+      "addr": 5357216,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051BEA0",
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c184000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.set_move_to_module_start_waypoint": {
       "cls": "CServerExoApp",
       "method": "SetMoveToModuleStartWaypoint",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 5357472,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051BFA0",
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c18c000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.set_dialog_selection": {
       "cls": "CGuiInGame",
       "method": "SetDialogSelection",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8180944,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007CD4D0",
+      "expected_bytes": "558bec51894dfc8b45fc8b4d088988e0",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d088988e00000008b55fc",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.update_dialog": {
       "cls": "CGuiInGame",
       "method": "UpdateDialog",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'UpdateDialog' bindings, class unknown",
-      "candidates": 2
+      "addr": 8179952,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007CD0F0",
+      "expected_bytes": "558bec83ec78894d8c8b458c8b88cc00",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec78894d8c8b458c8b88cc000000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "gui.close_dialog": {
       "cls": "CGuiInGame",
       "method": "CloseDialog",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'CloseDialog' bindings, class unknown",
-      "candidates": 1
+      "addr": 8153632,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007C6A20",
+      "expected_bytes": "558bec81eca8000000a1201fa10033c5",
+      "signature_kind": "pattern",
+      "pattern": "558bec81eca8000000a1201fa10033c58945ec",
+      "mask": "ffffffffffffffffffff00000000ffffffffff"
     },
     "gui.handle_dialog_selection": {
       "cls": "CGuiInGame",
       "method": "HandleDialogSelection",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'HandleDialogSelection' bindings, class unknown",
-      "candidates": 1
+      "addr": 8158560,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007C7D60",
+      "expected_bytes": "558bec6aff68289a960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68289a960064a1000000005081ecc0000000a1201fa10033c5508d45f464a300000000898d3cffffff8b853cffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "dialog.select_reply": {
       "cls": "CSWGuiDialog",
       "method": "SelectReply",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 9151776,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x008BA520",
+      "expected_bytes": "558bec83ec0c894df48b45f48b4d083b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f48b4d083b4870",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "dialog.reply_dialog": {
       "cls": "CSWSObject",
@@ -975,7 +1406,9 @@
       "source": "ambiguous",
       "confidence": null,
       "method_detail": "1 bare 'ReplyDialog' bindings, class unknown",
-      "candidates": 1
+      "candidates": 1,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "dialog.handle_reply": {
       "cls": "CSWSDialog",
@@ -986,40 +1419,63 @@
       "source": "ambiguous",
       "confidence": null,
       "method_detail": "1 bare 'HandleReply' bindings, class unknown",
-      "candidates": 1
+      "candidates": 1,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "dialog.check_script": {
       "cls": "CSWSDialog",
       "method": "CheckScript",
-      "kind": "call",
+      "kind": "detour",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'CheckScript' bindings, class unknown",
-      "candidates": 1
+      "addr": 7110544,
+      "source": "adjudicated",
+      "confidence": 1.0,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "addr_hex": "0x006C7F90",
+      "expected_bytes": "558bec6aff68582f970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68582f970064a1000000005083ec20a1201fa10033c5508d45f464a300000000894dd468256998008b4d0c",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffff00000000ffffff"
     },
     "dialog.skip_past": {
       "cls": "CServerExoApp",
       "method": "SkipPastDialog",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'SkipPastDialog' bindings, class unknown",
-      "candidates": 2
+      "addr": 5359312,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C6D0",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec14894decc745f8000000008b45ec8b885c000100",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "object.stop_dialog": {
       "cls": "CSWSObject",
       "method": "StopDialog",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'StopDialog' bindings, class unknown",
-      "candidates": 1
+      "addr": 5531904,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00546900",
+      "expected_bytes": "558bec83ec24894de08b45e08b108b4d",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec24894de08b45e08b10",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "timer.set_snapshot_scale": {
       "cls": "CWorldTimer",
@@ -1030,7 +1486,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "timer.set_fixed_snapshot_rate": {
       "cls": "CWorldTimer",
@@ -1041,260 +1499,383 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "timer.pause_world_timer": {
       "cls": "CWorldTimer",
       "method": "PauseWorldTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'PauseWorldTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 5353552,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051B050",
+      "expected_bytes": "558bec83ec0c894df48b45f483782400",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f483782400752c",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "timer.unpause_world_timer": {
       "cls": "CWorldTimer",
       "method": "UnpauseWorldTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'UnpauseWorldTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 5353632,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051B0A0",
+      "expected_bytes": "558bec51894dfc8b45fc837824017522",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc83782401",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "client.get_world_timer": {
       "cls": "CClientExoApp",
       "method": "GetWorldTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetWorldTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 7599024,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F3B0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5124",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_pause_timer": {
       "cls": "CClientExoApp",
       "method": "GetPauseTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetPauseTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 7599056,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F3D0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b512c",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_animation_timer": {
       "cls": "CClientExoApp",
       "method": "GetAnimationTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7599088,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F3F0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5130",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "server.get_world_timer": {
       "cls": "CServerExoApp",
       "method": "GetWorldTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetWorldTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 5358448,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C370",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9148000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "server.get_pause_timer": {
       "cls": "CServerExoApp",
       "method": "GetPauseTimer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetPauseTimer' bindings, class unknown",
-      "candidates": 1
+      "addr": 5358512,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C3B0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9150000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.get_in_game_gui": {
       "cls": "CClientExoApp",
       "method": "GetInGameGui",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7599952,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F750",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5140",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_client_name": {
       "cls": "CClientExoApp",
       "method": "GetClientName",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetClientName' bindings, class unknown",
-      "candidates": 1
+      "addr": 7598864,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F310",
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745fc000000008b45f48b480481c140010000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.get_net_layer": {
       "cls": "CClientExoApp",
       "method": "GetNetLayer",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetNetLayer' bindings, class unknown",
-      "candidates": 1
+      "addr": 7600112,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F7F0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5110",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_message_handler": {
       "cls": "CClientExoApp",
       "method": "GetSWCMessage",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetSWCMessage' bindings, class unknown",
-      "candidates": 1
+      "addr": 7600144,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F810",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9150010000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.is_movie_playing": {
       "cls": "CClientExoApp",
       "method": "IsMoviePlaying",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'IsMoviePlaying' bindings, class unknown",
-      "candidates": 2
+      "addr": 7602528,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00740160",
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e88e8a",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec51894dfc8b45fc83b830010000007504",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.get_game_over": {
       "cls": "CClientExoApp",
       "method": "GetGameOver",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetGameOver' bindings, class unknown",
-      "candidates": 1
+      "addr": 7603168,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007403E0",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b91c0020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.remove_panel": {
       "cls": "CSWGuiManager",
       "method": "RemovePanel",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 4261488,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00410670",
+      "expected_bytes": "558bec83ec10894df0837d0800750733",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df0837d08007507",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "gui.panel_exists": {
       "cls": "CSWGuiManager",
       "method": "PanelExists",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 4261888,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00410800",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfce87d",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b4508508b4dfce87d00000033c9",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffff"
     },
     "gui.tutorial_handle_input": {
       "cls": "CSWGuiTutorialBox",
       "method": "HandleInputEvent",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "63 bare 'HandleInputEvent' bindings, class unknown",
-      "candidates": 63
+      "addr": 9014864,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00898E50",
+      "expected_bytes": "558bec83ec08894dfc837d0c0074398b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894dfc837d0c007439",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "gui.tutorial_unpause": {
       "cls": "CSWGuiTutorialBox",
       "method": "MessageBoxUnpause",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'MessageBoxUnpause' bindings, class unknown",
-      "candidates": 1
+      "addr": 9015680,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00899180",
+      "expected_bytes": "558bec83ec08894df88b45f883b8d409",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f883b8d409000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "gui.messagebox_handle_input": {
       "cls": "CSWGuiMessageBox",
       "method": "HandleInputEvent",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "63 bare 'HandleInputEvent' bindings, class unknown",
-      "candidates": 63
+      "addr": 7715040,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0075B8E0",
+      "expected_bytes": "558bec83ec14894df0837d0c000f848d",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894df0837d0c000f848d010000c745fc00000000",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffff"
     },
     "gui.status_summary_handle_input": {
       "cls": "CSWGuiStatusSummary",
       "method": "HandleInputEvent",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "63 bare 'HandleInputEvent' bindings, class unknown",
-      "candidates": 63
+      "addr": 7723344,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0075D950",
+      "expected_bytes": "558bec83ec1c894de8837d0c000f84bd",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec1c894de8837d0c000f84bd0000008b45088945e48b4de483e927894de4837de4070f87a40000008b55e40fb68240da7500",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000"
     },
     "gui.show_sw_in_game_gui": {
       "cls": "CGuiInGame",
       "method": "ShowSWInGameGui",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'ShowSWInGameGui' bindings, class unknown",
-      "candidates": 1
+      "addr": 8166896,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007C9DF0",
+      "expected_bytes": "558bec6aff68a09a960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68a09a960064a1000000005083ec40a1201fa10033c5508d45f464a300000000894db48b45b4",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "gui.hide_sw_in_game_gui": {
       "cls": "CGuiInGame",
       "method": "HideSWInGameGui",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'HideSWInGameGui' bindings, class unknown",
-      "candidates": 1
+      "addr": 8167520,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007CA060",
+      "expected_bytes": "558bec83ec2c894dd48b45d483b82801",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2c894dd48b45d483b82801000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "gui.container_handle_input": {
       "cls": "CSWGuiContainer",
       "method": "HandleInputEvent",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "63 bare 'HandleInputEvent' bindings, class unknown",
-      "candidates": 63
+      "addr": 9119824,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x008B2850",
+      "expected_bytes": "558bec83ec1c894de8837d0c000f843c",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec1c894de8837d0c000f843c0100008b45088945e48b4de483e927894de4837de4070f87230100008b55e4ff2495b8298b00",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000"
     },
     "gui.party_selection_accept_party": {
       "cls": "CSWGuiPartySelection",
       "method": "AcceptParty",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'AcceptParty' bindings, class unknown",
-      "candidates": 1
+      "addr": 9042896,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0089FBD0",
+      "expected_bytes": "558bec81ec9401000056898d6cfeffff",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ec9401000056898d6cfeffff",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "gui.party_selection_vtable": {
       "cls": "CSWGuiPartySelection",
@@ -1305,62 +1886,95 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "gui.main_menu_new_game": {
       "cls": "CSWGuiMainMenu",
       "method": "OnNewGamePicked",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'OnNewGamePicked' bindings, class unknown",
-      "candidates": 1
+      "addr": 8921648,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00882230",
+      "expected_bytes": "558bec6aff688b4a970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff688b4a970064a1000000005083ec78a1201fa10033c5508d45f464a300000000894d808b45808b4848",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffff"
     },
     "gui.main_chargen_begin_play": {
       "cls": "CSWGuiMainCharGen",
       "method": "BeginPlayGame",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'BeginPlayGame' bindings, class unknown",
-      "candidates": 2
+      "addr": 9466688,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00907340",
+      "expected_bytes": "558bec51894dfc8b4dfce8c1edffff8b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4dfce8c1edffff8b45fc8b486c",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec6aff6830ef970064a1000000005081eca4000000a1201fa10033c5508d45f464a300000000898d60ffffffa1a4b4a100",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffff00000000",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "gui.main_chargen_set_visible_panel": {
       "cls": "CSWGuiMainCharGen",
       "method": "SetVisiblePanel",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'SetVisiblePanel' bindings, class unknown",
-      "candidates": 1
+      "addr": 9462544,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00906310",
+      "expected_bytes": "558bec83ec0c894dfc8b45fc8b4d083b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894dfc8b45fc8b4d083b88582b0000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.update_client_game_objects": {
       "cls": "CServerExoAppInternal",
       "method": "UpdateClientGameObjects",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'UpdateClientGameObjects' bindings, class unknown",
-      "candidates": 1
+      "addr": 5469456,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00537510",
+      "expected_bytes": "558bec83ec14894deca188b4a1008b48",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894deca188b4a1008b4804e8faec1f00",
+      "mask": "ffffffffffffffffffff00000000ffffffff00000000"
     },
     "gui.class_selection_select_button": {
       "cls": "CSWGuiClassSelection",
       "method": "OnSelectButton",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'OnSelectButton' bindings, class unknown",
-      "candidates": 1
+      "addr": 9414304,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x008FA6A0",
+      "expected_bytes": "558bec6aff686b9c960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff686b9c960064a1000000005083ec24a1201fa10033c5508d45f464a300000000894dd48b45088b4850894de0",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "menu.newgame_button": {
       "cls": "CSWGuiMainMenu",
@@ -1374,7 +1988,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "menu.ready": {
       "cls": "CSWGuiMainMenu",
@@ -1388,7 +2004,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panel_bit_flags": {
       "cls": "CSWGuiPanel",
@@ -1402,7 +2020,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.control_active": {
       "cls": "CSWGuiControl",
@@ -1416,7 +2036,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.class_controls": {
       "cls": "CSWGuiClassSelection",
@@ -1430,7 +2052,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.class_control": {
       "cls": "CSWGuiControl",
@@ -1444,7 +2068,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_route_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1458,7 +2084,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_quick_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1472,7 +2100,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.child_main_panel": {
       "cls": "CSWGuiCharGenPanel",
@@ -1486,7 +2116,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_visible_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1500,7 +2132,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panels_data": {
       "cls": "CSWGuiManager",
@@ -1514,7 +2148,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panels_size": {
       "cls": "CSWGuiManager",
@@ -1528,18 +2164,25 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "app.get_global_variable_table": {
       "cls": "CServerExoApp",
       "method": "GetGlobalVariableTable",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetGlobalVariableTable' bindings, class unknown",
-      "candidates": 1
+      "addr": 5359760,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C890",
+      "expected_bytes": "558bec51894dfc8b45fc8b400405fc00",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b400405fc000100",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "app.get_party_table": {
       "cls": "CServerExoApp",
@@ -1550,7 +2193,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "app.get_module": {
       "cls": "CServerExoApp",
@@ -1563,7 +2208,16 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x0051BD90",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e81e37"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e81e37",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec0c894df48b45f48b4df4",
+        "target_mask": "ffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "server.get_player_creature_id": {
       "cls": "CServerExoApp",
@@ -1576,73 +2230,130 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x0051C8F0",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e85ed4"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e85ed4",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec14894deca1a4b4a1008b4808894df86a01",
+        "target_mask": "ffffffffffffffffffff00000000ffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "server.client_to_server_object_id": {
       "cls": "CServerExoApp",
       "method": "ClientToServerObjectId",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'ClientToServerObjectId' bindings, class unknown",
-      "candidates": 2
+      "addr": 5359792,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C8B0",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec51894dfc817d080000007f740c",
+        "target_mask": "ffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.get_sw_party": {
       "cls": "CClientExoApp",
       "method": "GetSWParty",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'GetSWParty' bindings, class unknown",
-      "candidates": 1
+      "addr": 7601040,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073FB90",
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9170020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "party.get_player_character": {
       "cls": "CSWParty",
       "method": "GetPlayerCharacter",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8281472,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007E5D80",
+      "expected_bytes": "558bec51894dfc6a008b4dfce80f0000",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc6a008b4dfc",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec0c894df4837d08007c37",
+        "target_mask": "ffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "party.set_leader": {
       "cls": "CSWParty",
       "method": "SetLeader",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 8281584,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x007E5DF0",
+      "expected_bytes": "558bec6aff6821b8960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff6821b8960064a1000000005081ec24010000a1201fa10033c5508d45f464a300000000898dd4feffff8b85d4feffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "client_creature.party_menu_use_item": {
       "cls": "CSWCCreature",
       "method": "PartyMenuUseItem",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'PartyMenuUseItem' bindings, class unknown",
-      "candidates": 1
+      "addr": 7851136,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0077CC80",
+      "expected_bytes": "558bec83ec18894de88b45e88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec18894de88b45e88b4804894dfc",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_creature_by_object_id": {
       "cls": "CClientExoApp",
       "method": "GetCreatureByGameObjectID",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7599440,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0073F550",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b4814894df88d55fc528b4508508b4df8e89721dbff0fb6c80fb6157f4499003bca7527837dfc0074210fb605744499008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b422c",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client_party.count": {
       "cls": "CSWParty",
@@ -1656,7 +2367,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_party.member": {
       "cls": "CSWPartyMemberData",
@@ -1670,7 +2383,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_party.member_id": {
       "cls": "CSWPartyMemberData",
@@ -1684,18 +2399,25 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_creature.get_server_creature": {
       "cls": "CSWCCreature",
       "method": "GetServerCreature",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7854080,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0077D800",
+      "expected_bytes": "558bec83ec08894dfc8b4dfce82f4d07",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894dfc8b4dfce82f4d070085c0741a8b4dfce8234d07008945f88b45f88b108b4df88b4230",
+      "mask": "ffffffffffffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffffffff"
     },
     "server.get_game_object": {
       "cls": "CServerExoApp",
@@ -1708,40 +2430,64 @@
       "method_detail": "hand-adjudicated",
       "candidates": 1,
       "addr_hex": "0x0051C0A0",
-      "expected_bytes": "558bec83ec10894df08b45f08b480489"
+      "expected_bytes": "558bec83ec10894df08b45f08b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df08b45f08b4804894df4c745fc000000008b55f48b825c000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "server.get_item_by_object_id": {
       "cls": "CServerExoApp",
       "method": "GetItemByGameObjectID",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 5357792,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C0E0",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b885c000100894df88d55fc528b4508508b4df8e8846400000fb6c80fb6157f4499003bca7527837dfc0074210fb605754499008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b4238",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "creature.run_equip": {
       "cls": "CSWSCreature",
       "method": "RunEquip",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'RunEquip' bindings, class unknown",
-      "candidates": 1
+      "addr": 5662288,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x00566650",
+      "expected_bytes": "558bec81ec20010000898df8feffffc7",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ec20010000898df8feffff",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "inventory.get_item_in_slot": {
       "cls": "CSWInventory",
       "method": "GetItemInSlot",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 7144992,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x006D0620",
+      "expected_bytes": "558bec83ec0c894df48b4508508b4df4",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b4508508b4df4e83b0000008945fc837dfc00741e",
+      "mask": "ffffffffffffffffffffffffffffffffff00000000ffffffffffffffffff"
     },
     "creature.inventory": {
       "cls": "CSWSCreature",
@@ -1755,7 +2501,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "item.id": {
       "cls": "CSWSItem",
@@ -1769,7 +2517,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "item.possessor": {
       "cls": "CSWSItem",
@@ -1783,51 +2533,79 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.get_client_object_by_object_id": {
       "cls": "CServerExoApp",
       "method": "GetClientObjectByObjectId",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "2 bare 'GetClientObjectByObjectId' bindings, class unknown",
-      "candidates": 2
+      "addr": 5359104,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_xref_thunk_transfer",
+      "candidates": 1,
+      "addr_hex": "0x0051C600",
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec14894decc745fc00000000817d080000007f",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "stats.auto_levelup": {
       "cls": "CSWSCreatureStats",
       "method": "AutoLevelup",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'AutoLevelup' bindings, class unknown",
-      "candidates": 1
+      "addr": 7073264,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x006BEDF0",
+      "expected_bytes": "558bec6aff688ec4950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff688ec4950064a1000000005081ecb801000056",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff"
     },
     "stats.get_level": {
       "cls": "CSWSCreatureStats",
       "method": "GetLevel",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "unresolved",
-      "confidence": null,
-      "method_detail": null,
-      "candidates": 0
+      "addr": 6966784,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x006A4E00",
+      "expected_bytes": "558bec6aff6800ba950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff6800ba950064a1000000005083ec5ca1201fa10033c5508d45f464a300000000894da0c745e400000000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff"
     },
     "stats.can_level_up": {
       "cls": "CSWSCreatureStats",
       "method": "CanLevelUp",
       "kind": "call",
       "required": false,
-      "addr": null,
-      "source": "ambiguous",
-      "confidence": null,
-      "method_detail": "1 bare 'CanLevelUp' bindings, class unknown",
-      "candidates": 1
+      "addr": 7051152,
+      "source": "adjudicated",
+      "confidence": 0.99,
+      "method_detail": "sigforge_pattern_transfer",
+      "candidates": 1,
+      "addr_hex": "0x006B9790",
+      "expected_bytes": "558bec83ec2056894de4a1a4b4a1008b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2056894de4a1a4b4a100",
+      "mask": "ffffffffffffffffffffff00000000"
     },
     "object.type": {
       "cls": "CGameObject",
@@ -1841,7 +2619,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.id": {
       "cls": "CGameObject",
@@ -1857,7 +2637,9 @@
       "size": 4,
       "owner": "CGameObject",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x4"
+      "offset_hex": "0x4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "creature.stats": {
       "cls": "CSWSCreature",
@@ -1871,7 +2653,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.experience": {
       "cls": "CSWSCreatureStats",
@@ -1885,7 +2669,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "g.app_manager": {
       "cls": "",
@@ -1901,7 +2687,9 @@
       "size": 4,
       "owner": "",
       "addr_hex": "0x00A1B4A4",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.client": {
       "cls": "CAppManager",
@@ -1915,7 +2703,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.server": {
       "cls": "CAppManager",
@@ -1931,7 +2721,9 @@
       "size": 4,
       "owner": "CAppManager",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.reentrant_server_stats": {
       "cls": "CAppManager",
@@ -1945,7 +2737,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.internal": {
       "cls": "CClientExoApp",
@@ -1959,7 +2753,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.internal": {
       "cls": "CServerExoApp",
@@ -1973,7 +2769,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.server_mode": {
       "cls": "CServerExoAppInternal",
@@ -1987,7 +2785,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.pause_state": {
       "cls": "CServerExoAppInternal",
@@ -2001,7 +2801,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.move_to_module_pending": {
       "cls": "CServerExoAppInternal",
@@ -2015,7 +2817,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.move_to_module_string": {
       "cls": "CServerExoAppInternal",
@@ -2029,7 +2833,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.loading_module": {
       "cls": "CServerExoAppInternal",
@@ -2043,7 +2849,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.auto_save_pending": {
       "cls": "CServerExoAppInternal",
@@ -2057,7 +2865,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.load_from_savegame": {
       "cls": "CServerExoAppInternal",
@@ -2071,7 +2881,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.world_timer": {
       "cls": "CServerExoAppInternal",
@@ -2085,7 +2897,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.pause_timer": {
       "cls": "CServerExoAppInternal",
@@ -2099,7 +2913,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.table": {
       "cls": "CServerExoAppInternal",
@@ -2113,7 +2929,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "party.table": {
       "cls": "CServerExoAppInternal",
@@ -2127,7 +2945,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.net_layer": {
       "cls": "CClientExoAppInternal",
@@ -2141,7 +2961,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.world_timer": {
       "cls": "CClientExoAppInternal",
@@ -2155,7 +2977,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.gui_in_game": {
       "cls": "CClientExoAppInternal",
@@ -2169,7 +2993,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.input_class": {
       "cls": "CClientExoAppInternal",
@@ -2183,7 +3009,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.movie_player": {
       "cls": "CClientExoAppInternal",
@@ -2197,7 +3025,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.message_handler": {
       "cls": "CClientExoAppInternal",
@@ -2211,7 +3041,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.disable_movies": {
       "cls": "CClientExoAppInternal",
@@ -2225,7 +3057,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.gui_manager": {
       "cls": "CClientExoAppInternal",
@@ -2239,7 +3073,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.main_menu": {
       "cls": "CClientExoAppInternal",
@@ -2253,7 +3089,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.area_not_ready_to_display": {
       "cls": "CClientExoAppInternal",
@@ -2267,7 +3105,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.player_creature_id": {
       "cls": "CClientExoAppInternal",
@@ -2281,7 +3121,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.input_disabled": {
       "cls": "CClientExoAppInternal",
@@ -2295,7 +3137,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.game_over_state": {
       "cls": "CClientExoAppInternal",
@@ -2309,7 +3153,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.loading_savegame": {
       "cls": "CClientExoAppInternal",
@@ -2323,7 +3169,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.continue_message_processing": {
       "cls": "CSWReentrantServerStats",
@@ -2337,7 +3185,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.phase": {
       "cls": "CSWReentrantServerStats",
@@ -2351,7 +3201,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.finished": {
       "cls": "CSWReentrantServerStats",
@@ -2365,7 +3217,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.load_game_error": {
       "cls": "CSWReentrantServerStats",
@@ -2379,7 +3233,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.sw_gui_status": {
       "cls": "CGuiInGame",
@@ -2393,7 +3249,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.in_game_screen_active": {
       "cls": "CGuiInGame",
@@ -2407,7 +3265,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.last_gui_panel": {
       "cls": "CGuiInGame",
@@ -2421,7 +3281,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_panel": {
       "cls": "CGuiInGame",
@@ -2435,7 +3297,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_active": {
       "cls": "CGuiInGame",
@@ -2449,7 +3313,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_selection": {
       "cls": "CGuiInGame",
@@ -2463,7 +3329,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_selection_count": {
       "cls": "CGuiInGame",
@@ -2477,7 +3345,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_pending": {
       "cls": "CGuiInGame",
@@ -2491,7 +3361,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.controller_pause": {
       "cls": "CGuiInGame",
@@ -2505,7 +3377,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.tutorial_box": {
       "cls": "CGuiInGame",
@@ -2519,7 +3393,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.status_summary_panel": {
       "cls": "CGuiInGame",
@@ -2533,7 +3409,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback": {
       "cls": "CSWGuiMessageBox",
@@ -2547,7 +3425,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback_context": {
       "cls": "CSWGuiMessageBox",
@@ -2561,7 +3441,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback_arg": {
       "cls": "CSWGuiMessageBox",
@@ -2575,7 +3457,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.modal_data": {
       "cls": "CSWGuiManager",
@@ -2589,7 +3473,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.modal_size": {
       "cls": "CSWGuiManager",
@@ -2603,7 +3489,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.initialized": {
       "cls": "CGuiInGame",
@@ -2617,7 +3505,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_selected_count": {
       "cls": "CSWGuiPartySelection",
@@ -2631,7 +3521,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_mode": {
       "cls": "CSWGuiPartySelection",
@@ -2645,7 +3537,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_entry0_flags": {
       "cls": "CSWGuiPartySelection",
@@ -2659,7 +3553,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_count": {
       "cls": "CGuiInGame",
@@ -2673,7 +3569,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_texts": {
       "cls": "CGuiInGame",
@@ -2687,7 +3585,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_links": {
       "cls": "CGuiInGame",
@@ -2701,7 +3601,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_current_entry": {
       "cls": "CSWGuiDialog",
@@ -2715,7 +3617,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_visible_count": {
       "cls": "CSWGuiDialog",
@@ -2729,7 +3633,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_link_map": {
       "cls": "CSWGuiDialog",
@@ -2743,7 +3649,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_owner": {
       "cls": "CSWGuiDialog",
@@ -2757,7 +3665,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entries": {
       "cls": "CSWSDialog",
@@ -2771,7 +3681,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.skippable": {
       "cls": "CSWSDialog",
@@ -2785,7 +3697,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.current_entry": {
       "cls": "CSWSDialog",
@@ -2799,7 +3713,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.current_reply": {
       "cls": "CSWSDialog",
@@ -2813,7 +3729,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry": {
       "cls": "CSWSDialogEntry",
@@ -2827,7 +3745,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry_link_count": {
       "cls": "CSWSDialogEntry",
@@ -2841,7 +3761,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry_links": {
       "cls": "CSWSDialogEntry",
@@ -2855,7 +3777,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link": {
       "cls": "CSWSDialogLinkEntry",
@@ -2869,7 +3793,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link_index": {
       "cls": "CSWSDialogLinkEntry",
@@ -2883,7 +3809,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link_display_inactive": {
       "cls": "CSWSDialogLinkEntry",
@@ -2897,7 +3825,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.node_strref": {
       "cls": "CSWSDialogBase",
@@ -2911,7 +3841,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_ptr": {
       "cls": "CSWSObject",
@@ -2925,7 +3857,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_send_pending": {
       "cls": "CSWSObject",
@@ -2939,7 +3873,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_wait_flags": {
       "cls": "CSWSObject",
@@ -2953,7 +3889,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_skip_requested": {
       "cls": "CSWSObject",
@@ -2967,7 +3905,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifiers": {
       "cls": "CSWGlobalVariableTable",
@@ -2981,7 +3921,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifier": {
       "cls": "GlobalIndentifier",
@@ -2995,7 +3937,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifier_type_index": {
       "cls": "GlobalIndentifier",
@@ -3009,7 +3953,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.bools": {
       "cls": "CSWGlobalVariableTable",
@@ -3023,7 +3969,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.numbers": {
       "cls": "CSWGlobalVariableTable",
@@ -3037,7 +3985,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.locations": {
       "cls": "CSWGlobalVariableTable",
@@ -3051,7 +4001,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.strings": {
       "cls": "CSWGlobalVariableTable",
@@ -3065,7 +4017,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.boolean_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3079,7 +4033,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.number_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3093,7 +4049,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.location_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3107,7 +4065,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.string_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3121,7 +4081,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entries": {
       "cls": "CSWPartyTable",
@@ -3135,7 +4097,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.data": {
       "cls": "CSWSJournal",
@@ -3149,7 +4113,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.size": {
       "cls": "CSWSJournal",
@@ -3163,7 +4129,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry": {
       "cls": "SJournalEntry",
@@ -3177,7 +4145,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry_tag": {
       "cls": "SJournalEntry",
@@ -3191,7 +4161,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry_state": {
       "cls": "SJournalEntry",
@@ -3205,7 +4177,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "module.name": {
       "cls": "CSWSModule",
@@ -3219,7 +4193,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "movie.internal": {
       "cls": "CExoMoviePlayer",
@@ -3233,7 +4209,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "movie.playing": {
       "cls": "CExoMoviePlayerInternal",
@@ -3247,7 +4225,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.fixed_rate": {
       "cls": "CWorldTimer",
@@ -3261,7 +4241,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.scale": {
       "cls": "CWorldTimer",
@@ -3275,7 +4257,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.paused": {
       "cls": "CWorldTimer",
@@ -3289,7 +4273,432 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client.module": {
+      "cls": "CClientExoAppInternal",
+      "method": "module",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client.options": {
+      "cls": "CClientExoAppInternal",
+      "method": "options",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client_options.camera_mode": {
+      "cls": "CClientOptions",
+      "method": "camera_mode",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client_module.vtable": {
+      "cls": "CSWCModule",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "client_module.camera": {
+      "cls": "CSWCModule",
+      "method": "camera",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera.vtable": {
+      "cls": "CAurCamera",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "camera.active_behavior": {
+      "cls": "CAurCamera",
+      "method": "active_behavior",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.vtable": {
+      "cls": "CSWCameraOnAStick",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "camera_chase.distance": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fDist",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.speed": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fSpeed",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.preset_pitch": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fPresetPitch",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.height": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fHeight",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.dolly": {
+      "cls": "CSWCameraOnAStick",
+      "method": "dolly",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.base_distance": {
+      "cls": "CSWCameraOnAStick",
+      "method": "base_distance",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.base_view_angle": {
+      "cls": "CSWCameraOnAStick",
+      "method": "base_view_angle",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.style_row": {
+      "cls": "CSWCameraOnAStick",
+      "method": "style_row",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_28_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_28_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_38_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_38_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_50_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_50_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "g.camera_style_pending": {
+      "cls": "",
+      "method": "g_camera_style_pending",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.area_id": {
+      "cls": "CSWSObject",
+      "method": "area_id",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.position": {
+      "cls": "CSWSObject",
+      "method": "position",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.orientation": {
+      "cls": "CSWSObject",
+      "method": "orientation",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.client_push_gate_unverified": {
+      "cls": "CSWSObject",
+      "method": "client_push_gate_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.dirty_bits": {
+      "cls": "CSWSObject",
+      "method": "dirty_bits",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "placeable.aabb_registered": {
+      "cls": "CSWSPlaceable",
+      "method": "aabb_registered",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "placeable.quaternion_raw_order_unverified": {
+      "cls": "CSWSPlaceable",
+      "method": "quaternion_raw_order_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     }
   },
   "reference_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
@@ -3307,12 +4716,12 @@
     }
   ],
   "summary": {
-    "total": 256,
-    "resolved": 39,
+    "total": 286,
+    "resolved": 126,
     "by_func": 0,
     "by_identity": 0,
-    "by_adjudication": 39,
-    "by_field": 6,
+    "by_adjudication": 126,
+    "by_field": 7,
     "overlay_conflicts": [],
     "refused_ambiguous": [
       "vm.run_script_situation",
@@ -3342,7 +4751,6 @@
       "gui.handle_dialog_selection",
       "dialog.reply_dialog",
       "dialog.handle_reply",
-      "dialog.check_script",
       "dialog.skip_past",
       "object.stop_dialog",
       "timer.pause_world_timer",
@@ -3533,7 +4941,34 @@
       "movie.playing",
       "timer.fixed_rate",
       "timer.scale",
-      "timer.paused"
+      "timer.paused",
+      "client.module",
+      "client.options",
+      "client_options.camera_mode",
+      "client_module.vtable",
+      "client_module.camera",
+      "camera.vtable",
+      "camera.active_behavior",
+      "camera_chase.vtable",
+      "camera_chase.distance",
+      "camera_chase.speed",
+      "camera_chase.preset_pitch",
+      "camera_chase.height",
+      "camera_chase.dolly",
+      "camera_chase.base_distance",
+      "camera_chase.base_view_angle",
+      "camera_chase.style_row",
+      "camera_chase.raw_28_unverified",
+      "camera_chase.raw_38_unverified",
+      "camera_chase.raw_50_unverified",
+      "g.camera_style_pending",
+      "server_object.area_id",
+      "server_object.position",
+      "server_object.orientation",
+      "server_object.client_push_gate_unverified",
+      "server_object.dirty_bits",
+      "placeable.aabb_registered",
+      "placeable.quaternion_raw_order_unverified"
     ],
     "multi_candidate": [],
     "low_confidence": [

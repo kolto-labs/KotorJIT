@@ -1,0 +1,120 @@
+{
+  "target_binary": {
+    "binary_id": 18,
+    "slug": "TSL__k2_linux_swkotor2.elf",
+    "alias": "k2_steam_linux",
+    "sha256": "ed043d21a4578fd1c6f1557f0f72bde5589ba3572a5b6f1a687ed9feeab49ac3",
+    "md5": "b3420a36a4385fec8189f37c5d5eaad1",
+    "format": "ELF32, x86, 32-bit, cdecl"
+  },
+  "purpose": "Disassembly-, vtable-, and caller-verified VM, event, dialog, and main-loop bindings for the native 32-bit Linux Aspyr kotor2 ELF.",
+  "bindings": [
+    {
+      "name": "CVirtualMachine::internal",
+      "kind": "field",
+      "owner": "CVirtualMachine",
+      "addr": "0x00000000",
+      "offset": "0x1c",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 ELF CVirtualMachine::StackPopInteger 0x0846345c loads [this+0x1c] into internal pointer before calling 0x08467e9c."
+      }
+    },
+    {
+      "name": "CVirtualMachineInternal::command_implementer",
+      "kind": "field",
+      "owner": "CVirtualMachineInternal",
+      "addr": "0x00000000",
+      "offset": "0x3d4",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 ELF CVirtualMachineInternal::ExecuteCode 0x0846612e and RunScript 0x08468306 load command_implementer at [this+0x3d4]."
+      }
+    },
+    {
+      "name": "CVirtualMachineInternal::stack_pointer",
+      "kind": "field",
+      "owner": "CVirtualMachineInternal",
+      "addr": "0x00000000",
+      "offset": "0x1ac",
+      "size": 4,
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "disassembly": "K2 ELF CVirtualMachineInternal::StackPopInteger 0x08467e9c loads edx=[ecx+0x1ac] (`mov edx, [ecx+0x1ac]; test edx, edx`)."
+      }
+    },
+    {
+      "name": "CSWVirtualMachineCommands::DestroyGameDefinedStructure",
+      "addr": "0x085b8b32",
+      "verdict": "accept",
+      "confidence": 1.0,
+      "evidence": {
+        "vtable": "CSWVirtualMachineCommands vtable .rodata:0x087889d0 slot[+4] points directly to 0x085b8b32 (adjacent to InitializeCommands 0x0858b002 and ExecuteCommand 0x085b878e).",
+        "disassembly": "Switches structure type edi (0=Effect,1=Event,2=Location,3=Talent), invokes element destructor and operator delete 0x0818e797."
+      }
+    },
+    {
+      "name": "CExoString::~CExoString",
+      "addr": "0x08190a36",
+      "verdict": "accept",
+      "confidence": 0.99,
+      "evidence": {
+        "disassembly": "0x08190a36 pushes esi, loads s=[esp+0x10], checks eax=[esi], clears [esi+4]=0, frees eax via 0x0818e79c, sets [esi]=0."
+      }
+    },
+    {
+      "name": "CSWSDialog::CheckScript",
+      "addr": "0x0850533e",
+      "verdict": "accept",
+      "confidence": 0.99,
+      "evidence": {
+        "disassembly": "0x0850533e checks empty CResRef at [esp+0x38], constructs CExoString via 0x081908e8, reads CWSObject->m_idSelf at [eax+4], and dispatches VM RunScript."
+      }
+    },
+    {
+      "name": "CSWSCreature::EventHandler",
+      "addr": "0x084ad196",
+      "verdict": "accept",
+      "confidence": 0.99,
+      "evidence": {
+        "vtable": "CSWSCreature vtable slot .rodata:0x08783dd4 points directly to 0x084ad196.",
+        "disassembly": "Real GCC prologue `push ebp; push ebx; push edi; push esi; sub esp, 0x6c`."
+      }
+    },
+    {
+      "name": "CSWSArea::EventHandler",
+      "addr": "0x08483176",
+      "verdict": "accept",
+      "confidence": 0.96,
+      "evidence": {
+        "caller": "Unique non-virtual caller CServerAIMaster::UpdateState 0x085c0038 alongside CSWSModule::EventHandler 0x08541674.",
+        "disassembly": "Real GCC prologue `push ebp; push ebx; push edi; push esi; sub esp, 0xac`."
+      }
+    },
+    {
+      "name": "CServerExoAppInternal::MainLoop",
+      "addr": "0x085ca53e",
+      "verdict": "accept",
+      "confidence": 0.99,
+      "evidence": {
+        "caller": "CServerExoApp::MainLoop 0x085c31a0 unwraps [this+4] and calls 0x085ca53e directly.",
+        "disassembly": "Real GCC prologue `push ebp; push ebx; push edi; push esi; sub esp, 0xac`."
+      }
+    },
+    {
+      "name": "CClientExoAppInternal::MainLoop",
+      "addr": "0x081a5d72",
+      "verdict": "accept",
+      "confidence": 0.99,
+      "evidence": {
+        "caller": "CClientExoApp::MainLoop 0x0819f56c unwraps [this+4] and calls 0x081a5d72 directly.",
+        "disassembly": "Real GCC prologue `push ebp; push ebx; push edi; push esi; sub esp, 0xbc`."
+      }
+    }
+  ]
+}

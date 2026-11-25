@@ -83,11 +83,16 @@ struct VmBinding {
 void bind(const VmBinding&);
 const VmBinding& binding();
 
-// Register nwscript.call, nwscript.with_caller and nwscript.last_trace.
+// Register nwscript.call, nwscript.with_caller, nwscript.last_trace and
+// nwscript.last_stack_balance.
 // This bridge owns only nwscript and never creates the native kp root.
 // Routine names remain data in the generated catalog; none are exported as Lua
 // table members.
 void register_all(lua_State*);
+
+// Register kp.vm_ready, kp.routine, kp.routines, kp.engine_type and kp.gametime
+// onto the shared kp table.
+void register_kp_routines(lua_State*);
 
 // Call one routine with arguments already on the Lua stack starting at
 // `first_arg`. Returns the number of values pushed back (0 or 1).

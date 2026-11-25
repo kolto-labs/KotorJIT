@@ -120,6 +120,8 @@ std::atomic<void*> g_orig_net_send{nullptr};
 std::atomic<void*> g_orig_net_process{nullptr};
 std::atomic<void*> g_orig_client_area_get_server_area{nullptr};
 std::atomic<void*> g_orig_add_move_to_point{nullptr};
+std::atomic<void*> g_orig_run_situation{nullptr};
+std::atomic<void*> g_orig_dialog_check{nullptr};
 std::atomic<void*> g_server_net{nullptr};
 std::atomic<void*> g_client_net{nullptr};
 std::atomic<void*> g_client_support_server_net{nullptr};
@@ -130,6 +132,8 @@ std::atomic<std::uint32_t> g_net_inbound_frames{0};
 std::atomic<bool> g_poison_run_script{false};
 std::atomic<bool> g_poison_client_area_get_server_area{false};
 std::atomic<bool> g_poison_add_move_to_point{false};
+std::atomic<bool> g_poison_run_situation{false};
+std::atomic<bool> g_poison_dialog_check{false};
 std::atomic<bool> g_poison_main_loop{false};
 std::atomic<bool> g_poison_do_console{false};
 // One flag per event site, not one shared flag: a fault in the door handler
@@ -169,6 +173,8 @@ std::string g_situation_blob;
 #endif
 
 using RunScriptFn = int (KP_ENGINE_METHOD_CC*)(void*, CExoString*, kp::abi::ObjectId, int);
+using RunScriptSituationFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, kp::abi::ObjectId, int);
+using DialogCheckScriptFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, const char*);
 using MainLoopFn  = void* (KP_SERVER_LOOP_CC*)(void*);
 using DoConsoleFn = void (__attribute__((cdecl)) *)(char);
 using ClientLoopFn = int (KP_CLIENT_LOOP_CC*)(void*);
@@ -706,41 +712,219 @@ ScriptVerdict decide(const events::EventContract& ev, const events::Outcome& out
     return {b.skip_original, b.engine_result};
 }
 
+thread_local bool t_in_dialog_check = false;
+
+std::string tolower_ascii(std::string_view sv) {
+    std::string out(sv);
+    for (char& ch : out) {
+        if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
+    }
+    return out;
+}
+
+bool contains_ci(std::string_view hay, std::string_view needle) {
+    return tolower_ascii(hay).find(needle) != std::string::npos;
+}
+
+void* resolve_game_object(std::uint32_t oid, std::uint8_t* out_type = nullptr,
+                          std::uint32_t* out_player_id = nullptr) {
+    void* server = current_server_app();
+    const hooks::AddressTable* table = Runtime::instance().table();
+    if (server == nullptr || table == nullptr) return nullptr;
+    if (out_player_id != nullptr) {
+        *out_player_id = 0x7f000000u;
+        if (const hooks::Site* gp = table->find("server.get_player_creature_id");
+            gp != nullptr && gp->resolved) {
+            if (const std::uintptr_t addr = relocated_addr(gp)) {
+                *out_player_id = reinterpret_cast<GetPlayerCreatureIdFn>(addr)(server);
+            }
+        }
+    }
+    const hooks::Site* go = table->find("server.get_game_object");
+    const std::uintptr_t go_addr = relocated_addr(go);
+    if (go_addr == 0) return nullptr;
+    void* obj = reinterpret_cast<GetGameObjectFn>(go_addr)(server, oid);
+    if (obj != nullptr && out_type != nullptr && platform::is_readable(obj, 12)) {
+        *out_type = *(static_cast<const std::uint8_t*>(obj) + 8);
+    }
+    return obj;
+}
+
+const char* match_script_slot_event(const CExoString* name_ptr,
+                                    std::string_view script_name,
+                                    kp::abi::ObjectId object_id,
+                                    int* out_state_val) {
+    if (t_in_dialog_check) return nullptr;
+    std::uint8_t obj_type = 0;
+    std::uint32_t player_id = 0x7f000000u;
+    const std::uint32_t oid = kp::abi::script_id(object_id);
+    void* obj = resolve_game_object(oid, &obj_type, &player_id);
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const bool is_k2 = (table != nullptr && (table->game() == "K2" || table->game() == "k2"));
+
+    // 1. Exact interior CExoString* pointer range match against CSWS* script slot arrays.
+    if (obj != nullptr && name_ptr != nullptr) {
+        const auto obj_va = reinterpret_cast<std::uintptr_t>(obj);
+        const auto ptr_va = reinterpret_cast<std::uintptr_t>(name_ptr);
+        if (ptr_va > obj_va && ptr_va - obj_va < 0x800) {
+            const std::size_t rel = static_cast<std::size_t>(ptr_va - obj_va);
+            const std::size_t stride = sizeof(CExoString);
+            if (obj_type == 5) {  // CSWSCreature: K1 0x230, K2 0x270 (14 slots)
+                const std::size_t base = is_k2 ? 0x270u : 0x230u;
+                if (rel >= base && (rel - base) % stride == 0) {
+                    switch ((rel - base) / stride) {
+                    case 0:  return "OnCreatureHeartbeat";
+                    case 4:  return "OnCreatureDamaged";
+                    case 6:  return "OnCreatureEndCombatRound";
+                    case 8:  return "OnCreatureSpawn";
+                    case 10: return "OnCreatureDeath";
+                    case 13: return "OnCreatureEndDialogue";
+                    default: break;
+                    }
+                }
+            } else if (obj_type == 9) {  // CSWSPlaceable: K1 0x294, K2 0x2e4 (16+ slots)
+                const std::size_t base = is_k2 ? 0x2e4u : 0x294u;
+                if (rel == base + 15u * stride) return "OnPlaceableEndDialogue";
+            } else if (obj_type == 7) {  // CSWSTrigger: K1 0x244, K2 0x284 (7 slots)
+                const std::size_t base = is_k2 ? 0x284u : 0x244u;
+                if (rel >= base && (rel - base) % stride == 0) {
+                    const std::size_t slot = (rel - base) / stride;
+                    if (slot == 0) return "OnTriggerHeartbeat";
+                    if (slot == 4) return "OnTriggerTrapTriggered";
+                }
+            }
+        }
+    }
+
+    // 2. Hardcoded and script-naming fallback (supports builds lacking get_game_object
+    //    like k2_steam_linux and caller paths that construct temporary CExoStrings).
+    const std::string lower = tolower_ascii(script_name);
+    if (lower == "k_trg_transfail") return "OnAreaTransitionFail";
+    if (lower == "itemuse") return "OnItemUse";
+
+    if (obj_type == 7 || (obj_type == 0 && lower.find("_trg_") != std::string::npos)) {
+        if (contains_ci(lower, "trap")) return "OnTriggerTrapTriggered";
+        if (contains_ci(lower, "heartbeat") || lower.ends_with("_hb")) return "OnTriggerHeartbeat";
+    }
+    if (obj_type == 9 && (contains_ci(lower, "endconv") || contains_ci(lower, "enddiag"))) {
+        return "OnPlaceableEndDialogue";
+    }
+    if (obj_type == 5 || obj_type == 0) {
+        if (contains_ci(lower, "heartbeat") || lower.ends_with("_hb") || lower.ends_with("_hb01"))
+            return "OnCreatureHeartbeat";
+        if (contains_ci(lower, "spwn") || contains_ci(lower, "spawn"))
+            return "OnCreatureSpawn";
+        if (contains_ci(lower, "damage"))
+            return "OnCreatureDamaged";
+        if (contains_ci(lower, "death"))
+            return "OnCreatureDeath";
+        if (contains_ci(lower, "endrnd") || contains_ci(lower, "endround") || contains_ci(lower, "combend"))
+            return "OnCreatureEndCombatRound";
+        if (contains_ci(lower, "endconv") || contains_ci(lower, "enddiag"))
+            return "OnCreatureEndDialogue";
+    }
+    if (obj_type == 5 && obj != nullptr) {
+        const std::size_t state_off = is_k2 ? 0x91du : 0x8edu;
+        if (platform::is_readable(static_cast<const char*>(obj) + state_off, 1)) {
+            const int st = static_cast<int>(*(static_cast<const std::uint8_t*>(obj) + state_off));
+            if (st != 0) {
+                if (out_state_val) *out_state_val = st;
+                return "OnCreatureStateScript";
+            }
+        }
+        if (oid == player_id && !lower.empty()) {
+            return "OnClientRequestedScript";
+        }
+    }
+    return nullptr;
+}
+
 __attribute__((noinline)) void run_script_pre_inner(
     lua::Host& host, const CExoString* name, kp::abi::ObjectId object_id,
     int has_object, RunScriptState& state) {
-    const events::EventContract* ev = find_contract("OnRunScript");
-    if (ev == nullptr) return;
-
     const std::string script_name = read_exostring(name);
     state.script_name_len = std::min(script_name.size(), sizeof(state.script_name));
     std::memcpy(state.script_name, script_name.data(), state.script_name_len);
     state.saw_run_script = true;
 
-    {
-        // Into the harness ring, before dispatch: what the engine is
-        // about to run, whether or not a script then blocks it.
-        const kp::harness::EventField fields[] = {
-            kp::harness::EventField::str("script", script_name),
-            kp::harness::EventField::unsigned_("object", kp::abi::script_id(object_id)),
-            kp::harness::EventField::integer("has_object", has_object),
+    const events::EventContract* ev = find_contract("OnRunScript");
+    if (ev != nullptr) {
+        {
+            // Into the harness ring, before dispatch: what the engine is
+            // about to run, whether or not a script then blocks it.
+            const kp::harness::EventField fields[] = {
+                kp::harness::EventField::str("script", script_name),
+                kp::harness::EventField::unsigned_("object", kp::abi::script_id(object_id)),
+                kp::harness::EventField::integer("has_object", has_object),
+            };
+            kp::harness::ring().push("OnRunScript", ring_tick(&host), fields, 3);
+        }
+        const std::vector<lua::Value> args = {
+            lua::Value::str(script_name),
+            lua::Value::object(kp::abi::script_id(object_id)),
+            lua::Value::integer(has_object),
         };
-        kp::harness::ring().push("OnRunScript", ring_tick(&host), fields, 3);
+        const events::Outcome outcome = host.dispatch(*ev, args);
+        state.claimed_by_len = std::min(outcome.claimed_by.size(), sizeof(state.claimed_by));
+        std::memcpy(state.claimed_by, outcome.claimed_by.data(), state.claimed_by_len);
+        const ScriptVerdict verdict = decide(*ev, outcome);
+        state.block = verdict.block;
+        state.engine_result = verdict.engine_result;
     }
-    const std::vector<lua::Value> args = {
-        lua::Value::str(script_name),
-        lua::Value::object(kp::abi::script_id(object_id)),
-        lua::Value::integer(has_object),
-    };
-    const events::Outcome outcome = host.dispatch(*ev, args);
-    state.claimed_by_len = std::min(outcome.claimed_by.size(), sizeof(state.claimed_by));
-    std::memcpy(state.claimed_by, outcome.claimed_by.data(), state.claimed_by_len);
-    const ScriptVerdict verdict = decide(*ev, outcome);
-    state.block = verdict.block;
-    state.engine_result = verdict.engine_result;
-    if (verdict.block) {
-        dispatch_run_script_done(host, script_name, object_id, has_object, false, true,
-                                 outcome.claimed_by);
+
+    int state_val = 0;
+    const char* specialized_name =
+        match_script_slot_event(name, script_name, object_id, &state_val);
+    if (specialized_name != nullptr) {
+        if (const events::EventContract* sev = find_contract(specialized_name); sev != nullptr) {
+            const std::uint32_t oid = kp::abi::script_id(object_id);
+            const kp::harness::EventField fields[] = {
+                kp::harness::EventField::str("script", script_name),
+                kp::harness::EventField::unsigned_("object", oid),
+            };
+            kp::harness::ring().push(specialized_name, ring_tick(&host), fields, 2);
+            if (host.has_subscriber(specialized_name)) {
+                const std::vector<NamedArg> have = {
+                    {"creature", lua::Value::object(oid)},
+                    {"placeable", lua::Value::object(oid)},
+                    {"trigger", lua::Value::object(oid)},
+                    {"object", lua::Value::object(oid)},
+                    {"script_name", lua::Value::str(script_name)},
+                    {"state", lua::Value::integer(state_val)},
+                };
+                const events::Outcome sout = host.dispatch(*sev, shape_args(*sev, have));
+                const ScriptVerdict sv = decide(*sev, sout);
+                if (sv.block) {
+                    state.block = true;
+                    state.engine_result = sv.engine_result;
+                    if (!sout.claimed_by.empty()) {
+                        state.claimed_by_len = std::min(sout.claimed_by.size(), sizeof(state.claimed_by));
+                        std::memcpy(state.claimed_by, sout.claimed_by.data(), state.claimed_by_len);
+                    }
+                }
+            }
+            if (std::strcmp(specialized_name, "OnCreatureSpawn") == 0) {
+                std::uint32_t player_id = 0x7f000000u;
+                resolve_game_object(oid, nullptr, &player_id);
+                if (oid == player_id && oid != 0x7f000000u) {
+                    if (const events::EventContract* pev = find_contract("OnPlayerSpawn")) {
+                        const kp::harness::EventField pfields[] = {
+                            kp::harness::EventField::unsigned_("player", oid),
+                        };
+                        kp::harness::ring().push("OnPlayerSpawn", ring_tick(&host), pfields, 1);
+                        if (host.has_subscriber("OnPlayerSpawn")) {
+                            host.dispatch(*pev, {lua::Value::object(oid)});
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (state.block) {
+        dispatch_run_script_done(
+            host, script_name, object_id, has_object, false, true,
+            std::string_view(state.claimed_by, state.claimed_by_len));
     }
 }
 
@@ -844,6 +1028,13 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
         h.advance_tick();
         h.service_requests();
 
+        static std::uint64_t s_last_sub_rev = 0;
+        const std::uint64_t cur_sub_rev = lua::Host::subscription_revision();
+        if (cur_sub_rev != s_last_sub_rev) {
+            s_last_sub_rev = cur_sub_rev;
+            Runtime::instance().sync_demand_hooks();
+        }
+
         if (tick % kReloadEvery == 0) {
             std::vector<std::string> errors;
             const unsigned n = h.reload_changed(&errors);
@@ -915,6 +1106,8 @@ const PoisonSite kPoisonSites[] = {
     {"harness", &kp::harness::poison_flag()},
     {"creature.ai_action_move_to_point", &g_poison_move_to_point},
     {"creature.add_move_to_point_action", &g_poison_add_move_to_point},
+    {"vm.run_script_situation", &g_poison_run_situation},
+    {"dialog.check_script", &g_poison_dialog_check},
 };
 
 std::string poisoned_site_list() {
@@ -1160,6 +1353,17 @@ void event_handler_common(void* self, std::uint32_t n_event_id,
                 host->dispatch(*ev, events::shape_handler_args(*ev, frame));
             if (ev->blocking)
                 skip = events::blocking_verdict(*ev, outcome).skip_original;
+            if (ev->lua_name == "OnModulePlayerEnter" && caller_id != 0x7f000000u) {
+                if (const events::EventContract* pev = find_contract("OnPlayerSpawn")) {
+                    const kp::harness::EventField pfields[] = {
+                        kp::harness::EventField::unsigned_("player", caller_id),
+                    };
+                    kp::harness::ring().push("OnPlayerSpawn", ring_tick(host), pfields, 1);
+                    if (host->has_subscriber("OnPlayerSpawn")) {
+                        host->dispatch(*pev, {lua::Value::object(caller_id)});
+                    }
+                }
+            }
         }
 
         KP_HOOK_GUARD_END
@@ -1264,6 +1468,89 @@ int KP_ENGINE_METHOD_CC load_situation_body(void* self, void* a, void* b, void* 
     }
     if (orig == nullptr) return 0;
     return orig(self, a, b, c);
+}
+
+int KP_ENGINE_METHOD_CC run_script_situation_body(
+    void* self, void* situation, kp::abi::ObjectId object_id, int has_object) {
+    auto orig = reinterpret_cast<RunScriptSituationFn>(
+        g_orig_run_situation.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    bool skip = false;
+    int engine_result = 1;
+    if (live() && host != nullptr && !g_poison_run_situation.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("vm.run_script_situation", g_poison_run_situation, skip = false)
+        const std::uint32_t oid = kp::abi::script_id(object_id);
+        const kp::harness::EventField fields[] = {
+            kp::harness::EventField::unsigned_("object", oid),
+            kp::harness::EventField::integer("has_object", has_object),
+        };
+        kp::harness::ring().push("OnScriptSituation", ring_tick(host), fields, 2);
+        if (const events::EventContract* ev = find_contract("OnScriptSituation")) {
+            if (host->has_subscriber("OnScriptSituation")) {
+                const events::Outcome outcome = host->dispatch(*ev, {
+                    lua::Value::object(oid),
+                    lua::Value::integer(has_object),
+                });
+                const events::BlockVerdict b = events::blocking_verdict(*ev, outcome);
+                skip = b.skip_original;
+                engine_result = b.engine_result;
+            }
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (skip) return engine_result;
+    return orig != nullptr ? orig(self, situation, object_id, has_object) : 0;
+}
+
+std::string read_resref16(const char* p) {
+    if (p == nullptr || !platform::is_readable(p, 16)) return {};
+    std::size_t n = 0;
+    while (n < 16 && p[n] != '\0') ++n;
+    return std::string(p, n);
+}
+
+int KP_ENGINE_METHOD_CC dialog_check_script_body(
+    void* dlg, void* owner, const char* resref16) {
+    auto orig = reinterpret_cast<DialogCheckScriptFn>(
+        g_orig_dialog_check.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    bool skip = false;
+    int override_res = 0;
+    if (live() && host != nullptr && !g_poison_dialog_check.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("dialog.check_script", g_poison_dialog_check, skip = false)
+        const std::string script_name = read_resref16(resref16);
+        std::uint32_t speaker_id = 0x7f000000u;
+        if (owner != nullptr && platform::is_readable(static_cast<const char*>(owner) + 4, 4)) {
+            std::memcpy(&speaker_id, static_cast<const char*>(owner) + 4, sizeof speaker_id);
+        }
+        const kp::harness::EventField fields[] = {
+            kp::harness::EventField::str("script", script_name),
+            kp::harness::EventField::unsigned_("speaker", speaker_id),
+        };
+        kp::harness::ring().push("OnDialogConditional", ring_tick(host), fields, 2);
+        if (const events::EventContract* ev = find_contract("OnDialogConditional")) {
+            if (host->has_subscriber("OnDialogConditional")) {
+                const events::Outcome outcome = host->dispatch(*ev, {
+                    lua::Value::str(script_name),
+                    lua::Value::object(speaker_id),
+                });
+                const events::BlockVerdict b = events::blocking_verdict(*ev, outcome);
+                if (b.skip_original) {
+                    skip = true;
+                    override_res = b.engine_result;
+                }
+            }
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (skip) return override_res;
+    if (orig == nullptr) return 0;
+    struct DialogCheckGuard {
+        bool prev;
+        DialogCheckGuard() : prev(t_in_dialog_check) { t_in_dialog_check = true; }
+        ~DialogCheckGuard() { t_in_dialog_check = prev; }
+    } guard;
+    return orig(dlg, owner, resref16);
 }
 
 // ------------------------------------------------ movement admission trace --
@@ -1443,6 +1730,8 @@ void* store_event_detour()     { return reinterpret_cast<void*>(&store_event_bod
 void* waypoint_event_detour()  { return reinterpret_cast<void*>(&waypoint_event_body); }
 void* save_situation_detour()  { return reinterpret_cast<void*>(&save_situation_body); }
 void* load_situation_detour()  { return reinterpret_cast<void*>(&load_situation_body); }
+void* run_script_situation_detour() { return reinterpret_cast<void*>(&run_script_situation_body); }
+void* dialog_check_script_detour()  { return reinterpret_cast<void*>(&dialog_check_script_body); }
 void* creature_move_to_point_detour() { return reinterpret_cast<void*>(&creature_move_to_point_body); }
 void* add_move_to_point_detour() { return reinterpret_cast<void*>(&add_move_to_point_body); }
 void* net_start_connect_detour() { return reinterpret_cast<void*>(&net_start_connect_body); }
@@ -1474,6 +1763,8 @@ std::atomic<void*>* hook_original_slot(std::string_view site) {
     if (site == "event.waypoint") return &g_orig_waypoint;
     if (site == "vm.save_script_situation") return &g_orig_save;
     if (site == "vm.load_script_situation") return &g_orig_load;
+    if (site == "vm.run_script_situation") return &g_orig_run_situation;
+    if (site == "dialog.check_script") return &g_orig_dialog_check;
     if (site == "creature.ai_action_move_to_point") return &g_orig_move_to_point;
     if (site == "creature.add_move_to_point_action") return &g_orig_add_move_to_point;
     if (site == "app.client_main_loop") return &g_orig_client_loop;
@@ -1502,6 +1793,8 @@ void bind_originals(hooks::HookSet& set) {
     g_orig_waypoint.store(set.original("event.waypoint"), std::memory_order_release);
     g_orig_save.store(set.original("vm.save_script_situation"), std::memory_order_release);
     g_orig_load.store(set.original("vm.load_script_situation"), std::memory_order_release);
+    g_orig_run_situation.store(set.original("vm.run_script_situation"), std::memory_order_release);
+    g_orig_dialog_check.store(set.original("dialog.check_script"), std::memory_order_release);
     g_orig_move_to_point.store(set.original("creature.ai_action_move_to_point"), std::memory_order_release);
     g_orig_add_move_to_point.store(set.original("creature.add_move_to_point_action"),
                                    std::memory_order_release);
@@ -1537,6 +1830,8 @@ void clear_originals() {
     g_orig_waypoint.store(nullptr, std::memory_order_release);
     g_orig_save.store(nullptr, std::memory_order_release);
     g_orig_load.store(nullptr, std::memory_order_release);
+    g_orig_run_situation.store(nullptr, std::memory_order_release);
+    g_orig_dialog_check.store(nullptr, std::memory_order_release);
     g_orig_move_to_point.store(nullptr, std::memory_order_release);
     g_orig_add_move_to_point.store(nullptr, std::memory_order_release);
     g_orig_client_loop.store(nullptr, std::memory_order_release);

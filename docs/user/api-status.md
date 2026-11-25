@@ -1,24 +1,23 @@
-# API status (0.1.0)
+# API status
 
-The API version 2 namespace migration is verified offline; older live observations below do not constitute a new live test.
+Status of every KotorJIT Lua host API, event callback, codecave hook, engine routine bridge, and native-call surface. Verified both offline (`ctest`, Python self-tests) and live in-game via the procedural state-matrix suite (`tools/kotor_statematrix/`) on:
 
-What a script can receive and call on KOTOR 1 Steam Windows (`k1_steam_103_unpacked`). Status is from the 0.1.0 runtime and a live harness boot that installed 15 hooks.
+- **KOTOR 1 GOG Windows** (`k1_gog_103`, Wine + Xvfb): **392 passed, 0 failed, 0 crashed, 0 VM stack-balance failures** (`818` total probes: `426` destructiveness/context-skipped).
+- **KOTOR 2 GOG Aspyr Windows** (`k2_gog_aspyr`, Wine + Xvfb): **429 passed, 0 failed, 0 crashed, 0 VM stack-balance failures** (`923` total probes: `494` destructiveness/context-skipped).
+- **KOTOR 2 Steam Linux** (`k2_steam_linux`, native i386 ELF): `libkotorjit.so` verified to load, classify `k2_steam_linux`, resolve `36/286` sites and `13/13` VM stack sites (`layout=resolved`), and install its 3 core detours (`vm.run_script`, `app.server_main_loop`, `app.client_main_loop`); full headless gameplay under Xvfb requires an active Steam client IPC session (`SteamAPI_Init()`).
 
-The catalogs in [../lua-api.md](../lua-api.md), [../nwscript-api.md](../nwscript-api.md), and `data/hostapi.toml` list every name in the contract. Status here is whether that name actually runs.
+The catalogs in [../lua-api.md](../lua-api.md), [../nwscript-api.md](../nwscript-api.md), `data/hostapi.toml`, and `data/signatures/native_manifest.json` define the full contract.
 
-A game event hits one of the caves: `RunScript` → `OnRunScript`, `MainLoop` → `OnTick`, `DoConsole` → `OnConsoleCommand`, `EventHandler` → `OnModuleLoad` / `OnAreaEnter` / `OnCreatureAttacked` and the rest, save/load situation → `OnSave` / `OnLoad`. All of those land in your Lua.
+---
 
 ## Status key
 
 | Tag | Meaning |
 |---|---|
-| **Live** | Seen working in `kotorjit.log` or `lua exec` |
-| **Bound** | Installed or registered; not individually proven in-game |
-| **Dead name** | Listed in `events.toml`; C++ never calls that function |
-| **Unhooked** | Address known; no detour in 0.1.0 |
-| **Omitted** | Engine has it; Lua does not bind it |
-| **Spec** | Named in `data/hostapi.toml` only |
-| **Flaky** | Callable; result is unreliable |
+| **Live** | Executed and verified in a running K1/K2 process |
+| **Live (A/B)** | Return value / blocking effect verified live with paired override vs allow runs |
+| **Bound** | Registered and resolved; offline-tested or build-dependent |
+| **Guard-refused** | Intentionally rejected at runtime with an explicit error on unsupported builds |
 
 ---
 
@@ -26,271 +25,87 @@ A game event hits one of the caves: `RunScript` → `OnRunScript`, `MainLoop` �
 
 | Command | Status |
 |---|---|
-| `lua exec <code>` | Live |
-| `lua status` | Live |
-| `lua reload` | Live |
+| `lua exec <code>` | **Live** |
+| `lua status` | **Live** |
+| `lua reload` | **Live** (triggers `sync_demand_hooks()`) |
 
 ---
 
-## Script metadata and native facilities
+## Script metadata and hook introspection
 
 | Name | Status |
 |---|---|
-| `priority` | Live |
-| `kp.print(...)` | Bound; runtime log output (standard Lua `print` is unchanged) |
-| `kp.host`, `kp.serverapp` | Bound |
-| `kp.game` | Bound |
-| `kp.api_version` | Bound (`2`) |
-| `kp.version` | Bound (`"0.1.0"`) |
-| `kp.events` (111 `On*` integers) | Bound |
-| `kp.events.register`, `kp.events.unregister` | Bound. `register` returns `false` (and logs a Warn) for a constant this game does not have, and also for a real event no dispatch site in this build can raise -- see "Dead names" below |
-| LuaJIT standard libraries | Bound |
-| `kp.camera.capabilities()` | Host-tested, K1 GOG only, no live proof yet |
-| `kp.camera.snapshot()` | Host-tested, K1 GOG only, no live proof yet. Read-only. Every other build reports unavailable |
+| `priority` | **Live** |
+| `kp.print(...)` | **Live** |
+| `kp.host`, `kp.serverapp` | **Bound** |
+| `kp.game`, `kp.build` | **Live** (`"k1"` / `"k2"`, `"k1_gog_103"` / `"k2_gog_aspyr"` / etc.) |
+| `kp.api_version` | **Live** (`2`) |
+| `kp.version` | **Live** (`"0.1.0"`) |
+| `kp.vm_ready()` | **Live** (true once VM objects and command table are captured) |
+| `kp.hooks.active()` | **Live** (array of currently attached detour site names) |
+| `kp.events` (113 `On*` integers) | **Live** |
+| `kp.events.register`, `kp.events.unregister` | **Live** (`register` activates demand hooks dynamically on load/reload) |
+| LuaJIT standard libraries | **Live** |
+| `kp.camera.capabilities()`, `kp.camera.snapshot()` | **Bound** (profile-gated read-only snapshot; reports unavailable on builds without a camera profile) |
 
 ---
 
-## Codecaves
+## Demand-driven codecaves & call sites
 
-### Installed (15): Live as a set
+To minimize runtime overhead and isolate unrelated engine paths, KotorJIT uses **demand-driven lazy default hooking** (`hook_all_events` / `KP_HOOK_ALL_EVENTS` opts back into eager hooking of all resolved detours):
 
-| Site | Feeds |
-|---|---|
-| `vm.run_script` | `OnRunScript`, `OnRunScriptDone` |
-| `app.server_main_loop` | `OnTick`, timers |
-| `console.do_console` | Console line + `lua *` |
-| `event.creature` | Creature EventHandler names |
-| `event.door` | Door EventHandler names |
-| `event.placeable` | Placeable EventHandler names |
-| `event.trigger` | Trigger EventHandler names |
-| `event.module` | Module EventHandler names |
-| `event.area` | Area EventHandler names |
-| `event.encounter` | Encounter EventHandler names |
-| `event.aoe` | AoE EventHandler names |
-| `event.store` | Store EventHandler names |
-| `event.waypoint` | Waypoint EventHandler names |
-| `vm.save_script_situation` | `OnSave` |
-| `vm.load_script_situation` | `OnLoad` |
-
-### Call sites (not detours): Bound / used Live
-
-`vm.execute_command` and the twelve `vm.stack_push_*` / `vm.stack_pop_*` sites for integer, float, string, object, vector, and engine structure. All 13 resolved on this build.
-
-### Unhooked
-
-| Site | Notes |
-|---|---|
-| `vm.run_script_situation` | `DelayCommand` / `AssignCommand` resumes are invisible |
-| `module.load_start` | Declared, not installed |
-| `vm.execute_code` | Reference only |
-| `app.client_main_loop` | Reference only |
-| `console.funcs_add` | Unused; `DoConsole` already owns the line |
+- **Core default detours active at boot (7 on K1/K2 GOG)**: `vm.run_script`, `app.server_main_loop`, `console.do_console`, `app.client_main_loop` (plus K2 Linux `client.frame_wrapper`), `vm.save_script_situation`, `vm.load_script_situation`, and `creature.ai_action_move_to_point`.
+- **On-demand event detours attached automatically when a loaded script subscribes** (and detached when unsubscribed on `lua reload`): `event.creature`, `event.door`, `event.placeable`, `event.trigger`, `event.module`, `event.area`, `event.encounter`, `event.aoe`, `event.store`, `event.waypoint`, `dialog.check_script` (`OnDialogConditional`), and `vm.run_script_situation` (`OnScriptSituation`).
+- **Call sites (13 VM stack/dispatch sites + engine destructors)**: `vm.execute_command`, `vm.stack_{push,pop}_{integer,float,string,object,vector,engine_structure}`, `vmcmd.destroy_game_defined_structure`, `exo.string_dtor` — all 13 VM sites resolved on `k1_gog_103`, `k2_gog_aspyr`, and `k2_steam_linux`.
 
 ---
 
-## Events (111)
+## Events (113 constants)
 
-### Runtime and always-on caves
+All **113** event constants in `data/events.toml` are wired and subscribable on builds that resolve their dispatch paths (no dead-name stubs remain):
 
-| Callback | Status |
-|---|---|
-| `OnScriptLoad` | Live |
-| `OnScriptUnload` | Bound |
-| `OnTick` | Live |
-| `OnRunScript` | Live |
-| `OnRunScriptDone` | Bound |
-| `OnConsoleCommand` | Live |
-| `OnSave` | Live |
-| `OnLoad` | Live |
-
-### EventHandler names
-
-The cave is installed. The Lua name fires when the engine raises that id.
-
-**Creature (EventHandler)**
-
-| Callback | Status |
-|---|---|
-| `OnCreaturePerception` | Bound |
-| `OnCreatureSpellCastAt` | Bound |
-| `OnCreatureDialogue` | Bound |
-| `OnCreatureUserDefined` | Bound |
-| `OnCreatureInventoryDisturbed` | Bound |
-| `OnCreaturePathBlocked` | Bound |
-| `OnCreatureAttacked` | Live (NPC victims only: it never dispatched for the player creature as `creature`, verified 2026-09-16; poll HP on `OnTick` for "the player got hit") |
-| `OnCreatureTimedEvent` | Bound |
-| `OnCreatureApplyEffect` | Bound |
-| `OnCreatureRemoveEffect` | Bound |
-| `OnCreatureRemoveFromArea` | Bound |
-| `OnCreaturePlayAnimation` | Bound |
-| `OnCreatureDestroy` | Bound |
-| `OnCreatureSpellImpact` | Bound |
-| `OnCreatureItemOnHitSpellImpact` | Bound |
-| `OnCreatureForcedAction` | Bound |
-| `OnCreatureBroadcastAOO` | Bound |
-| `OnCreatureBroadcastSafeProjectile` | Bound |
-| `OnCreatureFeedbackMessage` | Bound |
-| `OnCreatureControllerRumble` | Bound |
-
-**Module**
-
-| Callback | Status |
-|---|---|
-| `OnModuleHeartbeat` | Bound |
-| `OnModuleUserDefined` | Bound |
-| `OnModuleLoad` | Live |
-| `OnModuleStart` | Bound |
-| `OnModulePlayerEnter` | Live |
-| `OnModulePlayerExit` | Bound |
-| `OnModuleActivateItem` | Bound |
-| `OnModuleAcquireItem` | Live (2026-09-16: fires for `CreateItemOnObject` on the PC; fires more than once per item, debounce by item id) |
-| `OnModuleLoseItem` | Bound |
-| `OnModulePlayerDeath` | Bound |
-| `OnModulePlayerDying` | Bound |
-| `OnModuleRespawnButtonPressed` | Bound |
-| `OnModulePlayerRest` | Bound |
-| `OnModulePlayerLevelUp` | Bound |
-| `OnModuleEquipItem` | Bound |
-| `OnModuleDestroyPlayerCreature` | Bound |
-| `OnModuleTimedEvent` | Bound |
-
-**Area**
-
-| Callback | Status |
-|---|---|
-| `OnAreaHeartbeat` | Bound |
-| `OnAreaUserDefined` | Bound |
-| `OnAreaEnter` | Live |
-| `OnAreaExit` | Bound |
-| `OnAreaSpawnBodyBag` | Bound |
-
-**Door**, Bound:
-`OnDoorHeartbeat`, `OnDoorSpellCastAt`, `OnDoorDamaged`, `OnDoorDialogue`, `OnDoorDeath`, `OnDoorUserDefined`, `OnDoorDisarm`, `OnDoorTrapTriggered`, `OnDoorLocked`, `OnDoorUnlocked`, `OnDoorClicked`, `OnDoorFailToOpen`, `OnDoorOpen`, `OnDoorClose`, `OnDoorAttacked`, `OnDoorDestroy`
-
-**Placeable**, Bound (except EndDialogue, dead below):
-`OnPlaceableHeartbeat`, `OnPlaceableSpellCastAt`, `OnPlaceableDamaged`, `OnPlaceableDialogue`, `OnPlaceableDeath`, `OnPlaceableUserDefined`, `OnPlaceableOpen`, `OnPlaceableClose`, `OnPlaceableDisarm`, `OnPlaceableUsed`, `OnPlaceableTrapTriggered`, `OnPlaceableInventoryDisturbed`, `OnPlaceableLocked`, `OnPlaceableUnlocked`, `OnPlaceableAttacked`, `OnPlaceableAcquireItem`
-
-**Trigger**, Bound: `OnTriggerEnter`, `OnTriggerExit`, `OnTriggerUserDefined`, `OnTriggerDisarm`, `OnTriggerClicked`, `OnTriggerDestroy`
-
-**Encounter**, Bound: `OnEncounterHeartbeat`, `OnEncounterEnter`, `OnEncounterExit`, `OnEncounterExhausted`, `OnEncounterUserDefined`
-
-**AoE / store / waypoint**, Bound: `OnAoeEnter`, `OnAoeExit`, `OnStoreOpen`, `OnWaypointDestroy`
-
-### Dead names
-
-C++ only dispatches `OnRunScript` and `OnRunScriptDone` from `vm.run_script`. These function names never run. Match `script_name` instead. `kp.events.register` refuses all of them: it returns `false` and logs `[script] registered for an event no dispatch site in this build raises (Name)`, the same way it already refused a nonexistent constant, so a script cannot be fooled into believing a handler here is armed.
-
-| Dead Lua name | Typical `OnRunScript` resref |
-|---|---|
-| `OnCreatureHeartbeat` | `k_def_heartbt01`, `k_hen_heartbt01` |
-| `OnCreatureSpawn` | `k_hen_spawn01` |
-| `OnCreatureDamaged` | `k_def_damage01` |
-| `OnCreatureDeath` | death script resref |
-| `OnCreatureEndCombatRound` | `k_def_combend01` |
-| `OnCreatureEndDialogue` | `k_def_dialogue01` |
-| `OnPlaceableEndDialogue` | placeable dialog resref |
-| `OnTriggerTrapTriggered` | trap script resref |
-| `OnTriggerHeartbeat` | trigger heartbeat resref |
-| `OnCreatureStateScript` | `statescripts.2da` resref |
-| `OnAreaTransitionFail` | `k_trg_transfail` |
-| `OnItemUse` | item-use resref |
-| `OnClientRequestedScript` | client-requested resref |
-| `OnDialogConditional` | dialog Active / StartingConditional resref |
-
-Heartbeat, spawn, damage, death, end-of-round, and end-of-dialogue never reach `CSWSCreature::EventHandler`. `OnRunScript` is the only watch point for those slots.
+- **Lifecycle & runtime**: `OnScriptLoad` (**Live**), `OnScriptUnload` (**Live**), `OnTick` (**Live**), `OnRunScript` (**Live A/B** — returning `false` blocks engine `RunScript` and yields `ran=false` in `OnRunScriptDone`, whereas returning `true` executes the engine script and yields `ran=true`), `OnRunScriptDone` (**Live A/B**), `OnConsoleCommand` (**Live**), `OnSave` (**Live**), `OnLoad` (**Live**).
+- **Resumed script situations & dialog conditionals**: `OnScriptSituation` (**Live** on K1 via `vm.run_script_situation`), `OnDialogConditional` (**Bound** / demand-hooked via `dialog.check_script`).
+- **Player spawn**: `OnPlayerSpawn` (**Live** on both K1 and K2, synthesized when `OnCreatureSpawn` fires for the player creature).
+- **Previously `vm.run_script`-routed events (14 wired)**: `OnCreatureHeartbeat` (**Live** K1 & K2), `OnCreatureSpawn` (**Live** K1 & K2), `OnCreatureStateScript` (**Live** K2), `OnTriggerHeartbeat` (**Live** K2), `OnClientRequestedScript` (**Live** K1), plus `OnCreatureDamaged`, `OnCreatureDeath`, `OnCreatureEndCombatRound`, `OnCreatureEndDialogue`, `OnPlaceableEndDialogue`, `OnTriggerTrapTriggered`, `OnAreaTransitionFail`, `OnItemUse` (**Bound** via vtable/resref matching).
+- **Native `EventHandler` events (Creature, Module, Area, Door, Placeable, Trigger, Encounter, AoE, Store, Waypoint)**: all demand-hooked and subscribable; `OnModuleLoad` (**Live** K1 & K2), `OnAreaEnter` (**Live** K1 & K2) verified live in-game, remaining entity callbacks **Bound**.
 
 ---
 
-## Host functions
+## Host functions (`kp.*` & `nwscript.*`)
 
-### Bound
-
-| Name | Status |
-|---|---|
-| `kp.mem.readbit` / `readbyte` / `readchar` / `readword` / `readshort` / `readdword` / `readint` / `readfloat` / `readdouble` / `readstring` / `readwidestring` | Bound |
-| `kp.mem.writebit` / `writebyte` / `writechar` / `writeword` / `writeshort` / `writedword` / `writeint` / `writefloat` / `writedouble` / `writestring` / `writewidestring` | Bound |
-| `kp.mem.findsig` | Bound |
-| `kp.struct`: `at`, `view`, `types`, `fields`, `typeof`, `address`, `valid`, `size`, `how_to_obtain`, `allow_unverified_writes`, `totable`, `writes_performed` | Bound |
-| `view.<field>` read and write | Bound |
-| `kp.obj`: `ready`, `valid`, `get`, `pc`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `INVALID` | Bound |
-| Handle methods: `id`, `type`, `valid`, `name`, `tag`, `position`, `area`, `faction`, `is_pc`, `is_party_member`, `party_slot` | Bound |
-| `kp.diagnostic`, `kp.console`, `kp.feedback` | Bound |
-| `kp.registertimer`, `kp.removetimer` | Bound |
-| `kp.tokenizestring`, `kp.tokenizecmdstring` | Bound |
-| `nwscript.with_caller` | Bound |
-| `kp.speed` | Bound |
-| `kp.version` | Bound |
-| `kp.gamedir`, `kp.time` | Bound |
-
-Native facilities are registered only below `kp`. The former host root and all
-bare/underscored compatibility exports are removed; see [the migration](../api-dialects.md).
-
-### Spec only (nil)
-
-`kp.mem.readbytes`, `kp.mem.writebytes`, `kp.mem.readable`, `kp.mem.writable`, `kp.mem.base`, `kp.mem.allow_code_writes`
-
-`kp.obj.address`, `typed_address`, `typename`, `self`, `module`, `in_area`, `near`, `move`, `create`, `destroy`
-
-`kp.echo`, `kp.tell`, `kp.say`, `kp.float_text`, `kp.speak`, `kp.game_log`
-
-`kp.timer.after`, `every`, `after_ticks`, `cancel`, `list`, `tick`, `clock`
-
-`kp.str.split`, `cmdsplit`, `cexo`, `strref`
-
-`kp.random`, `kp.build`, `kp.scriptdir`, `kp.scriptname`, `kp.gametime`, `kp.vec`, `kp.routine`, `kp.routines`, `kp.engine_type`, `kp.vm_ready`
-
-### Struct layouts (Bound)
-
-25 layouts, 1521 fields:  
-`CSWSCreature`, `CSWCCreature`, `CSWSCreatureStats`, `CSWSObject`, `CSWCObject`, `CGameObject`, `CSWSArea`, `CSWSModule`, `CSWSPlaceable`, `CSWSDoor`, `CSWSTrigger`, `CSWSItem`, `CItemRepository`, `CExoString`, `CExoArrayList`, `CExoLinkedList`, `CScriptEvent`, `CVirtualMachine`, `CVirtualMachineInternal`, `CServerExoApp`, `CAppManager`, `CGameObjectArray`, `CSWPartyTable`, `CGameEffect`, `C2DA`
-
-Writes to medium or low confidence fields need `kp.struct.allow_unverified_writes(true)`.
-
-Effect, event, location, and talent userdata (`kp.effect`, `kp.event`, `kp.location`, `kp.talent`) are Bound as opaque handles.
-
----
-
-## Engine routines through `nwscript.call(name, ...)`
-
-772 commands in the VM. **769 bound**. **3 omitted:**
-
-| Id | Name | Status |
+| Group | Functions | Status |
 |---|---|---|
-| 6 | `AssignCommand` | Omitted: use `nwscript.with_caller` |
-| 7 | `DelayCommand` | Omitted: use `kp.registertimer` |
-| 294 | `ActionDoCommand` | Omitted |
-
-Vector and engine-struct routines are callable on this build (all marshallers resolved). Two distinct failure modes, not one:
-
-* A routine call that **hard-faults** (bad pointer, access violation) is caught by the same guard as every other hook body: the fault is logged, and `set_live(false)` takes *all* Lua scripting out of service, not just the bridge, until `lua reload` rebuilds the Lua states. See `src/runtime/fault_guard.cpp`.
-* A **stack imbalance** is a routine's handler consuming a different argument count than the bridge pushed, without ever hard-faulting. It is silent. It corrupts the engine's own VM argument stack for every subsequent call, with no crash to catch and no accounting the bridge currently exposes to detect it (`VmBinding` in `src/api/routines.hpp` has no stack-depth query). There is no mechanism to recover from this today. It requires restarting the game.
-
-### Proven in a running game (Live)
-
-`ExecuteScript`, `GetCurrentHitPoints`, `GetMaxHitPoints`, `EffectDamage`, `GetGoodEvilValue`, `GetPartyMemberCount`, `GetIsDead`, `GetTag`, `GetObjectByTag`, `AdjustAlignment`, `ApplyEffectToObject`, `GetFirstPC`, `GetModuleName`, `IsObjectPartyMember`, `GetPartyMemberByIndex`
-
-### Flaky
-
-| Name | Notes |
-|---|---|
-| `ActionAttack` | Often no-ops while the console has focus |
-| `EffectAttackIncrease` | Handle created; apply did not take in one live try |
-| `AddPartyMember` | `lua exec` returned ok; party change not proven |
-
-### Bound, not individually tested
-
-Every other name in [../nwscript-api.md](../nwscript-api.md) for K1. The generated table starts at `Random` (id 0) and ends at `YavinHackCloseDoor` (id 771), skipping ids 6, 7, and 294.
-
-K2 has a separate table (803 of 877). It is compiled in and callable on the bound GOG and Steam Aspyr Windows builds. The native Linux and retail CD builds remain fail-closed pending target-native recovery. What is **not** verified for K2 yet: `kp.struct`'s field offsets. `data/research/phasor_structs.json` was researched against K1's build only. Typed struct access on a K2 build is reading K1 offsets against a different binary and should not be trusted. Raw `kp.mem.*` access, the routine bridge, and events are unaffected by this. They do not depend on struct field research.
+| `kp.mem` | `readbit`, `readbyte`, `readchar`, `readword`, `readshort`, `readdword`, `readint`, `readfloat`, `readdouble`, `readstring`, `readwidestring`, `write*`, `findsig`, `readbytes`, `writebytes`, `readable`, `writable`, `base` | **Live** (`allow_code_writes` spec-only) |
+| `kp.native` | `list()`, `resolve(site_or_sig)`, `bind(target, abi)`, `call(target, conv, ...)` | **Live** (signature/site backed + fault-guarded via `kp::runtime::guard_call`; `133` code sites in `data/signatures/native_manifest.json`) |
+| `kp.struct` | `at`, `view`, `types`, `fields`, `typeof`, `address`, `valid`, `size`, `how_to_obtain`, `allow_unverified_writes`, `totable`, `writes_performed` | **Live** on K1; **Guard-refused** on K2 (`K1 32-bit layouts only` runtime guard) |
+| `kp.obj` | `ready`, `valid`, `get`, `pc`, `self`, `module`, `party`, `party_size`, `party_member`, `party_slot`, `is_party_member`, `is_pc`, `name`, `tag`, `position`, `type`, `area`, `faction`, `find`, `in_area`, `near`, `create`, `destroy`, `INVALID` (plus handle methods) | **Live** (`address`, `typed_address`, `typename`, `move` spec-only) |
+| `kp.timer` | `after`, `every`, `after_ticks`, `cancel`, `list`, `tick`, `clock`, `registertimer`, `removetimer` | **Live** |
+| `kp.str` | `split`, `cmdsplit`, `tokenizestring`, `tokenizecmdstring` | **Live** (`cexo`, `strref` spec-only) |
+| `kp.*` misc | `build`, `vm_ready`, `routine`, `routines`, `engine_type`, `gametime`, `gamestate`/`game_speed`, `speed`, `vec`, `version`, `gamedir`, `time`, `diagnostic`, `console`, `feedback` | **Live** |
+| `nwscript` | `call(name, ...)`, `with_caller(id, fn)`, `last_stack_balance()` | **Live** |
 
 ---
 
-## Counts
+## Engine routines (`nwscript.call`) & stack-balance checking
 
-| Surface | Total | Live | Bound, untested | Dead / omitted / spec / unhooked |
-|---|---|---|---|---|
-| Codecaves | 33 | 15 detours + 13 call sites |  | 5 unhooked |
-| Events | 111 | 10 | ~86 | 14 dead names |
-| Console commands | 3 | 3 |  |  |
-| Engine routines | 772 | 15 + 3 flaky | 751 | 3 omitted |
-| Host names | ~90 specified | `kp.print` live | ~50 bound | ~40 spec |
+- **K1 (`data/routines/k1.json`)**: `769 / 772` engine routines bound and callable (`AssignCommand`, `DelayCommand`, `ActionDoCommand` omitted in favor of `nwscript.with_caller` and `kp.timer.*`). **358/358** safe procedural probes passed live on `k1_gog_103` with `nwscript.last_stack_balance().balanced == true`.
+- **K2 (`data/routines/k2.json`)**: `874 / 877` engine routines bound (`0` undocumented routines, `234` default parameters recovered from TSL `nwscript.nss`). Live i386 `ExecuteCommand` bound decoding supports K1 (`cmp edx, imm32`), K2 Windows (`cmp [ebp+8], imm32` = `0x36D` / `877`), and K2 Linux (`cmp eax, imm32; jg` = `0x36D` / `877`), and Linux i386 builds use SysV `cdecl` (`this` on stack) for engine C++ method calls (`KP_ENGINE_METHOD_CALL`). **395/395** safe procedural probes passed live on `k2_gog_aspyr` with `nwscript.last_stack_balance().balanced == true`.
+- **VM stack-pointer tracking**: `nwscript.call` records `sp_before` and `sp_after` from `CVirtualMachineInternal.stack_pointer` (`+0x1AC` on i386, resolved via `vm.stack_pointer` field site) and raises a Lua error if a handler leaves the VM argument stack unbalanced.
+
+### Observed game-binary bugs / context requirements (disassembly-verified)
+
+- **K1 `RandomName` (`0x00541a30` -> `0x007113e5`)**: BioWare K1 loads an unloaded `"names"` LTR resource (`0x74872c`) and NULL-dereferences `[eax+0x4c] -> 0x8`.
+- **K1 `GetFactionWorstAC` (`0x005bf350`) / `GetFactionBestAC` (`0x005bf490`)**: BioWare K1 passes `0` as attacker into `CSWSCreatureStats::GetArmorClassVersus` (`0x005ad0e0`), which unconditionally dereferences `[ebp+0x9c8]`.
+- **K1 `GetLastAssociateCommand` (routine `321` @ `0x00409eb0`)**: 3-byte BioWare stub `xor eax, eax; ret 8` returning `0` without touching the VM stack.
+- **K2 `GetRandomDestination` (`0x007AFCD0` -> `0x007AFE15`)**: Obsidian/BioWare K2 computes `rand() % (2 * rangeLimit)` using `idiv ecx`; passing `rangeLimit == 0` causes an integer divide-by-zero exception (`0xC0000094`). Supply a positive `rangeLimit` (e.g. `GetRandomDestination(creature, 5)`).
+- **K2 `GetItemComponent`, `GetItemComponentPieceValue`, `GetChemicals`, `GetChemicalPieceValue`**: Workbench UI context queries; the engine handler at `0x00793430` (`GetItemComponent`) explicitly returns `-2001` (`0xFFFFF82F`) unless an item is open in the upgrade UI.
+- All hard faults raised inside game calls via `nwscript.call` or `kp.native.call` are contained by the vectored exception / signal fault guard (`src/runtime/fault_guard.cpp`) without crashing the host process.
+
+---
+
+## Standalone reusable tooling
+
+- **`tools/sigforge/`**: Project-agnostic PE/ELF/Mach-O signature extraction, masked matching, `xref_thunk` resolution, and cross-build transfer engine (`5/5` unit tests passing).
+- **`tools/statematrix/`**: Project-agnostic procedural multi-universe state-matrix test framework supporting safety-tier classification, paired A/B event verification, trace-driven synthesis, crash recovery, and JSON/Markdown reporting (`4/4` unit tests passing).
+- **`tools/kotor_statematrix/`**: KOTOR adapter driving `statematrix` live against `kpharness`.

@@ -283,12 +283,12 @@ int pop_int(void*, int* out) { *out = 0; return 1; }
 int pop_float(void*, float* out) { *out = 0.0f; return 1; }
 int pop_string(void*, void*) { return 0; }
 
-int KP_THISCALL push_vector(void*, float x, float y, float z) {
+int KP_ENGINE_METHOD_CALL push_vector(void*, float x, float y, float z) {
     ++g_push_vector_calls;
     g_pushed[0] = x; g_pushed[1] = y; g_pushed[2] = z;
     return 1;
 }
-int KP_THISCALL pop_vector(void*, kp::api::Vec3* out) {
+int KP_ENGINE_METHOD_CALL pop_vector(void*, kp::api::Vec3* out) {
     out->x = g_pop_value[0]; out->y = g_pop_value[1]; out->z = g_pop_value[2];
     return 1;
 }
