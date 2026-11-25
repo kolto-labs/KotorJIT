@@ -705,6 +705,71 @@ std::uintptr_t find_unique(const std::uint8_t* bytes, std::size_t n) {
     return first;
 }
 
+std::vector<MaskedHit> scan_masked(const std::vector<MaskedPattern>& patterns) {
+    std::vector<MaskedHit> hits(patterns.size());
+
+    // Bucket on the first two bytes when both are concrete, else on the first
+    // byte alone. Ten thousand MSVC prologues share a handful of first bytes
+    // (6A, 8B, 56, 83); keying on two cuts the candidates per position from
+    // thousands to a few.
+    std::vector<std::vector<std::uint32_t>> by_pair(65536);
+    std::vector<std::vector<std::uint32_t>> by_byte(256);
+    std::size_t longest = 0;
+    for (std::size_t k = 0; k < patterns.size(); ++k) {
+        const MaskedPattern& p = patterns[k];
+        if (p.n == 0 || p.value == nullptr || p.mask == nullptr || p.mask[0] != 0xFF) continue;
+        if (p.n >= 2 && p.mask[1] == 0xFF)
+            by_pair[(std::size_t(p.value[0]) << 8) | p.value[1]].push_back(std::uint32_t(k));
+        else
+            by_byte[p.value[0]].push_back(std::uint32_t(k));
+        longest = std::max(longest, p.n);
+    }
+    if (longest == 0) return hits;
+
+    auto try_at = [&](const std::uint8_t* at, std::size_t room, std::uint32_t k, std::uintptr_t va) {
+        const MaskedPattern& p = patterns[k];
+        if (p.n > room) return;
+        MaskedHit& h = hits[k];
+        if (h.count >= 2) return;
+        for (std::size_t i = 0; i < p.n; ++i)
+            if ((at[i] & p.mask[i]) != (p.value[i] & p.mask[i])) return;
+        if (h.count == 0) h.first = va;
+        ++h.count;
+    };
+
+    for (const ScanRegion& r : scan_regions()) {
+        std::uintptr_t cursor = r.va;
+        const std::uintptr_t end = r.va + r.size;
+        while (cursor < end) {
+            if (!platform::is_readable(reinterpret_cast<const void*>(cursor), 1)) {
+                cursor = (cursor & ~(kPage - 1)) + kPage;
+                continue;
+            }
+            std::uintptr_t run_end = (cursor & ~(kPage - 1)) + kPage;
+            if (run_end > end) run_end = end;
+            while (run_end < end &&
+                   platform::is_readable(reinterpret_cast<const void*>(run_end), 1)) {
+                const std::uintptr_t next = run_end + kPage;
+                run_end = next > end ? end : next;
+            }
+
+            const auto* base = reinterpret_cast<const std::uint8_t*>(cursor);
+            const std::size_t len = std::size_t(run_end - cursor);
+            for (std::size_t i = 0; i < len; ++i) {
+                const std::size_t room = len - i;
+                const std::uintptr_t va = cursor + i;
+                for (std::uint32_t k : by_byte[base[i]]) try_at(base + i, room, k, va);
+                if (room >= 2) {
+                    for (std::uint32_t k : by_pair[(std::size_t(base[i]) << 8) | base[i + 1]])
+                        try_at(base + i, room, k, va);
+                }
+            }
+            cursor = run_end;
+        }
+    }
+    return hits;
+}
+
 void set_write_observer(WriteObserver obs, void* user) {
     g_observer = obs;
     g_observer_user = user;

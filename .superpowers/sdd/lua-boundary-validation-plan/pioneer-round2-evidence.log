@@ -1,0 +1,1063 @@
+Historical Pioneer evidence, combined verbatim.
+See evidence-index.json for source paths, SHA-256 hashes, offsets and lengths.
+No checks or runtime commands were repeated during consolidation.
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-container.log sha256=879aadfa238b05fed48b307b8e2ceb18be62149c13ee486d44ff1e8b9163c632 bytes=273 =====
+.RuntimeError: cleanup failed: session: RuntimeError: parent cleanup failed
+........RuntimeError: capture_binding_changed: late capture failure
+........................
+----------------------------------------------------------------------
+Ran 33 tests in 17.027s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-container.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-host.log sha256=6e054debe5853186eab04b81536ab8ca4bd821393ad006213ebe152b612de228 bytes=279 =====
+.RuntimeError: cleanup failed: session: RuntimeError: parent cleanup failed
+........RuntimeError: capture_binding_changed: late capture failure
+........................
+----------------------------------------------------------------------
+Ran 33 tests in 1.982s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-creative-host.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-host-rerun.log sha256=86f6a4d6d01d42d8f4ccb86e67e48b0b790b02f956a2cdf35ab730eac0d92029 bytes=811 =====
+ 12:21:13 up 7 days,  5:16,  1 user,  load average: 201.19, 222.74, 232.45
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 11.594s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.608s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-host-rerun.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-container.log sha256=2266500706e54ef38db4fbe00f4f092f0164a7a32de57d6dc119494069246234 bytes=1838 =====
+......................................................................................................................................................
+----------------------------------------------------------------------
+Ran 150 tests in 283.812s
+
+OK
+[12:12:05] target k1: data /tmp/kpharness_stage_orp0o2y3/install
+[12:12:05] staged tree /tmp/kpharness_stage_orp0o2y3/k1_resource_harness (new)
+[12:12:05]   copied writable dir Saves
+[12:12:06] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:12:06] executable /tmp/kpharness_stage_orp0o2y3/k1_resource_harness/swkotor.exe
+[12:12:06] saved original binkw32.dll -> binkw32_real.dll
+[12:12:06] runtime installed from /tmp/kpharness_stage_orp0o2y3/build
+[12:12:06] ini tuned: swkotor.ini (14 keys)
+[12:12:06] target k1: data /tmp/kpharness_stage_orp0o2y3/install
+[12:12:06] staged tree /tmp/kpharness_stage_orp0o2y3/k1_resource_harness (reused)
+[12:12:06] route resource cache verified for data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:12:06] executable /tmp/kpharness_stage_orp0o2y3/k1_resource_harness/swkotor.exe
+[12:12:06] runtime already current (f7db5b3f13d6)
+[12:12:06] ini tuned: swkotor.ini (14 keys)
+[12:12:06] target k1: data /tmp/kpharness_stage_orp0o2y3/install
+[12:12:06] staged tree /tmp/kpharness_stage_orp0o2y3/k1_resource_harness (reused)
+[12:12:06] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:12:06] executable /tmp/kpharness_stage_orp0o2y3/k1_resource_harness/swkotor.exe
+[12:12:06] runtime already current (f7db5b3f13d6)
+[12:12:06] ini tuned: swkotor.ini (14 keys)
+[12:12:06] target k1: data /tmp/kpharness_stage_orp0o2y3/install
+[12:12:06] staged tree /tmp/kpharness_stage_orp0o2y3/bad_resource (new)
+[12:12:06]   copied writable dir Saves
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-container.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host.log sha256=818d255a23410f20eb5e5b2fd2dcda000402c294d558d9a0ad72461bdfadfcbf bytes=2766 =====
+...................................................................F........................................................[12:17:38] target k1: data /tmp/kpharness_stage_vewm3agh/install
+[12:17:38] staged tree /tmp/kpharness_stage_vewm3agh/k1_resource_harness (new)
+[12:17:38]   copied writable dir Saves
+[12:17:38] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:17:38] executable /tmp/kpharness_stage_vewm3agh/k1_resource_harness/swkotor.exe
+[12:17:38] saved original binkw32.dll -> binkw32_real.dll
+[12:17:38] runtime installed from /tmp/kpharness_stage_vewm3agh/build
+[12:17:38] ini tuned: swkotor.ini (14 keys)
+[12:17:38] target k1: data /tmp/kpharness_stage_vewm3agh/install
+[12:17:38] staged tree /tmp/kpharness_stage_vewm3agh/k1_resource_harness (reused)
+[12:17:38] route resource cache verified for data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:17:38] executable /tmp/kpharness_stage_vewm3agh/k1_resource_harness/swkotor.exe
+[12:17:38] runtime already current (c69a69bbfdca)
+[12:17:38] ini tuned: swkotor.ini (14 keys)
+[12:17:38] target k1: data /tmp/kpharness_stage_vewm3agh/install
+[12:17:38] staged tree /tmp/kpharness_stage_vewm3agh/k1_resource_harness (reused)
+[12:17:38] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:17:38] executable /tmp/kpharness_stage_vewm3agh/k1_resource_harness/swkotor.exe
+[12:17:38] runtime already current (c69a69bbfdca)
+[12:17:38] ini tuned: swkotor.ini (14 keys)
+[12:17:38] target k1: data /tmp/kpharness_stage_vewm3agh/install
+[12:17:38] staged tree /tmp/kpharness_stage_vewm3agh/bad_resource (new)
+[12:17:38]   copied writable dir Saves
+..........................
+======================================================================
+FAIL: test_placeable_transaction_does_not_count_range_without_open (__main__.TestScenario.test_placeable_transaction_does_not_count_range_without_open)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_offline_test.py", line 1862, in test_placeable_transaction_does_not_count_range_without_open
+    self.assertIn("interaction did not reach open/range/stable state", report.steps[0].detail)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'interaction did not reach open/range/stable state' not found in 'placeable transaction budget expired before interaction observation'
+
+----------------------------------------------------------------------
+Ran 150 tests in 296.725s
+
+FAILED (failures=1)
+rc=1
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host2.log sha256=53c42a48aaf471b516296ba0900f4963cd1d2c7e79ceafa30085c7441aa345f3 bytes=1943 =====
+ 12:27:55 up 7 days,  5:22,  1 user,  load average: 203.17, 214.26, 225.14
+............................................................................................................................[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (new)
+[12:31:55]   copied writable dir Saves
+[12:31:55] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] saved original binkw32.dll -> binkw32_real.dll
+[12:31:55] runtime installed from /tmp/kpharness_stage_lxs9e80s/build
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (reused)
+[12:31:55] route resource cache verified for data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] runtime already current (a63efa27fea8)
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/k1_resource_harness (reused)
+[12:31:55] route resource staged from data/models.bif/m01aa_01a.wok -> harness-resources/m01aa_01a.wok
+[12:31:55] executable /tmp/kpharness_stage_lxs9e80s/k1_resource_harness/swkotor.exe
+[12:31:55] runtime already current (a63efa27fea8)
+[12:31:55] ini tuned: swkotor.ini (14 keys)
+[12:31:55] target k1: data /tmp/kpharness_stage_lxs9e80s/install
+[12:31:55] staged tree /tmp/kpharness_stage_lxs9e80s/bad_resource (new)
+[12:31:55]   copied writable dir Saves
+..........................
+----------------------------------------------------------------------
+Ran 150 tests in 243.004s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-offline-host2.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-container.log sha256=6193efc72878cc16250f56366052c6d33eed74bff16f703e56377fb4114b659e bytes=125 =====
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 0.375s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-container.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-host.log sha256=71d0c2670e2a2b66f604312b4217995d7eaa0c104fbf5a4e10ea770b867f78a4 bytes=130 =====
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 5.135s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-pioneer_policy-host.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container.log sha256=6a7b30ba53798845dcc2ceacd826f2a2c28540a3755b75d4cb823ac054604536 bytes=4163 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 274.514s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container3.log sha256=16393e11811d3592c266158ae7c1af323a6da9811770e53f7fad89cb839e996d bytes=4167 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 76.490s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-container3.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host.log sha256=116a2ab99fd4c51664769a8f5b4bf5eb83e851a2d2d359ce390fae7315618525 bytes=15697 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ERROR
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ERROR
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ERROR
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ERROR
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+======================================================================
+ERROR: test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 713, in start
+    launcher.communicate(json.dumps(info.to_dict()).encode(), timeout=start_timeout() + 15)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2179, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2076, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/home/linuxbrew/.linuxbrew/opt/python@3.14/bin/python3.14', '-m', 'kpharness.playback', '--launch', '/tmp/kpharness_playback_yocpk_1o/route.toml']' timed out after 45.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 747, in test_owner_is_not_a_child_of_the_caller
+    self.attach()
+    ~~~~~~~~~~~^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 558, in attach
+    return super().attach(out)
+           ~~~~~~~~~~~~~~^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 211, in attach
+    state = self.PB.start(out, self.info)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 717, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 713, in start
+    launcher.communicate(json.dumps(info.to_dict()).encode(), timeout=start_timeout() + 15)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2179, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2076, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/home/linuxbrew/.linuxbrew/opt/python@3.14/bin/python3.14', '-m', 'kpharness.playback', '--launch', '/tmp/kpharness_playback_rwaz54fc/route.toml']' timed out after 45.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 698, in test_probe_g_unwritable_journal_exits_owner
+    self.attach()
+    ~~~~~~~~~~~^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 558, in attach
+    return super().attach(out)
+           ~~~~~~~~~~~~~~^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 211, in attach
+    state = self.PB.start(out, self.info)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 717, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 713, in start
+    launcher.communicate(json.dumps(info.to_dict()).encode(), timeout=start_timeout() + 15)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2179, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2076, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/home/linuxbrew/.linuxbrew/opt/python@3.14/bin/python3.14', '-m', 'kpharness.playback', '--launch', '/tmp/kpharness_playback_cudnijaf/route.toml']' timed out after 45.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 728, in test_probe_h_idle_connection_does_not_block_status
+    self.attach()
+    ~~~~~~~~~~~^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 558, in attach
+    return super().attach(out)
+           ~~~~~~~~~~~~~~^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 211, in attach
+    state = self.PB.start(out, self.info)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 717, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 713, in start
+    launcher.communicate(json.dumps(info.to_dict()).encode(), timeout=start_timeout() + 15)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2179, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/subprocess.py", line 2076, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/home/linuxbrew/.linuxbrew/opt/python@3.14/bin/python3.14', '-m', 'kpharness.playback', '--launch', '/tmp/kpharness_playback_2l0sf5i2/route.toml']' timed out after 45.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 715, in test_probe_k_tampered_descriptor_mode_still_detaches
+    pid = self.fastforward_into_wait()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 570, in fastforward_into_wait
+    self.attach()
+    ~~~~~~~~~~~^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 558, in attach
+    return super().attach(out)
+           ~~~~~~~~~~~~~~^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 211, in attach
+    state = self.PB.start(out, self.info)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 717, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+----------------------------------------------------------------------
+Ran 32 tests in 506.240s
+
+FAILED (errors=4)
+rc=1
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host2.log sha256=d2315f69a3b350e713fcb2d9401ad704408889b1a540e7b17a450afbd2b00491 bytes=4358 =====
+ 12:21:38 up 7 days,  5:16,  1 user,  load average: 192.86, 219.06, 230.97
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 236.126s
+
+OK
+rc=0
+ 12:25:36 up 7 days,  5:20,  1 user,  load average: 221.22, 221.04, 228.68
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host2.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host3.log sha256=79552d1c22cd5ea3199069dfd321a89479a8c841360b03a3562ef4818daa452d bytes=4205 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 93.918s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-playback-host3.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-container.log sha256=2882960ab2a145692b35afa624252da098e3ed87550ba2cea2aaf1d494d3acec bytes=3658 =====
+......E.....
+======================================================================
+ERROR: test_g_journal_write_failure_kills_worker (__main__.Probes.test_g_journal_write_failure_kills_worker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-pioneer/probe_playback.py", line 151, in test_g_journal_write_failure_kills_worker
+    st = self.PB.control(self.out, {'op': 'status'})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 662, in control
+    d = private_read(descriptor)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 83, in private_read
+    stat = path.stat()
+           ^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 842, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kpharness_playback__q2g5no2/route.toml.playback.json'
+
+----------------------------------------------------------------------
+Ran 12 tests in 150.967s
+
+FAILED (errors=1)
+PROBE A clamp: prior=2.0 op=uncertain observed=3.0 speed_after_job=2.0 engine_scale_now=2.0 world_uncertain=True
+PROBE B route-edit-then-stop: stop accepted; owner_alive=True; descriptor=False
+PROBE B other route attach: succeeded
+PROBE C route-edit mid-job then raw stop ok=True: engine_scale_now=2.0 (prior 2.0) speed_after_job=2.0 op=execution_stopped last_error='PlaybackError: route changed while attached'
+PROBE D SIGTERM: owner_alive=False engine_scale_now=2.0 (prior 2.0) descriptor_left=False journal_op=execution_stopped journal_active=None status='execution_stopped' reattach='reattach ok' journal_has_prior_speed=True
+PROBE E SIGINT: owner_alive=False engine_scale_now=2.0 (prior 2.0) descriptor_left=False journal_op=execution_stopped journal_active=None status='execution_stopped' reattach='reattach ok' journal_has_prior_speed=True
+PROBE F SIGKILL: owner_alive=False engine_scale_now=12.0 (prior 2.0) descriptor_left=True journal_op=running journal_active=1 status='PlaybackError: playback owner is not reachable ([Errno 111] Connection refused); if the owner is dead, run `kpharness pioneer reclaim --out /tmp/kpharness_playback_3k92u0u0/route.toml`; it refuses while the owner still holds its locks' reattach='PlaybackError: playback owner is not reachable ([Errno 111] Connection refused); if the owner is dead, run `kpharness pioneer reclaim --out /tmp/kpharness_playback_3k92u0u0/route.toml`; it refuses while the owner still holds its locks' journal_has_prior_speed=True
+PROBE G play accepted job=e203c879 state=queued
+PROBE H unauth replies=['control authentication failed', 'control authentication failed', 'control authentication failed', 'control authentication failed'] still_attached=True status_with_one_hog=0.00s ok
+PROBE I stop after uncertain: pre=uncertain final_op=execution_stopped final_world_uncertain=True
+PROBE J play-then-immediate-stop: final=execution_stopped boundary=0 mutations=[('lua', 'return true', None), ('speed', '', 16.0), ('speed', '', 2.0)]
+PROBE K descriptor 0644: client stop -> PlaybackError: playback sidecar must be owned by this user with mode600; after raw stop owner_alive=False descriptor_left=False
+PROBE L two concurrent attaches: [('ok', '28b0abb1'), ('ok', '28b0abb1')]; live_owner_procs=1 engine_connections=1
+rc=1
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-container.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-host.log sha256=0b752288583e5c4ee721a1c814cfcf2bedacf169fc5e0566ed3624854d0b429f bytes=3640 =====
+PROBE A clamp: prior=2.0 op=uncertain observed=3.0 speed_after_job=2.0 engine_scale_now=2.0 world_uncertain=True
+.PROBE B route-edit-then-stop: stop accepted; owner_alive=False; descriptor=False
+PROBE B other route attach: succeeded
+.PROBE C route-edit mid-job then raw stop ok=True: engine_scale_now=2.0 (prior 2.0) speed_after_job=2.0 op=execution_stopped last_error='PlaybackError: route changed while attached'
+.PROBE D SIGTERM: owner_alive=False engine_scale_now=2.0 (prior 2.0) descriptor_left=False journal_op=execution_stopped journal_active=None status='execution_stopped' reattach='reattach ok' journal_has_prior_speed=True
+.PROBE E SIGINT: owner_alive=False engine_scale_now=2.0 (prior 2.0) descriptor_left=False journal_op=execution_stopped journal_active=None status='execution_stopped' reattach='reattach ok' journal_has_prior_speed=True
+.PROBE F SIGKILL: owner_alive=False engine_scale_now=12.0 (prior 2.0) descriptor_left=True journal_op=running journal_active=1 status='PlaybackError: playback owner is not reachable ([Errno 111] Connection refused); if the owner is dead, run `kpharness pioneer reclaim --out /tmp/kpharness_playback_1268y5vx/route.toml`; it refuses while the owner still holds its locks' reattach='PlaybackError: playback owner is not reachable ([Errno 111] Connection refused); if the owner is dead, run `kpharness pioneer reclaim --out /tmp/kpharness_playback_1268y5vx/route.toml`; it refuses while the owner still holds its locks' journal_has_prior_speed=True
+.PROBE G play accepted job=239ca719 state=queued
+EPROBE H unauth replies=['control authentication failed', 'control authentication failed', 'control authentication failed', 'control authentication failed'] still_attached=True status_with_one_hog=0.01s ok
+.PROBE I stop after uncertain: pre=uncertain final_op=execution_stopped final_world_uncertain=True
+.PROBE J play-then-immediate-stop: final=execution_stopped boundary=0 mutations=[('lua', 'return true', None), ('speed', '', 16.0), ('speed', '', 2.0)]
+.PROBE K descriptor 0644: client stop -> PlaybackError: playback sidecar must be owned by this user with mode600; after raw stop owner_alive=False descriptor_left=False
+.PROBE L two concurrent attaches: [('ok', '30439d5d'), ('ok', '30439d5d')]; live_owner_procs=1 engine_connections=1
+.
+======================================================================
+ERROR: test_g_journal_write_failure_kills_worker (__main__.Probes.test_g_journal_write_failure_kills_worker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/brunner56/kp-live-20260922/review-probes-pioneer/probe_playback.py", line 151, in test_g_journal_write_failure_kills_worker
+    st = self.PB.control(self.out, {'op': 'status'})
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 662, in control
+    d = private_read(descriptor)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 83, in private_read
+    stat = path.stat()
+  File "/home/linuxbrew/.linuxbrew/Cellar/python@3.14/3.14.7/lib/python3.14/pathlib/__init__.py", line 654, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kpharness_playback_2_0r8cg2/route.toml.playback.json'
+
+----------------------------------------------------------------------
+Ran 12 tests in 65.879s
+
+FAILED (errors=1)
+rc=1
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-probe-host.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red.log sha256=4aa49ef0651de23ed2021bc1b17f4cf58ef4216d6808fd009cf077f206bc05d0 bytes=20073 =====
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ERROR
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ERROR
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3935775 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3937143 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3938273 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ERROR
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ERROR
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 804, in <module>
+    run_engine(sys.argv[2], sys.argv[3], float(sys.argv[4]), float(sys.argv[5]))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 42, in run_engine
+    log = open(log_file, 'a', buffering=1)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kpharness_playback_e19_aif7/engine-622314794288195.log'
+ERROR
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 804, in <module>
+    run_engine(sys.argv[2], sys.argv[3], float(sys.argv[4]), float(sys.argv[5]))
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 42, in run_engine
+    log = open(log_file, 'a', buffering=1)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kpharness_playback_6md1ic9y/engine-622324805921642.log'
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3944640 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3946458 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ERROR
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3950394 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 3956515 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ERROR
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ERROR
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ERROR
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ERROR
+
+======================================================================
+ERROR: test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 584, in test_probe_a_readback_mismatch_restores_prior_engine_speed
+    self.attach()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 557, in attach
+    return super().attach(out)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 210, in attach
+    state = self.PB.start(out, self.info)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 541, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 596, in test_probe_b_route_edit_does_not_block_stop
+    self.attach()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 557, in attach
+    return super().attach(out)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 210, in attach
+    state = self.PB.start(out, self.info)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 541, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 614, in test_probe_c_route_edit_mid_job_still_restores_speed
+    self.PB.control(self.out, {'op': 'stop'})
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 500, in control
+    raise PlaybackError('stale or invalid playback descriptor')
+kpharness.playback.PlaybackError: stale or invalid playback descriptor
+
+======================================================================
+ERROR: test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 638, in test_probe_d_sigterm_behaves_like_stop
+    self._signal_restores(15)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 624, in _signal_restores
+    pid = self.fastforward_into_wait()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 569, in fastforward_into_wait
+    self.attach()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 557, in attach
+    return super().attach(out)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 210, in attach
+    state = self.PB.start(out, self.info)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 541, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 184, in setUp
+    self.engine = self.start_engine()
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 192, in start_engine
+    engine = Engine(self.root, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 134, in __init__
+    raise RuntimeError('synthetic engine did not start')
+RuntimeError: synthetic engine did not start
+
+======================================================================
+ERROR: test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 184, in setUp
+    self.engine = self.start_engine()
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 192, in start_engine
+    engine = Engine(self.root, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 134, in __init__
+    raise RuntimeError('synthetic engine did not start')
+RuntimeError: synthetic engine did not start
+
+======================================================================
+ERROR: test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 673, in test_reclaim_refused_while_owner_alive
+    self.PB.reclaim(self.out, self.info)
+    ^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.playback' has no attribute 'reclaim'
+
+======================================================================
+ERROR: test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 641, in test_sighup_behaves_like_stop
+    self._signal_restores(1)
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 626, in _signal_restores
+    self.assertEqual(journal['speed_before_job'], 2.0, 'prior speed journaled before the first write')
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'speed_before_job'
+
+======================================================================
+ERROR: test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 746, in test_owner_is_not_a_child_of_the_caller
+    self.attach()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 557, in attach
+    return super().attach(out)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 210, in attach
+    state = self.PB.start(out, self.info)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 541, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 733, in test_probe_h_idle_connection_does_not_block_status
+    self.assertEqual(self.PB.status(self.out)['operation_state'], 'idle')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 504, in control
+    raw = stream.readline(1024 * 1024)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+======================================================================
+ERROR: test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 714, in test_probe_k_tampered_descriptor_mode_still_detaches
+    pid = self.fastforward_into_wait()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 569, in fastforward_into_wait
+    self.attach()
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 557, in attach
+    return super().attach(out)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 210, in attach
+    state = self.PB.start(out, self.info)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 541, in start
+    raise PlaybackError('owner startup outcome uncertain; inspect descriptor/log, do not blindly retry')
+kpharness.playback.PlaybackError: owner startup outcome uncertain; inspect descriptor/log, do not blindly retry
+
+======================================================================
+ERROR: test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 399, in setUp
+    super().setUp()
+    ^^^^^^^^^^^^^
+TypeError: super(type, obj): obj must be an instance or subtype of type
+
+======================================================================
+ERROR: test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 399, in setUp
+    super().setUp()
+    ^^^^^^^^^^^^^
+TypeError: super(type, obj): obj must be an instance or subtype of type
+
+======================================================================
+ERROR: test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 399, in setUp
+    super().setUp()
+    ^^^^^^^^^^^^^
+TypeError: super(type, obj): obj must be an instance or subtype of type
+
+======================================================================
+FAIL: test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 707, in test_probe_g_unwritable_journal_exits_owner
+    self.assertTrue(wait_dead(pid), 'owner kept serving with an unwritable journal')
+AssertionError: False is not true : owner kept serving with an unwritable journal
+
+----------------------------------------------------------------------
+Ran 15 tests in 220.299s
+
+FAILED (failures=1, errors=14)
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2-m2.log sha256=75c8a046dfd7c12e640872476d60de1fe95d941daafe147f1e156c2c5e49ae7c bytes=932 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 68345 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+
+======================================================================
+FAIL: test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 752, in test_owner_is_not_a_child_of_the_caller
+    self.assertNotEqual(parent, os.getpid())
+AssertionError: 68164 == 68164
+
+----------------------------------------------------------------------
+Ran 1 test in 2.755s
+
+FAILED (failures=1)
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2-m2.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2.log sha256=292803d4ca394b755e403495c7ac63afe0a9f23797ea0ceb6f2f93088094afc1 bytes=10807 =====
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 46393 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 51818 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 52183 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 57452 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 58119 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 59910 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 60271 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 61489 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 63007 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ERROR
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 65240 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+
+======================================================================
+ERROR: test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 735, in test_probe_h_idle_connection_does_not_block_status
+    self.assertEqual(self.PB.status(self.out)['operation_state'], 'idle')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 504, in control
+    raw = stream.readline(1024 * 1024)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+======================================================================
+ERROR: test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 601, in test_probe_b_route_edit_does_not_block_stop
+    self.assertIn(self.PB.status(self.out)['operation_state'], {'idle'})
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 500, in control
+    raise PlaybackError('stale or invalid playback descriptor')
+kpharness.playback.PlaybackError: stale or invalid playback descriptor
+
+======================================================================
+ERROR: test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 653, in test_probe_f_sigkill_then_reclaim_restores_recorded_speed
+    report = self.PB.reclaim(self.out, self.info)
+             ^^^^^^^^^^^^^^^
+AttributeError: module 'kpharness.playback' has no attribute 'reclaim'
+
+======================================================================
+ERROR: test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 683, in test_reclaim_never_restores_on_a_different_game_process
+    self.PB.status(self.out)
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 548, in status
+    return control(out, {'op': 'status'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/old-tree/scripts/harness/kpharness/playback.py", line 504, in control
+    raw = stream.readline(1024 * 1024)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+======================================================================
+FAIL: test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 709, in test_probe_g_unwritable_journal_exits_owner
+    self.assertTrue(wait_dead(pid), 'owner kept serving with an unwritable journal')
+AssertionError: False is not true : owner kept serving with an unwritable journal
+
+======================================================================
+FAIL: test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 722, in test_probe_k_tampered_descriptor_mode_still_detaches
+    self.assertTrue(wait_dead(pid), 'owner alive after stop with a tampered descriptor')
+AssertionError: False is not true : owner alive after stop with a tampered descriptor
+
+======================================================================
+FAIL: test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 587, in test_probe_a_readback_mismatch_restores_prior_engine_speed
+    self.assertEqual(self.engine.scale(), 2.0, 'engine left at the clamped speed')
+AssertionError: 3.0 != 2.0 : engine left at the clamped speed
+
+======================================================================
+FAIL: test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 618, in test_probe_c_route_edit_mid_job_still_restores_speed
+    self.assertEqual(self.engine.scale(), 2.0, 'route edit skipped the speed restore')
+AssertionError: 12.0 != 2.0 : route edit skipped the speed restore
+
+======================================================================
+FAIL: test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 640, in test_probe_d_sigterm_behaves_like_stop
+    self._signal_restores(15)
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 630, in _signal_restores
+    self.assertEqual(self.engine.scale(), 2.0)
+AssertionError: 12.0 != 2.0
+
+======================================================================
+FAIL: test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 643, in test_sighup_behaves_like_stop
+    self._signal_restores(1)
+  File "/tmp/old-tree/tools/kpharness_playback_test.py", line 630, in _signal_restores
+    self.assertEqual(self.engine.scale(), 2.0)
+AssertionError: 12.0 != 2.0
+
+----------------------------------------------------------------------
+Ran 10 tests in 149.190s
+
+FAILED (failures=6, errors=4)
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round2-logs/pioneer-round2-red2.log =====

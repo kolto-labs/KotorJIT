@@ -195,7 +195,7 @@ int main(int argc, char**) {
                     assert(type(v) == 'function', 'missing kp.' .. path)
                 end
                 assert(type(kp.events.OnTick) == 'number')
-                assert(kp.host == 'KotorPhasor' and kp.serverapp == 'KotorPhasor')
+                assert(kp.host == 'ScriptForge' and kp.serverapp == 'ScriptForge')
                 assert(kp.game == 'KOTOR' and kp.api_version == 2)
                 assert(type(kp.version) == 'string' and kp.gamedir() == '/offline/game')
                 assert(kp.tokenizestring('a,b', ',')[2] == 'b')

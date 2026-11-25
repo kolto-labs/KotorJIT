@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Build libkphasor.dylib for the x86_64 macOS Steam builds of KOTOR 1 and 2.
+# Build libscriptforge.dylib for the x86_64 macOS Steam builds of KOTOR 1 and 2.
 #
 # Everything is -arch x86_64, deployment 10.13: the retail games are x86_64,
 # and on Apple silicon they run under Rosetta 2, so the runtime we inject must
 # match. Run this on a Mac with Xcode Command Line Tools. No network is needed;
 # LuaJIT and Dear ImGui are vendored under third_party/.
 #
-#   scripts/mac/build.sh              # builds build-mac/libkphasor.dylib
+#   scripts/mac/build.sh              # builds build-mac/libscriptforge.dylib
 #   scripts/mac/build.sh clean
 #
-# Output: build-mac/libkphasor.dylib (ad-hoc signed). Install it with
+# Output: build-mac/libscriptforge.dylib (ad-hoc signed). Install it with
 # scripts/mac/install_to_game.sh.
 set -euo pipefail
 
@@ -48,6 +48,7 @@ mapfile -t SRCS < <(cd "$ROOT" && find src -name '*.cpp' \
   ! -path 'src/platform/platform_win32.cpp' \
   ! -path 'src/platform/platform_linux.cpp' \
   ! -path 'src/proxy/*' \
+  ! -path 'src/launcher/*' \
   ! -path 'src/hooks/trampoline.cpp' \
   ! -path 'src/hooks/arm32/*' \
   ! -path 'src/harness/engine_k1.cpp' \
@@ -81,10 +82,10 @@ done
 # stub resolver while a code page is briefly writable, and lazy binding is the
 # one thing that could. install_name @executable_path so a copy placed beside
 # the game resolves; DYLD_INSERT_LIBRARIES overrides that with the real path.
-DYLIB="$OUT/libkphasor.dylib"
-echo ">> linking libkphasor.dylib"
+DYLIB="$OUT/libscriptforge.dylib"
+echo ">> linking libscriptforge.dylib"
 "$CXX" -arch "$ARCH" -mmacosx-version-min="$MIN" -dynamiclib \
-  -install_name "@executable_path/libkphasor.dylib" \
+  -install_name "@executable_path/libscriptforge.dylib" \
   -Wl,-bind_at_load \
   -o "$DYLIB" "${OBJS[@]}" "$LIBLUAJIT" \
   -framework OpenGL -framework Cocoa -lobjc -lc++

@@ -1,6 +1,6 @@
 #pragma once
 /* Shape of the legacy <OpenGL/gl.h> (GL 2.1 compatibility) for the entry
-   points KotorPhasor's overlay and Dear ImGui's GL2 backend use. */
+   points ScriptForge's overlay and Dear ImGui's GL2 backend use. */
 #include <stddef.h>
 #include <stdint.h>
 #ifdef __cplusplus

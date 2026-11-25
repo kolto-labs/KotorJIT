@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print KotorPhasor build profiles from data/profiles/builds.toml."""
+"""Print ScriptForge build profiles from data/profiles/builds.toml."""
 from __future__ import annotations
 
 import sys

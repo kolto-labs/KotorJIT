@@ -1,4 +1,4 @@
-# k2 smoke: the native ELF with libkphasor.so preloaded, same shape as the
+# k2 smoke: the native ELF with libscriptforge.so preloaded, same shape as the
 # K1 smoke minus `reply`. The save dir starts empty on this port; the
 # session seeds it from the store's cloud copies, whose folder names are
 # the store's, so the load picks the autosave by glob. Commands the K2

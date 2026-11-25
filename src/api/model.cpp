@@ -43,6 +43,7 @@ bool Operations::bind(const std::string& sha,Address base,Backend* backend,
     profile_=p;sites_=p->sites;backend_=backend;loaded_base_=base;
     if (!generated_sites) { unbind(); return fail(error,"unsupported: generated model operation binding required"); }
     for (unsigned i=0;i<sites_.size();++i) {
+        if (!p->sites[i].va) { sites_[i].va=0; continue; }
         if (!(*generated_sites)[i]) { unbind(); return fail(error,"unsupported: generated model operation role missing"); }
         sites_[i].va=(*generated_sites)[i];
     }

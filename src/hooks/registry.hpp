@@ -51,7 +51,24 @@ enum class SiteKind {
 SiteKind site_kind_from_string(std::string_view);
 const char* to_string(SiteKind);
 
+// Missing numeric ABI fields remain -1, never silently become valid zeroes.
+struct AbiParam {
+    int index = -1, size = -1, stack = -1;
+    std::string c_type, lua, reg;
+};
+struct HookAbi {
+    std::string convention, confidence, cleanup_by, ret_storage, ret_type, ret_lua, this_reg;
+    int stack_bytes = -1, ret_pop = -1, stolen_len = -1;
+    bool variadic = true, struct_return = true;
+    bool engine_accept = false;
+    std::string hook_safe, lua_event, thread;
+    bool pre = false, post = false, rewrite = false, override_return = false, skip = false;
+    std::vector<AbiParam> params;
+    std::vector<int> observed_ret;
+};
+
 struct Site {
+    HookAbi abi;
     std::string    name;      // logical key, e.g. "vm.run_script"
     // Runtime adapter role emitted by AgentDecompile.  This is separate from
     // a logical display name: generated consumers bind roles, not labels.
@@ -73,6 +90,21 @@ struct Site {
     // Zero on every other kind. A Field with size 0 is unresolved.
     std::uint32_t  offset = 0;
     std::uint32_t  size = 0;
+    // Masked locator (hookmanifest/v1 `locate.primary`, else its unique exact
+    // `expected_bytes`, else an overlay row's bytes). Same length; mask 0x00 is a
+    // wildcard. When present the site binds ONLY through a unique masked scan:
+    // a recorded VA is never consulted for it.
+    std::vector<std::uint8_t> pattern;
+    std::vector<std::uint8_t> pattern_mask;
+    bool           bound_from_pattern = false;
+    // Manifest `hook.safe == "refuse"`: static analysis says the prologue
+    // cannot be detoured. An overlay may not promote such a site to Detour.
+    bool           hook_refused = false;
+    // Why the last resolve_from_signatures() left a code site unresolved:
+    // "missing" (0 hits), "ambiguous" (>= 2 hits), "no_locator" (manifest
+    // site with neither a valid pattern nor unique expected bytes). Empty
+    // when resolved or never scanned.
+    std::string    locate_error;
 };
 
 // A parsed data/addresses/<build>.json, or an AgentDecompile hook pack
@@ -91,6 +123,18 @@ public:
                               const std::string& overlay_path,
                               AddressTable& out,
                               std::string& error);
+    // An `agentdecompile.hookmanifest/v1` file, read one function at a time so
+    // a 50 MB manifest never becomes a whole DOM inside a 32-bit game. Every
+    // code site starts at addr 0 and is bound by resolve_from_signatures()
+    // alone; `entry_va` is ignored. The overlay may add kind / required /
+    // expected_bytes but never an address (see scan_only()).
+    static bool load_manifest(const std::string& manifest_path,
+                              const std::string& build_slug,
+                              const std::string& overlay_path,
+                              AddressTable& out,
+                              std::string& error);
+    static bool parse_manifest(std::string_view json, const std::string& build_slug,
+                               AddressTable& out, std::string& error);
 
     const Site* find(std::string_view name) const;
     // Exact adapter-key/alias lookup.  Returns null on an absent or ambiguous
@@ -111,9 +155,15 @@ public:
     // is carried explicitly so a relocatable image is a data question.
     std::uintptr_t image_base() const { return image_base_; }
 
+    // True for a table loaded from a hook manifest: code-site addresses come
+    // from the runtime pattern scan only, never from data.
+    bool scan_only() const { return scan_only_; }
+
     std::vector<std::string> unresolved_required() const;
 
-    // Recorded VA is a hint. Unique expected_bytes bind the site.
+    // Recorded VA is a hint. Unique expected_bytes bind the site. A site with
+    // a masked pattern binds only on a unique masked hit. All patterns share
+    // one pass over the bound executable regions.
     // `runtime_base` 0 means the table's image_base (no reloc).
     // A hit is stored as an image VA so install() still applies delta once.
     void resolve_from_signatures(std::uintptr_t runtime_base);
@@ -126,6 +176,7 @@ private:
     std::string    platform_;
     std::string    sha256_;
     std::uintptr_t image_base_ = 0;
+    bool           scan_only_ = false;
     std::vector<Site> sites_;
     std::vector<std::string> operations_;
 };

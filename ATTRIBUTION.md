@@ -1,12 +1,12 @@
 # Attribution
 
-KotorPhasor stands on work other people did first. Who, and for what:
+ScriptForge stands on work other people did first. Who, and for what:
 
 ## Architectural model
 
 **[Phasor](https://github.com/urbanyoung/Phasor)**: urbanyoung, MIT.
 
-Phasor is a Lua scripting host for Halo servers. KotorPhasor borrows its shape, and the
+Phasor is a Lua scripting host for Halo servers. ScriptForge borrows its shape, and the
 borrowing is deliberate rather than incidental:
 
 - Scripts live in a folder and define only the event callbacks they care about.
@@ -29,14 +29,21 @@ quarantine is on by default here.
 and contributors, MIT, 2025.
 
 The prior art for running native code inside KOTOR. Credited for its code caves, injection
-points, and published reverse-engineering findings for both games. Two of its design
-decisions are reflected here: describing hooks as data (declared address, declared type,
-original-byte verification, per-version files gated on executable hash) and validating hook
-addresses for conflicts before install.
+points, published reverse-engineering findings for both games, and its deployment tooling:
 
-KotorPhasor implements its own hook engine and address tables rather than reusing theirs.
-Its hook addresses were checked mechanically against every site KotorPhasor touches; there
-are no collisions, so the two can be installed together.
+- **Deployment and packaging designs adopted here**:
+  - Data-driven hook verification (expected original bytes, per-version executable hashes).
+  - Native Windows process-injection launching (`CreateProcess` with `CREATE_SUSPENDED` +
+    remote `LoadLibraryA`, and delayed Steam/attach launching for packed builds).
+  - Address-preserving ELF32 `DT_NEEDED` injection (`PT_NOTE` repurposed to `PT_LOAD`) via
+    `tools/elf_needed.py`.
+  - DLL-only `.kpatch` packaging (`kpatch/`, `scripts/package_kpatch.py`) so KPM itself can
+    load ScriptForge without duplicating hook definitions.
+
+ScriptForge implements its own hook engine and address tables rather than using
+`KotorPatcher` detours, and is **strictly incompatible with any other code patching**:
+every hook site requires exact expected prologue bytes, and ScriptForge refuses to install
+hooks cleanly if another patch or module has modified those bytes.
 
 Individual patches in that project are credited to their own authors: Lane, Vriff, J,
 Synchro, VexFlint, Shae Condon, and Arniel_Stanislaus.
@@ -55,7 +62,7 @@ cross-build identity layer that makes unnamed builds usable all come from that c
 ## The games
 
 KOTOR and KOTOR II are the work of BioWare, Obsidian Entertainment, LucasArts, and Aspyr.
-KotorPhasor is an unaffiliated fan project. It ships no game content and redistributes no
+ScriptForge is an unaffiliated fan project. It ships no game content and redistributes no
 game binaries. You need your own copy of the game.
 
 ## Dependencies

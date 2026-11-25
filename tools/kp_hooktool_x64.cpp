@@ -322,6 +322,12 @@ void test_relocation() {
 }
 
 // ---- tier 3: native self-hook ----------------------------------------------
+}  // namespace
+
+// These three names are shared with the assembly below, so they must have real
+// external C linkage. Inside the unnamed namespace they have internal linkage
+// ([basic.link]/4 overrides extern "C"); GCC 15 then mangles them and the
+// asm's plain-symbol references stop resolving.
 extern "C" {
 int kp_x64_global = 100;
 int kp_x64_target(int);         // assembly below
@@ -356,6 +362,8 @@ kp_x64_target_bytes:
     .p2align 12, 0xcc
     .popsection
 )");
+
+namespace {
 
 Detour* g_detour = nullptr;
 int g_calls = 0;

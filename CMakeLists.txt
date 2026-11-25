@@ -1,4 +1,4 @@
-# KotorPhasor build.
+# ScriptForge build.
 #
 # Both game targets are 32-bit: KOTOR 1 is a PE32 for i386, KOTOR 2 on Linux is
 # an ELF32 EXEC. Nothing here is ever built 64-bit, and the Windows half is
@@ -7,7 +7,7 @@
 #   cmake -S . -B build && cmake --build build      native tools, g++ -m32
 #   cmake --build build --target image_win32        Windows cross-compile check
 cmake_minimum_required(VERSION 3.20)
-project(KotorPhasor VERSION 0.1.0 LANGUAGES CXX)
+project(ScriptForge VERSION 0.1.0 LANGUAGES CXX)
 
 # Some development hosts enforce a small per-user quota on the shared /tmp.
 # GCC writes large intermediate assembly files there even when the object file
@@ -36,10 +36,10 @@ enable_testing()
 # build script, and stops. The macOS runtime, its address tables and its
 # offline verification live under scripts/mac/ and tools/mac/.
 if(APPLE)
-    add_custom_target(kphasor_mac ALL
+    add_custom_target(scriptforge_mac ALL
         COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_SOURCE_DIR}/scripts/mac/build.sh
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Building libkphasor.dylib via scripts/mac/build.sh (x86_64)"
+        COMMENT "Building libscriptforge.dylib via scripts/mac/build.sh (x86_64)"
         VERBATIM USES_TERMINAL)
     find_package(Python3 3.9 COMPONENTS Interpreter)
     if(Python3_FOUND)
@@ -54,14 +54,14 @@ if(APPLE)
     target_include_directories(kp_hooktool_x64 PRIVATE src)
     target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
     add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
-    add_dependencies(kphasor_mac kp_hooktool_x64)
+    add_dependencies(scriptforge_mac kp_hooktool_x64)
     # The x86_64 engine-ABI unit test (layout widths, id truncation, the
     # ExecuteCommand bound decoders). Runs on any x86_64 host.
     add_executable(kp_mac_abitest tools/mac/kp_mac_abitest.cpp)
     target_include_directories(kp_mac_abitest PRIVATE src)
     target_compile_options(kp_mac_abitest PRIVATE -Wall -Wextra)
     add_test(NAME kp_mac_abitest COMMAND kp_mac_abitest)
-    add_dependencies(kphasor_mac kp_mac_abitest)
+    add_dependencies(scriptforge_mac kp_mac_abitest)
     message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
                    "`ctest` runs the Mach-O table gate and the x86_64 detour self-test; "
                    "run tools/mac/gen_mac_tables.py --check against the local images for full byte verification.")
@@ -77,6 +77,15 @@ endforeach()
 add_test(NAME gameplay_scheduler_test
     COMMAND bash ${CMAKE_SOURCE_DIR}/tools/gameplay_scheduler_test.sh)
 set_tests_properties(gameplay_scheduler_test PROPERTIES LABELS "offline;harness" TIMEOUT 60)
+
+# Deployment: the KPM-style loaders and packaging (docs/user/install.md).
+foreach(gate elf_needed_test package_kpatch_test install_to_game_test)
+    add_test(NAME ${gate} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/${gate}.py)
+    set_tests_properties(${gate} PROPERTIES LABELS "offline;deploy" TIMEOUT 120)
+endforeach()
+add_test(NAME embedded_addresses_current
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gen_embedded_addresses.py --check)
+set_tests_properties(embedded_addresses_current PROPERTIES LABELS "offline;deploy" TIMEOUT 60)
 
 # Classification reads every byte of every section, twice over for the marker
 # scan. Unoptimised that is a third of a second at load time, inside a game's
@@ -104,6 +113,11 @@ add_library(kp_image STATIC ${KP_IMAGE_SOURCES})
 target_include_directories(kp_image PUBLIC src)
 target_compile_options(kp_image PUBLIC -m32 -Wall -Wextra)
 target_link_options(kp_image PUBLIC -m32)
+
+add_executable(kp_buildlookup_test tools/kp_buildlookup_test.cpp)
+target_link_libraries(kp_buildlookup_test PRIVATE kp_image)
+add_test(NAME kp_buildlookup_test COMMAND kp_buildlookup_test)
+set_tests_properties(kp_buildlookup_test PROPERTIES LABELS "offline;deploy")
 
 # The offline proof that the module works: classification, identification and
 # parsing run against files, so the encrypted build can be checked without Steam.
@@ -156,15 +170,10 @@ endif()
 # Hook engine: trampolines, platform layer, address-table registry.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/hooks/hooks.cmake)
 
-# The runtime, and the two libraries it ships as: kphasor.dll and libkphasor.so.
+# The runtime, and the two libraries it ships as: scriptforge.dll and libscriptforge.so.
 # After hooks.cmake because it links what image_win32 and hooks_win32 compile.
-# Host API modules. Each fragment is self-contained and order-independent.
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/routines.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/structs.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/entity.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/support.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/vector.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/motion.cmake)
+# Host API libraries and source lists, in their established dependency order.
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api.cmake)
 
 # The headless harness control plane. Before runtime.cmake: it only publishes
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
@@ -174,10 +183,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/harness.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
 # After runtime.cmake: kp_memtest links the native LuaJIT that target builds.
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/memory.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/model.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/camera.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/animation.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api_luajit.cmake)
 
 # The Lua host on its own, for exercising the arbitration rule without the game.
 # After runtime.cmake: it links the native LuaJIT that target builds.
@@ -196,6 +202,9 @@ endif()
 
 # The binkw32 proxy: the DLL the game actually imports, which loads the runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/proxy/proxy.cmake)
+
+# Windows 32-bit runtime-injection launcher (alternative to the binkw32 proxy).
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/launcher.cmake)
 
 if(UNIX AND NOT WIN32)
     add_executable(kp_projectilestest tools/kp_projectilestest.cpp src/api/projectiles.cpp

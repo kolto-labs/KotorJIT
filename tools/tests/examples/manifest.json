@@ -136,7 +136,7 @@
     },
     {
       "path": "coverage/10_cover.lua",
-      "sha256": "c13f64247ba86895849d42d4b32816957a4530a4ad5079d2a886818a879e77b3",
+      "sha256": "bcf5df81df8c2f701134ca18834aa0fdc27628e34896846a7ea5bf04dccf4b20",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -1029,7 +1029,7 @@
     },
     {
       "path": "multiplayer/10_avatar_sync.lua",
-      "sha256": "954b9cdee1f17e9011f109a4f5d9dc55e62786dfdb52b3d6108db3d76e54a2c0",
+      "sha256": "4570c7db3f54017aab5bb19763f6fa744ebd0685d8e662f9a698110b8ef36e9b",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -1127,7 +1127,7 @@
     },
     {
       "path": "probe/10_position_trace.lua",
-      "sha256": "1dd76b8b044e31913ca414779ea9cf9e9ef5657ba6b07e869d04cb3d472af4e4",
+      "sha256": "bbb34b12998b8f26c30ace77314306c649cdbc016527c2650b4af3c300a992ad",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -1403,7 +1403,7 @@
     },
     {
       "path": "cursed/110_footlocker_blaster.lua",
-      "sha256": "cdf9d55447b1dd6afefb86bbf0eada031a722daf3990b55d118f788c6db859f6",
+      "sha256": "7c3dc9f7ccd4beca1ace8d9a79965dabbad9321cf791067fd0ac5ebd6b32d16e",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"

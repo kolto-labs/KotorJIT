@@ -1,0 +1,926 @@
+Historical Pioneer evidence, combined verbatim.
+See evidence-index.json for source paths, SHA-256 hashes, offsets and lengths.
+No checks or runtime commands were repeated during consolidation.
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/green-container-r4.txt sha256=e153f529fb88bd811571251783a9e5a68aa62b54e977b025eb48e567704c66df bytes=546 =====
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ok
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... ok
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 22.777s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/green-container-r4.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-001.log sha256=1cf4fb470c0252dd7149d84b06500b75c50daca7df0a52a4d11809c1746dc46a bytes=303 =====
+18:22:00.374883144
+126.39 122.02 90.18 51/7093 824299
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.655s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-001.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-002.log sha256=61078842991bd7ae59a963a4c452312ddbd6f8998ee24325c6859f9358ab24d2 bytes=303 =====
+18:22:07.167424696
+124.51 121.70 90.25 55/7083 824903
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.548s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-002.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-003.log sha256=b37274908ea9b4dba12044fbc29967c955c4331c04e38a77f82517a74c93820f bytes=303 =====
+18:22:14.316965946
+124.07 121.65 90.41 46/7030 826128
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.346s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-003.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-004.log sha256=716924b5137eabeb15e6129d7c731b153e7b03bc370330320af677bb3decff97 bytes=303 =====
+18:22:22.369847438
+121.88 121.27 90.62 50/7061 828832
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.226s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-004.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-005.log sha256=dde93fafedcf7865d3a207a6f6a6bff96ea02ccdb08a450ca7d9b485318851ea bytes=304 =====
+18:22:30.216545113
+120.32 120.96 90.85 52/7059 831510
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 12.345s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-005.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-006.log sha256=ec1f778ccd778c83eebce4fe3ef416246fdfc46afe1f54f47c4dcb59b3be66f0 bytes=303 =====
+18:22:44.581673522
+121.84 121.26 91.27 58/7061 833479
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.290s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-006.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-007.log sha256=6c63381492e59fe240f5f9f5f04ec940ef3ba73b8afc569ed92fd933dddfe39f bytes=304 =====
+18:22:50.721378168
+122.95 121.52 91.67 53/7111 834535
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 13.564s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-007.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-008.log sha256=8f13623425208fa4332e9a353a81c974e5da8c143cabec7ab5ef31319140b987 bytes=303 =====
+18:23:06.869393011
+125.13 122.07 92.33 46/7073 837179
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.331s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-008.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-009.log sha256=0e87bb1ab2f1d695708a15b17f76937bd2119d9d07d50a75c1a026bd07bdefda bytes=303 =====
+18:23:14.259798012
+124.47 121.98 92.46 40/7101 837789
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 8.467s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-009.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-010.log sha256=c55b6296a962d991441468f6b1584413aa1ab444747086e23e9d4cb66645aae1 bytes=303 =====
+18:23:23.248840278
+124.91 122.16 92.84 48/7049 838644
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.408s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-010.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-011.log sha256=c2afceaacf40e27bd829830158e1d92ef82cd62fa4d5da7712add5a34bc6784c bytes=303 =====
+18:23:34.591516614
+124.48 122.16 93.15 44/7054 839625
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.615s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-011.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-012.log sha256=058c45ec3a8bcacd27a38f6bb26f1345405a2abfa80430a0e7683485edf391a1 bytes=303 =====
+18:23:47.602159537
+126.16 122.63 93.77 41/7049 841063
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.902s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-012.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-013.log sha256=2580cc54399681f03d5256b0be1563bfb0de551bedb91ffa815e9cf21a4ff830 bytes=303 =====
+18:23:58.110958861
+126.13 122.74 94.11 49/6998 842088
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.937s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-013.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-014.log sha256=ec5da72e1d636ed9e4243ff51644d01622095623b72243dd241bb1d236e37659 bytes=304 =====
+18:24:08.736181030
+127.43 123.13 94.55 69/7019 844742
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 10.822s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-014.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-015.log sha256=33309bb919c35bf8f8780759bbe1281404ea5634f2c5ecf07e9db3113dcf4932 bytes=304 =====
+18:24:24.649449205
+127.41 123.32 95.07 58/7030 848190
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 17.001s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-015.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-016.log sha256=f71ab3665b118ad408b92f87c4effe2520f27ae0132a4db2e6f444e0d74c26f7 bytes=304 =====
+18:24:45.424082399
+125.20 123.18 95.78 51/6908 853379
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 13.351s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-016.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-017.log sha256=0b1c3783a6b887f19d58a5ef8a73a9458e63333ca86d29b6f87bf979c12bc1b5 bytes=304 =====
+18:24:59.535059689
+125.67 123.34 96.12 52/6906 857970
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 12.616s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-017.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-018.log sha256=d1369898b1160cb5ca625349572cbb3176aaf9fa8f241601e49a24034acbd078 bytes=303 =====
+18:25:16.649643289
+128.61 124.13 96.96 57/6994 861300
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 8.118s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-018.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-019.log sha256=4c61802e97f66e226204afb69971a9b4827d594088669cd0b760e33e10e59114 bytes=304 =====
+18:25:27.262319998
+130.42 124.68 97.43 50/7051 862550
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 10.918s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-019.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-020.log sha256=446f9667c529200470cb7ae337d2653f437f5e620eb34705baa84a05384f1061 bytes=304 =====
+18:25:45.653667211
+135.35 126.16 98.50 69/7155 865912
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 13.744s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-020.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-021.log sha256=354be710336c2073ea8181bd2836025b0ff7debd60d62ed84039b01d921e6166 bytes=304 =====
+18:26:02.012035135
+139.37 127.47 99.37 71/7135 868893
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 15.810s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-021.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-022.log sha256=337e6ce8370bb919c3a0317dc7e377d063e071678ad8b1d9589c311d12737ba3 bytes=304 =====
+18:26:21.102139581
+146.18 129.71 100.70 91/7198 872729
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.926s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-022.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-023.log sha256=22294191ea88d6d138b055c2c134f190f47ef2e89cb43416aff2a0bc69e8590a bytes=304 =====
+18:26:32.195476924
+150.00 131.06 101.45 73/7203 874239
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.987s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-023.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-024.log sha256=c377a954d467af71703997cbe6fc350ad07dd09f4b046e530620617d82308ee0 bytes=305 =====
+18:26:41.315718124
+153.40 132.42 102.21 47/7192 875732
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 13.879s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-024.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-025.log sha256=a1ec151f736a65ece4fd1d7e6689804a92d2d8593d298970e0675e2cf8c72354 bytes=305 =====
+18:26:56.250446332
+159.41 134.78 103.47 76/7185 879311
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.691s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-025.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-026.log sha256=116edb643319cc7785e33942b26cf6d76d86ef7d9db8d130e9ca50ed8ffeae5c bytes=305 =====
+18:27:10.209093042
+162.94 136.73 104.61 55/7100 882787
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 17.868s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-026.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-027.log sha256=cdc19ebbaf60fd4faf3629c71f41b1810d3255e2b90e1ee54f07de9ed9b6a861 bytes=305 =====
+18:27:31.093142834
+170.48 140.14 106.41 77/7157 886869
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 15.561s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-027.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-028.log sha256=a5a83b511a4f0246e793cc629b16fffb95955821463c1ab04683b6fca1f57ed6 bytes=305 =====
+18:27:51.015068272
+165.49 140.97 107.41 66/7182 889492
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 14.697s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-028.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-029.log sha256=78098b1986ebba980060e8c64af48786d6a72288ac4fa85b4e57afb38f065078 bytes=305 =====
+18:28:07.040842282
+162.95 141.62 108.16 69/7210 892603
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 10.662s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-029.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-030.log sha256=877628919d63510aa15ddc1f25b4ecb0fa6c56acc3a062a48c2cdfeb175f93ad bytes=304 =====
+18:28:21.171299654
+165.84 143.28 109.24 82/7320 894834
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.131s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-030.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-031.log sha256=8f82db755e002fa9a713a70c2c35e942430b12333106b2203d378270f11303fe bytes=304 =====
+18:28:31.691547481
+166.40 144.14 109.88 77/7324 896271
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.028s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-031.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-032.log sha256=0de666facb99585772aead48ba4232d82d95862368325157e5c08841bfddfa69 bytes=305 =====
+18:28:41.460945960
+169.57 145.54 110.71 67/7304 898248
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 12.344s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-032.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-033.log sha256=0b00dc126148638b50ec6f0f6178d5c2a9425161d489929d5ee162075698821b bytes=305 =====
+18:28:58.372593535
+168.96 146.57 111.60 70/7179 900952
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.442s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-033.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-034.log sha256=3801ff5e05f337f067fd42b99de605e5089f1d6f15bbac766f501579c3925967 bytes=305 =====
+18:29:13.121075940
+173.27 148.63 112.83 73/7172 903232
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 15.387s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-034.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-035.log sha256=3920a700db2eb8976d05f65f2d5a4ebc683dbf0f1a660ce56a2cf4d2d4022032 bytes=305 =====
+18:29:33.019230217
+182.94 152.34 114.81 80/7476 907431
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 14.121s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-035.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-036.log sha256=30711618eef670fbad7f94768a5954cbd1a210bd3906fc189b067e1191125da7 bytes=305 =====
+18:29:52.451622786
+188.53 155.68 116.72 52/7527 910329
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.399s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-036.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-037.log sha256=9f77e6c2f13c6cf3086a04ec35bdeb51a8ab269525e426235122571204de9c0f bytes=304 =====
+18:30:06.792060973
+189.89 157.59 117.97 62/7529 913397
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.493s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-037.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-038.log sha256=187e8381b40f23edb2e9aab65516d5510d86cfc1115772e2997b7d0cf0365484 bytes=305 =====
+18:30:15.564128276
+191.83 159.07 118.87 64/7453 914713
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 18.902s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-038.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-039.log sha256=b8aa121df42286bb190619f95a5a3e3f9bcffa2f0bec3db6fc0eac3eae01afb5 bytes=304 =====
+18:30:38.915195359
+196.27 162.28 120.79 44/7468 918340
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.603s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-039.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-040.log sha256=bbed2e4884b5538b76874d53dc0555ed8df9586204cd0822c8678cb582c1c752 bytes=305 =====
+18:30:51.372246071
+196.66 164.03 122.03 81/7484 919943
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 12.721s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-040.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-041.log sha256=c596d946e6863b40e122da9b41da36f7a8ffb988af093f3b5ab8bcbae27bf94c bytes=305 =====
+18:31:05.270064210
+193.66 164.99 123.02 76/7212 922001
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.165s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-041.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-042.log sha256=42957187297d2702d2b43fbda35f3f35fb4b6c19e3fc77bf1e4171b2dd3e1a9e bytes=305 =====
+18:31:18.219666725
+195.20 166.27 123.89 71/7344 924434
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 18.868s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-042.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-043.log sha256=f384d39206be9bec35a7627b0a20eff3b890a398f2eedff09379a1f33077d7f4 bytes=305 =====
+18:31:43.153726375
+208.87 171.83 126.85 85/7373 928625
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 22.242s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-043.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-044.log sha256=cc1182c7d44a62027a1ff689a3e4e1f7b02e11c7e944f4c8b42e62424b3e759b bytes=305 =====
+18:32:13.297825468
+227.16 179.85 130.95 84/7347 931840
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 11.901s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-044.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-045.log sha256=5e37368c0b078e8c31ce77c8634d8460eb2e48f91a7808f3eb8c9401dfae5c31 bytes=305 =====
+18:32:26.900456023
+239.94 185.02 133.43 77/7368 933290
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 27.291s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-045.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-046.log sha256=2423af849a974966786f8ec5e00e3d8acf9e60209fe3d12c4dce9f459140a0f2 bytes=305 =====
+18:33:01.712892522
+261.74 196.47 139.17 82/7078 936949
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 30.029s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-046.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-047.log sha256=f5a8a907b042ea708d5e9afe2799e72e353a2769c18779dac0b7c582fa9fada8 bytes=305 =====
+18:33:39.165896649
+253.08 201.77 143.08 59/7101 940121
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 15.004s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-047.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-048.log sha256=5f539e5094cad91374948ee25712b95910e3f4d8cec618d8373969aa94c6044b bytes=305 =====
+18:34:00.307250745
+247.22 204.62 145.59 74/7021 942110
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 10.134s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-048.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-049.log sha256=296ad8d13d9d424357861c35c6cffc5b5553658e33fa40eada301d6c493d53fc bytes=305 =====
+18:34:14.032785190
+244.85 205.51 146.51 53/7049 943462
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 12.462s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-049.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-050.log sha256=8445766243c088ddbe6870cfe0e1234ec5d926ab2ff16e82f1ba0551e4432ab4 bytes=305 =====
+18:34:28.835670018
+242.68 206.93 147.92 82/7079 945367
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 16.042s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50/run-050.log =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50.txt sha256=68b8c408abaaf30d954a197441949050d390402c2d0840a2cd53f753c53a1604 bytes=1942 =====
+run 1 rc=0 owners_left=0 load=124.51
+run 2 rc=0 owners_left=0 load=124.07
+run 3 rc=0 owners_left=0 load=121.88
+run 4 rc=0 owners_left=0 load=120.32
+run 5 rc=0 owners_left=0 load=121.84
+run 6 rc=0 owners_left=0 load=122.95
+run 7 rc=0 owners_left=0 load=125.13
+run 8 rc=0 owners_left=0 load=124.47
+run 9 rc=0 owners_left=0 load=124.91
+run 10 rc=0 owners_left=0 load=124.48
+run 11 rc=0 owners_left=0 load=126.16
+run 12 rc=0 owners_left=0 load=126.13
+run 13 rc=0 owners_left=0 load=127.43
+run 14 rc=0 owners_left=0 load=127.41
+run 15 rc=0 owners_left=0 load=125.20
+run 16 rc=0 owners_left=0 load=125.67
+run 17 rc=0 owners_left=0 load=128.61
+run 18 rc=0 owners_left=0 load=130.42
+run 19 rc=0 owners_left=0 load=135.35
+run 20 rc=0 owners_left=0 load=139.37
+run 21 rc=0 owners_left=0 load=146.18
+run 22 rc=0 owners_left=0 load=150.00
+run 23 rc=0 owners_left=0 load=153.40
+run 24 rc=0 owners_left=0 load=159.41
+run 25 rc=0 owners_left=0 load=162.94
+run 26 rc=0 owners_left=0 load=170.48
+run 27 rc=0 owners_left=0 load=165.49
+run 28 rc=0 owners_left=0 load=162.95
+run 29 rc=0 owners_left=0 load=165.84
+run 30 rc=0 owners_left=0 load=166.40
+run 31 rc=0 owners_left=0 load=169.57
+run 32 rc=0 owners_left=0 load=168.96
+run 33 rc=0 owners_left=0 load=173.27
+run 34 rc=0 owners_left=0 load=182.94
+run 35 rc=0 owners_left=0 load=188.53
+run 36 rc=0 owners_left=0 load=189.89
+run 37 rc=0 owners_left=0 load=191.83
+run 38 rc=0 owners_left=0 load=196.27
+run 39 rc=0 owners_left=0 load=196.66
+run 40 rc=0 owners_left=0 load=193.66
+run 41 rc=0 owners_left=0 load=195.20
+run 42 rc=0 owners_left=0 load=208.87
+run 43 rc=0 owners_left=0 load=227.16
+run 44 rc=0 owners_left=0 load=239.94
+run 45 rc=0 owners_left=0 load=259.45
+run 46 rc=0 owners_left=0 load=253.08
+run 47 rc=0 owners_left=0 load=248.90
+run 48 rc=0 owners_left=0 load=244.85
+run 49 rc=0 owners_left=0 load=242.68
+run 50 rc=0 owners_left=0 load=233.82
+SUMMARY ok=50 bad=0 of 50 burners=12 Python 3.14.7
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe-f-host-x50.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe_f_loop.sh sha256=a3625b2b999aa630ff9bf31fcda61ea074749fcb7fa0f123ae8a7480a4124cac bytes=1062 =====
+#!/usr/bin/env bash
+# Usage: probe_f_loop.sh <worktree> <logdir> <iterations> <burners>
+# Runs Round2SignalTests.test_probe_f_* N times with <burners> CPU busy loops
+# it owns; keeps every per-run log; kills only the burners it started.
+set -u
+W=$1; D=$2; N=$3; B=$4
+mkdir -p "$D"
+pids=()
+for _ in $(seq "$B"); do ( while :; do :; done ) & pids+=($!); done
+trap 'kill "${pids[@]}" 2>/dev/null; wait 2>/dev/null' EXIT
+ok=0; bad=0
+for i in $(seq "$N"); do
+  log="$D/run-$(printf %03d "$i").log"
+  { date +%T.%N; cat /proc/loadavg; } > "$log"
+  (cd "$W" && PYTHONPATH=scripts/harness timeout 300 python3 tools/kpharness_playback_test.py \
+     Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) >> "$log" 2>&1
+  rc=$?
+  if [ $rc -eq 0 ]; then ok=$((ok+1)); else bad=$((bad+1)); echo "FAIL run $i rc=$rc -> $log"; fi
+  left=$(ps -eo pid,args | grep "[k]pharness.playback --serve" | wc -l)
+  echo "run $i rc=$rc owners_left=$left load=$(cut -d' ' -f1 /proc/loadavg)"
+done
+echo "SUMMARY ok=$ok bad=$bad of $N burners=$B $(python3 --version)"
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/probe_f_loop.sh =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/red-container.txt sha256=1bc9c12346e9f95f06159cf33d2e150148f3d18be7689f9be73da0e01751b48a bytes=3363 =====
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ERROR
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... FAIL
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... FAIL
+
+======================================================================
+ERROR: test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 972, in test_control_turns_an_empty_reply_into_a_playback_error
+    self.PB.control(out, {'op': 'status'})
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/scripts/harness/kpharness/playback.py", line 773, in control
+    reply = json.loads(raw)
+            ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+FAIL: test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 934, in test_eviction_during_widened_gap_keeps_the_reply
+    self.assertTrue(raw, f'command ran {self.executed} but the reply was dropped')
+AssertionError: b'' is not true : command ran ['play'] but the reply was dropped
+
+======================================================================
+FAIL: test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/run/media/brunner56/MyBook/Workspaces/KotorPhasor/.worktrees/lua-boundary-validation/tools/kpharness_playback_test.py", line 953, in test_socket_evicted_before_admission_never_runs_the_command
+    self.assertEqual(self.executed, [], 'an evicted connection still ran its command')
+AssertionError: Lists differ: ['play'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'play'
+
+- ['play']
++ [] : an evicted connection still ran its command
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.006s
+
+FAILED (failures=2, errors=1)
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/red-container.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-inproc-widen-after-fix.txt sha256=9f4c9ea57800a22372e4ea00d0990d663abe06d752a361f0cda77916ee97d732 bytes=214 =====
+{
+ "calls": 300,
+ "flooders": 4,
+ "widen": 0.02,
+ "flood_connects": 2574,
+ "evict_calls": 1385,
+ "evict_saw_closed_socket": 0,
+ "failures": 0,
+ "failure_kinds": {},
+ "p50": 0.0226,
+ "p99": 0.4649,
+ "max": 1.1396
+}
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-inproc-widen-after-fix.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-race-probe-after-fix.txt sha256=972b47efcb4a96355a97d957cf0c6b5d90fff1265891110184d18da6bda6cf40 bytes=375 =====
+{"widen": 0.3, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.704, "executed": ["play"]}
+{"widen": 0.05, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.25, "executed": ["play"]}
+{"widen": 0.02, "legit_reply": "{\"ok\": true, \"result\": {\"op\": \"play\"}}\n", "reply_wait": 0.22, "executed": ["play"]}
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/reviewer-race-probe-after-fix.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-container.txt sha256=f267410da76bcf1e471ec0d2a0301e2e08d4b3479823b66d3cad033fb067ba74 bytes=4906 =====
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_idle_flood_keeps_threads_bounded_and_control_working (__main__.Round3AdmissionTests.test_idle_flood_keeps_threads_bounded_and_control_working) ... ok
+test_trickling_client_is_dropped_by_total_deadline (__main__.Round3AdmissionTests.test_trickling_client_is_dropped_by_total_deadline) ... ok
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ok
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... ok
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 124.741s
+
+OK
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-container.txt =====
+
+
+===== BEGIN .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-host.txt sha256=cbc22187bbed421644a3751beeb701e859c0fe0aac8e869be063716b46404afa bytes=4925 =====
+Python 3.14.7
+test_owner_is_not_a_child_of_the_caller (__main__.Round2CleanupTests.test_owner_is_not_a_child_of_the_caller) ... ok
+test_probe_g_unwritable_journal_exits_owner (__main__.Round2CleanupTests.test_probe_g_unwritable_journal_exits_owner) ... ok
+test_probe_h_idle_connection_does_not_block_status (__main__.Round2CleanupTests.test_probe_h_idle_connection_does_not_block_status) ... ok
+test_probe_k_tampered_descriptor_mode_still_detaches (__main__.Round2CleanupTests.test_probe_k_tampered_descriptor_mode_still_detaches) ... ok
+test_cli_reclaim_after_sigkill (__main__.Round2CliTests.test_cli_reclaim_after_sigkill) ... ok
+test_exec_refused_while_owner_holds_engine (__main__.Round2CliTests.test_exec_refused_while_owner_holds_engine) ... ok
+test_exec_without_owner_still_works (__main__.Round2CliTests.test_exec_without_owner_still_works) ... ok
+test_probe_a_readback_mismatch_restores_prior_engine_speed (__main__.Round2RestoreTests.test_probe_a_readback_mismatch_restores_prior_engine_speed) ... ok
+test_probe_b_route_edit_does_not_block_stop (__main__.Round2RestoreTests.test_probe_b_route_edit_does_not_block_stop) ... ok
+test_probe_c_route_edit_mid_job_still_restores_speed (__main__.Round2RestoreTests.test_probe_c_route_edit_mid_job_still_restores_speed) ... ok
+test_probe_d_sigterm_behaves_like_stop (__main__.Round2SignalTests.test_probe_d_sigterm_behaves_like_stop) ... ok
+test_probe_f_sigkill_then_reclaim_restores_recorded_speed (__main__.Round2SignalTests.test_probe_f_sigkill_then_reclaim_restores_recorded_speed) ... ok
+test_reclaim_never_restores_on_a_different_game_process (__main__.Round2SignalTests.test_reclaim_never_restores_on_a_different_game_process) ... ok
+test_reclaim_refused_while_owner_alive (__main__.Round2SignalTests.test_reclaim_refused_while_owner_alive) ... ok
+test_sighup_behaves_like_stop (__main__.Round2SignalTests.test_sighup_behaves_like_stop) ... ok
+test_idle_flood_keeps_threads_bounded_and_control_working (__main__.Round3AdmissionTests.test_idle_flood_keeps_threads_bounded_and_control_working) ... ok
+test_trickling_client_is_dropped_by_total_deadline (__main__.Round3AdmissionTests.test_trickling_client_is_dropped_by_total_deadline) ... ok
+test_control_turns_an_empty_reply_into_a_playback_error (__main__.Round4ReadEvictTests.test_control_turns_an_empty_reply_into_a_playback_error) ... ok
+test_eviction_during_widened_gap_keeps_the_reply (__main__.Round4ReadEvictTests.test_eviction_during_widened_gap_keeps_the_reply) ... ok
+test_socket_evicted_before_admission_never_runs_the_command (__main__.Round4ReadEvictTests.test_socket_evicted_before_admission_never_runs_the_command) ... ok
+test_cli_play_status_stop_end_to_end (__main__.Stage0CliTests.test_cli_play_status_stop_end_to_end) ... ok
+test_cli_step_commit_route_through_owner (__main__.Stage0CliTests.test_cli_step_commit_route_through_owner) ... ok
+test_cli_step_without_owner_takes_engine_guard (__main__.Stage0CliTests.test_cli_step_without_owner_takes_engine_guard) ... ok
+test_engine_lock_lives_in_private_state_dir (__main__.Stage0PlaybackTests.test_engine_lock_lives_in_private_state_dir) ... ok
+test_failed_step_is_not_retried (__main__.Stage0PlaybackTests.test_failed_step_is_not_retried) ... ok
+test_invalid_arguments_rejected_before_mutation (__main__.Stage0PlaybackTests.test_invalid_arguments_rejected_before_mutation) ... ok
+test_one_engine_connection_and_ordered_steps (__main__.Stage0PlaybackTests.test_one_engine_connection_and_ordered_steps) ... ok
+test_second_owner_for_other_route_is_refused (__main__.Stage0PlaybackTests.test_second_owner_for_other_route_is_refused) ... ok
+test_speed_restored_after_failed_step (__main__.Stage0PlaybackTests.test_speed_restored_after_failed_step) ... ok
+test_stale_descriptor_rejected_without_spawning (__main__.Stage0PlaybackTests.test_stale_descriptor_rejected_without_spawning) ... ok
+test_status_during_wait_then_stop_is_clean_execution_stop (__main__.Stage0PlaybackTests.test_status_during_wait_then_stop_is_clean_execution_stop) ... ok
+test_step_and_commit_route_through_attached_owner (__main__.Stage0PlaybackTests.test_step_and_commit_route_through_attached_owner) ... ok
+test_acknowledged_but_not_applied_speed_is_not_published (__main__.Stage5SpeedTests.test_acknowledged_but_not_applied_speed_is_not_published) ... ok
+test_explicit_speed_step_keeps_its_setting (__main__.Stage5SpeedTests.test_explicit_speed_step_keeps_its_setting) ... ok
+test_fastforward_reads_back_before_publishing_and_restores (__main__.Stage5SpeedTests.test_fastforward_reads_back_before_publishing_and_restores) ... ok
+test_speed_bounds_accept_upper_edge (__main__.Stage5SpeedTests.test_speed_bounds_accept_upper_edge) ... ok
+test_speed_restored_after_stop_during_fastforward (__main__.Stage5SpeedTests.test_speed_restored_after_stop_during_fastforward) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 129.713s
+
+OK
+rc=0
+
+===== END .superpowers/sdd/lua-boundary-validation-plan/pioneer-round4-logs/suite-host.txt =====

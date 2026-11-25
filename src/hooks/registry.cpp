@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
+#include <climits>
 #include <utility>
 #include <unordered_set>
 
@@ -86,6 +88,31 @@ public:
         }
         return true;
     }
+
+    // Incremental access for documents too large to hold as one DOM (a hook
+    // manifest is tens of megabytes): the caller walks the top-level object
+    // and pulls one array element at a time.
+    bool accept(char c) {
+        skip_ws();
+        if (i_ < s_.size() && s_[i_] == c) { ++i_; return true; }
+        return false;
+    }
+    bool key(std::string& out, std::string& error) {
+        skip_ws();
+        if (i_ >= s_.size() || s_[i_] != '"') { error = fail("expected a member name"); return false; }
+        if (!string(out, error)) return false;
+        if (!accept(':')) { error = fail("expected ':'"); return false; }
+        return true;
+    }
+    bool next_value(JValue& out, std::string& error) {
+        skip_ws();
+        return value(out, error);
+    }
+    bool at_end() {
+        skip_ws();
+        return i_ == s_.size();
+    }
+    std::string where(const char* what) const { return fail(what); }
 
 private:
     std::string_view s_;
@@ -236,6 +263,63 @@ bool as_bool(const JValue* v, bool fallback = false) {
     return (v && v->type == JType::Bool) ? v->boolean : fallback;
 }
 
+int as_int(const JValue* v) {
+    return v && v->type == JType::Number && std::isfinite(v->number) &&
+           v->number >= 0 && v->number <= INT_MAX && std::floor(v->number) == v->number
+               ? static_cast<int>(v->number) : -1;
+}
+
+void manifest_abi(const JValue& f, HookAbi& a) {
+    if (const auto* v = f.member("abi")) {
+        a.convention = as_string(v->member("convention"));
+        a.confidence = as_string(v->member("abi_confidence"));
+        a.stack_bytes = as_int(v->member("stack_arg_bytes"));
+        a.variadic = as_bool(v->member("variadic"), true);
+        a.struct_return = as_bool(v->member("struct_return"), true);
+        if (const auto* c = v->member("cleanup")) {
+            a.cleanup_by = as_string(c->member("by"));
+            a.ret_pop = as_int(c->member("ret_imm16"));
+        }
+        if (const auto* r = v->member("ret")) {
+            a.ret_storage = as_string(r->member("storage"));
+            a.ret_type = as_string(r->member("c_type"));
+            a.ret_lua = as_string(r->member("lua"));
+        }
+        if (const auto* t = v->member("this"))
+            if (const auto* s = t->member("storage")) a.this_reg = as_string(s->member("reg"));
+        if (const auto* p = v->member("params"); p && p->type == JType::Array) {
+            for (const auto& row : p->array) {
+                AbiParam param;
+                param.index = as_int(row.member("i"));
+                param.size = as_int(row.member("size"));
+                param.c_type = as_string(row.member("c_type"));
+                param.lua = as_string(row.member("lua"));
+                if (const auto* s = row.member("storage")) {
+                    param.stack = as_int(s->member("stack"));
+                    param.reg = as_string(s->member("reg"));
+                }
+                a.params.push_back(std::move(param));
+            }
+        }
+        if (const auto* e = v->member("evidence"))
+            if (const auto* r = e->member("ret_imm_observed"); r && r->type == JType::Array)
+                for (const auto& n : r->array) a.observed_ret.push_back(as_int(&n));
+    }
+    if (const auto* h = f.member("hook")) {
+        a.hook_safe = as_string(h->member("safe"));
+        a.engine_accept = as_bool(h->member("kp_engine_would_accept"));
+        a.stolen_len = as_int(h->member("stolen_len"));
+    }
+    if (const auto* l = f.member("lua")) {
+        a.lua_event = as_string(l->member("event"));
+        a.pre = as_bool(l->member("pre")); a.post = as_bool(l->member("post"));
+        a.rewrite = as_bool(l->member("can_rewrite_args"));
+        a.override_return = as_bool(l->member("can_override_return"));
+        a.skip = as_bool(l->member("can_skip_original"));
+    }
+    if (const auto* c = f.member("callable")) a.thread = as_string(c->member("thread"));
+}
+
 bool parse_hex_bytes(std::string_view hex, std::vector<std::uint8_t>& out) {
     out.clear();
     for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
@@ -276,6 +360,116 @@ const JValue* pick_instance(const JValue& entry, const std::string& slug) {
         return nullptr;
     }
     return &inst->array[0];
+}
+
+// hookmanifest/v1 `locate.primary.pattern` ("6a ff 68 ?? ?? ?? ??") plus its
+// per-byte hex `mask` ("ffffff00000000"). Both must agree on length, every
+// wildcard in the text must be a zero mask byte, the first byte must be
+// concrete and at least half the bytes concrete -- SPEC §3.3's validity rule,
+// re-checked here because a pattern that passes it at generation time but not
+// here is a corrupted manifest, and a corrupted locator must not bind.
+bool parse_masked_pattern(std::string_view text, std::string_view mask_hex,
+                          std::vector<std::uint8_t>& value,
+                          std::vector<std::uint8_t>& mask) {
+    value.clear();
+    mask.clear();
+    std::vector<bool> wild;
+    std::size_t i = 0;
+    auto nib = [](char ch) -> int {
+        if (ch >= '0' && ch <= '9') return ch - '0';
+        if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
+        if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
+        return -1;
+    };
+    while (i < text.size()) {
+        const char c = text[i];
+        if (c == ' ' || c == '\t') { ++i; continue; }
+        if (i + 1 >= text.size()) return false;
+        if (c == '?' && text[i + 1] == '?') {
+            value.push_back(0);
+            wild.push_back(true);
+        } else {
+            const int hi = nib(c), lo = nib(text[i + 1]);
+            if (hi < 0 || lo < 0) return false;
+            value.push_back(static_cast<std::uint8_t>((hi << 4) | lo));
+            wild.push_back(false);
+        }
+        i += 2;
+    }
+    if (value.empty()) return false;
+    if (!parse_hex_bytes(mask_hex, mask) || mask.size() != value.size()) return false;
+    std::size_t concrete = 0;
+    for (std::size_t k = 0; k < value.size(); ++k) {
+        if (mask[k] != 0x00 && mask[k] != 0xFF) return false;
+        if (wild[k] != (mask[k] == 0x00)) return false;
+        if (mask[k] == 0xFF) ++concrete;
+    }
+    if (mask[0] != 0xFF) return false;
+    if (concrete * 2 < value.size()) return false;
+    return true;
+}
+
+// One element of hookmanifest/v1 `functions[]` -> one Site. Never reads
+// `entry_va`, `entry_rva`, `file_offset` or a `va_hint` fallback: in a
+// manifest table the address is an output of the scan, not an input.
+void manifest_function_to_site(const JValue& f, Site& s) {
+    manifest_abi(f, s.abi);
+    const std::string kp_site = as_string(f.member("kp_site"));
+    s.name = !kp_site.empty() ? kp_site : as_string(f.member("id"));
+    s.adapter_key = as_string(f.member("adapter_key"));
+    if (const JValue* aliases = f.member("kp_site_aliases"); aliases && aliases->type == JType::Array) {
+        for (const JValue& alias : aliases->array) {
+            if (alias.type == JType::String && !alias.str.empty()) s.aliases.push_back(alias.str);
+        }
+    }
+    s.cls = as_string(f.member("cls"));
+    s.method = as_string(f.member("method"));
+
+    // SPEC §5: callable.safe -> call, else reference. Detour comes only from
+    // the KP overlay, and never for a statically refused prologue.
+    s.kind = SiteKind::Reference;
+    if (const JValue* callable = f.member("callable"); callable && as_bool(callable->member("safe")))
+        s.kind = SiteKind::Call;
+    if (const JValue* hook = f.member("hook"))
+        s.hook_refused = as_string(hook->member("safe")) == "refuse";
+    if (const JValue* conf = f.member("confidence")) {
+        if (const JValue* overall = conf->member("overall"); overall && overall->type == JType::Number)
+            s.confidence = overall->number;
+    }
+
+    s.addr = 0;
+    s.resolved = false;
+    const JValue* locate = f.member("locate");
+    if (locate == nullptr) {
+        s.locate_error = "no_locator";
+        return;
+    }
+    // Unique-in-image expected bytes: the generator proved them unique over
+    // the reference image (unmasked_count == 1); the loader re-proves it at
+    // runtime. They also serve as the detour's prologue check.
+    const JValue* unmasked = locate->member("expected_bytes_unmasked_count");
+    const bool expected_unique = unmasked && unmasked->type == JType::Number && unmasked->number == 1.0;
+    if (const JValue* e = locate->member("expected_bytes"); e && e->type == JType::String)
+        parse_hex_bytes(e->str, s.expected);
+
+    if (const JValue* primary = locate->member("primary"); primary && primary->type == JType::Object) {
+        const JValue* anchor_off = primary->member("offset");
+        const bool at_entry = as_string(primary->member("anchor")) == "entry" &&
+                              (anchor_off == nullptr || (anchor_off->type == JType::Number && anchor_off->number == 0.0));
+        if (at_entry &&
+            parse_masked_pattern(as_string(primary->member("pattern")), as_string(primary->member("mask")),
+                                 s.pattern, s.pattern_mask)) {
+            return;
+        }
+        s.pattern.clear();
+        s.pattern_mask.clear();
+    }
+    if (expected_unique && !s.expected.empty()) {
+        s.pattern = s.expected;
+        s.pattern_mask.assign(s.expected.size(), 0xFF);
+        return;
+    }
+    s.locate_error = "no_locator";
 }
 
 }  // namespace
@@ -517,16 +711,137 @@ bool AddressTable::load_hookpack(const std::string& pack_path,
     return true;
 }
 
+bool AddressTable::parse_manifest(std::string_view json, const std::string& build_slug,
+                                  AddressTable& out, std::string& error) {
+    out = AddressTable{};
+    out.scan_only_ = true;
+    JParser p(json);
+    if (!p.accept('{')) { error = p.where("manifest is not a JSON object"); return false; }
+
+    bool saw_format = false;
+    bool saw_program = false;
+    bool saw_functions = false;
+    std::size_t ordinal_collisions = 0;
+    if (!p.accept('}')) {
+        for (;;) {
+            std::string key;
+            if (!p.key(key, error)) return false;
+            if (key == "functions") {
+                // Streamed: one function's DOM at a time.
+                if (!p.accept('[')) { error = p.where("\"functions\" is not an array"); return false; }
+                saw_functions = true;
+                if (!p.accept(']')) {
+                    for (;;) {
+                        JValue f;
+                        if (!p.next_value(f, error)) return false;
+                        if (f.type == JType::Object) {
+                            Site s;
+                            manifest_function_to_site(f, s);
+                            if (!s.name.empty()) {
+                                // Overloads share an id. A name must select one
+                                // site, so later twins get an ordinal suffix and
+                                // the bare name stays with the first.
+                                if (out.find(s.name) != nullptr) {
+                                    const std::string base = s.name;
+                                    for (unsigned n = 2;; ++n) {
+                                        s.name = base + "#" + std::to_string(n);
+                                        if (out.find(s.name) == nullptr) break;
+                                    }
+                                    ++ordinal_collisions;
+                                }
+                                out.sites_.push_back(std::move(s));
+                            }
+                        }
+                        if (p.accept(',')) continue;
+                        if (p.accept(']')) break;
+                        error = p.where("expected ',' or ']' in \"functions\"");
+                        return false;
+                    }
+                }
+            } else {
+                JValue v;
+                if (!p.next_value(v, error)) return false;
+                if (key == "format") {
+                    if (as_string(&v) != "agentdecompile.hookmanifest/v1") {
+                        error = "not an agentdecompile.hookmanifest/v1 document";
+                        return false;
+                    }
+                    saw_format = true;
+                } else if (key == "program" && v.type == JType::Object) {
+                    saw_program = true;
+                    const std::string slug = as_string(v.member("slug"));
+                    if (!build_slug.empty() && slug != build_slug) {
+                        error = "manifest is for build " + slug + ", not " + build_slug;
+                        return false;
+                    }
+                    out.build_ = slug;
+                    out.game_ = as_string(v.member("game"));
+                    out.platform_ = as_string(v.member("platform"));
+                    out.sha256_ = as_string(v.member("sha256"));
+                    if (const JValue* ib = v.member("image_base"); ib && ib->type == JType::Number)
+                        out.image_base_ = static_cast<std::uintptr_t>(ib->number);
+                    const std::string arch = as_string(v.member("arch"));
+                    if (!arch.empty() && arch != "x86") {
+                        error = "manifest arch " + arch + " is not supported by this loader";
+                        return false;
+                    }
+                }
+            }
+            if (p.accept(',')) continue;
+            if (p.accept('}')) break;
+            error = p.where("expected ',' or '}'");
+            return false;
+        }
+    }
+    if (!p.at_end()) { error = p.where("trailing content after the top-level value"); return false; }
+    if (!saw_format) { error = "manifest has no \"format\""; return false; }
+    if (!saw_program) { error = "manifest has no \"program\""; return false; }
+    if (!saw_functions) { error = "manifest has no \"functions\" array"; return false; }
+    if (ordinal_collisions != 0) {
+        platform::log(platform::LogLevel::Info, "hook manifest %s: %zu overloaded id(s) suffixed #n",
+                      out.build_.c_str(), ordinal_collisions);
+    }
+    return true;
+}
+
+bool AddressTable::load_manifest(const std::string& manifest_path,
+                                 const std::string& build_slug,
+                                 const std::string& overlay_path,
+                                 AddressTable& out,
+                                 std::string& error) {
+    std::string text;
+    if (!read_file_text(manifest_path, text, error)) return false;
+    if (!parse_manifest(text, build_slug, out, error)) {
+        error = manifest_path + ": " + error;
+        return false;
+    }
+    if (overlay_path.empty()) return true;
+    AddressTable overlay;
+    if (!load_file(overlay_path, overlay, error)) return false;
+    out.merge_overlay(overlay);
+    return true;
+}
+
 void AddressTable::merge_overlay(const AddressTable& overlay) {
     for (Site& s : sites_) {
         const Site* o = overlay.find(s.name);
         if (o == nullptr) continue;
         if (!o->expected.empty()) s.expected = o->expected;
-        if (o->kind != SiteKind::Unknown) s.kind = o->kind;
+        if (o->kind != SiteKind::Unknown && !(o->kind == SiteKind::Detour && s.hook_refused))
+            s.kind = o->kind;
         if (o->required) s.required = true;
-        if (s.addr == 0 && o->addr != 0) {
+        // A manifest table binds code by scan only; an overlay address would
+        // be exactly the hard-coded VA this mode exists to remove.
+        if (s.addr == 0 && o->addr != 0 && (!scan_only_ || s.kind == SiteKind::Field)) {
             s.addr = o->addr;
             s.resolved = true;
+        }
+        // An overlay row with bytes rescues a manifest site that had no
+        // locator: its expected_bytes become an exact, unique-or-refuse scan.
+        if (scan_only_ && s.pattern.empty() && !s.expected.empty() && s.kind != SiteKind::Field) {
+            s.pattern = s.expected;
+            s.pattern_mask.assign(s.expected.size(), 0xFF);
+            s.locate_error.clear();
         }
         if (s.cls.empty()) s.cls = o->cls;
         if (s.method.empty()) s.method = o->method;
@@ -538,7 +853,19 @@ void AddressTable::merge_overlay(const AddressTable& overlay) {
         }
     }
     for (const Site& o : overlay.sites()) {
-        if (find(o.name) == nullptr) sites_.push_back(o);
+        if (find(o.name) != nullptr) continue;
+        Site added = o;
+        if (scan_only_ && added.kind != SiteKind::Field) {
+            added.addr = 0;
+            added.resolved = false;
+            if (!added.expected.empty()) {
+                added.pattern = added.expected;
+                added.pattern_mask.assign(added.expected.size(), 0xFF);
+            } else {
+                added.locate_error = "no_locator";
+            }
+        }
+        sites_.push_back(std::move(added));
     }
     if (image_base_ == 0) image_base_ = overlay.image_base();
     if (sha256_.empty()) sha256_ = overlay.expected_sha256();
@@ -573,11 +900,54 @@ void AddressTable::resolve_from_signatures(std::uintptr_t runtime_base) {
     const std::uintptr_t live = (runtime_base == 0) ? image_base_ : runtime_base;
     const std::intptr_t delta = static_cast<std::intptr_t>(live - image_base_);
 
+    // Masked sites first, all in one pass. No VA hint: a pattern site binds on
+    // exactly one hit or not at all, and a site that bound before is cleared
+    // first so a rescan can never keep a stale address.
+    std::vector<api::memory::MaskedPattern> batch;
+    std::vector<Site*> batch_sites;
     for (Site& s : sites_) {
+        if (s.kind == SiteKind::Field || s.pattern.empty()) continue;
+        s.resolved = false;
         s.bound_from_scan = false;
+        s.bound_from_pattern = false;
+        s.addr = 0;
+        s.locate_error.clear();
+        if (s.pattern_mask.size() != s.pattern.size()) {
+            s.locate_error = "no_locator";
+            continue;
+        }
+        batch.push_back({s.pattern.data(), s.pattern_mask.data(), s.pattern.size()});
+        batch_sites.push_back(&s);
+    }
+    if (!batch.empty()) {
+        const std::vector<api::memory::MaskedHit> hits = api::memory::scan_masked(batch);
+        for (std::size_t k = 0; k < batch_sites.size(); ++k) {
+            Site& s = *batch_sites[k];
+            if (hits[k].count == 0) { s.locate_error = "missing"; continue; }
+            if (hits[k].count > 1)  { s.locate_error = "ambiguous"; continue; }
+            const std::uintptr_t hit = hits[k].first;
+            // expected_bytes stay the detour's prologue check at install time;
+            // they are not re-applied here, so a reference/call site keeps
+            // binding when only masked operands (relocated targets) differ.
+            s.addr = static_cast<std::uintptr_t>(static_cast<std::intptr_t>(hit) - delta);
+            s.resolved = s.addr != 0;
+            s.bound_from_scan = s.resolved;
+            s.bound_from_pattern = s.resolved;
+        }
+    }
+
+    for (Site& s : sites_) {
         // A field has no bytes of its own; its resolution is the offset it
         // carries. Scanning would only ever clear it.
         if (s.kind == SiteKind::Field) continue;
+        if (!s.pattern.empty()) continue;   // handled by the masked pass
+        s.bound_from_scan = false;
+        if (scan_only_) {
+            s.resolved = false;
+            s.addr = 0;
+            if (s.locate_error.empty()) s.locate_error = "no_locator";
+            continue;
+        }
         if (s.expected.empty()) continue;
 
         const std::uintptr_t hint = (s.addr == 0) ? 0

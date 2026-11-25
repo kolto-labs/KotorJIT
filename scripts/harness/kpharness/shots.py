@@ -58,7 +58,7 @@ class Shooter:
     """Takes a frame every `interval` seconds when polled, and on demand."""
 
     def __init__(self, channel: Channel, game_dir: Path, run_dir: Path, *,
-                 interval: float = 120.0, log=None, rel_dir: str = "kotorphasor/shots"):
+                 interval: float = 120.0, log=None, rel_dir: str = "scriptforge/shots"):
         self.channel = channel
         self.game_dir = Path(game_dir)
         self.run_dir = Path(run_dir)

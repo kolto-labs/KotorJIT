@@ -1,4 +1,5 @@
 #include "devtools/console.hpp"
+#include "platform/naming.hpp"
 // The five phases, in the order runtime.hpp declares them.
 //
 // Every phase either advances or fails, and a failure leaves the game exactly
@@ -13,6 +14,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <sys/stat.h>
 #include <cstring>
 #include <string>
 #include <string_view>
@@ -21,7 +23,11 @@
 
 #include "events/contract.hpp"
 #include "events/table.hpp"
+#include "generated/embedded_addresses.inc"
 #include "hooks/registry.hpp"
+#if defined(__i386__)
+#include "hooks/lua_bridge.hpp"
+#endif
 #include "image/image.hpp"
 #include "image/sha256.hpp"
 #include "api/enginestruct.hpp"
@@ -153,19 +159,19 @@ std::string resolve_against(const std::string& base, const std::string& value) {
     return join(base, value);
 }
 
-// KOTORPHASOR_HARNESS_PORT wins over the ini, and it has to win whether or
+// SCRIPTFORGE_HARNESS_PORT wins over the ini, and it has to win whether or
 // not the ini exists: it is how a build directory is driven without staging
 // a file next to the game. Applied on both exits from from_game_dir.
 void apply_harness_env(Config& c) {
-    const char* port = std::getenv("KOTORPHASOR_HARNESS_PORT");
+    const char* port = kp::naming::env("HARNESS_PORT");
     if (port != nullptr && *port != '\0')
         c.harness_port = static_cast<unsigned>(std::strtoul(port, nullptr, 10));
 }
 
 void apply_multiplayer_env(Config& c) {
-    if (const char* host = std::getenv("KOTORPHASOR_MULTIPLAYER_HOST"); host != nullptr && *host != '\0')
+    if (const char* host = kp::naming::env("MULTIPLAYER_HOST"); host != nullptr && *host != '\0')
         c.multiplayer_host = host;
-    if (const char* port = std::getenv("KOTORPHASOR_MULTIPLAYER_PORT"); port != nullptr && *port != '\0')
+    if (const char* port = kp::naming::env("MULTIPLAYER_PORT"); port != nullptr && *port != '\0')
         c.multiplayer_port = static_cast<unsigned>(std::strtoul(port, nullptr, 10));
 }
 
@@ -257,7 +263,7 @@ std::string self_module_path() {
     return n > 0 ? std::string(buf, n) : std::string();
 #elif defined(__APPLE__)
     // The GAME executable, not this dylib: the runtime derives game_dir,
-    // script dir and log path from it. When KotorPhasor is loaded through
+    // script dir and log path from it. When ScriptForge is loaded through
     // DYLD_INSERT_LIBRARIES, _NSGetExecutablePath still names the host
     // executable (KOTOR_Exe / KOTOR2sub), which is what we want. The path it
     // returns may be non-canonical (symlinks, .. segments); realpath resolves
@@ -283,15 +289,34 @@ const events::EventContract* find_contract(std::string_view lua_name) {
     return events::find(lua_name);
 }
 
+static bool is_directory(const std::string& path) {
+    struct stat st {};
+    return ::stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
+// A Config built by hand (not through from_game_dir) has no data_dir; fall
+// back to the current folder name under game_dir rather than the process cwd.
+static std::string data_dir_of(const Config& cfg) {
+    return cfg.data_dir.empty() ? join(cfg.game_dir, naming::kDataDir) : cfg.data_dir;
+}
+
 // ---------------------------------------------------------------- Config ----
 
 Config Config::from_game_dir(const std::string& game_dir) {
     Config c;
     c.game_dir = game_dir;
-    c.script_dir = join(join(game_dir, "kotorphasor"), "scripts");
-    c.log_path = join(game_dir, "kotorphasor.log");
+    // Current folder name first; an install made under the old name keeps
+    // working untouched. Only when the current folder is absent and the legacy
+    // one is present does the legacy one win -- a fresh install gets the new
+    // name even though neither exists yet.
+    const std::string current = join(game_dir, naming::kDataDir);
+    const std::string legacy = join(game_dir, naming::kLegacyDataDir);
+    c.data_dir = (!is_directory(current) && is_directory(legacy)) ? legacy : current;
+    c.script_dir = join(c.data_dir, "scripts");
+    c.log_path = join(game_dir, naming::kLogName);
 
-    std::FILE* f = std::fopen(join(game_dir, "kotorphasor.ini").c_str(), "rb");
+    std::FILE* f = std::fopen(join(game_dir, naming::kIniName).c_str(), "rb");
+    if (f == nullptr) f = std::fopen(join(game_dir, naming::kLegacyIniName).c_str(), "rb");
     apply_harness_env(c);
     apply_multiplayer_env(c);
     if (f == nullptr) return c;   // optional, and its absence is not a problem
@@ -369,7 +394,7 @@ void Runtime::log(const char* fmt, ...) {
     body[n] = '\0';
 
     while (g_log_lock.test_and_set(std::memory_order_acquire)) {}
-    std::FILE* f = std::fopen(log_path_.empty() ? "kotorphasor.log" : log_path_.c_str(), "ab");
+    std::FILE* f = std::fopen(log_path_.empty() ? "scriptforge.log" : log_path_.c_str(), "ab");
     if (f != nullptr) {
         std::fprintf(f, "[%s] %s\n", to_string(phase_), body);
         std::fclose(f);
@@ -474,68 +499,122 @@ bool Runtime::resolve(const Config& cfg) {
         return false;
     }
 
-    // Hook pack first (logical sites + per-build instance cache), then the
-    // optional per-build overlay for expected_bytes / kind / required.
-    // Address JSON alone still works when no pack is staged.
+    // Hook manifest first (masked patterns, scan-only: no VA is trusted), then
+    // hook pack (logical sites + per-build instance cache), then the optional
+    // per-build overlay for expected_bytes / kind / required. Address JSON
+    // alone still works when neither is staged.
+    std::vector<std::string> manifest_candidates;
+    manifest_candidates.push_back(join(data_dir_of(cfg), "hookmanifest.json"));
+    if (const char* m = kp::naming::env("HOOKMANIFEST"); m != nullptr && *m != '\0')
+        manifest_candidates.insert(manifest_candidates.begin(), m);
+    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
+        manifest_candidates.push_back(join(dir, "hookmanifest.json"));
+
     std::vector<std::string> pack_candidates;
-    pack_candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), "hookpack.json"));
-    if (const char* pack = std::getenv("KOTORPHASOR_HOOKPACK"); pack != nullptr && *pack != '\0')
+    pack_candidates.push_back(join(data_dir_of(cfg), "hookpack.json"));
+    if (const char* pack = kp::naming::env("HOOKPACK"); pack != nullptr && *pack != '\0')
         pack_candidates.insert(pack_candidates.begin(), pack);
-    if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
+    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
         pack_candidates.push_back(join(dir, "hookpack.json"));
 
     std::vector<std::string> candidates;
-    candidates.push_back(join(join(join(cfg.game_dir, "kotorphasor"), "addresses"), build_ + ".json"));
-    candidates.push_back(join(join(cfg.game_dir, "kotorphasor"), build_ + ".json"));
-    if (const char* dir = std::getenv("KOTORPHASOR_ADDRESSES"); dir != nullptr && *dir != '\0')
+    candidates.push_back(join(join(data_dir_of(cfg), "addresses"), build_ + ".json"));
+    candidates.push_back(join(data_dir_of(cfg), build_ + ".json"));
+    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
         candidates.push_back(join(dir, build_ + ".json"));
 
+    std::string manifest;
+    for (const std::string& p : manifest_candidates) {
+        if (file_exists(p)) { manifest = p; break; }
+    }
     std::string pack;
-    for (const std::string& p : pack_candidates) {
-        if (file_exists(p)) { pack = p; break; }
+    if (manifest.empty()) {
+        for (const std::string& p : pack_candidates) {
+            if (file_exists(p)) { pack = p; break; }
+        }
     }
     std::string chosen;
     for (const std::string& p : candidates) {
         if (file_exists(p)) { chosen = p; break; }
     }
-    if (pack.empty() && chosen.empty()) {
-        failure_ = "no hook pack or address table for build \"" + build_ + "\"; looked in";
-        for (const std::string& p : pack_candidates) failure_ += " " + p;
-        for (const std::string& p : candidates) failure_ += " " + p;
-        return false;
+    std::string_view embedded;
+    if (manifest.empty() && pack.empty() && chosen.empty()) {
+        embedded = kp::generated::find_embedded_address_table(build_);
+        if (embedded.empty()) {
+            failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
+            for (const std::string& p : manifest_candidates) failure_ += " " + p;
+            for (const std::string& p : pack_candidates) failure_ += " " + p;
+            for (const std::string& p : candidates) failure_ += " " + p;
+            failure_ += " (and no embedded table)";
+            return false;
+        }
     }
 
     auto table = std::make_unique<hooks::AddressTable>();
     std::string error;
-    if (!pack.empty()) {
+    if (!manifest.empty()) {
+        if (!hooks::AddressTable::load_manifest(manifest, build_, chosen, *table, error)) {
+            failure_ = "hook manifest " + manifest + ": " + error;
+            return false;
+        }
+        if (!table->expected_sha256().empty() && table->expected_sha256() != image_sha256_) {
+            log("hook manifest %s was generated from sha256 %s; this image is %s -- "
+                "binding by pattern only, ambiguous or missing sites refuse",
+                manifest.c_str(), table->expected_sha256().c_str(), image_sha256_.c_str());
+        }
+    } else if (!pack.empty()) {
         if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
             failure_ = "hook pack " + pack + ": " + error;
             return false;
         }
-    } else if (!hooks::AddressTable::load_file(chosen, *table, error)) {
-        failure_ = "address table " + chosen + ": " + error;
+    } else if (!chosen.empty()) {
+        if (!hooks::AddressTable::load_file(chosen, *table, error)) {
+            failure_ = "address table " + chosen + ": " + error;
+            return false;
+        }
+    } else if (!hooks::AddressTable::parse(embedded, *table, error)) {
+        failure_ = "embedded address table for " + build_ + ": " + error;
         return false;
     }
 
     table->resolve_from_signatures(runtime_base_);
     std::size_t bound = 0;
+    std::size_t missing_pattern = 0;
+    std::size_t ambiguous_pattern = 0;
     for (const hooks::Site& s : table->sites()) {
         if (s.resolved) ++bound;
-        if (s.bound_from_scan) {
+        if (s.locate_error == "missing") ++missing_pattern;
+        if (s.locate_error == "ambiguous") ++ambiguous_pattern;
+        if (s.bound_from_scan && !table->scan_only()) {
             log("signature resolve: %s bound from scan (hint stale or missing)", s.name.c_str());
         }
     }
     log("signature resolve: %zu/%zu sites bound (VA is a hint)", bound, table->sites().size());
+    if (table->scan_only()) {
+        log("pattern resolve: %zu missing, %zu ambiguous (refused, left unbound)",
+            missing_pattern, ambiguous_pattern);
+    }
 
+    const std::string source = !manifest.empty()
+        ? manifest
+        : (!pack.empty() ? pack : (!chosen.empty() ? chosen : ("embedded:" + build_)));
+    const std::string err_source = !manifest.empty()
+        ? ("hook manifest " + manifest)
+        : (!pack.empty() ? ("hook pack " + pack)
+                         : (!chosen.empty() ? ("address table " + chosen)
+                                            : ("embedded address table for " + build_)));
     const std::vector<std::string> missing = table->unresolved_required();
     if (!missing.empty()) {
-        failure_ = "address table " + chosen + " leaves required sites unresolved:";
-        for (const std::string& m : missing) failure_ += " " + m;
+        failure_ = err_source + " leaves required sites unresolved:";
+        for (const std::string& m : missing) {
+            failure_ += " " + m;
+            if (const hooks::Site* s = table->find(m); s != nullptr && !s->locate_error.empty())
+                failure_ += "(" + s->locate_error + ")";
+        }
         return false;
     }
 
     table_ = std::move(table);
-    const std::string& source = pack.empty() ? chosen : pack;
     log("address table: %s (%zu sites, build %s, %s)", source.c_str(), table_->sites().size(),
         table_->build().c_str(), table_->platform_name().c_str());
 
@@ -826,12 +905,39 @@ bool Runtime::install(bool multiplayer_enabled) {
 }
 
 bool Runtime::boot_scripts(const Config& cfg) {
+#if defined(__i386__)
+    hooks::lua_bridge::bind(table_.get(), runtime_base_,
+        +[] { return live() && on_engine_thread(); },
+        +[] { return on_engine_thread() || (!live() && !engine_thread_latched()); },
+        +[](hooks::lua_bridge::Entry& entry, void (*work)(void*), void* arg) {
+            volatile bool healthy = true;   // written by the setjmp fault path (-Wclobbered)
+            KP_HOOK_GUARD_BEGIN(entry.site.name.c_str(), entry.poisoned, healthy = false)
+                work(arg);
+            KP_HOOK_GUARD_END
+            return healthy;
+        },
+        +[](const hooks::Site& site) {
+            // Inferred ABI confidence is not independent proof. A reviewer must
+            // opt each exact site into this experimental bridge after checking
+            // its complete calling contract against the binary.
+            const char* configured = kp::naming::env("REVIEWED_LUA_HOOKS");
+            if (!configured) return false;
+            std::string_view ids(configured);
+            while (!ids.empty()) {
+                const auto end = ids.find(',');
+                if (ids.substr(0, end) == site.name) return true;
+                if (end == std::string_view::npos) break;
+                ids.remove_prefix(end + 1);
+            }
+            return false;
+        });
+#endif
     lua::HostConfig hc;
     hc.script_dir = cfg.script_dir;
     hc.error_budget = cfg.error_budget;
     hc.hot_reload = cfg.hot_reload;
     api::timers::set_error_budget(cfg.error_budget);
-    set_situation_path(join(join(cfg.game_dir, "kotorphasor"), "lua_situation.dat"));
+    set_situation_path(join(data_dir_of(cfg), "lua_situation.dat"));
 
     // Everything a script can call is registered here, on each fresh state.
     // The Lua host takes this as a hook precisely so it does not have to know
@@ -842,6 +948,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
         api::open_engine_structs(L);      // effect/event/location/talent handles
         api::register_all(L);             // nwscript.call(name, ...), all 769
         api::memory::register_all(L);     // raw read/write, the escape hatch
+#if defined(__i386__)
+        hooks::lua_bridge::register_all(L);
+#endif
         api::structs::register_all(L);    // named typed field access
         api::animation::register_all(L);  // native named clip clocks
         api::projectiles::register_all(L);
@@ -861,6 +970,9 @@ bool Runtime::boot_scripts(const Config& cfg) {
 
     // The console builds a state of its own and needs the same API on it.
     set_state_init(hc.on_state_created);
+#if defined(__i386__)
+    hc.on_state_closing = hooks::lua_bridge::close_state;
+#endif
 
     // Which routine table nwscript.call binds to. The choice latches the first time
     // a state registers the API, which load_all is about to do, so it has to
@@ -918,7 +1030,12 @@ bool Runtime::start(const Config& cfg) {
     set_fault_log_path(log_path_.c_str());
     platform::set_log_sink(&runtime_log_sink, nullptr);
 
-    log("KotorPhasor %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
+    log("ScriptForge %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
+    if (const std::string dd = data_dir_of(cfg);
+        dd.size() >= std::strlen(naming::kLegacyDataDir) &&
+        dd.compare(dd.size() - std::strlen(naming::kLegacyDataDir), std::string::npos, naming::kLegacyDataDir) == 0)
+        log("note: using the legacy data folder %s (KotorPhasor was renamed to ScriptForge); "
+            "renaming it to '%s' is optional and changes nothing else", dd.c_str(), naming::kDataDir);
 
     // Before anything can fault: the guard has to be in place before the first
     // hook body can run, and installing it is free when nothing faults.
@@ -941,6 +1058,9 @@ bool Runtime::start(const Config& cfg) {
         // start from leaving a half-initialised runtime addressable.
         if (hooks_) clear_originals();
         hooks_.reset();
+#if defined(__i386__)
+        hooks::lua_bridge::shutdown();
+#endif
         table_.reset();
         if (host_) host_->unload_all();
         api::scripts::bind_host(nullptr);
@@ -1012,6 +1132,9 @@ void Runtime::stop() {
     // trampoline header says so and this cannot check it; stop() belongs at a
     // quiescent point, which in practice means process shutdown.
     if (hooks_) hooks_->uninstall();
+#if defined(__i386__)
+    hooks::lua_bridge::shutdown();
+#endif
 
     // Run unload callbacks while the host service is still bound.  The
     // callbacks may inspect kp.scripts; after unload_all the host is empty and

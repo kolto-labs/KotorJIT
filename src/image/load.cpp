@@ -73,7 +73,7 @@ std::optional<std::uintptr_t> find_live_base(const std::string& module_path, For
         return std::nullopt;
     }
 #endif
-    if (record != nullptr) return record->image_base;
+    if (record != nullptr) return static_cast<std::uintptr_t>(record->image_base);
     if (fmt != Format::Elf32) return std::nullopt;
     // Unrecognised ELF: the file's own lowest PT_LOAD is the load address for a
     // non-PIE image, which is the only ELF shape we target.
@@ -154,6 +154,61 @@ bool await_decipher(const LoadedImage& img, const Sentinel& sentinel, const Wait
         }
         sleep_ms(policy.poll_interval_ms);
     }
+}
+
+std::uint16_t rd16_le(const std::uint8_t* p) {
+    return static_cast<std::uint16_t>(p[0] | (p[1] << 8));
+}
+
+std::uint32_t rd32_le(const std::uint8_t* p) {
+    return static_cast<std::uint32_t>(p[0]) | (static_cast<std::uint32_t>(p[1]) << 8) |
+           (static_cast<std::uint32_t>(p[2]) << 16) | (static_cast<std::uint32_t>(p[3]) << 24);
+}
+
+bool find_elf32_disk_section(const std::vector<std::uint8_t>& file, const char* target_name,
+                             std::uint32_t& out_addr, std::uint32_t& out_off,
+                             std::uint32_t& out_size) {
+    if (file.size() < 52 || !elf::looks_like(file.data(), file.size())) return false;
+    const std::uint32_t shoff     = rd32_le(file.data() + 32);
+    const std::uint16_t shentsize = rd16_le(file.data() + 46);
+    const std::uint16_t shnum     = rd16_le(file.data() + 48);
+    const std::uint16_t shstrndx  = rd16_le(file.data() + 50);
+    if (shoff == 0 || shentsize < 40 || shnum == 0 || shstrndx >= shnum) return false;
+    const std::uint64_t table_end = static_cast<std::uint64_t>(shoff) +
+                                    static_cast<std::uint64_t>(shentsize) * shnum;
+    if (table_end > file.size()) return false;
+
+    const std::size_t str_sh = static_cast<std::size_t>(shoff) +
+                               static_cast<std::size_t>(shentsize) * shstrndx;
+    const std::uint32_t str_type = rd32_le(file.data() + str_sh + 4);
+    const std::uint32_t str_off  = rd32_le(file.data() + str_sh + 16);
+    const std::uint32_t str_size = rd32_le(file.data() + str_sh + 20);
+    if (str_type != elf::kShtStrtab || str_size == 0 ||
+        static_cast<std::uint64_t>(str_off) + str_size > file.size()) {
+        return false;
+    }
+
+    const std::size_t target_len = std::strlen(target_name);
+    for (std::uint16_t i = 0; i < shnum; ++i) {
+        const std::size_t sh = static_cast<std::size_t>(shoff) +
+                               static_cast<std::size_t>(shentsize) * i;
+        const std::uint32_t name_off = rd32_le(file.data() + sh + 0);
+        const std::uint32_t type     = rd32_le(file.data() + sh + 4);
+        const std::uint32_t addr     = rd32_le(file.data() + sh + 12);
+        const std::uint32_t off      = rd32_le(file.data() + sh + 16);
+        const std::uint32_t size     = rd32_le(file.data() + sh + 20);
+        if (type == elf::kShtNobits || size == 0 || name_off >= str_size) continue;
+        const char* p = reinterpret_cast<const char*>(file.data() + str_off + name_off);
+        const std::size_t len = bounded_len(p, str_size - name_off);
+        if (len == target_len && std::memcmp(p, target_name, len) == 0) {
+            if (static_cast<std::uint64_t>(off) + size > file.size()) return false;
+            out_addr = addr;
+            out_off = off;
+            out_size = size;
+            return true;
+        }
+    }
+    return false;
 }
 
 const char* expected_text_sha(const BuildRecord* record, const std::string& section) {
@@ -424,6 +479,42 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
     r.sections = std::move(*sections);
     classify_sections(img, r.sections);
 
+    // If an ELF32 (DT_NEEDED) or Mach-O (LC_LOAD_DYLIB) binary had loader
+    // dependencies added, its container SHA-256 changed while .text/__text and
+    // preferred image_base stayed exact. PE32 images never use this fallback.
+    if (record == nullptr && r.format == Format::Elf32) {
+        std::uint32_t text_addr = 0, text_off = 0, text_size = 0;
+        if (find_elf32_disk_section(head, ".text", text_addr, text_off, text_size)) {
+            const std::string disk_sha = sha256_hex(head.data() + text_off, text_size);
+            const BuildRecord* by_text = lookup_build_by_text(Format::Elf32, ".text", disk_sha);
+            if (by_text != nullptr && r.image_base == static_cast<std::uintptr_t>(by_text->image_base)) {
+                std::vector<std::uint8_t> live_text;
+                if (img.read_vector(static_cast<std::uintptr_t>(text_addr), text_size, live_text) &&
+                    sha256_hex(live_text.data(), live_text.size()) == disk_sha) {
+                    record = by_text;
+                    r.identity.recognised = true;
+                    r.identity.build_alias = record->alias;
+                    r.identity.expected_encrypted = record->encrypted;
+                }
+            }
+        }
+    } else if (record == nullptr && r.format == Format::MachO) {
+        const Section* mcode = code_section(r.sections, nullptr);
+        if (mcode != nullptr && mcode->name == "__text" && mcode->state != SectionState::Ciphertext) {
+            std::vector<std::uint8_t> live_text;
+            if (img.read_vector(mcode->va, mcode->size, live_text)) {
+                const std::string live_sha = sha256_hex(live_text.data(), live_text.size());
+                const BuildRecord* by_text = lookup_build_by_text(Format::MachO, "__text", live_sha);
+                if (by_text != nullptr && r.image_base == static_cast<std::uintptr_t>(by_text->image_base)) {
+                    record = by_text;
+                    r.identity.recognised = true;
+                    r.identity.build_alias = record->alias;
+                    r.identity.expected_encrypted = record->encrypted;
+                }
+            }
+        }
+    }
+
     if (record == nullptr) {
         r.status = LoadStatus::UnrecognisedBuild;
         r.detail = "sha256 " + r.identity.sha256 + " is not in the build table";
@@ -490,6 +581,18 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
     r.text_sha256 = sha256_hex(body.data(), body.size());
 
     const char* expected = expected_text_sha(record, code->name);
+    if (expected == nullptr && r.format == Format::Elf32) {
+        std::uint32_t text_addr = 0, text_off = 0, text_size = 0;
+        const char* dot_text = expected_text_sha(record, ".text");
+        if (dot_text != nullptr &&
+            find_elf32_disk_section(head, ".text", text_addr, text_off, text_size)) {
+            std::vector<std::uint8_t> live_text;
+            if (img.read_vector(static_cast<std::uintptr_t>(text_addr), text_size, live_text)) {
+                r.text_sha256 = sha256_hex(live_text.data(), live_text.size());
+                expected = dot_text;
+            }
+        }
+    }
     if (expected == nullptr) {
         r.status = LoadStatus::PlaintextMismatch;
         r.detail = "no known-good digest for section " + code->name + " on build " + record->alias;

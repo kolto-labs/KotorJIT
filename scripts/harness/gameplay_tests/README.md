@@ -12,7 +12,7 @@ at (40,46) is no longer `#292E36` (gameplay HUD / minimap) before opening the
 console. `POST_LOAD_WAIT` is only a short pad after that (default 2s).
 `SPLASH_WAIT` (default 120s) is the ceiling for the splash poll. Typing
 before the splash clears lands on the loading bar and never reaches
-`kotorphasor.log`.
+`scriptforge.log`.
 
 **Console input:** KOTOR reads keyboard through DirectInput. Harness typing must
 use focused **XTEST** events (`xdotool type` after `windowactivate`), not
@@ -69,7 +69,7 @@ belong in a manual or nightly run, not a fast loop.
 The pattern, every time:
 
 1. **Deploy.** Copy `scripts/examples/probe/00_probe.lua` alongside whatever
-   you're testing, into `$GAME_DIR/kotorphasor/scripts/`. Nothing else in the
+   you're testing, into `$GAME_DIR/scriptforge/scripts/`. Nothing else in the
    runtime logs which stock scripts the engine ran. The probe does, by
    defining `OnRunScript` and printing what it receives, and it is also the
    gameplay-reached oracle `live_session.sh` depends on. Skipping this means
@@ -122,7 +122,7 @@ The pattern, every time:
    returns `OBJECT_INVALID` for a hostility query, which reads exactly like
    "no hostiles nearby" and cost real time to catch.
 
-4. **Assert on the log, not the screen.** `$GAME_DIR/kotorphasor.log` is
+4. **Assert on the log, not the screen.** `$GAME_DIR/scriptforge.log` is
    flushed per line. `wine.log` (the game's own stdout) is block-buffered
    under Wine and can lag by minutes. Reading it reads as "nothing
    happened" when something happened five minutes ago. Every example script
@@ -145,7 +145,7 @@ The pattern, every time:
 Every `OnRunScript` example compared `script_name == "k_def_attacked01"` and
 none of them ever fired, despite the probe log proving the real script ran.
 Hex-dumping the bytes in a live, instrumented copy of the deployed script
-(edit the copy under `$GAME_DIR/kotorphasor/scripts/`, `lua reload`, retrigger,
+(edit the copy under `$GAME_DIR/scriptforge/scripts/`, `lua reload`, retrigger,
 read the log. Never edit the committed copy for this) showed
 `k_def_attacked01\0`: the engine's `CExoString::length` for this specific
 string includes a trailing NUL, so every name arriving through

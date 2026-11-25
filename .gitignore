@@ -50,5 +50,11 @@ CLAUDE.md
 
 # Local runtime configuration and logs
 /swkotor.ini
-/kotorphasor.log
-/kotorphasor-proxy.log
+/scriptforge.log
+/scriptforge-proxy.log
+
+# Local agent caches, harness logs and session transcripts
+.skipper/
+scripts/harness/.harnesskit/
+codex-session-*.md
+*-pastedcontent-*.txt
