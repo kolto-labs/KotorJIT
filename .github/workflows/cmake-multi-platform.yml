@@ -45,7 +45,7 @@ jobs:
       # libkotorjit.so, every native test tool) are all built -m32, and
       # ubuntu-latest's default g++/clang++ only carry 64-bit headers.
       # g++-mingw-w64-i686 + binutils-mingw-w64-i686: cross-compiles
-      # kotorjit.dll and the proxy binkw32.dll.
+      # kotorjit.dll, kotorjit-launch.exe, and the proxy binkw32.dll.
       # luajit: configure-time find_program(... REQUIRED) in CMakeLists.txt,
       # src/api/api_luajit.cmake; the example, model
       # and animation tests run under it. lua5.1: kpharness_world_test runs
@@ -94,3 +94,10 @@ jobs:
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config Release --output-on-failure
+
+    - name: Verify contracts and packaging
+      working-directory: ${{ github.workspace }}
+      run: |
+        python3 tools/platform_receipt_test.py
+        ./scripts/package_release.sh ${{ steps.strings.outputs.build-output-dir }}
+        python3 scripts/package_kpatch.py ${{ steps.strings.outputs.build-output-dir }} --output dist/kotorjit.kpatch

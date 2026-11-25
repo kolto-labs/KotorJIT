@@ -24,11 +24,38 @@
 
 namespace {
 
+HMODULE g_self = nullptr;
+
+// Resolve `leaf` inside the directory containing this binkw32.dll so neither
+// the proxy log nor runtime DLL lookup depends on process CWD. Returns true if
+// resolved relative to g_self; falls back to bare `leaf` otherwise.
+bool sibling_path(const char* leaf, char* out, DWORD cap) {
+    if (out == nullptr || cap == 0 || leaf == nullptr) return false;
+    if (g_self != nullptr) {
+        char mod[MAX_PATH * 2] = {};
+        const DWORD n = GetModuleFileNameA(g_self, mod, sizeof(mod));
+        if (n > 0 && n < sizeof(mod)) {
+            DWORD cut = n;
+            while (cut > 0 && mod[cut - 1] != '\\' && mod[cut - 1] != '/') --cut;
+            const int leaf_len = lstrlenA(leaf);
+            if (cut > 0 && cut + static_cast<DWORD>(leaf_len) + 1 <= cap) {
+                for (DWORD i = 0; i < cut; ++i) out[i] = mod[i];
+                for (int i = 0; i <= leaf_len; ++i) out[cut + static_cast<DWORD>(i)] = leaf[i];
+                return true;
+            }
+        }
+    }
+    lstrcpynA(out, leaf, static_cast<int>(cap));
+    return false;
+}
+
 // Written next to the game so a failure to load is visible without a debugger.
 // A player whose mod silently does nothing has no way to tell this apart from a
 // mod that loaded and found nothing to do.
 void note(const char* what) {
-    HANDLE f = CreateFileA("kotorjit-proxy.log", FILE_APPEND_DATA, FILE_SHARE_READ,
+    char log_path[MAX_PATH * 2] = {};
+    sibling_path("kotorjit-proxy.log", log_path, sizeof(log_path));
+    HANDLE f = CreateFileA(log_path, FILE_APPEND_DATA, FILE_SHARE_READ,
                            nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (f == INVALID_HANDLE_VALUE) return;
     DWORD written = 0;
@@ -49,13 +76,24 @@ void load_runtime() {
 
     DWORD first_error = 0;
     for (const char* name : kRuntimeNames) {
-        if (LoadLibraryA(name) != nullptr) {
+        char dll_path[MAX_PATH * 2] = {};
+        const bool resolved = sibling_path(name, dll_path, sizeof(dll_path));
+        if (LoadLibraryA(dll_path) != nullptr) {
             char msg[96];
             wsprintfA(msg, "%s loaded", name);
             note(msg);
             return;
         }
-        const DWORD err = GetLastError();
+        DWORD err = GetLastError();
+        if (resolved && err == ERROR_MOD_NOT_FOUND) {
+            if (LoadLibraryA(name) != nullptr) {
+                char msg[96];
+                wsprintfA(msg, "%s loaded", name);
+                note(msg);
+                return;
+            }
+            err = GetLastError();
+        }
         if (first_error == 0) first_error = err;
         // ERROR_MOD_NOT_FOUND just means "not installed under this name"; any
         // other error means the file is there and broken, which is worth
@@ -84,6 +122,7 @@ DWORD WINAPI worker(LPVOID) {
 
 BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
     if (reason == DLL_PROCESS_ATTACH) {
+        g_self = self;
         // We never care about thread attach/detach, and turning the
         // notifications off keeps us out of the loader lock on every thread the
         // game creates.

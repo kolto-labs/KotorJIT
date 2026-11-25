@@ -25,13 +25,14 @@ CC="${CC:-clang}"
 
 case "$(uname -s)" in Darwin) ;; *)
   echo "build.sh must run on macOS with Xcode Command Line Tools." >&2; exit 1;; esac
+[[ -d "$LJ/src" ]] || { echo "missing $LJ/src; clone LuaJIT v2.1 into third_party/luajit first." >&2; exit 1; }
 mkdir -p "$OUT/obj"
 
 # --- LuaJIT: x86_64 static ---------------------------------------------------
 # GC64 is LuaJIT's default on x86_64. The build host tool (buildvm) must also be
 # x86_64 so it runs under Rosetta on Apple silicon, hence HOST_CC too.
 LIBLUAJIT="$LJ/src/libluajit.a"
-if [[ ! -f "$LIBLUAJIT" ]]; then
+if [[ ! -f "$LIBLUAJIT" ]] || ! lipo -info "$LIBLUAJIT" 2>/dev/null | grep -q x86_64; then
   echo ">> building LuaJIT ($ARCH static)"
   make -C "$LJ" clean >/dev/null 2>&1 || true
   make -C "$LJ" -j"$(sysctl -n hw.ncpu)" BUILDMODE=static \
@@ -42,14 +43,19 @@ fi
 # --- source set --------------------------------------------------------------
 # Everything the shipping runtime uses, minus the files for other platforms and
 # ABIs. The exclusions mirror the CMake source lists: no Windows/Linux platform
-# layer, no i386 detour engine or arm32, no binkw32 proxy, and the i386-only
-# harness adapters are replaced by engine_unsupported.cpp.
-mapfile -t SRCS < <(cd "$ROOT" && find src -name '*.cpp' \
+# layer, no i386 detour engine/bridge or arm32, no binkw32 proxy, no Windows
+# launcher, and the i386-only harness adapters are replaced by engine_unsupported.cpp.
+SRCS=()
+while IFS= read -r f; do
+  SRCS+=("$f")
+done < <(cd "$ROOT" && find src -name '*.cpp' \
   ! -path 'src/platform/platform_win32.cpp' \
   ! -path 'src/platform/platform_linux.cpp' \
   ! -path 'src/proxy/*' \
   ! -path 'src/launcher/*' \
   ! -path 'src/hooks/trampoline.cpp' \
+  ! -path 'src/hooks/lua_bridge.cpp' \
+  ! -path 'src/hooks/lua_stub.cpp' \
   ! -path 'src/hooks/arm32/*' \
   ! -path 'src/harness/engine_k1.cpp' \
   ! -path 'src/harness/engine_k2.cpp' \

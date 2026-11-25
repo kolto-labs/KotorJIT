@@ -538,8 +538,10 @@ bool Runtime::resolve(const Config& cfg) {
         if (file_exists(p)) { chosen = p; break; }
     }
     std::string_view embedded;
-    if (manifest.empty() && pack.empty() && chosen.empty()) {
+    if (chosen.empty()) {
         embedded = kp::generated::find_embedded_address_table(build_);
+    }
+    if (manifest.empty() && pack.empty() && chosen.empty()) {
         if (embedded.empty()) {
             failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
             for (const std::string& p : manifest_candidates) failure_ += " " + p;
@@ -548,6 +550,7 @@ bool Runtime::resolve(const Config& cfg) {
             failure_ += " (and no embedded table)";
             return false;
         }
+        log("using embedded address table for %s", build_.c_str());
     }
 
     auto table = std::make_unique<hooks::AddressTable>();
@@ -556,6 +559,15 @@ bool Runtime::resolve(const Config& cfg) {
         if (!hooks::AddressTable::load_manifest(manifest, build_, chosen, *table, error)) {
             failure_ = "hook manifest " + manifest + ": " + error;
             return false;
+        }
+        if (chosen.empty() && !embedded.empty()) {
+            hooks::AddressTable overlay;
+            if (!hooks::AddressTable::parse(embedded, overlay, error)) {
+                failure_ = "embedded address table for " + build_ + ": " + error;
+                return false;
+            }
+            table->merge_overlay(overlay);
+            log("merged embedded address table overlay for %s", build_.c_str());
         }
         if (!table->expected_sha256().empty() && table->expected_sha256() != image_sha256_) {
             log("hook manifest %s was generated from sha256 %s; this image is %s -- "
@@ -566,6 +578,15 @@ bool Runtime::resolve(const Config& cfg) {
         if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
             failure_ = "hook pack " + pack + ": " + error;
             return false;
+        }
+        if (chosen.empty() && !embedded.empty()) {
+            hooks::AddressTable overlay;
+            if (!hooks::AddressTable::parse(embedded, overlay, error)) {
+                failure_ = "embedded address table for " + build_ + ": " + error;
+                return false;
+            }
+            table->merge_overlay(overlay);
+            log("merged embedded address table overlay for %s", build_.c_str());
         }
     } else if (!chosen.empty()) {
         if (!hooks::AddressTable::load_file(chosen, *table, error)) {

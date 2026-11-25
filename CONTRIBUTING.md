@@ -123,7 +123,7 @@ Regenerating `data/addresses/*.json` or `src/generated/builds.inc` needs the loc
 ./scripts/install_to_game.sh uninstall /path/to/swkotor
 ```
 
-Restores the original `binkw32.dll` and removes `kotorjit.dll`. Scripts and `kotorjit.log` are left alone.
+Restores the original `binkw32.dll` or native ELF backup (depending on the install method) and removes KotorJIT's binaries (`kotorjit.dll`, `kotorjit-launch.exe`, `libkotorjit.so`, `run-kotorjit.sh`). Scripts and `kotorjit.log` are left alone.
 
 ## Further reading
 

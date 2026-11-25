@@ -13,7 +13,12 @@
 #   install_to_game.sh status    <game-dir>
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [[ -d "$SCRIPT_DIR/data/addresses" ]]; then
+  ROOT="$SCRIPT_DIR"
+else
+  ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
 METHOD="auto"
 POS=()
 
@@ -47,7 +52,15 @@ esac
 
 ACTION="${POS[0]:-}"
 GAME="${POS[1]:-}"
-BUILD="${POS[2]:-$ROOT/build}"
+if [[ -n "${POS[2]:-}" ]]; then
+  BUILD="${POS[2]}"
+elif [[ -d "$ROOT/build" ]]; then
+  BUILD="$ROOT/build"
+elif [[ -f "$ROOT/kotorjit.dll" || -f "$ROOT/libkotorjit.so" ]]; then
+  BUILD="$ROOT"
+else
+  BUILD="$ROOT/build"
+fi
 
 [[ -n "$ACTION" && -n "$GAME" ]] || usage
 [[ -d "$GAME" ]] || { echo "not a directory: $GAME" >&2; exit 1; }
@@ -138,6 +151,10 @@ prepare_kotorjit_dir() {
     mv "$GAME/kotorphasor" "$GAME/kotorjit"
     echo "moved kotorphasor/ -> kotorjit/ (scripts kept)"
   fi
+  if [[ -f "$GAME/kotorphasor.ini" && ! -e "$GAME/kotorjit.ini" ]]; then
+    mv "$GAME/kotorphasor.ini" "$GAME/kotorjit.ini"
+    echo "moved kotorphasor.ini -> kotorjit.ini"
+  fi
   mkdir -p "$GAME/kotorjit/scripts"
   local addr_dir
   if addr_dir="$(find_addresses_dir)"; then
@@ -147,7 +164,7 @@ prepare_kotorjit_dir() {
 
 case "$ACTION" in
 install)
-  if is_ours || [[ -f "$METHOD_FILE" ]] || [[ -f "$MARK" ]] || [[ -f "$LAUNCHER_DST" ]] || [[ -f "$PRELOAD_WRAPPER" ]]; then
+  if is_ours || [[ -f "$METHOD_FILE" ]] || [[ -f "$MARK" ]] || [[ -f "$GAME/kotorphasor/.installed" ]] || [[ -f "$LAUNCHER_DST" ]] || [[ -f "$PRELOAD_WRAPPER" ]]; then
     echo "already installed; run uninstall first if you want a clean swap" >&2
     exit 1
   fi
@@ -214,11 +231,11 @@ install)
       [[ -n "$LINUX_EXE" ]] || { echo "no ELF32 Linux executable found in $GAME" >&2; exit 1; }
       [[ -f "$BUILD/libkotorjit.so" ]] || { echo "missing $BUILD/libkotorjit.so -- build first" >&2; exit 1; }
       ELF_TOOL="$(find_elf_tool)" || { echo "missing tools/elf_needed.py" >&2; exit 1; }
-      install -D -m755 "$BUILD/libkotorjit.so" "$SO_DST"
+      prepare_kotorjit_dir
       mkdir -p "$GAME/kotorjit/backup"
       python3 "$ELF_TOOL" add "$GAME/$LINUX_EXE" '$ORIGIN/libkotorjit.so' \
         --backup "$GAME/kotorjit/backup/${LINUX_EXE}.orig"
-      prepare_kotorjit_dir
+      install -D -m755 "$BUILD/libkotorjit.so" "$SO_DST"
       echo "linked:${LINUX_EXE}" > "$METHOD_FILE"
       date -Iseconds > "$MARK"
       echo "installed (method: linked on $LINUX_EXE) into $GAME"

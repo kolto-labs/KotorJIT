@@ -264,8 +264,17 @@ foreach ($n in @('swkotor.exe', 'swkotor2.exe')) {
 if (-not $exe) { throw "no swkotor.exe or swkotor2.exe in $GameDir" }
 $exeSha = Get-Sha256OrNull $exe
 $manifestPath = [System.IO.Path]::Combine($GameDir, 'kotorjit', 'install-manifest.json')
+$legacyManifestPath = [System.IO.Path]::Combine($GameDir, 'kotorphasor', 'install-manifest.json')
+if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf) -and (Test-Path -LiteralPath $legacyManifestPath -PathType Leaf)) {
+    $manifestPath = $legacyManifestPath
+}
 $build = $null
-if (Test-Path -LiteralPath $manifestPath) { $build = (Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json).game.build }
+$method = 'proxy'
+if (Test-Path -LiteralPath $manifestPath -PathType Leaf) {
+    $m = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+    if ($m.PSObject.Properties['game'] -and $m.game.PSObject.Properties['build']) { $build = $m.game.build }
+    if ($m.PSObject.Properties['method'] -and ($m.method -is [string]) -and $m.method) { $method = $m.method }
+}
 $game = [ordered]@{
     exe_name         = (Split-Path -Leaf $exe)
     exe_sha256       = $exeSha
@@ -275,11 +284,24 @@ $game = [ordered]@{
     slice_sha256     = $exeSha
     build            = $build
 }
-$runtime = [ordered]@{
-    kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit.dll')
-    proxy_binkw32_sha256    = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
-    real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32_real.dll')
-    install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+if (($method -eq 'inject') -or ($method -eq 'launcher')) {
+    $runtime = [ordered]@{
+        method                  = $method
+        kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit.dll')
+        proxy_binkw32_sha256    = $null
+        real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
+        launcher_exe_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit-launch.exe')
+        install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+    }
+} else {
+    $runtime = [ordered]@{
+        method                  = $method
+        kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit.dll')
+        proxy_binkw32_sha256    = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
+        real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32_real.dll')
+        launcher_exe_sha256     = $null
+        install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+    }
 }
 
 # --- the runtime's own view --------------------------------------------------

@@ -37,7 +37,8 @@ find_macos_dir() {
 }
 MACOS="$(find_macos_dir "$TARGET")" || { echo "no KOTOR executable under: $TARGET" >&2; exit 1; }
 EXE=""
-for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && EXE="$e"; done
+for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && { EXE="$e"; break; }; done
+[[ -n "$EXE" && -f "$MACOS/$EXE" ]] || { echo "no KOTOR executable inside $MACOS" >&2; exit 1; }
 KPDIR="$MACOS/kotorjit"
 DYLIB="$MACOS/libkotorjit.dylib"
 

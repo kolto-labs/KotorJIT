@@ -9,8 +9,8 @@ Where months of KotOR reverse-engineering / byte-exact recovery live:
 
 ```mermaid
 flowchart TD
-    A[Start the game] --> B[binkw32.dll loads kotorjit.dll]
-    B --> C[Identify the executable]
+    A[Start the game] --> B[Loader: kotorjit-launch.exe, KPM .kpatch, DT_NEEDED, or binkw32.dll]
+    B --> C[Runtime loads and verifies exact build/code hashes]
     C --> D[Install 15 hooks]
     D --> E[Load .lua files from kotorjit/scripts]
     E --> F[OnScriptLoad]

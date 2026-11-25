@@ -7,15 +7,23 @@ import sys
 import zipfile
 from pathlib import Path
 
-REQUIRED_SUFFIXES = (
-    "/kotorjit.dll",
-    "/binkw32.dll",
-    "/install_to_game.sh",
-    "/data/addresses/k1_gog_103.json",
-    "/data/addresses/k2_gog_aspyr.json",
-    "/README.md",
-    "/docs/user/install.md",
-    "/CONTRIBUTING.md",
+REQUIRED_ENTRIES = (
+    "kotorjit.dll",
+    "binkw32.dll",
+    "bin/kotorjit.dll",
+    "bin/binkw32.dll",
+    "install_to_game.sh",
+    "scripts/install_to_game.sh",
+    "Install-KotorJIT.ps1",
+    "scripts/install/windows/Install-KotorJIT.ps1",
+    "tools/elf_needed.py",
+    "INSTALL.txt",
+    "data/addresses/k1_gog_103.json",
+    "data/addresses/k2_gog_aspyr.json",
+    "README.md",
+    "docs/user/install.md",
+    "docs/user/windows-native-install.md",
+    "CONTRIBUTING.md",
 )
 
 ALLOWED_EXE_SUFFIXES = (
@@ -46,12 +54,11 @@ def check(path: Path) -> list[str]:
         if len(roots) != 1:
             errs.append(f"expected one top-level directory, got {sorted(roots)}")
         root = next(iter(roots)) if roots else ""
-        for suf in REQUIRED_SUFFIXES:
-            want = root + suf
-            if want not in names and not any(n.endswith(suf.lstrip("/")) or n.endswith(suf) for n in names):
-                # Accept either rooted or exact suffix match under the single root.
-                if not any(n == want or n.endswith(suf) for n in names):
-                    errs.append(f"missing required member ending with {suf}")
+        name_set = set(names)
+        for rel in REQUIRED_ENTRIES:
+            want = f"{root}/{rel}"
+            if want not in name_set:
+                errs.append(f"missing required member {want}")
         for n in names:
             low = n.lower()
             for bad in FORBIDDEN_SUBSTRINGS:

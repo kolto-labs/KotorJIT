@@ -81,12 +81,11 @@ $ManifestSchema = 'kotorphasor.install-manifest/v1'
 # BuildRecord aliases from src\generated\builds.inc; the Python contract test
 # (tools\platform_receipt_test.py) fails if a hash here is not a BuildRecord.
 # k1_steam_103_unpacked is a harness artifact, not something a player runs.
-# k2_steam_aspyr is left out: its builds.inc note and its address table
-# disagree about whether it is installable.
 $ExeAllowlist = @{
     '9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435' = 'k1_gog_103'
     '34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88' = 'k1_steam_103'
     '777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914' = 'k2_gog_aspyr'
+    '6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef' = 'k2_steam_aspyr'
 }
 
 # Original RAD Game Tools binkw32.dll builds, by where they were hashed. The
@@ -223,14 +222,28 @@ function Assert-Manifest($m) {
         throw "manifest method '$manifestMethod' is unknown; refusing, nothing removed"
     }
     $bd = Get-StringField $m 'backup_dir' 'backup_dir'
+    $binkOrig = Get-StringField $m 'bink_original_sha256' 'bink_original_sha256'
+    $binkTrust = Get-StringField $m 'bink_trusted_override' 'bink_trusted_override'
     if ($manifestMethod -ceq 'proxy') {
         if (($null -eq $bd) -or ($bd -cnotmatch $BackupDirPattern)) {
             throw "manifest backup_dir '$bd' is not kotorjit\backup\<yyyyMMddTHHmmssZ> (or kotorphasor\backup\... from an older install); refusing, nothing removed"
         }
         [void](Resolve-Owned $bd 'backup_dir')
+        if (($null -ne $binkOrig) -and ($binkOrig -cnotmatch $ShaPattern)) {
+            throw "manifest bink_original_sha256 '$binkOrig' is not a sha256; refusing, nothing removed"
+        }
+        if (($null -ne $binkTrust) -and ($binkTrust -cnotmatch $ShaPattern)) {
+            throw "manifest bink_trusted_override '$binkTrust' is not a sha256; refusing, nothing removed"
+        }
     } else {
         if (($null -eq $bd) -or ($bd -cne '')) {
             throw "manifest backup_dir '$bd' must be empty for inject method; refusing, nothing removed"
+        }
+        if ($null -ne $binkOrig) {
+            throw "manifest bink_original_sha256 is unexpected for method '$manifestMethod'; refusing, nothing removed"
+        }
+        if ($null -ne $binkTrust) {
+            throw "manifest bink_trusted_override is unexpected for method '$manifestMethod'; refusing, nothing removed"
         }
     }
     $filesValue = Get-Field $m 'files'
@@ -320,8 +333,10 @@ if ($Action -eq 'Status') {
             }
             Write-Output ("  {0,-8} {1}" -f $state, $f.path)
         }
-    } elseif ((Test-Path -LiteralPath $Proxy) -and (Test-OurProxy $Proxy)) {
+    } elseif ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and (Test-OurProxy $Proxy)) {
         Write-Output 'proxy present but no manifest: installed by another tool; not managed here'
+    } elseif ((Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit-launch.exe') -PathType Leaf) -or (Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit.dll') -PathType Leaf)) {
+        Write-Output 'launcher or runtime DLL present but no manifest: not managed here'
     } else {
         Write-Output 'not installed'
     }
@@ -428,12 +443,23 @@ if ($Action -eq 'Uninstall') {
 
 # --------------------------------------------------------------------------
 # Install: every check before the first write.
-if (-not $SourceDir) { $SourceDir = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'build') }
+if (-not $SourceDir) {
+    $repoBuild = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'build')
+    $pkgRoot = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..')
+    if (Test-Path -LiteralPath $repoBuild -PathType Container) { $SourceDir = $repoBuild }
+    elseif (Test-Path -LiteralPath (Join-Path $pkgRoot 'kotorjit.dll') -PathType Leaf) { $SourceDir = $pkgRoot }
+    else { $SourceDir = $repoBuild }
+}
 if (-not $AddressDir) { $AddressDir = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'data', 'addresses') }
 $SourceDir = (Resolve-Path -LiteralPath $SourceDir).Path
 $AddressDir = (Resolve-Path -LiteralPath $AddressDir).Path
 
-if (Test-Path -LiteralPath $ManifestPath) { throw 'already installed; run -Action Uninstall first' }
+if ((Test-Path -LiteralPath $ManifestPath) -or (Test-Path -LiteralPath $LegacyManifest)) {
+    throw 'already installed; run -Action Uninstall first'
+}
+$OwnDir = Join-Path $GameDir 'kotorjit'
+$ManifestPath = Join-Path $OwnDir 'install-manifest.json'
+$LegacyOwnDir = Join-Path $GameDir 'kotorphasor'
 
 $exe = Find-GameExe $GameDir
 if (-not $exe) { throw "no swkotor.exe or swkotor2.exe in $GameDir" }
@@ -448,6 +474,10 @@ if (-not (Test-Path -LiteralPath $srcDll -PathType Leaf)) { throw "missing $srcD
 $table = Join-Path $AddressDir "$build.json"
 if (-not (Test-Path -LiteralPath $table -PathType Leaf)) { throw "missing address table $table" }
 if (Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit.dll')) { throw 'kotorjit.dll already in the game folder and not ours; refusing' }
+if (Test-Path -LiteralPath (Join-Path $GameDir 'kphasor.dll')) { throw 'kphasor.dll already in the game folder and not ours; refusing' }
+if ((Test-Path -LiteralPath $LegacyOwnDir -PathType Container) -and -not (Test-Path -LiteralPath $OwnDir)) {
+    Assert-NoReparsePoint $LegacyOwnDir 'legacy kotorphasor folder'
+}
 
 $srcLauncher = Join-Path $SourceDir 'kotorjit-launch.exe'
 if ($Method -eq 'Auto') {
@@ -515,6 +545,23 @@ function Add-Created([string]$Rel, [string]$From) {
 }
 
 try {
+    $legacyIni = Join-Path $GameDir 'kotorphasor.ini'
+    $currentIni = Join-Path $GameDir 'kotorjit.ini'
+    if ((Test-Path -LiteralPath $legacyIni -PathType Leaf) -and -not (Test-Path -LiteralPath $currentIni)) {
+        Move-Item -LiteralPath $legacyIni -Destination $currentIni
+        [void]$undo.Add({ if (Test-Path -LiteralPath $currentIni) { Move-Item -LiteralPath $currentIni -Destination $legacyIni -ErrorAction SilentlyContinue } }.GetNewClosure())
+        Write-Output 'moved kotorphasor.ini -> kotorjit.ini'
+    }
+    if ((Test-Path -LiteralPath $LegacyOwnDir -PathType Container) -and -not (Test-Path -LiteralPath $OwnDir)) {
+        Move-Item -LiteralPath $LegacyOwnDir -Destination $OwnDir
+        [void]$undo.Add({
+            foreach ($d in @($createdDirs)) {
+                if ((Test-Path -LiteralPath $d) -and -not (Get-ChildItem -LiteralPath $d -Force)) { Remove-Item -LiteralPath $d -Force -ErrorAction SilentlyContinue }
+            }
+            if (Test-Path -LiteralPath $OwnDir) { Move-Item -LiteralPath $OwnDir -Destination $LegacyOwnDir -ErrorAction SilentlyContinue }
+        }.GetNewClosure())
+        Write-Output 'moved kotorphasor\ -> kotorjit\ (scripts kept)'
+    }
     Add-Dir $OwnDir
     if ($Method -eq 'Proxy') {
         Add-Dir (Join-Path $OwnDir 'backup')

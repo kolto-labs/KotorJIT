@@ -42,8 +42,7 @@ On a Mac with Xcode Command Line Tools:
 scripts/mac/build.sh          # -> build-mac/libkotorjit.dylib (x86_64, ad-hoc signed)
 ```
 
-LuaJIT and Dear ImGui are vendored; no network is needed. `cmake --build` on a
-Mac runs this same script.
+Dear ImGui is vendored under `third_party/imgui/`; place LuaJIT v2.1 under `third_party/luajit/` first (see `ATTRIBUTION.md`). `cmake --build` on a Mac runs this same script.
 
 ## Install
 

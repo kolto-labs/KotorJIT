@@ -21,7 +21,7 @@ die() { echo "package_release: $*" >&2; exit 1; }
 [[ -f "$BUILD/binkw32.dll" ]] || die "missing $BUILD/binkw32.dll — build first"
 
 rm -rf "$STAGE"
-mkdir -p "$STAGE"/{bin,data,docs/user,scripts/install/windows,tools,examples}
+mkdir -p "$STAGE"/{bin,data,docs/user,scripts/install/windows,scripts/mac,tools,examples}
 
 install -m644 "$BUILD/kotorjit.dll" "$STAGE/bin/kotorjit.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/bin/binkw32.dll"
@@ -41,6 +41,8 @@ install -m755 "$ROOT/scripts/install_to_game.sh" "$STAGE/install_to_game.sh"
 install -m755 "$ROOT/scripts/install_to_game.sh" "$STAGE/scripts/install_to_game.sh"
 install -m644 "$ROOT/scripts/install/windows/Install-KotorJIT.ps1" "$STAGE/Install-KotorJIT.ps1"
 install -m644 "$ROOT/scripts/install/windows/Install-KotorJIT.ps1" "$STAGE/scripts/install/windows/Install-KotorJIT.ps1"
+[[ -f "$ROOT/scripts/mac/build.sh" ]] && install -m755 "$ROOT/scripts/mac/build.sh" "$STAGE/scripts/mac/build.sh"
+[[ -f "$ROOT/scripts/mac/install_to_game.sh" ]] && install -m755 "$ROOT/scripts/mac/install_to_game.sh" "$STAGE/scripts/mac/install_to_game.sh"
 install -m755 "$ROOT/tools/elf_needed.py" "$STAGE/tools/elf_needed.py"
 
 cp -a "$ROOT/data/addresses" "$STAGE/data/addresses"

@@ -23,6 +23,4 @@ per-build addresses are a cache. This is unrelated to the Unity game engine.
 
 ## Packaging
 
-`scripts/package_release.sh` ships the currently supported PE/ELF runtime plus
-address tables. Mac profiles travel in the registry so the same logical sites
-can be bound once a Mac loader exists — no Unity, no game assets in the zip.
+`scripts/package_release.sh` ships the Windows/Linux binaries (`kotorjit.dll`, `kotorjit-launch.exe`, `binkw32.dll`, `libkotorjit.so`), `scripts/mac/` sources, `tools/elf_needed.py`, installers, and all address tables (`data/addresses/*.json`). No Unity assets or game content ship in the zip.

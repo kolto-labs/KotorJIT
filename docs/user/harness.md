@@ -246,7 +246,7 @@ a chain of warps.
   Linux runtime trees on its own (`discover.libglu_dirs()`) and stages the
   case-matching Miles audio symlinks the ELF needs, both automatically at
   `stage()` time. If discovery finds nothing usable on a given machine, set
-  `KP_LIBGLU_DIR` or `[harness] libglu_dir` in `kotorphasor.toml` to a
+  `KP_LIBGLU_DIR` or `[harness] libglu_dir` in `kotorjit.toml` to a
   directory that actually contains `libGLU.so.1`.
 - A module load under software rendering takes tens of seconds. Budget
   for it, or start from a checkpoint.

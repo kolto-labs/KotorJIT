@@ -200,6 +200,7 @@ if(UNIX AND NOT WIN32)
                      BUILDMODE=static TARGET_SYS=Linux
         COMMENT "building LuaJIT for native 32-bit Linux"
         VERBATIM)
+    add_custom_target(kp_luajit_linux DEPENDS ${KP_LUAJIT_LINUX_LIB})
 
     # image/ and hooks/ are compiled again here rather than linked from
     # libkp_image.a and libkp_hooks.a, because those are built without -fPIC:
@@ -212,8 +213,8 @@ if(UNIX AND NOT WIN32)
 
     add_library(kotorjit SHARED ${KP_RUNTIME_SOURCES} ${KP_LUA_SOURCES} ${KP_API_SOURCES}
                                ${KP_IMAGE_SRC} ${KP_HOOKS_SRC}
-                               ${KP_HARNESS_SOURCES}
-                               ${KP_LUAJIT_LINUX_LIB})
+                               ${KP_HARNESS_SOURCES})
+    add_dependencies(kotorjit kp_luajit_linux)
     set_target_properties(kotorjit PROPERTIES POSITION_INDEPENDENT_CODE ON)
     # Both LuaJIT header paths. The build-time copy is what the archive is built
     # from, but it does not exist until its custom command runs, and object
@@ -224,7 +225,10 @@ if(UNIX AND NOT WIN32)
                                                "${KP_LUAJIT_LINUX_DIR}/src"
                                                "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
     target_compile_options(kotorjit PRIVATE -m32 -Wall -Wextra)
-    target_link_options(kotorjit PRIVATE -m32)
+    # Keep LuaJIT archive symbols internal without splitting the DWARF unwinder:
+    # mixing -static-libgcc (libgcc_eh.a) with dynamic libstdc++.so.6 aborts
+    # C++/LuaJIT exception unwinds across DSO boundaries (e.g. kp_routinetest).
+    target_link_options(kotorjit PRIVATE -m32 -Wl,--exclude-libs,libluajit.a)
     # LuaJIT's own two dependencies on Linux. Nothing else we link pulls them
     # in, and the failure without them is a pile of undefined symbols at link.
     target_link_libraries(kotorjit PRIVATE ${KP_LUAJIT_LINUX_LIB} m dl)

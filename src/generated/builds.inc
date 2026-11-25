@@ -57,7 +57,7 @@ static const BuildRecord kBuilds[] = {
         Format::Pe32, 0x00400000, false,
         0, "", "",
         kText_k2_steam_aspyr, sizeof kText_k2_steam_aspyr / sizeof kText_k2_steam_aspyr[0],
-        "Registered for build identification only. 57% named (func_count 26965, named_count 15311) -- unlike its GOG sibling, this Steam build needs the identity/adjudication layer before it resolves. Not installable until that work is done.",
+        "Windows Steam Aspyr KOTOR 2 PE. Required sites hand-adjudicated against the GOG Aspyr donor and installable.",
     },
 };
 // clang-format on

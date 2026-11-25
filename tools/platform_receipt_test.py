@@ -218,8 +218,24 @@ def validate(r: dict, records: dict[str, str] | None = None, log_bytes: bytes | 
 
     for section, k in SHA_FIELDS:
         v = r[section][k]
+        if section == "runtime" and k == "proxy_binkw32_sha256":
+            continue
         if not isinstance(v, str) or not HEX64.match(v):
             errs.append(f"{section}.{k} is not a lowercase sha256: {v!r}")
+
+    rt_method = r["runtime"].get("method", "proxy")
+    if rt_method not in ("proxy", "inject", "launcher"):
+        errs.append(f"runtime.method is {rt_method!r}, want 'proxy', 'inject', or 'launcher'")
+    elif rt_method == "proxy":
+        pv = r["runtime"].get("proxy_binkw32_sha256")
+        if not isinstance(pv, str) or not HEX64.match(pv):
+            errs.append(f"runtime.proxy_binkw32_sha256 is not a lowercase sha256: {pv!r}")
+    else:
+        if r["runtime"].get("proxy_binkw32_sha256") is not None:
+            errs.append(f"runtime.proxy_binkw32_sha256 must be null for method {rt_method!r}")
+        lv = r["runtime"].get("launcher_exe_sha256")
+        if not isinstance(lv, str) or not HEX64.match(lv):
+            errs.append(f"runtime.launcher_exe_sha256 is not a lowercase sha256: {lv!r}")
 
     if r["os"]["family"] != "windows":
         errs.append(f"os.family is {r['os']['family']!r}")
@@ -926,10 +942,14 @@ class ScriptContracts(unittest.TestCase):
         self.assertNotIn("platform::log(", body)
         self.assertEqual(body.count("runtime::Runtime::instance().log("), 3)
         for needle in ("kp-session=", "host: wine=", "gl: vendor="):
-            emitters = [p for p in (ROOT / "src").rglob("*.cpp") if needle in p.read_text()]
-            want = {"kp-session=": "overlay.cpp", "host: wine=": "platform_win32.cpp",
-                    "gl: vendor=": "overlay.cpp"}[needle]
-            self.assertEqual([p.name for p in emitters], [want], needle)
+            emitters = sorted(p.name for p in (ROOT / "src").rglob("*.cpp") if needle in p.read_text())
+            want = {"kp-session=": ["overlay.cpp", "overlay_darwin.cpp"],
+                    "host: wine=": ["platform_win32.cpp"],
+                    "gl: vendor=": ["overlay.cpp", "overlay_darwin.cpp"]}[needle]
+            self.assertEqual(emitters, want, needle)
+        dar = (ROOT / "src/devtools/overlay_darwin.cpp").read_text()
+        dar_body = dar[dar.index("void log_session_start()"):dar.index("void draw()")]
+        self.assertNotIn("platform::log(", dar_body)
 
     def test_overlay_logs_once_at_imgui_init(self):
         src = (ROOT / "src/devtools/overlay.cpp").read_text()
@@ -1367,6 +1387,85 @@ class InstallerBehaviour(unittest.TestCase):
         rc, out = self.run_ps("-Action", "Status")
         self.assertNotEqual(rc, 0, out)
         self.assertIn("backup_dir", out)
+
+    def test_inject_method_round_trip_and_tamper_refusal(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        before = self.snapshot()
+        # With -Method Auto and kotorjit-launch.exe present, unpacked k1_gog_103 chooses Inject.
+        rc, out = self.run_ps("-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "inject")
+        self.assertEqual(m["backup_dir"], "")
+        # Original binkw32.dll must remain untouched in Inject mode.
+        self.assertEqual(_sha((self.game / "binkw32.dll").read_bytes()), _sha(self.BINK))
+        self.assertFalse((self.game / "binkw32_real.dll").exists())
+        self.assertTrue((self.game / "kotorjit-launch.exe").exists())
+
+        rc, out = self.run_ps("-Action", "Status")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("inject", out)
+
+        rc, out = self.run_ps("-Action", "Uninstall")
+        self.assertEqual(rc, 0, out)
+        after = self.snapshot()
+        self.assertEqual(after.pop("nest/game/kotorjit"), "dir")
+        self.assertEqual(after.pop("nest/game/kotorjit/scripts"), "dir")
+        self.assertEqual(before, after)
+
+    def test_inject_manifest_tampering_refused(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        self.fresh()
+        rc, out = self.run_ps("-Method", "Inject", "-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        for label, mutate in (
+            ("unexpected backup_dir", lambda m: m.__setitem__("backup_dir", "kotorjit/backup/20260101T000000Z")),
+            ("unexpected bink_original_sha256", lambda m: m.__setitem__("bink_original_sha256", _sha(self.BINK))),
+            ("unknown method", lambda m: m.__setitem__("method", "magic")),
+        ):
+            with self.subTest(label):
+                before_m = self.manifest_path().read_text(encoding="utf-8-sig")
+                self.edit(mutate)
+                before_snap = self.snapshot()
+                rc, out = self.run_ps("-Action", "Uninstall")
+                self.assertNotEqual(rc, 0, out)
+                self.assertEqual(before_snap, self.snapshot())
+                self.manifest_path().write_text(before_m, encoding="utf-8")
+
+    def test_steam_k1_auto_picks_proxy_even_with_launcher(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        (self.addr / "k1_steam_103.json").write_text('{"build": "k1_steam_103"}\n')
+        steam_exe = b"synthetic steam swkotor.exe\n"
+        steam_sha = _sha(steam_exe)
+        src_text = Path(os.environ.get("KP_INSTALL_PS1", INSTALL_PS1)).read_text()
+        src_text = src_text.replace("$ExeAllowlist = @{\n",
+                                    f"$ExeAllowlist = @{{\n    '{steam_sha}' = 'k1_steam_103'\n", 1)
+        src_text = src_text.replace("$BinkAllowlist = @{\n",
+                                    f"$BinkAllowlist = @{{\n    '{_sha(self.BINK)}' = 'test bink'\n", 1)
+        self.script.write_text(src_text)
+        (self.game / "swkotor.exe").write_bytes(steam_exe)
+        rc, out = self.run_ps("-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "proxy")
+        self.assertEqual(m["game"]["build"], "k1_steam_103")
+
+
+class InjectReceiptValidation(unittest.TestCase):
+    def test_inject_receipt_validates_and_requires_launcher_sha(self):
+        r = json.loads(json.dumps(load("native_pass")))
+        r["runtime"] = {
+            "method": "inject",
+            "kphasor_dll_sha256": r["runtime"]["kphasor_dll_sha256"],
+            "proxy_binkw32_sha256": None,
+            "real_binkw32_sha256": r["runtime"]["real_binkw32_sha256"],
+            "launcher_exe_sha256": "5" * 64,
+            "install_manifest_sha256": r["runtime"].get("install_manifest_sha256"),
+        }
+        self.assertEqual(validate(r), [])
+        bad = json.loads(json.dumps(r))
+        bad["runtime"]["launcher_exe_sha256"] = None
+        self.assertTrue(any("launcher_exe_sha256" in e for e in validate(bad)))
 
 
 if __name__ == "__main__":

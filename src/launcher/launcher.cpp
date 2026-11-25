@@ -19,12 +19,14 @@
 #include <shellapi.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -65,6 +67,7 @@ struct Options {
     DWORD pid = 0;
     DWORD timeout_ms = 60000;
     bool wait = false;
+    bool wait_window = true;
     bool check_only = false;
     std::vector<std::string> game_args;
 };
@@ -72,9 +75,23 @@ struct Options {
 struct PeInspection {
     bool valid_pe = false;
     bool is_i386 = false;
+    bool is_pe32 = false;
     bool has_bind_section = false;
     std::uint16_t machine = 0;
 };
+
+bool parse_uint_dec(const char* s, unsigned long& out) {
+    if (s == nullptr || *s == '\0') return false;
+    for (const char* p = s; *p != '\0'; ++p) {
+        if (!std::isdigit(static_cast<unsigned char>(*p))) return false;
+    }
+    errno = 0;
+    char* end = nullptr;
+    const unsigned long v = std::strtoul(s, &end, 10);
+    if (errno == ERANGE || end == s || *end != '\0') return false;
+    out = v;
+    return true;
+}
 
 std::string to_lower_ascii(std::string s) {
     for (char& c : s) {
@@ -152,7 +169,7 @@ PeInspection inspect_pe(const std::string& path) {
     if (e_lfanew > 0x100000u) return out;
 
     f.seekg(e_lfanew, std::ios::beg);
-    std::uint8_t pe_hdr[24]{};
+    std::uint8_t pe_hdr[26]{};
     if (!f.read(reinterpret_cast<char*>(pe_hdr), sizeof(pe_hdr))) return out;
     if (pe_hdr[0] != 'P' || pe_hdr[1] != 'E' || pe_hdr[2] != 0 || pe_hdr[3] != 0) return out;
 
@@ -162,10 +179,13 @@ PeInspection inspect_pe(const std::string& path) {
         static_cast<std::uint16_t>(pe_hdr[6] | (pe_hdr[7] << 8));
     const std::uint16_t opt_size =
         static_cast<std::uint16_t>(pe_hdr[20] | (pe_hdr[21] << 8));
+    const std::uint16_t opt_magic =
+        static_cast<std::uint16_t>(pe_hdr[24] | (pe_hdr[25] << 8));
 
     out.valid_pe = true;
     out.machine = machine;
     out.is_i386 = (machine == 0x014c);
+    out.is_pe32 = (opt_magic == 0x010b);
 
     f.seekg(static_cast<std::streamoff>(e_lfanew) + 24 + opt_size, std::ios::beg);
     const std::uint16_t cap = std::min<std::uint16_t>(num_sections, 96);
@@ -210,7 +230,26 @@ std::string quote_win_arg(const std::string& arg) {
     return out;
 }
 
-std::vector<DWORD> find_pids_by_name(const std::string& target_name) {
+bool query_process_image_path(DWORD pid, std::string& out) {
+    using QueryFullNameFn = BOOL(WINAPI*)(HANDLE, DWORD, LPSTR, PDWORD);
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    if (k32 == nullptr) return false;
+    auto fn = reinterpret_cast<QueryFullNameFn>(
+        reinterpret_cast<void*>(GetProcAddress(k32, "QueryFullProcessImageNameA")));
+    if (fn == nullptr) return false;
+    HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+    if (h == nullptr) return false;
+    char buf[MAX_PATH * 4]{};
+    DWORD sz = static_cast<DWORD>(sizeof(buf));
+    const BOOL ok = fn(h, 0, buf, &sz);
+    CloseHandle(h);
+    if (!ok || sz == 0) return false;
+    out.assign(buf, sz);
+    return true;
+}
+
+std::vector<DWORD> find_pids_by_name(const std::string& target_name, const std::string& full_path = {}) {
+    std::vector<DWORD> exact;
     std::vector<DWORD> pids;
     HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (snap == INVALID_HANDLE_VALUE) return pids;
@@ -219,23 +258,40 @@ std::vector<DWORD> find_pids_by_name(const std::string& target_name) {
     if (Process32First(snap, &pe)) {
         do {
             if (_stricmp(pe.szExeFile, target_name.c_str()) == 0) {
+                if (!full_path.empty()) {
+                    std::string proc_path;
+                    if (query_process_image_path(pe.th32ProcessID, proc_path) &&
+                        _stricmp(proc_path.c_str(), full_path.c_str()) == 0) {
+                        exact.push_back(pe.th32ProcessID);
+                        continue;
+                    }
+                }
                 pids.push_back(pe.th32ProcessID);
             }
         } while (Process32Next(snap, &pe));
     }
     CloseHandle(snap);
-    return pids;
+    return !exact.empty() ? exact : pids;
 }
 
 bool module_loaded_in_pid(DWORD pid, const std::string& module_basename) {
-    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+    HANDLE snap = INVALID_HANDLE_VALUE;
+    for (int attempt = 0; attempt < 16; ++attempt) {
+        snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+        if (snap != INVALID_HANDLE_VALUE) break;
+        const DWORD err = GetLastError();
+        if (err != ERROR_BAD_LENGTH && err != ERROR_PARTIAL_COPY) return false;
+        Sleep(25);
+    }
     if (snap == INVALID_HANDLE_VALUE) return false;
     MODULEENTRY32 me{};
     me.dwSize = sizeof(me);
     bool found = false;
     if (Module32First(snap, &me)) {
         do {
-            if (_stricmp(me.szModule, module_basename.c_str()) == 0) {
+            if (_stricmp(me.szModule, kp::naming::kRuntimeDll) == 0 ||
+                _stricmp(me.szModule, kp::naming::kLegacyRuntimeDll) == 0 ||
+                (!module_basename.empty() && _stricmp(me.szModule, module_basename.c_str()) == 0)) {
                 found = true;
                 break;
             }
@@ -267,11 +323,63 @@ bool has_visible_window(DWORD pid) {
     return ws.found;
 }
 
-bool check_dos_mz_readable(HANDLE proc) {
-    std::uint8_t mz[2]{};
+bool check_wow64_parity(HANDLE target) {
+    using IsWow64Fn = BOOL(WINAPI*)(HANDLE, PBOOL);
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    if (k32 == nullptr) return true;
+    auto fn = reinterpret_cast<IsWow64Fn>(
+        reinterpret_cast<void*>(GetProcAddress(k32, "IsWow64Process")));
+    if (fn == nullptr) return true;
+    BOOL self_wow64 = FALSE;
+    BOOL target_wow64 = FALSE;
+    if (!fn(GetCurrentProcess(), &self_wow64) || !fn(target, &target_wow64)) return false;
+    return self_wow64 == target_wow64;
+}
+
+LPCVOID find_main_module_base(DWORD pid) {
+    for (int attempt = 0; attempt < 8; ++attempt) {
+        HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+        if (snap == INVALID_HANDLE_VALUE) {
+            const DWORD err = GetLastError();
+            if (err == ERROR_BAD_LENGTH || err == ERROR_PARTIAL_COPY) {
+                Sleep(20);
+                continue;
+            }
+            break;
+        }
+        MODULEENTRY32 me{};
+        me.dwSize = sizeof(me);
+        const BOOL ok = Module32First(snap, &me);
+        CloseHandle(snap);
+        if (ok && me.modBaseAddr != nullptr) return me.modBaseAddr;
+        break;
+    }
+    return reinterpret_cast<LPCVOID>(static_cast<std::uintptr_t>(0x00400000u));
+}
+
+bool check_target_pe32(HANDLE proc, DWORD pid) {
+    if (!check_wow64_parity(proc)) return false;
+    const LPCVOID base = find_main_module_base(pid);
+    std::uint8_t dos[0x40]{};
     SIZE_T read = 0;
-    const LPCVOID base = reinterpret_cast<LPCVOID>(static_cast<std::uintptr_t>(0x00400000u));
-    return ReadProcessMemory(proc, base, mz, 2, &read) && read == 2 && mz[0] == 'M' && mz[1] == 'Z';
+    if (!ReadProcessMemory(proc, base, dos, sizeof(dos), &read) || read != sizeof(dos) ||
+        dos[0] != 'M' || dos[1] != 'Z') {
+        return false;
+    }
+    const std::uint32_t e_lfanew = static_cast<std::uint32_t>(dos[0x3c]) |
+                                   (static_cast<std::uint32_t>(dos[0x3d]) << 8) |
+                                   (static_cast<std::uint32_t>(dos[0x3e]) << 16) |
+                                   (static_cast<std::uint32_t>(dos[0x3f]) << 24);
+    if (e_lfanew < sizeof(dos) || e_lfanew >= 0x100000u) return false;
+    std::uint8_t pe_hdr[26]{};
+    const auto nt_addr = reinterpret_cast<LPCVOID>(reinterpret_cast<std::uintptr_t>(base) + e_lfanew);
+    if (!ReadProcessMemory(proc, nt_addr, pe_hdr, sizeof(pe_hdr), &read) || read != sizeof(pe_hdr)) {
+        return false;
+    }
+    if (pe_hdr[0] != 'P' || pe_hdr[1] != 'E' || pe_hdr[2] != 0 || pe_hdr[3] != 0) return false;
+    const std::uint16_t machine = static_cast<std::uint16_t>(pe_hdr[4] | (pe_hdr[5] << 8));
+    const std::uint16_t opt_magic = static_cast<std::uint16_t>(pe_hdr[24] | (pe_hdr[25] << 8));
+    return machine == 0x014c && opt_magic == 0x010b;
 }
 
 bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) {
@@ -311,20 +419,37 @@ bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) 
     }
 
     const DWORD wait_rc = WaitForSingleObject(thread, 15000);
+    if (wait_rc != WAIT_OBJECT_0) {
+        CloseHandle(thread);
+        // Never VirtualFreeEx(remote) on timeout while remote thread may still read it.
+        err = "remote LoadLibraryA did not finish within 15s (wait=" + std::to_string(wait_rc) + ")";
+        return false;
+    }
     DWORD exit_code = 0;
     const BOOL got_code = GetExitCodeThread(thread, &exit_code);
     CloseHandle(thread);
     VirtualFreeEx(proc, remote, 0, MEM_RELEASE);
 
-    if (wait_rc != WAIT_OBJECT_0) {
-        err = "remote LoadLibraryA did not finish within 15s (wait=" + std::to_string(wait_rc) + ")";
-        return false;
-    }
     if (!got_code || exit_code == 0) {
         err = "remote LoadLibraryA returned NULL for " + abs_dll_path;
         return false;
     }
     return true;
+}
+
+int wait_for_exit_code(HANDLE proc) {
+    if (WaitForSingleObject(proc, INFINITE) != WAIT_OBJECT_0) {
+        std::fprintf(stderr, "error: WaitForSingleObject failed (err=%lu)\n",
+                     static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    DWORD code = 0;
+    if (!GetExitCodeProcess(proc, &code)) {
+        std::fprintf(stderr, "error: GetExitCodeProcess failed (err=%lu)\n",
+                     static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    return static_cast<int>(code);
 }
 
 const char* mode_name(Mode m) {
@@ -348,6 +473,7 @@ void print_help() {
         "  --dll <path>                     Path to kotorjit.dll (auto-detected if omitted)\n"
         "  --pid <pid>                      Attach to running process ID (implies --mode attach)\n"
         "  --timeout <ms>                   Steam/window wait timeout in ms (default: 60000)\n"
+        "  --no-wait-window                 In steam mode, inject without waiting for a visible window\n"
         "  --wait                           Wait for the game process to exit\n"
         "  --check                          Inspect target executable and print plan without launching\n"
         "  --version                        Print version and exit\n"
@@ -377,6 +503,10 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             opt.wait = true;
             continue;
         }
+        if (a == "--no-wait-window") {
+            opt.wait_window = false;
+            continue;
+        }
         if (a == "--check") {
             opt.check_only = true;
             continue;
@@ -398,9 +528,9 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             continue;
         }
         if (a == "--pid" && i + 1 < argc) {
-            char* end = nullptr;
-            const unsigned long v = std::strtoul(argv[++i], &end, 10);
-            if (end == nullptr || *end != '\0' || v == 0) {
+            unsigned long v = 0;
+            if (!parse_uint_dec(argv[++i], v) || v == 0 ||
+                v > static_cast<unsigned long>((std::numeric_limits<DWORD>::max)())) {
                 std::fprintf(stderr, "error: invalid --pid value\n");
                 return false;
             }
@@ -409,9 +539,9 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             continue;
         }
         if (a == "--timeout" && i + 1 < argc) {
-            char* end = nullptr;
-            const unsigned long v = std::strtoul(argv[++i], &end, 10);
-            if (end == nullptr || *end != '\0' || v == 0) {
+            unsigned long v = 0;
+            if (!parse_uint_dec(argv[++i], v) || v == 0 ||
+                v > static_cast<unsigned long>((std::numeric_limits<DWORD>::max)())) {
                 std::fprintf(stderr, "error: invalid --timeout value\n");
                 return false;
             }
@@ -498,11 +628,7 @@ int run_direct(const std::string& exe_path, const std::string& game_dir,
     CloseHandle(pi.hThread);
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(pi.hProcess, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(pi.hProcess, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(pi.hProcess);
     CloseHandle(pi.hProcess);
     return rc;
 }
@@ -510,7 +636,7 @@ int run_direct(const std::string& exe_path, const std::string& game_dir,
 int run_steam(const std::string& exe_path, const std::string& game_dir,
               const std::string& dll_path, const KnownBuild* known, const Options& opt) {
     const std::string exe_name = basename_of(exe_path);
-    const std::vector<DWORD> existing = find_pids_by_name(exe_name);
+    const std::vector<DWORD> existing = find_pids_by_name(exe_name, exe_path);
 
     std::string target = exe_path;
     if (known != nullptr && known->steam_app_id[0] != '\0') {
@@ -528,17 +654,18 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
     const DWORD deadline = GetTickCount() + opt.timeout_ms;
     HANDLE target_proc = nullptr;
     DWORD target_pid = 0;
+    std::vector<DWORD> tried_pids = existing;
 
     while (static_cast<std::int32_t>(deadline - GetTickCount()) > 0) {
-        const std::vector<DWORD> now_pids = find_pids_by_name(exe_name);
+        const std::vector<DWORD> now_pids = find_pids_by_name(exe_name, exe_path);
         for (DWORD pid : now_pids) {
-            if (std::find(existing.begin(), existing.end(), pid) != existing.end()) continue;
+            if (std::find(tried_pids.begin(), tried_pids.end(), pid) != tried_pids.end()) continue;
             HANDLE proc = OpenProcess(
                 PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
                 PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
                 FALSE, pid);
             if (proc == nullptr) continue;
-            if (!check_dos_mz_readable(proc)) {
+            if (!check_target_pe32(proc, pid)) {
                 CloseHandle(proc);
                 continue;
             }
@@ -547,6 +674,7 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
             Sleep(500);
             if (WaitForSingleObject(proc, 0) != WAIT_TIMEOUT) {
                 CloseHandle(proc);
+                tried_pids.push_back(pid);
                 continue;
             }
             target_proc = proc;
@@ -563,48 +691,52 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
         return 1;
     }
 
-    bool win_ready = false;
-    while (static_cast<std::int32_t>(deadline - GetTickCount()) > 0) {
-        if (WaitForSingleObject(target_proc, 0) != WAIT_TIMEOUT) {
-            CloseHandle(target_proc);
-            target_proc = nullptr;
-            // Bootstrapper exited later than 500 ms; look for replacement PID.
-            const std::vector<DWORD> now_pids = find_pids_by_name(exe_name);
-            for (DWORD pid : now_pids) {
-                if (pid == target_pid ||
-                    std::find(existing.begin(), existing.end(), pid) != existing.end()) {
+    if (opt.wait_window) {
+        bool win_ready = false;
+        while (static_cast<std::int32_t>(deadline - GetTickCount()) > 0) {
+            if (WaitForSingleObject(target_proc, 0) != WAIT_TIMEOUT) {
+                CloseHandle(target_proc);
+                target_proc = nullptr;
+                tried_pids.push_back(target_pid);
+                // Bootstrapper exited later than 500 ms; look for replacement PID.
+                const std::vector<DWORD> now_pids = find_pids_by_name(exe_name, exe_path);
+                for (DWORD pid : now_pids) {
+                    if (std::find(tried_pids.begin(), tried_pids.end(), pid) != tried_pids.end()) {
+                        continue;
+                    }
+                    HANDLE proc = OpenProcess(
+                        PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
+                        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
+                        FALSE, pid);
+                    if (proc != nullptr && check_target_pe32(proc, pid)) {
+                        target_proc = proc;
+                        target_pid = pid;
+                        break;
+                    }
+                    if (proc != nullptr) CloseHandle(proc);
+                }
+                if (target_proc == nullptr) {
+                    Sleep(100);
                     continue;
                 }
-                HANDLE proc = OpenProcess(
-                    PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
-                    PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
-                    FALSE, pid);
-                if (proc != nullptr && check_dos_mz_readable(proc)) {
-                    target_proc = proc;
-                    target_pid = pid;
-                    break;
-                }
-                if (proc != nullptr) CloseHandle(proc);
             }
-            if (target_proc == nullptr) {
-                Sleep(100);
-                continue;
+            if (has_visible_window(target_pid)) {
+                win_ready = true;
+                break;
             }
+            Sleep(100);
         }
-        if (has_visible_window(target_pid)) {
-            win_ready = true;
-            break;
-        }
-        Sleep(100);
-    }
 
-    if (target_proc == nullptr) {
-        std::fprintf(stderr, "error: %s exited before exposing a main window\n", exe_name.c_str());
-        return 1;
-    }
-    if (!win_ready) {
-        std::fprintf(stderr, "warning: timed out waiting for visible window on PID %lu; attempting inject\n",
-                     static_cast<unsigned long>(target_pid));
+        if (target_proc == nullptr) {
+            std::fprintf(stderr, "error: %s exited before exposing a main window\n", exe_name.c_str());
+            return 1;
+        }
+        if (!win_ready) {
+            std::fprintf(stderr, "error: timed out waiting for visible window on PID %lu\n",
+                         static_cast<unsigned long>(target_pid));
+            CloseHandle(target_proc);
+            return 1;
+        }
     }
 
     const std::string dll_name = basename_of(dll_path);
@@ -626,11 +758,7 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
                 dll_path.c_str(), static_cast<unsigned long>(target_pid));
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(target_proc, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(target_proc, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(target_proc);
     CloseHandle(target_proc);
     return rc;
 }
@@ -639,7 +767,7 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
     DWORD pid = opt.pid;
     if (pid == 0) {
         const std::string exe_name = basename_of(exe_path);
-        const std::vector<DWORD> pids = find_pids_by_name(exe_name);
+        const std::vector<DWORD> pids = find_pids_by_name(exe_name, exe_path);
         if (pids.empty()) {
             std::fprintf(stderr, "error: no running process matching '%s'\n", exe_name.c_str());
             return 1;
@@ -651,13 +779,6 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
         pid = pids.front();
     }
 
-    const std::string dll_name = basename_of(dll_path);
-    if (module_loaded_in_pid(pid, dll_name)) {
-        std::fprintf(stderr, "error: %s is already loaded in PID %lu\n",
-                     dll_name.c_str(), static_cast<unsigned long>(pid));
-        return 1;
-    }
-
     HANDLE proc = OpenProcess(
         PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
         PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
@@ -665,6 +786,20 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
     if (proc == nullptr) {
         std::fprintf(stderr, "error: OpenProcess(%lu) failed (err=%lu)\n",
                      static_cast<unsigned long>(pid), static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    if (!check_target_pe32(proc, pid)) {
+        std::fprintf(stderr, "error: PID %lu is not a valid 32-bit PE process\n",
+                     static_cast<unsigned long>(pid));
+        CloseHandle(proc);
+        return 1;
+    }
+
+    const std::string dll_name = basename_of(dll_path);
+    if (module_loaded_in_pid(pid, dll_name)) {
+        std::fprintf(stderr, "error: %s is already loaded in PID %lu\n",
+                     dll_name.c_str(), static_cast<unsigned long>(pid));
+        CloseHandle(proc);
         return 1;
     }
 
@@ -679,11 +814,7 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
                 dll_path.c_str(), static_cast<unsigned long>(pid));
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(proc, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(proc, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(proc);
     CloseHandle(proc);
     return rc;
 }
@@ -732,8 +863,8 @@ int main(int argc, char** argv) {
             std::fprintf(stderr, "error: %s is not a valid PE executable\n", exe_path.c_str());
             return 1;
         }
-        if (!pe.is_i386) {
-            std::fprintf(stderr, "error: %s has PE machine 0x%04x, expected i386 (0x014c)\n",
+        if (!pe.is_i386 || !pe.is_pe32) {
+            std::fprintf(stderr, "error: %s is not a valid 32-bit PE32 executable (machine=0x%04x)\n",
                          exe_path.c_str(), static_cast<unsigned>(pe.machine));
             return 1;
         }
