@@ -4149,7 +4149,6 @@
       "offset_hex": "0x428"
     }
   },
-  "reference_image": "/home/brunner56/biodecompwarehouse/kotorxid/output/binaries/K1__k1_win_gog_swkotor.exe/artifacts/raw_image",
   "reference_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
   "derived_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435",
   "sentinel": {

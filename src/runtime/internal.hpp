@@ -95,6 +95,9 @@ void set_active_multiplayer_transport(multiplayer::Transport*);
 // Called by the runtime once hooks are installed, and again before they are
 // removed. The trampoline is unmapped on uninstall, so a cached original()
 // pointer must be cleared BEFORE the uninstall rather than after.
+// Returns the per-site atomic original pointer slot so HookSet::install()
+// populates g_orig_* before activating each detour.
+std::atomic<void*>* hook_original_slot(std::string_view site);
 void bind_originals(hooks::HookSet&);
 void clear_originals();
 

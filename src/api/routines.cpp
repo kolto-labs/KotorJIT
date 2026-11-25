@@ -524,7 +524,14 @@ int call(lua_State* L, const Routine& r, int first_arg) {
 // builds' RunScript store them there; see api/abi_layout.hpp).
 // data/hostapi.toml `nwscript.with_caller`: write, call body, restore (including on error).
 int l_as(lua_State* L) {
-    const auto id = static_cast<std::uint32_t>(luaL_checkinteger(L, 1));
+    if (lua_type(L, 1) != LUA_TNUMBER)
+        return luaL_argerror(L, 1, "caller id must be an unsigned 32-bit integer");
+    const lua_Number raw_id = lua_tonumber(L, 1);
+    if (!std::isfinite(raw_id) || raw_id < 0.0 || raw_id > 4294967295.0 ||
+        std::floor(raw_id) != raw_id) {
+        return luaL_argerror(L, 1, "caller id must be in 0..4294967295");
+    }
+    const auto id = static_cast<std::uint32_t>(raw_id);
     luaL_checktype(L, 2, LUA_TFUNCTION);
     const VmBinding& vm = binding();
     if (!vm_binding_live())

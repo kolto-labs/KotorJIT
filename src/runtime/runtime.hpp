@@ -81,6 +81,7 @@ public:
     const std::string& failure() const { return failure_; }
     const std::string& build() const { return build_; }
     multiplayer::Role role() const { return role_; }
+    std::uintptr_t     runtime_base() const { return runtime_base_; }
 
     lua::Host*              host()  { return host_.get(); }
     hooks::HookSet*         hooks() { return hooks_.get(); }

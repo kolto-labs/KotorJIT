@@ -20,7 +20,8 @@ const std::array<Profile,4>& profiles() {
            // the client creature getter. Bytes verified against the K2 x86_64
            // slice; see data/adjudication/mac_x64_bindings.json / mac-model-memory.md.
            {0x1002f9cd8ULL,"554889e54883ec10488b470848c745f8"}}},
-         /*manager_server*/0x10,/*server_array*/0x10098},
+         /*manager_server*/0x10,/*server_array*/0x10098,
+         /*container_sha256*/"1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77"},
         {"windows-k1-gog", "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435", Abi::Win32,4,
          0x400000,0x7a39fc,4,4,0x14,8,0x1b4,0x1b8,0x58,0xcc,
          {{{0x5eda50,"8b4904e9685000009090909090909090"},{0x5ed5b0,"8b4904e9c83b00009090909090909090"},
@@ -30,7 +31,9 @@ const std::array<Profile,4>& profiles() {
     return p;
 }
 const Profile* profile_for(const std::string& sha) {
-    for (const auto& p: profiles()) if (sha == p.sha256) return &p;
+    for (const auto& p: profiles())
+        if (sha == p.sha256 || (p.container_sha256 != nullptr && sha == p.container_sha256))
+            return &p;
     return nullptr;
 }
 const char* abi_name(Abi abi) {

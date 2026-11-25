@@ -17,7 +17,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="$ROOT/build-mac"
 LJ="$ROOT/third_party/luajit"
 ARCH=x86_64
-MIN=10.13
+MIN=10.15
 CXX="${CXX:-clang++}"
 CC="${CC:-clang}"
 
@@ -72,6 +72,7 @@ SRCS+=(
 # try/catch so a C++ throw on a game thread becomes a logged, contained return
 # instead of unwinding into game frames that have no unwind info.
 CXXFLAGS=(-std=c++20 -O2 -DNDEBUG -arch "$ARCH" -mmacosx-version-min="$MIN"
+          -ffile-prefix-map="$ROOT"=."
           -fvisibility=hidden -Wall -Wextra -Wno-unused-parameter
           -I"$ROOT/src" -I"$LJ/src" -I"$ROOT/third_party/imgui")
 

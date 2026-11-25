@@ -137,6 +137,8 @@ struct Plan {
 };
 Plan plan(const std::uint8_t* code, std::size_t avail, std::uint64_t at);
 
+using TrampolineFn = void (*)(void* original, void* user);
+
 class Detour {
 public:
     Detour() = default;
@@ -151,7 +153,9 @@ public:
     HookStatus install(void* target, void* detour,
                        const std::uint8_t* expect = nullptr,
                        std::size_t expect_len = 0,
-                       const char** detail = nullptr);
+                       const char** detail = nullptr,
+                       TrampolineFn on_trampoline = nullptr,
+                       void* trampoline_user = nullptr);
 
     // Restores the original bytes and the recorded protection after checking
     // our patch is still there. On failure, installed() says whether the

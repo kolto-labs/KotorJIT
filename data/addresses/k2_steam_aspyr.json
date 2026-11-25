@@ -3292,7 +3292,6 @@
       "owner": null
     }
   },
-  "reference_image": "/home/brunner56/biodecompwarehouse/kotorxid/output/binaries/TSL__k2_win_steam_aspyr_swkotor2.exe/artifacts/raw_image",
   "reference_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
   "derived_sha256": "6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef",
   "sentinel": {

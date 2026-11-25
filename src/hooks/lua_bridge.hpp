@@ -50,9 +50,12 @@ private:
 // it must return false, poison the entry, and disable the affected Lua runtime.
 using Guard = bool (*)(Entry&, void (*work)(void*), void*);
 using Review = bool (*)(const Site&);
+// Returns true if the failing script is now quarantined and its handler should
+// be deactivated.
+using OnError = bool (*)(lua_State*, const char* site, const char* message);
 // Binding/unbinding and registration belong to quiescent engine-thread points.
 void bind(const AddressTable*, std::uintptr_t base, Entry::Gate live_gate,
-          Entry::Gate patch_gate, Guard, Review = nullptr);
+          Entry::Gate patch_gate, Guard, Review = nullptr, OnError = nullptr);
 void register_all(lua_State*);
 void close_state(lua_State*);
 void shutdown();

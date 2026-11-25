@@ -150,15 +150,19 @@ endif()
 if(KP_MINGW_CXX)
     set(KP_STRUCTS_WIN32_OBJDIR "${CMAKE_BINARY_DIR}/win32")
     set(KP_STRUCTS_WIN32_OBJ "${KP_STRUCTS_WIN32_OBJDIR}/api_structs.obj")
+    set(KP_STRUCTS_WIN32_DEP "${KP_STRUCTS_WIN32_OBJDIR}/api_structs.d")
     add_custom_command(
         OUTPUT ${KP_STRUCTS_WIN32_OBJ}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_STRUCTS_WIN32_OBJDIR}
         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                 ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
                 -I${KP_STRUCTS_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
+                -MD -MF ${KP_STRUCTS_WIN32_DEP}
                 -c "${KP_STRUCTS_DIR}/structs.cpp" -o ${KP_STRUCTS_WIN32_OBJ}
         DEPENDS "${KP_STRUCTS_DIR}/structs.cpp"
                 "${KP_STRUCTS_REPO}/src/generated/structs_k1.inc"
+        DEPFILE ${KP_STRUCTS_WIN32_DEP}
         COMMENT "i686-w64-mingw32-g++ structs.cpp"
         VERBATIM)
     add_custom_target(api_structs_win32 ALL DEPENDS ${KP_STRUCTS_WIN32_OBJ})
@@ -242,14 +246,18 @@ endif()
 if(KP_MINGW_CXX)
     set(KP_API_WIN32_OBJDIR "${CMAKE_BINARY_DIR}/win32")
     set(KP_API_WIN32_OBJ "${KP_API_WIN32_OBJDIR}/api_entity.obj")
+    set(KP_API_WIN32_DEP "${KP_API_WIN32_OBJDIR}/api_entity.d")
     add_custom_command(
         OUTPUT ${KP_API_WIN32_OBJ}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_API_WIN32_OBJDIR}
         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                 ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
                 -I${KP_API_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR}
+                -MD -MF ${KP_API_WIN32_DEP}
                 -c "${KP_API_DIR}/entity.cpp" -o ${KP_API_WIN32_OBJ}
         DEPENDS "${KP_API_DIR}/entity.cpp"
+        DEPFILE ${KP_API_WIN32_DEP}
         COMMENT "i686-w64-mingw32-g++ entity.cpp"
         VERBATIM)
     add_custom_target(api_entity_win32 ALL DEPENDS ${KP_API_WIN32_OBJ})
@@ -352,14 +360,18 @@ if(KP_MINGW_CXX)
     foreach(src ${KP_SUPPORT_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_SUPPORT_WIN32_OBJDIR}/api_${name}.obj")
+        set(dep "${KP_SUPPORT_WIN32_OBJDIR}/api_${name}.d")
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_SUPPORT_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
                     -I${KP_API_SRC_ROOT} -I${KP_SUPPORT_LUA_INC}
+                    -MD -MF ${dep}
                     -c ${src} -o ${obj}
             DEPENDS ${src}
+            DEPFILE ${dep}
             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"
             VERBATIM)
         list(APPEND KP_SUPPORT_WIN32_OBJECTS ${obj})

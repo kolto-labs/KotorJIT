@@ -4,6 +4,13 @@
 #include <cstring>
 #include <vector>
 
+#if defined(_WIN32)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
+
 namespace kp::image {
 namespace {
 
@@ -123,7 +130,29 @@ std::string sha256_hex(const void* data, std::size_t len) {
 }
 
 std::string sha256_file(const std::string& path) {
+#if defined(_WIN32)
+    auto to_wide = [](const std::string& s) -> std::wstring {
+        if (s.empty()) return {};
+        int n = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, s.data(),
+                                    static_cast<int>(s.size()), nullptr, 0);
+        UINT cp = CP_UTF8;
+        DWORD flags = MB_ERR_INVALID_CHARS;
+        if (n <= 0) {
+            cp = CP_ACP;
+            flags = 0;
+            n = MultiByteToWideChar(cp, flags, s.data(), static_cast<int>(s.size()), nullptr, 0);
+        }
+        if (n <= 0) return {};
+        std::wstring w(static_cast<std::size_t>(n), L'\0');
+        MultiByteToWideChar(cp, flags, s.data(), static_cast<int>(s.size()), w.data(), n);
+        return w;
+    };
+    const std::wstring wpath = to_wide(path);
+    std::FILE* f = !wpath.empty() ? _wfopen(wpath.c_str(), L"rb")
+                                  : std::fopen(path.c_str(), "rb");
+#else
     std::FILE* f = std::fopen(path.c_str(), "rb");
+#endif
     if (f == nullptr) return {};
 
     Sha256 h;

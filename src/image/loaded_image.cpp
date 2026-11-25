@@ -2,11 +2,15 @@
 
 #include <cstdio>
 #include <cstring>
+#include <limits>
 
 #include "pe_elf.hpp"
 
 #if defined(_WIN32)
 #include <windows.h>
+#elif defined(__APPLE__)
+#include <mach/mach.h>
+#include <mach/mach_vm.h>
 #else
 #include <sys/uio.h>
 #include <unistd.h>
@@ -44,19 +48,42 @@ bool BufferImage::read(std::uintptr_t va, void* out, std::size_t len) const {
 
 bool LiveImage::read(std::uintptr_t va, void* out, std::size_t len) const {
     if (len == 0) return true;
+    if (out == nullptr || va == 0) return false;
+    if (len > static_cast<std::size_t>(std::numeric_limits<std::uintptr_t>::max() - va)) return false;
 #if defined(_WIN32)
-    // VirtualQuery first so an uncommitted or no-access region is rejected
-    // before we touch it; ReadProcessMemory then reports any residual fault as
-    // a return value instead of an exception.
-    MEMORY_BASIC_INFORMATION mbi;
-    if (VirtualQuery(reinterpret_cast<LPCVOID>(va), &mbi, sizeof mbi) == 0) return false;
-    if (mbi.State != MEM_COMMIT) return false;
-    if ((mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD)) != 0) return false;
+    // Walk every VM region in [va, va + len) via VirtualQuery first so an
+    // uncommitted, NOACCESS, or PAGE_GUARD tail page never gets touched by
+    // ReadProcessMemory.
+    std::uintptr_t cursor = va;
+    const std::uintptr_t end = va + len;
+    while (cursor < end) {
+        MEMORY_BASIC_INFORMATION mbi{};
+        if (VirtualQuery(reinterpret_cast<LPCVOID>(cursor), &mbi, sizeof mbi) == 0) return false;
+        if (mbi.State != MEM_COMMIT) return false;
+        if ((mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD)) != 0) return false;
+        const std::uintptr_t region_base = reinterpret_cast<std::uintptr_t>(mbi.BaseAddress);
+        if (mbi.RegionSize == 0 ||
+            mbi.RegionSize > std::numeric_limits<std::uintptr_t>::max() - region_base) {
+            break;
+        }
+        const std::uintptr_t region_end = region_base + mbi.RegionSize;
+        if (region_end <= cursor) return false;
+        cursor = region_end;
+    }
 
     SIZE_T got = 0;
     if (ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(va), out, len, &got) == 0)
         return false;
     return got == len;
+#elif defined(__APPLE__)
+    mach_vm_size_t got = 0;
+    const kern_return_t kr = mach_vm_read_overwrite(
+        mach_task_self(),
+        static_cast<mach_vm_address_t>(va),
+        static_cast<mach_vm_size_t>(len),
+        reinterpret_cast<mach_vm_address_t>(out),
+        &got);
+    return kr == KERN_SUCCESS && static_cast<std::size_t>(got) == len;
 #else
     iovec local{out, len};
     iovec remote{reinterpret_cast<void*>(va), len};

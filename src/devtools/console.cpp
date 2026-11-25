@@ -168,8 +168,11 @@ Console::~Console() {
     lua_close(state_);
 }
 Console &console() {
-  static Console c;
-  return c;
+  // Intentionally leaked singleton so FreeLibrary/DLL_PROCESS_DETACH never runs
+  // lua_close(state_) under the OS loader lock. Callers needing explicit
+  // cleanup call Console::reset() from quiescent shutdown.
+  static Console *c = new Console();
+  return *c;
 }
 Submission Console::submit_locked(Session session, std::string code) {
   Submission result{session_, 0, Reject::None};
@@ -348,10 +351,12 @@ bool Console::interrupted() {
 void Console::reset() {
   // Caller guarantees engine ownership and no pump on the stack. Publish the
   // new session and detach state before lua_close invokes finalizers.
-  lua_State *old = state_;
-  state_ = nullptr;
-  io_ref_ = -1;
+  lua_State *old = nullptr;
   {
+    std::lock_guard pump_lock(pump_mutex_);
+    old = state_;
+    state_ = nullptr;
+    io_ref_ = -1;
     std::lock_guard lock(mutex_);
     session_ = next_session.fetch_add(1);
     epoch_first_ = submitted_ + 1;
@@ -374,6 +379,9 @@ void Console::reset() {
 void Console::pump(const std::function<void(lua_State *)> &init) {
   static thread_local bool busy = false;
   if (busy)
+    return;
+  std::unique_lock pump_lock(pump_mutex_, std::try_to_lock);
+  if (!pump_lock.owns_lock())
     return;
   busy = true;
   if (!state_) {

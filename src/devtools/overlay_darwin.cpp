@@ -96,6 +96,7 @@ enum {
 
 std::atomic<bool> g_opened{false};
 std::atomic<unsigned long> g_input_calls{0};
+std::atomic<int> g_viewport_height{0};
 std::atomic<bool> g_imgui_ready{false};
 std::atomic<bool> g_reset_inputs{false};
 std::atomic<bool> g_focus{true};
@@ -324,6 +325,9 @@ void flush_replacement(id self, SEL op) {
         console().output("system", "F12 Lua console attached. Cmd+Enter inserts a newline; Cmd+Up recalls history.");
         g_imgui_ready.store(true, std::memory_order_release);
     }
+    GLint vp[4] = {0, 0, 0, 0};
+    glGetIntegerv(GL_VIEWPORT, vp);
+    if (vp[3] > 0) g_viewport_height.store(vp[3], std::memory_order_release);
     draw();
     reinterpret_cast<void (*)(id, SEL)>(g_orig_flush)(self, op);
 }
@@ -354,6 +358,8 @@ id next_event_replacement(id self, SEL op, unsigned long long mask, id until, id
         return reinterpret_cast<MsgNextEvent>(g_orig_next_event)(self, op, mask, until, mode, dequeue);
     };
     id event = call_orig();
+    // Do not mutate state, toggle F12, or loop 256x on a queue peek (dequeue == NO).
+    if (!dequeue) return event;
 
     static const SEL s_type = sel("type");
     static const SEL s_keycode = sel("keyCode");
@@ -415,11 +421,10 @@ id next_event_replacement(id self, SEL op, unsigned long long mask, id until, id
                     me.scroll = reinterpret_cast<double (*)(id, SEL)>(objc_msgSend)(event, s_delta_y);
                 } else {
                     const NSPointLocal p = reinterpret_cast<MsgPoint>(objc_msgSend)(event, s_loc);
-                    GLint vp[4] = {0, 0, 0, 0};
-                    glGetIntegerv(GL_VIEWPORT, vp);
+                    const int vp_h = g_viewport_height.load(std::memory_order_acquire);
                     // locationInWindow is bottom-left origin; ImGui is top-left.
                     me.x = p.x;
-                    me.y = double(vp[3]) - p.y;
+                    me.y = double(vp_h) - p.y;
                 }
                 std::lock_guard<std::mutex> lock(g_mouse_mutex);
                 if (g_mouse.size() < 512) g_mouse.push_back(me);

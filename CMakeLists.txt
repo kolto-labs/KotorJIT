@@ -98,6 +98,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_compile_options(
+    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+    -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
+)
+
 set(KP_IMAGE_SOURCES
     src/image/sha256.cpp
     src/image/loaded_image.cpp
@@ -147,16 +152,24 @@ find_program(KP_MINGW_CXX i686-w64-mingw32-g++)
 if(KP_MINGW_CXX)
     set(KP_WIN32_OBJDIR ${CMAKE_BINARY_DIR}/win32)
     set(KP_WIN32_OBJECTS)
+    set(KP_IMAGE_WIN32_DEPS
+        ${CMAKE_SOURCE_DIR}/src/generated/builds.inc
+        ${CMAKE_SOURCE_DIR}/src/generated/builds_macho.inc
+    )
     foreach(src ${KP_IMAGE_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj ${KP_WIN32_OBJDIR}/${name}.obj)
+        set(dep ${KP_WIN32_OBJDIR}/${name}.d)
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -Isrc
+                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+                    -MD -MF ${dep}
                     -c ${CMAKE_SOURCE_DIR}/${src} -o ${obj}
-            DEPENDS ${CMAKE_SOURCE_DIR}/${src}
+            DEPENDS ${CMAKE_SOURCE_DIR}/${src} ${KP_IMAGE_WIN32_DEPS}
+            DEPFILE ${dep}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             COMMENT "i686-w64-mingw32-g++ ${src}"
             VERBATIM)
@@ -179,6 +192,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api.cmake)
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
 # defines kp_harnesstest, which needs no runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/harness.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/pause_lease.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 

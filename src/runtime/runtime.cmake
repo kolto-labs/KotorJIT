@@ -127,6 +127,8 @@ if(KP_MINGW_CXX AND EXISTS "${KP_LUAJIT_WIN_DIR}/libluajit.a")
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_RT_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+                    -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
                     -I${KP_SRC_ROOT} -I${KP_LUAJIT_WIN_DIR} -I${CMAKE_SOURCE_DIR}/third_party/imgui
                     -MD -MF ${dep}
                     -c ${src} -o ${obj}
@@ -196,7 +198,7 @@ if(UNIX AND NOT WIN32)
         # pointer size must match for LuaJIT's build-time code generator, hence
         # -m32 on HOST_CC as well.
         COMMAND ${CMAKE_COMMAND} -E chdir ${KP_LUAJIT_LINUX_DIR}
-                make -s "CC=gcc -m32 -fPIC" "HOST_CC=gcc -m32"
+                make -s "CC=gcc -m32 -fPIC -ffile-prefix-map=${CMAKE_BINARY_DIR}/luajit32=luajit" "HOST_CC=gcc -m32"
                      BUILDMODE=static TARGET_SYS=Linux
         COMMENT "building LuaJIT for native 32-bit Linux"
         VERBATIM)

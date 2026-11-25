@@ -57,7 +57,7 @@ static const BuildRecord kBuilds[] = {
         Format::Pe32, 0x00400000, false,
         0, "", "",
         kText_k2_steam_aspyr, sizeof kText_k2_steam_aspyr / sizeof kText_k2_steam_aspyr[0],
-        "Windows Steam Aspyr KOTOR 2 PE. Required sites hand-adjudicated against the GOG Aspyr donor and installable.",
+        "Required VM/stack and multiplayer sites are adjudicated against the exact Steam image and the K2 GOG donor. Bound executable sites carry target-derived expected bytes; field bindings carry measured offsets. Unresolved optional sites remain fail-closed.",
     },
 };
 // clang-format on

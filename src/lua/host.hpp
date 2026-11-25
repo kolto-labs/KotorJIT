@@ -339,6 +339,7 @@ public:
     std::size_t   pending_requests() const { return queue_.size(); }
 
     const std::string& script_dir() const { return cfg_.script_dir; }
+    unsigned           error_budget() const { return cfg_.error_budget; }
 
     // True while the host is inside a Lua call it made: dispatch, a lifecycle
     // raise, or a chunk running during load.

@@ -94,6 +94,8 @@ enum class HookStatus {
 
 const char* to_string(HookStatus);
 
+using TrampolineFn = void (*)(void* original, void* user);
+
 // One installed detour. Move-only: the object owns a trampoline allocation and
 // the obligation to restore the target's bytes, and neither survives copying.
 class Detour {
@@ -130,7 +132,9 @@ public:
     HookStatus install(void* target, void* detour,
                        const std::uint8_t* expect = nullptr,
                        std::size_t expect_len = 0,
-                       std::string* detail = nullptr);
+                       std::string* detail = nullptr,
+                       TrampolineFn on_trampoline = nullptr,
+                       void* trampoline_user = nullptr);
 
     // Restore the original bytes and release the trampoline.
     //

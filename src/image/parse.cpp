@@ -67,8 +67,11 @@ std::optional<elf::Headers> read_elf_headers(const LoadedImage& img) {
     const std::uint16_t phentsize = rd16(ehdr.data() + 42);
     const std::uint16_t phnum     = rd16(ehdr.data() + 44);
 
-    const std::size_t span = static_cast<std::size_t>(phoff) + static_cast<std::size_t>(phentsize) * phnum;
-    if (span == 0 || span > kMaxTableBytes) return std::nullopt;
+    const std::uint64_t span64 =
+        static_cast<std::uint64_t>(phoff) +
+        static_cast<std::uint64_t>(phentsize) * static_cast<std::uint64_t>(phnum);
+    if (span64 == 0 || span64 > kMaxTableBytes) return std::nullopt;
+    const std::size_t span = static_cast<std::size_t>(span64);
 
     std::vector<std::uint8_t> buf;
     if (!img.read_vector(img.base(), span, buf)) return std::nullopt;
@@ -184,7 +187,7 @@ bool macho_sections(const LoadedImage& img, std::vector<Section>* out, MachOLive
         std::uint32_t cmd = 0, cmdsize = 0;
         std::memcpy(&cmd, cmds.data() + off, 4);
         std::memcpy(&cmdsize, cmds.data() + off + 4, 4);
-        if (cmdsize < 8 || off + cmdsize > cmds.size()) return false;
+        if (cmdsize < 8 || cmdsize > cmds.size() - off) return false;
         if (cmd == 0x19) {                                     // LC_SEGMENT_64
             if (cmdsize < 72) return false;
             const std::uint8_t* c = cmds.data() + off;

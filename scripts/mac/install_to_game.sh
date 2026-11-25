@@ -31,7 +31,7 @@ find_macos_dir() {
     [[ -f "$t/Contents/MacOS/$exe" ]] && { echo "$t/Contents/MacOS"; return; }
   done
   # search one level down for a .app
-  local app; app=$(find "$t" -maxdepth 2 -name '*.app' -type d 2>/dev/null | head -1)
+  local app; app=$({ find "$t" -maxdepth 2 -name '*.app' -type d 2>/dev/null || true; } | head -n 1)
   [[ -n "$app" && -d "$app/Contents/MacOS" ]] && { echo "$app/Contents/MacOS"; return; }
   return 1
 }
@@ -45,14 +45,26 @@ DYLIB="$MACOS/libkotorjit.dylib"
 case "$ACTION" in
 install)
   [[ -f "$BUILD/libkotorjit.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libkotorjit.dylib)" >&2; exit 1; }
-  # Identify the build by the code-section hash so the right address table is
-  # shipped, exactly as the runtime identifies it at load.
+  # Identify the build by the code-section hash and architecture so the right
+  # address table is shipped, exactly as the runtime identifies it at load.
+  if ! lipo -archs "$MACOS/$EXE" 2>/dev/null | grep -qw x86_64; then
+    echo "unsupported architecture in $MACOS/$EXE (x86_64 slice required)" >&2
+    exit 1
+  fi
   local_sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
   SHA="$(local_sha "$MACOS/$EXE")"
   BUILDID=""
-  case "$EXE" in
-    KOTOR_Exe|swkotor)   BUILDID=k1_mac_steam_x64;;
-    KOTOR2sub|swkotor2)  BUILDID=k2_mac_steam_x64;;
+  case "$SHA" in
+    c1fcb8d37c702849882a17751c63ee0af7c2b9cbbc3b31b98a5f0edbc27c6d71)
+      BUILDID=k1_mac_steam_x64
+      ;;
+    1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77|469067c416f1a3ff391df73c7ace2d44a8d0a246253e8ad5752f6413ea033be4)
+      BUILDID=k2_mac_steam_x64
+      ;;
+    *)
+      echo "unrecognized macOS executable SHA-256 for $MACOS/$EXE: $SHA" >&2
+      exit 1
+      ;;
   esac
   # Upgrading an install made under the old name (KotorPhasor): keep its
   # scripts by moving the data folder, and keep any Steam launch option that

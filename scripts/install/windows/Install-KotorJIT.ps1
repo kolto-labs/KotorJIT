@@ -443,14 +443,25 @@ if ($Action -eq 'Uninstall') {
 
 # --------------------------------------------------------------------------
 # Install: every check before the first write.
-if (-not $SourceDir) {
-    $repoBuild = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'build')
+if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'data\addresses') -PathType Container) {
+    $pkgRoot = $PSScriptRoot
+} else {
     $pkgRoot = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..')
-    if (Test-Path -LiteralPath $repoBuild -PathType Container) { $SourceDir = $repoBuild }
-    elseif (Test-Path -LiteralPath (Join-Path $pkgRoot 'kotorjit.dll') -PathType Leaf) { $SourceDir = $pkgRoot }
-    else { $SourceDir = $repoBuild }
 }
-if (-not $AddressDir) { $AddressDir = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'data', 'addresses') }
+if (-not $SourceDir) {
+    foreach ($cand in @(
+        (Join-Path $pkgRoot 'build'),
+        $pkgRoot,
+        (Join-Path $pkgRoot 'bin')
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $cand 'kotorjit.dll') -PathType Leaf) {
+            $SourceDir = $cand
+            break
+        }
+    }
+    if (-not $SourceDir) { $SourceDir = Join-Path $pkgRoot 'build' }
+}
+if (-not $AddressDir) { $AddressDir = [System.IO.Path]::Combine($pkgRoot, 'data', 'addresses') }
 $SourceDir = (Resolve-Path -LiteralPath $SourceDir).Path
 $AddressDir = (Resolve-Path -LiteralPath $AddressDir).Path
 
@@ -575,6 +586,16 @@ try {
         $backupFile = [System.IO.Path]::Combine($backupRel, 'binkw32.dll')
         Copy-Item -LiteralPath $Proxy -Destination (Join-Path $GameDir $backupFile)
         if ((Get-Sha256 (Join-Path $GameDir $backupFile)) -ne $binkSha) { throw 'backup copy of binkw32.dll does not verify' }
+        [void]$undo.Add({
+            $bPath = Join-Path $GameDir $backupFile
+            if ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and ((Get-Sha256 $Proxy) -eq $binkSha)) {
+                Remove-Item -LiteralPath $bPath -Force -ErrorAction SilentlyContinue
+                $bDir = Split-Path -Parent $bPath
+                if ((Test-Path -LiteralPath $bDir) -and -not (Get-ChildItem -LiteralPath $bDir -Force)) { Remove-Item -LiteralPath $bDir -Force -ErrorAction SilentlyContinue }
+                $pDir = Split-Path -Parent $bDir
+                if ((Test-Path -LiteralPath $pDir) -and -not (Get-ChildItem -LiteralPath $pDir -Force)) { Remove-Item -LiteralPath $pDir -Force -ErrorAction SilentlyContinue }
+            }
+        }.GetNewClosure())
         if (-not (Test-Path -LiteralPath $Real)) { Add-Created 'binkw32_real.dll' $Proxy }
     }
 

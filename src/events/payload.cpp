@@ -156,7 +156,8 @@ std::string script_event_string(const ScriptEventView& ev, int index) {
     constexpr std::uint32_t kMax = 64 * 1024;
     if (s.length > kMax || !readable(s.c_string, s.length)) return {};
     std::uint32_t len = s.length;
-    if (len > 0 && s.c_string[len - 1] == '\0') --len;
+    if (const void* nul = std::memchr(s.c_string, '\0', len))
+        len = static_cast<std::uint32_t>(static_cast<const char*>(nul) - s.c_string);
     return std::string(s.c_string, len);
 }
 

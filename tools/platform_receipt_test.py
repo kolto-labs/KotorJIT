@@ -1450,6 +1450,23 @@ class InstallerBehaviour(unittest.TestCase):
         self.assertEqual(m["method"], "proxy")
         self.assertEqual(m["game"]["build"], "k1_steam_103")
 
+    def test_release_zip_root_layout_auto_resolves_without_dirs(self):
+        flat = Path(tempfile.mkdtemp(prefix="kj_ps1_flat."))
+        self.addCleanup(shutil.rmtree, flat, True)
+        flat_script = flat / "Install-KotorJIT.ps1"
+        flat_script.write_text(self.script.read_text())
+        (flat / "kotorjit.dll").write_bytes(self.DLL)
+        (flat / "binkw32.dll").write_bytes(self.PROXY)
+        (flat / "data" / "addresses").mkdir(parents=True)
+        (flat / "data" / "addresses" / "k1_gog_103.json").write_text('{"build": "k1_gog_103"}\n')
+        cmd = self.pwsh + ["-NoProfile", "-NonInteractive", "-File", str(flat_script),
+                           "-GameDir", str(self.game)]
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        self.assertEqual(out.returncode, 0, out.stdout + out.stderr)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "proxy")
+        self.assertEqual(m["game"]["build"], "k1_gog_103")
+
 
 class InjectReceiptValidation(unittest.TestCase):
     def test_inject_receipt_validates_and_requires_launcher_sha(self):

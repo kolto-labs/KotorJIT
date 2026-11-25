@@ -112,11 +112,13 @@ is_elf32_le() {
 }
 
 find_linux_exe() {
-  if [[ -f "$GAME/KOTOR2" ]] && is_elf32_le "$GAME/KOTOR2"; then
-    echo "KOTOR2"
-    return 0
-  fi
-  for cand in "$GAME"/KOTOR* "$GAME"/swkotor*; do
+  for exact in kotor2 KOTOR2; do
+    if [[ -f "$GAME/$exact" ]] && is_elf32_le "$GAME/$exact"; then
+      echo "$exact"
+      return 0
+    fi
+  done
+  for cand in "$GAME"/KOTOR* "$GAME"/kotor* "$GAME"/swkotor*; do
     [[ -f "$cand" && -x "$cand" ]] || continue
     [[ "${cand##*/}" == *.so* || "${cand##*/}" == *.sh ]] && continue
     if is_elf32_le "$cand"; then
@@ -164,15 +166,22 @@ prepare_kotorjit_dir() {
 
 case "$ACTION" in
 install)
-  if is_ours || [[ -f "$METHOD_FILE" ]] || [[ -f "$MARK" ]] || [[ -f "$GAME/kotorphasor/.installed" ]] || [[ -f "$LAUNCHER_DST" ]] || [[ -f "$PRELOAD_WRAPPER" ]]; then
-    echo "already installed; run uninstall first if you want a clean swap" >&2
-    exit 1
-  fi
-
   WIN_EXE=""
   LINUX_EXE=""
   WIN_EXE="$(find_win_exe || true)"
   LINUX_EXE="$(find_linux_exe || true)"
+  ELF_TOOL_CHK="$(find_elf_tool || true)"
+
+  if is_ours || [[ -f "$METHOD_FILE" ]] || [[ -f "$MARK" ]] || [[ -f "$GAME/kotorphasor/.installed" ]] \
+     || [[ -f "$LAUNCHER_DST" ]] || [[ -f "$PRELOAD_WRAPPER" ]] || [[ -f "$SO_DST" ]] || [[ -f "$GAME/kotorjit.dll" ]]; then
+    echo "already installed; run uninstall first if you want a clean swap" >&2
+    exit 1
+  fi
+  if [[ -n "$LINUX_EXE" && -n "$ELF_TOOL_CHK" ]] && \
+     python3 "$ELF_TOOL_CHK" check "$GAME/$LINUX_EXE" '$ORIGIN/libkotorjit.so' >/dev/null 2>&1; then
+    echo "already installed ($LINUX_EXE references libkotorjit.so); run uninstall first if you want a clean swap" >&2
+    exit 1
+  fi
 
   if [[ "$METHOD" == "auto" ]]; then
     if [[ -n "$WIN_EXE" ]]; then
@@ -231,13 +240,27 @@ install)
       [[ -n "$LINUX_EXE" ]] || { echo "no ELF32 Linux executable found in $GAME" >&2; exit 1; }
       [[ -f "$BUILD/libkotorjit.so" ]] || { echo "missing $BUILD/libkotorjit.so -- build first" >&2; exit 1; }
       ELF_TOOL="$(find_elf_tool)" || { echo "missing tools/elf_needed.py" >&2; exit 1; }
+      BACKUP_BIN="$GAME/kotorjit/backup/${LINUX_EXE}.orig"
+      rollback_linked() {
+        local rc=$?
+        trap - ERR
+        if [[ -f "$BACKUP_BIN" ]]; then
+          cp -p "$BACKUP_BIN" "$GAME/$LINUX_EXE.tmp" 2>/dev/null && mv -f "$GAME/$LINUX_EXE.tmp" "$GAME/$LINUX_EXE" 2>/dev/null || true
+          rm -f "$BACKUP_BIN"
+          rmdir "$GAME/kotorjit/backup" 2>/dev/null || true
+        fi
+        rm -f "$SO_DST" "$METHOD_FILE" "$MARK"
+        exit "$rc"
+      }
+      trap rollback_linked ERR
       prepare_kotorjit_dir
       mkdir -p "$GAME/kotorjit/backup"
-      python3 "$ELF_TOOL" add "$GAME/$LINUX_EXE" '$ORIGIN/libkotorjit.so' \
-        --backup "$GAME/kotorjit/backup/${LINUX_EXE}.orig"
       install -D -m755 "$BUILD/libkotorjit.so" "$SO_DST"
+      python3 "$ELF_TOOL" add "$GAME/$LINUX_EXE" '$ORIGIN/libkotorjit.so' \
+        --backup "$BACKUP_BIN"
       echo "linked:${LINUX_EXE}" > "$METHOD_FILE"
       date -Iseconds > "$MARK"
+      trap - ERR
       echo "installed (method: linked on $LINUX_EXE) into $GAME"
       echo "  scripts go in $GAME/kotorjit/scripts"
       ;;
@@ -279,7 +302,14 @@ uninstall)
         rmdir "$GAME/kotorjit/backup" 2>/dev/null || true
         echo "restored original $TARGET_EXE"
       else
-        echo "no backup $BACKUP_BIN found; leaving $TARGET_EXE alone" >&2
+        ELF_TOOL="$(find_elf_tool || true)"
+        if [[ -n "$ELF_TOOL" && -f "$GAME/$TARGET_EXE" ]] && \
+           python3 "$ELF_TOOL" remove "$GAME/$TARGET_EXE" '$ORIGIN/libkotorjit.so'; then
+          echo "removed DT_NEEDED \$ORIGIN/libkotorjit.so from $TARGET_EXE (no backup present)"
+        else
+          echo "no backup $BACKUP_BIN found and could not cleanly strip DT_NEEDED from $TARGET_EXE; keeping $SO_DST" >&2
+          exit 1
+        fi
       fi
       rm -f "$SO_DST"
       ;;

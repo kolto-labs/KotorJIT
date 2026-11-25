@@ -24,6 +24,7 @@
 // installed are rolled back.
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -190,6 +191,9 @@ struct HookRequest {
     // guarantee -- the generator writes the site's full displaced prologue, and
     // verification is only as wide as the pattern it is given.
     std::vector<std::uint8_t> expect;
+    // Optional slot published with release ordering right before the target JMP
+    // is written (and cleared back to null before the trampoline is unmapped).
+    std::atomic<void*>*       original_slot = nullptr;
 };
 
 // A set of hooks that install and uninstall together.
@@ -223,6 +227,7 @@ private:
     struct Installed {
         std::string name;
         std::unique_ptr<Detour> detour;
+        std::atomic<void*>* original_slot = nullptr;
     };
 
     std::vector<HookRequest> requests_;

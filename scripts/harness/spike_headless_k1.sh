@@ -17,7 +17,7 @@ if [[ -z "${VANILLA:-}" ]]; then
 fi
 if [[ -z "${VANILLA:-}" || ! -d "$VANILLA" ]]; then
   echo "no KOTOR 1 install found." >&2
-  echo "Set KOTOR1_DIR, or add [paths] k1 = \"...\" to kotorphasor.toml." >&2
+  echo "Set KOTOR1_DIR, or add [paths] k1 = \"...\" to kotorjit.toml (or kotorphasor.toml)." >&2
   exit 1
 fi
 GAME_DIR="${GAME_DIR:-$ROOT/tmp/k1_harness}"

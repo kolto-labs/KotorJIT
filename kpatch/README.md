@@ -24,5 +24,6 @@ KotorJIT runtime library, which then:
 
 ```sh
 python3 scripts/package_kpatch.py build
-# -> dist/kotorjit.kpatch
+# -> dist/kotorjit.kpatch (bundles binaries matching [patch.supported_versions])
+# Pass --include-linux to also embed binaries/linux_x86.so if present.
 ```

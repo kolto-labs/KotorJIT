@@ -19,6 +19,7 @@ die() { echo "package_release: $*" >&2; exit 1; }
 
 [[ -f "$BUILD/kotorjit.dll" ]] || die "missing $BUILD/kotorjit.dll — build first"
 [[ -f "$BUILD/binkw32.dll" ]] || die "missing $BUILD/binkw32.dll — build first"
+[[ -f "$BUILD/kotorjit-launch.exe" ]] || die "missing $BUILD/kotorjit-launch.exe — build first"
 
 rm -rf "$STAGE"
 mkdir -p "$STAGE"/{bin,data,docs/user,scripts/install/windows,scripts/mac,tools,examples}
@@ -28,10 +29,8 @@ install -m644 "$BUILD/binkw32.dll" "$STAGE/bin/binkw32.dll"
 # Flat copies at package root so install_to_game.sh can treat STAGE as build-dir.
 install -m644 "$BUILD/kotorjit.dll" "$STAGE/kotorjit.dll"
 install -m644 "$BUILD/binkw32.dll" "$STAGE/binkw32.dll"
-if [[ -f "$BUILD/kotorjit-launch.exe" ]]; then
-  install -m755 "$BUILD/kotorjit-launch.exe" "$STAGE/bin/kotorjit-launch.exe"
-  install -m755 "$BUILD/kotorjit-launch.exe" "$STAGE/kotorjit-launch.exe"
-fi
+install -m755 "$BUILD/kotorjit-launch.exe" "$STAGE/bin/kotorjit-launch.exe"
+install -m755 "$BUILD/kotorjit-launch.exe" "$STAGE/kotorjit-launch.exe"
 if [[ -f "$BUILD/libkotorjit.so" ]]; then
   install -m644 "$BUILD/libkotorjit.so" "$STAGE/bin/libkotorjit.so"
   install -m644 "$BUILD/libkotorjit.so" "$STAGE/libkotorjit.so"
@@ -66,20 +65,23 @@ install -m644 "$ROOT/docs/user/install.md" "$STAGE/docs/user/install.md"
 cat > "$STAGE/INSTALL.txt" <<EOF
 KotorJIT ${VERSION}
 
-Windows (K1/K2 GOG or Steam PE):
+Windows native (PowerShell — Proxy binkw32.dll or Inject kotorjit-launch.exe):
+  powershell -ExecutionPolicy Bypass -File .\Install-KotorJIT.ps1 -GameDir "C:\path\to\game"
+  (pass -Method Inject to use kotorjit-launch.exe instead of proxy binkw32.dll)
+
+Linux / Wine / Proton / Native KOTOR 2 ELF:
   ./install_to_game.sh install /path/to/game/dir .
+  (pass --method proxy, --method inject, --method linked, or --method preload)
 
-That copies kotorjit.dll + proxy binkw32.dll and address tables into the game
-folder. Bring your own legal game install. This package ships no game content.
-
-See docs/user/install.md and CONTRIBUTING.md (Supported builds).
+Bring your own legal game install. This package ships no game content.
+See docs/user/install.md, docs/user/windows-native-install.md, and CONTRIBUTING.md.
 EOF
 
 rm -f "$ZIP"
 mkdir -p "$ROOT/dist"
 (
   cd "$ROOT/dist"
-  zip -rq "${NAME}.zip" "$NAME"
+  zip -Xrq "${NAME}.zip" "$NAME"
 )
 ZIP="$ROOT/dist/${NAME}.zip"
 
@@ -88,3 +90,4 @@ echo "$ZIP"
 echo "sha256 $SUM"
 
 python3 "$ROOT/tools/check_release_zip.py" "$ZIP"
+python3 "$ROOT/tools/scan_release_zip.py" --allow '*.dll' --allow '*.exe' --allow '*.so' --allow '*.dylib' "$ZIP"

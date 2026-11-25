@@ -258,9 +258,22 @@ std::string directory_of(const std::string& path) {
 
 std::string self_module_path() {
 #if defined(_WIN32)
-    char buf[MAX_PATH] = {0};
-    const DWORD n = GetModuleFileNameA(nullptr, buf, sizeof buf);
-    return n > 0 ? std::string(buf, n) : std::string();
+    std::wstring buf(1024, L'\0');
+    for (;;) {
+        const DWORD n = GetModuleFileNameW(nullptr, buf.data(), static_cast<DWORD>(buf.size()));
+        if (n == 0) return {};
+        if (n < buf.size()) {
+            const int utf8_len = WideCharToMultiByte(CP_UTF8, 0, buf.data(), static_cast<int>(n),
+                                                     nullptr, 0, nullptr, nullptr);
+            if (utf8_len <= 0) return {};
+            std::string out(static_cast<std::size_t>(utf8_len), '\0');
+            WideCharToMultiByte(CP_UTF8, 0, buf.data(), static_cast<int>(n),
+                                out.data(), utf8_len, nullptr, nullptr);
+            return out;
+        }
+        if (buf.size() >= 32768) return {};
+        buf.resize(buf.size() * 2);
+    }
 #elif defined(__APPLE__)
     // The GAME executable, not this dylib: the runtime derives game_dir,
     // script dir and log path from it. When KotorJIT is loaded through
@@ -355,8 +368,12 @@ Config Config::from_game_dir(const std::string& game_dir) {
 // --------------------------------------------------------------- Runtime ----
 
 Runtime& Runtime::instance() {
-    static Runtime r;
-    return r;
+    // Intentionally immortal: KPM's KotorPatcher can invoke FreeLibrary
+    // inside its DLL_PROCESS_DETACH under the OS loader lock. Running ~Runtime
+    // there would join Transport's socket thread and unpatch hooks mid-exit.
+    // Quiescent callers use explicit Runtime::stop().
+    static Runtime* r = new Runtime();
+    return *r;
 }
 
 void Runtime::log(const char* fmt, ...) {
@@ -756,8 +773,13 @@ bool Runtime::install(bool multiplayer_enabled) {
     // prefers those -- they are wider than a pattern typed here and they cannot
     // drift away from the table they came from.
     auto set = std::make_unique<hooks::HookSet>();
-    set->add({"vm.run_script", run_script_detour(), {}});
-    set->add({"app.server_main_loop", main_loop_detour(), {}});
+    auto add_hook = [&](std::string site_name, void* detour) {
+        std::atomic<void*>* slot = hook_original_slot(site_name);
+        if (slot == nullptr) slot = kp::harness::adapter_original_slot(site_name);
+        set->add({std::move(site_name), detour, {}, slot});
+    };
+    add_hook("vm.run_script", run_script_detour());
+    add_hook("app.server_main_loop", main_loop_detour());
 
     // Optional caves. HookSet::install refuses an unresolved requested site, so
     // only add the ones this build actually bound. Named vm.run_script events
@@ -802,7 +824,7 @@ bool Runtime::install(bool multiplayer_enabled) {
             continue;
         const hooks::Site* s = table_->find(o.site);
         if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
-            set->add({o.site, o.detour, {}});
+            add_hook(o.site, o.detour);
     }
 
     if (multiplayer_enabled) {
@@ -820,7 +842,7 @@ bool Runtime::install(bool multiplayer_enabled) {
                 failure_ = std::string("multiplayer hook unavailable: ") + hook.site;
                 return false;
             }
-            set->add({hook.site, hook.detour, {}});
+            add_hook(hook.site, hook.detour);
         }
         const hooks::Site* destination = table_->find("net.destination_net_layer");
         if (destination == nullptr || !destination->resolved ||
@@ -854,9 +876,13 @@ bool Runtime::install(bool multiplayer_enabled) {
     // rest of the process with no retry.
     {
         api::VmSites sites;
+        const std::uintptr_t delta =
+            (runtime_base_ != 0 && table_->image_base() != 0)
+                ? (runtime_base_ - table_->image_base())
+                : 0;
         auto at = [&](const char* name) -> std::uintptr_t {
             const hooks::Site* s = table_->find(name);
-            return (s != nullptr && s->resolved) ? s->addr : 0;
+            return (s != nullptr && s->resolved && s->addr != 0) ? (s->addr + delta) : 0;
         };
         sites.execute_command    = at("vm.execute_command");
         sites.stack_push_integer = at("vm.stack_push_integer");
@@ -871,6 +897,18 @@ bool Runtime::install(bool multiplayer_enabled) {
         sites.stack_pop_vector   = at("vm.stack_pop_vector");
         sites.stack_push_engine_structure = at("vm.stack_push_engine_structure");
         sites.stack_pop_engine_structure  = at("vm.stack_pop_engine_structure");
+        sites.destroy_game_defined_structure = at("vmcmd.destroy_game_defined_structure");
+        sites.exostring_dtor                 = at("exo.string_dtor");
+        if (const hooks::Site* cmds = table_->find("vmcmd.commands");
+            cmds != nullptr && cmds->resolved &&
+            cmds->kind == hooks::SiteKind::Field && cmds->offset != 0) {
+            sites.commands_offset = cmds->offset;
+        }
+        if (const hooks::Site* cnt = table_->find("vmcmd.command_count");
+            cnt != nullptr && cnt->resolved &&
+            cnt->kind == hooks::SiteKind::Field && cnt->offset != 0) {
+            sites.commands_count = cnt->offset;
+        }
         const hooks::Site* wrapper_internal = table_->find("vm.wrapper_internal");
         const hooks::Site* command_implementer =
             table_->find("vm.internal_command_implementer");
@@ -951,6 +989,16 @@ bool Runtime::boot_scripts(const Config& cfg) {
                 ids.remove_prefix(end + 1);
             }
             return false;
+        },
+        +[](lua_State* L, const char* site, const char* msg) -> bool {
+            lua::Script* s = lua::Script::owner(L);
+            if (s == nullptr) return false;
+            lua::Host* h = active_host();
+            const std::uint64_t tick = h != nullptr ? h->tick() : 0;
+            const unsigned budget = h != nullptr ? h->error_budget() : 8u;
+            s->record_error(site != nullptr ? site : "kp.hook",
+                            msg != nullptr ? msg : "handler failed", tick, budget);
+            return s->state() == lua::ScriptState::Quarantined;
         });
 #endif
     lua::HostConfig hc;
@@ -1008,6 +1056,13 @@ bool Runtime::boot_scripts(const Config& cfg) {
     }
 
     host_ = std::make_unique<lua::Host>(hc);
+    // Register lifecycle contracts BEFORE load_all so each script's initial
+    // OnScriptLoad runs inside Host::raise_load (protected by RaiseMark)
+    // before active_host() / live() expose the Host to engine hook threads.
+    host_->set_lifecycle(find_contract("OnScriptLoad"),
+                         find_contract("OnScriptUnload"),
+                         table_ ? table_->game() : std::string(),
+                         build_);
     // Publish the host services before load_all: top-level scripts may call
     // kp.scripts during their initial execution, and those calls must see the
     // same host that owns the state. Failed starts clear these bindings before
@@ -1021,27 +1076,19 @@ bool Runtime::boot_scripts(const Config& cfg) {
     log("loaded %u script(s) from %s", loaded, cfg.script_dir.c_str());
 
     // Publish, host pointer first. Every hook body reads the live flag before
-    // it reads the host, so until the second store lands the bodies forward
-    // straight to the original and the game runs exactly as it would without us.
+    // it reads the host, and neither is visible until load_all / OnScriptLoad
+    // have finished on this worker thread.
     phase_ = Phase::Running;
     set_active_host(host_.get());
     set_live(true);
-
-    if (const events::EventContract* ev = find_contract("OnScriptLoad"); ev != nullptr) {
-        const std::vector<lua::Value> args = {
-            lua::Value::str(table_ ? table_->game() : std::string()),
-            lua::Value::str(build_),
-        };
-        host_->dispatch(*ev, args);
-    }
-    host_->set_lifecycle(find_contract("OnScriptLoad"),
-                         find_contract("OnScriptUnload"),
-                         table_ ? table_->game() : std::string(),
-                         build_);
     return true;
 }
 
 bool Runtime::start(const Config& cfg) {
+    if (phase_ != Phase::Idle) {
+        failure_ = std::string("runtime cannot start from phase ") + to_string(phase_);
+        return false;
+    }
     // This is a worker/quiescent transition.  It is deliberately outside
     // DllMain and loader-lock callbacks; no engine thread has been latched yet.
     reset_engine_thread();
@@ -1156,6 +1203,9 @@ void Runtime::stop() {
 #if defined(__i386__)
     hooks::lua_bridge::shutdown();
 #endif
+    // After every hook is unpatched and quiesced, tear down the devtools
+    // console state so a racing pump thread can never observe lua_close.
+    kp::devtools::console().reset();
 
     // Run unload callbacks while the host service is still bound.  The
     // callbacks may inspect kp.scripts; after unload_all the host is empty and

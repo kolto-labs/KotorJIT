@@ -194,6 +194,23 @@ class LinuxFolder(Base):
         self.assertIn("method: linked", self.status())
         self.assertEqual(self.run_game(self.game / "KOTOR2"), ["SFLIB", "MAIN"])
 
+    def test_lowercase_kotor2_detected_and_second_install_refused(self) -> None:
+        (self.game / "KOTOR2").rename(self.game / "kotor2")
+        self.install("linked")
+        self.assertIn("method: linked", self.status())
+        self.assertEqual(self.run_game(self.game / "kotor2"), ["SFLIB", "MAIN"])
+        r = self.install("linked", ok=False)
+        self.assertIn("already installed", r.stderr)
+
+    def test_linked_uninstall_strips_dt_needed_when_backup_missing(self) -> None:
+        self.install("linked")
+        backup = self.game / "kotorjit" / "backup" / "KOTOR2.orig"
+        self.assertTrue(backup.is_file())
+        backup.unlink()
+        self.uninstall()
+        self.assertFalse((self.game / "libkotorjit.so").exists())
+        self.assertEqual(self.run_game(self.game / "KOTOR2"), ["MAIN"])
+
 
 if __name__ == "__main__":
     unittest.main()

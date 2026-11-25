@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 #include <map>
 
 #include "image/image.hpp"
@@ -70,6 +71,8 @@ void derive_regions() {
         fmt = image::Format::Pe32;
     } else if (magic[0] == 0x7f && magic[1] == 'E' && magic[2] == 'L' && magic[3] == 'F') {
         fmt = image::Format::Elf32;
+    } else if (magic[0] == 0xCF && magic[1] == 0xFA && magic[2] == 0xED && magic[3] == 0xFE) {
+        fmt = image::Format::MachO;
     } else {
         return;
     }
@@ -160,8 +163,8 @@ void store(lua_State* L, std::uintptr_t va, const void* src, std::size_t len,
     rec.where   = call_site(L);
 
     platform::log(platform::LogLevel::Info,
-                  "mem write 0x%08X %s %d bytes = %s  <- %s",
-                  (unsigned)va, kind, int(len), rec.value.c_str(),
+                  "mem write %s %s %d bytes = %s  <- %s",
+                  hex32(va).c_str(), kind, int(len), rec.value.c_str(),
                   rec.where.empty() ? "(unknown site)" : rec.where.c_str());
 
     if (g_observer) g_observer(rec, g_observer_user);
@@ -177,8 +180,12 @@ std::string fmt(const char* f, double v) {
 // no %X. So an address is rendered here and handed over as %s. Getting this
 // wrong does not warn; it puts the literal "0x%08X" in the error message.
 std::string hex32(std::uintptr_t va) {
-    char buf[16];
-    std::snprintf(buf, sizeof buf, "0x%08X", (unsigned)va);
+    char buf[32];
+    if constexpr (sizeof(std::uintptr_t) == 4) {
+        std::snprintf(buf, sizeof buf, "0x%08X", static_cast<unsigned>(va));
+    } else {
+        std::snprintf(buf, sizeof buf, "0x%llX", static_cast<unsigned long long>(va));
+    }
     return buf;
 }
 
@@ -197,20 +204,41 @@ lua_Number arg_number(lua_State* L, int idx) {
 
 std::uintptr_t arg_address(lua_State* L, int idx) {
     const lua_Number n = arg_number(L, idx);
-    // The comparison also rejects NaN, which would otherwise cast to something
-    // arbitrary and be probed as if it were an address.
-    if (!(n >= -2147483648.0 && n <= 4294967295.0))
-        luaL_argerror(L, idx, "address outside the 32-bit address space");
-    return std::uintptr_t(std::uint32_t(std::int64_t(n)));
+    if constexpr (sizeof(std::uintptr_t) == 4) {
+        // The comparison also rejects NaN, which would otherwise cast to something
+        // arbitrary and be probed as if it were an address.
+        if (!(n >= -2147483648.0 && n <= 4294967295.0))
+            luaL_argerror(L, idx, "address outside the 32-bit address space");
+        return std::uintptr_t(std::uint32_t(std::int64_t(n)));
+    } else {
+        if (!std::isfinite(n) || n < 0.0 || n > 9007199254740991.0)
+            luaL_argerror(L, idx, "address outside the 64-bit exact integer range");
+        return static_cast<std::uintptr_t>(static_cast<std::uint64_t>(n));
+    }
 }
 
 std::uintptr_t offset_by(lua_State* L, std::uintptr_t base, int idx) {
     const lua_Number n = arg_number(L, idx);
-    if (!(n >= -2147483648.0 && n <= 4294967295.0))
-        luaL_argerror(L, idx, "offset outside the 32-bit address space");
-    // Wrap in 32 bits on purpose: base + a negative offset is how the corpus
-    // walks backwards through a struct.
-    return std::uintptr_t(std::uint32_t(base) + std::uint32_t(std::int64_t(n)));
+    if constexpr (sizeof(std::uintptr_t) == 4) {
+        if (!(n >= -2147483648.0 && n <= 4294967295.0))
+            luaL_argerror(L, idx, "offset outside the 32-bit address space");
+        // Wrap in 32 bits on purpose: base + a negative offset is how the corpus
+        // walks backwards through a struct.
+        return std::uintptr_t(std::uint32_t(base) + std::uint32_t(std::int64_t(n)));
+    } else {
+        if (!std::isfinite(n) || n < -9007199254740991.0 || n > 9007199254740991.0)
+            luaL_argerror(L, idx, "offset outside the 64-bit exact integer range");
+        const std::int64_t delta = static_cast<std::int64_t>(n);
+        if (delta < 0) {
+            const std::uint64_t mag = static_cast<std::uint64_t>(-delta);
+            if (mag > base) luaL_argerror(L, idx, "offset underflows address");
+            return static_cast<std::uintptr_t>(base - mag);
+        }
+        const std::uint64_t udelta = static_cast<std::uint64_t>(delta);
+        if (udelta > std::numeric_limits<std::uintptr_t>::max() - base)
+            luaL_argerror(L, idx, "offset overflows address");
+        return static_cast<std::uintptr_t>(base + udelta);
+    }
 }
 
 void check_arity(lua_State* L, const char* fn, int lo, int hi) {
@@ -318,7 +346,11 @@ std::uintptr_t normalise_bit(lua_State* L, std::uintptr_t a, int idx, unsigned& 
         luaL_argerror(L, idx, "bit index must be zero or positive");
     const std::uint32_t b = std::uint32_t(std::int64_t(n));
     bit = b % 8;
-    return std::uintptr_t(std::uint32_t(a) + (b / 8));
+    if constexpr (sizeof(std::uintptr_t) == 4) {
+        return std::uintptr_t(std::uint32_t(a) + (b / 8));
+    } else {
+        return a + static_cast<std::uintptr_t>(b / 8);
+    }
 }
 
 int l_readbit(lua_State* L) {
@@ -617,8 +649,13 @@ int l_findsig(lua_State* L) {
 
     // The key carries the module base, so a rebased or reloaded module does not
     // hand back an address from the previous mapping.
-    char key[64];
-    std::snprintf(key, sizeof key, "%08X|%u|", (unsigned)scan_base(), occurrence);
+    char key[96];
+    if constexpr (sizeof(std::uintptr_t) == 4) {
+        std::snprintf(key, sizeof key, "%08X|%u|", static_cast<unsigned>(scan_base()), occurrence);
+    } else {
+        std::snprintf(key, sizeof key, "%016llX|%u|",
+                      static_cast<unsigned long long>(scan_base()), occurrence);
+    }
     const std::string memo_key = std::string(key) + std::string(text, len);
 
     auto& cache = memo();

@@ -143,6 +143,12 @@ void* client_play_movies_detour() {
     return reinterpret_cast<void*>(&play_movies_body_ecx);
 }
 
+std::atomic<void*>* adapter_original_slot(std::string_view site) {
+    if (site == "client.set_game_speed") return &g_orig_set_game_speed;
+    if (site == "client.play_movies") return &g_orig_play_movies;
+    return nullptr;
+}
+
 void bind_adapter_originals(const hooks::HookSet& set) {
     g_orig_set_game_speed.store(set.original("client.set_game_speed"), std::memory_order_release);
     g_orig_play_movies.store(set.original("client.play_movies"), std::memory_order_release);

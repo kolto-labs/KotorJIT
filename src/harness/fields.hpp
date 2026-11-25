@@ -210,7 +210,8 @@ inline std::optional<std::string> read_exostring_at(std::uintptr_t addr) {
     if (s.length > kMaxEngineString) return std::nullopt;
     if (!readable(reinterpret_cast<std::uintptr_t>(s.c_string), s.length)) return std::nullopt;
     std::uint32_t len = s.length;
-    if (s.c_string[len - 1] == '\0') --len;
+    if (const void* nul = std::memchr(s.c_string, '\0', len))
+        len = static_cast<std::uint32_t>(static_cast<const char*>(nul) - s.c_string);
     return std::string(s.c_string, len);
 }
 

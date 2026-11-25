@@ -349,4 +349,28 @@ test('cursed/100_item_airstrike.lua','strikes only hostile non-party creatures b
  local asked=false; for _,c in ipairs(f.calls) do if c.name=='GetIsEnemy' and c.args[1]==22 and c.args[2]==1 then asked=true end end; assert(asked)
 end)
 
+test('cursed/110_footlocker_blaster.lua','ranged filtering, dedup, crate flight, impact fling, and footammo console command',function(F,p)
+ local f=F.new(p):load(); f:arm()
+ assert(f.locals[5]==1 and f.locals[6]==11 and f:has('[cursed:footlocker] armed ammo=footlker001'))
+ f.env.OnCreatureAttacked(20,1); assert(f:count('CreateObject')==0)
+ f.objects[50]={tag='blaster',ranged=1}
+ f.overrides.GetItemInSlot=function(slot,id) return (id==1 and slot==4) and 50 or F.INVALID end
+ f.env.OnCreatureAttacked(20,1)
+ assert(f:count('CreateObject')==1 and #f.timers==1 and f.timers[1].ms==40)
+ assert(f:has('[cursed:footlocker] shot #1 ammo=footlker001 -> sith'))
+ f.env.OnCreatureBroadcastSafeProjectile(20,1)
+ assert(f:count('CreateObject')==1 and #f.timers==1)
+ for step=1,5 do assert(f:fire(1)==true) end
+ local jmp=f:last('JumpToLocation'); assert(jmp and jmp.caller==100)
+ assert(f:fire(1)==false)
+ assert(f:count('EffectForcePushed')==2 and f:count('EffectVisualEffect')==2)
+ assert(f.locals[7]==1 and f:count('DestroyObject')==1)
+ assert(f:has('[cursed:footlocker] impact #1 on sith'))
+ f.second=11
+ f.env.OnCreatureAttacked(1,1); f.env.OnCreatureAttacked(2,1)
+ assert(f:count('CreateObject')==1)
+ assert(f.env.OnConsoleCommand('footammo k_trg_crate')==false)
+ assert(f.locals[6]==11 and f:has('ammo set to k_trg_crate'))
+end)
+
 end

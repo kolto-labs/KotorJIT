@@ -18,6 +18,7 @@ if(KP_MINGW_CXX AND TARGET image_win32)
         OUTPUT ${KP_LAUNCHER_EXE}
         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                 ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2
+                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
                 "-I${CMAKE_SOURCE_DIR}/src"
                 -o ${KP_LAUNCHER_EXE}
                 "${KP_LAUNCHER_DIR}/launcher.cpp"

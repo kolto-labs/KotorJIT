@@ -57,12 +57,6 @@ KNOWN_DRIFT = {
     ("profile-sha-unregistered", "model:macos-k2-x86_64",
      "469067c416f1a3ff391df73c7ace2d44a8d0a246253e8ad5752f6413ea033be4" + _UNREG):
         "M0 static-only k2_mac_x86_64 generator entry",
-    # builds.inc still says "Not installable" for k2_steam_aspyr while its
-    # address JSON says installable with 39/256 sites. builds.inc is only
-    # rewritten by --all, which is sequenced after k2_gog_aspyr.json lands.
-    ("note-mismatch", "k2_steam_aspyr",
-     "json-note-sha256=70ca14da1cd6412e builds.inc-note-sha256=1e8a73ae1e6375da"):
-        "W0-later --all regen after k2_gog_aspyr.json commit",
 }
 
 

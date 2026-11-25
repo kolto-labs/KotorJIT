@@ -29,15 +29,15 @@ HMODULE g_self = nullptr;
 // Resolve `leaf` inside the directory containing this binkw32.dll so neither
 // the proxy log nor runtime DLL lookup depends on process CWD. Returns true if
 // resolved relative to g_self; falls back to bare `leaf` otherwise.
-bool sibling_path(const char* leaf, char* out, DWORD cap) {
+bool sibling_path(const wchar_t* leaf, wchar_t* out, DWORD cap) {
     if (out == nullptr || cap == 0 || leaf == nullptr) return false;
     if (g_self != nullptr) {
-        char mod[MAX_PATH * 2] = {};
-        const DWORD n = GetModuleFileNameA(g_self, mod, sizeof(mod));
-        if (n > 0 && n < sizeof(mod)) {
+        wchar_t mod[32768] = {};
+        const DWORD n = GetModuleFileNameW(g_self, mod, static_cast<DWORD>(sizeof(mod) / sizeof(mod[0])));
+        if (n > 0 && n < sizeof(mod) / sizeof(mod[0])) {
             DWORD cut = n;
-            while (cut > 0 && mod[cut - 1] != '\\' && mod[cut - 1] != '/') --cut;
-            const int leaf_len = lstrlenA(leaf);
+            while (cut > 0 && mod[cut - 1] != L'\\' && mod[cut - 1] != L'/') --cut;
+            const int leaf_len = lstrlenW(leaf);
             if (cut > 0 && cut + static_cast<DWORD>(leaf_len) + 1 <= cap) {
                 for (DWORD i = 0; i < cut; ++i) out[i] = mod[i];
                 for (int i = 0; i <= leaf_len; ++i) out[cut + static_cast<DWORD>(i)] = leaf[i];
@@ -45,7 +45,7 @@ bool sibling_path(const char* leaf, char* out, DWORD cap) {
             }
         }
     }
-    lstrcpynA(out, leaf, static_cast<int>(cap));
+    lstrcpynW(out, leaf, static_cast<int>(cap));
     return false;
 }
 
@@ -53,9 +53,9 @@ bool sibling_path(const char* leaf, char* out, DWORD cap) {
 // A player whose mod silently does nothing has no way to tell this apart from a
 // mod that loaded and found nothing to do.
 void note(const char* what) {
-    char log_path[MAX_PATH * 2] = {};
-    sibling_path("kotorjit-proxy.log", log_path, sizeof(log_path));
-    HANDLE f = CreateFileA(log_path, FILE_APPEND_DATA, FILE_SHARE_READ,
+    wchar_t log_path[32768] = {};
+    sibling_path(L"kotorjit-proxy.log", log_path, static_cast<DWORD>(sizeof(log_path) / sizeof(log_path[0])));
+    HANDLE f = CreateFileW(log_path, FILE_APPEND_DATA, FILE_SHARE_READ,
                            nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (f == INVALID_HANDLE_VALUE) return;
     DWORD written = 0;
@@ -68,39 +68,40 @@ void note(const char* what) {
 // KotorPhasor -> KotorJIT rename, so a game folder that only received a new
 // proxy (or only kept an old DLL) still starts scripting. Exactly one runtime
 // is ever loaded: if either is already resident, nothing more happens.
-constexpr const char* kRuntimeNames[] = {"kotorjit.dll", "kphasor.dll"};
+struct RuntimeName {
+    const wchar_t* wide;
+    const char*    ascii;
+};
+constexpr RuntimeName kRuntimeNames[] = {
+    {L"kotorjit.dll", "kotorjit.dll"},
+    {L"kphasor.dll", "kphasor.dll"},
+};
 
 void load_runtime() {
-    for (const char* name : kRuntimeNames)
-        if (GetModuleHandleA(name) != nullptr) return;   // already in
+    for (const RuntimeName& name : kRuntimeNames)
+        if (GetModuleHandleW(name.wide) != nullptr) return;   // already in
 
     DWORD first_error = 0;
-    for (const char* name : kRuntimeNames) {
-        char dll_path[MAX_PATH * 2] = {};
-        const bool resolved = sibling_path(name, dll_path, sizeof(dll_path));
-        if (LoadLibraryA(dll_path) != nullptr) {
+    for (const RuntimeName& name : kRuntimeNames) {
+        wchar_t dll_path[32768] = {};
+        // Never fall back to unqualified LoadLibrary when sibling resolution
+        // succeeded: doing so would search CWD/System32/PATH and mask sibling
+        // kphasor.dll or allow DLL hijacking.
+        (void)sibling_path(name.wide, dll_path, static_cast<DWORD>(sizeof(dll_path) / sizeof(dll_path[0])));
+        if (LoadLibraryW(dll_path) != nullptr) {
             char msg[96];
-            wsprintfA(msg, "%s loaded", name);
+            wsprintfA(msg, "%s loaded", name.ascii);
             note(msg);
             return;
         }
-        DWORD err = GetLastError();
-        if (resolved && err == ERROR_MOD_NOT_FOUND) {
-            if (LoadLibraryA(name) != nullptr) {
-                char msg[96];
-                wsprintfA(msg, "%s loaded", name);
-                note(msg);
-                return;
-            }
-            err = GetLastError();
-        }
+        const DWORD err = GetLastError();
         if (first_error == 0) first_error = err;
         // ERROR_MOD_NOT_FOUND just means "not installed under this name"; any
         // other error means the file is there and broken, which is worth
         // recording even if a later name loads.
         if (err != ERROR_MOD_NOT_FOUND) {
             char msg[128];
-            wsprintfA(msg, "%s failed to load (GetLastError=%lu)", name, err);
+            wsprintfA(msg, "%s failed to load (GetLastError=%lu)", name.ascii, err);
             note(msg);
         }
     }

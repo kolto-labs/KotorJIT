@@ -472,7 +472,7 @@ def image_facts(spec: dict, sentinel_va: int | None) -> dict:
     """
     import hashlib
     ref = spec.get("reference_image")
-    out: dict = {"reference_image": str(ref) if ref else None}
+    out: dict = {}
     if not ref or not Path(ref).exists():
         out["error"] = "reference image not available"
         return out

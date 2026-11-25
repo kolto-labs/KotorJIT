@@ -57,8 +57,16 @@ RUNTIME = ROOT / "src" / "runtime" / "runtime.cpp"
 HOOKPACK_FORMAT = "agentdecompile.hookpack/v1"   # registry.cpp AddressTable::parse
 
 LAYOUT_SITES = ("vm.wrapper_internal", "vm.internal_command_implementer")
-# 64-bit tables would carry "pointer_size" or a 64-bit format; none ship yet.
-POINTER_SIZE = {"pe": 4, "elf": 4, "macho": 4, "elf64": 8}
+POINTER_SIZE = {"pe": 4, "elf": 4, "macho": 4, "macho64": 8, "elf64": 8, "pe64": 8}
+
+
+def pointer_width(table: dict) -> int:
+    if table.get("arch") in ("x86_64", "amd64", "arm64", "aarch64"):
+        return 8
+    fk = table.get("format_kind")
+    if fk in POINTER_SIZE:
+        return POINTER_SIZE[fk]
+    return POINTER_SIZE.get(table.get("format") or "pe", 4)
 
 
 def _is_number(v) -> bool:
@@ -68,7 +76,7 @@ def _is_number(v) -> bool:
 def layout_problems(table: dict) -> list[str]:
     """Why the runtime would leave `layout_resolved` false for this table."""
     sites = table.get("sites") or {}
-    width = POINTER_SIZE.get(table.get("format") or "pe", 4)
+    width = pointer_width(table)
     problems = []
     for name in LAYOUT_SITES:
         s = sites.get(name)
@@ -137,6 +145,16 @@ def adjudicated_layout(alias: str) -> dict[str, tuple[int, int]]:
 
 @functools.cache
 def _adjudicated_layout(alias: str) -> tuple:
+    if alias in ("k1_mac_steam_x64", "k2_mac_steam_x64"):
+        mac_file = ROOT / "data" / "adjudication" / "mac_x64_bindings.json"
+        fields = json.loads(mac_file.read_text()).get("fields", {})
+        game_key = "k1" if alias.startswith("k1_") else "k2"
+        out = {}
+        for name in LAYOUT_SITES:
+            row = fields.get(name)
+            if isinstance(row, dict) and game_key in row:
+                out[name] = (row[game_key], 8)
+        return tuple(sorted(out.items()))
     overlay = _gen().load_overlay(alias)
     out = {}
     for name, key in layout_keys().items():
@@ -379,7 +397,7 @@ class ShippedTables(unittest.TestCase):
                 self.assertEqual(sorted(donor), sorted(LAYOUT_SITES),
                                  f"donor {DONOR[table['game']]} lacks an adjudicated layout")
                 own = adjudicated_layout(path.stem)
-                if own:
+                if own and pointer_width(table) == 4:
                     self.assertEqual(own, donor,
                                      f"{path.stem} adjudication disagrees with donor "
                                      f"{DONOR[table['game']]}")

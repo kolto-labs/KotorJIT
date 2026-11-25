@@ -26,6 +26,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <utility>
 
@@ -56,9 +57,15 @@ vm_prot_t to_vm_prot(Protect p) {
 
 std::pair<mach_vm_address_t, mach_vm_size_t> page_span(const void* addr, std::size_t len) {
     const std::size_t ps = page_size();
-    const auto raw   = reinterpret_cast<std::uintptr_t>(addr);
-    const auto start = raw & ~static_cast<std::uintptr_t>(ps - 1);
-    const auto end   = (raw + len + ps - 1) & ~static_cast<std::uintptr_t>(ps - 1);
+    const auto raw = reinterpret_cast<std::uintptr_t>(addr);
+    if (len == 0 || ps == 0) return {0, 0};
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len - 1 > static_cast<std::size_t>(max_addr - raw)) return {0, 0};
+    const std::uintptr_t last = raw + (len - 1);
+    const std::uintptr_t start = raw & ~static_cast<std::uintptr_t>(ps - 1);
+    const std::uintptr_t end_page = last & ~static_cast<std::uintptr_t>(ps - 1);
+    if (end_page > max_addr - ps) return {0, 0};
+    const std::uintptr_t end = end_page + ps;
     return {static_cast<mach_vm_address_t>(start), static_cast<mach_vm_size_t>(end - start)};
 }
 
@@ -77,6 +84,7 @@ std::size_t round_to_pages(std::size_t len) {
 bool set_protection(void* addr, std::size_t len, Protect p) {
     if (!addr || len == 0) return false;
     const auto [start, span] = page_span(addr, len);
+    if (span == 0) return false;
     const vm_prot_t want = to_vm_prot(p);
     kern_return_t kr = mach_vm_protect(mach_task_self(), start, span, FALSE, want);
     if (kr != KERN_SUCCESS && (want & VM_PROT_WRITE) != 0) {
@@ -115,6 +123,7 @@ void free_exec(void* addr, std::size_t len) {
 bool is_readable(const void* addr, std::size_t len) {
     if (!addr || len == 0) return false;
     auto [cur, span] = page_span(addr, len);
+    if (span == 0) return false;
     const mach_vm_address_t end = cur + span;
     while (cur < end) {
         mach_vm_address_t region = cur;
@@ -129,8 +138,9 @@ bool is_readable(const void* addr, std::size_t len) {
         if (object != MACH_PORT_NULL) mach_port_deallocate(mach_task_self(), object);
         // mach_vm_region returns the first region AT OR AFTER the address; a
         // region that starts past `cur` means `cur` itself is unmapped.
-        if (kr != KERN_SUCCESS || region > cur) return false;
+        if (kr != KERN_SUCCESS || region > cur || size == 0) return false;
         if ((info.protection & VM_PROT_READ) == 0) return false;
+        if (size >= end - region) return true;
         cur = region + size;
     }
     return true;

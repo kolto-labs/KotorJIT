@@ -1058,9 +1058,14 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
         const std::vector<std::uint8_t>& expect =
             !p.site->expected.empty() ? p.site->expected : p.request->expect;
 
+        const auto publish = +[](void* o, void* u) {
+            if (u != nullptr) static_cast<std::atomic<void*>*>(u)->store(o, std::memory_order_release);
+        };
         const HookStatus st = detour->install(
             reinterpret_cast<void*>(p.addr), p.request->detour,
-            expect.empty() ? nullptr : expect.data(), expect.size(), &detail);
+            expect.empty() ? nullptr : expect.data(), expect.size(), &detail,
+            p.request->original_slot != nullptr ? publish : nullptr,
+            p.request->original_slot);
 
         if (st != HookStatus::Ok) {
             error = "site \"" + p.request->site + "\" at 0x";
@@ -1075,7 +1080,7 @@ bool HookSet::install(const AddressTable& table, std::uintptr_t runtime_base,
             return false;
         }
 
-        installed_.push_back({p.request->site, std::move(detour)});
+        installed_.push_back({p.request->site, std::move(detour), p.request->original_slot});
     }
 
     platform::log(platform::LogLevel::Info, "installed %zu hook(s) for build %s",
@@ -1088,6 +1093,9 @@ void HookSet::uninstall() {
     // ever overlap, undoing them in the order they went in would restore the
     // wrong bytes.
     for (auto it = installed_.rbegin(); it != installed_.rend(); ++it) {
+        if (it->original_slot != nullptr) {
+            it->original_slot->store(nullptr, std::memory_order_release);
+        }
         if (it->detour) it->detour->uninstall();
     }
     installed_.clear();

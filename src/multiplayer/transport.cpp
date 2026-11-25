@@ -44,11 +44,20 @@ bool set_nonblocking(sock_t socket) {
 }
 #endif
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__APPLE__)
 constexpr int kSendFlags = 0;
 #else
 constexpr int kSendFlags = MSG_NOSIGNAL;
 #endif
+
+void suppress_sigpipe(sock_t s) {
+#if defined(__APPLE__)
+    int one = 1;
+    ::setsockopt(s, SOL_SOCKET, SO_NOSIGPIPE, &one, sizeof one);
+#else
+    (void)s;
+#endif
+}
 
 constexpr std::array<std::uint8_t, 4> kMagic{'K', 'P', 'M', 'P'};
 constexpr std::uint16_t kVersion = 2;
@@ -216,6 +225,7 @@ bool Transport::start_client(std::string host, std::uint16_t port, std::string c
         return false;
     }
     int one = 1;
+    suppress_sigpipe(connection);
     ::setsockopt(connection, IPPROTO_TCP, TCP_NODELAY,
                  reinterpret_cast<const char*>(&one), sizeof one);
     role_ = Role::Client;
@@ -409,6 +419,7 @@ void Transport::run_loop() {
                     close_socket(accepted);
                 } else {
                     int one = 1;
+                    suppress_sigpipe(accepted);
                     ::setsockopt(accepted, IPPROTO_TCP, TCP_NODELAY,
                                  reinterpret_cast<const char*>(&one), sizeof one);
                     connection_sock_ = static_cast<std::intptr_t>(accepted);

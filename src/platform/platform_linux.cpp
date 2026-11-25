@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <utility>
 
@@ -36,9 +37,15 @@ int to_prot(Protect p) {
 // a half-applied patch, which is the worst possible place to discover it.
 std::pair<void*, std::size_t> page_span(void* addr, std::size_t len) {
     const std::size_t ps = page_size();
-    const auto raw   = reinterpret_cast<std::uintptr_t>(addr);
-    const auto start = raw & ~static_cast<std::uintptr_t>(ps - 1);
-    const auto end   = (raw + len + ps - 1) & ~static_cast<std::uintptr_t>(ps - 1);
+    const auto raw = reinterpret_cast<std::uintptr_t>(addr);
+    if (len == 0 || ps == 0) return {nullptr, 0};
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len - 1 > static_cast<std::size_t>(max_addr - raw)) return {nullptr, 0};
+    const std::uintptr_t last = raw + (len - 1);
+    const std::uintptr_t start = raw & ~static_cast<std::uintptr_t>(ps - 1);
+    const std::uintptr_t end_page = last & ~static_cast<std::uintptr_t>(ps - 1);
+    if (end_page > max_addr - ps) return {nullptr, 0};
+    const std::uintptr_t end = end_page + ps;
     return {reinterpret_cast<void*>(start), static_cast<std::size_t>(end - start)};
 }
 
@@ -52,6 +59,7 @@ std::string basename_of(const std::string& path) {
 bool set_protection(void* addr, std::size_t len, Protect p) {
     if (!addr || len == 0) return false;
     const auto [start, span] = page_span(addr, len);
+    if (span == 0) return false;
     if (::mprotect(start, span, to_prot(p)) != 0) {
         log(LogLevel::Error, "mprotect(%p, %zu) failed: %s",
             start, span, std::strerror(errno));
@@ -94,6 +102,7 @@ bool is_readable(const void* addr, std::size_t len) {
     // about read permission, but PROT_NONE code pages do not occur in either
     // target -- the case that actually happens is a wholly wrong address.
     const auto [start, span] = page_span(const_cast<void*>(addr), len);
+    if (span == 0) return false;
     return ::msync(start, span, MS_ASYNC) == 0 || errno != ENOMEM;
 }
 
