@@ -1,6 +1,6 @@
 [patch]
-id = "scriptforge"
-name = "ScriptForge"
+id = "kotorjit"
+name = "KotorJIT"
 version = "0.1.0"
 author = "Kolto Labs"
 description = "Lua 5.1 / LuaJIT scripting runtime, NWScript routine bridge, and F12 ImGui overlay for KOTOR I & II"

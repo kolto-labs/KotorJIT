@@ -4,7 +4,7 @@
 -- happened under headless llvmpipe -- see docs/knowledgebase (or ask why the
 -- world renders black there). A test that drives #key presses and wants to
 -- know whether they actually moved the character deploys this alongside
--- 00_probe.lua and greps scriptforge.log for [trace] lines.
+-- 00_probe.lua and greps kotorjit.log for [trace] lines.
 priority = -1500
 
 local lx, ly, lz, lf

@@ -40,7 +40,7 @@ namespace {
 // One runtime per process, however many copies of this module get loaded.
 // The proxy, the launcher's injection, KPM's DLL-only patch, DT_NEEDED and
 // LD_PRELOAD can each bring the runtime in, and two of them can be set up at
-// once with different files (a game-folder scriptforge.dll and KPM's extracted
+// once with different files (a game-folder kotorjit.dll and KPM's extracted
 // windows_x86.dll). Each copy would otherwise start its own runtime and hook
 // every site a second time. The first copy to reach its entry point claims the
 // process; a later copy stays loaded and inert. Claimed from the entry point,
@@ -49,7 +49,7 @@ namespace {
 bool claim_process() {
 #if defined(_WIN32)
     char name[64];
-    wsprintfA(name, "Local\\scriptforge-runtime-%lu", GetCurrentProcessId());
+    wsprintfA(name, "Local\\kotorjit-runtime-%lu", GetCurrentProcessId());
     // Deliberately never closed: the claim lasts as long as the process.
     HANDLE m = CreateMutexA(nullptr, FALSE, name);
     return m != nullptr && GetLastError() != ERROR_ALREADY_EXISTS;
@@ -59,9 +59,9 @@ bool claim_process() {
     // (which also hosted a runtime) is not taken for a claim on this one.
     char pid[24];
     std::snprintf(pid, sizeof pid, "%ld", static_cast<long>(getpid()));
-    const char* owner = std::getenv("SCRIPTFORGE_RUNTIME_PID");
+    const char* owner = std::getenv("KOTORJIT_RUNTIME_PID");
     if (owner != nullptr && std::strcmp(owner, pid) == 0) return false;
-    setenv("SCRIPTFORGE_RUNTIME_PID", pid, 1);
+    setenv("KOTORJIT_RUNTIME_PID", pid, 1);
     return true;
 #endif
 }

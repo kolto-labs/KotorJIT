@@ -678,7 +678,7 @@ bool GameAdapter::read_last_module(const std::string& dir, std::string* module, 
         *where += root;
     }
     *where = "no savenfo.res for '" + dir + "' under " + *where +
-             " (set SCRIPTFORGE_SAVES_DIR to the saves directory)";
+             " (set KOTORJIT_SAVES_DIR to the saves directory)";
     return false;
 }
 

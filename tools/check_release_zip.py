@@ -8,7 +8,7 @@ import zipfile
 from pathlib import Path
 
 REQUIRED_SUFFIXES = (
-    "/scriptforge.dll",
+    "/kotorjit.dll",
     "/binkw32.dll",
     "/install_to_game.sh",
     "/data/addresses/k1_gog_103.json",
@@ -19,14 +19,14 @@ REQUIRED_SUFFIXES = (
 )
 
 ALLOWED_EXE_SUFFIXES = (
-    "/scriptforge-launch.exe",
-    "/bin/scriptforge-launch.exe",
+    "/kotorjit-launch.exe",
+    "/bin/kotorjit-launch.exe",
 )
 
 FORBIDDEN_SUBSTRINGS = (
     "corpus.sqlite",
-    "scriptforge.log",
-    "scriptforge-proxy.log",
+    "kotorjit.log",
+    "kotorjit-proxy.log",
     "/.git/",
     "agentdecompile",
 )

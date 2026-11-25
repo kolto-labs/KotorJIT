@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline tests for scripts/package_kpatch.py (ScriptForge as a KPM DLL-only patch).
+"""Offline tests for scripts/package_kpatch.py (KotorJIT as a KPM DLL-only patch).
 
 Checks the archive against what KPM's loader expects (manifest.toml and a
 *hooks.toml at the root, modules under binaries/<platform>_<arch><ext>, no
@@ -25,7 +25,7 @@ spec = importlib.util.spec_from_file_location("package_kpatch", ROOT / "scripts"
 package_kpatch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(package_kpatch)
 
-# KPM's version ids for the builds ScriptForge's tables are keyed by alias.
+# KPM's version ids for the builds KotorJIT's tables are keyed by alias.
 KPM_ID_FOR_ALIAS = {
     "k1_gog_103": "kotor1_gog_103",
     "k1_steam_103": "kotor1_steam_103",
@@ -58,7 +58,7 @@ class Manifest(unittest.TestCase):
         alias_for_kpm = {v: k for k, v in KPM_ID_FOR_ALIAS.items()}
         for kpm_id, digest in self.manifest["supported_versions"].items():
             with self.subTest(kpm_id):
-                self.assertIn(kpm_id, alias_for_kpm, f"no ScriptForge build mapped to KPM id {kpm_id}")
+                self.assertIn(kpm_id, alias_for_kpm, f"no KotorJIT build mapped to KPM id {kpm_id}")
                 self.assertIn(digest, known.get(alias_for_kpm[kpm_id], set()),
                               f"{kpm_id} hash is not in the runtime's build table")
 
@@ -109,14 +109,14 @@ class Archive(unittest.TestCase):
         self.build.mkdir()
 
     def package(self) -> tuple[int, Path]:
-        out = self.tmp / "dist" / "scriptforge.kpatch"
+        out = self.tmp / "dist" / "kotorjit.kpatch"
         rc = package_kpatch.main([str(self.build), "--output", str(out),
                                   "--mac-build-dir", str(self.tmp / "no-mac")])
         return rc, out
 
     def test_archive_layout_matches_kpm(self) -> None:
-        (self.build / "scriptforge.dll").write_bytes(b"MZ windows")
-        (self.build / "libscriptforge.so").write_bytes(b"\x7fELF linux")
+        (self.build / "kotorjit.dll").write_bytes(b"MZ windows")
+        (self.build / "libkotorjit.so").write_bytes(b"\x7fELF linux")
         rc, out = self.package()
         self.assertEqual(rc, 0)
         with zipfile.ZipFile(out) as z:
@@ -126,7 +126,7 @@ class Archive(unittest.TestCase):
             # A dylib is only allowed from the packager's documented fallback
             # (<repo>/build-mac), which exists on a Mac developer's machine.
             if "binaries/macos_x86_64.dylib" in z.namelist():
-                self.assertTrue((ROOT / "build-mac" / "libscriptforge.dylib").is_file())
+                self.assertTrue((ROOT / "build-mac" / "libkotorjit.dylib").is_file())
             self.assertEqual(z.read("binaries/windows_x86.dll"), b"MZ windows")
             self.assertEqual(z.read("binaries/linux_x86.so"), b"\x7fELF linux")
             self.assertEqual(z.read("manifest.toml"), (ROOT / "kpatch" / "manifest.toml").read_bytes())

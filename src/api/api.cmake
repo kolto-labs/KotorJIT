@@ -20,7 +20,7 @@ file(GLOB KP_ROUTINE_GENERATED "${KP_API_SRC_ROOT}/generated/routines_*.inc"
 set_source_files_properties(${KP_ROUTINE_SOURCES}
     PROPERTIES OBJECT_DEPENDS "${KP_ROUTINE_GENERATED}")
 
-# The production bridge is part of scriptforge, so this links that exact result
+# The production bridge is part of kotorjit, so this links that exact result
 # boundary against a tiny fake VM instead of duplicating it in a test stub.
 if(UNIX AND NOT WIN32)
     set(KP_ROUTINE_LUAJIT "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a")
@@ -29,23 +29,23 @@ if(UNIX AND NOT WIN32)
         "${KP_API_SRC_ROOT}" "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
     target_compile_options(kp_routinetest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_routinetest PRIVATE -m32)
-    add_dependencies(kp_routinetest scriptforge)
-    target_link_libraries(kp_routinetest PRIVATE scriptforge "${KP_ROUTINE_LUAJIT}" m dl)
+    add_dependencies(kp_routinetest kotorjit)
+    target_link_libraries(kp_routinetest PRIVATE kotorjit "${KP_ROUTINE_LUAJIT}" m dl)
     # One runtime per process even when two copies of the library load
-    # (proxy + KPM, preload + DT_NEEDED). Loads the real libscriptforge.so.
+    # (proxy + KPM, preload + DT_NEEDED). Loads the real libkotorjit.so.
     add_executable(kp_singleinstance_test "${KP_API_SRC_ROOT}/../tools/kp_singleinstance_test.cpp")
     target_compile_options(kp_singleinstance_test PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_singleinstance_test PRIVATE -m32)
     target_compile_definitions(kp_singleinstance_test PRIVATE
-        KP_RUNTIME_SO="$<TARGET_FILE:scriptforge>")
+        KP_RUNTIME_SO="$<TARGET_FILE:kotorjit>")
     target_link_libraries(kp_singleinstance_test PRIVATE dl)
-    add_dependencies(kp_singleinstance_test scriptforge)
+    add_dependencies(kp_singleinstance_test kotorjit)
     add_test(NAME kp_singleinstance_test COMMAND kp_singleinstance_test)
     set_tests_properties(kp_singleinstance_test PROPERTIES LABELS "offline;deploy" TIMEOUT 60)
 
     add_test(NAME kp_routinetest COMMAND kp_routinetest)
     set_tests_properties(kp_routinetest PROPERTIES
-        ENVIRONMENT "SCRIPTFORGE_NO_AUTOSTART=1")
+        ENVIRONMENT "KOTORJIT_NO_AUTOSTART=1")
 endif()
 
 # --- structs ---
@@ -100,14 +100,14 @@ if(TARGET kp_structs_generated)
 endif()
 # Headers only, no link -- but they live in the build tree, written by
 # runtime.cmake's custom command, and add_dependencies is what makes CMake
-# wait for it. Not guarded on `if(TARGET scriptforge)`: that target is defined by
+# wait for it. Not guarded on `if(TARGET kotorjit)`: that target is defined by
 # runtime.cmake, included AFTER this fragment, so the guard is always false
-# here regardless of whether scriptforge ends up existing. Unguarded still
+# here regardless of whether kotorjit ends up existing. Unguarded still
 # resolves correctly -- add_dependencies matches target names at generate
 # time, once every include() in this directory has run, not at the line
-# where it is called -- and scriptforge itself is unconditional on any UNIX
+# where it is called -- and kotorjit itself is unconditional on any UNIX
 # host, the only host this top-level CMakeLists.txt is ever configured on.
-add_dependencies(kp_structs scriptforge)
+add_dependencies(kp_structs kotorjit)
 
 # --- kp_structtest -----------------------------------------------------------
 #
@@ -117,7 +117,7 @@ add_dependencies(kp_structs scriptforge)
 # printed in the output would move every run and stop being readable evidence.
 #
 # Gated on UNIX alone, not on the LuaJIT archive existing yet or on
-# `TARGET scriptforge`: both were checked at configure time, when the archive is
+# `TARGET kotorjit`: both were checked at configure time, when the archive is
 # always absent (runtime.cmake's custom command that builds it hasn't run --
 # it is a BUILD-time step) and the target guard has the same always-false
 # ordering problem as kp_structs above. That silently skipped this whole
@@ -131,7 +131,7 @@ if(UNIX AND NOT WIN32)
     target_link_libraries(kp_structtest PRIVATE kp_structs kp_hooks
                           "${KP_LUAJIT_NATIVE_LIB}" m dl)
     target_link_options(kp_structtest PRIVATE -no-pie)
-    add_dependencies(kp_structtest scriptforge)
+    add_dependencies(kp_structtest kotorjit)
 
     # Self-contained: exits 0 on kp_structtest's own g_failures == 0.
     add_test(NAME kp_structtest COMMAND kp_structtest)
@@ -194,15 +194,15 @@ target_link_options(kp_entity PUBLIC -m32)
 # Headers only, no link -- but the headers live in the build tree, written by
 # runtime.cmake's custom command, and CMake only infers that ordering from a
 # real dependency edge. kp_entitytest already tries to declare this, guarded
-# by `if(TARGET scriptforge)` -- which is always false at this point in the
-# script, since runtime.cmake (where scriptforge is defined) is included AFTER
+# by `if(TARGET kotorjit)` -- which is always false at this point in the
+# script, since runtime.cmake (where kotorjit is defined) is included AFTER
 # this fragment in CMakeLists.txt, despite its comment claiming the API
 # fragments are order-independent. Unguarded works: add_dependencies resolves
 # target names at generate time, once every include() has run, not eagerly --
-# proven against a two-target CMake project before relying on it here. scriptforge
+# proven against a two-target CMake project before relying on it here. kotorjit
 # itself is unconditional on any UNIX host, which is the only host this
 # top-level CMakeLists.txt is ever configured on.
-add_dependencies(kp_entity scriptforge)
+add_dependencies(kp_entity kotorjit)
 
 # --- kp_entitytest -----------------------------------------------------------
 #
@@ -211,7 +211,7 @@ add_dependencies(kp_entity scriptforge)
 # Adding a real routines target here would give the linker two definitions of
 # kp::api::call and break both modules at once.
 # Gated on UNIX alone, not on the LuaJIT archive existing yet or on
-# `TARGET scriptforge`: both were checked at configure time, when the archive is
+# `TARGET kotorjit`: both were checked at configure time, when the archive is
 # always absent (it is a build-time output) and the target guard has the same
 # always-false ordering problem kp_entity's own dependency had above. That
 # silently skipped this whole target on every from-scratch configure.
@@ -222,7 +222,7 @@ if(UNIX AND NOT WIN32)
                                                      "${KP_LUAJIT_NATIVE_DIR}")
     target_link_libraries(kp_entitytest PRIVATE kp_entity
                           "${KP_LUAJIT_NATIVE_LIB}" m dl)
-    add_dependencies(kp_entitytest scriptforge)
+    add_dependencies(kp_entitytest kotorjit)
 
     # Print-and-inspect, not assertion-based (it always exits 0): registered as
     # a smoke test, so a crash or an uncaught Lua error still fails the suite.
@@ -272,7 +272,7 @@ set(KP_SUPPORT_SOURCES
 
 # LuaJIT headers only. The module never calls a Lua function the linker has to
 # resolve at this level -- it is compiled into whatever binary already carries
-# the interpreter, which is scriptforge.dll or libscriptforge.so.
+# the interpreter, which is kotorjit.dll or libkotorjit.so.
 set(KP_SUPPORT_LUA_INC "${CMAKE_SOURCE_DIR}/third_party/luajit/src")
 
 add_library(kp_support STATIC ${KP_SUPPORT_SOURCES})
@@ -289,13 +289,13 @@ target_link_options(kp_support PUBLIC -m32)
 # LuaJIT that src/runtime/runtime.cmake builds into the build tree. The Windows
 # libluajit.a in third_party is PE-COFF and cannot be linked here.
 #
-# The dependency is taken from the scriptforge target, not from the archive path: a
+# The dependency is taken from the kotorjit target, not from the archive path: a
 # custom-command OUTPUT belongs to the fragment that declared it, and claiming
 # the same output twice is a generator error rather than a shared rule.
 #
-# Not gated on `TARGET scriptforge` here, despite the reasoning above: that check
+# Not gated on `TARGET kotorjit` here, despite the reasoning above: that check
 # is always false at this point in the script, since runtime.cmake (where
-# scriptforge is defined) is included AFTER this fragment in CMakeLists.txt. That
+# kotorjit is defined) is included AFTER this fragment in CMakeLists.txt. That
 # silently skipped this whole target on every from-scratch configure -- the
 # STATUS message below used to fire unconditionally, never the executable.
 # add_dependencies still resolves the target correctly: CMake matches
@@ -319,7 +319,7 @@ if(UNIX AND NOT WIN32)
         "${KP_API_SRC_ROOT}" "${CMAKE_BINARY_DIR}/luajit32/src")
     target_compile_options(kp_supporttest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_supporttest PRIVATE -m32)
-    add_dependencies(kp_supporttest scriptforge)
+    add_dependencies(kp_supporttest kotorjit)
     target_link_libraries(kp_supporttest PRIVATE "${KP_SUPPORT_LUAJIT}" m dl)
 
     # Self-contained: writes its own scratch scripts to a temp dir (removed and
@@ -331,11 +331,11 @@ if(UNIX AND NOT WIN32)
         "${KP_API_SRC_ROOT}" "${KP_SUPPORT_LUA_INC}")
     target_compile_options(kp_namespacetest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_namespacetest PRIVATE -m32)
-    target_link_libraries(kp_namespacetest PRIVATE scriptforge "${KP_SUPPORT_LUAJIT}" m dl)
+    target_link_libraries(kp_namespacetest PRIVATE kotorjit "${KP_SUPPORT_LUAJIT}" m dl)
     add_test(NAME kp_namespacetest.k1 COMMAND kp_namespacetest)
     add_test(NAME kp_namespacetest.k2 COMMAND kp_namespacetest k2)
     set_tests_properties(kp_namespacetest.k1 kp_namespacetest.k2 PROPERTIES
-        ENVIRONMENT "SCRIPTFORGE_NO_AUTOSTART=1")
+        ENVIRONMENT "KOTORJIT_NO_AUTOSTART=1")
 endif()
 
 # --- the Windows half --------------------------------------------------------
@@ -387,11 +387,11 @@ if(UNIX AND NOT WIN32)
         "${KP_VEC_SRC_ROOT}" "${CMAKE_BINARY_DIR}/luajit32/src")
     target_compile_options(kp_vectortest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_vectortest PRIVATE -m32)
-    add_dependencies(kp_vectortest scriptforge)
-    target_link_libraries(kp_vectortest PRIVATE scriptforge "${KP_VEC_LUAJIT}" m dl)
+    add_dependencies(kp_vectortest kotorjit)
+    target_link_libraries(kp_vectortest PRIVATE kotorjit "${KP_VEC_LUAJIT}" m dl)
     add_test(NAME kp_vectortest COMMAND kp_vectortest)
     set_tests_properties(kp_vectortest PROPERTIES
-        ENVIRONMENT "SCRIPTFORGE_NO_AUTOSTART=1")
+        ENVIRONMENT "KOTORJIT_NO_AUTOSTART=1")
 endif()
 
 # --- motion ---
@@ -405,7 +405,7 @@ if(UNIX AND NOT WIN32)
     target_compile_options(kp_motiontest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_motiontest PRIVATE -m32)
     target_link_libraries(kp_motiontest PRIVATE "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a" m dl)
-    add_dependencies(kp_motiontest scriptforge)
+    add_dependencies(kp_motiontest kotorjit)
     # The argument is the source root: the test cross-checks the generated
     # data/addresses/k1_gog_103.json and data/routines/*.json read-only.
     add_test(NAME kp_motiontest COMMAND kp_motiontest "${CMAKE_SOURCE_DIR}")

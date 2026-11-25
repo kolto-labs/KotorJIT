@@ -1,9 +1,9 @@
-// One ScriptForge runtime per process, however many copies get loaded.
+// One KotorJIT runtime per process, however many copies get loaded.
 //
 // The runtime can arrive by several routes -- the binkw32 proxy, the launcher's
 // injection, KPM's DLL-only patch, DT_NEEDED or LD_PRELOAD -- and two of them
-// can be set up at once with different files (a game-folder scriptforge.dll and
-// KPM's extracted windows_x86.dll; a preloaded libscriptforge.so and a
+// can be set up at once with different files (a game-folder kotorjit.dll and
+// KPM's extracted windows_x86.dll; a preloaded libkotorjit.so and a
 // DT_NEEDED copy). Each copy that starts its own runtime would hook every site
 // a second time. This test loads two copies of the real library into one
 // process and counts how many runtimes announce themselves in the log.
@@ -24,7 +24,7 @@
 #include <string>
 
 #ifndef KP_RUNTIME_SO
-#error "KP_RUNTIME_SO must name the built libscriptforge.so"
+#error "KP_RUNTIME_SO must name the built libkotorjit.so"
 #endif
 
 namespace {
@@ -55,7 +55,7 @@ int count_banners(const std::string& log) {
     std::string line;
     int n = 0;
     while (std::getline(f, line))
-        if (line.find("ScriptForge ") != std::string::npos && line.find(" starting (") != std::string::npos) ++n;
+        if (line.find("KotorJIT ") != std::string::npos && line.find(" starting (") != std::string::npos) ++n;
     return n;
 }
 
@@ -84,16 +84,16 @@ int run_scenario(const char* inherited_claim) {
 
     const pid_t pid = fork();
     if (pid == 0) {
-        unsetenv("SCRIPTFORGE_NO_AUTOSTART");
+        unsetenv("KOTORJIT_NO_AUTOSTART");
         unsetenv("KOTORPHASOR_NO_AUTOSTART");
-        if (inherited_claim != nullptr) setenv("SCRIPTFORGE_RUNTIME_PID", inherited_claim, 1);
-        else unsetenv("SCRIPTFORGE_RUNTIME_PID");
+        if (inherited_claim != nullptr) setenv("KOTORJIT_RUNTIME_PID", inherited_claim, 1);
+        else unsetenv("KOTORJIT_RUNTIME_PID");
         execl(game.c_str(), game.c_str(), "child", a.c_str(), b.c_str(), static_cast<char*>(nullptr));
         _exit(127);
     }
     int status = 0;
     waitpid(pid, &status, 0);
-    const int banners = count_banners(d + "/scriptforge.log");
+    const int banners = count_banners(d + "/kotorjit.log");
     if (std::system(("rm -rf '" + d + "'").c_str()) != 0) std::fprintf(stderr, "could not remove %s\n", d.c_str());
     return (WIFEXITED(status) && WEXITSTATUS(status) == 0) ? banners : -100 - WEXITSTATUS(status);
 }

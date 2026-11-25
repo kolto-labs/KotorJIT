@@ -1,4 +1,4 @@
-// A stand-in for the game's binkw32.dll that loads ScriptForge and then gets
+// A stand-in for the game's binkw32.dll that loads KotorJIT and then gets
 // out of the way.
 //
 // Both games import binkw32 statically, and under Wine or Proton there is no
@@ -13,7 +13,7 @@
 // place.
 //
 // This does NOT install hooks. At DllMain time the game's code section may still
-// be ciphertext, and the loader lock is held -- so even loading scriptforge.dll is
+// be ciphertext, and the loader lock is held -- so even loading kotorjit.dll is
 // deferred to a worker thread here; the real work happens on a further worker
 // thread the runtime starts for itself once it is in.
 
@@ -28,7 +28,7 @@ namespace {
 // A player whose mod silently does nothing has no way to tell this apart from a
 // mod that loaded and found nothing to do.
 void note(const char* what) {
-    HANDLE f = CreateFileA("scriptforge-proxy.log", FILE_APPEND_DATA, FILE_SHARE_READ,
+    HANDLE f = CreateFileA("kotorjit-proxy.log", FILE_APPEND_DATA, FILE_SHARE_READ,
                            nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (f == INVALID_HANDLE_VALUE) return;
     DWORD written = 0;
@@ -38,10 +38,10 @@ void note(const char* what) {
 }
 
 // Current name first, then the name the runtime shipped under before the
-// KotorPhasor -> ScriptForge rename, so a game folder that only received a new
+// KotorPhasor -> KotorJIT rename, so a game folder that only received a new
 // proxy (or only kept an old DLL) still starts scripting. Exactly one runtime
 // is ever loaded: if either is already resident, nothing more happens.
-constexpr const char* kRuntimeNames[] = {"scriptforge.dll", "kphasor.dll"};
+constexpr const char* kRuntimeNames[] = {"kotorjit.dll", "kphasor.dll"};
 
 void load_runtime() {
     for (const char* name : kRuntimeNames)
@@ -68,7 +68,7 @@ void load_runtime() {
     }
 
     char msg[160];
-    wsprintfA(msg, "no runtime loaded: scriptforge.dll and kphasor.dll both failed (first GetLastError=%lu)",
+    wsprintfA(msg, "no runtime loaded: kotorjit.dll and kphasor.dll both failed (first GetLastError=%lu)",
               first_error);
     note(msg);
     // Deliberately not fatal. Without the runtime the player still gets their
@@ -90,8 +90,8 @@ BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
         DisableThreadLibraryCalls(self);
 
         // LoadLibraryA deadlocks against the loader lock DllMain already holds
-        // -- the same rule runtime/dllmain.cpp documents for scriptforge.dll's own
-        // entry point. This proxy happened to be safe only because scriptforge.dll's
+        // -- the same rule runtime/dllmain.cpp documents for kotorjit.dll's own
+        // entry point. This proxy happened to be safe only because kotorjit.dll's
         // DllMain defers its own work to a worker thread and returns quickly;
         // that safety was incidental to this file, not guaranteed by it. Defer
         // here too, the same way: CreateThread is documented as safe under the
@@ -104,7 +104,7 @@ BOOL APIENTRY DllMain(HMODULE self, DWORD reason, LPVOID) {
             // Every other failure path in this file logs through note();
             // silently giving up here would be the one exception.
             char msg[96];
-            wsprintfA(msg, "CreateThread failed (GetLastError=%lu); scriptforge.dll will not load", GetLastError());
+            wsprintfA(msg, "CreateThread failed (GetLastError=%lu); kotorjit.dll will not load", GetLastError());
             note(msg);
         }
     }

@@ -1,4 +1,4 @@
-// Win32 runtime-injection launcher for ScriptForge (KPM-style ProcessInjector).
+// Win32 runtime-injection launcher for KotorJIT (KPM-style ProcessInjector).
 //
 // Deployment modes:
 //   direct -- CreateProcessA(CREATE_SUSPENDED) -> remote LoadLibraryA -> ResumeThread.
@@ -123,7 +123,7 @@ bool running_under_wine() {
     return ntdll != nullptr && GetProcAddress(ntdll, "wine_get_version") != nullptr;
 }
 
-bool looks_like_scriptforge_proxy(const std::string& bink_path) {
+bool looks_like_kotorjit_proxy(const std::string& bink_path) {
     if (!file_exists(bink_path)) return false;
     std::ifstream f(bink_path, std::ios::binary | std::ios::ate);
     if (!f) return false;
@@ -339,13 +339,13 @@ const char* mode_name(Mode m) {
 
 void print_help() {
     std::printf(
-        "Usage: scriptforge-launch [options] [game-exe] [-- <game-args...>]\n"
+        "Usage: kotorjit-launch [options] [game-exe] [-- <game-args...>]\n"
         "\n"
-        "Runtime DLL injector for ScriptForge (replaces binkw32.dll proxy on native Windows).\n"
+        "Runtime DLL injector for KotorJIT (replaces binkw32.dll proxy on native Windows).\n"
         "\n"
         "Options:\n"
         "  --mode auto|direct|steam|attach  Injection mode (default: auto)\n"
-        "  --dll <path>                     Path to scriptforge.dll (auto-detected if omitted)\n"
+        "  --dll <path>                     Path to kotorjit.dll (auto-detected if omitted)\n"
         "  --pid <pid>                      Attach to running process ID (implies --mode attach)\n"
         "  --timeout <ms>                   Steam/window wait timeout in ms (default: 60000)\n"
         "  --wait                           Wait for the game process to exit\n"
@@ -369,7 +369,7 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             return true;
         }
         if (a == "--version") {
-            std::printf("scriptforge-launch %s\n", kVersion);
+            std::printf("kotorjit-launch %s\n", kVersion);
             exit_early = true;
             return true;
         }
@@ -751,7 +751,7 @@ int main(int argc, char** argv) {
     }
 
     const bool wine = running_under_wine();
-    const bool proxy_present = !game_dir.empty() && looks_like_scriptforge_proxy(join_win(game_dir, "binkw32.dll"));
+    const bool proxy_present = !game_dir.empty() && looks_like_kotorjit_proxy(join_win(game_dir, "binkw32.dll"));
 
     if (wine) {
         std::fprintf(stderr,
@@ -759,7 +759,7 @@ int main(int argc, char** argv) {
     }
     if (proxy_present && resolved != Mode::Attach) {
         std::fprintf(stderr,
-                     "warning: binkw32.dll in %s is already a ScriptForge proxy; runtime injection is redundant\n",
+                     "warning: binkw32.dll in %s is already a KotorJIT proxy; runtime injection is redundant\n",
                      game_dir.c_str());
     }
     if (resolved == Mode::Steam) {

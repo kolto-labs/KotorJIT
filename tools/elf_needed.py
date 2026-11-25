@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Address-preserving ELF32 DT_NEEDED manager for ScriptForge (KPM-style LinkedDependency).
+"""Address-preserving ELF32 DT_NEEDED manager for KotorJIT (KPM-style LinkedDependency).
 
-Adds a shared-library dependency (e.g. $ORIGIN/libscriptforge.so) to an ELF32
+Adds a shared-library dependency (e.g. $ORIGIN/libkotorjit.so) to an ELF32
 little-endian executable (such as native Linux KOTOR 2) without changing e_phoff,
 any existing PT_LOAD segment, or any .text virtual address or byte.
 

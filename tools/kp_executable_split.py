@@ -2,7 +2,7 @@
 """Create and verify role-labelled client/server artifacts from one known image.
 
 This is the artifact boundary, not multiplayer proof: both outputs initially
-retain the source image bytes so ScriptForge's exact-image and signature checks
+retain the source image bytes so KotorJIT's exact-image and signature checks
 still apply.  The manifest says so explicitly until a server bootstrap patch is
 implemented and validated.
 """

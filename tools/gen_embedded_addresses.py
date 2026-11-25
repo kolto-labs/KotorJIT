@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Embed data/addresses/*.json into src/generated/embedded_addresses.inc.
 
-Used as a fallback by Runtime::resolve() when ScriptForge is loaded without an
+Used as a fallback by Runtime::resolve() when KotorJIT is loaded without an
 extracted data/addresses/ directory on disk (for instance via a KPM .kpatch).
 """
 from __future__ import annotations

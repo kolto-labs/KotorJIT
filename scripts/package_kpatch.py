@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package ScriptForge as a KotOR Patch Manager (KPM) DLL-only .kpatch archive."""
+"""Package KotorJIT as a KotOR Patch Manager (KPM) DLL-only .kpatch archive."""
 from __future__ import annotations
 
 import argparse
@@ -40,19 +40,19 @@ def validate_kpatch_inputs(manifest_path: Path, hooks_path: Path) -> None:
 
 def collect_binaries(build_dir: Path, mac_build_dir: Path | None) -> dict[str, Path]:
     found: dict[str, Path] = {}
-    win_dll = build_dir / "scriptforge.dll"
+    win_dll = build_dir / "kotorjit.dll"
     if win_dll.is_file():
         found["binaries/windows_x86.dll"] = win_dll
-    linux_so = build_dir / "libscriptforge.so"
+    linux_so = build_dir / "libkotorjit.so"
     if linux_so.is_file():
         found["binaries/linux_x86.so"] = linux_so
 
     mac_candidates = []
     if mac_build_dir is not None:
-        mac_candidates.append(mac_build_dir / "libscriptforge.dylib")
+        mac_candidates.append(mac_build_dir / "libkotorjit.dylib")
     mac_candidates.extend([
-        build_dir / "libscriptforge.dylib",
-        ROOT / "build-mac/libscriptforge.dylib",
+        build_dir / "libkotorjit.dylib",
+        ROOT / "build-mac/libkotorjit.dylib",
     ])
     for cand in mac_candidates:
         if cand.is_file():
@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("build_dir", nargs="?", type=Path, default=ROOT / "build")
     ap.add_argument("--mac-build-dir", type=Path, default=None)
-    ap.add_argument("--output", type=Path, default=ROOT / "dist/scriptforge.kpatch")
+    ap.add_argument("--output", type=Path, default=ROOT / "dist/kotorjit.kpatch")
     args = ap.parse_args(argv)
 
     manifest_path = KPATCH_DIR / "manifest.toml"
@@ -76,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
     if not binaries:
         print(
             f"package_kpatch: no built runtime libraries found in {args.build_dir} "
-            "(build scriptforge.dll, libscriptforge.so, or libscriptforge.dylib first)",
+            "(build kotorjit.dll, libkotorjit.so, or libkotorjit.dylib first)",
             file=sys.stderr,
         )
         return 1

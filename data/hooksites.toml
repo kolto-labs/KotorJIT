@@ -1,4 +1,4 @@
-# ScriptForge hook site manifest.
+# KotorJIT hook site manifest.
 #
 # Sites are named LOGICALLY (class + method). Addresses never appear here — they
 # are resolved per build by tools/gen_address_tables.py against the RE corpus and

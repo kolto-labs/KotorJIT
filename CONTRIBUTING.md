@@ -1,4 +1,4 @@
-# Using ScriptForge
+# Using KotorJIT
 
 Technical reference: build, install, supported builds, and where to go for scripting details. For what this is and why, see [README.md](README.md).
 
@@ -16,7 +16,7 @@ cmake -S . -B build
 cmake --build build
 ```
 
-That produces `build/scriptforge.dll`, the optional `build/binkw32.dll` proxy, `build/scriptforge-launch.exe` (Windows runtime-injection launcher), and `build/libscriptforge.so`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `scriptforge.dll` needs to link against.
+That produces `build/kotorjit.dll`, the optional `build/binkw32.dll` proxy, `build/kotorjit-launch.exe` (Windows runtime-injection launcher), and `build/libkotorjit.so`. `BUILDMODE=static` matters: without it, LuaJIT's Windows build only produces `lua51.dll`, not the static archive `kotorjit.dll` needs to link against.
 
 On Debian/Ubuntu, the equivalent packages are `g++-multilib`, `g++-mingw-w64-i686`, `binutils-mingw-w64-i686`, `luajit`, and `lua5.1` (configure requires a `luajit` interpreter; one harness test runs `lua`); see [`.github/workflows/cmake-multi-platform.yml`](.github/workflows/cmake-multi-platform.yml) for the exact native tooling and Windows cross-compile recipe.
 
@@ -29,7 +29,7 @@ Full build, install (`inject` / `proxy` / `linked` / `preload` / `.kpatch`), and
 # Or explicitly choose: --method inject | --method proxy | --method linked | --method preload
 ```
 
-Scripts go in `<game>/scriptforge/scripts`. The log is `<game>/scriptforge.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
+Scripts go in `<game>/kotorjit/scripts`. The log is `<game>/kotorjit.log`. In the cheat console: `lua exec`, `lua status`, `lua reload`.
 
 ## Supported builds
 
@@ -123,7 +123,7 @@ Regenerating `data/addresses/*.json` or `src/generated/builds.inc` needs the loc
 ./scripts/install_to_game.sh uninstall /path/to/swkotor
 ```
 
-Restores the original `binkw32.dll` and removes `scriptforge.dll`. Scripts and `scriptforge.log` are left alone.
+Restores the original `binkw32.dll` and removes `kotorjit.dll`. Scripts and `kotorjit.log` are left alone.
 
 ## Further reading
 

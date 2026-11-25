@@ -52,7 +52,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-log "=== ScriptForge Step 0 spike ==="
+log "=== KotorJIT Step 0 spike ==="
 
 # 0. writable working copy -----------------------------------------------------
 # The vanilla reference stays pristine; the game writes ini/saves/logs.

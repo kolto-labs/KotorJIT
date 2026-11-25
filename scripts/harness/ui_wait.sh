@@ -53,7 +53,7 @@ wait_until_gameplay_visible() {
 # Writes $OUT/02_console.png. Returns 0 on `status: phase=` in the runtime log.
 open_console_smoke() {
   local attempts="${1:-2}" n before
-  before=$(wc -l < "$GAME_DIR/scriptforge.log" 2>/dev/null || echo 0)
+  before=$(wc -l < "$GAME_DIR/kotorjit.log" 2>/dev/null || echo 0)
   for n in $(seq 1 "$attempts"); do
     xdotool windowactivate --sync "$WID" 2>/dev/null || true
     log "opening console ($CONSOLE_KEY) attempt $n"
@@ -64,7 +64,7 @@ open_console_smoke() {
     sleep 0.5
     xdotool key --clearmodifiers Return
     sleep 3
-    if tail -n +$((before + 1)) "$GAME_DIR/scriptforge.log" 2>/dev/null |
+    if tail -n +$((before + 1)) "$GAME_DIR/kotorjit.log" 2>/dev/null |
          grep -q 'status: phase='; then
       log "  console smoke ok (status: phase=)"
       return 0

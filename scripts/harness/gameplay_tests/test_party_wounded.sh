@@ -8,7 +8,7 @@ DISPLAY_NUM="${DISPLAY_NUM:-90}"
 
 deploy_scripts "$GAME_DIR" "$ROOT/tools/tests/examples/fixtures/legacy/showcase/60_party_wounded.lua" \
   "$ROOT/scripts/examples/probe/10_position_trace.lua"
-rm -f "$GAME_DIR/scriptforge.log"
+rm -f "$GAME_DIR/kotorjit.log"
 
 start_live_session "$GAME_DIR" "$OUT" "$DISPLAY_NUM"
 
@@ -22,9 +22,9 @@ send "#key w"; send "#sleep 1.5"
 send "#key w"; send "#sleep 4"
 send "#console"
 
-assert_contains_re "$GAME_DIR/scriptforge.log" '\[probe\] script:k_def_damage01' \
+assert_contains_re "$GAME_DIR/kotorjit.log" '\[probe\] script:k_def_damage01' \
   "real damage scripts fired during Endar Spire combat"
-assert_contains_re "$GAME_DIR/scriptforge.log" '\[wounded\]' \
+assert_contains_re "$GAME_DIR/kotorjit.log" '\[wounded\]' \
   "60_party_wounded reacted when a companion dropped below 35%"
 
 summary_and_exit

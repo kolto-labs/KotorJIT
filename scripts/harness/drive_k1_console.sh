@@ -213,7 +213,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
     # a redirected file under Wine, so a script's output sits in a 4 KB buffer and
     # shows up minutes late -- which reads as "gameplay never happened" when it
     # happened five minutes ago. The runtime log is flushed per line.
-    if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/scriptforge.log" 2>/dev/null; then
+    if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/kotorjit.log" 2>/dev/null; then
       LOADED=1; log "  in gameplay at t+${i}s (heartbeat script seen)"; break
     fi
     if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
@@ -230,7 +230,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   xdotool windowactivate --sync "$WID" 2>/dev/null || true
   for i in $(seq 1 90); do
     grep -qE '\[running\] running: build|\[running\] vm: routine bridge' \
-      "$GAME_DIR/scriptforge.log" 2>/dev/null && { log "  runtime ready at t+${i}s"; break; }
+      "$GAME_DIR/kotorjit.log" 2>/dev/null && { log "  runtime ready at t+${i}s"; break; }
     sleep 1
   done
 else
@@ -287,7 +287,7 @@ for cmd in "${COMMANDS[@]}"; do
   n=$((n+1))
 done
 
-log "--- scriptforge.log ---"
-tail -40 "$GAME_DIR/scriptforge.log" 2>/dev/null | tee -a "$OUT/drive.log" ||
-  log "(no scriptforge.log -- runtime did not start)"
+log "--- kotorjit.log ---"
+tail -40 "$GAME_DIR/kotorjit.log" 2>/dev/null | tee -a "$OUT/drive.log" ||
+  log "(no kotorjit.log -- runtime did not start)"
 log "screenshots in $OUT"
