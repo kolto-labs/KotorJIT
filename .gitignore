@@ -50,8 +50,8 @@ CLAUDE.md
 
 # Local runtime configuration and logs
 /swkotor.ini
-/scriptforge.log
-/scriptforge-proxy.log
+/kotorjit.log
+/kotorjit-proxy.log
 
 # Local agent caches, harness logs and session transcripts
 .skipper/

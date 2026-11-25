@@ -39,7 +39,14 @@ const char* to_string(HookStatus s) {
 }
 
 Detour::~Detour() {
-    if (installed_) uninstall();
+    if (installed_ && uninstall() != HookStatus::Ok && installed_) {
+        trampoline_ = nullptr;
+        trampoline_size_ = 0;
+        target_ = 0;
+        stolen_len_ = 0;
+        installed_ = false;
+        return;
+    }
     release();
 }
 
@@ -47,8 +54,15 @@ Detour::Detour(Detour&& other) noexcept { *this = static_cast<Detour&&>(other); 
 
 Detour& Detour::operator=(Detour&& other) noexcept {
     if (this == &other) return *this;
-    if (installed_) uninstall();
-    release();
+    if (installed_ && uninstall() != HookStatus::Ok && installed_) {
+        trampoline_ = nullptr;
+        trampoline_size_ = 0;
+        target_ = 0;
+        stolen_len_ = 0;
+        installed_ = false;
+    } else {
+        release();
+    }
 
     target_          = other.target_;
     detour_          = other.detour_;
@@ -98,7 +112,8 @@ void write_nop(uint8_t* p) {
 
 HookStatus Detour::install(void* target, void* detour,
                            const uint8_t* expect, size_t expect_len,
-                           const char** detail) {
+                           const char** detail, TrampolineFn on_trampoline,
+                           void* trampoline_user) {
     auto explain = [&](const char* text) { if (detail) *detail = text; };
 
     if (!target || !detour) {
@@ -199,13 +214,18 @@ HookStatus Detour::install(void* target, void* detour,
     }
     platform::flush_instruction_cache(tramp, tramp_size);
 
+    trampoline_      = tramp;
+    trampoline_size_ = tramp_size;
+    if (on_trampoline) on_trampoline(tramp, trampoline_user);
+
     // --- patch the target -------------------------------------------------
 
     memcpy(original_, code, stolen);
 
     if (!platform::set_protection(const_cast<uint8_t*>(code), stolen,
                                   platform::Protect::ReadWrite)) {
-        platform::free_exec(tramp, tramp_size);
+        if (on_trampoline) on_trampoline(nullptr, trampoline_user);
+        release();
         explain("could not make the target writable");
         return HookStatus::ProtectFailed;
     }
@@ -234,8 +254,6 @@ HookStatus Detour::install(void* target, void* detour,
 
     target_          = target_addr;
     detour_          = detour;
-    trampoline_      = tramp;
-    trampoline_size_ = tramp_size;
     stolen_len_      = stolen;
     installed_       = true;
     return HookStatus::Ok;

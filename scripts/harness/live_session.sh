@@ -150,7 +150,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   # whatever else is loaded. Absent it, this waits the full LOAD_WAIT and exits 4.
   LOADED=0
   for i in $(seq 1 "${LOAD_WAIT:-180}"); do
-    if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/scriptforge.log" 2>/dev/null; then
+    if grep -qE "k_def_heartbt01|k_ai_master|\\[probe\\] script:" "$GAME_DIR/kotorjit.log" 2>/dev/null; then
       LOADED=1; log "  in gameplay at t+${i}s"; break
     fi
     if (( i % 15 == 0 )); then log "  loading... t+${i}s"; fi
@@ -159,7 +159,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
   import -window "$WID" "$OUT/01_loading.png" 2>/dev/null
   if (( LOADED == 0 )); then
     log "no gameplay script ran within ${LOAD_WAIT:-180}s"
-    log "(is scripts/examples/probe/00_probe.lua deployed to $GAME_DIR/scriptforge/scripts/ ?)"
+    log "(is scripts/examples/probe/00_probe.lua deployed to $GAME_DIR/kotorjit/scripts/ ?)"
     exit 4
   fi
   # Heartbeats fire under the splash; the console does not exist until the
@@ -171,7 +171,7 @@ if [[ -d "$GAME_DIR/Saves" ]] && [[ -n "$(ls -A "$GAME_DIR/Saves" 2>/dev/null)" 
                         sed -n 's/^X=//p;s/^Y=//p;s/^WIDTH=//p;s/^HEIGHT=//p' | paste -sd' ')
   for i in $(seq 1 90); do
     grep -qE '\[running\] running: build|\[running\] vm: routine bridge' \
-      "$GAME_DIR/scriptforge.log" 2>/dev/null && { log "  runtime ready at t+${i}s"; break; }
+      "$GAME_DIR/kotorjit.log" 2>/dev/null && { log "  runtime ready at t+${i}s"; break; }
     sleep 1
   done
 else
@@ -258,5 +258,5 @@ while [[ ! -f "$OUT/stop" ]]; do
 done
 log "LIVE: stop requested"
 import -window "$WID" "$OUT/99_final.png" 2>/dev/null
-log "--- scriptforge.log tail ---"
-tail -40 "$GAME_DIR/scriptforge.log" 2>/dev/null | tee -a "$OUT/drive.log" || true
+log "--- kotorjit.log tail ---"
+tail -40 "$GAME_DIR/kotorjit.log" 2>/dev/null | tee -a "$OUT/drive.log" || true

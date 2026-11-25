@@ -54,12 +54,13 @@ std::atomic<bool> g_lua_reload_requested{false};
 std::atomic<std::uint64_t> g_client_tick{0};
 
 // The channel is built on the bootstrap worker and used from the client-loop
-// hook on the game thread. The unique_ptr owns it; the atomic is how the two
-// threads agree it exists -- the worker publishes with release after the
-// object is fully constructed, every reader takes it with acquire. Reading
-// the unique_ptr itself across the threads was a data race.
-std::unique_ptr<Channel>       g_channel;
+// hook on the game thread. Explicitly deleted on quiescent stop() /
+// stop_after_flush() rather than via a static unique_ptr destructor, so
+// FreeLibrary under DLL_PROCESS_DETACH never joins Channel's thread under the
+// OS loader lock.
+Channel*                       g_channel = nullptr;
 std::atomic<Channel*>          g_channel_ptr{nullptr};
+std::mutex                     g_drain_mutex;
 
 Channel* channel() { return g_channel_ptr.load(std::memory_order_acquire); }
 
@@ -766,6 +767,7 @@ void cmd_reload(const Json&, Outcome& out) {
         std::vector<std::string> errs;
         loaded = h->load_all(errs);
         for (const std::string& e : errs) errors.push(Json::string(e));
+        Runtime::instance().sync_demand_hooks();
         close_harness_state();
         faulted = false;
     }
@@ -1345,16 +1347,17 @@ bool start(const HarnessOptions& opts, std::string& error) {
     if (!ch->start(co, error)) return false;
     g_started = std::chrono::steady_clock::now();
     g_quit.store(false, std::memory_order_release);
-    g_channel = std::move(ch);
-    g_channel_ptr.store(g_channel.get(), std::memory_order_release);
+    g_channel = ch.release();
+    g_channel_ptr.store(g_channel, std::memory_order_release);
     return true;
 }
 
 void stop() {
-    if (g_channel) {
+    if (g_channel != nullptr) {
         g_channel_ptr.store(nullptr, std::memory_order_release);
         g_channel->stop();
-        g_channel.reset();
+        delete g_channel;
+        g_channel = nullptr;
     }
     close_harness_state();
     g_adapter.reset();
@@ -1418,13 +1421,14 @@ bool take_screenshot_result(ScreenshotResult& result) {
 }
 
 void stop_after_flush() {
-    if (!g_channel) return;
+    if (g_channel == nullptr) return;
     g_channel_ptr.store(nullptr, std::memory_order_release);
     // Half a second is far longer than a loopback write takes; the bound is
     // there so a client that stopped reading cannot hold the exit hostage.
     g_channel->wait_flushed(500);
     g_channel->stop();
-    g_channel.reset();
+    delete g_channel;
+    g_channel = nullptr;
 }
 
 void drain() {
@@ -1432,6 +1436,8 @@ void drain() {
     // with LoadLibrary and the simpler the thread-local, the better.
     static thread_local bool draining = false;
     if (draining) return;
+    std::unique_lock drain_lock(g_drain_mutex, std::try_to_lock);
+    if (!drain_lock.owns_lock()) return;
     if (g_poison.load(std::memory_order_acquire)) return;
     if (g_lua_reload_requested.exchange(false, std::memory_order_acq_rel)) {
         Outcome reload;

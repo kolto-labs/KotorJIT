@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install ScriptForge into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
+# Install KotorJIT into a macOS Steam KOTOR 1 or KOTOR 2 install, and take
 # it back out. No game file is modified: the runtime is delivered through
 # DYLD_INSERT_LIBRARIES, so uninstalling is deleting a folder.
 #
@@ -31,27 +31,40 @@ find_macos_dir() {
     [[ -f "$t/Contents/MacOS/$exe" ]] && { echo "$t/Contents/MacOS"; return; }
   done
   # search one level down for a .app
-  local app; app=$(find "$t" -maxdepth 2 -name '*.app' -type d 2>/dev/null | head -1)
+  local app; app=$({ find "$t" -maxdepth 2 -name '*.app' -type d 2>/dev/null || true; } | head -n 1)
   [[ -n "$app" && -d "$app/Contents/MacOS" ]] && { echo "$app/Contents/MacOS"; return; }
   return 1
 }
 MACOS="$(find_macos_dir "$TARGET")" || { echo "no KOTOR executable under: $TARGET" >&2; exit 1; }
 EXE=""
-for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && EXE="$e"; done
-KPDIR="$MACOS/scriptforge"
-DYLIB="$MACOS/libscriptforge.dylib"
+for e in KOTOR_Exe KOTOR2sub swkotor swkotor2; do [[ -f "$MACOS/$e" ]] && { EXE="$e"; break; }; done
+[[ -n "$EXE" && -f "$MACOS/$EXE" ]] || { echo "no KOTOR executable inside $MACOS" >&2; exit 1; }
+KPDIR="$MACOS/kotorjit"
+DYLIB="$MACOS/libkotorjit.dylib"
 
 case "$ACTION" in
 install)
-  [[ -f "$BUILD/libscriptforge.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libscriptforge.dylib)" >&2; exit 1; }
-  # Identify the build by the code-section hash so the right address table is
-  # shipped, exactly as the runtime identifies it at load.
+  [[ -f "$BUILD/libkotorjit.dylib" ]] || { echo "build first: scripts/mac/build.sh (missing $BUILD/libkotorjit.dylib)" >&2; exit 1; }
+  # Identify the build by the code-section hash and architecture so the right
+  # address table is shipped, exactly as the runtime identifies it at load.
+  if ! lipo -archs "$MACOS/$EXE" 2>/dev/null | grep -qw x86_64; then
+    echo "unsupported architecture in $MACOS/$EXE (x86_64 slice required)" >&2
+    exit 1
+  fi
   local_sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
   SHA="$(local_sha "$MACOS/$EXE")"
   BUILDID=""
-  case "$EXE" in
-    KOTOR_Exe|swkotor)   BUILDID=k1_mac_steam_x64;;
-    KOTOR2sub|swkotor2)  BUILDID=k2_mac_steam_x64;;
+  case "$SHA" in
+    c1fcb8d37c702849882a17751c63ee0af7c2b9cbbc3b31b98a5f0edbc27c6d71)
+      BUILDID=k1_mac_steam_x64
+      ;;
+    1c536c3ef2e8bed348b38934b381e3dc427f3ebee21faddfbd7524fbb2388d77|469067c416f1a3ff391df73c7ace2d44a8d0a246253e8ad5752f6413ea033be4)
+      BUILDID=k2_mac_steam_x64
+      ;;
+    *)
+      echo "unrecognized macOS executable SHA-256 for $MACOS/$EXE: $SHA" >&2
+      exit 1
+      ;;
   esac
   # Upgrading an install made under the old name (KotorPhasor): keep its
   # scripts by moving the data folder, and keep any Steam launch option that
@@ -59,19 +72,19 @@ install)
   # runtime. Both runtimes are never present as separate files.
   if [[ -d "$MACOS/kotorphasor" && ! -e "$KPDIR" ]]; then
     mv "$MACOS/kotorphasor" "$KPDIR"
-    echo "moved kotorphasor/ -> scriptforge/ (scripts kept)"
+    echo "moved kotorphasor/ -> kotorjit/ (scripts kept)"
   fi
-  [[ -f "$MACOS/kotorphasor.ini" && ! -e "$MACOS/scriptforge.ini" ]] && mv "$MACOS/kotorphasor.ini" "$MACOS/scriptforge.ini"
+  [[ -f "$MACOS/kotorphasor.ini" && ! -e "$MACOS/kotorjit.ini" ]] && mv "$MACOS/kotorphasor.ini" "$MACOS/kotorjit.ini"
   mkdir -p "$KPDIR/scripts" "$KPDIR/addresses"
-  cp "$BUILD/libscriptforge.dylib" "$DYLIB"
+  cp "$BUILD/libkotorjit.dylib" "$DYLIB"
   if [[ -e "$MACOS/libkphasor.dylib" || -L "$MACOS/libkphasor.dylib" ]]; then
-    ln -sf "libscriptforge.dylib" "$MACOS/libkphasor.dylib"
-    echo "libkphasor.dylib now points at libscriptforge.dylib (old launch options keep working)"
+    ln -sf "libkotorjit.dylib" "$MACOS/libkphasor.dylib"
+    echo "libkphasor.dylib now points at libkotorjit.dylib (old launch options keep working)"
   fi
   cp "$ROOT/data/addresses/$BUILDID.json" "$KPDIR/addresses/$BUILDID.json"
   # A starter ini and an example script, only if absent.
-  [[ -f "$MACOS/scriptforge.ini" ]] || cat > "$MACOS/scriptforge.ini" <<INI
-; ScriptForge settings. Scripts live in scriptforge/scripts/*.lua.
+  [[ -f "$MACOS/kotorjit.ini" ]] || cat > "$MACOS/kotorjit.ini" <<INI
+; KotorJIT settings. Scripts live in kotorjit/scripts/*.lua.
 ; harness_port is off (0) by default; it is a test surface, not for play.
 harness_port = 0
 INI
@@ -93,14 +106,14 @@ LUA
 uninstall)
   rm -f "$DYLIB" "$MACOS/libkphasor.dylib"
   echo "removed $DYLIB"
-  echo "scriptforge/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
+  echo "kotorjit/ (scripts, ini, logs) left in place: delete $KPDIR to remove it."
   echo "Clear the game's Steam launch options (remove the DYLD_INSERT_LIBRARIES line)."
   ;;
 status)
   echo "executable: $MACOS/${EXE:-<none found>}"
-  [[ -f "$DYLIB" ]] && echo "libscriptforge.dylib: present" || echo "libscriptforge.dylib: not installed"
-  [[ -d "$KPDIR" ]] && echo "scriptforge/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
-  [[ -f "$MACOS/scriptforge.log" ]] && echo "log: $MACOS/scriptforge.log"
+  [[ -f "$DYLIB" ]] && echo "libkotorjit.dylib: present" || echo "libkotorjit.dylib: not installed"
+  [[ -d "$KPDIR" ]] && echo "kotorjit/: present ($(ls "$KPDIR/scripts" 2>/dev/null | wc -l | tr -d ' ') script(s))"
+  [[ -f "$MACOS/kotorjit.log" ]] && echo "log: $MACOS/kotorjit.log"
   ;;
 *) usage;;
 esac

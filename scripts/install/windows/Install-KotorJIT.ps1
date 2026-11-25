@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Install ScriptForge into a native Windows game folder, or take it back out.
+Install KotorJIT into a native Windows game folder, or take it back out.
 
 .DESCRIPTION
 The Windows twin of scripts/install_to_game.sh, with stricter rules because a
@@ -8,17 +8,17 @@ native install has no Wine prefix to throw away.
 
 Install refuses unless the game executable is on the exe allowlist. It supports
 two native Windows deployment methods (-Method):
-  Inject -- Copy scriptforge.dll, scriptforge-launch.exe and the address table
-            without modifying binkw32.dll (default when scriptforge-launch.exe
+  Inject -- Copy kotorjit.dll, kotorjit-launch.exe and the address table
+            without modifying binkw32.dll (default when kotorjit-launch.exe
             is built and the build is not packed Steam K1).
   Proxy  -- Copy the original binkw32.dll to a backup and binkw32_real.dll,
-            then drop in the proxy binkw32.dll, scriptforge.dll and table
+            then drop in the proxy binkw32.dll, kotorjit.dll and table
             (default for packed Steam K1 and required under Wine/Proton).
-  Auto   -- Picks Inject when scriptforge-launch.exe is present alongside
-            scriptforge.dll and the build is not packed k1_steam_103; otherwise
+  Auto   -- Picks Inject when kotorjit-launch.exe is present alongside
+            kotorjit.dll and the build is not packed k1_steam_103; otherwise
             picks Proxy.
 
-Every file it writes is recorded in scriptforge\install-manifest.json with its
+Every file it writes is recorded in kotorjit\install-manifest.json with its
 hash. If any step fails, the steps already done are undone in reverse order.
 
 Uninstall reads that manifest. Before it touches anything, it checks every
@@ -26,7 +26,7 @@ value and path in it. Each value must be a single string, not a list. Paths may
 not be rooted, have a '.' or '..' segment, or resolve outside the game folder.
 Only the file names this script writes are allowed, each listed once; Proxy
 manifests require exactly one binkw32.dll replaced entry and backup_dir
-scriptforge\backup\<timestamp>, whereas Inject manifests require empty
+kotorjit\backup\<timestamp>, whereas Inject manifests require empty
 backup_dir and zero replaced entries. No folder on the way to a file it removes
 may be a junction or symbolic link. A manifest that fails any check is refused
 and nothing is removed. It removes a file only when the file still has the hash
@@ -50,18 +50,18 @@ setting. Install into Program Files needs an elevated window ("Run as
 administrator"). See docs\user\windows-native-install.md.
 
 .EXAMPLE
-.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
-.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
-.\Install-ScriptForge.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
+.\Install-KotorJIT.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -SourceDir .\build
+.\Install-KotorJIT.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Uninstall
+.\Install-KotorJIT.ps1 -GameDir 'C:\GOG Games\Star Wars - KotOR' -Action Status
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$GameDir,
     [ValidateSet('Install', 'Uninstall', 'Status')][string]$Action = 'Install',
-    # Deployment method: Auto picks Inject when scriptforge-launch.exe is present
+    # Deployment method: Auto picks Inject when kotorjit-launch.exe is present
     # and the target is not packed Steam K1; otherwise Proxy.
     [ValidateSet('Auto', 'Inject', 'Proxy')][string]$Method = 'Auto',
-    # Folder holding scriptforge.dll, scriptforge-launch.exe and/or binkw32.dll.
+    # Folder holding kotorjit.dll, kotorjit-launch.exe and/or binkw32.dll.
     [string]$SourceDir = '',
     # Folder holding the per-build address tables (data\addresses in the repo).
     [string]$AddressDir = '',
@@ -74,19 +74,18 @@ Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
 # A format identifier, not the product name: it predates the KotorPhasor ->
-# ScriptForge rename and stays, so manifests written by older installs still read.
+# KotorJIT rename and stays, so manifests written by older installs still read.
 $ManifestSchema = 'kotorphasor.install-manifest/v1'
 
-# Game executables ScriptForge has an installable address table for. Values are
+# Game executables KotorJIT has an installable address table for. Values are
 # BuildRecord aliases from src\generated\builds.inc; the Python contract test
 # (tools\platform_receipt_test.py) fails if a hash here is not a BuildRecord.
 # k1_steam_103_unpacked is a harness artifact, not something a player runs.
-# k2_steam_aspyr is left out: its builds.inc note and its address table
-# disagree about whether it is installable.
 $ExeAllowlist = @{
     '9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435' = 'k1_gog_103'
     '34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88' = 'k1_steam_103'
     '777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914' = 'k2_gog_aspyr'
+    '6a522e71631dcee93467bd2010f3b23d9145326e1e2e89305f13ab104dbbffef' = 'k2_steam_aspyr'
 }
 
 # Original RAD Game Tools binkw32.dll builds, by where they were hashed. The
@@ -103,13 +102,13 @@ function Get-Sha256([string]$Path) {
 
 function Test-OurProxy([string]$Path) {
     # Our proxy is small and names the runtime DLL; the real Bink is ~370 KB of
-    # codec. Proxies built before the KotorPhasor -> ScriptForge rename name
+    # codec. Proxies built before the KotorPhasor -> KotorJIT rename name
     # kphasor.dll; they are ours too and must never be taken for the original.
     $item = Get-Item -LiteralPath $Path
     if ($item.Length -ge 200000) { return $false }
     $bytes = [System.IO.File]::ReadAllBytes($Path)
     $text = [System.Text.Encoding]::ASCII.GetString($bytes)
-    return ($text.Contains('scriptforge.dll') -or $text.Contains('kphasor.dll'))
+    return ($text.Contains('kotorjit.dll') -or $text.Contains('kphasor.dll'))
 }
 
 function Test-KnownBink([string]$Sha) {
@@ -150,9 +149,9 @@ function Get-StringField($Object, [string]$Name, [string]$What) {
 # '$' also matches before a final newline (review M7). -cmatch: this script
 # writes these names in exactly this case.
 # kotorphasor\ and kphasor.dll: what installs made before the rename recorded.
-$BackupDirPattern = '^(scriptforge|kotorphasor)[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
+$BackupDirPattern = '^(kotorjit|kotorphasor)[\\/]backup[\\/][0-9]{8}T[0-9]{6}Z\z'
 # The files this script creates. A manifest naming anything else is not ours.
-$CreatedPattern = '^(binkw32_real\.dll|scriptforge\.dll|scriptforge-launch\.exe|kphasor\.dll|(scriptforge|kotorphasor)[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
+$CreatedPattern = '^(binkw32_real\.dll|kotorjit\.dll|kotorjit-launch\.exe|kphasor\.dll|(kotorjit|kotorphasor)[\\/]addresses[\\/][A-Za-z0-9_-]+\.json)\z'
 $ShaPattern = '^[0-9a-f]{64}\z'
 
 function Resolve-Owned([object]$Rel, [string]$What) {
@@ -223,14 +222,28 @@ function Assert-Manifest($m) {
         throw "manifest method '$manifestMethod' is unknown; refusing, nothing removed"
     }
     $bd = Get-StringField $m 'backup_dir' 'backup_dir'
+    $binkOrig = Get-StringField $m 'bink_original_sha256' 'bink_original_sha256'
+    $binkTrust = Get-StringField $m 'bink_trusted_override' 'bink_trusted_override'
     if ($manifestMethod -ceq 'proxy') {
         if (($null -eq $bd) -or ($bd -cnotmatch $BackupDirPattern)) {
-            throw "manifest backup_dir '$bd' is not scriptforge\backup\<yyyyMMddTHHmmssZ> (or kotorphasor\backup\... from an older install); refusing, nothing removed"
+            throw "manifest backup_dir '$bd' is not kotorjit\backup\<yyyyMMddTHHmmssZ> (or kotorphasor\backup\... from an older install); refusing, nothing removed"
         }
         [void](Resolve-Owned $bd 'backup_dir')
+        if (($null -ne $binkOrig) -and ($binkOrig -cnotmatch $ShaPattern)) {
+            throw "manifest bink_original_sha256 '$binkOrig' is not a sha256; refusing, nothing removed"
+        }
+        if (($null -ne $binkTrust) -and ($binkTrust -cnotmatch $ShaPattern)) {
+            throw "manifest bink_trusted_override '$binkTrust' is not a sha256; refusing, nothing removed"
+        }
     } else {
         if (($null -eq $bd) -or ($bd -cne '')) {
             throw "manifest backup_dir '$bd' must be empty for inject method; refusing, nothing removed"
+        }
+        if ($null -ne $binkOrig) {
+            throw "manifest bink_original_sha256 is unexpected for method '$manifestMethod'; refusing, nothing removed"
+        }
+        if ($null -ne $binkTrust) {
+            throw "manifest bink_trusted_override is unexpected for method '$manifestMethod'; refusing, nothing removed"
         }
     }
     $filesValue = Get-Field $m 'files'
@@ -287,7 +300,7 @@ $GameDir = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $GameDir).Pa
 $GameRoot = $GameDir.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
 $Proxy = Join-Path $GameDir 'binkw32.dll'
 $Real = Join-Path $GameDir 'binkw32_real.dll'
-$OwnDir = Join-Path $GameDir 'scriptforge'
+$OwnDir = Join-Path $GameDir 'kotorjit'
 $ManifestPath = Join-Path $OwnDir 'install-manifest.json'
 # An install made under the old name keeps its manifest in kotorphasor\. Use
 # it when there is no current one, so Status and Uninstall manage that
@@ -320,8 +333,10 @@ if ($Action -eq 'Status') {
             }
             Write-Output ("  {0,-8} {1}" -f $state, $f.path)
         }
-    } elseif ((Test-Path -LiteralPath $Proxy) -and (Test-OurProxy $Proxy)) {
+    } elseif ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and (Test-OurProxy $Proxy)) {
         Write-Output 'proxy present but no manifest: installed by another tool; not managed here'
+    } elseif ((Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit-launch.exe') -PathType Leaf) -or (Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit.dll') -PathType Leaf)) {
+        Write-Output 'launcher or runtime DLL present but no manifest: not managed here'
     } else {
         Write-Output 'not installed'
     }
@@ -408,7 +423,7 @@ if ($Action -eq 'Uninstall') {
         }
     }
     # Our own bookkeeping, only once every game file is back. backup_dir was
-    # checked against scriptforge\backup\<timestamp>, resolved inside the
+    # checked against kotorjit\backup\<timestamp>, resolved inside the
     # game folder and checked for links before pass 1.
     if ($manifestMethod -ceq 'proxy') {
         Remove-BackupDir $backupDir
@@ -428,12 +443,34 @@ if ($Action -eq 'Uninstall') {
 
 # --------------------------------------------------------------------------
 # Install: every check before the first write.
-if (-not $SourceDir) { $SourceDir = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'build') }
-if (-not $AddressDir) { $AddressDir = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..', 'data', 'addresses') }
+if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'data\addresses') -PathType Container) {
+    $pkgRoot = $PSScriptRoot
+} else {
+    $pkgRoot = [System.IO.Path]::Combine($PSScriptRoot, '..', '..', '..')
+}
+if (-not $SourceDir) {
+    foreach ($cand in @(
+        (Join-Path $pkgRoot 'build'),
+        $pkgRoot,
+        (Join-Path $pkgRoot 'bin')
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $cand 'kotorjit.dll') -PathType Leaf) {
+            $SourceDir = $cand
+            break
+        }
+    }
+    if (-not $SourceDir) { $SourceDir = Join-Path $pkgRoot 'build' }
+}
+if (-not $AddressDir) { $AddressDir = [System.IO.Path]::Combine($pkgRoot, 'data', 'addresses') }
 $SourceDir = (Resolve-Path -LiteralPath $SourceDir).Path
 $AddressDir = (Resolve-Path -LiteralPath $AddressDir).Path
 
-if (Test-Path -LiteralPath $ManifestPath) { throw 'already installed; run -Action Uninstall first' }
+if ((Test-Path -LiteralPath $ManifestPath) -or (Test-Path -LiteralPath $LegacyManifest)) {
+    throw 'already installed; run -Action Uninstall first'
+}
+$OwnDir = Join-Path $GameDir 'kotorjit'
+$ManifestPath = Join-Path $OwnDir 'install-manifest.json'
+$LegacyOwnDir = Join-Path $GameDir 'kotorphasor'
 
 $exe = Find-GameExe $GameDir
 if (-not $exe) { throw "no swkotor.exe or swkotor2.exe in $GameDir" }
@@ -443,13 +480,17 @@ if (-not $ExeAllowlist.ContainsKey($exeSha)) {
 }
 $build = $ExeAllowlist[$exeSha]
 
-$srcDll = Join-Path $SourceDir 'scriptforge.dll'
+$srcDll = Join-Path $SourceDir 'kotorjit.dll'
 if (-not (Test-Path -LiteralPath $srcDll -PathType Leaf)) { throw "missing $srcDll; build first" }
 $table = Join-Path $AddressDir "$build.json"
 if (-not (Test-Path -LiteralPath $table -PathType Leaf)) { throw "missing address table $table" }
-if (Test-Path -LiteralPath (Join-Path $GameDir 'scriptforge.dll')) { throw 'scriptforge.dll already in the game folder and not ours; refusing' }
+if (Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit.dll')) { throw 'kotorjit.dll already in the game folder and not ours; refusing' }
+if (Test-Path -LiteralPath (Join-Path $GameDir 'kphasor.dll')) { throw 'kphasor.dll already in the game folder and not ours; refusing' }
+if ((Test-Path -LiteralPath $LegacyOwnDir -PathType Container) -and -not (Test-Path -LiteralPath $OwnDir)) {
+    Assert-NoReparsePoint $LegacyOwnDir 'legacy kotorphasor folder'
+}
 
-$srcLauncher = Join-Path $SourceDir 'scriptforge-launch.exe'
+$srcLauncher = Join-Path $SourceDir 'kotorjit-launch.exe'
 if ($Method -eq 'Auto') {
     if (($build -cne 'k1_steam_103') -and (Test-Path -LiteralPath $srcLauncher -PathType Leaf)) {
         $Method = 'Inject'
@@ -462,7 +503,7 @@ $binkSha = $null
 $srcProxy = $null
 if ($Method -eq 'Proxy') {
     if (-not (Test-Path -LiteralPath $Proxy -PathType Leaf)) { throw "no binkw32.dll in $GameDir" }
-    if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a ScriptForge proxy but there is no manifest; restore the original by hand first' }
+    if (Test-OurProxy $Proxy) { throw 'binkw32.dll is already a KotorJIT proxy but there is no manifest; restore the original by hand first' }
     $binkSha = Get-Sha256 $Proxy
     if (-not (Test-KnownBink $binkSha)) {
         throw "binkw32.dll sha256 $binkSha is not a known Bink build; pass -TrustBinkSha256 $binkSha only if you know it is the game's original"
@@ -474,13 +515,13 @@ if ($Method -eq 'Proxy') {
     }
     $srcProxy = Join-Path $SourceDir 'binkw32.dll'
     if (-not (Test-Path -LiteralPath $srcProxy -PathType Leaf)) { throw "missing $srcProxy; build first" }
-    if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a ScriptForge proxy" }
+    if (-not (Test-OurProxy $srcProxy)) { throw "$srcProxy is not a KotorJIT proxy" }
 } else {
     if ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and (Test-OurProxy $Proxy)) {
-        throw 'binkw32.dll is already a ScriptForge proxy; restore original binkw32.dll before installing with -Method Inject'
+        throw 'binkw32.dll is already a KotorJIT proxy; restore original binkw32.dll before installing with -Method Inject'
     }
     if (-not (Test-Path -LiteralPath $srcLauncher -PathType Leaf)) { throw "missing $srcLauncher; build first" }
-    if (Test-Path -LiteralPath (Join-Path $GameDir 'scriptforge-launch.exe')) { throw 'scriptforge-launch.exe already in the game folder and not ours; refusing' }
+    if (Test-Path -LiteralPath (Join-Path $GameDir 'kotorjit-launch.exe')) { throw 'kotorjit-launch.exe already in the game folder and not ours; refusing' }
 }
 
 # Program Files needs an elevated shell. Find out now, not halfway through.
@@ -494,7 +535,7 @@ try {
 
 $stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
 $backupRel = ''
-if ($Method -eq 'Proxy') { $backupRel = [System.IO.Path]::Combine('scriptforge', 'backup', $stamp) }
+if ($Method -eq 'Proxy') { $backupRel = [System.IO.Path]::Combine('kotorjit', 'backup', $stamp) }
 $records = New-Object System.Collections.ArrayList
 $undo = New-Object System.Collections.ArrayList   # scriptblocks, run in reverse
 $createdDirs = New-Object System.Collections.ArrayList
@@ -515,6 +556,23 @@ function Add-Created([string]$Rel, [string]$From) {
 }
 
 try {
+    $legacyIni = Join-Path $GameDir 'kotorphasor.ini'
+    $currentIni = Join-Path $GameDir 'kotorjit.ini'
+    if ((Test-Path -LiteralPath $legacyIni -PathType Leaf) -and -not (Test-Path -LiteralPath $currentIni)) {
+        Move-Item -LiteralPath $legacyIni -Destination $currentIni
+        [void]$undo.Add({ if (Test-Path -LiteralPath $currentIni) { Move-Item -LiteralPath $currentIni -Destination $legacyIni -ErrorAction SilentlyContinue } }.GetNewClosure())
+        Write-Output 'moved kotorphasor.ini -> kotorjit.ini'
+    }
+    if ((Test-Path -LiteralPath $LegacyOwnDir -PathType Container) -and -not (Test-Path -LiteralPath $OwnDir)) {
+        Move-Item -LiteralPath $LegacyOwnDir -Destination $OwnDir
+        [void]$undo.Add({
+            foreach ($d in @($createdDirs)) {
+                if ((Test-Path -LiteralPath $d) -and -not (Get-ChildItem -LiteralPath $d -Force)) { Remove-Item -LiteralPath $d -Force -ErrorAction SilentlyContinue }
+            }
+            if (Test-Path -LiteralPath $OwnDir) { Move-Item -LiteralPath $OwnDir -Destination $LegacyOwnDir -ErrorAction SilentlyContinue }
+        }.GetNewClosure())
+        Write-Output 'moved kotorphasor\ -> kotorjit\ (scripts kept)'
+    }
     Add-Dir $OwnDir
     if ($Method -eq 'Proxy') {
         Add-Dir (Join-Path $OwnDir 'backup')
@@ -528,16 +586,26 @@ try {
         $backupFile = [System.IO.Path]::Combine($backupRel, 'binkw32.dll')
         Copy-Item -LiteralPath $Proxy -Destination (Join-Path $GameDir $backupFile)
         if ((Get-Sha256 (Join-Path $GameDir $backupFile)) -ne $binkSha) { throw 'backup copy of binkw32.dll does not verify' }
+        [void]$undo.Add({
+            $bPath = Join-Path $GameDir $backupFile
+            if ((Test-Path -LiteralPath $Proxy -PathType Leaf) -and ((Get-Sha256 $Proxy) -eq $binkSha)) {
+                Remove-Item -LiteralPath $bPath -Force -ErrorAction SilentlyContinue
+                $bDir = Split-Path -Parent $bPath
+                if ((Test-Path -LiteralPath $bDir) -and -not (Get-ChildItem -LiteralPath $bDir -Force)) { Remove-Item -LiteralPath $bDir -Force -ErrorAction SilentlyContinue }
+                $pDir = Split-Path -Parent $bDir
+                if ((Test-Path -LiteralPath $pDir) -and -not (Get-ChildItem -LiteralPath $pDir -Force)) { Remove-Item -LiteralPath $pDir -Force -ErrorAction SilentlyContinue }
+            }
+        }.GetNewClosure())
         if (-not (Test-Path -LiteralPath $Real)) { Add-Created 'binkw32_real.dll' $Proxy }
     }
 
     # 2. Runtime and tables.
-    Add-Created 'scriptforge.dll' $srcDll
+    Add-Created 'kotorjit.dll' $srcDll
     if ($Method -eq 'Inject') {
-        Add-Created 'scriptforge-launch.exe' $srcLauncher
+        Add-Created 'kotorjit-launch.exe' $srcLauncher
     }
     # Only the detected build's table: the runtime loads <build>.json.
-    Add-Created ([System.IO.Path]::Combine('scriptforge', 'addresses', "$build.json")) $table
+    Add-Created ([System.IO.Path]::Combine('kotorjit', 'addresses', "$build.json")) $table
 
     if ($Method -eq 'Proxy') {
         # 3. The proxy last: until this point the game still starts unmodded.
@@ -588,7 +656,7 @@ try {
 
 Write-Output "installed $build ($($Method.ToLowerInvariant())) into $GameDir"
 if ($Method -eq 'Inject') {
-    Write-Output "  launch with: $(Join-Path $GameDir 'scriptforge-launch.exe')"
+    Write-Output "  launch with: $(Join-Path $GameDir 'kotorjit-launch.exe')"
 }
 Write-Output "  scripts go in $(Join-Path $OwnDir 'scripts')"
 Write-Output "  manifest: $ManifestPath"

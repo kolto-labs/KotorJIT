@@ -119,7 +119,16 @@ void register_strings(lua_State* L) {
     push_kp_table(L);
     lua_pushcfunction(L, l_tokenizestring);     lua_setfield(L, -2, "tokenizestring");
     lua_pushcfunction(L, l_tokenizecmdstring);  lua_setfield(L, -2, "tokenizecmdstring");
-    lua_pop(L, 1);
+    lua_getfield(L, -1, "str");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_createtable(L, 0, 2);
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -3, "str");
+    }
+    lua_pushcfunction(L, l_tokenizestring);     lua_setfield(L, -2, "split");
+    lua_pushcfunction(L, l_tokenizecmdstring);  lua_setfield(L, -2, "cmdsplit");
+    lua_pop(L, 2);
 }
 
 }  // namespace kp::api

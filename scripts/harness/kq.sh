@@ -26,7 +26,7 @@ if [[ -z "${KQ_INSTALL:-}" ]]; then
   KQ_INSTALL="$(python3 "$ROOT/tools/kpdiscover.py" --app k1 2>/dev/null || true)"
 fi
 [[ -n "${KQ_INSTALL:-}" && -d "$KQ_INSTALL" ]] || {
-  echo "kq: no K1 install. Set KQ_INSTALL or add [paths] k1 to kotorphasor.toml." >&2
+  echo "kq: no K1 install. Set KQ_INSTALL or add [paths] k1 to kotorjit.toml (or kotorphasor.toml)." >&2
   exit 1
 }
 

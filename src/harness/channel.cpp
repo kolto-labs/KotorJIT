@@ -55,11 +55,20 @@ bool would_block(int e) { return e == EWOULDBLOCK || e == EAGAIN; }
 // send() must never raise SIGPIPE: the peer can go away between select() and
 // send(), and the default disposition would kill the game rather than fail the
 // write. Winsock has no such signal and no such flag.
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__APPLE__)
 constexpr int kSendFlags = 0;
 #else
 constexpr int kSendFlags = MSG_NOSIGNAL;
 #endif
+
+void suppress_sigpipe(sock_t s) {
+#if defined(__APPLE__)
+    int one = 1;
+    ::setsockopt(s, SOL_SOCKET, SO_NOSIGPIPE, &one, sizeof one);
+#else
+    (void)s;
+#endif
+}
 
 // select() indexes fd_set by descriptor on POSIX, so a descriptor at or above
 // FD_SETSIZE would write past the set. Winsock's fd_set is an array of handles
@@ -411,6 +420,7 @@ void Channel::run_loop() {
             socklen_t plen = sizeof peer;
             const sock_t a = ::accept(ls, reinterpret_cast<sockaddr*>(&peer), &plen);
             if (a != kInvalidSock) {
+                suppress_sigpipe(a);
                 if (have_client || !fd_in_select_range(a)) {
                     const bool no_room = !fd_in_select_range(a);
                     // Refused, not queued: a driver that connects twice must

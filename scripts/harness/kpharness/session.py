@@ -12,7 +12,7 @@ runtime writes, symlinks for everything else. Trees left by the earlier
 harness (tmp/k1_harness as a full copy, tmp/k2_harness as an overlay) are
 reused as they are. The runtime is installed the way
 scripts/install_to_game.sh does it: the proxy replaces binkw32.dll and the
-original is kept as binkw32_real.dll; on the ELF libscriptforge.so is preloaded.
+original is kept as binkw32_real.dll; on the ELF libkotorjit.so is preloaded.
 
 Locking. One display, one game, one owner. The lock file holds the owning
 pid and that pid's start time, the same four lines scripts/harness/lock.sh
@@ -349,9 +349,9 @@ def tune_ini(path: Path, keys: List[T.IniKey], log: Log = _quiet) -> None:
 
 
 def write_runtime_ini(game_dir: Path, port: int, bind: str = "127.0.0.1") -> Path:
-    """scriptforge.ini next to the game. Section headers are ignored by the
+    """kotorjit.ini next to the game. Section headers are ignored by the
     runtime, so the keys are the global harness_port and harness_bind."""
-    path = game_dir / "scriptforge.ini"
+    path = game_dir / "kotorjit.ini"
     kept: List[str] = []
     if path.is_file():
         for line in path.read_text(errors="replace").splitlines():
@@ -367,17 +367,17 @@ def write_runtime_ini(game_dir: Path, port: int, bind: str = "127.0.0.1") -> Pat
 
 
 def proxy_is_ours(dll: Path) -> bool:
-    """The proxy is small and names scriptforge; the real codec is ~370 KB."""
+    """The proxy is small and names kotorjit; the real codec is ~370 KB."""
     try:
         if dll.stat().st_size >= 200000:
             return False
-        return b"scriptforge.dll" in dll.read_bytes()
+        return b"kotorjit.dll" in dll.read_bytes()
     except OSError:
         return False
 
 
-RUNTIME_WRITTEN_FILES = {"scriptforge.dll", "steam_appid.txt", "scriptforge.ini",
-                         "scriptforge.log", "scriptforge-proxy.log"}
+RUNTIME_WRITTEN_FILES = {"kotorjit.dll", "steam_appid.txt", "kotorjit.ini",
+                         "kotorjit.log", "kotorjit-proxy.log"}
 
 
 def overlay_tree(src: Path, dst: Path, writable: List[str], copy_files: bool,
@@ -539,7 +539,7 @@ class GameSession:
     @property
     def runtime_log(self) -> Path:
         assert self.game_dir is not None
-        return self.game_dir / "scriptforge.log"
+        return self.game_dir / "kotorjit.log"
 
     @property
     def wineprefix(self) -> Path:
@@ -803,7 +803,7 @@ class GameSession:
         for f in t.runtime_files:
             if not (self.build_dir / f).is_file():
                 raise BootFailure("runtime not built", f"missing {self.build_dir / f}")
-        kp = gd / "scriptforge"
+        kp = gd / "kotorjit"
         kp.mkdir(exist_ok=True)
         (kp / "scripts").mkdir(exist_ok=True)
         sources = [self.build_dir / f for f in t.runtime_files]
@@ -818,7 +818,7 @@ class GameSession:
             digest.update(f"\0{stat.st_size}\0{stat.st_mtime_ns}\n".encode())
         manifest = digest.hexdigest()
         installed = kp / ".installed"
-        runtime = gd / ("scriptforge.dll" if t.wine else "scriptforge/libscriptforge.so")
+        runtime = gd / ("kotorjit.dll" if t.wine else "kotorjit/libkotorjit.so")
         if (installed.is_file() and installed.read_text().strip() == manifest
                 and runtime.is_file() and (kp / "addresses").is_dir()
                 and (not t.wine or proxy_is_ours(gd / "binkw32.dll"))):
@@ -837,13 +837,13 @@ class GameSession:
                 self.log("saved original binkw32.dll -> binkw32_real.dll")
             if proxy.is_symlink():
                 proxy.unlink()
-            runtime_dll = gd / "scriptforge.dll"
+            runtime_dll = gd / "kotorjit.dll"
             if runtime_dll.is_symlink():
                 runtime_dll.unlink()
-            shutil.copy2(self.build_dir / "scriptforge.dll", runtime_dll)
+            shutil.copy2(self.build_dir / "kotorjit.dll", runtime_dll)
             shutil.copy2(self.build_dir / "binkw32.dll", proxy)
         else:
-            shutil.copy2(self.build_dir / "libscriptforge.so", kp / "libscriptforge.so")
+            shutil.copy2(self.build_dir / "libkotorjit.so", kp / "libkotorjit.so")
             if t.name == "k2-native":
                 self._install_k2_libglu(kp)
         addr = kp / "addresses"
@@ -915,6 +915,8 @@ class GameSession:
         if any(p.is_dir() for p in self.save_dir.iterdir()):
             return
         cloud = self.staged / "cloudsaves"
+        if not cloud.is_dir() and self.data_dir is not None:
+            cloud = self.data_dir.parent / "cloudsaves"
         if not cloud.is_dir():
             return
         n = 0
@@ -1168,7 +1170,7 @@ class GameSession:
         env["LIBGL_ALWAYS_SOFTWARE"] = "1"
         env["GALLIUM_DRIVER"] = "llvmpipe"
         env["LP_NUM_THREADS"] = env.get("KP_LP_NUM_THREADS", "2")
-        env["SCRIPTFORGE_HARNESS_PORT"] = str(self.port)
+        env["KOTORJIT_HARNESS_PORT"] = str(self.port)
         # This host's /tmp can be quota-limited independently of its free
         # space. Wine and the game create transient files during launch, so
         # keep those files in the harness-owned staged tree instead of making
@@ -1181,7 +1183,7 @@ class GameSession:
             if not isolated:
                 Path(env["TMPDIR"]).mkdir(parents=True, exist_ok=True)
         else:
-            temp_dir = self.game_dir / "scriptforge/tmp"
+            temp_dir = self.game_dir / "kotorjit/tmp"
             temp_dir.mkdir(parents=True, exist_ok=True)
             env["TMPDIR"] = str(temp_dir)
         # Steamworks uses these launch-context variables when a native binary
@@ -1196,10 +1198,10 @@ class GameSession:
             env["WINEDEBUG"] = self.wine_debug if self.wine_debug is not None else env.get("WINEDEBUG", "-all")
         else:
             assert self.xdg_home is not None
-            env["LD_PRELOAD"] = str(self.game_dir / "scriptforge" / "libscriptforge.so")
+            env["LD_PRELOAD"] = str(self.game_dir / "kotorjit" / "libkotorjit.so")
             env["XDG_DATA_HOME"] = str(self.xdg_home)
             libs = [str(self.game_dir)]
-            staged_glu = self.game_dir / "scriptforge" / "lib"
+            staged_glu = self.game_dir / "kotorjit" / "lib"
             if staged_glu.is_dir():
                 libs.insert(0, str(staged_glu))
             prior = env.get("LD_LIBRARY_PATH", "")
@@ -1671,7 +1673,7 @@ class GameSession:
         self.release_lock()
         try:
             if self.game_dir and self.runtime_log.is_file():
-                shutil.copy2(self.runtime_log, self.run_dir / "scriptforge.log")
+                shutil.copy2(self.runtime_log, self.run_dir / "kotorjit.log")
         except OSError:
             pass
         try:
@@ -1753,9 +1755,9 @@ def teardown_from_info(info: SessionInfo, log: Log = print) -> None:
         except OSError:
             pass
     try:
-        src = Path(info.game_dir) / "scriptforge.log"
+        src = Path(info.game_dir) / "kotorjit.log"
         if src.is_file():
-            shutil.copy2(src, Path(info.run_dir) / "scriptforge.log")
+            shutil.copy2(src, Path(info.run_dir) / "kotorjit.log")
     except OSError:
         pass
     try:

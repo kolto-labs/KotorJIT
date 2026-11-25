@@ -56,7 +56,7 @@ class CurationTests(unittest.TestCase):
         entries = validation.validate_inventory(self.manifest)
         retired = [e for e in entries if e['disposition'] == 'retired_public']
         self.assertEqual({e['path'] for e in retired}, RETIRED)
-        self.assertEqual(len(entries), 41)
+        self.assertEqual(len(entries), 42)
         self.assertEqual(len(retired), 8)
         for entry in retired:
             self.assertFalse((validation.ROOT / 'scripts/examples' / entry['path']).exists())

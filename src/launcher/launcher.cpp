@@ -1,4 +1,4 @@
-// Win32 runtime-injection launcher for ScriptForge (KPM-style ProcessInjector).
+// Win32 runtime-injection launcher for KotorJIT (KPM-style ProcessInjector).
 //
 // Deployment modes:
 //   direct -- CreateProcessA(CREATE_SUSPENDED) -> remote LoadLibraryA -> ResumeThread.
@@ -19,12 +19,13 @@
 #include <shellapi.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -65,6 +66,7 @@ struct Options {
     DWORD pid = 0;
     DWORD timeout_ms = 60000;
     bool wait = false;
+    bool wait_window = true;
     bool check_only = false;
     std::vector<std::string> game_args;
 };
@@ -72,9 +74,23 @@ struct Options {
 struct PeInspection {
     bool valid_pe = false;
     bool is_i386 = false;
+    bool is_pe32 = false;
     bool has_bind_section = false;
     std::uint16_t machine = 0;
 };
+
+bool parse_uint_dec(const char* s, unsigned long& out) {
+    if (s == nullptr || *s == '\0') return false;
+    for (const char* p = s; *p != '\0'; ++p) {
+        if (!std::isdigit(static_cast<unsigned char>(*p))) return false;
+    }
+    errno = 0;
+    char* end = nullptr;
+    const unsigned long v = std::strtoul(s, &end, 10);
+    if (errno == ERANGE || end == s || *end != '\0') return false;
+    out = v;
+    return true;
+}
 
 std::string to_lower_ascii(std::string s) {
     for (char& c : s) {
@@ -99,23 +115,73 @@ std::string join_win(const std::string& dir, const std::string& leaf) {
     return dir + "\\" + leaf;
 }
 
+std::wstring utf8_to_wide(const std::string& s) {
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, s.data(),
+                                static_cast<int>(s.size()), nullptr, 0);
+    UINT cp = CP_UTF8;
+    DWORD flags = MB_ERR_INVALID_CHARS;
+    if (n <= 0) {
+        cp = CP_ACP;
+        flags = 0;
+        n = MultiByteToWideChar(cp, flags, s.data(), static_cast<int>(s.size()), nullptr, 0);
+    }
+    if (n <= 0) return {};
+    std::wstring w(static_cast<std::size_t>(n), L'\0');
+    MultiByteToWideChar(cp, flags, s.data(), static_cast<int>(s.size()), w.data(), n);
+    return w;
+}
+
+std::string wide_to_utf8(const wchar_t* s, int len = -1) {
+    if (s == nullptr) return {};
+    if (len == 0 || (len < 0 && s[0] == L'\0')) return {};
+    const int n = WideCharToMultiByte(CP_UTF8, 0, s, len, nullptr, 0, nullptr, nullptr);
+    if (n <= 0) return {};
+    std::string out(static_cast<std::size_t>(n), '\0');
+    WideCharToMultiByte(CP_UTF8, 0, s, len, out.data(), n, nullptr, nullptr);
+    if (len < 0 && !out.empty() && out.back() == '\0') out.pop_back();
+    return out;
+}
+
+std::uint64_t tick_now_ms() {
+    using Tick64Fn = ULONGLONG(WINAPI*)();
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    if (k32 != nullptr) {
+        auto fn = reinterpret_cast<Tick64Fn>(
+            reinterpret_cast<void*>(GetProcAddress(k32, "GetTickCount64")));
+        if (fn != nullptr) return static_cast<std::uint64_t>(fn());
+    }
+    return static_cast<std::uint64_t>(GetTickCount());
+}
+
 bool file_exists(const std::string& path) {
-    const DWORD attr = GetFileAttributesA(path.c_str());
+    const std::wstring w = utf8_to_wide(path);
+    const DWORD attr = w.empty() ? INVALID_FILE_ATTRIBUTES : GetFileAttributesW(w.c_str());
     return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
 std::string abs_path_of(const std::string& path) {
-    char buf[MAX_PATH * 4]{};
-    const DWORD n = GetFullPathNameA(path.c_str(), static_cast<DWORD>(sizeof(buf)), buf, nullptr);
-    if (n == 0 || n >= sizeof(buf)) return path;
-    return std::string(buf, n);
+    const std::wstring w = utf8_to_wide(path);
+    if (w.empty()) return path;
+    std::wstring buf(1024, L'\0');
+    DWORD n = GetFullPathNameW(w.c_str(), static_cast<DWORD>(buf.size()), buf.data(), nullptr);
+    if (n >= buf.size()) {
+        buf.resize(n + 1);
+        n = GetFullPathNameW(w.c_str(), static_cast<DWORD>(buf.size()), buf.data(), nullptr);
+    }
+    if (n == 0 || n >= buf.size()) return path;
+    return wide_to_utf8(buf.data(), static_cast<int>(n));
 }
 
 std::string self_dir() {
-    char buf[MAX_PATH * 4]{};
-    const DWORD n = GetModuleFileNameA(nullptr, buf, static_cast<DWORD>(sizeof(buf)));
-    if (n == 0 || n >= sizeof(buf)) return ".";
-    return dirname_of(std::string(buf, n));
+    std::wstring buf(1024, L'\0');
+    for (;;) {
+        const DWORD n = GetModuleFileNameW(nullptr, buf.data(), static_cast<DWORD>(buf.size()));
+        if (n == 0) return ".";
+        if (n < buf.size()) return dirname_of(wide_to_utf8(buf.data(), static_cast<int>(n)));
+        if (buf.size() >= 32768) return ".";
+        buf.resize(buf.size() * 2);
+    }
 }
 
 bool running_under_wine() {
@@ -123,38 +189,51 @@ bool running_under_wine() {
     return ntdll != nullptr && GetProcAddress(ntdll, "wine_get_version") != nullptr;
 }
 
-bool looks_like_scriptforge_proxy(const std::string& bink_path) {
-    if (!file_exists(bink_path)) return false;
-    std::ifstream f(bink_path, std::ios::binary | std::ios::ate);
-    if (!f) return false;
-    const std::streamoff sz = f.tellg();
-    if (sz <= 0 || sz >= 200000) return false;
-    f.seekg(0, std::ios::beg);
-    std::string data(static_cast<std::size_t>(sz), '\0');
-    if (!f.read(data.data(), sz)) return false;
+bool looks_like_kotorjit_proxy(const std::string& bink_path) {
+    const std::wstring w = utf8_to_wide(bink_path);
+    if (w.empty()) return false;
+    std::FILE* f = _wfopen(w.c_str(), L"rb");
+    if (f == nullptr) return false;
+    std::string data;
+    char chunk[8192];
+    for (;;) {
+        const std::size_t n = std::fread(chunk, 1, sizeof(chunk), f);
+        if (n > 0) data.append(chunk, n);
+        if (data.size() >= 200000) {
+            std::fclose(f);
+            return false;
+        }
+        if (n < sizeof(chunk)) break;
+    }
+    std::fclose(f);
+    if (data.empty()) return false;
     return data.find(kp::naming::kRuntimeDll) != std::string::npos ||
            data.find(kp::naming::kLegacyRuntimeDll) != std::string::npos;
 }
 
 PeInspection inspect_pe(const std::string& path) {
     PeInspection out;
-    std::ifstream f(path, std::ios::binary);
-    if (!f) return out;
+    const std::wstring w = utf8_to_wide(path);
+    std::FILE* f = !w.empty() ? _wfopen(w.c_str(), L"rb") : std::fopen(path.c_str(), "rb");
+    if (f == nullptr) return out;
 
     std::uint8_t dos[64]{};
-    if (!f.read(reinterpret_cast<char*>(dos), sizeof(dos))) return out;
-    if (dos[0] != 'M' || dos[1] != 'Z') return out;
+    if (std::fread(dos, 1, sizeof(dos), f) != sizeof(dos)) { std::fclose(f); return out; }
+    if (dos[0] != 'M' || dos[1] != 'Z') { std::fclose(f); return out; }
 
     const std::uint32_t e_lfanew = static_cast<std::uint32_t>(dos[0x3c]) |
                                    (static_cast<std::uint32_t>(dos[0x3d]) << 8) |
                                    (static_cast<std::uint32_t>(dos[0x3e]) << 16) |
                                    (static_cast<std::uint32_t>(dos[0x3f]) << 24);
-    if (e_lfanew > 0x100000u) return out;
+    if (e_lfanew > 0x100000u) { std::fclose(f); return out; }
 
-    f.seekg(e_lfanew, std::ios::beg);
-    std::uint8_t pe_hdr[24]{};
-    if (!f.read(reinterpret_cast<char*>(pe_hdr), sizeof(pe_hdr))) return out;
-    if (pe_hdr[0] != 'P' || pe_hdr[1] != 'E' || pe_hdr[2] != 0 || pe_hdr[3] != 0) return out;
+    if (std::fseek(f, static_cast<long>(e_lfanew), SEEK_SET) != 0) { std::fclose(f); return out; }
+    std::uint8_t pe_hdr[26]{};
+    if (std::fread(pe_hdr, 1, sizeof(pe_hdr), f) != sizeof(pe_hdr)) { std::fclose(f); return out; }
+    if (pe_hdr[0] != 'P' || pe_hdr[1] != 'E' || pe_hdr[2] != 0 || pe_hdr[3] != 0) {
+        std::fclose(f);
+        return out;
+    }
 
     const std::uint16_t machine =
         static_cast<std::uint16_t>(pe_hdr[4] | (pe_hdr[5] << 8));
@@ -162,20 +241,25 @@ PeInspection inspect_pe(const std::string& path) {
         static_cast<std::uint16_t>(pe_hdr[6] | (pe_hdr[7] << 8));
     const std::uint16_t opt_size =
         static_cast<std::uint16_t>(pe_hdr[20] | (pe_hdr[21] << 8));
+    const std::uint16_t opt_magic =
+        static_cast<std::uint16_t>(pe_hdr[24] | (pe_hdr[25] << 8));
 
     out.valid_pe = true;
     out.machine = machine;
     out.is_i386 = (machine == 0x014c);
+    out.is_pe32 = (opt_magic == 0x010b);
 
-    f.seekg(static_cast<std::streamoff>(e_lfanew) + 24 + opt_size, std::ios::beg);
-    const std::uint16_t cap = std::min<std::uint16_t>(num_sections, 96);
-    for (std::uint16_t i = 0; i < cap; ++i) {
-        std::uint8_t sec[40]{};
-        if (!f.read(reinterpret_cast<char*>(sec), sizeof(sec))) break;
-        if (std::memcmp(sec, ".bind\0\0\0", 8) == 0 || std::memcmp(sec, ".bind", 5) == 0) {
-            out.has_bind_section = true;
+    if (std::fseek(f, static_cast<long>(e_lfanew) + 24 + opt_size, SEEK_SET) == 0) {
+        const std::uint16_t cap = std::min<std::uint16_t>(num_sections, 96);
+        for (std::uint16_t i = 0; i < cap; ++i) {
+            std::uint8_t sec[40]{};
+            if (std::fread(sec, 1, sizeof(sec), f) != sizeof(sec)) break;
+            if (std::memcmp(sec, ".bind\0\0\0", 8) == 0 || std::memcmp(sec, ".bind", 5) == 0) {
+                out.has_bind_section = true;
+            }
         }
     }
+    std::fclose(f);
     return out;
 }
 
@@ -210,36 +294,79 @@ std::string quote_win_arg(const std::string& arg) {
     return out;
 }
 
-std::vector<DWORD> find_pids_by_name(const std::string& target_name) {
-    std::vector<DWORD> pids;
+bool query_process_image_path(DWORD pid, std::string& out) {
+    using QueryFullNameWFn = BOOL(WINAPI*)(HANDLE, DWORD, LPWSTR, PDWORD);
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    if (k32 == nullptr) return false;
+    auto fn = reinterpret_cast<QueryFullNameWFn>(
+        reinterpret_cast<void*>(GetProcAddress(k32, "QueryFullProcessImageNameW")));
+    if (fn == nullptr) return false;
+    HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+    if (h == nullptr) return false;
+    std::wstring buf(4096, L'\0');
+    DWORD sz = static_cast<DWORD>(buf.size());
+    const BOOL ok = fn(h, 0, buf.data(), &sz);
+    CloseHandle(h);
+    if (!ok || sz == 0) return false;
+    out = wide_to_utf8(buf.data(), static_cast<int>(sz));
+    return !out.empty();
+}
+
+std::vector<DWORD> find_pids_by_name(const std::string& target_name, const std::string& full_path = {}) {
+    std::vector<DWORD> exact;
+    std::vector<DWORD> unknown_path;
+    const std::wstring wname = utf8_to_wide(target_name);
+    const std::wstring wfull = utf8_to_wide(full_path);
     HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (snap == INVALID_HANDLE_VALUE) return pids;
-    PROCESSENTRY32 pe{};
+    if (snap == INVALID_HANDLE_VALUE) return unknown_path;
+    PROCESSENTRY32W pe{};
     pe.dwSize = sizeof(pe);
-    if (Process32First(snap, &pe)) {
+    if (Process32FirstW(snap, &pe)) {
         do {
-            if (_stricmp(pe.szExeFile, target_name.c_str()) == 0) {
-                pids.push_back(pe.th32ProcessID);
+            if (_wcsicmp(pe.szExeFile, wname.c_str()) == 0) {
+                if (!wfull.empty()) {
+                    std::string proc_path;
+                    if (query_process_image_path(pe.th32ProcessID, proc_path)) {
+                        const std::wstring wproc = utf8_to_wide(proc_path);
+                        if (_wcsicmp(wproc.c_str(), wfull.c_str()) == 0) {
+                            exact.push_back(pe.th32ProcessID);
+                        }
+                        continue;
+                    }
+                }
+                unknown_path.push_back(pe.th32ProcessID);
             }
-        } while (Process32Next(snap, &pe));
+        } while (Process32NextW(snap, &pe));
     }
     CloseHandle(snap);
-    return pids;
+    return !exact.empty() ? exact : unknown_path;
 }
 
 bool module_loaded_in_pid(DWORD pid, const std::string& module_basename) {
-    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+    HANDLE snap = INVALID_HANDLE_VALUE;
+    for (int attempt = 0; attempt < 16; ++attempt) {
+        snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+        if (snap != INVALID_HANDLE_VALUE) break;
+        const DWORD err = GetLastError();
+        if (err != ERROR_BAD_LENGTH && err != ERROR_PARTIAL_COPY) return false;
+        Sleep(25);
+    }
     if (snap == INVALID_HANDLE_VALUE) return false;
-    MODULEENTRY32 me{};
+    const std::wstring wmod = utf8_to_wide(module_basename);
+    const std::wstring wruntime = utf8_to_wide(kp::naming::kRuntimeDll);
+    const std::wstring wlegacy = utf8_to_wide(kp::naming::kLegacyRuntimeDll);
+    MODULEENTRY32W me{};
     me.dwSize = sizeof(me);
     bool found = false;
-    if (Module32First(snap, &me)) {
+    if (Module32FirstW(snap, &me)) {
         do {
-            if (_stricmp(me.szModule, module_basename.c_str()) == 0) {
+            if (_wcsicmp(me.szModule, wruntime.c_str()) == 0 ||
+                _wcsicmp(me.szModule, wlegacy.c_str()) == 0 ||
+                (!wmod.empty() && _wcsicmp(me.szModule, wmod.c_str()) == 0)) {
                 found = true;
                 break;
             }
-        } while (Module32Next(snap, &me));
+        } while (Module32NextW(snap, &me));
     }
     CloseHandle(snap);
     return found;
@@ -267,11 +394,63 @@ bool has_visible_window(DWORD pid) {
     return ws.found;
 }
 
-bool check_dos_mz_readable(HANDLE proc) {
-    std::uint8_t mz[2]{};
+bool check_wow64_parity(HANDLE target) {
+    using IsWow64Fn = BOOL(WINAPI*)(HANDLE, PBOOL);
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    if (k32 == nullptr) return true;
+    auto fn = reinterpret_cast<IsWow64Fn>(
+        reinterpret_cast<void*>(GetProcAddress(k32, "IsWow64Process")));
+    if (fn == nullptr) return true;
+    BOOL self_wow64 = FALSE;
+    BOOL target_wow64 = FALSE;
+    if (!fn(GetCurrentProcess(), &self_wow64) || !fn(target, &target_wow64)) return false;
+    return self_wow64 == target_wow64;
+}
+
+LPCVOID find_main_module_base(DWORD pid) {
+    for (int attempt = 0; attempt < 8; ++attempt) {
+        HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+        if (snap == INVALID_HANDLE_VALUE) {
+            const DWORD err = GetLastError();
+            if (err == ERROR_BAD_LENGTH || err == ERROR_PARTIAL_COPY) {
+                Sleep(20);
+                continue;
+            }
+            break;
+        }
+        MODULEENTRY32 me{};
+        me.dwSize = sizeof(me);
+        const BOOL ok = Module32First(snap, &me);
+        CloseHandle(snap);
+        if (ok && me.modBaseAddr != nullptr) return me.modBaseAddr;
+        break;
+    }
+    return reinterpret_cast<LPCVOID>(static_cast<std::uintptr_t>(0x00400000u));
+}
+
+bool check_target_pe32(HANDLE proc, DWORD pid) {
+    if (!check_wow64_parity(proc)) return false;
+    const LPCVOID base = find_main_module_base(pid);
+    std::uint8_t dos[0x40]{};
     SIZE_T read = 0;
-    const LPCVOID base = reinterpret_cast<LPCVOID>(static_cast<std::uintptr_t>(0x00400000u));
-    return ReadProcessMemory(proc, base, mz, 2, &read) && read == 2 && mz[0] == 'M' && mz[1] == 'Z';
+    if (!ReadProcessMemory(proc, base, dos, sizeof(dos), &read) || read != sizeof(dos) ||
+        dos[0] != 'M' || dos[1] != 'Z') {
+        return false;
+    }
+    const std::uint32_t e_lfanew = static_cast<std::uint32_t>(dos[0x3c]) |
+                                   (static_cast<std::uint32_t>(dos[0x3d]) << 8) |
+                                   (static_cast<std::uint32_t>(dos[0x3e]) << 16) |
+                                   (static_cast<std::uint32_t>(dos[0x3f]) << 24);
+    if (e_lfanew < sizeof(dos) || e_lfanew >= 0x100000u) return false;
+    std::uint8_t pe_hdr[26]{};
+    const auto nt_addr = reinterpret_cast<LPCVOID>(reinterpret_cast<std::uintptr_t>(base) + e_lfanew);
+    if (!ReadProcessMemory(proc, nt_addr, pe_hdr, sizeof(pe_hdr), &read) || read != sizeof(pe_hdr)) {
+        return false;
+    }
+    if (pe_hdr[0] != 'P' || pe_hdr[1] != 'E' || pe_hdr[2] != 0 || pe_hdr[3] != 0) return false;
+    const std::uint16_t machine = static_cast<std::uint16_t>(pe_hdr[4] | (pe_hdr[5] << 8));
+    const std::uint16_t opt_magic = static_cast<std::uint16_t>(pe_hdr[24] | (pe_hdr[25] << 8));
+    return machine == 0x014c && opt_magic == 0x010b;
 }
 
 bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) {
@@ -280,13 +459,18 @@ bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) 
         err = "GetModuleHandleA(kernel32.dll) failed";
         return false;
     }
-    const FARPROC load_lib = GetProcAddress(k32, "LoadLibraryA");
+    const FARPROC load_lib = GetProcAddress(k32, "LoadLibraryW");
     if (load_lib == nullptr) {
-        err = "GetProcAddress(LoadLibraryA) failed";
+        err = "GetProcAddress(LoadLibraryW) failed";
         return false;
     }
 
-    const SIZE_T len = abs_dll_path.size() + 1;
+    const std::wstring wdll = utf8_to_wide(abs_dll_path);
+    if (wdll.empty()) {
+        err = "invalid DLL path: " + abs_dll_path;
+        return false;
+    }
+    const SIZE_T len = (wdll.size() + 1) * sizeof(wchar_t);
     void* remote = VirtualAllocEx(proc, nullptr, len, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (remote == nullptr) {
         err = "VirtualAllocEx failed (err=" + std::to_string(GetLastError()) + ")";
@@ -294,7 +478,7 @@ bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) 
     }
 
     SIZE_T written = 0;
-    if (!WriteProcessMemory(proc, remote, abs_dll_path.c_str(), len, &written) || written != len) {
+    if (!WriteProcessMemory(proc, remote, wdll.c_str(), len, &written) || written != len) {
         err = "WriteProcessMemory failed (err=" + std::to_string(GetLastError()) + ")";
         VirtualFreeEx(proc, remote, 0, MEM_RELEASE);
         return false;
@@ -311,20 +495,37 @@ bool inject_dll(HANDLE proc, const std::string& abs_dll_path, std::string& err) 
     }
 
     const DWORD wait_rc = WaitForSingleObject(thread, 15000);
+    if (wait_rc != WAIT_OBJECT_0) {
+        CloseHandle(thread);
+        // Never VirtualFreeEx(remote) on timeout while remote thread may still read it.
+        err = "remote LoadLibraryW did not finish within 15s (wait=" + std::to_string(wait_rc) + ")";
+        return false;
+    }
     DWORD exit_code = 0;
     const BOOL got_code = GetExitCodeThread(thread, &exit_code);
     CloseHandle(thread);
     VirtualFreeEx(proc, remote, 0, MEM_RELEASE);
 
-    if (wait_rc != WAIT_OBJECT_0) {
-        err = "remote LoadLibraryA did not finish within 15s (wait=" + std::to_string(wait_rc) + ")";
-        return false;
-    }
     if (!got_code || exit_code == 0) {
-        err = "remote LoadLibraryA returned NULL for " + abs_dll_path;
+        err = "remote LoadLibraryW returned NULL for " + abs_dll_path;
         return false;
     }
     return true;
+}
+
+int wait_for_exit_code(HANDLE proc) {
+    if (WaitForSingleObject(proc, INFINITE) != WAIT_OBJECT_0) {
+        std::fprintf(stderr, "error: WaitForSingleObject failed (err=%lu)\n",
+                     static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    DWORD code = 0;
+    if (!GetExitCodeProcess(proc, &code)) {
+        std::fprintf(stderr, "error: GetExitCodeProcess failed (err=%lu)\n",
+                     static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    return static_cast<int>(code);
 }
 
 const char* mode_name(Mode m) {
@@ -339,28 +540,43 @@ const char* mode_name(Mode m) {
 
 void print_help() {
     std::printf(
-        "Usage: scriptforge-launch [options] [game-exe] [-- <game-args...>]\n"
+        "Usage: kotorjit-launch [options] [game-exe] [-- <game-args...>]\n"
         "\n"
-        "Runtime DLL injector for ScriptForge (replaces binkw32.dll proxy on native Windows).\n"
+        "Runtime DLL injector for KotorJIT (replaces binkw32.dll proxy on native Windows).\n"
         "\n"
         "Options:\n"
         "  --mode auto|direct|steam|attach  Injection mode (default: auto)\n"
-        "  --dll <path>                     Path to scriptforge.dll (auto-detected if omitted)\n"
+        "  --dll <path>                     Path to kotorjit.dll (auto-detected if omitted)\n"
         "  --pid <pid>                      Attach to running process ID (implies --mode attach)\n"
         "  --timeout <ms>                   Steam/window wait timeout in ms (default: 60000)\n"
+        "  --no-wait-window                 In steam mode, inject without waiting for a visible window\n"
         "  --wait                           Wait for the game process to exit\n"
         "  --check                          Inspect target executable and print plan without launching\n"
         "  --version                        Print version and exit\n"
         "  -h, --help                       Show this help\n");
 }
 
-bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit_code) {
+std::vector<std::string> collect_args(int argc, char** argv) {
+    std::vector<std::string> out;
+    int wargc = 0;
+    if (LPWSTR* wargv = CommandLineToArgvW(GetCommandLineW(), &wargc); wargv != nullptr) {
+        out.reserve(static_cast<std::size_t>(wargc));
+        for (int i = 0; i < wargc; ++i) out.push_back(wide_to_utf8(wargv[i]));
+        LocalFree(wargv);
+        return out;
+    }
+    out.reserve(static_cast<std::size_t>(argc));
+    for (int i = 0; i < argc; ++i) out.emplace_back(argv[i]);
+    return out;
+}
+
+bool parse_args(const std::vector<std::string>& args, Options& opt, bool& exit_early, int& exit_code) {
     exit_early = false;
     exit_code = 0;
-    for (int i = 1; i < argc; ++i) {
-        const std::string a = argv[i];
+    for (std::size_t i = 1; i < args.size(); ++i) {
+        const std::string& a = args[i];
         if (a == "--") {
-            for (int j = i + 1; j < argc; ++j) opt.game_args.emplace_back(argv[j]);
+            for (std::size_t j = i + 1; j < args.size(); ++j) opt.game_args.emplace_back(args[j]);
             break;
         }
         if (a == "-h" || a == "--help") {
@@ -369,7 +585,7 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             return true;
         }
         if (a == "--version") {
-            std::printf("scriptforge-launch %s\n", kVersion);
+            std::printf("kotorjit-launch %s\n", kVersion);
             exit_early = true;
             return true;
         }
@@ -377,45 +593,50 @@ bool parse_args(int argc, char** argv, Options& opt, bool& exit_early, int& exit
             opt.wait = true;
             continue;
         }
+        if (a == "--no-wait-window") {
+            opt.wait_window = false;
+            continue;
+        }
         if (a == "--check") {
             opt.check_only = true;
             continue;
         }
-        if (a == "--mode" && i + 1 < argc) {
-            const std::string m = to_lower_ascii(argv[++i]);
-            if (m == "auto") opt.mode = Mode::Auto;
-            else if (m == "direct") opt.mode = Mode::Direct;
-            else if (m == "steam") opt.mode = Mode::Steam;
-            else if (m == "attach") opt.mode = Mode::Attach;
-            else {
-                std::fprintf(stderr, "error: unknown --mode '%s' (expected auto, direct, steam, attach)\n", m.c_str());
+        if (a == "--mode" || a == "--dll" || a == "--pid" || a == "--timeout") {
+            if (i + 1 >= args.size()) {
+                std::fprintf(stderr, "error: %s requires a value\n", a.c_str());
                 return false;
             }
-            continue;
-        }
-        if (a == "--dll" && i + 1 < argc) {
-            opt.dll_path = argv[++i];
-            continue;
-        }
-        if (a == "--pid" && i + 1 < argc) {
-            char* end = nullptr;
-            const unsigned long v = std::strtoul(argv[++i], &end, 10);
-            if (end == nullptr || *end != '\0' || v == 0) {
-                std::fprintf(stderr, "error: invalid --pid value\n");
-                return false;
+            const std::string& val = args[++i];
+            if (a == "--mode") {
+                const std::string m = to_lower_ascii(val);
+                if (m == "auto") opt.mode = Mode::Auto;
+                else if (m == "direct") opt.mode = Mode::Direct;
+                else if (m == "steam") opt.mode = Mode::Steam;
+                else if (m == "attach") opt.mode = Mode::Attach;
+                else {
+                    std::fprintf(stderr, "error: unknown --mode '%s' (expected auto, direct, steam, attach)\n", m.c_str());
+                    return false;
+                }
+            } else if (a == "--dll") {
+                opt.dll_path = val;
+            } else if (a == "--pid") {
+                unsigned long v = 0;
+                if (!parse_uint_dec(val.c_str(), v) || v == 0 ||
+                    v > static_cast<unsigned long>((std::numeric_limits<DWORD>::max)())) {
+                    std::fprintf(stderr, "error: invalid --pid value\n");
+                    return false;
+                }
+                opt.pid = static_cast<DWORD>(v);
+                opt.mode = Mode::Attach;
+            } else if (a == "--timeout") {
+                unsigned long v = 0;
+                if (!parse_uint_dec(val.c_str(), v) || v == 0 ||
+                    v > static_cast<unsigned long>((std::numeric_limits<DWORD>::max)())) {
+                    std::fprintf(stderr, "error: invalid --timeout value\n");
+                    return false;
+                }
+                opt.timeout_ms = static_cast<DWORD>(v);
             }
-            opt.pid = static_cast<DWORD>(v);
-            opt.mode = Mode::Attach;
-            continue;
-        }
-        if (a == "--timeout" && i + 1 < argc) {
-            char* end = nullptr;
-            const unsigned long v = std::strtoul(argv[++i], &end, 10);
-            if (end == nullptr || *end != '\0' || v == 0) {
-                std::fprintf(stderr, "error: invalid --timeout value\n");
-                return false;
-            }
-            opt.timeout_ms = static_cast<DWORD>(v);
             continue;
         }
         if (!a.empty() && a[0] == '-') {
@@ -462,15 +683,18 @@ int run_direct(const std::string& exe_path, const std::string& game_dir,
         cmd += ' ';
         cmd += quote_win_arg(arg);
     }
-    std::vector<char> cmd_buf(cmd.begin(), cmd.end());
-    cmd_buf.push_back('\0');
+    std::wstring wexe = utf8_to_wide(exe_path);
+    std::wstring wcmd = utf8_to_wide(cmd);
+    std::wstring wdir = utf8_to_wide(game_dir);
+    std::vector<wchar_t> cmd_buf(wcmd.begin(), wcmd.end());
+    cmd_buf.push_back(L'\0');
 
-    STARTUPINFOA si{};
+    STARTUPINFOW si{};
     si.cb = sizeof(si);
     PROCESS_INFORMATION pi{};
-    if (!CreateProcessA(exe_path.c_str(), cmd_buf.data(), nullptr, nullptr, FALSE,
-                        CREATE_SUSPENDED, nullptr, game_dir.c_str(), &si, &pi)) {
-        std::fprintf(stderr, "error: CreateProcessA('%s') failed (err=%lu)\n",
+    if (!CreateProcessW(wexe.c_str(), cmd_buf.data(), nullptr, nullptr, FALSE,
+                        CREATE_SUSPENDED, nullptr, wdir.c_str(), &si, &pi)) {
+        std::fprintf(stderr, "error: CreateProcessW('%s') failed (err=%lu)\n",
                      exe_path.c_str(), static_cast<unsigned long>(GetLastError()));
         return 1;
     }
@@ -498,11 +722,7 @@ int run_direct(const std::string& exe_path, const std::string& game_dir,
     CloseHandle(pi.hThread);
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(pi.hProcess, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(pi.hProcess, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(pi.hProcess);
     CloseHandle(pi.hProcess);
     return rc;
 }
@@ -510,35 +730,43 @@ int run_direct(const std::string& exe_path, const std::string& game_dir,
 int run_steam(const std::string& exe_path, const std::string& game_dir,
               const std::string& dll_path, const KnownBuild* known, const Options& opt) {
     const std::string exe_name = basename_of(exe_path);
-    const std::vector<DWORD> existing = find_pids_by_name(exe_name);
+    const std::vector<DWORD> existing = find_pids_by_name(exe_name, exe_path);
 
     std::string target = exe_path;
     if (known != nullptr && known->steam_app_id[0] != '\0') {
+        if (!opt.game_args.empty()) {
+            std::fprintf(stderr,
+                         "warning: steam://rungameid/%s launch ignores extra arguments after '--'\n",
+                         known->steam_app_id);
+        }
         target = std::string("steam://rungameid/") + known->steam_app_id;
     }
 
-    const HINSTANCE shell_rc = ShellExecuteA(
-        nullptr, "open", target.c_str(), nullptr, game_dir.c_str(), SW_SHOWNORMAL);
+    const std::wstring wtarget = utf8_to_wide(target);
+    const std::wstring wdir = utf8_to_wide(game_dir);
+    const HINSTANCE shell_rc = ShellExecuteW(
+        nullptr, L"open", wtarget.c_str(), nullptr, wdir.c_str(), SW_SHOWNORMAL);
     if (reinterpret_cast<std::uintptr_t>(shell_rc) <= 32u) {
-        std::fprintf(stderr, "error: ShellExecuteA('%s') failed (code=%lu)\n",
+        std::fprintf(stderr, "error: ShellExecuteW('%s') failed (code=%lu)\n",
                      target.c_str(), static_cast<unsigned long>(reinterpret_cast<std::uintptr_t>(shell_rc)));
         return 1;
     }
 
-    const DWORD deadline = GetTickCount() + opt.timeout_ms;
+    const std::uint64_t start_ms = tick_now_ms();
     HANDLE target_proc = nullptr;
     DWORD target_pid = 0;
+    std::vector<DWORD> tried_pids = existing;
 
-    while (static_cast<std::int32_t>(deadline - GetTickCount()) > 0) {
-        const std::vector<DWORD> now_pids = find_pids_by_name(exe_name);
+    while (tick_now_ms() - start_ms < opt.timeout_ms) {
+        const std::vector<DWORD> now_pids = find_pids_by_name(exe_name, exe_path);
         for (DWORD pid : now_pids) {
-            if (std::find(existing.begin(), existing.end(), pid) != existing.end()) continue;
+            if (std::find(tried_pids.begin(), tried_pids.end(), pid) != tried_pids.end()) continue;
             HANDLE proc = OpenProcess(
                 PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
                 PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
                 FALSE, pid);
             if (proc == nullptr) continue;
-            if (!check_dos_mz_readable(proc)) {
+            if (!check_target_pe32(proc, pid)) {
                 CloseHandle(proc);
                 continue;
             }
@@ -547,6 +775,7 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
             Sleep(500);
             if (WaitForSingleObject(proc, 0) != WAIT_TIMEOUT) {
                 CloseHandle(proc);
+                tried_pids.push_back(pid);
                 continue;
             }
             target_proc = proc;
@@ -563,48 +792,54 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
         return 1;
     }
 
-    bool win_ready = false;
-    while (static_cast<std::int32_t>(deadline - GetTickCount()) > 0) {
-        if (WaitForSingleObject(target_proc, 0) != WAIT_TIMEOUT) {
-            CloseHandle(target_proc);
-            target_proc = nullptr;
-            // Bootstrapper exited later than 500 ms; look for replacement PID.
-            const std::vector<DWORD> now_pids = find_pids_by_name(exe_name);
-            for (DWORD pid : now_pids) {
-                if (pid == target_pid ||
-                    std::find(existing.begin(), existing.end(), pid) != existing.end()) {
-                    continue;
-                }
-                HANDLE proc = OpenProcess(
-                    PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
-                    PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
-                    FALSE, pid);
-                if (proc != nullptr && check_dos_mz_readable(proc)) {
-                    target_proc = proc;
-                    target_pid = pid;
-                    break;
-                }
-                if (proc != nullptr) CloseHandle(proc);
+    if (opt.wait_window) {
+        bool win_ready = false;
+        while (tick_now_ms() - start_ms < opt.timeout_ms) {
+            if (target_proc != nullptr && WaitForSingleObject(target_proc, 0) != WAIT_TIMEOUT) {
+                CloseHandle(target_proc);
+                target_proc = nullptr;
+                tried_pids.push_back(target_pid);
             }
             if (target_proc == nullptr) {
-                Sleep(100);
-                continue;
+                // Bootstrapper exited later than 500 ms; look for replacement PID.
+                const std::vector<DWORD> now_pids = find_pids_by_name(exe_name, exe_path);
+                for (DWORD pid : now_pids) {
+                    if (std::find(tried_pids.begin(), tried_pids.end(), pid) != tried_pids.end()) {
+                        continue;
+                    }
+                    HANDLE proc = OpenProcess(
+                        PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
+                        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
+                        FALSE, pid);
+                    if (proc != nullptr && check_target_pe32(proc, pid)) {
+                        target_proc = proc;
+                        target_pid = pid;
+                        break;
+                    }
+                    if (proc != nullptr) CloseHandle(proc);
+                }
+                if (target_proc == nullptr) {
+                    Sleep(100);
+                    continue;
+                }
             }
+            if (has_visible_window(target_pid)) {
+                win_ready = true;
+                break;
+            }
+            Sleep(100);
         }
-        if (has_visible_window(target_pid)) {
-            win_ready = true;
-            break;
-        }
-        Sleep(100);
-    }
 
-    if (target_proc == nullptr) {
-        std::fprintf(stderr, "error: %s exited before exposing a main window\n", exe_name.c_str());
-        return 1;
-    }
-    if (!win_ready) {
-        std::fprintf(stderr, "warning: timed out waiting for visible window on PID %lu; attempting inject\n",
-                     static_cast<unsigned long>(target_pid));
+        if (target_proc == nullptr) {
+            std::fprintf(stderr, "error: %s exited before exposing a main window\n", exe_name.c_str());
+            return 1;
+        }
+        if (!win_ready) {
+            std::fprintf(stderr, "error: timed out waiting for visible window on PID %lu\n",
+                         static_cast<unsigned long>(target_pid));
+            CloseHandle(target_proc);
+            return 1;
+        }
     }
 
     const std::string dll_name = basename_of(dll_path);
@@ -626,11 +861,7 @@ int run_steam(const std::string& exe_path, const std::string& game_dir,
                 dll_path.c_str(), static_cast<unsigned long>(target_pid));
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(target_proc, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(target_proc, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(target_proc);
     CloseHandle(target_proc);
     return rc;
 }
@@ -639,7 +870,7 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
     DWORD pid = opt.pid;
     if (pid == 0) {
         const std::string exe_name = basename_of(exe_path);
-        const std::vector<DWORD> pids = find_pids_by_name(exe_name);
+        const std::vector<DWORD> pids = find_pids_by_name(exe_name, exe_path);
         if (pids.empty()) {
             std::fprintf(stderr, "error: no running process matching '%s'\n", exe_name.c_str());
             return 1;
@@ -651,13 +882,6 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
         pid = pids.front();
     }
 
-    const std::string dll_name = basename_of(dll_path);
-    if (module_loaded_in_pid(pid, dll_name)) {
-        std::fprintf(stderr, "error: %s is already loaded in PID %lu\n",
-                     dll_name.c_str(), static_cast<unsigned long>(pid));
-        return 1;
-    }
-
     HANDLE proc = OpenProcess(
         PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |
         PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | SYNCHRONIZE,
@@ -665,6 +889,20 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
     if (proc == nullptr) {
         std::fprintf(stderr, "error: OpenProcess(%lu) failed (err=%lu)\n",
                      static_cast<unsigned long>(pid), static_cast<unsigned long>(GetLastError()));
+        return 1;
+    }
+    if (!check_target_pe32(proc, pid)) {
+        std::fprintf(stderr, "error: PID %lu is not a valid 32-bit PE process\n",
+                     static_cast<unsigned long>(pid));
+        CloseHandle(proc);
+        return 1;
+    }
+
+    const std::string dll_name = basename_of(dll_path);
+    if (module_loaded_in_pid(pid, dll_name)) {
+        std::fprintf(stderr, "error: %s is already loaded in PID %lu\n",
+                     dll_name.c_str(), static_cast<unsigned long>(pid));
+        CloseHandle(proc);
         return 1;
     }
 
@@ -679,11 +917,7 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
                 dll_path.c_str(), static_cast<unsigned long>(pid));
 
     int rc = 0;
-    if (opt.wait) {
-        WaitForSingleObject(proc, INFINITE);
-        DWORD code = 0;
-        if (GetExitCodeProcess(proc, &code)) rc = static_cast<int>(code);
-    }
+    if (opt.wait) rc = wait_for_exit_code(proc);
     CloseHandle(proc);
     return rc;
 }
@@ -691,10 +925,11 @@ int run_attach(const std::string& exe_path, const std::string& dll_path, const O
 }  // namespace
 
 int main(int argc, char** argv) {
+    const std::vector<std::string> args = collect_args(argc, argv);
     Options opt;
     bool exit_early = false;
     int parse_rc = 0;
-    if (!parse_args(argc, argv, opt, exit_early, parse_rc)) return 2;
+    if (!parse_args(args, opt, exit_early, parse_rc)) return 2;
     if (exit_early) return parse_rc;
 
     const std::string launcher_dir = self_dir();
@@ -706,6 +941,9 @@ int main(int argc, char** argv) {
     } else if (opt.pid == 0) {
         exe_path = resolve_default_exe(launcher_dir);
         game_dir = exe_path.empty() ? launcher_dir : dirname_of(exe_path);
+    } else if (query_process_image_path(opt.pid, exe_path)) {
+        exe_path = abs_path_of(exe_path);
+        game_dir = dirname_of(exe_path);
     } else {
         game_dir = launcher_dir;
     }
@@ -732,8 +970,8 @@ int main(int argc, char** argv) {
             std::fprintf(stderr, "error: %s is not a valid PE executable\n", exe_path.c_str());
             return 1;
         }
-        if (!pe.is_i386) {
-            std::fprintf(stderr, "error: %s has PE machine 0x%04x, expected i386 (0x014c)\n",
+        if (!pe.is_i386 || !pe.is_pe32) {
+            std::fprintf(stderr, "error: %s is not a valid 32-bit PE32 executable (machine=0x%04x)\n",
                          exe_path.c_str(), static_cast<unsigned>(pe.machine));
             return 1;
         }
@@ -751,7 +989,7 @@ int main(int argc, char** argv) {
     }
 
     const bool wine = running_under_wine();
-    const bool proxy_present = !game_dir.empty() && looks_like_scriptforge_proxy(join_win(game_dir, "binkw32.dll"));
+    const bool proxy_present = !game_dir.empty() && looks_like_kotorjit_proxy(join_win(game_dir, "binkw32.dll"));
 
     if (wine) {
         std::fprintf(stderr,
@@ -759,7 +997,7 @@ int main(int argc, char** argv) {
     }
     if (proxy_present && resolved != Mode::Attach) {
         std::fprintf(stderr,
-                     "warning: binkw32.dll in %s is already a ScriptForge proxy; runtime injection is redundant\n",
+                     "warning: binkw32.dll in %s is already a KotorJIT proxy; runtime injection is redundant\n",
                      game_dir.c_str());
     }
     if (resolved == Mode::Steam) {

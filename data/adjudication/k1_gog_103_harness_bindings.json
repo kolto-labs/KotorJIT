@@ -3929,6 +3929,28 @@
      "accessor or consumer immediate in the raw image"
     ]
    }
+  },
+  {
+   "name": "CVirtualMachineInternal::stack_pointer",
+   "kind": "field",
+   "owner": "CVirtualMachineInternal",
+   "addr": "0x00000000",
+   "offset": "0x1ac",
+   "size": 4,
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "K1 GOG StackPopInteger internal 0x005d24c0 reads [ecx+0x1ac] (m_nStackPointer) and passes lea edx,[ecx+0x1ac]; confirmed identically in StackPopFloat 0x005d2510."
+   }
+  },
+  {
+   "name": "CExoString::~CExoString",
+   "addr": "0x005e5c20",
+   "verdict": "accept",
+   "confidence": 1.0,
+   "evidence": {
+    "disassembly": "K1 GOG 0x005e5c20 clears [esi+4], frees [esi] via operator delete 0x006fa390, zeroes [esi]; 0x0059ea30 is a single-insn jmp thunk to 0x005e5c20."
+   }
   }
  ]
 }

@@ -1,10 +1,10 @@
-# ScriptForge Lua API (complete reference)
+# KotorJIT Lua API (complete reference)
 
 This file documents the runtime Lua surface. Routine tables are generated from `data/routines/*.json`; regenerate this document when those signatures change.
 
 ## Automatic loading
 
-At game startup the proxy scans `<game>/scriptforge/scripts/*.lua` (top-level files, lexical order) and loads each file once. Create the directory and drop files there; no `.nss` compiler or registration file is required. Set `priority = 10` in a file to order callbacks (higher first; filename breaks ties). `OnScriptLoad(game, build)` runs after loading. Reload/unload invokes `OnScriptUnload`. Errors quarantine the offending script.
+At game startup the proxy scans `<game>/kotorjit/scripts/*.lua` (top-level files, lexical order) and loads each file once. Create the directory and drop files there; no `.nss` compiler or registration file is required. Set `priority = 10` in a file to order callbacks (higher first; filename breaks ties). `OnScriptLoad(game, build)` runs after loading. Reload/unload invokes `OnScriptUnload`. Errors quarantine the offending script.
 
 Example:
 ```lua
@@ -13,7 +13,7 @@ function OnScriptLoad(game, build) kp.print("loaded " .. game .. " " .. build) e
 function OnTick(tick) end
 ```
 
-The loader is invoked by the game startup sequence; it is not the harness channel. To enable the optional control channel, set `harness_port=27015` and `harness_bind=127.0.0.1` in `scriptforge.ini` (or `SCRIPTFORGE_HARNESS_PORT`).
+The loader is invoked by the game startup sequence; it is not the harness channel. To enable the optional control channel, set `harness_port=27015` and `harness_bind=127.0.0.1` in `kotorjit.ini` (or `KOTORJIT_HARNESS_PORT`).
 
 ## Core Lua modules
 

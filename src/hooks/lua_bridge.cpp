@@ -21,6 +21,7 @@ std::uintptr_t runtime_base=0;
 Entry::Gate live_gate=nullptr, patch_gate=nullptr;
 Guard guard=nullptr;
 Review review=nullptr;
+OnError on_error=nullptr;
 unsigned next_id=0;
 unsigned dispatch_depth=0;
 struct View { HookCtx* ctx; Entry* entry; };
@@ -36,7 +37,9 @@ View* view(lua_State* L, int idx=1) {
 }
 bool unsigned_type(const std::string& t) {
     return t.find("unsigned")!=std::string::npos || t.find("uint")!=std::string::npos ||
-        t.find("undefined")!=std::string::npos || t.find('*')!=std::string::npos || t=="DWORD";
+        t.find("undefined")!=std::string::npos || t.find('*')!=std::string::npos ||
+        t=="DWORD" || t=="WORD" || t=="BYTE" || t=="ulong" || t=="ushort" ||
+        t=="uchar" || t=="size_t";
 }
 bool address_type(const std::string& t) { return t=="address" || t=="cexostring_ptr"; }
 int width_for(const std::string& t, int size) {
@@ -175,7 +178,8 @@ bool dispatch(void* user,Entry& entry,HookCtx& ctx,bool post) {
     auto& n=*static_cast<Node*>(user);
     ++dispatch_depth;
     for(auto& h:n.handlers) {
-        if(h.removed || h.post!=post) continue;
+        if(h.removed || h.post!=post || h.state==nullptr) continue;
+        const HookCtx before_handler = ctx;
         int top=lua_gettop(h.state);
         Call c{h.state,h.ref,&entry,&ctx};
         bool healthy=guard && guard(entry,run,&c);
@@ -187,11 +191,24 @@ bool dispatch(void* user,Entry& entry,HookCtx& ctx,bool post) {
             --dispatch_depth; return false;
         }
         if(c.view) c.view->ctx=nullptr;
-        if(c.status) platform::log(platform::LogLevel::Warn,"Lua hook %s: %s",entry.site.name.c_str(),
-            lua_tostring(h.state,-1)?lua_tostring(h.state,-1):"handler failed");
+        if(c.status) {
+            ctx = before_handler;
+            const char* err_msg=lua_tostring(h.state,-1)?lua_tostring(h.state,-1):"handler failed";
+            platform::log(platform::LogLevel::Warn,"Lua hook %s: %s",entry.site.name.c_str(),err_msg);
+            const bool quarantined = on_error && on_error(h.state,entry.site.name.c_str(),err_msg);
+            lua_settop(h.state,top);
+            luaL_unref(h.state,LUA_REGISTRYINDEX,c.root);
+            if(quarantined) {
+                h.removed=true;
+                luaL_unref(h.state,LUA_REGISTRYINDEX,h.ref);
+                h.state=nullptr;
+                h.ref=LUA_NOREF;
+            }
+            if(!on_error) {--dispatch_depth;return false;}
+            continue;
+        }
         lua_settop(h.state,top);
         luaL_unref(h.state,LUA_REGISTRYINDEX,c.root);
-        if(c.status) {--dispatch_depth;return false;}
     }
     --dispatch_depth; return true;
 }
@@ -245,8 +262,8 @@ int state_gc(lua_State* L) {
     return 0;
 }
 }
-void bind(const AddressTable* t,std::uintptr_t base,Entry::Gate live,Entry::Gate patch,Guard g,Review r) {
-    table=t;runtime_base=base;live_gate=live;patch_gate=patch;guard=g;review=r;
+void bind(const AddressTable* t,std::uintptr_t base,Entry::Gate live,Entry::Gate patch,Guard g,Review r,OnError e) {
+    table=t;runtime_base=base;live_gate=live;patch_gate=patch;guard=g;review=r;on_error=e;
 }
 void close_state(lua_State* L) {
     for(auto& item:nodes) for(auto& h:item.second->handlers) if(h.state==L) {
@@ -259,7 +276,7 @@ void shutdown() {
     for(auto it=nodes.begin();it!=nodes.end();) {
         if(it->second->entry.uninstall()) it=nodes.erase(it);else ++it;
     }
-    table=nullptr;live_gate=patch_gate=nullptr;guard=nullptr;review=nullptr;
+    table=nullptr;live_gate=patch_gate=nullptr;guard=nullptr;review=nullptr;on_error=nullptr;
 }
 void register_all(lua_State* L) {
     int top=lua_gettop(L);

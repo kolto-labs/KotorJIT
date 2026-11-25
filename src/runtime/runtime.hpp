@@ -43,12 +43,12 @@ const char* to_string(Phase);
 
 struct Config {
     std::string game_dir;      // where the executable lives
-    // <game_dir>/scriptforge, or <game_dir>/kotorphasor when only the folder an
+    // <game_dir>/kotorjit, or <game_dir>/kotorphasor when only the folder an
     // older install created exists (see platform/naming.hpp). Hook packs,
     // manifests, address overlays and the situation file live here.
     std::string data_dir;
     std::string script_dir;    // defaults to <data_dir>/scripts
-    std::string log_path;      // defaults to <game_dir>/scriptforge.log
+    std::string log_path;      // defaults to <game_dir>/kotorjit.log
     unsigned    error_budget = 8;
     bool        hot_reload = true;
     multiplayer::Role role = multiplayer::Role::Embedded;
@@ -56,14 +56,15 @@ struct Config {
     unsigned    multiplayer_port = 0;
 
     // The headless harness listener. Off unless `harness_port` is set in the
-    // ini or SCRIPTFORGE_HARNESS_PORT is in the environment; players never
+    // ini or KOTORJIT_HARNESS_PORT is in the environment; players never
     // run it. The ini parser ignores section headers, so the keys are the
     // global `harness_port` and `harness_bind`. Anything but loopback is
     // refused when the listener starts.
     unsigned    harness_port = 0;
     std::string harness_bind = "127.0.0.1";
+    bool        hook_all_events = false;
 
-    // Read from scriptforge.ini next to the game if present, so a player can
+    // Read from kotorjit.ini next to the game if present, so a player can
     // change these without rebuilding.
     static Config from_game_dir(const std::string& game_dir);
 };
@@ -81,10 +82,12 @@ public:
     const std::string& failure() const { return failure_; }
     const std::string& build() const { return build_; }
     multiplayer::Role role() const { return role_; }
+    std::uintptr_t     runtime_base() const { return runtime_base_; }
 
     lua::Host*              host()  { return host_.get(); }
     hooks::HookSet*         hooks() { return hooks_.get(); }
     const hooks::AddressTable* table() const { return table_.get(); }
+    void sync_demand_hooks();
 
     // Appends to the log file. Cheap and unconditional: when something goes
     // wrong inside somebody else's process, the log is usually all there is.
@@ -107,7 +110,11 @@ private:
     multiplayer::Role role_ = multiplayer::Role::Embedded;
     std::string log_path_;
     std::uintptr_t runtime_base_ = 0;
+    bool        hook_all_events_ = false;
+    bool        harness_active_ = false;
+    bool        multiplayer_active_ = false;
 
+    std::unique_ptr<hooks::AddressTable> probed_table_;
     std::unique_ptr<hooks::AddressTable> table_;
     std::unique_ptr<hooks::HookSet>      hooks_;
     std::unique_ptr<lua::Host>           host_;

@@ -137,6 +137,7 @@ std::uint64_t now_ms();
 // show up outside the game. Until someone sets it, clock() is now_ms().
 void          set_clock(std::uint64_t now_ms);
 std::uint64_t clock();
+std::uint64_t tick();
 
 // A callback that throws counts against its script's error budget and is
 // quarantined at the same threshold as any event callback. The budget lives in

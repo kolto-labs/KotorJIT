@@ -43,6 +43,7 @@
 #include "lua/host.hpp"
 #include "lua/value.hpp"
 #include "platform/platform.hpp"
+#include "platform/target.hpp"
 #include "runtime/internal.hpp"
 #include "runtime/runtime.hpp"
 #include "version.hpp"
@@ -89,7 +90,8 @@ std::string read_exostring(const CExoString* s) {
     // bytes. Strip exactly one trailing NUL, and only a NUL -- anything else at
     // that position is real content, not a terminator, and must not be eaten.
     std::uint32_t len = s->length;
-    if (len > 0 && s->c_string[len - 1] == '\0') --len;
+    if (const void* nul = std::memchr(s->c_string, '\0', len))
+        len = static_cast<std::uint32_t>(static_cast<const char*>(nul) - s->c_string);
     return std::string(s->c_string, len);
 }
 
@@ -118,6 +120,8 @@ std::atomic<void*> g_orig_net_send{nullptr};
 std::atomic<void*> g_orig_net_process{nullptr};
 std::atomic<void*> g_orig_client_area_get_server_area{nullptr};
 std::atomic<void*> g_orig_add_move_to_point{nullptr};
+std::atomic<void*> g_orig_run_situation{nullptr};
+std::atomic<void*> g_orig_dialog_check{nullptr};
 std::atomic<void*> g_server_net{nullptr};
 std::atomic<void*> g_client_net{nullptr};
 std::atomic<void*> g_client_support_server_net{nullptr};
@@ -128,6 +132,8 @@ std::atomic<std::uint32_t> g_net_inbound_frames{0};
 std::atomic<bool> g_poison_run_script{false};
 std::atomic<bool> g_poison_client_area_get_server_area{false};
 std::atomic<bool> g_poison_add_move_to_point{false};
+std::atomic<bool> g_poison_run_situation{false};
+std::atomic<bool> g_poison_dialog_check{false};
 std::atomic<bool> g_poison_main_loop{false};
 std::atomic<bool> g_poison_do_console{false};
 // One flag per event site, not one shared flag: a fault in the door handler
@@ -152,30 +158,25 @@ std::atomic<std::uint64_t> g_client_loop_frames{0};
 std::string g_situation_path;
 std::string g_situation_blob;
 
-using RunScriptFn = int (KP_THISCALL*)(void*, CExoString*, std::uint32_t, int);
 #if defined(_WIN32)
+#define KP_ENGINE_METHOD_CC KP_THISCALL
 #define KP_SERVER_LOOP_CC KP_THISCALL
-#else
-#define KP_SERVER_LOOP_CC __attribute__((cdecl))
-#endif
-using MainLoopFn  = void* (KP_SERVER_LOOP_CC*)(void*);
-using DoConsoleFn = void (__attribute__((cdecl)) *)(char);
-
-// The client loop's convention is a platform fact, not a per-site one. The
-// DLL only ever runs inside the MSVC-built PE, where every method is
-// __thiscall; the .so only ever runs inside the GCC-built kotor2 ELF, where
-// `this` is the first stack argument. Verified against the ELF prologue at
-// the resolved site: push ebp/ebx/edi/esi; sub esp; mov ebp,[esp+0xd0].
-//
-//   K1 0x00602EB0  int __thiscall CClientExoAppInternal::MainLoop()
-//
-// The server-loop body above still assumes __thiscall on both; that is the
-// same latent mismatch on the ELF and is left for the K2 native work.
-#if defined(_WIN32)
 #define KP_CLIENT_LOOP_CC KP_THISCALL
+#elif defined(__i386__)
+#define KP_ENGINE_METHOD_CC __attribute__((cdecl))
+#define KP_SERVER_LOOP_CC __attribute__((cdecl))
+#define KP_CLIENT_LOOP_CC __attribute__((cdecl))
 #else
+#define KP_ENGINE_METHOD_CC
+#define KP_SERVER_LOOP_CC __attribute__((cdecl))
 #define KP_CLIENT_LOOP_CC __attribute__((cdecl))
 #endif
+
+using RunScriptFn = int (KP_ENGINE_METHOD_CC*)(void*, CExoString*, kp::abi::ObjectId, int);
+using RunScriptSituationFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, kp::abi::ObjectId, int);
+using DialogCheckScriptFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, const char*);
+using MainLoopFn  = void* (KP_SERVER_LOOP_CC*)(void*);
+using DoConsoleFn = void (__attribute__((cdecl)) *)(char);
 using ClientLoopFn = int (KP_CLIENT_LOOP_CC*)(void*);
 using ClientFrameWrapperFn = int (__attribute__((cdecl)) *)(void*);
 std::atomic<void*> g_orig_client_frame_wrapper{nullptr};
@@ -184,7 +185,7 @@ std::atomic<void*> g_orig_client_frame_wrapper{nullptr};
 // servercore/nwscreatureai.cpp:26604.  The first four branches are the
 // complete admission gate before the action node is consumed.  We observe
 // them here and always forward the original call unmodified.
-using MoveToPointFn = int (KP_THISCALL*)(void*, void*);
+using MoveToPointFn = int (KP_ENGINE_METHOD_CC*)(void*, void*);
 
 // K1 GOG and K2 GOG machine-code ABIs. Both exact images use these callee-pop
 // shapes; the final stack word on SendMessageToPlayer and StartServerMode is
@@ -240,14 +241,25 @@ bool valid_position(const Vector3& value) {
            std::abs(value.z) <= 1000000.0f;
 }
 
+std::uintptr_t relocated_addr(const hooks::Site* site) {
+    if (site == nullptr || !site->resolved || site->addr == 0) return 0;
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const std::uintptr_t runtime_base = Runtime::instance().runtime_base();
+    const std::uintptr_t delta =
+        (table != nullptr && runtime_base != 0 && table->image_base() != 0)
+            ? (runtime_base - table->image_base())
+            : 0;
+    return site->addr + delta;
+}
+
 void* current_server_app() {
     const hooks::AddressTable* table = Runtime::instance().table();
     const hooks::Site* manager_site = table != nullptr ? table->find("g.app_manager") : nullptr;
     const hooks::Site* server_field = table != nullptr ? table->find("appmgr.server") : nullptr;
-    if (manager_site == nullptr || !manager_site->resolved || server_field == nullptr ||
-        !server_field->resolved) return nullptr;
+    const std::uintptr_t manager_base = relocated_addr(manager_site);
+    if (manager_base == 0 || server_field == nullptr || !server_field->resolved) return nullptr;
     std::uint32_t manager = 0, server = 0;
-    const void* manager_at = reinterpret_cast<const void*>(manager_site->addr + manager_site->offset);
+    const void* manager_at = reinterpret_cast<const void*>(manager_base + manager_site->offset);
     if (!platform::is_readable(manager_at, sizeof manager)) return nullptr;
     std::memcpy(&manager, manager_at, sizeof manager);
     const void* server_at = reinterpret_cast<const void*>(
@@ -267,10 +279,12 @@ bool replay_move_to_point(const multiplayer::Frame& frame) {
     const hooks::Site* get_object = table != nullptr ? table->find("server.get_game_object") : nullptr;
     const hooks::Site* set_position = table != nullptr
         ? table->find("server_object.set_position") : nullptr;
+    const std::uintptr_t get_player_addr = relocated_addr(get_player);
+    const std::uintptr_t get_object_addr = relocated_addr(get_object);
+    const std::uintptr_t set_position_addr = relocated_addr(set_position);
     void* server = current_server_app();
-    if (server == nullptr || get_player == nullptr || !get_player->resolved ||
-        get_object == nullptr || !get_object->resolved || set_position == nullptr ||
-        !set_position->resolved) return true;
+    if (server == nullptr || get_player_addr == 0 || get_object_addr == 0 ||
+        set_position_addr == 0) return true;
 
     std::size_t at = 0;
     std::uint32_t creature_id = 0, action = 0, p3 = 0, p4 = 0, p5 = 0, p8 = 0,
@@ -292,20 +306,20 @@ bool replay_move_to_point(const multiplayer::Frame& frame) {
         take_wire_float(frame.payload, at, secondary.z) && take_wire_u32(frame.payload, at, p15) &&
         take_wire_u32(frame.payload, at, p16) && take_wire_u32(frame.payload, at, p17) &&
         at == frame.payload.size();
-    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player_addr)(server);
     if (!decoded || !valid_position(destination) || !valid_position(secondary) ||
         !std::isfinite(p6) || !std::isfinite(p7) || creature_id != player_id) {
         Runtime::instance().log("multiplayer: rejected MoveToPoint actor %u (player %u)",
                                 creature_id, player_id);
         return true;
     }
-    void* creature = reinterpret_cast<GetGameObjectFn>(get_object->addr)(server, player_id);
+    void* creature = reinterpret_cast<GetGameObjectFn>(get_object_addr)(server, player_id);
     if (creature == nullptr) return true;
     // ponytail: the dedicated loop cannot safely advance retail pathfinding
     // without a local playing client. Apply the validated destination through
     // the engine's own area-indexing setter; replace this with input simulation
     // once the headless AI loop is independently brought up.
-    reinterpret_cast<SetPositionFn>(set_position->addr)(creature, &destination, 1, 1, 0);
+    reinterpret_cast<SetPositionFn>(set_position_addr)(creature, &destination, 1, 1, 0);
     Runtime::instance().log("multiplayer: replayed MoveToPoint for %u to %.3f %.3f %.3f",
                             player_id, destination.x, destination.y, destination.z);
     std::vector<std::uint8_t> authoritative;
@@ -332,10 +346,12 @@ bool replay_authoritative_position(const multiplayer::Frame& frame) {
     const hooks::Site* get_object = table != nullptr ? table->find("server.get_game_object") : nullptr;
     const hooks::Site* set_position = table != nullptr
         ? table->find("server_object.set_position") : nullptr;
+    const std::uintptr_t get_player_addr = relocated_addr(get_player);
+    const std::uintptr_t get_object_addr = relocated_addr(get_object);
+    const std::uintptr_t set_position_addr = relocated_addr(set_position);
     void* server = current_server_app();
-    if (server == nullptr || get_player == nullptr || !get_player->resolved ||
-        get_object == nullptr || !get_object->resolved || set_position == nullptr ||
-        !set_position->resolved) return true;
+    if (server == nullptr || get_player_addr == 0 || get_object_addr == 0 ||
+        set_position_addr == 0) return true;
 
     std::size_t at = 0;
     std::uint32_t creature_id = 0;
@@ -344,15 +360,15 @@ bool replay_authoritative_position(const multiplayer::Frame& frame) {
         take_wire_float(frame.payload, at, position.x) &&
         take_wire_float(frame.payload, at, position.y) &&
         take_wire_float(frame.payload, at, position.z) && at == frame.payload.size();
-    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+    const std::uint32_t player_id = reinterpret_cast<GetPlayerCreatureIdFn>(get_player_addr)(server);
     if (!decoded || !valid_position(position) || creature_id != player_id) {
         Runtime::instance().log("multiplayer: rejected authoritative position actor %u (player %u)",
                                 creature_id, player_id);
         return true;
     }
-    void* creature = reinterpret_cast<GetGameObjectFn>(get_object->addr)(server, player_id);
+    void* creature = reinterpret_cast<GetGameObjectFn>(get_object_addr)(server, player_id);
     if (creature == nullptr) return true;
-    reinterpret_cast<SetPositionFn>(set_position->addr)(creature, &position, 1, 1, 0);
+    reinterpret_cast<SetPositionFn>(set_position_addr)(creature, &position, 1, 1, 0);
     Runtime::instance().log(
         "multiplayer: applied authoritative position for %u at %.3f %.3f %.3f",
         player_id, position.x, position.y, position.z);
@@ -427,9 +443,10 @@ int KP_THISCALL add_move_to_point_body(
         const hooks::Site* get_player = table != nullptr
             ? table->find("server.get_player_creature_id") : nullptr;
         const hooks::Site* object_id = table != nullptr ? table->find("object.id") : nullptr;
+        const std::uintptr_t get_player_addr = relocated_addr(get_player);
         void* server = current_server_app();
         std::uint32_t creature_id = 0;
-        if (server != nullptr && get_player != nullptr && get_player->resolved &&
+        if (server != nullptr && get_player_addr != 0 &&
             object_id != nullptr && object_id->resolved && destination != nullptr &&
             secondary != nullptr && platform::is_readable(destination, sizeof *destination) &&
             platform::is_readable(secondary, sizeof *secondary) &&
@@ -438,7 +455,7 @@ int KP_THISCALL add_move_to_point_body(
             std::memcpy(&creature_id, reinterpret_cast<const std::uint8_t*>(creature) +
                                       object_id->offset, sizeof creature_id);
             const std::uint32_t player_id =
-                reinterpret_cast<GetPlayerCreatureIdFn>(get_player->addr)(server);
+                reinterpret_cast<GetPlayerCreatureIdFn>(get_player_addr)(server);
             if (creature_id == player_id) {
                 std::vector<std::uint8_t> payload;
                 payload.reserve(88);
@@ -586,15 +603,18 @@ void* KP_THISCALL client_area_get_server_area_body(void* self) {
         ? table->find("client_area.attach_from_server") : nullptr;
     const hooks::Site* attach_server = table != nullptr
         ? table->find("server_area.attach_from_client") : nullptr;
-    if (manager_site != nullptr && manager_site->resolved &&
+    const std::uintptr_t manager_base = relocated_addr(manager_site);
+    const std::uintptr_t get_module_addr = relocated_addr(get_module);
+    const std::uintptr_t get_area_addr = relocated_addr(get_area);
+    const std::uintptr_t attach_client_addr = relocated_addr(attach_client);
+    const std::uintptr_t attach_server_addr = relocated_addr(attach_server);
+    if (manager_base != 0 &&
         server_field != nullptr && server_field->resolved &&
-        get_module != nullptr && get_module->resolved &&
-        get_area != nullptr && get_area->resolved &&
-        attach_client != nullptr && attach_client->resolved &&
-        attach_server != nullptr && attach_server->resolved) {
+        get_module_addr != 0 && get_area_addr != 0 &&
+        attach_client_addr != 0 && attach_server_addr != 0) {
         std::uint32_t manager = 0;
         const auto manager_at = reinterpret_cast<const void*>(
-            manager_site->addr + manager_site->offset);
+            manager_base + manager_site->offset);
         if (platform::is_readable(manager_at, sizeof manager))
             std::memcpy(&manager, manager_at, sizeof manager);
         std::uint32_t server = 0;
@@ -603,13 +623,13 @@ void* KP_THISCALL client_area_get_server_area_body(void* self) {
         if (manager != 0 && platform::is_readable(server_at, sizeof server))
             std::memcpy(&server, server_at, sizeof server);
         if (server != 0) {
-            void* module = reinterpret_cast<NoArgPointerFn>(get_module->addr)(
+            void* module = reinterpret_cast<NoArgPointerFn>(get_module_addr)(
                 reinterpret_cast<void*>(static_cast<std::uintptr_t>(server)));
             if (module != nullptr) {
-                fallback = reinterpret_cast<NoArgPointerFn>(get_area->addr)(module);
+                fallback = reinterpret_cast<NoArgPointerFn>(get_area_addr)(module);
                 if (fallback != nullptr) {
-                    reinterpret_cast<OnePointerVoidFn>(attach_server->addr)(fallback, self);
-                    reinterpret_cast<OnePointerVoidFn>(attach_client->addr)(self, fallback);
+                    reinterpret_cast<OnePointerVoidFn>(attach_server_addr)(fallback, self);
+                    reinterpret_cast<OnePointerVoidFn>(attach_client_addr)(self, fallback);
                 }
             }
         }
@@ -652,25 +672,36 @@ std::vector<lua::Value> shape_args(const events::EventContract& ev,
     return out;
 }
 
-void dispatch_run_script_done(lua::Host& host, const std::string& script_name,
-                              std::uint32_t object_id, int has_object, bool ran,
-                              bool blocked, const events::Outcome& outcome) {
+void dispatch_run_script_done(lua::Host& host, std::string_view script_name,
+                              kp::abi::ObjectId object_id, int has_object, bool ran,
+                              bool blocked, std::string_view claimed_by) {
     const events::EventContract* done = find_contract("OnRunScriptDone");
     if (done == nullptr) return;
     const std::vector<NamedArg> have = {
-        {"script_name", lua::Value::str(script_name)},
-        {"object_id", lua::Value::object(object_id)},
+        {"script_name", lua::Value::str(std::string(script_name))},
+        {"object_id", lua::Value::object(kp::abi::script_id(object_id))},
         {"has_object", lua::Value::integer(has_object)},
         {"ran", lua::Value::boolean(ran)},
         {"blocked", lua::Value::boolean(blocked)},
-        {"claimed_by", lua::Value::str(outcome.claimed_by)},
+        {"claimed_by", lua::Value::str(std::string(claimed_by))},
     };
     host.dispatch(*done, shape_args(*done, have));
 }
 
 // ------------------------------------------------------------- RunScript ----
 
-// The blocking decision, separated so the guarded region has one job.
+// Trivially destructible POD across KP_HOOK_GUARD_BEGIN (setjmp/longjmp) so no
+// non-trivial C++ object is mutated or destroyed across a recovered fault.
+struct RunScriptState {
+    bool        block = false;
+    int         engine_result = 1;
+    bool        saw_run_script = false;
+    char        script_name[512]{};
+    std::size_t script_name_len = 0;
+    char        claimed_by[256]{};
+    std::size_t claimed_by_len = 0;
+};
+
 struct ScriptVerdict {
     bool block = false;
     int  engine_result = 1;
@@ -681,11 +712,236 @@ ScriptVerdict decide(const events::EventContract& ev, const events::Outcome& out
     return {b.skip_original, b.engine_result};
 }
 
+thread_local bool t_in_dialog_check = false;
+
+std::string tolower_ascii(std::string_view sv) {
+    std::string out(sv);
+    for (char& ch : out) {
+        if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
+    }
+    return out;
+}
+
+bool contains_ci(std::string_view hay, std::string_view needle) {
+    return tolower_ascii(hay).find(needle) != std::string::npos;
+}
+
+void* resolve_game_object(std::uint32_t oid, std::uint8_t* out_type = nullptr,
+                          std::uint32_t* out_player_id = nullptr) {
+    void* server = current_server_app();
+    const hooks::AddressTable* table = Runtime::instance().table();
+    if (server == nullptr || table == nullptr) return nullptr;
+    if (out_player_id != nullptr) {
+        *out_player_id = 0x7f000000u;
+        if (const hooks::Site* gp = table->find("server.get_player_creature_id");
+            gp != nullptr && gp->resolved) {
+            if (const std::uintptr_t addr = relocated_addr(gp)) {
+                *out_player_id = reinterpret_cast<GetPlayerCreatureIdFn>(addr)(server);
+            }
+        }
+    }
+    const hooks::Site* go = table->find("server.get_game_object");
+    const std::uintptr_t go_addr = relocated_addr(go);
+    if (go_addr == 0) return nullptr;
+    void* obj = reinterpret_cast<GetGameObjectFn>(go_addr)(server, oid);
+    if (obj != nullptr && out_type != nullptr && platform::is_readable(obj, 12)) {
+        *out_type = *(static_cast<const std::uint8_t*>(obj) + 8);
+    }
+    return obj;
+}
+
+const char* match_script_slot_event(const CExoString* name_ptr,
+                                    std::string_view script_name,
+                                    kp::abi::ObjectId object_id,
+                                    int* out_state_val) {
+    if (t_in_dialog_check) return nullptr;
+    std::uint8_t obj_type = 0;
+    std::uint32_t player_id = 0x7f000000u;
+    const std::uint32_t oid = kp::abi::script_id(object_id);
+    void* obj = resolve_game_object(oid, &obj_type, &player_id);
+    const hooks::AddressTable* table = Runtime::instance().table();
+    const bool is_k2 = (table != nullptr && (table->game() == "K2" || table->game() == "k2"));
+
+    // 1. Exact interior CExoString* pointer range match against CSWS* script slot arrays.
+    if (obj != nullptr && name_ptr != nullptr) {
+        const auto obj_va = reinterpret_cast<std::uintptr_t>(obj);
+        const auto ptr_va = reinterpret_cast<std::uintptr_t>(name_ptr);
+        if (ptr_va > obj_va && ptr_va - obj_va < 0x800) {
+            const std::size_t rel = static_cast<std::size_t>(ptr_va - obj_va);
+            const std::size_t stride = sizeof(CExoString);
+            if (obj_type == 5) {  // CSWSCreature: K1 0x230, K2 0x270 (14 slots)
+                const std::size_t base = is_k2 ? 0x270u : 0x230u;
+                if (rel >= base && (rel - base) % stride == 0) {
+                    switch ((rel - base) / stride) {
+                    case 0:  return "OnCreatureHeartbeat";
+                    case 4:  return "OnCreatureDamaged";
+                    case 6:  return "OnCreatureEndCombatRound";
+                    case 8:  return "OnCreatureSpawn";
+                    case 10: return "OnCreatureDeath";
+                    case 13: return "OnCreatureEndDialogue";
+                    default: break;
+                    }
+                }
+            } else if (obj_type == 9) {  // CSWSPlaceable: K1 0x294, K2 0x2e4 (16+ slots)
+                const std::size_t base = is_k2 ? 0x2e4u : 0x294u;
+                if (rel == base + 15u * stride) return "OnPlaceableEndDialogue";
+            } else if (obj_type == 7) {  // CSWSTrigger: K1 0x244, K2 0x284 (7 slots)
+                const std::size_t base = is_k2 ? 0x284u : 0x244u;
+                if (rel >= base && (rel - base) % stride == 0) {
+                    const std::size_t slot = (rel - base) / stride;
+                    if (slot == 0) return "OnTriggerHeartbeat";
+                    if (slot == 4) return "OnTriggerTrapTriggered";
+                }
+            }
+        }
+    }
+
+    // 2. Hardcoded and script-naming fallback (supports builds lacking get_game_object
+    //    like k2_steam_linux and caller paths that construct temporary CExoStrings).
+    const std::string lower = tolower_ascii(script_name);
+    if (lower == "k_trg_transfail") return "OnAreaTransitionFail";
+    if (lower == "itemuse") return "OnItemUse";
+
+    if (obj_type == 7 || (obj_type == 0 && lower.find("_trg_") != std::string::npos)) {
+        if (contains_ci(lower, "trap")) return "OnTriggerTrapTriggered";
+        if (contains_ci(lower, "heartbeat") || lower.ends_with("_hb")) return "OnTriggerHeartbeat";
+    }
+    if (obj_type == 9 && (contains_ci(lower, "endconv") || contains_ci(lower, "enddiag"))) {
+        return "OnPlaceableEndDialogue";
+    }
+    if (obj_type == 5 || obj_type == 0) {
+        if (contains_ci(lower, "heartbeat") || lower.ends_with("_hb") || lower.ends_with("_hb01"))
+            return "OnCreatureHeartbeat";
+        if (contains_ci(lower, "spwn") || contains_ci(lower, "spawn"))
+            return "OnCreatureSpawn";
+        if (contains_ci(lower, "damage"))
+            return "OnCreatureDamaged";
+        if (contains_ci(lower, "death"))
+            return "OnCreatureDeath";
+        if (contains_ci(lower, "endrnd") || contains_ci(lower, "endround") || contains_ci(lower, "combend"))
+            return "OnCreatureEndCombatRound";
+        if (contains_ci(lower, "endconv") || contains_ci(lower, "enddiag"))
+            return "OnCreatureEndDialogue";
+    }
+    if (obj_type == 5 && obj != nullptr) {
+        const std::size_t state_off = is_k2 ? 0x91du : 0x8edu;
+        if (platform::is_readable(static_cast<const char*>(obj) + state_off, 1)) {
+            const int st = static_cast<int>(*(static_cast<const std::uint8_t*>(obj) + state_off));
+            if (st != 0) {
+                if (out_state_val) *out_state_val = st;
+                return "OnCreatureStateScript";
+            }
+        }
+        if (oid == player_id && !lower.empty()) {
+            return "OnClientRequestedScript";
+        }
+    }
+    return nullptr;
+}
+
+__attribute__((noinline)) void run_script_pre_inner(
+    lua::Host& host, const CExoString* name, kp::abi::ObjectId object_id,
+    int has_object, RunScriptState& state) {
+    const std::string script_name = read_exostring(name);
+    state.script_name_len = std::min(script_name.size(), sizeof(state.script_name));
+    std::memcpy(state.script_name, script_name.data(), state.script_name_len);
+    state.saw_run_script = true;
+
+    const events::EventContract* ev = find_contract("OnRunScript");
+    if (ev != nullptr) {
+        {
+            // Into the harness ring, before dispatch: what the engine is
+            // about to run, whether or not a script then blocks it.
+            const kp::harness::EventField fields[] = {
+                kp::harness::EventField::str("script", script_name),
+                kp::harness::EventField::unsigned_("object", kp::abi::script_id(object_id)),
+                kp::harness::EventField::integer("has_object", has_object),
+            };
+            kp::harness::ring().push("OnRunScript", ring_tick(&host), fields, 3);
+        }
+        const std::vector<lua::Value> args = {
+            lua::Value::str(script_name),
+            lua::Value::object(kp::abi::script_id(object_id)),
+            lua::Value::integer(has_object),
+        };
+        const events::Outcome outcome = host.dispatch(*ev, args);
+        state.claimed_by_len = std::min(outcome.claimed_by.size(), sizeof(state.claimed_by));
+        std::memcpy(state.claimed_by, outcome.claimed_by.data(), state.claimed_by_len);
+        const ScriptVerdict verdict = decide(*ev, outcome);
+        state.block = verdict.block;
+        state.engine_result = verdict.engine_result;
+    }
+
+    int state_val = 0;
+    const char* specialized_name =
+        match_script_slot_event(name, script_name, object_id, &state_val);
+    if (specialized_name != nullptr) {
+        if (const events::EventContract* sev = find_contract(specialized_name); sev != nullptr) {
+            const std::uint32_t oid = kp::abi::script_id(object_id);
+            const kp::harness::EventField fields[] = {
+                kp::harness::EventField::str("script", script_name),
+                kp::harness::EventField::unsigned_("object", oid),
+            };
+            kp::harness::ring().push(specialized_name, ring_tick(&host), fields, 2);
+            if (host.has_subscriber(specialized_name)) {
+                const std::vector<NamedArg> have = {
+                    {"creature", lua::Value::object(oid)},
+                    {"placeable", lua::Value::object(oid)},
+                    {"trigger", lua::Value::object(oid)},
+                    {"object", lua::Value::object(oid)},
+                    {"script_name", lua::Value::str(script_name)},
+                    {"state", lua::Value::integer(state_val)},
+                };
+                const events::Outcome sout = host.dispatch(*sev, shape_args(*sev, have));
+                const ScriptVerdict sv = decide(*sev, sout);
+                if (sv.block) {
+                    state.block = true;
+                    state.engine_result = sv.engine_result;
+                    if (!sout.claimed_by.empty()) {
+                        state.claimed_by_len = std::min(sout.claimed_by.size(), sizeof(state.claimed_by));
+                        std::memcpy(state.claimed_by, sout.claimed_by.data(), state.claimed_by_len);
+                    }
+                }
+            }
+            if (std::strcmp(specialized_name, "OnCreatureSpawn") == 0) {
+                std::uint32_t player_id = 0x7f000000u;
+                resolve_game_object(oid, nullptr, &player_id);
+                if (oid == player_id && oid != 0x7f000000u) {
+                    if (const events::EventContract* pev = find_contract("OnPlayerSpawn")) {
+                        const kp::harness::EventField pfields[] = {
+                            kp::harness::EventField::unsigned_("player", oid),
+                        };
+                        kp::harness::ring().push("OnPlayerSpawn", ring_tick(&host), pfields, 1);
+                        if (host.has_subscriber("OnPlayerSpawn")) {
+                            host.dispatch(*pev, {lua::Value::object(oid)});
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (state.block) {
+        dispatch_run_script_done(
+            host, script_name, object_id, has_object, false, true,
+            std::string_view(state.claimed_by, state.claimed_by_len));
+    }
+}
+
+__attribute__((noinline)) void run_script_post_inner(
+    lua::Host& host, const RunScriptState& state, kp::abi::ObjectId object_id,
+    int has_object, bool ran) {
+    dispatch_run_script_done(
+        host, std::string_view(state.script_name, state.script_name_len),
+        object_id, has_object, ran, false,
+        std::string_view(state.claimed_by, state.claimed_by_len));
+}
+
 // `self` is the CVirtualMachineInternal, which is the only place the two live
 // VM objects the routine bridge needs can be reached from. Revalidate the
 // cached context; a later script can repair an invalidated VM binding.
-int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t object_id,
-                                int has_object) {
+int KP_ENGINE_METHOD_CC run_script_body(void* self, CExoString* name,
+                                        kp::abi::ObjectId object_id, int has_object) {
     capture_vm(self);
 
     auto orig = reinterpret_cast<RunScriptFn>(g_orig_run_script.load(std::memory_order_acquire));
@@ -695,57 +951,23 @@ int KP_THISCALL run_script_body(void* self, CExoString* name, std::uint32_t obje
     // there to prevent.
     lua::Host* const host = active_host();
 
-    ScriptVerdict verdict;
-    events::Outcome outcome;
-    std::string script_name;
-    bool saw_run_script = false;
+    RunScriptState state;
     if (live() && host != nullptr && !g_poison_run_script.load(std::memory_order_acquire)) {
-        // `verdict` is written inside the guarded region, so its value after a
-        // fault is indeterminate and the fallback re-states it. The default is
-        // "do not block", which is the right answer when our own dispatch just
-        // faulted: the game's handler runs as it always would.
-        KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, verdict = ScriptVerdict{})
-
-        const events::EventContract* ev = find_contract("OnRunScript");
-        if (ev != nullptr) {
-            script_name = read_exostring(name);
-            saw_run_script = true;
-            {
-                // Into the harness ring, before dispatch: what the engine is
-                // about to run, whether or not a script then blocks it.
-                const kp::harness::EventField fields[] = {
-                    kp::harness::EventField::str("script", script_name),
-                    kp::harness::EventField::unsigned_("object", object_id),
-                    kp::harness::EventField::integer("has_object", has_object),
-                };
-                kp::harness::ring().push("OnRunScript", ring_tick(host), fields, 3);
-            }
-            const std::vector<lua::Value> args = {
-                lua::Value::str(script_name),
-                lua::Value::object(object_id),
-                lua::Value::integer(has_object),
-            };
-            outcome = host->dispatch(*ev, args);
-            verdict = decide(*ev, outcome);
-            if (verdict.block)
-                dispatch_run_script_done(*host, script_name, object_id, has_object,
-                                         false, true, outcome);
-        }
-
+        KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, state = RunScriptState{})
+        run_script_pre_inner(*host, name, object_id, has_object, state);
         KP_HOOK_GUARD_END
     }
 
-    if (verdict.block) return verdict.engine_result;
+    if (state.block) return state.engine_result;
     if (orig == nullptr) return 0;   // unpatched: we have nothing to forward to
     const volatile int rc = orig(self, name, object_id, has_object);
 
     // After the engine script, with the engine's own 0/1. A Lua fault here
     // must not rewrite the return the game already produced.
-    if (saw_run_script && live() && host != nullptr &&
+    if (state.saw_run_script && live() && host != nullptr &&
         !g_poison_run_script.load(std::memory_order_acquire)) {
         KP_HOOK_GUARD_BEGIN("vm.run_script", g_poison_run_script, {})
-        dispatch_run_script_done(*host, script_name, object_id, has_object,
-                                 rc == 1, false, outcome);
+        run_script_post_inner(*host, state, object_id, has_object, rc == 1);
         KP_HOOK_GUARD_END
     }
     return rc;
@@ -786,8 +1008,12 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
 
     lua::Host* const host = active_host();
 
-    if (live() && host != nullptr && !g_poison_main_loop.load(std::memory_order_acquire)) {
-        KP_HOOK_GUARD_BEGIN("app.server_main_loop", g_poison_main_loop, {})
+    static thread_local bool in_main_loop_lua = false;
+    if (!in_main_loop_lua && live() && host != nullptr &&
+        !g_poison_main_loop.load(std::memory_order_acquire)) {
+        in_main_loop_lua = true;
+        KP_HOOK_GUARD_BEGIN("app.server_main_loop", g_poison_main_loop,
+                            { in_main_loop_lua = false; })
 
         lua::Host& h = *host;
         const std::uint64_t tick = h.tick();
@@ -800,6 +1026,14 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
         }
         kp::api::timers::pump(kp::api::timers::now_ms(), tick);
         h.advance_tick();
+        h.service_requests();
+
+        static std::uint64_t s_last_sub_rev = 0;
+        const std::uint64_t cur_sub_rev = lua::Host::subscription_revision();
+        if (cur_sub_rev != s_last_sub_rev) {
+            s_last_sub_rev = cur_sub_rev;
+            Runtime::instance().sync_demand_hooks();
+        }
 
         if (tick % kReloadEvery == 0) {
             std::vector<std::string> errors;
@@ -810,6 +1044,7 @@ void* KP_SERVER_LOOP_CC main_loop_body(void* self) {
         }
 
         KP_HOOK_GUARD_END
+        in_main_loop_lua = false;
     }
 
     if (orig == nullptr) return nullptr;
@@ -871,6 +1106,8 @@ const PoisonSite kPoisonSites[] = {
     {"harness", &kp::harness::poison_flag()},
     {"creature.ai_action_move_to_point", &g_poison_move_to_point},
     {"creature.add_move_to_point_action", &g_poison_add_move_to_point},
+    {"vm.run_script_situation", &g_poison_run_situation},
+    {"dialog.check_script", &g_poison_dialog_check},
 };
 
 std::string poisoned_site_list() {
@@ -885,7 +1122,7 @@ std::string poisoned_site_list() {
 
 void console_status() {
     Runtime& rt = Runtime::instance();
-    rt.log("status: ScriptForge %s", KP_VERSION);
+    rt.log("status: KotorJIT %s", KP_VERSION);
     rt.log("status: phase=%s build=%s live=%s", to_string(rt.phase()),
            rt.build().empty() ? "(none)" : rt.build().c_str(), live() ? "yes" : "no");
     if (!rt.failure().empty()) rt.log("status: failure=%s", rt.failure().c_str());
@@ -960,7 +1197,14 @@ bool handle_line(const std::string& line) {
         std::size_t begin = rest.find_first_not_of(' ');
         const std::string args = begin == std::string::npos ? std::string() : rest.substr(begin);
 
-        if (args == "reload")                 console_reload();
+        if (args == "reload") {
+            if (kp::runtime::engine_thread_latched() && !kp::runtime::on_engine_thread()) {
+                kp::harness::request_reload();
+                Runtime::instance().log("lua reload: queued for engine thread");
+            } else {
+                console_reload();
+            }
+        }
         else if (args == "status")            console_status();
         else if (args.rfind("exec ", 0) == 0) console_exec(args.substr(5));
         else Runtime::instance().log("lua: commands are `lua reload`, `lua status`, "
@@ -970,6 +1214,8 @@ bool handle_line(const std::string& line) {
 
     lua::Host* h = active_host();
     if (!live() || h == nullptr) return false;
+    if (kp::runtime::engine_thread_latched() && !kp::runtime::on_engine_thread())
+        return false;
 
     const events::EventContract* ev = find_contract("OnConsoleCommand");
     if (ev == nullptr) return false;   // no contract, so no script can claim it
@@ -1043,8 +1289,8 @@ void __attribute__((cdecl)) do_console_body(char c) {
 // and, when outer id is SIGNAL_EVENT, the script event type. Named slots that
 // only ever reach RunScript are not looked up here.
 
-using EventHandlerFn = void (KP_THISCALL*)(void*, unsigned long, unsigned long,
-                                           void*, unsigned long, unsigned long);
+using EventHandlerFn = void (KP_ENGINE_METHOD_CC*)(void*, std::uint32_t, kp::abi::ObjectId,
+                                                   void*, std::uint32_t, std::uint32_t);
 
 void persist_situation(const std::string& blob) {
     g_situation_blob = blob;
@@ -1060,9 +1306,9 @@ std::string load_situation() {
     return g_situation_blob;
 }
 
-void event_handler_common(void* self, unsigned long n_event_id,
-                          unsigned long n_caller, void* payload,
-                          unsigned long day, unsigned long time,
+void event_handler_common(void* self, std::uint32_t n_event_id,
+                          kp::abi::ObjectId n_caller, void* payload,
+                          std::uint32_t day, std::uint32_t time,
                           const char* site, std::atomic<void*>& orig_slot,
                           std::atomic<bool>& poison) {
     auto orig = reinterpret_cast<EventHandlerFn>(
@@ -1081,13 +1327,14 @@ void event_handler_common(void* self, unsigned long n_event_id,
         const events::EventContract* ev = events::find_by_site(
             site, static_cast<int>(n_event_id), script_type);
         if (ev != nullptr) {
+            const std::uint32_t caller_id = kp::abi::script_id(n_caller);
             {
                 // The ring record carries the contract's own name, which is
                 // a static string from the generated table.
                 const kp::harness::EventField fields[] = {
                     kp::harness::EventField::unsigned_(
                         "object", events::object_id_from_handler(self, site)),
-                    kp::harness::EventField::unsigned_("caller", n_caller),
+                    kp::harness::EventField::unsigned_("caller", caller_id),
                     kp::harness::EventField::integer("event_id",
                                                      static_cast<std::int64_t>(n_event_id)),
                     kp::harness::EventField::integer("type", script_type),
@@ -1096,16 +1343,27 @@ void event_handler_common(void* self, unsigned long n_event_id,
             }
             events::HandlerFrame frame;
             frame.self = self;
-            frame.caller = static_cast<std::uint32_t>(n_caller);
+            frame.caller = caller_id;
             frame.payload = payload;
-            frame.calendar_day = static_cast<std::uint32_t>(day);
-            frame.time_of_day = static_cast<std::uint32_t>(time);
+            frame.calendar_day = day;
+            frame.time_of_day = time;
             frame.hook_site = site;
             frame.outer_event_id = static_cast<int>(n_event_id);
             const events::Outcome outcome =
                 host->dispatch(*ev, events::shape_handler_args(*ev, frame));
             if (ev->blocking)
                 skip = events::blocking_verdict(*ev, outcome).skip_original;
+            if (ev->lua_name == "OnModulePlayerEnter" && caller_id != 0x7f000000u) {
+                if (const events::EventContract* pev = find_contract("OnPlayerSpawn")) {
+                    const kp::harness::EventField pfields[] = {
+                        kp::harness::EventField::unsigned_("player", caller_id),
+                    };
+                    kp::harness::ring().push("OnPlayerSpawn", ring_tick(host), pfields, 1);
+                    if (host->has_subscriber("OnPlayerSpawn")) {
+                        host->dispatch(*pev, {lua::Value::object(caller_id)});
+                    }
+                }
+            }
         }
 
         KP_HOOK_GUARD_END
@@ -1116,53 +1374,53 @@ void event_handler_common(void* self, unsigned long n_event_id,
     orig(self, n_event_id, n_caller, payload, day, time);
 }
 
-void KP_THISCALL creature_event_body(void* self, unsigned long id, unsigned long caller,
-                                     void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC creature_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                             void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.creature", g_orig_creature,
                          g_poison_event_creature);
 }
-void KP_THISCALL door_event_body(void* self, unsigned long id, unsigned long caller,
-                                 void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC door_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                         void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.door", g_orig_door,
                          g_poison_event_door);
 }
-void KP_THISCALL placeable_event_body(void* self, unsigned long id, unsigned long caller,
-                                      void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC placeable_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                              void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.placeable", g_orig_placeable,
                          g_poison_event_placeable);
 }
-void KP_THISCALL trigger_event_body(void* self, unsigned long id, unsigned long caller,
-                                    void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC trigger_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                            void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.trigger", g_orig_trigger,
                          g_poison_event_trigger);
 }
-void KP_THISCALL module_event_body(void* self, unsigned long id, unsigned long caller,
-                                   void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC module_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                           void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.module", g_orig_module,
                          g_poison_event_module);
 }
-void KP_THISCALL area_event_body(void* self, unsigned long id, unsigned long caller,
-                                 void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC area_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                         void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.area", g_orig_area,
                          g_poison_event_area);
 }
-void KP_THISCALL encounter_event_body(void* self, unsigned long id, unsigned long caller,
-                                      void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC encounter_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                              void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.encounter", g_orig_encounter,
                          g_poison_event_encounter);
 }
-void KP_THISCALL aoe_event_body(void* self, unsigned long id, unsigned long caller,
-                                void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC aoe_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                        void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.aoe", g_orig_aoe,
                          g_poison_event_aoe);
 }
-void KP_THISCALL store_event_body(void* self, unsigned long id, unsigned long caller,
-                                  void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC store_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                          void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.store", g_orig_store,
                          g_poison_event_store);
 }
-void KP_THISCALL waypoint_event_body(void* self, unsigned long id, unsigned long caller,
-                                     void* data, unsigned long day, unsigned long time) {
+void KP_ENGINE_METHOD_CC waypoint_event_body(void* self, std::uint32_t id, kp::abi::ObjectId caller,
+                                             void* data, std::uint32_t day, std::uint32_t time) {
     event_handler_common(self, id, caller, data, day, time, "event.waypoint", g_orig_waypoint,
                          g_poison_event_waypoint);
 }
@@ -1175,10 +1433,10 @@ void KP_THISCALL waypoint_event_body(void* self, unsigned long id, unsigned long
 // faulting at CResGFF+0x98 (0x004127C5).  Load's three-argument ABI was
 // already established from its callers and epilogue; preserve all arguments
 // for both hooks.
-using SaveSituationFn = int (KP_THISCALL*)(void*, void*, void*, void*);
-using LoadSituationFn = int (KP_THISCALL*)(void*, void*, void*, void*);
+using SaveSituationFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, void*, void*);
+using LoadSituationFn = int (KP_ENGINE_METHOD_CC*)(void*, void*, void*, void*);
 
-int KP_THISCALL save_situation_body(void* self, void* situation, void* gff, void* structure) {
+int KP_ENGINE_METHOD_CC save_situation_body(void* self, void* situation, void* gff, void* structure) {
     auto orig = reinterpret_cast<SaveSituationFn>(g_orig_save.load(std::memory_order_acquire));
     lua::Host* const host = active_host();
     if (live() && host != nullptr && !g_poison_save.load(std::memory_order_acquire)) {
@@ -1194,7 +1452,7 @@ int KP_THISCALL save_situation_body(void* self, void* situation, void* gff, void
     return orig(self, situation, gff, structure);
 }
 
-int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
+int KP_ENGINE_METHOD_CC load_situation_body(void* self, void* a, void* b, void* c) {
     auto orig = reinterpret_cast<LoadSituationFn>(g_orig_load.load(std::memory_order_acquire));
     lua::Host* const host = active_host();
     if (live() && host != nullptr && !g_poison_load.load(std::memory_order_acquire)) {
@@ -1210,6 +1468,89 @@ int KP_THISCALL load_situation_body(void* self, void* a, void* b, void* c) {
     }
     if (orig == nullptr) return 0;
     return orig(self, a, b, c);
+}
+
+int KP_ENGINE_METHOD_CC run_script_situation_body(
+    void* self, void* situation, kp::abi::ObjectId object_id, int has_object) {
+    auto orig = reinterpret_cast<RunScriptSituationFn>(
+        g_orig_run_situation.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    bool skip = false;
+    int engine_result = 1;
+    if (live() && host != nullptr && !g_poison_run_situation.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("vm.run_script_situation", g_poison_run_situation, skip = false)
+        const std::uint32_t oid = kp::abi::script_id(object_id);
+        const kp::harness::EventField fields[] = {
+            kp::harness::EventField::unsigned_("object", oid),
+            kp::harness::EventField::integer("has_object", has_object),
+        };
+        kp::harness::ring().push("OnScriptSituation", ring_tick(host), fields, 2);
+        if (const events::EventContract* ev = find_contract("OnScriptSituation")) {
+            if (host->has_subscriber("OnScriptSituation")) {
+                const events::Outcome outcome = host->dispatch(*ev, {
+                    lua::Value::object(oid),
+                    lua::Value::integer(has_object),
+                });
+                const events::BlockVerdict b = events::blocking_verdict(*ev, outcome);
+                skip = b.skip_original;
+                engine_result = b.engine_result;
+            }
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (skip) return engine_result;
+    return orig != nullptr ? orig(self, situation, object_id, has_object) : 0;
+}
+
+std::string read_resref16(const char* p) {
+    if (p == nullptr || !platform::is_readable(p, 16)) return {};
+    std::size_t n = 0;
+    while (n < 16 && p[n] != '\0') ++n;
+    return std::string(p, n);
+}
+
+int KP_ENGINE_METHOD_CC dialog_check_script_body(
+    void* dlg, void* owner, const char* resref16) {
+    auto orig = reinterpret_cast<DialogCheckScriptFn>(
+        g_orig_dialog_check.load(std::memory_order_acquire));
+    lua::Host* const host = active_host();
+    bool skip = false;
+    int override_res = 0;
+    if (live() && host != nullptr && !g_poison_dialog_check.load(std::memory_order_acquire)) {
+        KP_HOOK_GUARD_BEGIN("dialog.check_script", g_poison_dialog_check, skip = false)
+        const std::string script_name = read_resref16(resref16);
+        std::uint32_t speaker_id = 0x7f000000u;
+        if (owner != nullptr && platform::is_readable(static_cast<const char*>(owner) + 4, 4)) {
+            std::memcpy(&speaker_id, static_cast<const char*>(owner) + 4, sizeof speaker_id);
+        }
+        const kp::harness::EventField fields[] = {
+            kp::harness::EventField::str("script", script_name),
+            kp::harness::EventField::unsigned_("speaker", speaker_id),
+        };
+        kp::harness::ring().push("OnDialogConditional", ring_tick(host), fields, 2);
+        if (const events::EventContract* ev = find_contract("OnDialogConditional")) {
+            if (host->has_subscriber("OnDialogConditional")) {
+                const events::Outcome outcome = host->dispatch(*ev, {
+                    lua::Value::str(script_name),
+                    lua::Value::object(speaker_id),
+                });
+                const events::BlockVerdict b = events::blocking_verdict(*ev, outcome);
+                if (b.skip_original) {
+                    skip = true;
+                    override_res = b.engine_result;
+                }
+            }
+        }
+        KP_HOOK_GUARD_END
+    }
+    if (skip) return override_res;
+    if (orig == nullptr) return 0;
+    struct DialogCheckGuard {
+        bool prev;
+        DialogCheckGuard() : prev(t_in_dialog_check) { t_in_dialog_check = true; }
+        ~DialogCheckGuard() { t_in_dialog_check = prev; }
+    } guard;
+    return orig(dlg, owner, resref16);
 }
 
 // ------------------------------------------------ movement admission trace --
@@ -1231,7 +1572,7 @@ bool trace_u32(const void* base, std::size_t offset, std::uint32_t& out) {
 
 }  // namespace
 
-int KP_THISCALL creature_move_to_point_body(void* creature, void* action_node) {
+int KP_ENGINE_METHOD_CC creature_move_to_point_body(void* creature, void* action_node) {
     auto orig = reinterpret_cast<MoveToPointFn>(
         g_orig_move_to_point.load(std::memory_order_acquire));
     lua::Host* const host = active_host();
@@ -1291,10 +1632,11 @@ int KP_CLIENT_LOOP_CC client_main_loop_body(void* self) {
     kp::harness::note_client_frame();
     note_client_gate_mismatch();
     kp::devtools::overlay_tick();
-    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
-    kp::harness::drain();
-
-    kp::harness::after_frame();
+    if (!kp::runtime::engine_thread_latched() || kp::runtime::on_engine_thread()) {
+        if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
+        kp::harness::drain();
+        kp::harness::after_frame();
+    }
 
     if (kp::harness::quit_requested()) {
         // Give the listener a moment to write the `quit` reply. Bounded: a
@@ -1317,9 +1659,11 @@ int __attribute__((cdecl)) client_frame_wrapper_body(void* self) {
     kp::harness::note_client_frame();
     note_client_gate_mismatch();
     kp::devtools::overlay_tick();
-    if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
-    kp::harness::drain();
-    kp::harness::after_frame();
+    if (!kp::runtime::engine_thread_latched() || kp::runtime::on_engine_thread()) {
+        if (live()) { kp::api::bind_console(devtools_output, nullptr); kp::devtools::console().pump(init_lua_state); }
+        kp::harness::drain();
+        kp::harness::after_frame();
+    }
     return result;
 }
 
@@ -1386,6 +1730,8 @@ void* store_event_detour()     { return reinterpret_cast<void*>(&store_event_bod
 void* waypoint_event_detour()  { return reinterpret_cast<void*>(&waypoint_event_body); }
 void* save_situation_detour()  { return reinterpret_cast<void*>(&save_situation_body); }
 void* load_situation_detour()  { return reinterpret_cast<void*>(&load_situation_body); }
+void* run_script_situation_detour() { return reinterpret_cast<void*>(&run_script_situation_body); }
+void* dialog_check_script_detour()  { return reinterpret_cast<void*>(&dialog_check_script_body); }
 void* creature_move_to_point_detour() { return reinterpret_cast<void*>(&creature_move_to_point_body); }
 void* add_move_to_point_detour() { return reinterpret_cast<void*>(&add_move_to_point_body); }
 void* net_start_connect_detour() { return reinterpret_cast<void*>(&net_start_connect_body); }
@@ -1400,6 +1746,36 @@ void set_net_destination_offset(std::uint32_t offset) {
 }
 void* client_main_loop_detour() { return reinterpret_cast<void*>(&client_main_loop_body); }
 void* client_frame_wrapper_detour() { return reinterpret_cast<void*>(&client_frame_wrapper_body); }
+
+std::atomic<void*>* hook_original_slot(std::string_view site) {
+    if (site == "vm.run_script") return &g_orig_run_script;
+    if (site == "app.server_main_loop") return &g_orig_main_loop;
+    if (site == "console.do_console") return &g_orig_do_console;
+    if (site == "event.creature") return &g_orig_creature;
+    if (site == "event.door") return &g_orig_door;
+    if (site == "event.placeable") return &g_orig_placeable;
+    if (site == "event.trigger") return &g_orig_trigger;
+    if (site == "event.module") return &g_orig_module;
+    if (site == "event.area") return &g_orig_area;
+    if (site == "event.encounter") return &g_orig_encounter;
+    if (site == "event.aoe") return &g_orig_aoe;
+    if (site == "event.store") return &g_orig_store;
+    if (site == "event.waypoint") return &g_orig_waypoint;
+    if (site == "vm.save_script_situation") return &g_orig_save;
+    if (site == "vm.load_script_situation") return &g_orig_load;
+    if (site == "vm.run_script_situation") return &g_orig_run_situation;
+    if (site == "dialog.check_script") return &g_orig_dialog_check;
+    if (site == "creature.ai_action_move_to_point") return &g_orig_move_to_point;
+    if (site == "creature.add_move_to_point_action") return &g_orig_add_move_to_point;
+    if (site == "app.client_main_loop") return &g_orig_client_loop;
+    if (site == "app.client_frame_wrapper") return &g_orig_client_frame_wrapper;
+    if (site == "net.start_connect_to_session") return &g_orig_net_start_connect;
+    if (site == "net.start_server_mode") return &g_orig_net_start_server;
+    if (site == "net.send_message_to_player") return &g_orig_net_send;
+    if (site == "net.process_received_frames") return &g_orig_net_process;
+    if (site == "client.area_get_server_area") return &g_orig_client_area_get_server_area;
+    return nullptr;
+}
 
 void bind_originals(hooks::HookSet& set) {
     g_orig_run_script.store(set.original("vm.run_script"), std::memory_order_release);
@@ -1417,6 +1793,8 @@ void bind_originals(hooks::HookSet& set) {
     g_orig_waypoint.store(set.original("event.waypoint"), std::memory_order_release);
     g_orig_save.store(set.original("vm.save_script_situation"), std::memory_order_release);
     g_orig_load.store(set.original("vm.load_script_situation"), std::memory_order_release);
+    g_orig_run_situation.store(set.original("vm.run_script_situation"), std::memory_order_release);
+    g_orig_dialog_check.store(set.original("dialog.check_script"), std::memory_order_release);
     g_orig_move_to_point.store(set.original("creature.ai_action_move_to_point"), std::memory_order_release);
     g_orig_add_move_to_point.store(set.original("creature.add_move_to_point_action"),
                                    std::memory_order_release);
@@ -1452,6 +1830,8 @@ void clear_originals() {
     g_orig_waypoint.store(nullptr, std::memory_order_release);
     g_orig_save.store(nullptr, std::memory_order_release);
     g_orig_load.store(nullptr, std::memory_order_release);
+    g_orig_run_situation.store(nullptr, std::memory_order_release);
+    g_orig_dialog_check.store(nullptr, std::memory_order_release);
     g_orig_move_to_point.store(nullptr, std::memory_order_release);
     g_orig_add_move_to_point.store(nullptr, std::memory_order_release);
     g_orig_client_loop.store(nullptr, std::memory_order_release);
@@ -1465,8 +1845,6 @@ void clear_originals() {
     g_server_net.store(nullptr, std::memory_order_release);
     g_client_net.store(nullptr, std::memory_order_release);
     g_client_support_server_net.store(nullptr, std::memory_order_release);
-
-    kp::devtools::console().reset();
 }
 
 }  // namespace kp::runtime

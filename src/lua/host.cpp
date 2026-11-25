@@ -1,6 +1,7 @@
 #include "lua/host.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <cctype>
 #include <chrono>
 #include <cstdio>
@@ -35,6 +36,14 @@ namespace fs = std::filesystem;
 namespace kp::lua {
 
 namespace {
+
+std::atomic<std::uint64_t> g_sub_revision{1};
+std::atomic<void (*)()> g_sub_notify{nullptr};
+
+void bump_subscriptions() {
+    g_sub_revision.fetch_add(1, std::memory_order_release);
+    if (auto fn = g_sub_notify.load(std::memory_order_acquire)) fn();
+}
 
 // A private registry key. Its address is the key, so nothing a script can write
 // will collide with it.
@@ -356,6 +365,7 @@ void Script::commit_staged() {
     last_load_error_.clear();
     state_ = ScriptState::Loaded;
     ++generation_;
+    bump_subscriptions();
 }
 
 void Script::bind_callback(const std::string& event, int ref) {
@@ -371,6 +381,7 @@ void Script::bind_callback(const std::string& event, int ref) {
         map.erase(it);
     }
     if (ref != LUA_NOREF && ref != LUA_REFNIL) map[event] = ref;
+    if (!staging_chunk_) bump_subscriptions();
 }
 
 bool Script::push_handler(const std::string& callback) const {
@@ -639,7 +650,10 @@ bool Host::do_load_path(const std::string& raw, std::string& error) {
     Script* raw_s = s.get();
     scripts_.push_back(std::move(s));
     sort_scripts();
-    if (ok) raise_load(*raw_s);
+    if (ok) {
+        bump_subscriptions();
+        raise_load(*raw_s);
+    }
     return ok;
 }
 
@@ -677,6 +691,31 @@ bool Host::do_reload(Script& s, std::string& error) {
 void Host::do_unload(Script& s) {
     raise_unload(s);
     s.unload();
+    bump_subscriptions();
+}
+
+std::unordered_set<std::string> Host::subscribed_events() const {
+    std::unordered_set<std::string> out;
+    for (const auto& sp : scripts_) {
+        if (sp->state() == ScriptState::Loaded) sp->collect_callbacks(out);
+    }
+    return out;
+}
+
+bool Host::has_subscriber(std::string_view callback) const {
+    const std::string key(callback);
+    for (const auto& sp : scripts_) {
+        if (sp->state() == ScriptState::Loaded && sp->defines(key)) return true;
+    }
+    return false;
+}
+
+std::uint64_t Host::subscription_revision() {
+    return g_sub_revision.load(std::memory_order_acquire);
+}
+
+void Host::set_subscription_notify(void (*fn)()) {
+    g_sub_notify.store(fn, std::memory_order_release);
 }
 
 bool Host::unload_one(const std::string& name, std::string& error) {

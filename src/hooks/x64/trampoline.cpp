@@ -439,7 +439,8 @@ void Detour::abandon() {
 }
 
 HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expect,
-                           std::size_t expect_len, const char** detail) {
+                           std::size_t expect_len, const char** detail,
+                           TrampolineFn on_trampoline, void* trampoline_user) {
     if (detail) *detail = nullptr;
     if (installed_) return HookStatus::AlreadyInstalled;
     if (!target || !detour || (expect_len && !expect) || expect_len > kMaxStolen) return HookStatus::BadArgs;
@@ -526,6 +527,11 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
     }
     __builtin___clear_cache(reinterpret_cast<char*>(tramp), reinterpret_cast<char*>(tramp + out + kPatchSize));
 
+    // Publish the trampoline before writing the target JMP.
+    trampoline_ = page_ = page;
+    page_size_ = size;
+    if (on_trampoline) on_trampoline(page, trampoline_user);
+
     // Patch: jmp [rip+0] to the detour, the rest of the stolen range int3.
     std::uint8_t patch[kMaxStolen];
     std::memset(patch, 0xcc, sizeof patch);
@@ -534,7 +540,8 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
     bool now_patched = false;
     const auto st = write_code(code, patch, pl.stolen, prot, now_patched, detail);
     if (!now_patched) {  // nothing written, or rolled back: the trampoline is unreachable
-        munmap(page, size);
+        if (on_trampoline) on_trampoline(nullptr, trampoline_user);
+        release();
         return st;
     }
     // Ok, or a failed restore whose rollback was also refused: either way the
@@ -543,8 +550,6 @@ HookStatus Detour::install(void* target, void* detour, const std::uint8_t* expec
     std::memcpy(patch_, patch, kPatchSize);
     std::memcpy(prot_, prot, sizeof prot_);
     target_ = code;
-    trampoline_ = page_ = page;
-    page_size_ = size;
     stolen_ = pl.stolen;
     installed_ = true;
     return st;

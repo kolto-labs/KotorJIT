@@ -20,14 +20,17 @@
 namespace kp::hooks {
 
 using HookStatus = x64::HookStatus;
+using TrampolineFn = x64::TrampolineFn;
 using x64::to_string;
 
 class Detour {
 public:
     HookStatus install(void* target, void* detour, const std::uint8_t* expect = nullptr,
-                       std::size_t expect_len = 0, std::string* detail = nullptr) {
+                       std::size_t expect_len = 0, std::string* detail = nullptr,
+                       TrampolineFn on_trampoline = nullptr, void* trampoline_user = nullptr) {
         const char* why = nullptr;
-        const HookStatus st = impl_.install(target, detour, expect, expect_len, &why);
+        const HookStatus st = impl_.install(target, detour, expect, expect_len, &why,
+                                            on_trampoline, trampoline_user);
         if (detail != nullptr && why != nullptr) *detail = why;
         return st;
     }

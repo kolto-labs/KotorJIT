@@ -159,6 +159,10 @@ public:
     bool defines(const std::string& callback) const {
         return defined_.count(callback) != 0 || bound_.count(callback) != 0;
     }
+    void collect_callbacks(std::unordered_set<std::string>& out) const {
+        out.insert(defined_.begin(), defined_.end());
+        for (const auto& kv : bound_) out.insert(kv.first);
+    }
 
     // Bind a Lua function to an event at RUNTIME, taking ownership of a registry
     // reference to it.
@@ -339,6 +343,7 @@ public:
     std::size_t   pending_requests() const { return queue_.size(); }
 
     const std::string& script_dir() const { return cfg_.script_dir; }
+    unsigned           error_budget() const { return cfg_.error_budget; }
 
     // True while the host is inside a Lua call it made: dispatch, a lifecycle
     // raise, or a chunk running during load.
@@ -388,6 +393,13 @@ public:
 
     // Scripts in dispatch order: priority descending, then filename.
     const std::vector<std::unique_ptr<Script>>& scripts() const { return scripts_; }
+
+    // Distinct event names currently handled by at least one Loaded script
+    // (global functions + runtime kp.on bindings).
+    std::unordered_set<std::string> subscribed_events() const;
+    bool has_subscriber(std::string_view callback) const;
+    static std::uint64_t subscription_revision();
+    static void set_subscription_notify(void (*fn)());
 
     // Every callback name the runtime can raise. This is generated from the
     // event table and is the single source for both dispatch and the

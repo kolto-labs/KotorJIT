@@ -16,6 +16,8 @@ struct Profile {
     unsigned effective_offset, base_offset, guard_offset, scale_slot;
     std::array<Site, 5> sites; // Conversion, creature, model, setter, optional server lookup.
     unsigned manager_server = 0, server_array = 0;
+    // Universal Mach-O fat container SHA-256 when distinct from sliced `sha256`.
+    const char* container_sha256 = nullptr;
 };
 const std::array<Profile, 4>& profiles();
 const Profile* profile_for(const std::string& sha);

@@ -3,8 +3,8 @@
 
 Runs the real script against throwaway game directories. Windows game folders
 are stand-ins (the files only need the right names and sizes); the native
-Linux cases use a real 32-bit executable and a stand-in libscriptforge.so whose
-constructor prints a marker, so "the game loads ScriptForge" is checked by
+Linux cases use a real 32-bit executable and a stand-in libkotorjit.so whose
+constructor prints a marker, so "the game loads KotorJIT" is checked by
 running the game, not by reading the script.
 
 What is pinned, per method:
@@ -83,34 +83,34 @@ class WindowsFolder(Base):
         (self.game / "swkotor.exe").write_bytes(b"MZ" + b"\0" * 1024)
         self.bink = os.urandom(375808)                       # the real codec's size class
         (self.game / "binkw32.dll").write_bytes(self.bink)
-        (self.build / "scriptforge.dll").write_bytes(b"MZ runtime")
-        (self.build / "binkw32.dll").write_bytes(b"MZ proxy loads scriptforge.dll\0")
-        (self.build / "scriptforge-launch.exe").write_bytes(b"MZ launcher")
+        (self.build / "kotorjit.dll").write_bytes(b"MZ runtime")
+        (self.build / "binkw32.dll").write_bytes(b"MZ proxy loads kotorjit.dll\0")
+        (self.build / "kotorjit-launch.exe").write_bytes(b"MZ launcher")
 
     def test_proxy_saves_and_restores_the_original_bink(self) -> None:
         self.install("proxy")
         self.assertEqual((self.game / "binkw32_real.dll").read_bytes(), self.bink)
         self.assertEqual((self.game / "binkw32.dll").read_bytes(), (self.build / "binkw32.dll").read_bytes())
-        self.assertTrue((self.game / "scriptforge.dll").is_file())
-        self.assertTrue((self.game / "scriptforge" / "scripts").is_dir())
+        self.assertTrue((self.game / "kotorjit.dll").is_file())
+        self.assertTrue((self.game / "kotorjit" / "scripts").is_dir())
         self.assertIn("method: proxy", self.status())
         self.uninstall()
         self.assertEqual((self.game / "binkw32.dll").read_bytes(), self.bink)
         self.assertFalse((self.game / "binkw32_real.dll").exists())
-        self.assertFalse((self.game / "scriptforge.dll").exists())
+        self.assertFalse((self.game / "kotorjit.dll").exists())
         self.assertIn("not installed", self.status())
 
     def test_inject_never_touches_bink(self) -> None:
         self.install("inject")
         self.assertEqual((self.game / "binkw32.dll").read_bytes(), self.bink)
         self.assertFalse((self.game / "binkw32_real.dll").exists())
-        self.assertTrue((self.game / "scriptforge-launch.exe").is_file())
-        self.assertTrue((self.game / "scriptforge.dll").is_file())
+        self.assertTrue((self.game / "kotorjit-launch.exe").is_file())
+        self.assertTrue((self.game / "kotorjit.dll").is_file())
         self.assertIn("method: inject", self.status())
         self.uninstall()
         self.assertEqual((self.game / "binkw32.dll").read_bytes(), self.bink)
-        self.assertFalse((self.game / "scriptforge-launch.exe").exists())
-        self.assertFalse((self.game / "scriptforge.dll").exists())
+        self.assertFalse((self.game / "kotorjit-launch.exe").exists())
+        self.assertFalse((self.game / "kotorjit.dll").exists())
         self.assertIn("not installed", self.status())
 
     def test_auto_picks_proxy_for_a_windows_folder(self) -> None:
@@ -132,7 +132,7 @@ class WindowsFolder(Base):
         legacy.mkdir(parents=True)
         (legacy / "mine.lua").write_text("-- player script\n")
         self.install("inject")
-        self.assertEqual((self.game / "scriptforge" / "scripts" / "mine.lua").read_text(), "-- player script\n")
+        self.assertEqual((self.game / "kotorjit" / "scripts" / "mine.lua").read_text(), "-- player script\n")
         self.assertFalse((self.game / "kotorphasor").exists())
 
     def test_pre_rename_proxy_counts_as_installed_not_as_the_original(self) -> None:
@@ -158,7 +158,7 @@ class LinuxFolder(Base):
         (self.tmp / "main.c").write_text(MAIN_SRC)
         (self.tmp / "lib.c").write_text(LIB_SRC)
         for args in (["-no-pie", str(self.tmp / "main.c"), "-o", str(self.game / "KOTOR2")],
-                     ["-shared", "-fPIC", str(self.tmp / "lib.c"), "-o", str(self.build / "libscriptforge.so")]):
+                     ["-shared", "-fPIC", str(self.tmp / "lib.c"), "-o", str(self.build / "libkotorjit.so")]):
             r = subprocess.run(["gcc", "-m32", *args], capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
         self.exe_bytes = (self.game / "KOTOR2").read_bytes()
@@ -177,22 +177,39 @@ class LinuxFolder(Base):
         self.uninstall()
         self.assertEqual((self.game / "KOTOR2").read_bytes(), self.exe_bytes)
         self.assertTrue(os.access(self.game / "KOTOR2", os.X_OK))
-        self.assertFalse((self.game / "libscriptforge.so").exists())
+        self.assertFalse((self.game / "libkotorjit.so").exists())
         self.assertEqual(self.run_game(self.game / "KOTOR2"), ["MAIN"])
 
     def test_preload_wrapper_loads_the_library(self) -> None:
         self.install("preload")
         self.assertEqual((self.game / "KOTOR2").read_bytes(), self.exe_bytes)   # binary untouched
-        self.assertEqual(self.run_game(self.game / "run-scriptforge.sh"), ["SFLIB", "MAIN"])
+        self.assertEqual(self.run_game(self.game / "run-kotorjit.sh"), ["SFLIB", "MAIN"])
         self.assertIn("method: preload", self.status())
         self.uninstall()
-        self.assertFalse((self.game / "run-scriptforge.sh").exists())
+        self.assertFalse((self.game / "run-kotorjit.sh").exists())
         self.assertIn("not installed", self.status())
 
     def test_auto_picks_linked_for_a_native_elf_folder(self) -> None:
         self.install()
         self.assertIn("method: linked", self.status())
         self.assertEqual(self.run_game(self.game / "KOTOR2"), ["SFLIB", "MAIN"])
+
+    def test_lowercase_kotor2_detected_and_second_install_refused(self) -> None:
+        (self.game / "KOTOR2").rename(self.game / "kotor2")
+        self.install("linked")
+        self.assertIn("method: linked", self.status())
+        self.assertEqual(self.run_game(self.game / "kotor2"), ["SFLIB", "MAIN"])
+        r = self.install("linked", ok=False)
+        self.assertIn("already installed", r.stderr)
+
+    def test_linked_uninstall_strips_dt_needed_when_backup_missing(self) -> None:
+        self.install("linked")
+        backup = self.game / "kotorjit" / "backup" / "KOTOR2.orig"
+        self.assertTrue(backup.is_file())
+        backup.unlink()
+        self.uninstall()
+        self.assertFalse((self.game / "libkotorjit.so").exists())
+        self.assertEqual(self.run_game(self.game / "KOTOR2"), ["MAIN"])
 
 
 if __name__ == "__main__":

@@ -118,6 +118,8 @@ enum class HookStatus {
 
 const char* to_string(HookStatus);
 
+using TrampolineFn = void (*)(void* original, void* user);
+
 // One installed detour. Same move-only ownership shape as the x86 Detour.
 class Detour {
 public:
@@ -139,7 +141,9 @@ public:
     HookStatus install(void* target, void* detour,
                        const uint8_t* expect = nullptr,
                        size_t expect_len = 0,
-                       const char** detail = nullptr);
+                       const char** detail = nullptr,
+                       TrampolineFn on_trampoline = nullptr,
+                       void* trampoline_user = nullptr);
 
     HookStatus uninstall();
 

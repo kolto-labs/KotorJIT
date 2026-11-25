@@ -122,17 +122,21 @@ if(KP_MINGW_CXX)
     )
     set(KP_HOOKS_WIN32_OBJDIR "${CMAKE_BINARY_DIR}/win32")
     set(KP_HOOKS_WIN32_OBJECTS)
+    file(GLOB KP_GENERATED_HEADERS "${KP_SRC_DIR}/generated/*.inc")
     foreach(src ${KP_HOOKS_WIN32_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj "${KP_HOOKS_WIN32_OBJDIR}/hooks_${name}.obj")
-        file(GLOB KP_GENERATED_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/../generated/*.inc")
+        set(dep "${KP_HOOKS_WIN32_OBJDIR}/hooks_${name}.d")
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_HOOKS_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -I${KP_SRC_DIR}
+                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+                    -MD -MF ${dep}
                     -c ${src} -o ${obj}
             DEPENDS ${src} ${KP_GENERATED_HEADERS}
+            DEPFILE ${dep}
             COMMENT "i686-w64-mingw32-g++ ${name}.cpp"
             VERBATIM)
         list(APPEND KP_HOOKS_WIN32_OBJECTS ${obj})

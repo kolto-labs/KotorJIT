@@ -373,7 +373,16 @@ struct Piece {
 }  // namespace
 
 Detour::~Detour() {
-    if (installed_) uninstall();
+    if (installed_ && uninstall() != HookStatus::Ok && installed_) {
+        // The target may still jump to our detour while re-protection failed;
+        // leak the trampoline rather than freeing executable memory under callers.
+        trampoline_ = nullptr;
+        trampoline_size_ = 0;
+        target_ = 0;
+        stolen_len_ = 0;
+        installed_ = false;
+        return;
+    }
     release();
 }
 
@@ -383,8 +392,15 @@ Detour::Detour(Detour&& other) noexcept {
 
 Detour& Detour::operator=(Detour&& other) noexcept {
     if (this == &other) return *this;
-    if (installed_) uninstall();
-    release();
+    if (installed_ && uninstall() != HookStatus::Ok && installed_) {
+        trampoline_ = nullptr;
+        trampoline_size_ = 0;
+        target_ = 0;
+        stolen_len_ = 0;
+        installed_ = false;
+    } else {
+        release();
+    }
 
     target_          = other.target_;
     detour_          = other.detour_;
@@ -411,7 +427,8 @@ void Detour::release() {
 
 HookStatus Detour::install(void* target, void* detour,
                            const std::uint8_t* expect, std::size_t expect_len,
-                           std::string* detail) {
+                           std::string* detail, TrampolineFn on_trampoline,
+                           void* trampoline_user) {
     auto explain = [&](const std::string& text) {
         if (detail) *detail = text;
     };
@@ -572,12 +589,19 @@ HookStatus Detour::install(void* target, void* detour,
     }
     platform::flush_instruction_cache(tramp, tramp_size);
 
+    // Publish the trampoline before writing the target JMP so concurrent
+    // callers arriving immediately after the patch never observe null.
+    trampoline_      = tramp;
+    trampoline_size_ = tramp_size;
+    if (on_trampoline) on_trampoline(tramp, trampoline_user);
+
     // --- pass 3: patch the target ----------------------------------------
 
     std::memcpy(original_, code, stolen);
 
     if (!platform::set_protection(target, stolen, platform::Protect::ReadWrite)) {
-        platform::free_exec(tramp, tramp_size);
+        if (on_trampoline) on_trampoline(nullptr, trampoline_user);
+        release();
         explain("could not make the target writable");
         return HookStatus::ProtectFailed;
     }
@@ -604,8 +628,6 @@ HookStatus Detour::install(void* target, void* detour,
 
     target_          = target_addr;
     detour_          = detour;
-    trampoline_      = tramp;
-    trampoline_size_ = tramp_size;
     stolen_len_      = stolen;
     installed_       = true;
 

@@ -110,6 +110,7 @@ private:
   lua_State *state_ = nullptr;
   int io_ref_ = -1;
   std::mutex mutex_;
+  std::mutex pump_mutex_;
   Session session_;
   Request epoch_first_ = 1;
   std::deque<std::pair<Request, std::string>> queue_;

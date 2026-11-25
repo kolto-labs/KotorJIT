@@ -230,5 +230,12 @@ static const ParamDefault kParamDefaults[] = {
   {765, 0, DefaultKind::Float, 0, 1.0f, 0.0f, 0.0f, nullptr},  // fVolume = 1.0f
   {766, 2, DefaultKind::Int, 0, 0.0f, 0.0f, 0.0f, nullptr},  // bUseAppearAnimation = FALSE
   {794, 1, DefaultKind::Int, 1, 0.0f, 0.0f, 0.0f, nullptr},  // nState = TRUE
+  {806, 1, DefaultKind::Int, 1, 0.0f, 0.0f, 0.0f, nullptr},  // nSkippable = TRUE
+  {807, 0, DefaultKind::Int, 1, 0.0f, 0.0f, 0.0f, nullptr},  // nAllowSkips = TRUE
+  {843, 0, DefaultKind::Float, 0, 2.5f, 0.0f, 0.0f, nullptr},  // fRange = 2.5
+  {856, 0, DefaultKind::Int, 0, 0.0f, 0.0f, 0.0f, nullptr},  // nFlag = FALSE
+  {858, 0, DefaultKind::Int, 0, 0.0f, 0.0f, 0.0f, nullptr},  // nFlag = FALSE
+  {860, 0, DefaultKind::Int, 0, 0.0f, 0.0f, 0.0f, nullptr},  // nFlag = FALSE
+  {864, 1, DefaultKind::String, 0, 0.0f, 0.0f, 0.0f, ""},  // sIcon = ""
 };
 // clang-format on

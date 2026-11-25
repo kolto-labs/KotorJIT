@@ -1,4 +1,4 @@
-# ScriptForge hook site manifest.
+# KotorJIT hook site manifest.
 #
 # Sites are named LOGICALLY (class + method). Addresses never appear here — they
 # are resolved per build by tools/gen_address_tables.py against the RE corpus and
@@ -67,6 +67,32 @@ method   = "command_implementer"
 kind     = "field"
 required = false
 purpose  = "CSWVirtualMachineCommands* captured from the active script VM."
+
+[[site]]
+name     = "vm.stack_pointer"
+class    = "CVirtualMachineInternal"
+method   = "stack_pointer"
+kind     = "field"
+required = false
+purpose  = "int32_t m_nStackPointer offset inside CVirtualMachineInternal (0x1ac on 32-bit K1/K2) used for pre/post routine stack-depth balance checks."
+
+[[site]]
+name       = "vmcmd.destroy_game_defined_structure"
+class      = "CSWVirtualMachineCommands"
+method     = "DestroyGameDefinedStructure"
+kind       = "call"
+required   = false
+convention = "thiscall"
+purpose    = "Release an owned NWScript engine structure (Effect/Event/Location/Talent) popped from the VM stack."
+
+[[site]]
+name       = "exo.string_dtor"
+class      = "CExoString"
+method     = "~CExoString"
+kind       = "call"
+required   = false
+convention = "thiscall"
+purpose    = "Free CExoString heap buffer returned by StackPopString."
 
 # --- Script state persistence -------------------------------------------------
 
@@ -776,11 +802,11 @@ convention = "thiscall"
 name     = "dialog.check_script"
 class    = "CSWSDialog"
 method   = "CheckScript"
-kind     = "call"
+kind     = "detour"
 required = false
-purpose  = "Active-conditional evaluator: (CSWSObject* owner, CResRef* script) -> int. Static; empty resref is true."
-# ulong __stdcall CheckScript(CSWSObject*, CResRef*)
-convention = "stdcall"
+purpose  = "Active-conditional evaluator: (this=CSWSDialog*, CSWSObject* owner, CResRef* script) -> int. Empty resref returns 1."
+# int __thiscall CheckScript(CSWSObject*, CResRef*)
+convention = "thiscall"
 
 [[site]]
 name     = "dialog.skip_past"

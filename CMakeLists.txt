@@ -1,4 +1,4 @@
-# ScriptForge build.
+# KotorJIT build.
 #
 # Both game targets are 32-bit: KOTOR 1 is a PE32 for i386, KOTOR 2 on Linux is
 # an ELF32 EXEC. Nothing here is ever built 64-bit, and the Windows half is
@@ -7,7 +7,7 @@
 #   cmake -S . -B build && cmake --build build      native tools, g++ -m32
 #   cmake --build build --target image_win32        Windows cross-compile check
 cmake_minimum_required(VERSION 3.20)
-project(ScriptForge VERSION 0.1.0 LANGUAGES CXX)
+project(KotorJIT VERSION 0.1.0 LANGUAGES CXX)
 
 # Some development hosts enforce a small per-user quota on the shared /tmp.
 # GCC writes large intermediate assembly files there even when the object file
@@ -36,10 +36,10 @@ enable_testing()
 # build script, and stops. The macOS runtime, its address tables and its
 # offline verification live under scripts/mac/ and tools/mac/.
 if(APPLE)
-    add_custom_target(scriptforge_mac ALL
+    add_custom_target(kotorjit_mac ALL
         COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_SOURCE_DIR}/scripts/mac/build.sh
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Building libscriptforge.dylib via scripts/mac/build.sh (x86_64)"
+        COMMENT "Building libkotorjit.dylib via scripts/mac/build.sh (x86_64)"
         VERBATIM USES_TERMINAL)
     find_package(Python3 3.9 COMPONENTS Interpreter)
     if(Python3_FOUND)
@@ -54,14 +54,14 @@ if(APPLE)
     target_include_directories(kp_hooktool_x64 PRIVATE src)
     target_compile_options(kp_hooktool_x64 PRIVATE -Wall -Wextra)
     add_test(NAME kp_hooktool_x64.selftest COMMAND kp_hooktool_x64 selftest)
-    add_dependencies(scriptforge_mac kp_hooktool_x64)
+    add_dependencies(kotorjit_mac kp_hooktool_x64)
     # The x86_64 engine-ABI unit test (layout widths, id truncation, the
     # ExecuteCommand bound decoders). Runs on any x86_64 host.
     add_executable(kp_mac_abitest tools/mac/kp_mac_abitest.cpp)
     target_include_directories(kp_mac_abitest PRIVATE src)
     target_compile_options(kp_mac_abitest PRIVATE -Wall -Wextra)
     add_test(NAME kp_mac_abitest COMMAND kp_mac_abitest)
-    add_dependencies(scriptforge_mac kp_mac_abitest)
+    add_dependencies(kotorjit_mac kp_mac_abitest)
     message(STATUS "macOS host: `cmake --build` runs scripts/mac/build.sh; "
                    "`ctest` runs the Mach-O table gate and the x86_64 detour self-test; "
                    "run tools/mac/gen_mac_tables.py --check against the local images for full byte verification.")
@@ -97,6 +97,11 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_compile_options(
+    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+    -ffile-prefix-map=${CMAKE_BINARY_DIR}=build
+)
 
 set(KP_IMAGE_SOURCES
     src/image/sha256.cpp
@@ -147,16 +152,24 @@ find_program(KP_MINGW_CXX i686-w64-mingw32-g++)
 if(KP_MINGW_CXX)
     set(KP_WIN32_OBJDIR ${CMAKE_BINARY_DIR}/win32)
     set(KP_WIN32_OBJECTS)
+    set(KP_IMAGE_WIN32_DEPS
+        ${CMAKE_SOURCE_DIR}/src/generated/builds.inc
+        ${CMAKE_SOURCE_DIR}/src/generated/builds_macho.inc
+    )
     foreach(src ${KP_IMAGE_SOURCES})
         get_filename_component(name ${src} NAME_WE)
         set(obj ${KP_WIN32_OBJDIR}/${name}.obj)
+        set(dep ${KP_WIN32_OBJDIR}/${name}.d)
         add_custom_command(
             OUTPUT ${obj}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${KP_WIN32_OBJDIR}
             COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                     ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -Isrc
+                    -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
+                    -MD -MF ${dep}
                     -c ${CMAKE_SOURCE_DIR}/${src} -o ${obj}
-            DEPENDS ${CMAKE_SOURCE_DIR}/${src}
+            DEPENDS ${CMAKE_SOURCE_DIR}/${src} ${KP_IMAGE_WIN32_DEPS}
+            DEPFILE ${dep}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             COMMENT "i686-w64-mingw32-g++ ${src}"
             VERBATIM)
@@ -170,7 +183,7 @@ endif()
 # Hook engine: trampolines, platform layer, address-table registry.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/hooks/hooks.cmake)
 
-# The runtime, and the two libraries it ships as: scriptforge.dll and libscriptforge.so.
+# The runtime, and the two libraries it ships as: kotorjit.dll and libkotorjit.so.
 # After hooks.cmake because it links what image_win32 and hooks_win32 compile.
 # Host API libraries and source lists, in their established dependency order.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api.cmake)
@@ -179,6 +192,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/api/api.cmake)
 # KP_HARNESS_SOURCES for that fragment to compile into both libraries, and
 # defines kp_harnesstest, which needs no runtime.
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/harness.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/harness/pause_lease.cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/runtime/runtime.cmake)
 
@@ -208,7 +222,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/launcher.cmake)
 
 if(UNIX AND NOT WIN32)
     add_executable(kp_projectilestest tools/kp_projectilestest.cpp src/api/projectiles.cpp
-        src/api/projectiles_lua.cpp src/api/projectiles_entry.cpp ${KP_LUAJIT_LINUX_LIB})
+        src/api/projectiles_lua.cpp src/api/projectiles_entry.cpp)
+    add_dependencies(kp_projectilestest kp_luajit_linux)
     target_include_directories(kp_projectilestest PRIVATE src third_party/luajit/src)
     target_compile_options(kp_projectilestest PRIVATE -m32 -fno-pie -Wall -Wextra)
     target_link_options(kp_projectilestest PRIVATE -m32 -no-pie)
@@ -217,7 +232,8 @@ if(UNIX AND NOT WIN32)
     set_tests_properties(kp_projectilestest PROPERTIES TIMEOUT 10 LABELS "offline;projectiles;abi")
 
     add_executable(kp_consoleprotocoltest tools/kp_consoleprotocoltest.cpp
-        src/harness/console_protocol.cpp src/harness/json.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+        src/harness/console_protocol.cpp src/harness/json.cpp src/devtools/console.cpp)
+    add_dependencies(kp_consoleprotocoltest kp_luajit_linux)
     target_include_directories(kp_consoleprotocoltest PRIVATE src third_party/luajit/src)
     target_compile_options(kp_consoleprotocoltest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_consoleprotocoltest PRIVATE -m32)
@@ -225,7 +241,8 @@ if(UNIX AND NOT WIN32)
     add_test(NAME kp_consoleprotocoltest COMMAND kp_consoleprotocoltest)
     set_tests_properties(kp_consoleprotocoltest PROPERTIES TIMEOUT 10 LABELS "offline;devtools")
 
-    add_executable(kp_consoletest tools/kp_consoletest.cpp src/devtools/console.cpp ${KP_LUAJIT_LINUX_LIB})
+    add_executable(kp_consoletest tools/kp_consoletest.cpp src/devtools/console.cpp)
+    add_dependencies(kp_consoletest kp_luajit_linux)
     target_include_directories(kp_consoletest PRIVATE src third_party/luajit/src)
     target_compile_options(kp_consoletest PRIVATE -m32 -Wall -Wextra)
     target_link_options(kp_consoletest PRIVATE -m32)

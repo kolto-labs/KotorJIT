@@ -126,15 +126,20 @@ bool Entry::install(const Site& s, std::uintptr_t addr, Dispatch dispatch, void*
         error="stub executable protection failed"; platform::free_exec(stub_,stub_size_); stub_=nullptr; return false;
     }
     platform::flush_instruction_cache(stub_,stub_size_);
-    const auto st=detour_.install(reinterpret_cast<void*>(addr),stub_,s.expected.data(),s.expected.size(),&error);
-    if (st!=HookStatus::Ok) { platform::free_exec(stub_,stub_size_); stub_=nullptr; return false; }
-    original_=detour_.original();
+    const auto publish = +[](void* o, void* u) {
+        __atomic_store_n(static_cast<void**>(u), o, __ATOMIC_RELEASE);
+    };
+    const auto st=detour_.install(reinterpret_cast<void*>(addr),stub_,s.expected.data(),s.expected.size(),&error,publish,&original_);
+    if (st!=HookStatus::Ok) { __atomic_store_n(&original_,nullptr,__ATOMIC_RELEASE); platform::free_exec(stub_,stub_size_); stub_=nullptr; return false; }
     return true;
 }
 bool Entry::uninstall() {
     if (busy_) return false;
-    if (detour_.installed() && detour_.uninstall()!=HookStatus::Ok) return false;
-    original_=nullptr;
+    __atomic_store_n(&original_,nullptr,__ATOMIC_RELEASE);
+    if (detour_.installed() && detour_.uninstall()!=HookStatus::Ok) {
+        __atomic_store_n(&original_,detour_.original(),__ATOMIC_RELEASE);
+        return false;
+    }
     if (stub_) platform::free_exec(stub_,stub_size_);
     stub_=nullptr;
     return true;

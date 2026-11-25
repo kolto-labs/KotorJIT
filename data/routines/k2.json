@@ -31,292 +31,7 @@
       "second": "GetItemComponentPieceValue"
     }
   ],
-  "names_without_signature": [
-    {
-      "id": 806,
-      "name": "QueueMovie"
-    },
-    {
-      "id": 807,
-      "name": "PlayMovieQueue"
-    },
-    {
-      "id": 808,
-      "name": "YavinHackDoorClose"
-    },
-    {
-      "id": 809,
-      "name": "EffectDroidConfused"
-    },
-    {
-      "id": 810,
-      "name": "IsStealthed"
-    },
-    {
-      "id": 811,
-      "name": "IsMeditating"
-    },
-    {
-      "id": 812,
-      "name": "IsInTotalDefense"
-    },
-    {
-      "id": 813,
-      "name": "SetHealTarget"
-    },
-    {
-      "id": 814,
-      "name": "GetHealTarget"
-    },
-    {
-      "id": 815,
-      "name": "GetRandomDestination"
-    },
-    {
-      "id": 816,
-      "name": "IsFormActive"
-    },
-    {
-      "id": 817,
-      "name": "GetSpellFormMask"
-    },
-    {
-      "id": 818,
-      "name": "GetSpellBaseForcePointCost"
-    },
-    {
-      "id": 819,
-      "name": "SetKeepStealthInDialog"
-    },
-    {
-      "id": 820,
-      "name": "HasLineOfSight"
-    },
-    {
-      "id": 821,
-      "name": "ShowDemoScreen"
-    },
-    {
-      "id": 822,
-      "name": "ForceHeartbeat"
-    },
-    {
-      "id": 823,
-      "name": "EffectForceSight"
-    },
-    {
-      "id": 824,
-      "name": "IsRunning"
-    },
-    {
-      "id": 825,
-      "name": "SWMG_PlayerApplyForce"
-    },
-    {
-      "id": 826,
-      "name": "SetForfeitConditions"
-    },
-    {
-      "id": 827,
-      "name": "GetLastForfeitViolation"
-    },
-    {
-      "id": 828,
-      "name": "ModifyReflexSavingThrowBase"
-    },
-    {
-      "id": 829,
-      "name": "ModifyFortitudeSavingThrowBase"
-    },
-    {
-      "id": 830,
-      "name": "ModifyWillSavingThrowBase"
-    },
-    {
-      "id": 831,
-      "name": "GetScriptStringParameter"
-    },
-    {
-      "id": 832,
-      "name": "GetObjectPersonalSpace"
-    },
-    {
-      "id": 833,
-      "name": "AdjustCreatureAttributes"
-    },
-    {
-      "id": 834,
-      "name": "SetCreatureAILevel"
-    },
-    {
-      "id": 835,
-      "name": "ResetCreatureAILevel"
-    },
-    {
-      "id": 836,
-      "name": "AddAvailablePUPByTemplate"
-    },
-    {
-      "id": 837,
-      "name": "AddAvailablePUPByObject"
-    },
-    {
-      "id": 838,
-      "name": "AssignPUP"
-    },
-    {
-      "id": 839,
-      "name": "SpawnAvailablePUP"
-    },
-    {
-      "id": 840,
-      "name": "AddPartyPuppet"
-    },
-    {
-      "id": 841,
-      "name": "GetPUPOwner"
-    },
-    {
-      "id": 842,
-      "name": "GetIsPuppet"
-    },
-    {
-      "id": 843,
-      "name": "ActionFollowOwner"
-    },
-    {
-      "id": 844,
-      "name": "GetIsPartyLeader"
-    },
-    {
-      "id": 845,
-      "name": "GetPartyLeader"
-    },
-    {
-      "id": 846,
-      "name": "RemoveNPCFromPartyToBase"
-    },
-    {
-      "id": 847,
-      "name": "CreatureFlourishWeapon"
-    },
-    {
-      "id": 848,
-      "name": "EffectMindTrick"
-    },
-    {
-      "id": 849,
-      "name": "EffectFactionModifier"
-    },
-    {
-      "id": 850,
-      "name": "ChangeObjectAppearance"
-    },
-    {
-      "id": 851,
-      "name": "GetIsXBox"
-    },
-    {
-      "id": 852,
-      "name": "EffectDroidScramble"
-    },
-    {
-      "id": 853,
-      "name": "ActionSwitchWeapons"
-    },
-    {
-      "id": 854,
-      "name": "PlayOverlayAnimation"
-    },
-    {
-      "id": 855,
-      "name": "UnlockAllSongs"
-    },
-    {
-      "id": 856,
-      "name": "DisableMap"
-    },
-    {
-      "id": 857,
-      "name": "DetonateMine"
-    },
-    {
-      "id": 858,
-      "name": "DisableHealthRegen"
-    },
-    {
-      "id": 859,
-      "name": "SetCurrentForm"
-    },
-    {
-      "id": 860,
-      "name": "SetDisableTransit"
-    },
-    {
-      "id": 861,
-      "name": "SetInputClass"
-    },
-    {
-      "id": 862,
-      "name": "SetForceAlwaysUpdate"
-    },
-    {
-      "id": 863,
-      "name": "EnableRain"
-    },
-    {
-      "id": 864,
-      "name": "DisplayMessageBox"
-    },
-    {
-      "id": 865,
-      "name": "DisplayDatapad"
-    },
-    {
-      "id": 866,
-      "name": "RemoveHeartbeat"
-    },
-    {
-      "id": 867,
-      "name": "RemoveEffectByID"
-    },
-    {
-      "id": 868,
-      "name": "RemoveEffectByExactMatch"
-    },
-    {
-      "id": 869,
-      "name": "AdjustCreatureSkills"
-    },
-    {
-      "id": 870,
-      "name": "GetSkillRankBase"
-    },
-    {
-      "id": 871,
-      "name": "EnableRendering"
-    },
-    {
-      "id": 872,
-      "name": "GetCombatActionsPending"
-    },
-    {
-      "id": 873,
-      "name": "SaveNPCByObject"
-    },
-    {
-      "id": 874,
-      "name": "SavePUPByObject"
-    },
-    {
-      "id": 875,
-      "name": "GetIsPlayerMadeCharacter"
-    },
-    {
-      "id": 876,
-      "name": "RebuildPartyTable"
-    }
-  ],
+  "names_without_signature": 0,
   "source_disagreements": [
     {
       "id": 771,
@@ -11542,428 +11257,963 @@
     {
       "id": 806,
       "name": "QueueMovie",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "string",
+          "name": "sMovie",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nSkippable",
+          "default": "TRUE"
+        }
+      ]
     },
     {
       "id": 807,
       "name": "PlayMovieQueue",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nAllowSkips",
+          "default": "TRUE"
+        }
+      ]
     },
     {
       "id": 808,
       "name": "YavinHackDoorClose",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 809,
       "name": "EffectDroidConfused",
-      "returns": null,
-      "params": null
+      "returns": "effect",
+      "params": []
     },
     {
       "id": 810,
       "name": "IsStealthed",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 811,
       "name": "IsMeditating",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 812,
       "name": "IsInTotalDefense",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 813,
       "name": "SetHealTarget",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oidHealer",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oidTarget",
+          "default": null
+        }
+      ]
     },
     {
       "id": 814,
       "name": "GetHealTarget",
-      "returns": null,
-      "params": null
+      "returns": "object",
+      "params": [
+        {
+          "type": "object",
+          "name": "oidHealer",
+          "default": null
+        }
+      ]
     },
     {
       "id": 815,
       "name": "GetRandomDestination",
-      "returns": null,
-      "params": null
+      "returns": "vector",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "rangeLimit",
+          "default": null
+        }
+      ]
     },
     {
       "id": 816,
       "name": "IsFormActive",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nFormID",
+          "default": null
+        }
+      ]
     },
     {
       "id": 817,
       "name": "GetSpellFormMask",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nSpellID",
+          "default": null
+        }
+      ]
     },
     {
       "id": 818,
       "name": "GetSpellBaseForcePointCost",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nSpellID",
+          "default": null
+        }
+      ]
     },
     {
       "id": 819,
       "name": "SetKeepStealthInDialog",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nStealthState",
+          "default": null
+        }
+      ]
     },
     {
       "id": 820,
       "name": "HasLineOfSight",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "vector",
+          "name": "vSource",
+          "default": null
+        },
+        {
+          "type": "vector",
+          "name": "vTarget",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oSource",
+          "default": "OBJECT_INVALID"
+        },
+        {
+          "type": "object",
+          "name": "oTarget",
+          "default": "OBJECT_INVALID"
+        }
+      ]
     },
     {
       "id": 821,
       "name": "ShowDemoScreen",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "string",
+          "name": "sTexture",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nTimeout",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nDisplayString",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nDisplayX",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nDisplayY",
+          "default": null
+        }
+      ]
     },
     {
       "id": 822,
       "name": "ForceHeartbeat",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 823,
       "name": "EffectForceSight",
-      "returns": null,
-      "params": null
+      "returns": "effect",
+      "params": []
     },
     {
       "id": 824,
       "name": "IsRunning",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 825,
       "name": "SWMG_PlayerApplyForce",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "vector",
+          "name": "vForce",
+          "default": null
+        }
+      ]
     },
     {
       "id": 826,
       "name": "SetForfeitConditions",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nForfeitFlags",
+          "default": null
+        }
+      ]
     },
     {
       "id": 827,
       "name": "GetLastForfeitViolation",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": []
     },
     {
       "id": 828,
       "name": "ModifyReflexSavingThrowBase",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "aObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "aModValue",
+          "default": null
+        }
+      ]
     },
     {
       "id": 829,
       "name": "ModifyFortitudeSavingThrowBase",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "aObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "aModValue",
+          "default": null
+        }
+      ]
     },
     {
       "id": 830,
       "name": "ModifyWillSavingThrowBase",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "aObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "aModValue",
+          "default": null
+        }
+      ]
     },
     {
       "id": 831,
       "name": "GetScriptStringParameter",
-      "returns": null,
-      "params": null
+      "returns": "string",
+      "params": []
     },
     {
       "id": 832,
       "name": "GetObjectPersonalSpace",
-      "returns": null,
-      "params": null
+      "returns": "float",
+      "params": [
+        {
+          "type": "object",
+          "name": "aObject",
+          "default": null
+        }
+      ]
     },
     {
       "id": 833,
       "name": "AdjustCreatureAttributes",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nAttribute",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nAmount",
+          "default": null
+        }
+      ]
     },
     {
       "id": 834,
       "name": "SetCreatureAILevel",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nPriority",
+          "default": null
+        }
+      ]
     },
     {
       "id": 835,
       "name": "ResetCreatureAILevel",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        }
+      ]
     },
     {
       "id": 836,
       "name": "AddAvailablePUPByTemplate",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "string",
+          "name": "sTemplate",
+          "default": null
+        }
+      ]
     },
     {
       "id": 837,
       "name": "AddAvailablePUPByObject",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oPuppet",
+          "default": null
+        }
+      ]
     },
     {
       "id": 838,
       "name": "AssignPUP",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nNPC",
+          "default": null
+        }
+      ]
     },
     {
       "id": 839,
       "name": "SpawnAvailablePUP",
-      "returns": null,
-      "params": null
+      "returns": "object",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "location",
+          "name": "lLocation",
+          "default": null
+        }
+      ]
     },
     {
       "id": 840,
       "name": "AddPartyPuppet",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oidCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 841,
       "name": "GetPUPOwner",
-      "returns": null,
-      "params": null
+      "returns": "object",
+      "params": [
+        {
+          "type": "object",
+          "name": "oPUP",
+          "default": "OBJECT_SELF"
+        }
+      ]
     },
     {
       "id": 842,
       "name": "GetIsPuppet",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oPUP",
+          "default": "OBJECT_SELF"
+        }
+      ]
     },
     {
       "id": 843,
       "name": "ActionFollowOwner",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "float",
+          "name": "fRange",
+          "default": "2.5"
+        }
+      ]
     },
     {
       "id": 844,
       "name": "GetIsPartyLeader",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCharacter",
+          "default": "OBJECT_SELF"
+        }
+      ]
     },
     {
       "id": 845,
       "name": "GetPartyLeader",
-      "returns": null,
-      "params": null
+      "returns": "object",
+      "params": []
     },
     {
       "id": 846,
       "name": "RemoveNPCFromPartyToBase",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nNPC",
+          "default": null
+        }
+      ]
     },
     {
       "id": 847,
       "name": "CreatureFlourishWeapon",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        }
+      ]
     },
     {
       "id": 848,
       "name": "EffectMindTrick",
-      "returns": null,
-      "params": null
+      "returns": "effect",
+      "params": []
     },
     {
       "id": 849,
       "name": "EffectFactionModifier",
-      "returns": null,
-      "params": null
+      "returns": "effect",
+      "params": [
+        {
+          "type": "int",
+          "name": "nNewFaction",
+          "default": null
+        }
+      ]
     },
     {
       "id": 850,
       "name": "ChangeObjectAppearance",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObjectToChange",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nAppearance",
+          "default": null
+        }
+      ]
     },
     {
       "id": 851,
       "name": "GetIsXBox",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": []
     },
     {
       "id": 852,
       "name": "EffectDroidScramble",
-      "returns": null,
-      "params": null
+      "returns": "effect",
+      "params": []
     },
     {
       "id": 853,
       "name": "ActionSwitchWeapons",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": []
     },
     {
       "id": 854,
       "name": "PlayOverlayAnimation",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oTarget",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nAnimation",
+          "default": null
+        }
+      ]
     },
     {
       "id": 855,
       "name": "UnlockAllSongs",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": []
     },
     {
       "id": 856,
       "name": "DisableMap",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nFlag",
+          "default": "FALSE"
+        }
+      ]
     },
     {
       "id": 857,
       "name": "DetonateMine",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oMine",
+          "default": null
+        }
+      ]
     },
     {
       "id": 858,
       "name": "DisableHealthRegen",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nFlag",
+          "default": "FALSE"
+        }
+      ]
     },
     {
       "id": 859,
       "name": "SetCurrentForm",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nFormID",
+          "default": null
+        }
+      ]
     },
     {
       "id": 860,
       "name": "SetDisableTransit",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nFlag",
+          "default": "FALSE"
+        }
+      ]
     },
     {
       "id": 861,
       "name": "SetInputClass",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nClass",
+          "default": null
+        }
+      ]
     },
     {
       "id": 862,
       "name": "SetForceAlwaysUpdate",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nFlag",
+          "default": null
+        }
+      ]
     },
     {
       "id": 863,
       "name": "EnableRain",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nFlag",
+          "default": null
+        }
+      ]
     },
     {
       "id": 864,
       "name": "DisplayMessageBox",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nStrRef",
+          "default": null
+        },
+        {
+          "type": "string",
+          "name": "sIcon",
+          "default": "\"\""
+        }
+      ]
     },
     {
       "id": 865,
       "name": "DisplayDatapad",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oDatapad",
+          "default": null
+        }
+      ]
     },
     {
       "id": 866,
       "name": "RemoveHeartbeat",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oPlaceable",
+          "default": null
+        }
+      ]
     },
     {
       "id": 867,
       "name": "RemoveEffectByID",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nEffectID",
+          "default": null
+        }
+      ]
     },
     {
       "id": 868,
       "name": "RemoveEffectByExactMatch",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        },
+        {
+          "type": "effect",
+          "name": "eEffect",
+          "default": null
+        }
+      ]
     },
     {
       "id": 869,
       "name": "AdjustCreatureSkills",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nSkill",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "nAmount",
+          "default": null
+        }
+      ]
     },
     {
       "id": 870,
       "name": "GetSkillRankBase",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "int",
+          "name": "nSkill",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": "OBJECT_SELF"
+        }
+      ]
     },
     {
       "id": 871,
       "name": "EnableRendering",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "object",
+          "name": "oObject",
+          "default": null
+        },
+        {
+          "type": "int",
+          "name": "bEnable",
+          "default": null
+        }
+      ]
     },
     {
       "id": 872,
       "name": "GetCombatActionsPending",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oCreature",
+          "default": null
+        }
+      ]
     },
     {
       "id": 873,
       "name": "SaveNPCByObject",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nNPC",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oidCharacter",
+          "default": null
+        }
+      ]
     },
     {
       "id": 874,
       "name": "SavePUPByObject",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": [
+        {
+          "type": "int",
+          "name": "nPUP",
+          "default": null
+        },
+        {
+          "type": "object",
+          "name": "oidPuppet",
+          "default": null
+        }
+      ]
     },
     {
       "id": 875,
       "name": "GetIsPlayerMadeCharacter",
-      "returns": null,
-      "params": null
+      "returns": "int",
+      "params": [
+        {
+          "type": "object",
+          "name": "oidCharacter",
+          "default": null
+        }
+      ]
     },
     {
       "id": 876,
       "name": "RebuildPartyTable",
-      "returns": null,
-      "params": null
+      "returns": "void",
+      "params": []
     }
   ]
 }

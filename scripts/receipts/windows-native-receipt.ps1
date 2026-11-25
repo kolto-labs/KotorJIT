@@ -1,23 +1,23 @@
 <#
 .SYNOPSIS
-Write a native-Windows ScriptForge receipt after one physical F12 test.
+Write a native-Windows KotorJIT receipt after one physical F12 test.
 
 .DESCRIPTION
 Run this on the Windows PC where you just played, after you:
-  1. installed with scripts\install\windows\Install-ScriptForge.ps1,
+  1. installed with scripts\install\windows\Install-KotorJIT.ps1,
   2. started the game from its own launcher or exe (not Wine, not a VM),
   3. pressed F12 on the physical keyboard in game and saw the Lua console or not,
   4. quit the game.
 
-The script reads the game folder and scriptforge.log. It records the OS build,
+The script reads the game folder and kotorjit.log. It records the OS build,
 the CPU and any x86 translation, the exe sha, the proxy and DLL shas, the log
 hash, the runtime's own host and GL lines, and the F12 result you report.
 
 The F12 result is your word: the script cannot see the screen.
 
-What the log lines are worth. ScriptForge appends one block per game start
-to scriptforge.log. The receipt reads only the newest block, which starts
-at the last "[idle] ScriptForge <version> starting" line. The runtime writes
+What the log lines are worth. KotorJIT appends one block per game start
+to kotorjit.log. The receipt reads only the newest block, which starts
+at the last "[idle] KotorJIT <version> starting" line. The runtime writes
 that banner before it loads any script. In that block, the runtime writes one
 "kp-session=<id> start" line when its overlay attaches. On the first rendered
 frame it adds one host line and one gl line with the same random id. These
@@ -32,14 +32,14 @@ carriage return inside a line of the newest block. A block with a second start, 
 line from another run, or a line in any other shape is refused.
 
 This is supporting evidence, not proof:
-  - The escaping is only in a scriptforge.dll built with it. An older DLL let a
+  - The escaping is only in a kotorjit.dll built with it. An older DLL let a
     script write a whole fake block, banner included, through print. The
     log=esc1 token refuses the host line an older DLL writes itself. It does
     not stop a script that writes the token too.
-  - The receipt records the scriptforge.dll sha256. The validator only checks
+  - The receipt records the kotorjit.dll sha256. The validator only checks
     that it is a sha256. It does not check which build it is: no list of
     release DLL shas exists.
-  - A script can still write to scriptforge.log with Lua's io library. The
+  - A script can still write to kotorjit.log with Lua's io library. The
     runtime does not stop that.
   - Wine is detected by one signal: ntdll exports wine_get_version only under
     Wine. Some patched Wine builds hide that export. The OS build cannot help,
@@ -48,7 +48,7 @@ This is supporting evidence, not proof:
     refuses Mesa, Linux driver and macOS GL names. A Wine run on a vendor
     driver whose GL strings match Windows can still pass.
   - tools\platform_receipt_test.py --validate checks the receipt against the
-    lines it quotes. Add --log scriptforge.log to re-check against the log.
+    lines it quotes. Add --log kotorjit.log to re-check against the log.
 
 RUNNING IT
 Windows blocks unsigned scripts by default. Allow this one PowerShell window
@@ -58,7 +58,7 @@ to run scripts, then unblock the downloaded file:
     Unblock-File .\scripts\receipts\windows-native-receipt.ps1
 
 -Scope Process lasts only until you close that window. It changes no system
-setting. The receipt is written under %LOCALAPPDATA%\ScriptForge\receipts
+setting. The receipt is written under %LOCALAPPDATA%\KotorJIT\receipts
 unless you pass -OutFile. That folder needs no admin rights, even when the
 game is in Program Files.
 
@@ -93,7 +93,7 @@ function Get-Sha256OrNull([string]$Path) {
 # line carries log=esc1, which only a DLL with that escaping writes; a host
 # line without it ($PreEscapeHostPattern) is refused with its own message.
 # -cmatch: case-sensitive, whole line.
-$BannerPattern = '^\[idle\] (?:ScriptForge|KotorPhasor) \S+ starting \([a-z-]+ role\)$'
+$BannerPattern = '^\[idle\] (?:KotorJIT|KotorPhasor) \S+ starting \([a-z-]+ role\)$'
 $SessionPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) start$'
 $HostPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) log=esc1 host: wine=(yes|no) wine_version=(\S+) os=(\d+)\.(\d+)\.(\d+) overlays=(\S+)$'
 $PreEscapeHostPattern = '^\[[a-z-]+\] kp-session=([0-9a-f]{32}) host: wine=(yes|no) wine_version=(\S+) os=(\d+)\.(\d+)\.(\d+) overlays=(\S+)$'
@@ -122,7 +122,7 @@ function Get-SessionEvidence([string[]]$Lines) {
     $start = -1
     for ($i = 0; $i -lt $all.Count; $i++) { if ($all[$i] -cmatch $BannerPattern) { $start = $i } }
     if ($start -lt 0) {
-        [void]$problems.Add('no ScriptForge start banner in the log')
+        [void]$problems.Add('no KotorJIT start banner in the log')
         $ev.problems = $problems.ToArray()
         return $ev
     }
@@ -146,7 +146,7 @@ function Get-SessionEvidence([string[]]$Lines) {
                 elseif ($line -cmatch $HostPattern) { $id = $Matches[1] }
                 elseif ($line -cmatch $GlPattern) { $id = $Matches[1] }
                 if (($null -eq $id) -and ($line -cmatch $PreEscapeHostPattern)) {
-                    [void]$problems.Add("session line $n is a host line without log=esc1: the scriptforge.dll that wrote it does not escape script text")
+                    [void]$problems.Add("session line $n is a host line without log=esc1: the kotorjit.dll that wrote it does not escape script text")
                 }
                 elseif ($null -eq $id) { [void]$problems.Add("session line $n mentions kp-session= but is not a runtime line") }
                 elseif (-not $ids.Contains($id)) { [void]$ids.Add($id) }
@@ -183,9 +183,9 @@ if (-not $OutFile) {
     # elevation, after all the work is done.
     $base = $env:LOCALAPPDATA
     if (-not $base) { $base = [System.IO.Path]::GetTempPath() }
-    $dir = [System.IO.Path]::Combine($base, 'ScriptForge', 'receipts')
+    $dir = [System.IO.Path]::Combine($base, 'KotorJIT', 'receipts')
     [void][System.IO.Directory]::CreateDirectory($dir)
-    $OutFile = Join-Path $dir ('scriptforge-receipt-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ') + '.json')
+    $OutFile = Join-Path $dir ('kotorjit-receipt-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ') + '.json')
 }
 
 # --- OS -------------------------------------------------------------------
@@ -227,7 +227,7 @@ try {
 } catch { $cpuName = $null }
 $nativeMachine = $null
 try {
-    Add-Type -Namespace ScriptForgeReceipt -Name Native -ErrorAction Stop -MemberDefinition @'
+    Add-Type -Namespace KotorJITReceipt -Name Native -ErrorAction Stop -MemberDefinition @'
 [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
 public static extern bool IsWow64Process2(System.IntPtr process, out ushort processMachine, out ushort nativeMachine);
 [System.Runtime.InteropServices.DllImport("kernel32.dll")]
@@ -235,7 +235,7 @@ public static extern System.IntPtr GetCurrentProcess();
 '@
     [UInt16]$processMachine = 0
     [UInt16]$machine = 0
-    if ([ScriptForgeReceipt.Native]::IsWow64Process2([ScriptForgeReceipt.Native]::GetCurrentProcess(), [ref]$processMachine, [ref]$machine)) {
+    if ([KotorJITReceipt.Native]::IsWow64Process2([KotorJITReceipt.Native]::GetCurrentProcess(), [ref]$processMachine, [ref]$machine)) {
         $nativeMachine = $machine
     }
 } catch { $nativeMachine = $null }
@@ -263,9 +263,18 @@ foreach ($n in @('swkotor.exe', 'swkotor2.exe')) {
 }
 if (-not $exe) { throw "no swkotor.exe or swkotor2.exe in $GameDir" }
 $exeSha = Get-Sha256OrNull $exe
-$manifestPath = [System.IO.Path]::Combine($GameDir, 'scriptforge', 'install-manifest.json')
+$manifestPath = [System.IO.Path]::Combine($GameDir, 'kotorjit', 'install-manifest.json')
+$legacyManifestPath = [System.IO.Path]::Combine($GameDir, 'kotorphasor', 'install-manifest.json')
+if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf) -and (Test-Path -LiteralPath $legacyManifestPath -PathType Leaf)) {
+    $manifestPath = $legacyManifestPath
+}
 $build = $null
-if (Test-Path -LiteralPath $manifestPath) { $build = (Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json).game.build }
+$method = 'proxy'
+if (Test-Path -LiteralPath $manifestPath -PathType Leaf) {
+    $m = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+    if ($m.PSObject.Properties['game'] -and $m.game.PSObject.Properties['build']) { $build = $m.game.build }
+    if ($m.PSObject.Properties['method'] -and ($m.method -is [string]) -and $m.method) { $method = $m.method }
+}
 $game = [ordered]@{
     exe_name         = (Split-Path -Leaf $exe)
     exe_sha256       = $exeSha
@@ -275,16 +284,29 @@ $game = [ordered]@{
     slice_sha256     = $exeSha
     build            = $build
 }
-$runtime = [ordered]@{
-    kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'scriptforge.dll')
-    proxy_binkw32_sha256    = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
-    real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32_real.dll')
-    install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+if (($method -eq 'inject') -or ($method -eq 'launcher')) {
+    $runtime = [ordered]@{
+        method                  = $method
+        kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit.dll')
+        proxy_binkw32_sha256    = $null
+        real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
+        launcher_exe_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit-launch.exe')
+        install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+    }
+} else {
+    $runtime = [ordered]@{
+        method                  = $method
+        kphasor_dll_sha256      = Get-Sha256OrNull (Join-Path $GameDir 'kotorjit.dll')
+        proxy_binkw32_sha256    = Get-Sha256OrNull (Join-Path $GameDir 'binkw32.dll')
+        real_binkw32_sha256     = Get-Sha256OrNull (Join-Path $GameDir 'binkw32_real.dll')
+        launcher_exe_sha256     = $null
+        install_manifest_sha256 = Get-Sha256OrNull $manifestPath
+    }
 }
 
 # --- the runtime's own view --------------------------------------------------
-$logPath = Join-Path $GameDir 'scriptforge.log'
-if (-not (Test-Path -LiteralPath $logPath -PathType Leaf)) { throw "no scriptforge.log in $GameDir; did the game start with ScriptForge?" }
+$logPath = Join-Path $GameDir 'kotorjit.log'
+if (-not (Test-Path -LiteralPath $logPath -PathType Leaf)) { throw "no kotorjit.log in $GameDir; did the game start with KotorJIT?" }
 # Read the bytes as they are: Get-Content would split a line at a lone "\r".
 # FileShare.ReadWrite, as Get-Content does, in case the game is still open.
 $logStream = New-Object System.IO.FileStream($logPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
@@ -337,11 +359,11 @@ $OutFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPa
 $json = $receipt | ConvertTo-Json -Depth 6
 [System.IO.File]::WriteAllText($OutFile, $json, (New-Object System.Text.UTF8Encoding $false))
 Write-Output "receipt written: $OutFile"
-foreach ($p in $ev.problems) { Write-Warning "scriptforge.log: $p" }
+foreach ($p in $ev.problems) { Write-Warning "kotorjit.log: $p" }
 if ($wineRegistry -eq 'yes') { Write-Warning 'HKLM\Software\Wine exists: this is a Wine prefix, not a native receipt' }
 if ($hostInfo.wine -and ($hostInfo.wine -ne 'no')) { Write-Warning 'the log says wine=yes; this is not a native receipt' }
 if (-not $ev.host_line) {
-    Write-Warning ('no usable host line in the newest session of scriptforge.log. The runtime writes it ' +
-        'on the first frame the game draws with ScriptForge loaded, not on F12. Start the game, ' +
+    Write-Warning ('no usable host line in the newest session of kotorjit.log. The runtime writes it ' +
+        'on the first frame the game draws with KotorJIT loaded, not on F12. Start the game, ' +
         'reach the main menu, quit, and run this again.')
 }

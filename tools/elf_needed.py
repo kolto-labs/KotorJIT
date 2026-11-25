@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Address-preserving ELF32 DT_NEEDED manager for ScriptForge (KPM-style LinkedDependency).
+"""Address-preserving ELF32 DT_NEEDED manager for KotorJIT (KPM-style LinkedDependency).
 
-Adds a shared-library dependency (e.g. $ORIGIN/libscriptforge.so) to an ELF32
+Adds a shared-library dependency (e.g. $ORIGIN/libkotorjit.so) to an ELF32
 little-endian executable (such as native Linux KOTOR 2) without changing e_phoff,
 any existing PT_LOAD segment, or any .text virtual address or byte.
 
@@ -15,9 +15,10 @@ Mechanism (mirrors KotOR Patch Manager's ElfDependencies):
      headers when present) to the new locations.
 
 Subcommands:
-  elf_needed.py list  <elf>
-  elf_needed.py check <elf> <soname>
-  elf_needed.py add   <elf> <soname> [--output <path>] [--backup <path>]
+  elf_needed.py list   <elf>
+  elf_needed.py check  <elf> <soname>
+  elf_needed.py add    <elf> <soname> [--output <path>] [--backup <path>]
+  elf_needed.py remove <elf> <soname> [--output <path>]
 """
 from __future__ import annotations
 
@@ -196,6 +197,10 @@ def add_needed(data: bytes, soname: str) -> tuple[bytes, bool]:
     existing = [read_cstr(dynstr, val) for tag, val in entries if tag == DT_NEEDED]
     if soname in existing:
         return data, False
+    soname_base = soname.rsplit("/", 1)[-1]
+    for dep in existing:
+        if dep.rsplit("/", 1)[-1] == soname_base:
+            raise ElfError(f"conflicting DT_NEEDED for {soname_base!r} already present as {dep!r}")
 
     try:
         soname_bytes = soname.encode("ascii") + b"\x00"
@@ -310,6 +315,26 @@ def add_needed(data: bytes, soname: str) -> tuple[bytes, bool]:
     return bytes(out), True
 
 
+def remove_needed(data: bytes, soname: str) -> tuple[bytes, bool]:
+    _, phdrs = parse_elf32(data)
+    _, dyn_phdr, entries, _, _, dynstr = read_dynamic_info(data, phdrs)
+
+    non_null = [(tag, val) for tag, val in entries if tag != DT_NULL]
+    kept = [
+        (tag, val)
+        for tag, val in non_null
+        if not (tag == DT_NEEDED and read_cstr(dynstr, val) == soname)
+    ]
+    if len(kept) == len(non_null):
+        return data, False
+
+    padded = kept + [(DT_NULL, 0)] * (len(entries) - len(kept))
+    out = bytearray(data)
+    for idx, (tag, val) in enumerate(padded):
+        struct.pack_into(DYN_FMT, out, dyn_phdr.p_offset + idx * DYN_SIZE, tag, val)
+    return bytes(out), True
+
+
 def write_atomic(target: Path, payload: bytes, mode: int) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp_name = tempfile.mkstemp(prefix=f".{target.name}.tmp.", dir=str(target.parent))
@@ -343,6 +368,11 @@ def main(argv: list[str] | None = None) -> int:
     p_add.add_argument("--output", type=Path, default=None, help="write patched binary here instead of in-place")
     p_add.add_argument("--backup", type=Path, default=None, help="save original file here first if missing")
 
+    p_remove = sub.add_parser("remove", help="remove DT_NEEDED soname from .dynamic in-place")
+    p_remove.add_argument("elf", type=Path)
+    p_remove.add_argument("soname")
+    p_remove.add_argument("--output", type=Path, default=None, help="write patched binary here instead of in-place")
+
     args = ap.parse_args(argv)
     try:
         src = args.elf
@@ -372,6 +402,18 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"added DT_NEEDED {args.soname} -> {dst}")
             else:
                 print(f"already present: {args.soname} in {dst}")
+            return 0
+
+        if args.cmd == "remove":
+            patched, changed = remove_needed(raw, args.soname)
+            dst = args.output if args.output is not None else src
+            mode = src.stat().st_mode & 0o7777
+            if changed or dst != src:
+                write_atomic(dst, patched, mode)
+            if changed:
+                print(f"removed DT_NEEDED {args.soname} -> {dst}")
+            else:
+                print(f"not present: {args.soname} in {dst}")
             return 0
     except ElfError as exc:
         print(f"elf_needed: {exc}", file=sys.stderr)

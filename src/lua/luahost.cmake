@@ -15,7 +15,7 @@
 
 set(KP_LUATEST_LUAJIT "${CMAKE_BINARY_DIR}/luajit32/src/libluajit.a")
 
-if(UNIX AND NOT WIN32 AND TARGET scriptforge)
+if(UNIX AND NOT WIN32 AND TARGET kotorjit)
     add_executable(kp_luatest
         "${CMAKE_SOURCE_DIR}/tools/kp_luatest.cpp"
         "${CMAKE_SOURCE_DIR}/src/lua/host.cpp"
@@ -35,7 +35,7 @@ if(UNIX AND NOT WIN32 AND TARGET scriptforge)
     set_source_files_properties("${CMAKE_SOURCE_DIR}/tools/kp_luatest.cpp"
         PROPERTIES OBJECT_DEPENDS "${KP_LUATEST_GENERATED}")
     # runtime.cmake owns the LuaJIT build; this only waits for it.
-    add_dependencies(kp_luatest scriptforge)
+    add_dependencies(kp_luatest kotorjit)
     target_link_libraries(kp_luatest PRIVATE "${KP_LUATEST_LUAJIT}" m dl)
 
     # kp_luatest is a print-and-inspect tool (it always exits 0 on a valid
@@ -83,7 +83,7 @@ if(UNIX AND NOT WIN32 AND TARGET scriptforge)
     target_compile_definitions(kp_eventtest PRIVATE KP_REPO="${CMAKE_SOURCE_DIR}")
     set_source_files_properties("${CMAKE_SOURCE_DIR}/src/events/table.cpp"
         PROPERTIES OBJECT_DEPENDS "${KP_LUATEST_GENERATED}")
-    add_dependencies(kp_eventtest scriptforge)
+    add_dependencies(kp_eventtest kotorjit)
     # kp_image: memory.cpp walks the mapped image's sections through it.
     target_link_libraries(kp_eventtest PRIVATE kp_hooks kp_image "${KP_LUATEST_LUAJIT}" m dl)
 
@@ -98,6 +98,6 @@ if(UNIX AND NOT WIN32 AND TARGET scriptforge)
     # Script lifecycle and kp.scripts host tests.
     include("${CMAKE_CURRENT_LIST_DIR}/lifecycle.cmake")
 elseif(UNIX AND NOT WIN32)
-    message(STATUS "kp_luatest needs the native LuaJIT that the scriptforge target "
+    message(STATUS "kp_luatest needs the native LuaJIT that the kotorjit target "
                    "builds; include src/runtime/runtime.cmake first")
 endif()

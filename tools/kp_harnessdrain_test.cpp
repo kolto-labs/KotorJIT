@@ -1,6 +1,6 @@
 // Offline regression for the production commands.cpp drain and stream_events
 // path.  The test uses a real loopback Channel and the process-wide EventRing;
-// it never starts the game or Wine.  The scriptforge shared library supplies the
+// it never starts the game or Wine.  The kotorjit shared library supplies the
 // typed runtime/API dependencies while commands.cpp is compiled afresh into
 // this executable, so this target cannot silently fall back to a retained
 // commands.o from an earlier review.

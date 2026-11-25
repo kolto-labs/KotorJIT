@@ -11,6 +11,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -109,17 +110,49 @@ bool is_readable(const void* addr, std::size_t len) {
     // VirtualQuery rather than the deprecated IsBadReadPtr: IsBadReadPtr probes
     // by touching the page, which trips guard pages and turns a stack-growth
     // guard into a spurious failure. VirtualQuery just asks the memory manager.
-    auto cursor = reinterpret_cast<const std::uint8_t*>(addr);
-    const auto* end = cursor + len;
+    std::uintptr_t cursor = reinterpret_cast<std::uintptr_t>(addr);
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len > static_cast<std::size_t>(max_addr - cursor)) return false;
+    const std::uintptr_t end = cursor + len;
     while (cursor < end) {
         MEMORY_BASIC_INFORMATION info{};
-        if (::VirtualQuery(cursor, &info, sizeof(info)) == 0) return false;
+        if (::VirtualQuery(reinterpret_cast<LPCVOID>(cursor), &info, sizeof(info)) == 0)
+            return false;
         if (info.State != MEM_COMMIT) return false;
         const DWORD prot = info.Protect;
         if (prot & (PAGE_NOACCESS | PAGE_GUARD)) return false;
-        // A range can span several regions, so step to the next one rather than
-        // assuming the first answer covers the whole request.
-        cursor = reinterpret_cast<const std::uint8_t*>(info.BaseAddress) + info.RegionSize;
+        const std::uintptr_t base = reinterpret_cast<std::uintptr_t>(info.BaseAddress);
+        if (info.RegionSize == 0) return false;
+        if (info.RegionSize > static_cast<std::size_t>(max_addr - base)) return true;
+        const std::uintptr_t next = base + info.RegionSize;
+        if (next <= cursor) return false;
+        cursor = next;
+    }
+    return true;
+}
+
+bool is_writable(const void* addr, std::size_t len) {
+    if (!addr || len == 0) return false;
+    std::uintptr_t cursor = reinterpret_cast<std::uintptr_t>(addr);
+    const std::uintptr_t max_addr = std::numeric_limits<std::uintptr_t>::max();
+    if (len > static_cast<std::size_t>(max_addr - cursor)) return false;
+    const std::uintptr_t end = cursor + len;
+    constexpr DWORD kWritableProt = PAGE_READWRITE | PAGE_WRITECOPY |
+                                    PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;
+    while (cursor < end) {
+        MEMORY_BASIC_INFORMATION info{};
+        if (::VirtualQuery(reinterpret_cast<LPCVOID>(cursor), &info, sizeof(info)) == 0)
+            return false;
+        if (info.State != MEM_COMMIT) return false;
+        const DWORD prot = info.Protect;
+        if (prot & (PAGE_NOACCESS | PAGE_GUARD)) return false;
+        if ((prot & kWritableProt) == 0) return false;
+        const std::uintptr_t base = reinterpret_cast<std::uintptr_t>(info.BaseAddress);
+        if (info.RegionSize == 0) return false;
+        if (info.RegionSize > static_cast<std::size_t>(max_addr - base)) return true;
+        const std::uintptr_t next = base + info.RegionSize;
+        if (next <= cursor) return false;
+        cursor = next;
     }
     return true;
 }

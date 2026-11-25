@@ -46,6 +46,7 @@ except ModuleNotFoundError:  # Python < 3.11
     tomllib = None
 
 CONFIG_NAME = "kotorphasor.toml"
+CONFIG_NAMES = ("kotorjit.toml", "kotorphasor.toml")
 
 # Nothing below knows what application it is looking for. Recognition rules and
 # search roots come from data/app_signatures.toml, so supporting another program
@@ -82,8 +83,10 @@ def read_workspace_config() -> dict:
     """
     here = Path.cwd().resolve()
     for d in dict.fromkeys([here, *here.parents, Path(__file__).resolve().parent.parent]):
-        p = d / CONFIG_NAME
-        if p.is_file():
+        for cfg_name in CONFIG_NAMES:
+            p = d / cfg_name
+            if not p.is_file():
+                continue
             if tomllib is None:
                 raise ValueError(f"{p}: Python 3.11+ is required")
             try:

@@ -11,6 +11,10 @@ static const KnownText kText_k1_steam_103_unpacked[] = {
 static const KnownText kText_k1_gog_103[] = {
     {".text", "7f3fba60ecc641347e38de046be047239dd8ccb463ffca5e45fe889dd56ba3d3"},
 };
+static const KnownText kText_k2_steam_linux[] = {
+    {".text", "79df1007e09581fb9f487d71a36c9402627e86d41a37bf3859eedbbbb5d326ad"},
+    {"seg0", "223d2684747cae6bc1c116dcdee7a85cd2dc9ce2315fb36d37fa55efc7e1dd81"},
+};
 static const KnownText kText_k2_gog_aspyr[] = {
     {".text", "e2b3e9695b092ba062e33858b417dd22f131cd2862690f3a896e9f754848bace"},
 };
@@ -44,6 +48,14 @@ static const BuildRecord kBuilds[] = {
         "",
     },
     {
+        "k2_steam_linux",
+        "ed043d21a4578fd1c6f1557f0f72bde5589ba3572a5b6f1a687ed9feeab49ac3",
+        Format::Elf32, 0x08048000, false,
+        0, "", "",
+        kText_k2_steam_linux, sizeof kText_k2_steam_linux / sizeof kText_k2_steam_linux[0],
+        "Native Aspyr ELF, EXEC (not PIE). VM, event, dialog, and main-loop entry points adjudicated and signature-bound.",
+    },
+    {
         "k2_gog_aspyr",
         "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
         Format::Pe32, 0x00400000, false,
@@ -57,7 +69,7 @@ static const BuildRecord kBuilds[] = {
         Format::Pe32, 0x00400000, false,
         0, "", "",
         kText_k2_steam_aspyr, sizeof kText_k2_steam_aspyr / sizeof kText_k2_steam_aspyr[0],
-        "Registered for build identification only. 57% named (func_count 26965, named_count 15311) -- unlike its GOG sibling, this Steam build needs the identity/adjudication layer before it resolves. Not installable until that work is done.",
+        "Required VM/stack and multiplayer sites are adjudicated against the exact Steam image and the K2 GOG donor. Bound executable sites carry target-derived expected bytes; field bindings carry measured offsets. Unresolved optional sites remain fail-closed.",
     },
 };
 // clang-format on

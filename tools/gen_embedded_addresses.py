@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Embed data/addresses/*.json into src/generated/embedded_addresses.inc.
 
-Used as a fallback by Runtime::resolve() when ScriptForge is loaded without an
+Used as a fallback by Runtime::resolve() when KotorJIT is loaded without an
 extracted data/addresses/ directory on disk (for instance via a KPM .kpatch).
 """
 from __future__ import annotations
@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ADDR_DIR = ROOT / "data/addresses"
+UNIFIED_SIG_PATH = ROOT / "data/signatures/unified_kotor.json"
 OUT_PATH = ROOT / "src/generated/embedded_addresses.inc"
 
 
@@ -100,6 +101,17 @@ def generate() -> str:
         "        }",
         "    }",
         "    return {};",
+        "}",
+        "",
+    ])
+    unified_data = UNIFIED_SIG_PATH.read_bytes() if UNIFIED_SIG_PATH.is_file() else b"{}"
+    out.extend(emit_array("kEmbeddedUnifiedSignatures", unified_data))
+    out.extend([
+        "",
+        "inline std::string_view embedded_unified_signatures() {",
+        "    return std::string_view(",
+        "        reinterpret_cast<const char*>(kEmbeddedUnifiedSignatures),",
+        "        sizeof(kEmbeddedUnifiedSignatures));",
         "}",
         "",
         "}  // namespace kp::generated",

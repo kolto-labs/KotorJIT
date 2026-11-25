@@ -96,17 +96,17 @@ struct VmEngineAccess {
     // it exactly as clang did when it compiled StackPushVector(Vector).
     // Call it through push_vector_value() below, which picks the right one.
 #if defined(__x86_64__) || defined(_M_X64)
-    hooks::ThiscallFn<int, Vec3>                push_vector = nullptr;
+    hooks::EngineMethodFn<int, Vec3>                push_vector = nullptr;
 #else
-    hooks::ThiscallFn<int, float, float, float> push_vector = nullptr;
+    hooks::EngineMethodFn<int, float, float, float> push_vector = nullptr;
 #endif
-    hooks::ThiscallFn<int, Vec3*>               pop_vector  = nullptr;
+    hooks::EngineMethodFn<int, Vec3*>               pop_vector  = nullptr;
 
     // The type argument is the bare engine-structure id, 0..3. The VM adds the
     // 0x10 that turns it into a stack tag; passing the tag would fail the
     // comparison at 0x5D265D and pop nothing.
-    hooks::ThiscallFn<int, std::uint32_t, void*>  push_engine_structure = nullptr;
-    hooks::ThiscallFn<int, std::uint32_t, void**> pop_engine_structure  = nullptr;
+    hooks::EngineMethodFn<int, std::uint32_t, void*>  push_engine_structure = nullptr;
+    hooks::EngineMethodFn<int, std::uint32_t, void**> pop_engine_structure  = nullptr;
 
     // OPTIONAL, and their absence is a leak rather than a crash.
     //
@@ -116,8 +116,8 @@ struct VmEngineAccess {
     // allocates. Without these two the bridge still works and still returns
     // correct values; it just never gives the memory back, and says so once in
     // the log rather than silently.
-    hooks::ThiscallFn<void, std::uint32_t, void*> destroy_engine_structure = nullptr;
-    hooks::ThiscallFn<void>                       destroy_string = nullptr;
+    hooks::EngineMethodFn<void, std::uint32_t, void*> destroy_engine_structure = nullptr;
+    hooks::EngineMethodFn<void>                       destroy_string = nullptr;
 
     // Snapshot identity plus layout for validating the live dispatcher table
     // before touching the VM stack. A changed table needs a trusted recapture.
@@ -127,6 +127,7 @@ struct VmEngineAccess {
     std::uint32_t command_count = 0;
     std::uint32_t commands_offset = static_cast<std::uint32_t>(layout::kEngine.commands_table);
     std::uint32_t wrapper_internal_offset = 0;
+    std::uint32_t stack_pointer_offset = 0;
 };
 
 // Push a Vector argument with the calling convention the running build uses.
@@ -166,6 +167,7 @@ struct VmSites {
     // wrapper base and find CVirtualMachineInternal at this offset.
     std::uint32_t wrapper_internal_offset = 0;
     std::uint32_t command_implementer_offset = 0;
+    std::uint32_t stack_pointer_offset = 0;
     bool layout_resolved = false;
 
     std::uintptr_t execute_command    = 0;   // vm.execute_command
@@ -231,20 +233,43 @@ inline bool decode_execute_command_bound_x64(const std::uint8_t* code, std::size
     return false;
 }
 
-// `81 FA imm32` = cmp edx, imm32. Stock K1 is 0x304; KPM writes 1000.
+// x86 dispatcher bounds across K1/K2/KPM builds:
+//   * K1 Win / KPM: `81 FA imm32`        = cmp edx, imm32  (0x304 stock, 1000 KPM)
+//   * K2 Win:       `81 7D 08 imm32`     = cmp [ebp+8], imm32; jge (0x36D)
+//   * K2 Linux:     `3D imm32` + `7F/0F8F` = cmp eax, imm32; jg (0x36C + 1 = 0x36D)
 inline bool decode_execute_command_bound(const std::uint8_t* code, std::size_t len,
                                          std::uint32_t& out) {
     if (code == nullptr) return false;
+    auto read_u32 = [&](std::size_t off) -> std::uint32_t {
+        return static_cast<std::uint32_t>(code[off]) |
+               (static_cast<std::uint32_t>(code[off + 1]) << 8) |
+               (static_cast<std::uint32_t>(code[off + 2]) << 16) |
+               (static_cast<std::uint32_t>(code[off + 3]) << 24);
+    };
+    auto adjust_branch = [&](std::size_t joff, std::uint32_t imm, std::uint32_t& res) -> bool {
+        if (imm == 0 || imm > 2048) return false;
+        const std::uint8_t j = joff < len ? code[joff] : 0;
+        const std::uint8_t j2 = joff + 1 < len ? code[joff + 1] : 0;
+        if (j == 0x7F || (j == 0x0F && j2 == 0x8F)) {
+            res = imm + 1;
+            return true;
+        }
+        res = imm;
+        return true;
+    };
     for (std::size_t i = 0; i + 6 <= len; ++i) {
         if (code[i] == 0x81 && code[i + 1] == 0xFA) {
-            std::uint32_t imm = static_cast<std::uint32_t>(code[i + 2]) |
-                                (static_cast<std::uint32_t>(code[i + 3]) << 8) |
-                                (static_cast<std::uint32_t>(code[i + 4]) << 16) |
-                                (static_cast<std::uint32_t>(code[i + 5]) << 24);
-            if (imm > 0 && imm <= 2048) {
-                out = imm;
-                return true;
-            }
+            if (adjust_branch(i + 6, read_u32(i + 2), out)) return true;
+        }
+        if (i + 7 <= len && code[i] == 0x81 && code[i + 1] == 0x7D && code[i + 2] == 0x08) {
+            if (adjust_branch(i + 7, read_u32(i + 3), out)) return true;
+        }
+        if (i + 6 <= len && code[i] == 0x3D) {
+            const std::uint8_t j = code[i + 5];
+            const std::uint8_t j2 = i + 6 < len ? code[i + 6] : 0;
+            const bool is_jg = (j == 0x7F || (j == 0x0F && j2 == 0x8F));
+            const bool is_jge = (j == 0x7D || (j == 0x0F && j2 == 0x8D));
+            if ((is_jg || is_jge) && adjust_branch(i + 5, read_u32(i + 1), out)) return true;
         }
     }
     return false;

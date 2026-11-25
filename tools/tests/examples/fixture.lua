@@ -70,6 +70,7 @@ function F.new(path, overrides)
     GetFirstItemInInventory=function(id) inventory=1 return id==30 and 40 or F.INVALID end,
     GetNextItemInInventory=function() inventory=inventory+1 return F.INVALID end,
     GetItemInSlot=function() return F.INVALID end,
+    GetWeaponRanged=function(id) return obj(id).ranged or 0 end,
     GetFirstEffect=function(id)
       local list=f.effect_lists[id] or {}; local n=1
       while list[n] and not (f.effects[list[n]] and f.effects[list[n]].active) do n=n+1 end

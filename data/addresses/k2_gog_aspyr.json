@@ -11,7 +11,7 @@
   },
   "format_kind": "pe",
   "note": "Native Aspyr PE. Sites resolved from the func table's own namespace-qualified symbols (name_origin='namespace'), not hand-adjudicated: this build was never stripped.",
-  "adjudicated_bindings": 61,
+  "adjudicated_bindings": 62,
   "sites": {
     "vm.run_script": {
       "cls": "CVirtualMachineInternal",
@@ -24,7 +24,10 @@
       "method_detail": "hand-adjudicated; func row agrees",
       "candidates": 1,
       "addr_hex": "0x00645540",
-      "expected_bytes": "558bec83ec10894df4837d0800742a8b"
+      "expected_bytes": "558bec83ec10894df4837d0800742a8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df4837d0800742a",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "vm.run_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -37,7 +40,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00645830",
-      "expected_bytes": "558bec83ec5c894db48b4db481c1ac01"
+      "expected_bytes": "558bec83ec5c894db48b4db481c1ac01",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec5c894db48b4db4",
+      "mask": "ffffffffffffffffffffffff"
     },
     "vm.execute_code": {
       "cls": "CVirtualMachineInternal",
@@ -50,7 +56,9 @@
       "method_detail": "user_defined",
       "candidates": 5,
       "addr_hex": "0x00643793",
-      "expected_bytes": "0fb64df283f920743e0fb655f283fa21"
+      "expected_bytes": "0fb64df283f920743e0fb655f283fa21",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "vm.execute_command": {
       "cls": "CSWVirtualMachineCommands",
@@ -63,7 +71,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0077E5B0",
-      "expected_bytes": "558bec83ec08894df8817d086d030000"
+      "expected_bytes": "558bec83ec08894df8817d086d030000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "vm.wrapper_internal": {
       "cls": "CVirtualMachine",
@@ -79,7 +89,9 @@
       "size": 4,
       "owner": "CVirtualMachine",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x1C"
+      "offset_hex": "0x1C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "vm.internal_command_implementer": {
       "cls": "CVirtualMachineInternal",
@@ -95,7 +107,59 @@
       "size": 4,
       "owner": "CVirtualMachineInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x3D4"
+      "offset_hex": "0x3D4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "vm.stack_pointer": {
+      "cls": "CVirtualMachineInternal",
+      "method": "stack_pointer",
+      "kind": "field",
+      "required": false,
+      "addr": 0,
+      "source": "adjudicated",
+      "confidence": 1.0,
+      "method_detail": "hand-adjudicated",
+      "candidates": 1,
+      "offset": 428,
+      "size": 4,
+      "owner": "CVirtualMachineInternal",
+      "addr_hex": "0x00000000",
+      "offset_hex": "0x1AC",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "vmcmd.destroy_game_defined_structure": {
+      "cls": "CSWVirtualMachineCommands",
+      "method": "DestroyGameDefinedStructure",
+      "kind": "call",
+      "required": false,
+      "addr": 7859248,
+      "source": "func",
+      "confidence": 1.0,
+      "method_detail": "user_defined",
+      "candidates": 1,
+      "addr_hex": "0x0077EC30",
+      "expected_bytes": "558bec83ec44894dcc837d080075458b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec44894dcc837d0800",
+      "mask": "ffffffffffffffffffffffffff"
+    },
+    "exo.string_dtor": {
+      "cls": "CExoString",
+      "method": "~CExoString",
+      "kind": "call",
+      "required": false,
+      "addr": 6314128,
+      "source": "func",
+      "confidence": 1.0,
+      "method_detail": "user_defined",
+      "candidates": 1,
+      "addr_hex": "0x00605890",
+      "expected_bytes": "558bec83ec08894df88b45f883380074",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f883380074278b4df8c7410400000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "vm.save_script_situation": {
       "cls": "CVirtualMachineInternal",
@@ -108,7 +172,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00646610",
-      "expected_bytes": "558bec83ec08894df88b450883781000"
+      "expected_bytes": "558bec83ec08894df88b450883781000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b450883781000",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "vm.load_script_situation": {
       "cls": "CVirtualMachine",
@@ -121,7 +188,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640DA0",
-      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b"
+      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4510508b4d0c518b5508528b45fc8b481c",
+        "suffix": "8be55dc20c00",
+        "target_pattern": "558bec6aff6886d2960064a1000000005083ec44a16002a10033c5508d45f464a300000000894dc06a28",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_integer": {
       "cls": "CVirtualMachine",
@@ -134,7 +210,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640BC0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df88b4df881c1ac010000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_integer": {
       "cls": "CVirtualMachine",
@@ -147,7 +232,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640BE0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df86a038b4df8",
+        "target_mask": "ffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_float": {
       "cls": "CVirtualMachine",
@@ -160,7 +254,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640C00",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e899c7ffff8945fc837dfc007f0433c0eb55",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_float": {
       "cls": "CVirtualMachine",
@@ -173,7 +276,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640C20",
-      "expected_bytes": "558bec51894dfc51d94508d91c248b45"
+      "expected_bytes": "558bec51894dfc51d94508d91c248b45",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc51d94508d91c248b45fc8b481c",
+      "mask": "ffffffffffffffffffffffffffffffffffffffff"
     },
     "vm.stack_pop_string": {
       "cls": "CVirtualMachine",
@@ -186,7 +292,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640C90",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e8f9c5ffff8945fc837dfc007f0433c0eb57",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_string": {
       "cls": "CVirtualMachine",
@@ -199,7 +314,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640CB0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec6aff685ba3960064a1000000005083ec18a16002a10033c5508d45f464a300000000894de06a08",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_object": {
       "cls": "CVirtualMachine",
@@ -212,7 +336,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640D10",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48b4df481c1ac010000e859c3ffff8945f8",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff00000000ffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_object": {
       "cls": "CVirtualMachine",
@@ -225,7 +358,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640D30",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec08894df86a068b4df8",
+        "target_mask": "ffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_pop_vector": {
       "cls": "CVirtualMachine",
@@ -238,7 +380,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640C40",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b491c",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df48d45fc508b4df4",
+        "target_mask": "ffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_vector": {
       "cls": "CVirtualMachine",
@@ -251,7 +402,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640C60",
-      "expected_bytes": "558bec51894dfc83ec0c8bc48b4d0889"
+      "expected_bytes": "558bec51894dfc83ec0c8bc48b4d0889",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc83ec0c8bc4",
+      "mask": "ffffffffffffffffffffffff"
     },
     "vm.stack_pop_engine_structure": {
       "cls": "CVirtualMachine",
@@ -264,7 +418,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640CD0",
-      "expected_bytes": "558bec51894dfc8b450c508b4d08518b"
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec10894df08b4df081c1ac010000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "vm.stack_push_engine_structure": {
       "cls": "CVirtualMachine",
@@ -277,7 +440,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640CF0",
-      "expected_bytes": "558bec51894dfc8b450c508b4d08518b"
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a1c",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec0c894df48b45f483b8d403000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "event.creature": {
       "cls": "CSWSCreature",
@@ -290,7 +462,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00687B00",
-      "expected_bytes": "558bec6aff68e807970064a100000000"
+      "expected_bytes": "558bec6aff68e807970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68e807970064a1000000005081ec24030000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "event.door": {
       "cls": "CSWSDoor",
@@ -303,7 +478,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00762FF0",
-      "expected_bytes": "558bec6aff68786e970064a100000000"
+      "expected_bytes": "558bec6aff68786e970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68786e970064a1000000005081ec84030000a16002a10033c5508d45f464a300000000898df8fcffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.placeable": {
       "cls": "CSWSPlaceable",
@@ -316,7 +494,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0076D3B0",
-      "expected_bytes": "558bec6aff685b74970064a100000000"
+      "expected_bytes": "558bec6aff685b74970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff685b74970064a1000000005081eca0020000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "event.trigger": {
       "cls": "CSWSTrigger",
@@ -329,7 +510,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0075E400",
-      "expected_bytes": "558bec6aff68eb6a970064a100000000"
+      "expected_bytes": "558bec6aff68eb6a970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68eb6a970064a1000000005081ecf4000000a16002a10033c5508d45f464a300000000898d10ffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.module": {
       "cls": "CSWSModule",
@@ -342,7 +526,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00729BF0",
-      "expected_bytes": "558bec81ece8000000898d20ffffff8b"
+      "expected_bytes": "558bec81ece8000000898d20ffffff8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ece8000000898d20ffffff",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "event.area": {
       "cls": "CSWSArea",
@@ -355,7 +542,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00717360",
-      "expected_bytes": "558bec6aff68b73a970064a100000000"
+      "expected_bytes": "558bec6aff68b73a970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68b73a970064a1000000005081ec54010000a16002a10033c5508d45f464a300000000898dccfeffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "event.encounter": {
       "cls": "CSWSEncounter",
@@ -368,7 +558,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007E9B40",
-      "expected_bytes": "558bec83ec48894dbc8b45083b05a48b"
+      "expected_bytes": "558bec83ec48894dbc8b45083b05a48b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec48894dbc8b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.aoe": {
       "cls": "CSWSAreaOfEffectObject",
@@ -381,7 +574,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007E6800",
-      "expected_bytes": "558bec83ec3c894dcc8b45083b05808b"
+      "expected_bytes": "558bec83ec3c894dcc8b45083b05808b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec3c894dcc8b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.store": {
       "cls": "CSWSStore",
@@ -394,7 +590,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007C10F0",
-      "expected_bytes": "558bec83ec2c894de08b45083b05a48b"
+      "expected_bytes": "558bec83ec2c894de08b45083b05a48b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2c894de08b4508",
+      "mask": "ffffffffffffffffffffffff"
     },
     "event.waypoint": {
       "cls": "CSWSWaypoint",
@@ -407,7 +606,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007F59D0",
-      "expected_bytes": "558bec83ec14894df08b45083b05a88b"
+      "expected_bytes": "558bec83ec14894df08b45083b05a88b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894df08b45083b05a88b9900",
+      "mask": "ffffffffffffffffffffffffffff00000000"
     },
     "app.server_main_loop": {
       "cls": "CServerExoAppInternal",
@@ -420,7 +622,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007B6BB0",
-      "expected_bytes": "558bec6aff683a99970064a100000000"
+      "expected_bytes": "558bec6aff683a99970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff683a99970064a1000000005081ec9c010000a16002a10033c5508d45f464a300000000898d60feffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "app.client_main_loop": {
       "cls": "CClientExoAppInternal",
@@ -433,7 +638,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0042E160",
-      "expected_bytes": "558bec6aff689b87940064a100000000"
+      "expected_bytes": "558bec6aff689b87940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff689b87940064a1000000005081ec5c030000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "console.do_console": {
       "cls": "",
@@ -446,7 +654,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004089F0",
-      "expected_bytes": "558bec6aff68d875940064a100000000"
+      "expected_bytes": "558bec6aff68d875940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68d875940064a1000000005083ec38a16002a10033c5508d45f464a3000000006a00",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffff"
     },
     "console.funcs_add": {
       "cls": "",
@@ -457,7 +668,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "module.load_start": {
       "cls": "CSWSModule",
@@ -470,7 +683,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0072AAA0",
-      "expected_bytes": "558bec6aff68c545970064a100000000"
+      "expected_bytes": "558bec6aff68c545970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68c545970064a1000000005081ec74050000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "client.set_game_speed": {
       "cls": "CClientExoAppInternal",
@@ -483,7 +699,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004489F0",
-      "expected_bytes": "558bec83ec20894de0833d041ca10000"
+      "expected_bytes": "558bec83ec20894de0833d041ca10000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec20894de0833d041ca100000f84cb000000",
+      "mask": "ffffffffffffffffffffff00000000ffffff00000000"
     },
     "client.play_movies": {
       "cls": "CClientExoAppInternal",
@@ -496,7 +715,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0044D5B0",
-      "expected_bytes": "558bec83ec14894dec8b45ec8b88f801"
+      "expected_bytes": "558bec83ec14894dec8b45ec8b88f801",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894dec8b45ec8b88f8010000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "creature.ai_action_move_to_point": {
       "cls": "CSWSCreature",
@@ -509,7 +731,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006CA9C0",
-      "expected_bytes": "558bec6aff68f51f970064a100000000"
+      "expected_bytes": "558bec6aff68f51f970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68f51f970064a1000000005081ecdc050000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "creature.add_move_to_point_action": {
       "cls": "CSWSCreature",
@@ -522,7 +747,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0067D3A0",
-      "expected_bytes": "558bec83ec0c894df4c745fc00000000"
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "unresolved_code",
+      "signature_reason": "comdat_identical_code_folding (2 byte-identical executable functions share entire body)"
     },
     "server_object.set_position": {
       "cls": "CSWSObject",
@@ -535,7 +762,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006AAC30",
-      "expected_bytes": "558bec81eca4000000898d5cffffff8b"
+      "expected_bytes": "558bec81eca4000000898d5cffffff8b",
+      "signature_kind": "pattern",
+      "pattern": "558bec81eca4000000898d5cffffff8b450850",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "app.create_server": {
       "cls": "CAppManager",
@@ -548,7 +778,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00401B80",
-      "expected_bytes": "558bec6aff686bca960064a100000000"
+      "expected_bytes": "558bec6aff686bca960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff686bca960064a1000000005083ec10a16002a10033c5508d45f464a300000000894de88b45e883780800",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff"
     },
     "net.start_connect_to_session": {
       "cls": "CNetLayer",
@@ -561,7 +794,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00640150",
-      "expected_bytes": "558bec83ec20894de08b45e083b86000"
+      "expected_bytes": "558bec83ec20894de08b45e083b86000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec20894de08b45e083b86000020001",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "net.initialize": {
       "cls": "CNetLayer",
@@ -574,7 +810,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0063F910",
-      "expected_bytes": "558bec6aff68a4cd960064a100000000"
+      "expected_bytes": "558bec6aff68a4cd960064a100000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "net.shutdown": {
       "cls": "CNetLayer",
@@ -587,7 +825,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0063F7F0",
-      "expected_bytes": "558bec51894dfc8b45fcc70000000000"
+      "expected_bytes": "558bec51894dfc8b45fcc70000000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "net.send_message_to_player": {
       "cls": "CNetLayer",
@@ -600,7 +840,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0063FC00",
-      "expected_bytes": "558bec6aff68c8cd960064a100000000"
+      "expected_bytes": "558bec6aff68c8cd960064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68c8cd960064a1000000005083ec7456",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff"
     },
     "net.process_received_frames": {
       "cls": "CNetLayer",
@@ -613,7 +856,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0063FAD0",
-      "expected_bytes": "558bec83ec0c56894df4837d08000f84"
+      "expected_bytes": "558bec83ec0c56894df4837d08000f84",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c56894df4837d0800",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "net.non_window_messages": {
       "cls": "CNetLayer",
@@ -626,7 +872,9 @@
       "method_detail": "user_defined",
       "candidates": 2,
       "addr_hex": "0x00640420",
-      "expected_bytes": "558bec83ec08894df8c745fc00000000"
+      "expected_bytes": "558bec83ec08894df8c745fc00000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "client.area_get_server_area": {
       "cls": "CSWCArea",
@@ -639,7 +887,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00457800",
-      "expected_bytes": "558bec83ec0c894df48b45f483b88002"
+      "expected_bytes": "558bec83ec0c894df48b45f483b88002",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f483b88002000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "module.get_area": {
       "cls": "CSWSModule",
@@ -652,7 +903,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0072A6A0",
-      "expected_bytes": "558bec83ec08894df88b45f88b4df88b"
+      "expected_bytes": "558bec83ec08894df88b45f88b4df88b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4df88b903c020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client_area.attach_from_server": {
       "cls": "CSWCArea",
@@ -665,7 +919,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00457880",
-      "expected_bytes": "558bec51894dfc8b45fc8b4d08898880"
+      "expected_bytes": "558bec51894dfc8b45fc8b4d08898880",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d08898880020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "server_area.attach_from_client": {
       "cls": "CSWSArea",
@@ -678,7 +935,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00722CF0",
-      "expected_bytes": "558bec51894dfc8b45fc8b4d08898834"
+      "expected_bytes": "558bec51894dfc8b45fc8b4d08898834",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d08898834030000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "net.destination_net_layer": {
       "cls": "CNetLayer",
@@ -694,7 +954,9 @@
       "size": 4,
       "owner": "CNetLayer",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x2000C"
+      "offset_hex": "0x2000C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "net.start_server_mode": {
       "cls": "CNetLayer",
@@ -707,7 +969,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006400A0",
-      "expected_bytes": "558bec51894dfc8b45fc83b83c000200"
+      "expected_bytes": "558bec51894dfc8b45fc83b83c000200",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc83b83c00020001",
+      "mask": "ffffffffffffffffffffffffffffffffff"
     },
     "msg.request_status": {
       "cls": "CSWCMessage",
@@ -720,7 +985,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00505E10",
-      "expected_bytes": "558bec51894dfc6a006a006a006a018b"
+      "expected_bytes": "558bec51894dfc6a006a006a006a018b",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc6a006a006a006a01",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "client.set_player_character_name": {
       "cls": "CClientExoApp",
@@ -733,7 +1001,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D4A0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec51894dfc8b4508508b4dfc81c194020000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.set_input_class": {
       "cls": "CClientExoApp",
@@ -746,7 +1023,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D3C0",
-      "expected_bytes": "558bec51894dfc8b450c508b4d08518b"
+      "expected_bytes": "558bec51894dfc8b450c508b4d08518b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b450c508b4d08518b55fc8b4a04",
+        "suffix": "8be55dc20800",
+        "target_pattern": "558bec83ec5c894dac8b45ac8b889c000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.disable_input": {
       "cls": "CClientExoApp",
@@ -759,7 +1045,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D790",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e8de27"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e8de27",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec51894dfc8b45fcc780bc02000001000000",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "app.set_load_from_savegame": {
       "cls": "CServerExoApp",
@@ -772,7 +1067,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C820",
-      "expected_bytes": "558bec83ec08894df88b45f88b480489"
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b45088982c4000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.set_loading_savegame": {
       "cls": "CClientExoApp",
@@ -785,7 +1083,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040E0C0",
-      "expected_bytes": "558bec83ec08894df88b45f88b480489"
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b450889823c030000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.send_load_game_request": {
       "cls": "CClientExoApp",
@@ -798,7 +1099,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CBE0",
-      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b"
+      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+      "signature_kind": "unresolved_code",
+      "signature_reason": "comdat_identical_code_folding (2 byte-identical executable functions share entire body)"
     },
     "client.send_save_game_request": {
       "cls": "CClientExoApp",
@@ -811,7 +1114,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CBB0",
-      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b"
+      "expected_bytes": "558bec51894dfc8b4510508b4d0c518b",
+      "signature_kind": "unresolved_code",
+      "signature_reason": "comdat_identical_code_folding (2 byte-identical executable functions share entire body)"
     },
     "msg.attack": {
       "cls": "CSWCMessage",
@@ -824,7 +1129,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00505280",
-      "expected_bytes": "558bec83ec0c894df4c745fc00000000"
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745fc00000000c745f806000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "msg.change_door_state": {
       "cls": "CSWCMessage",
@@ -837,7 +1145,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00505600",
-      "expected_bytes": "558bec83ec0c894df4c745f806000000"
+      "expected_bytes": "558bec83ec0c894df4c745f806000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745f806000000",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "door.move_to_next_open_state": {
       "cls": "CSWSDoor",
@@ -850,7 +1161,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00768BF0",
-      "expected_bytes": "558bec83ec14894dec8b45ec8a881c03"
+      "expected_bytes": "558bec83ec14894dec8b45ec8a881c03",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894dec8b45ec8a881c030000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "door.open_state": {
       "cls": "CSWSDoor",
@@ -864,7 +1178,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "door.also_open_state": {
       "cls": "CSWSDoor",
@@ -878,7 +1194,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "door.animation": {
       "cls": "CSWSDoor",
@@ -892,7 +1210,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "msg.area_loaded": {
       "cls": "CSWCMessage",
@@ -905,7 +1225,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00505180",
-      "expected_bytes": "558bec51894dfc6a006a006a036a048b"
+      "expected_bytes": "558bec51894dfc6a006a006a036a048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc6a006a006a03",
+      "mask": "ffffffffffffffffffffffffff"
     },
     "gui.unpack_game": {
       "cls": "CSWGuiSaveLoad",
@@ -918,7 +1241,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005D6E10",
-      "expected_bytes": "558bec6aff68d622950064a100000000"
+      "expected_bytes": "558bec6aff68d622950064a100000000",
+      "signature_kind": "unresolved_code",
+      "signature_reason": "comdat_identical_code_folding (2 byte-identical executable functions share entire body)"
     },
     "app.start_new_module": {
       "cls": "CServerExoAppInternal",
@@ -931,7 +1256,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007B3120",
-      "expected_bytes": "558bec6aff684393970064a100000000"
+      "expected_bytes": "558bec6aff684393970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff684393970064a1000000005081ec88000000a16002a10033c5508d45f464a300000000898d78ffffff8b8578ffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "app.load_module": {
       "cls": "CServerExoAppInternal",
@@ -944,7 +1272,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007B4FD0",
-      "expected_bytes": "558bec6aff682e98970064a100000000"
+      "expected_bytes": "558bec6aff682e98970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff682e98970064a1000000005081eca8070000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffff"
     },
     "app.set_move_to_module_pending": {
       "cls": "CServerExoApp",
@@ -957,7 +1288,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064B870",
-      "expected_bytes": "558bec83ec08894df88b45f88b480489"
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b55fc8b4508898280000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.set_move_to_module_string": {
       "cls": "CServerExoApp",
@@ -970,7 +1304,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064B8C0",
-      "expected_bytes": "558bec83ec08894df88b45f88b480489"
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c184000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.set_move_to_module_start_waypoint": {
       "cls": "CServerExoApp",
@@ -983,7 +1320,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064B9C0",
-      "expected_bytes": "558bec83ec08894df88b45f88b480489"
+      "expected_bytes": "558bec83ec08894df88b45f88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b4804894dfc8b5508528b4dfc81c18c000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.set_dialog_selection": {
       "cls": "CGuiInGame",
@@ -996,7 +1336,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004DDBD0",
-      "expected_bytes": "558bec51894dfc8b45fc8b4d088988e0"
+      "expected_bytes": "558bec51894dfc8b45fc8b4d088988e0",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b4d088988e00000008b55fc",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.update_dialog": {
       "cls": "CGuiInGame",
@@ -1009,7 +1352,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004DD7F0",
-      "expected_bytes": "558bec83ec78894d8c8b458c8b88cc00"
+      "expected_bytes": "558bec83ec78894d8c8b458c8b88cc00",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec78894d8c8b458c8b88cc000000",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "gui.close_dialog": {
       "cls": "CGuiInGame",
@@ -1022,7 +1368,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004D70B0",
-      "expected_bytes": "558bec81eca8000000a16002a10033c5"
+      "expected_bytes": "558bec81eca8000000a16002a10033c5",
+      "signature_kind": "pattern",
+      "pattern": "558bec81eca8000000a16002a10033c58945ec",
+      "mask": "ffffffffffffffffffff00000000ffffffffff"
     },
     "gui.handle_dialog_selection": {
       "cls": "CGuiInGame",
@@ -1035,7 +1384,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004D8450",
-      "expected_bytes": "558bec6aff68581e950064a100000000"
+      "expected_bytes": "558bec6aff68581e950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68581e950064a1000000005081ecc0000000a16002a10033c5508d45f464a300000000898d3cffffff8b853cffffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "dialog.select_reply": {
       "cls": "CSWGuiDialog",
@@ -1048,7 +1400,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005AEC70",
-      "expected_bytes": "558bec83ec0c894df48b45f48b4d083b"
+      "expected_bytes": "558bec83ec0c894df48b45f48b4d083b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f48b4d083b4870",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "dialog.reply_dialog": {
       "cls": "CSWSObject",
@@ -1061,7 +1416,9 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006AD3F0",
-      "expected_bytes": "558bec83ec08894df88b45f883783400"
+      "expected_bytes": "558bec83ec08894df88b45f883783400",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "dialog.handle_reply": {
       "cls": "CSWSDialog",
@@ -1074,12 +1431,14 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00757420",
-      "expected_bytes": "558bec6aff683065970064a100000000"
+      "expected_bytes": "558bec6aff683065970064a100000000",
+      "signature_kind": "data_ref",
+      "signature_reason": "reference_only_site"
     },
     "dialog.check_script": {
       "cls": "CSWSDialog",
       "method": "CheckScript",
-      "kind": "call",
+      "kind": "detour",
       "required": false,
       "addr": 7670944,
       "source": "func",
@@ -1087,7 +1446,10 @@
       "method_detail": "user_defined",
       "candidates": 2,
       "addr_hex": "0x00750CA0",
-      "expected_bytes": "558bec6aff68688e970064a100000000"
+      "expected_bytes": "558bec6aff68688e970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68688e970064a1000000005083ec20a16002a10033c5508d45f464a300000000894dd468f55898008b4d0c",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffff00000000ffffff"
     },
     "dialog.skip_past": {
       "cls": "CServerExoApp",
@@ -1100,7 +1462,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C0F0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec14894decc745f8000000008b45ec8b885c000100",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "object.stop_dialog": {
       "cls": "CSWSObject",
@@ -1113,7 +1484,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006AD5E0",
-      "expected_bytes": "558bec83ec24894de08b45e08b108b4d"
+      "expected_bytes": "558bec83ec24894de08b45e08b108b4d",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec24894de08b45e08b10",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "timer.set_snapshot_scale": {
       "cls": "CWorldTimer",
@@ -1124,7 +1498,9 @@
       "source": "ambiguous",
       "confidence": null,
       "method_detail": "1 bare 'SetSnapshotScale' bindings, class unknown",
-      "candidates": 1
+      "candidates": 1,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "timer.set_fixed_snapshot_rate": {
       "cls": "CWorldTimer",
@@ -1137,7 +1513,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0080B6E0",
-      "expected_bytes": "558bec51894dfc8b45fcc7400c000000"
+      "expected_bytes": "558bec51894dfc8b45fcc7400c000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fcc7400c00000000",
+      "mask": "ffffffffffffffffffffffffffffffffff"
     },
     "timer.pause_world_timer": {
       "cls": "CWorldTimer",
@@ -1150,7 +1529,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0080B530",
-      "expected_bytes": "558bec83ec0c894df48b45f483782400"
+      "expected_bytes": "558bec83ec0c894df48b45f483782400",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b45f483782400752c",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "timer.unpause_world_timer": {
       "cls": "CWorldTimer",
@@ -1163,7 +1545,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0080B580",
-      "expected_bytes": "558bec51894dfc8b45fc837824017522"
+      "expected_bytes": "558bec51894dfc8b45fc837824017522",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc83782401",
+      "mask": "ffffffffffffffffffffffffffff"
     },
     "client.get_world_timer": {
       "cls": "CClientExoApp",
@@ -1176,7 +1561,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040C870",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5124",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_pause_timer": {
       "cls": "CClientExoApp",
@@ -1189,7 +1577,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040C890",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b512c",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_animation_timer": {
       "cls": "CClientExoApp",
@@ -1202,7 +1593,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040C8B0",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5130",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "server.get_world_timer": {
       "cls": "CServerExoApp",
@@ -1215,7 +1609,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064BD90",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9148000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "server.get_pause_timer": {
       "cls": "CServerExoApp",
@@ -1228,7 +1625,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064BDD0",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9150000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.get_in_game_gui": {
       "cls": "CClientExoApp",
@@ -1241,7 +1641,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CC10",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5140",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_client_name": {
       "cls": "CClientExoApp",
@@ -1254,7 +1657,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040C7D0",
-      "expected_bytes": "558bec83ec0c894df4c745fc00000000"
+      "expected_bytes": "558bec83ec0c894df4c745fc00000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df4c745fc000000008b45f48b480481c140010000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.get_net_layer": {
       "cls": "CClientExoApp",
@@ -1267,7 +1673,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CCB0",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b5110",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_message_handler": {
       "cls": "CClientExoApp",
@@ -1280,7 +1689,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CCD0",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9150010000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "client.is_movie_playing": {
       "cls": "CClientExoApp",
@@ -1293,7 +1705,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D620",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e8ee7b"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e8ee7b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec51894dfc8b45fc83b830010000007504",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.get_game_over": {
       "cls": "CClientExoApp",
@@ -1306,7 +1727,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D8A0",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b91c0020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "gui.remove_panel": {
       "cls": "CSWGuiManager",
@@ -1319,7 +1743,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0090EAF0",
-      "expected_bytes": "558bec83ec10894df0837d0800750733"
+      "expected_bytes": "558bec83ec10894df0837d0800750733",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df0837d08007507",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "gui.panel_exists": {
       "cls": "CSWGuiManager",
@@ -1332,7 +1759,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0090EC80",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfce87d"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfce87d",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b4508508b4dfce87d00000033c9",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffff"
     },
     "gui.tutorial_handle_input": {
       "cls": "CSWGuiTutorialBox",
@@ -1345,7 +1775,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005868F0",
-      "expected_bytes": "558bec83ec08894dfc837d0c0074398b"
+      "expected_bytes": "558bec83ec08894dfc837d0c0074398b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894dfc837d0c007439",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "gui.tutorial_unpause": {
       "cls": "CSWGuiTutorialBox",
@@ -1358,7 +1791,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00586C20",
-      "expected_bytes": "558bec83ec08894df88b45f883b8d409"
+      "expected_bytes": "558bec83ec08894df88b45f883b8d409",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f883b8d409000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "gui.messagebox_handle_input": {
       "cls": "CSWGuiMessageBox",
@@ -1371,7 +1807,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0052CED0",
-      "expected_bytes": "558bec83ec14894df0837d0c000f848d"
+      "expected_bytes": "558bec83ec14894df0837d0c000f848d",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894df0837d0c000f848d010000c745fc00000000",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffff"
     },
     "gui.status_summary_handle_input": {
       "cls": "CSWGuiStatusSummary",
@@ -1384,7 +1823,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0052EF50",
-      "expected_bytes": "558bec83ec1c894de8837d0c000f84bd"
+      "expected_bytes": "558bec83ec1c894de8837d0c000f84bd",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec1c894de8837d0c000f84bd0000008b45088945e48b4de483e927894de4837de4070f87a40000008b55e40fb68240f05200",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000"
     },
     "gui.show_sw_in_game_gui": {
       "cls": "CGuiInGame",
@@ -1397,7 +1839,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004DA4F0",
-      "expected_bytes": "558bec6aff68d01e950064a100000000"
+      "expected_bytes": "558bec6aff68d01e950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68d01e950064a1000000005083ec40a16002a10033c5508d45f464a300000000894db48b45b4",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffff"
     },
     "gui.hide_sw_in_game_gui": {
       "cls": "CGuiInGame",
@@ -1410,7 +1855,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004DA760",
-      "expected_bytes": "558bec83ec2c894dd48b45d483b82801"
+      "expected_bytes": "558bec83ec2c894dd48b45d483b82801",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2c894dd48b45d483b82801000000",
+      "mask": "ffffffffffffffffffffffffffffffffffffff"
     },
     "gui.container_handle_input": {
       "cls": "CSWGuiContainer",
@@ -1423,7 +1871,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005A63F0",
-      "expected_bytes": "558bec83ec1c894de8837d0c000f843c"
+      "expected_bytes": "558bec83ec1c894de8837d0c000f843c",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec1c894de8837d0c000f843c0100008b45088945e48b4de483e927894de4837de4070f87230100008b55e4ff249558655a00",
+      "mask": "ffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000"
     },
     "gui.party_selection_accept_party": {
       "cls": "CSWGuiPartySelection",
@@ -1436,7 +1887,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0058D6E0",
-      "expected_bytes": "558bec81ec9401000056898d6cfeffff"
+      "expected_bytes": "558bec81ec9401000056898d6cfeffff",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ec9401000056898d6cfeffff",
+      "mask": "ffffffffffffffffffffffffffffffff"
     },
     "gui.party_selection_vtable": {
       "cls": "CSWGuiPartySelection",
@@ -1447,7 +1901,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "gui.main_menu_new_game": {
       "cls": "CSWGuiMainMenu",
@@ -1460,7 +1916,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0053CCD0",
-      "expected_bytes": "558bec6aff680b7d950064a100000000"
+      "expected_bytes": "558bec6aff680b7d950064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff680b7d950064a1000000005083ec78a16002a10033c5508d45f464a300000000894d808b45808b4848",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffff"
     },
     "gui.main_chargen_begin_play": {
       "cls": "CSWGuiMainCharGen",
@@ -1473,7 +1932,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005EEB30",
-      "expected_bytes": "558bec51894dfc8b4dfce8c1edffff8b"
+      "expected_bytes": "558bec51894dfc8b4dfce8c1edffff8b",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4dfce8c1edffff8b45fc8b486c",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec6aff687056960064a1000000005081eca4000000a16002a10033c5508d45f464a300000000898d60ffffffa1041ca100",
+        "target_mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffff00000000",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "gui.main_chargen_set_visible_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1486,7 +1954,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005EDB00",
-      "expected_bytes": "558bec83ec0c894dfc8b45fc8b4d083b"
+      "expected_bytes": "558bec83ec0c894dfc8b45fc8b4d083b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894dfc8b45fc8b4d083b88582b0000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "app.update_client_game_objects": {
       "cls": "CServerExoAppInternal",
@@ -1499,7 +1970,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x007BA760",
-      "expected_bytes": "558bec83ec14894deca1e81ba1008b48"
+      "expected_bytes": "558bec83ec14894deca1e81ba1008b48",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec14894deca1e81ba1008b4804e8dadbe4ff",
+      "mask": "ffffffffffffffffffff00000000ffffffff00000000"
     },
     "gui.class_selection_select_button": {
       "cls": "CSWGuiClassSelection",
@@ -1512,7 +1986,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x005DEA60",
-      "expected_bytes": "558bec6aff68cba5970064a100000000"
+      "expected_bytes": "558bec6aff68cba5970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68cba5970064a1000000005083ec24a16002a10033c5508d45f464a300000000894dd48b45088b4850894de0",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "menu.newgame_button": {
       "cls": "CSWGuiMainMenu",
@@ -1526,7 +2003,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "menu.ready": {
       "cls": "CSWGuiMainMenu",
@@ -1540,7 +2019,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panel_bit_flags": {
       "cls": "CSWGuiPanel",
@@ -1554,7 +2035,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.control_active": {
       "cls": "CSWGuiControl",
@@ -1568,7 +2051,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.class_controls": {
       "cls": "CSWGuiClassSelection",
@@ -1582,7 +2067,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.class_control": {
       "cls": "CSWGuiControl",
@@ -1596,7 +2083,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_route_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1610,7 +2099,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_quick_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1624,7 +2115,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.child_main_panel": {
       "cls": "CSWGuiCharGenPanel",
@@ -1638,7 +2131,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "chargen.main_visible_panel": {
       "cls": "CSWGuiMainCharGen",
@@ -1652,7 +2147,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panels_data": {
       "cls": "CSWGuiManager",
@@ -1666,7 +2163,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.panels_size": {
       "cls": "CSWGuiManager",
@@ -1680,7 +2179,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "app.get_global_variable_table": {
       "cls": "CServerExoApp",
@@ -1693,7 +2194,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C2B0",
-      "expected_bytes": "558bec51894dfc8b45fc8b400405fc00"
+      "expected_bytes": "558bec51894dfc8b45fc8b400405fc00",
+      "signature_kind": "pattern",
+      "pattern": "558bec51894dfc8b45fc8b400405fc000100",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "app.get_party_table": {
       "cls": "CServerExoApp",
@@ -1704,7 +2208,9 @@
       "source": "unresolved",
       "confidence": null,
       "method_detail": null,
-      "candidates": 0
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
     },
     "app.get_module": {
       "cls": "CServerExoApp",
@@ -1717,7 +2223,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064B7B0",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e87e70"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e87e70",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec0c894df48b45f48b4df4",
+        "target_mask": "ffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "server.get_player_creature_id": {
       "cls": "CServerExoApp",
@@ -1730,7 +2245,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C310",
-      "expected_bytes": "558bec51894dfc8b45fc8b4804e88e0c"
+      "expected_bytes": "558bec51894dfc8b45fc8b4804e88e0c",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b45fc8b4804",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec14894deca1041ca1008b4808894df86a01",
+        "target_mask": "ffffffffffffffffffff00000000ffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "server.client_to_server_object_id": {
       "cls": "CServerExoApp",
@@ -1743,7 +2267,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C2D0",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec51894dfc817d080000007f740c",
+        "target_mask": "ffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client.get_sw_party": {
       "cls": "CClientExoApp",
@@ -1756,7 +2289,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040D070",
-      "expected_bytes": "558bec83ec08894df88b45f88b48048b"
+      "expected_bytes": "558bec83ec08894df88b45f88b48048b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894df88b45f88b48048b9170020000",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffff"
     },
     "party.get_player_character": {
       "cls": "CSWParty",
@@ -1769,7 +2305,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x004789B0",
-      "expected_bytes": "558bec51894dfc6a008b4dfce80f0000"
+      "expected_bytes": "558bec51894dfc6a008b4dfce80f0000",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc6a008b4dfc",
+        "suffix": "8be55dc3",
+        "target_pattern": "558bec83ec0c894df4837d08007c37",
+        "target_mask": "ffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "party.set_leader": {
       "cls": "CSWParty",
@@ -1782,7 +2327,10 @@
       "method_detail": "user_defined",
       "candidates": 2,
       "addr_hex": "0x00478A20",
-      "expected_bytes": "558bec6aff68b1c9940064a100000000"
+      "expected_bytes": "558bec6aff68b1c9940064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68b1c9940064a1000000005081ec24010000a16002a10033c5508d45f464a300000000898dd4feffff8b85d4feffff",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffff"
     },
     "client_creature.party_menu_use_item": {
       "cls": "CSWCCreature",
@@ -1795,7 +2343,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00428C00",
-      "expected_bytes": "558bec83ec18894de88b45e88b480489"
+      "expected_bytes": "558bec83ec18894de88b45e88b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec18894de88b45e88b4804894dfc",
+      "mask": "ffffffffffffffffffffffffffffffffffff"
     },
     "client.get_creature_by_object_id": {
       "cls": "CClientExoApp",
@@ -1808,7 +2359,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0040CA10",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b4814894df88d55fc528b4508508b4df8e8271803000fb6c80fb615f77d98003bca7527837dfc0074210fb605ec7d98008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b422c",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "client_party.count": {
       "cls": "CSWParty",
@@ -1822,7 +2382,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_party.member": {
       "cls": "CSWPartyMemberData",
@@ -1836,7 +2398,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_party.member_id": {
       "cls": "CSWPartyMemberData",
@@ -1850,7 +2414,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client_creature.get_server_creature": {
       "cls": "CSWCCreature",
@@ -1863,7 +2429,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x00429780",
-      "expected_bytes": "558bec83ec08894dfc8b4dfce84fdf04"
+      "expected_bytes": "558bec83ec08894dfc8b4dfce84fdf04",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec08894dfc8b4dfce84fdf040085c0741a8b4dfce843df04008945f88b45f88b108b4df88b4230",
+      "mask": "ffffffffffffffffffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffffffffffff"
     },
     "server.get_game_object": {
       "cls": "CServerExoApp",
@@ -1876,7 +2445,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064BAC0",
-      "expected_bytes": "558bec83ec10894df08b45f08b480489"
+      "expected_bytes": "558bec83ec10894df08b45f08b480489",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec10894df08b45f08b4804894df4c745fc000000008b55f48b825c000100",
+      "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     },
     "server.get_item_by_object_id": {
       "cls": "CServerExoApp",
@@ -1889,7 +2461,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064BB00",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec0c894df4c745fc000000008b45f48b885c000100894df88d55fc528b4508508b4df8e8a4eecaff0fb6c80fb615f77d98003bca7527837dfc0074210fb605ed7d98008b4dfc0fb651083bd0750f8b45fc8b108b4dfc8b4238",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffff00000000ffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "creature.run_equip": {
       "cls": "CSWSCreature",
@@ -1902,7 +2483,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0067F280",
-      "expected_bytes": "558bec81ec20010000898df8feffffc7"
+      "expected_bytes": "558bec81ec20010000898df8feffffc7",
+      "signature_kind": "pattern",
+      "pattern": "558bec81ec20010000898df8feffff",
+      "mask": "ffffffffffffffffffffffffffffff"
     },
     "inventory.get_item_in_slot": {
       "cls": "CSWInventory",
@@ -1915,7 +2499,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0067A5B0",
-      "expected_bytes": "558bec83ec0c894df48b4508508b4df4"
+      "expected_bytes": "558bec83ec0c894df48b4508508b4df4",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec0c894df48b4508508b4df4e83b0000008945fc837dfc00741e",
+      "mask": "ffffffffffffffffffffffffffffffffff00000000ffffffffffffffffff"
     },
     "creature.inventory": {
       "cls": "CSWSCreature",
@@ -1929,7 +2516,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "item.id": {
       "cls": "CSWSItem",
@@ -1943,7 +2532,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "item.possessor": {
       "cls": "CSWSItem",
@@ -1957,7 +2548,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.get_client_object_by_object_id": {
       "cls": "CServerExoApp",
@@ -1970,7 +2563,16 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x0064C020",
-      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49"
+      "expected_bytes": "558bec51894dfc8b4508508b4dfc8b49",
+      "signature_kind": "xref_thunk",
+      "xref_thunk": {
+        "opcode": "e8",
+        "prefix": "558bec51894dfc8b4508508b4dfc8b4904",
+        "suffix": "8be55dc20400",
+        "target_pattern": "558bec83ec14894decc745fc00000000817d080000007f",
+        "target_mask": "ffffffffffffffffffffffffffffffffffffffffffffff",
+        "kind_detail": "call_forwarder_xref"
+      }
     },
     "stats.auto_levelup": {
       "cls": "CSWSCreatureStats",
@@ -1983,7 +2585,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006FB270",
-      "expected_bytes": "558bec6aff68fe2f970064a100000000"
+      "expected_bytes": "558bec6aff68fe2f970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68fe2f970064a1000000005081ecb801000056",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffffffffff"
     },
     "stats.get_level": {
       "cls": "CSWSCreatureStats",
@@ -1996,7 +2601,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006E1280",
-      "expected_bytes": "558bec6aff68a025970064a100000000"
+      "expected_bytes": "558bec6aff68a025970064a100000000",
+      "signature_kind": "pattern",
+      "pattern": "558bec6aff68a025970064a1000000005083ec5ca16002a10033c5508d45f464a300000000894da0c745e400000000",
+      "mask": "ffffffffffff00000000ffff00000000ffffffffff00000000ffffffffffffffff00000000ffffffffffffffffffff"
     },
     "stats.can_level_up": {
       "cls": "CSWSCreatureStats",
@@ -2009,7 +2617,10 @@
       "method_detail": "user_defined",
       "candidates": 1,
       "addr_hex": "0x006F5C10",
-      "expected_bytes": "558bec83ec2056894de4a1041ca1008b"
+      "expected_bytes": "558bec83ec2056894de4a1041ca1008b",
+      "signature_kind": "pattern",
+      "pattern": "558bec83ec2056894de4a1041ca100",
+      "mask": "ffffffffffffffffffffff00000000"
     },
     "object.type": {
       "cls": "CGameObject",
@@ -2023,7 +2634,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.id": {
       "cls": "CGameObject",
@@ -2039,7 +2652,9 @@
       "size": 4,
       "owner": "CGameObject",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x4"
+      "offset_hex": "0x4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "creature.stats": {
       "cls": "CSWSCreature",
@@ -2053,7 +2668,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.experience": {
       "cls": "CSWSCreatureStats",
@@ -2067,7 +2684,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "g.app_manager": {
       "cls": "",
@@ -2083,7 +2702,9 @@
       "size": 4,
       "owner": "",
       "addr_hex": "0x00A11C04",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.client": {
       "cls": "CAppManager",
@@ -2097,7 +2718,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.server": {
       "cls": "CAppManager",
@@ -2113,7 +2736,9 @@
       "size": 4,
       "owner": "CAppManager",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "appmgr.reentrant_server_stats": {
       "cls": "CAppManager",
@@ -2127,7 +2752,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.internal": {
       "cls": "CClientExoApp",
@@ -2143,7 +2770,9 @@
       "size": 4,
       "owner": "CClientExoApp",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x4"
+      "offset_hex": "0x4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.internal": {
       "cls": "CServerExoApp",
@@ -2159,7 +2788,9 @@
       "size": 4,
       "owner": "CServerExoApp",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x4"
+      "offset_hex": "0x4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.server_mode": {
       "cls": "CServerExoAppInternal",
@@ -2175,7 +2806,9 @@
       "size": 2,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10008"
+      "offset_hex": "0x10008",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.pause_state": {
       "cls": "CServerExoAppInternal",
@@ -2189,7 +2822,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.move_to_module_pending": {
       "cls": "CServerExoAppInternal",
@@ -2205,7 +2840,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10080"
+      "offset_hex": "0x10080",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.move_to_module_string": {
       "cls": "CServerExoAppInternal",
@@ -2221,7 +2858,9 @@
       "size": 8,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10084"
+      "offset_hex": "0x10084",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.loading_module": {
       "cls": "CServerExoAppInternal",
@@ -2237,7 +2876,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x100B4"
+      "offset_hex": "0x100B4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.auto_save_pending": {
       "cls": "CServerExoAppInternal",
@@ -2253,7 +2894,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x100B8"
+      "offset_hex": "0x100B8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.load_from_savegame": {
       "cls": "CServerExoAppInternal",
@@ -2269,7 +2912,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x100C4"
+      "offset_hex": "0x100C4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.world_timer": {
       "cls": "CServerExoAppInternal",
@@ -2285,7 +2930,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10048"
+      "offset_hex": "0x10048",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "server.pause_timer": {
       "cls": "CServerExoAppInternal",
@@ -2301,7 +2948,9 @@
       "size": 4,
       "owner": "CServerExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10050"
+      "offset_hex": "0x10050",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.table": {
       "cls": "CServerExoAppInternal",
@@ -2315,7 +2964,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "party.table": {
       "cls": "CServerExoAppInternal",
@@ -2329,7 +2980,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.net_layer": {
       "cls": "CClientExoAppInternal",
@@ -2345,7 +2998,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.world_timer": {
       "cls": "CClientExoAppInternal",
@@ -2361,7 +3016,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x24"
+      "offset_hex": "0x24",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.gui_in_game": {
       "cls": "CClientExoAppInternal",
@@ -2377,7 +3034,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x40"
+      "offset_hex": "0x40",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.input_class": {
       "cls": "CClientExoAppInternal",
@@ -2393,7 +3052,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x9C"
+      "offset_hex": "0x9C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.movie_player": {
       "cls": "CClientExoAppInternal",
@@ -2407,7 +3068,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.message_handler": {
       "cls": "CClientExoAppInternal",
@@ -2423,7 +3086,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x150"
+      "offset_hex": "0x150",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.disable_movies": {
       "cls": "CClientExoAppInternal",
@@ -2439,7 +3104,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x1F8"
+      "offset_hex": "0x1F8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.gui_manager": {
       "cls": "CClientExoAppInternal",
@@ -2455,7 +3122,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x274"
+      "offset_hex": "0x274",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.main_menu": {
       "cls": "CClientExoAppInternal",
@@ -2471,7 +3140,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x280"
+      "offset_hex": "0x280",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.area_not_ready_to_display": {
       "cls": "CClientExoAppInternal",
@@ -2487,7 +3158,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x288"
+      "offset_hex": "0x288",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.player_creature_id": {
       "cls": "CClientExoAppInternal",
@@ -2501,7 +3174,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.input_disabled": {
       "cls": "CClientExoAppInternal",
@@ -2517,7 +3192,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x2BC"
+      "offset_hex": "0x2BC",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.game_over_state": {
       "cls": "CClientExoAppInternal",
@@ -2533,7 +3210,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x2C0"
+      "offset_hex": "0x2C0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "client.loading_savegame": {
       "cls": "CClientExoAppInternal",
@@ -2549,7 +3228,9 @@
       "size": 4,
       "owner": "CClientExoAppInternal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x33C"
+      "offset_hex": "0x33C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.continue_message_processing": {
       "cls": "CSWReentrantServerStats",
@@ -2563,7 +3244,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.phase": {
       "cls": "CSWReentrantServerStats",
@@ -2577,7 +3260,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.finished": {
       "cls": "CSWReentrantServerStats",
@@ -2591,7 +3276,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "stats.load_game_error": {
       "cls": "CSWReentrantServerStats",
@@ -2605,7 +3292,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.sw_gui_status": {
       "cls": "CGuiInGame",
@@ -2621,7 +3310,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x34"
+      "offset_hex": "0x34",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.in_game_screen_active": {
       "cls": "CGuiInGame",
@@ -2635,7 +3326,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.last_gui_panel": {
       "cls": "CGuiInGame",
@@ -2649,7 +3342,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_panel": {
       "cls": "CGuiInGame",
@@ -2665,7 +3360,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x3C"
+      "offset_hex": "0x3C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_active": {
       "cls": "CGuiInGame",
@@ -2681,7 +3378,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0xCC"
+      "offset_hex": "0xCC",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_selection": {
       "cls": "CGuiInGame",
@@ -2697,7 +3396,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0xE0"
+      "offset_hex": "0xE0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_selection_count": {
       "cls": "CGuiInGame",
@@ -2713,7 +3414,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0xE4"
+      "offset_hex": "0xE4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_pending": {
       "cls": "CGuiInGame",
@@ -2729,7 +3432,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0xE8"
+      "offset_hex": "0xE8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.controller_pause": {
       "cls": "CGuiInGame",
@@ -2745,7 +3450,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0xF4"
+      "offset_hex": "0xF4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.tutorial_box": {
       "cls": "CGuiInGame",
@@ -2759,7 +3466,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.status_summary_panel": {
       "cls": "CGuiInGame",
@@ -2773,7 +3482,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback": {
       "cls": "CSWGuiMessageBox",
@@ -2787,7 +3498,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback_context": {
       "cls": "CSWGuiMessageBox",
@@ -2801,7 +3514,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.messagebox_callback_arg": {
       "cls": "CSWGuiMessageBox",
@@ -2815,7 +3530,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.modal_data": {
       "cls": "CSWGuiManager",
@@ -2829,7 +3546,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.modal_size": {
       "cls": "CSWGuiManager",
@@ -2843,7 +3562,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.initialized": {
       "cls": "CGuiInGame",
@@ -2857,7 +3578,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_selected_count": {
       "cls": "CSWGuiPartySelection",
@@ -2871,7 +3594,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_mode": {
       "cls": "CSWGuiPartySelection",
@@ -2885,7 +3610,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.party_selection_entry0_flags": {
       "cls": "CSWGuiPartySelection",
@@ -2899,7 +3626,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_count": {
       "cls": "CGuiInGame",
@@ -2915,7 +3644,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x134"
+      "offset_hex": "0x134",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_texts": {
       "cls": "CGuiInGame",
@@ -2931,7 +3662,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x138"
+      "offset_hex": "0x138",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.reply_links": {
       "cls": "CGuiInGame",
@@ -2947,7 +3680,9 @@
       "size": 4,
       "owner": "CGuiInGame",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x13C"
+      "offset_hex": "0x13C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_current_entry": {
       "cls": "CSWGuiDialog",
@@ -2963,7 +3698,9 @@
       "size": 4,
       "owner": "CSWGuiDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x68"
+      "offset_hex": "0x68",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_visible_count": {
       "cls": "CSWGuiDialog",
@@ -2979,7 +3716,9 @@
       "size": 4,
       "owner": "CSWGuiDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x70"
+      "offset_hex": "0x70",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.panel_link_map": {
       "cls": "CSWGuiDialog",
@@ -2995,7 +3734,9 @@
       "size": 80,
       "owner": "CSWGuiDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x26E4"
+      "offset_hex": "0x26E4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gui.dialog_owner": {
       "cls": "CSWGuiDialog",
@@ -3011,7 +3752,9 @@
       "size": 4,
       "owner": "CSWGuiDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x275C"
+      "offset_hex": "0x275C",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entries": {
       "cls": "CSWSDialog",
@@ -3027,7 +3770,9 @@
       "size": 4,
       "owner": "CSWSDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.skippable": {
       "cls": "CSWSDialog",
@@ -3041,7 +3786,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.current_entry": {
       "cls": "CSWSDialog",
@@ -3057,7 +3804,9 @@
       "size": 4,
       "owner": "CSWSDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x74"
+      "offset_hex": "0x74",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.current_reply": {
       "cls": "CSWSDialog",
@@ -3073,7 +3822,9 @@
       "size": 4,
       "owner": "CSWSDialog",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x78"
+      "offset_hex": "0x78",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry": {
       "cls": "CSWSDialogEntry",
@@ -3089,7 +3840,9 @@
       "size": 268,
       "owner": "CSWSDialogEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry_link_count": {
       "cls": "CSWSDialogEntry",
@@ -3105,7 +3858,9 @@
       "size": 4,
       "owner": "CSWSDialogEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x104"
+      "offset_hex": "0x104",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.entry_links": {
       "cls": "CSWSDialogEntry",
@@ -3121,7 +3876,9 @@
       "size": 4,
       "owner": "CSWSDialogEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x108"
+      "offset_hex": "0x108",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link": {
       "cls": "CSWSDialogLinkEntry",
@@ -3137,7 +3894,9 @@
       "size": 104,
       "owner": "CSWSDialogLinkEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link_index": {
       "cls": "CSWSDialogLinkEntry",
@@ -3153,7 +3912,9 @@
       "size": 4,
       "owner": "CSWSDialogLinkEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x10"
+      "offset_hex": "0x10",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.link_display_inactive": {
       "cls": "CSWSDialogLinkEntry",
@@ -3167,7 +3928,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "dialog.node_strref": {
       "cls": "CSWSDialogBase",
@@ -3181,7 +3944,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_ptr": {
       "cls": "CSWSObject",
@@ -3197,7 +3962,9 @@
       "size": 4,
       "owner": "CSWSObject",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x34"
+      "offset_hex": "0x34",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_send_pending": {
       "cls": "CSWSObject",
@@ -3213,7 +3980,9 @@
       "size": 4,
       "owner": "CSWSObject",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x48"
+      "offset_hex": "0x48",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_wait_flags": {
       "cls": "CSWSObject",
@@ -3227,7 +3996,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "object.dialog_skip_requested": {
       "cls": "CSWSObject",
@@ -3241,7 +4012,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifiers": {
       "cls": "CSWGlobalVariableTable",
@@ -3255,7 +4028,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifier": {
       "cls": "GlobalIndentifier",
@@ -3269,7 +4044,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.identifier_type_index": {
       "cls": "GlobalIndentifier",
@@ -3283,7 +4060,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.bools": {
       "cls": "CSWGlobalVariableTable",
@@ -3297,7 +4076,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.numbers": {
       "cls": "CSWGlobalVariableTable",
@@ -3311,7 +4092,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.locations": {
       "cls": "CSWGlobalVariableTable",
@@ -3325,7 +4108,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.strings": {
       "cls": "CSWGlobalVariableTable",
@@ -3339,7 +4124,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.boolean_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3353,7 +4140,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.number_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3367,7 +4156,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.location_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3381,7 +4172,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "gvt.string_count": {
       "cls": "CSWGlobalVariableTable",
@@ -3395,7 +4188,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entries": {
       "cls": "CSWPartyTable",
@@ -3411,7 +4206,9 @@
       "size": 4,
       "owner": "CSWPartyTable",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x1B0"
+      "offset_hex": "0x1B0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.data": {
       "cls": "CSWSJournal",
@@ -3427,7 +4224,9 @@
       "size": 4,
       "owner": "CSWSJournal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.size": {
       "cls": "CSWSJournal",
@@ -3443,7 +4242,9 @@
       "size": 4,
       "owner": "CSWSJournal",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x4"
+      "offset_hex": "0x4",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry": {
       "cls": "SJournalEntry",
@@ -3459,7 +4260,9 @@
       "size": 56,
       "owner": "SJournalEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry_tag": {
       "cls": "SJournalEntry",
@@ -3475,7 +4278,9 @@
       "size": 8,
       "owner": "SJournalEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x18"
+      "offset_hex": "0x18",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "journal.entry_state": {
       "cls": "SJournalEntry",
@@ -3491,7 +4296,9 @@
       "size": 4,
       "owner": "SJournalEntry",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x20"
+      "offset_hex": "0x20",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "module.name": {
       "cls": "CSWSModule",
@@ -3505,7 +4312,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "movie.internal": {
       "cls": "CExoMoviePlayer",
@@ -3519,7 +4328,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "movie.playing": {
       "cls": "CExoMoviePlayerInternal",
@@ -3533,7 +4344,9 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.fixed_rate": {
       "cls": "CWorldTimer",
@@ -3549,7 +4362,9 @@
       "size": 4,
       "owner": "CWorldTimer",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x0"
+      "offset_hex": "0x0",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.scale": {
       "cls": "CWorldTimer",
@@ -3565,7 +4380,9 @@
       "size": 4,
       "owner": "CWorldTimer",
       "addr_hex": "0x00000000",
-      "offset_hex": "0x8"
+      "offset_hex": "0x8",
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     },
     "timer.paused": {
       "cls": "CWorldTimer",
@@ -3579,10 +4396,434 @@
       "candidates": 0,
       "offset": null,
       "size": null,
-      "owner": null
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client.module": {
+      "cls": "CClientExoAppInternal",
+      "method": "module",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client.options": {
+      "cls": "CClientExoAppInternal",
+      "method": "options",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client_options.camera_mode": {
+      "cls": "CClientOptions",
+      "method": "camera_mode",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "client_module.vtable": {
+      "cls": "CSWCModule",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "client_module.camera": {
+      "cls": "CSWCModule",
+      "method": "camera",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera.vtable": {
+      "cls": "CAurCamera",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "camera.active_behavior": {
+      "cls": "CAurCamera",
+      "method": "active_behavior",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.vtable": {
+      "cls": "CSWCameraOnAStick",
+      "method": "vtable",
+      "kind": "reference",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": null,
+      "candidates": 0,
+      "signature_kind": "unmapped",
+      "signature_reason": "site_not_yet_resolved_in_build_corpus"
+    },
+    "camera_chase.distance": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fDist",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.speed": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fSpeed",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.preset_pitch": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fPresetPitch",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.height": {
+      "cls": "CSWCameraOnAStick",
+      "method": "m_fHeight",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.dolly": {
+      "cls": "CSWCameraOnAStick",
+      "method": "dolly",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.base_distance": {
+      "cls": "CSWCameraOnAStick",
+      "method": "base_distance",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.base_view_angle": {
+      "cls": "CSWCameraOnAStick",
+      "method": "base_view_angle",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.style_row": {
+      "cls": "CSWCameraOnAStick",
+      "method": "style_row",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_28_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_28_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_38_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_38_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "camera_chase.raw_50_unverified": {
+      "cls": "CSWCameraOnAStick",
+      "method": "raw_50_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "g.camera_style_pending": {
+      "cls": "",
+      "method": "g_camera_style_pending",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.area_id": {
+      "cls": "CSWSObject",
+      "method": "area_id",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.position": {
+      "cls": "CSWSObject",
+      "method": "position",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.orientation": {
+      "cls": "CSWSObject",
+      "method": "orientation",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.client_push_gate_unverified": {
+      "cls": "CSWSObject",
+      "method": "client_push_gate_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "server_object.dirty_bits": {
+      "cls": "CSWSObject",
+      "method": "dirty_bits",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "placeable.aabb_registered": {
+      "cls": "CSWSPlaceable",
+      "method": "aabb_registered",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
+    },
+    "placeable.quaternion_raw_order_unverified": {
+      "cls": "CSWSPlaceable",
+      "method": "quaternion_raw_order_unverified",
+      "kind": "field",
+      "required": false,
+      "addr": null,
+      "source": "unresolved",
+      "confidence": null,
+      "method_detail": "field has no adjudicated offset on this build",
+      "candidates": 0,
+      "offset": null,
+      "size": null,
+      "owner": null,
+      "signature_kind": "field",
+      "signature_reason": "struct_field_or_global_offset (not executable code; ABI layout binding)"
     }
   },
-  "reference_image": "/home/brunner56/swkotor-multiplayer-investigation/artifacts/k2_gog_aspyr_20260917/swkotor2-client.exe",
   "reference_sha256": "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
   "derived_sha256": "777bee235a9e8bdd9863f6741bc3ac54bb6a113b62b1d2e4d12bbe6db963a914",
   "sentinel": {
@@ -3598,12 +4839,12 @@
     }
   ],
   "summary": {
-    "total": 256,
-    "resolved": 184,
-    "by_func": 123,
+    "total": 286,
+    "resolved": 187,
+    "by_func": 125,
     "by_identity": 0,
-    "by_adjudication": 61,
-    "by_field": 60,
+    "by_adjudication": 62,
+    "by_field": 61,
     "overlay_conflicts": [],
     "refused_ambiguous": [
       "timer.set_snapshot_scale"
@@ -3679,7 +4920,34 @@
       "module.name",
       "movie.internal",
       "movie.playing",
-      "timer.paused"
+      "timer.paused",
+      "client.module",
+      "client.options",
+      "client_options.camera_mode",
+      "client_module.vtable",
+      "client_module.camera",
+      "camera.vtable",
+      "camera.active_behavior",
+      "camera_chase.vtable",
+      "camera_chase.distance",
+      "camera_chase.speed",
+      "camera_chase.preset_pitch",
+      "camera_chase.height",
+      "camera_chase.dolly",
+      "camera_chase.base_distance",
+      "camera_chase.base_view_angle",
+      "camera_chase.style_row",
+      "camera_chase.raw_28_unverified",
+      "camera_chase.raw_38_unverified",
+      "camera_chase.raw_50_unverified",
+      "g.camera_style_pending",
+      "server_object.area_id",
+      "server_object.position",
+      "server_object.orientation",
+      "server_object.client_push_gate_unverified",
+      "server_object.dirty_bits",
+      "placeable.aabb_registered",
+      "placeable.quaternion_raw_order_unverified"
     ],
     "multi_candidate": [
       "vm.execute_code",

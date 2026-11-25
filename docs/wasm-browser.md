@@ -1,6 +1,6 @@
 # Browser / WASM embed (low priority)
 
-ScriptForge will eventually embed playable KotOR in a browser the way
+KotorJIT will eventually embed playable KotOR in a browser the way
 [KotOR.js](https://github.com/KobaltBlu/KotOR.js) does, but as a first-party
 target of this repo — not a fork of game assets.
 

@@ -59,7 +59,7 @@ void check(bool condition, const char* what) {
 
 // The log sink the runtime would install. Here it prints to stdout so the log
 // lines and the script's own print() land in one readable stream; in the game
-// this is what appends to scriptforge.log.
+// this is what appends to kotorjit.log.
 void tool_log_sink(platform::LogLevel level, const char* message, void*) {
     g_log_records.push_back({level, message != nullptr ? message : ""});
     std::printf("  [log:%s] %s\n", platform::to_string(level), message);

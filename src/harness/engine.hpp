@@ -18,6 +18,7 @@
 // 1 of the feasibility audit).
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -206,6 +207,7 @@ void* client_set_game_speed_detour();
 void* client_play_movies_detour();
 
 // Called once hooks are installed, so the two bodies can reach their originals.
+std::atomic<void*>* adapter_original_slot(std::string_view site);
 void bind_adapter_originals(const hooks::HookSet&);
 
 }  // namespace kp::harness

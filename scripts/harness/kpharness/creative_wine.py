@@ -62,10 +62,10 @@ def private_tree(path: Path) -> None:
 
 def source_receipt(source: Path) -> dict:
     """Bound the mutable-source preservation check; static game assets aren't rescanned."""
-    names = {'swkotor.exe', 'swkotor.ini', 'scriptforge.ini', 'scriptforge.dll', 'binkw32.dll',
-             'binkw32_real.dll', 'steam_appid.txt', 'scriptforge.log', 'scriptforge-proxy.log'}
+    names = {'swkotor.exe', 'swkotor.ini', 'kotorjit.ini', 'kotorjit.dll', 'binkw32.dll',
+             'binkw32_real.dll', 'steam_appid.txt', 'kotorjit.log', 'kotorjit-proxy.log'}
     result = {name: sha256(source / name) if (source / name).is_file() else None for name in sorted(names)}
-    for directory in ('Saves', 'Override', 'scriptforge/scripts'):
+    for directory in ('Saves', 'Override', 'kotorjit/scripts'):
         root = source / directory
         for path in sorted(root.rglob('*')) if root.is_dir() else []:
             if path.is_file():
@@ -134,7 +134,7 @@ class LinuxWineCreativeSession(GameSession):
 
     def stage(self, resources=None):
         super().stage(resources)
-        scripts = self.game_dir / 'scriptforge/scripts'
+        scripts = self.game_dir / 'kotorjit/scripts'
         if scripts.is_symlink() or not scripts.resolve().is_relative_to(self.staged):
             raise BootFailure('script ownership', 'script directory escaped owned stage')
         # Everything here was created/materialized in the runner-owned stage.
@@ -149,7 +149,7 @@ class LinuxWineCreativeSession(GameSession):
             self.deployed.append({'source': artifact(source), 'deployed': artifact(destination)})
         (self.run_dir / 'deployed-scripts.json').write_text(json.dumps(self.deployed, indent=2) + '\n')
         prior_logs = {}
-        for name in ('scriptforge.log', 'scriptforge-proxy.log'):
+        for name in ('kotorjit.log', 'kotorjit-proxy.log'):
             path = self.game_dir / name
             if path.is_symlink() or not path.resolve().is_relative_to(self.staged):
                 raise BootFailure('log ownership', str(path))

@@ -137,10 +137,10 @@ evidence = "libsource/nwscript/nwvmachineinternal.cpp:005d45d0 body: returns 0 o
 
 [[event]]
 lua_name = "OnDialogConditional"
-hook_site = "vm.run_script"
+hook_site = "dialog.check_script"
 args = [
-  { name = "script_name", type = "string", source = "arg1 CExoString*" },
-  { name = "speaker", type = "object", source = "arg2 ulong" },
+  { name = "script_name", type = "string", source = "CResRef* arg2" },
+  { name = "speaker", type = "object", source = "CWSObject* arg1" },
 ]
 returns = ["bool"]
 fallback = "true"
@@ -1830,3 +1830,32 @@ engine_return = "ReportSuccess"
 confidence = "high"
 doc = "Object type: creature. Script slot: arbitrary, supplied by the client message. Return false to stop the game's own script running."
 evidence = "nwshandleplayermessage.cpp:595-615, player message subtype 8: reads a string from the wire and runs it as a script on the player's creature."
+
+[[event]]
+lua_name = "OnScriptSituation"
+hook_site = "vm.run_script_situation"
+args = [
+  { name = "object", type = "object", source = "arg2 ulong" },
+  { name = "has_object", type = "int", source = "arg3 int" },
+]
+returns = ["bool"]
+fallback = "true"
+blocking = true
+engine_return = "ReportSuccess"
+confidence = "high"
+doc = "Delayed/assigned script closure (DelayCommand/AssignCommand) is about to resume. Return false to cancel execution."
+evidence = "CVirtualMachineInternal::RunScriptSituation (K1 0x5d4ad0, K2 GOG 0x645830, K2 ELF 0x084685d8): takes (this, situation, objectId, hasObject), returns int status."
+
+[[event]]
+lua_name = "OnPlayerSpawn"
+hook_site = "vm.run_script"
+args = [
+  { name = "player", type = "object", source = "player creature object id" },
+]
+returns = []
+fallback = "none"
+blocking = false
+engine_return = "Passthrough"
+confidence = "high"
+doc = "Player creature spawned or entered module control."
+evidence = "Dispatched when ScriptSpawn runs on the player creature or when CSWSModule::EventHandler completes CLIENT_ENTER for the player character."

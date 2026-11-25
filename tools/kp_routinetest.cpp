@@ -7,7 +7,9 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
+#include "api/abi_layout.hpp"
 #include "api/routines.hpp"
 #include "api/output.hpp"
 #include "api/enginestruct.hpp"
@@ -30,7 +32,7 @@ const char* g_string_text = "last";
 std::uint32_t g_string_capacity = 5;
 int g_string_destroys = 0;
 std::string g_string_pushed;
-void KP_THISCALL destroy_string(void*) { ++g_string_destroys; }
+void KP_ENGINE_METHOD_CALL destroy_string(void*) { ++g_string_destroys; }
 int push_string(void*, const void* input) {
     ++g_push_calls;
     const auto& value = *static_cast<const kp::api::ExoString*>(input);
@@ -116,13 +118,19 @@ int trace_int(lua_State* L, const char* key) {
 int main() {
     int fake_vm = 0;
     void* wrapper = &fake_vm;
-    void* commands[772];
-    for (void*& command : commands) command = reinterpret_cast<void*>(&execute);
+    const std::size_t entry_bytes = kp::api::layout::kEngine.command_entry_bytes;
+    std::vector<unsigned char> command_buf(772 * entry_bytes, 0);
+    auto set_command = [&](std::size_t idx, void* fn) {
+        std::memset(command_buf.data() + idx * entry_bytes, 0, entry_bytes);
+        std::memcpy(command_buf.data() + idx * entry_bytes, &fn, sizeof(fn));
+    };
+    for (std::size_t i = 0; i < 772; ++i) set_command(i, reinterpret_cast<void*>(&execute));
+    const void* commands = command_buf.data();
     struct Commands {
         void* vtable = nullptr;
         int has_caller = 0;
         std::uint32_t caller_id = 0;
-        void* const* table = nullptr;
+        const void* table = nullptr;
     } implementer;
     struct Internal {
         unsigned char padding[0x3d4]{};
@@ -190,11 +198,11 @@ int main() {
           "table invalidation raises Lua error before dispatcher entry");
     lua_settop(L, 0);
     implementer.table = commands;
-    commands[28] = nullptr;
+    set_command(28, nullptr);
     check(invoke(L, call_facing) != 0 && g_execute_calls == before,
           "null selected command slot refuses dispatch");
     lua_settop(L, 0);
-    commands[28] = reinterpret_cast<void*>(&execute);
+    set_command(28, reinterpret_cast<void*>(&execute));
 
     g_pop_succeeds = true;
     g_pop_calls = 0;

@@ -95,6 +95,9 @@ void set_active_multiplayer_transport(multiplayer::Transport*);
 // Called by the runtime once hooks are installed, and again before they are
 // removed. The trampoline is unmapped on uninstall, so a cached original()
 // pointer must be cleared BEFORE the uninstall rather than after.
+// Returns the per-site atomic original pointer slot so HookSet::install()
+// populates g_orig_* before activating each detour.
+std::atomic<void*>* hook_original_slot(std::string_view site);
 void bind_originals(hooks::HookSet&);
 void clear_originals();
 
@@ -116,6 +119,8 @@ void* store_event_detour();
 void* waypoint_event_detour();
 void* save_situation_detour();
 void* load_situation_detour();
+void* run_script_situation_detour();
+void* dialog_check_script_detour();
 void* creature_move_to_point_detour();
 void* add_move_to_point_detour();
 void* net_start_connect_detour();
@@ -170,6 +175,10 @@ private:
     std::atomic<bool>* poison_;
     int                slot_;
 };
+
+// Scoped hardware-fault guard for arbitrary calls (e.g. kp.native.call).
+// Catches faults cleanly without poisoning or disabling the Lua runtime.
+bool guard_call(const char* label, void (*work)(void*), void* ctx);
 
 }  // namespace kp::runtime
 

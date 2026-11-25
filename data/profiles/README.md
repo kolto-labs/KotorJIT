@@ -1,6 +1,6 @@
 # Platform profiles (AgentDecompile-aligned)
 
-ScriptForge selects a game binary by **content identity** (code-section hash /
+KotorJIT selects a game binary by **content identity** (code-section hash /
 portable signatures), not by path or store shelf name. That matches AgentDecompile's
 **portable signature** and **hook pack** ideas: logical site names are stable;
 per-build addresses are a cache.

@@ -46,6 +46,12 @@ namespace {
 constexpr const char* kDirectDispatchNames[] = {
     "OnScriptLoad", "OnScriptUnload", "OnConsoleCommand", "OnRunScriptDone",
     "OnSave", "OnLoad", "OnTick", "OnRunScript",
+    "OnDialogConditional", "OnScriptSituation", "OnPlayerSpawn",
+    "OnCreatureHeartbeat", "OnCreatureSpawn", "OnCreatureDamaged",
+    "OnCreatureDeath", "OnCreatureEndCombatRound", "OnCreatureEndDialogue",
+    "OnPlaceableEndDialogue", "OnTriggerTrapTriggered", "OnTriggerHeartbeat",
+    "OnCreatureStateScript", "OnAreaTransitionFail", "OnItemUse",
+    "OnClientRequestedScript",
 };
 
 }  // namespace

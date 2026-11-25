@@ -1,12 +1,12 @@
 # Attribution
 
-ScriptForge stands on work other people did first. Who, and for what:
+KotorJIT stands on work other people did first. Who, and for what:
 
 ## Architectural model
 
 **[Phasor](https://github.com/urbanyoung/Phasor)**: urbanyoung, MIT.
 
-Phasor is a Lua scripting host for Halo servers. ScriptForge borrows its shape, and the
+Phasor is a Lua scripting host for Halo servers. KotorJIT borrows its shape, and the
 borrowing is deliberate rather than incidental:
 
 - Scripts live in a folder and define only the event callbacks they care about.
@@ -38,11 +38,11 @@ points, published reverse-engineering findings for both games, and its deploymen
   - Address-preserving ELF32 `DT_NEEDED` injection (`PT_NOTE` repurposed to `PT_LOAD`) via
     `tools/elf_needed.py`.
   - DLL-only `.kpatch` packaging (`kpatch/`, `scripts/package_kpatch.py`) so KPM itself can
-    load ScriptForge without duplicating hook definitions.
+    load KotorJIT without duplicating hook definitions.
 
-ScriptForge implements its own hook engine and address tables rather than using
+KotorJIT implements its own hook engine and address tables rather than using
 `KotorPatcher` detours, and is **strictly incompatible with any other code patching**:
-every hook site requires exact expected prologue bytes, and ScriptForge refuses to install
+every hook site requires exact expected prologue bytes, and KotorJIT refuses to install
 hooks cleanly if another patch or module has modified those bytes.
 
 Individual patches in that project are credited to their own authors: Lane, Vriff, J,
@@ -62,7 +62,7 @@ cross-build identity layer that makes unnamed builds usable all come from that c
 ## The games
 
 KOTOR and KOTOR II are the work of BioWare, Obsidian Entertainment, LucasArts, and Aspyr.
-ScriptForge is an unaffiliated fan project. It ships no game content and redistributes no
+KotorJIT is an unaffiliated fan project. It ships no game content and redistributes no
 game binaries. You need your own copy of the game.
 
 ## Dependencies

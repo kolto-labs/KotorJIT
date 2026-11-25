@@ -1,14 +1,14 @@
-# ScriptForge on macOS (Steam, x86_64)
+# KotorJIT on macOS (Steam, x86_64)
 
-ScriptForge runs on the Steam macOS builds of KOTOR 1 (`KOTOR_Exe`) and KOTOR 2
+KotorJIT runs on the Steam macOS builds of KOTOR 1 (`KOTOR_Exe`) and KOTOR 2
 (`KOTOR2sub`, the x86_64 slice of its universal binary). Both are x86_64, so on
-Apple silicon they run — and ScriptForge runs with them — under Rosetta 2. On an
+Apple silicon they run — and KotorJIT runs with them — under Rosetta 2. On an
 Intel Mac they run natively. Nothing here touches a 32-bit Mac build.
 
 ## What works
 
 - The `.lua` script model, exactly as on Windows: drop a file in
-  `<game>/scriptforge/scripts`, register for events, return to observe/block.
+  `<game>/kotorjit/scripts`, register for events, return to observe/block.
 - Every NWScript event that funnels through `RunScript` and the ten object
   `EventHandler`s (creature, door, placeable, trigger, module, area, encounter,
   area-of-effect, store, waypoint), plus save/load situation and the console.
@@ -39,11 +39,10 @@ Intel Mac they run natively. Nothing here touches a 32-bit Mac build.
 On a Mac with Xcode Command Line Tools:
 
 ```sh
-scripts/mac/build.sh          # -> build-mac/libscriptforge.dylib (x86_64, ad-hoc signed)
+scripts/mac/build.sh          # -> build-mac/libkotorjit.dylib (x86_64, ad-hoc signed)
 ```
 
-LuaJIT and Dear ImGui are vendored; no network is needed. `cmake --build` on a
-Mac runs this same script.
+Dear ImGui is vendored under `third_party/imgui/`; place LuaJIT v2.1 under `third_party/luajit/` first (see `ATTRIBUTION.md`). `cmake --build` on a Mac runs this same script.
 
 ## Install
 
@@ -52,18 +51,18 @@ scripts/mac/install_to_game.sh install "<KOTOR app or MacOS dir>"
 ```
 
 It identifies the build by its code-section hash, copies the dylib and the
-matching address table into `<game>/…/MacOS/scriptforge/`, writes a starter
-`scriptforge.ini` and an example script, and prints the launch line. No game
+matching address table into `<game>/…/MacOS/kotorjit/`, writes a starter
+`kotorjit.ini` and an example script, and prints the launch line. No game
 file is modified.
 
 Then set the game's **Steam launch options** to what the installer prints:
 
 ```
-DYLD_INSERT_LIBRARIES="…/MacOS/libscriptforge.dylib" %command%
+DYLD_INSERT_LIBRARIES="…/MacOS/libkotorjit.dylib" %command%
 ```
 
-That is the whole install. The runtime identifies the executable by hashing its code section (`__TEXT,__text`) at load — so an executable with an unmodified code section (including a binary whose `LC_LOAD_DYLIB` was edited by a loader like KotOR Patch Manager) still verifies cleanly, while any unexpected executable or modified hook site is left completely unpatched. `install_to_game.sh status` and `uninstall` do what they say; uninstalling is deleting the dylib and clearing the launch option. On KPM for macOS, `dist/scriptforge.kpatch` can also load `binaries/macos_x86_64.dylib` directly.
+That is the whole install. The runtime identifies the executable by hashing its code section (`__TEXT,__text`) at load — so an executable with an unmodified code section (including a binary whose `LC_LOAD_DYLIB` was edited by a loader like KotOR Patch Manager) still verifies cleanly, while any unexpected executable or modified hook site is left completely unpatched. `install_to_game.sh status` and `uninstall` do what they say; uninstalling is deleting the dylib and clearing the launch option. On KPM for macOS, `dist/kotorjit.kpatch` can also load `binaries/macos_x86_64.dylib` directly.
 
 ## Why DYLD_INSERT_LIBRARIES and not a Bink proxy
 
-On Windows, ScriptForge supports both runtime DLL injection (`scriptforge-launch.exe` / KPM `.kpatch`) and an optional `binkw32.dll` proxy. On macOS the equivalent preload route — load our code before the game's entry point — comes from `DYLD_INSERT_LIBRARIES`, which these builds allow because their code signature sets no library-validation or hardened-runtime flag (or via KPM's `LC_LOAD_DYLIB` loader). A dylib constructor starts the runtime on a worker thread, exactly as the Windows/Linux entry points do. No Bink dylib is replaced, so Steam's integrity check stays green.
+On Windows, KotorJIT supports both runtime DLL injection (`kotorjit-launch.exe` / KPM `.kpatch`) and an optional `binkw32.dll` proxy. On macOS the equivalent preload route — load our code before the game's entry point — comes from `DYLD_INSERT_LIBRARIES`, which these builds allow because their code signature sets no library-validation or hardened-runtime flag (or via KPM's `LC_LOAD_DYLIB` loader). A dylib constructor starts the runtime on a worker thread, exactly as the Windows/Linux entry points do. No Bink dylib is replaced, so Steam's integrity check stays green.

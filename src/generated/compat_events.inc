@@ -113,4 +113,6 @@
 {"OnAreaTransitionFail", "OnAreaTransitionFail", 108, ""},
 {"OnItemUse", "OnItemUse", 109, ""},
 {"OnClientRequestedScript", "OnClientRequestedScript", 110, ""},
+{"OnScriptSituation", "OnScriptSituation", 111, ""},
+{"OnPlayerSpawn", "OnPlayerSpawn", 112, ""},
 // clang-format on

@@ -19,11 +19,13 @@
 #include <string>
 #include <string_view>
 #include <thread>
+#include <unordered_set>
 #include <vector>
 
 #include "events/contract.hpp"
 #include "events/table.hpp"
 #include "generated/embedded_addresses.inc"
+#include "hooks/native_call.hpp"
 #include "hooks/registry.hpp"
 #if defined(__i386__)
 #include "hooks/lua_bridge.hpp"
@@ -98,6 +100,31 @@ void register_game_speed(lua_State* L) {
     lua_setfield(L, -2, "game_speed");
     lua_pop(L, 1);
 }
+
+int l_hooks_active(lua_State* L) {
+    hooks::HookSet* hs = Runtime::instance().hooks();
+    std::vector<std::string> names = hs ? hs->active_names() : std::vector<std::string>{};
+    lua_createtable(L, static_cast<int>(names.size()), 0);
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        lua_pushlstring(L, names[i].data(), names[i].size());
+        lua_rawseti(L, -2, static_cast<int>(i + 1));
+    }
+    return 1;
+}
+
+void register_hooks_api(lua_State* L) {
+    lua_getglobal(L, "kp");
+    if (!lua_istable(L, -1)) { lua_pop(L, 1); return; }
+    lua_getfield(L, -1, "hooks");
+    if (!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_createtable(L, 0, 1);
+    }
+    lua_pushcfunction(L, l_hooks_active);
+    lua_setfield(L, -2, "active");
+    lua_setfield(L, -2, "hooks");
+    lua_pop(L, 1);
+}
 }  // namespace
 namespace {
 
@@ -159,7 +186,7 @@ std::string resolve_against(const std::string& base, const std::string& value) {
     return join(base, value);
 }
 
-// SCRIPTFORGE_HARNESS_PORT wins over the ini, and it has to win whether or
+// KOTORJIT_HARNESS_PORT wins over the ini, and it has to win whether or
 // not the ini exists: it is how a build directory is driven without staging
 // a file next to the game. Applied on both exits from from_game_dir.
 void apply_harness_env(Config& c) {
@@ -258,12 +285,25 @@ std::string directory_of(const std::string& path) {
 
 std::string self_module_path() {
 #if defined(_WIN32)
-    char buf[MAX_PATH] = {0};
-    const DWORD n = GetModuleFileNameA(nullptr, buf, sizeof buf);
-    return n > 0 ? std::string(buf, n) : std::string();
+    std::wstring buf(1024, L'\0');
+    for (;;) {
+        const DWORD n = GetModuleFileNameW(nullptr, buf.data(), static_cast<DWORD>(buf.size()));
+        if (n == 0) return {};
+        if (n < buf.size()) {
+            const int utf8_len = WideCharToMultiByte(CP_UTF8, 0, buf.data(), static_cast<int>(n),
+                                                     nullptr, 0, nullptr, nullptr);
+            if (utf8_len <= 0) return {};
+            std::string out(static_cast<std::size_t>(utf8_len), '\0');
+            WideCharToMultiByte(CP_UTF8, 0, buf.data(), static_cast<int>(n),
+                                out.data(), utf8_len, nullptr, nullptr);
+            return out;
+        }
+        if (buf.size() >= 32768) return {};
+        buf.resize(buf.size() * 2);
+    }
 #elif defined(__APPLE__)
     // The GAME executable, not this dylib: the runtime derives game_dir,
-    // script dir and log path from it. When ScriptForge is loaded through
+    // script dir and log path from it. When KotorJIT is loaded through
     // DYLD_INSERT_LIBRARIES, _NSGetExecutablePath still names the host
     // executable (KOTOR_Exe / KOTOR2sub), which is what we want. The path it
     // returns may be non-canonical (symlinks, .. segments); realpath resolves
@@ -340,6 +380,7 @@ Config Config::from_game_dir(const std::string& game_dir) {
         else if (key == "log_path")     c.log_path = resolve_against(game_dir, val);
         else if (key == "error_budget") c.error_budget = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
         else if (key == "hot_reload")   c.hot_reload = truthy(val);
+        else if (key == "hook_all_events") c.hook_all_events = truthy(val);
         // [harness] keys. Sections are ignored above, so these are global.
         else if (key == "harness_port") c.harness_port = static_cast<unsigned>(std::strtoul(val.c_str(), nullptr, 10));
         else if (key == "harness_bind") c.harness_bind = val;
@@ -349,14 +390,20 @@ Config Config::from_game_dir(const std::string& game_dir) {
     std::fclose(f);
     apply_harness_env(c);
     apply_multiplayer_env(c);
+    if (const char* v = std::getenv("KP_HOOK_ALL_EVENTS"); v != nullptr && *v != '\0')
+        c.hook_all_events = truthy(v);
     return c;
 }
 
 // --------------------------------------------------------------- Runtime ----
 
 Runtime& Runtime::instance() {
-    static Runtime r;
-    return r;
+    // Intentionally immortal: KPM's KotorPatcher can invoke FreeLibrary
+    // inside its DLL_PROCESS_DETACH under the OS loader lock. Running ~Runtime
+    // there would join Transport's socket thread and unpatch hooks mid-exit.
+    // Quiescent callers use explicit Runtime::stop().
+    static Runtime* r = new Runtime();
+    return *r;
 }
 
 void Runtime::log(const char* fmt, ...) {
@@ -394,7 +441,7 @@ void Runtime::log(const char* fmt, ...) {
     body[n] = '\0';
 
     while (g_log_lock.test_and_set(std::memory_order_acquire)) {}
-    std::FILE* f = std::fopen(log_path_.empty() ? "scriptforge.log" : log_path_.c_str(), "ab");
+    std::FILE* f = std::fopen(log_path_.empty() ? "kotorjit.log" : log_path_.c_str(), "ab");
     if (f != nullptr) {
         std::fprintf(f, "[%s] %s\n", to_string(phase_), body);
         std::fclose(f);
@@ -447,6 +494,32 @@ bool Runtime::await_and_verify(const Config& cfg) {
     log("classifying and, if encrypted, waiting for the code section to decipher");
 
     const image::LoadResult r = image::load(exe);
+    probed_table_.reset();
+    std::vector<api::memory::ScanRegion> regions;
+    for (const image::Section& s : r.sections) {
+        if (!s.executable || s.state == image::SectionState::Ciphertext || s.size == 0) continue;
+        regions.push_back({s.va, s.size, s.name});
+    }
+    if (r.status == image::LoadStatus::UnrecognisedBuild && !regions.empty()) {
+        api::memory::bind_scan_regions(r.image_base, regions);
+        const char* fmt_name =
+            (r.format == image::Format::Elf32) ? "elf"
+            : (r.format == image::Format::MachO ? "macho" : "pe");
+        auto fallback = std::make_unique<hooks::AddressTable>();
+        std::string probe_error;
+        if (hooks::AddressTable::probe_unified(
+                kp::generated::embedded_unified_signatures(),
+                fmt_name, r.image_base, r.image_base, *fallback, probe_error)) {
+            build_ = fallback->build();
+            image_sha256_ = r.identity.sha256;
+            runtime_base_ = r.image_base;
+            probed_table_ = std::move(fallback);
+            log("build: unrecognised SHA, bound via unified signature probe (%s, image base 0x%08lx)",
+                build_.c_str(), static_cast<unsigned long>(runtime_base_));
+            return true;
+        }
+        log("unified signature probe failed: %s", probe_error.c_str());
+    }
     if (r.status != image::LoadStatus::Ok) {
         failure_ = std::string("image: ") + image::to_string(r.status);
         if (!r.detail.empty()) failure_ += " -- " + r.detail;
@@ -460,7 +533,6 @@ bool Runtime::await_and_verify(const Config& cfg) {
     log("build: %s (image base 0x%08lx, waited %ums)", build_.c_str(),
         static_cast<unsigned long>(runtime_base_), r.waited_ms);
     log("code section verified: %s", r.text_sha256.c_str());
-    std::vector<api::memory::ScanRegion> regions;
     for (const image::Section& s : r.sections) {
         if (!s.executable) continue;
         log("  section %s va=0x%08lx size=%lu entropy=%.3f state=%s", s.name.c_str(),
@@ -468,8 +540,6 @@ bool Runtime::await_and_verify(const Config& cfg) {
             s.state == image::SectionState::Ciphertext  ? "ciphertext"
             : s.state == image::SectionState::Deciphered ? "deciphered"
                                                          : "plaintext");
-        if (s.state == image::SectionState::Ciphertext || s.size == 0) continue;
-        regions.push_back({s.va, s.size, s.name});
     }
     api::memory::bind_scan_regions(runtime_base_, std::move(regions));
     std::string model_error;
@@ -503,81 +573,119 @@ bool Runtime::resolve(const Config& cfg) {
     // hook pack (logical sites + per-build instance cache), then the optional
     // per-build overlay for expected_bytes / kind / required. Address JSON
     // alone still works when neither is staged.
-    std::vector<std::string> manifest_candidates;
-    manifest_candidates.push_back(join(data_dir_of(cfg), "hookmanifest.json"));
-    if (const char* m = kp::naming::env("HOOKMANIFEST"); m != nullptr && *m != '\0')
-        manifest_candidates.insert(manifest_candidates.begin(), m);
-    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
-        manifest_candidates.push_back(join(dir, "hookmanifest.json"));
-
-    std::vector<std::string> pack_candidates;
-    pack_candidates.push_back(join(data_dir_of(cfg), "hookpack.json"));
-    if (const char* pack = kp::naming::env("HOOKPACK"); pack != nullptr && *pack != '\0')
-        pack_candidates.insert(pack_candidates.begin(), pack);
-    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
-        pack_candidates.push_back(join(dir, "hookpack.json"));
-
-    std::vector<std::string> candidates;
-    candidates.push_back(join(join(data_dir_of(cfg), "addresses"), build_ + ".json"));
-    candidates.push_back(join(data_dir_of(cfg), build_ + ".json"));
-    if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
-        candidates.push_back(join(dir, build_ + ".json"));
-
-    std::string manifest;
-    for (const std::string& p : manifest_candidates) {
-        if (file_exists(p)) { manifest = p; break; }
-    }
     std::string pack;
-    if (manifest.empty()) {
-        for (const std::string& p : pack_candidates) {
-            if (file_exists(p)) { pack = p; break; }
-        }
-    }
     std::string chosen;
-    for (const std::string& p : candidates) {
-        if (file_exists(p)) { chosen = p; break; }
-    }
-    std::string_view embedded;
-    if (manifest.empty() && pack.empty() && chosen.empty()) {
-        embedded = kp::generated::find_embedded_address_table(build_);
-        if (embedded.empty()) {
-            failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
-            for (const std::string& p : manifest_candidates) failure_ += " " + p;
-            for (const std::string& p : pack_candidates) failure_ += " " + p;
-            for (const std::string& p : candidates) failure_ += " " + p;
-            failure_ += " (and no embedded table)";
-            return false;
-        }
-    }
-
     auto table = std::make_unique<hooks::AddressTable>();
     std::string error;
-    if (!manifest.empty()) {
-        if (!hooks::AddressTable::load_manifest(manifest, build_, chosen, *table, error)) {
-            failure_ = "hook manifest " + manifest + ": " + error;
-            return false;
-        }
-        if (!table->expected_sha256().empty() && table->expected_sha256() != image_sha256_) {
-            log("hook manifest %s was generated from sha256 %s; this image is %s -- "
-                "binding by pattern only, ambiguous or missing sites refuse",
-                manifest.c_str(), table->expected_sha256().c_str(), image_sha256_.c_str());
-        }
-    } else if (!pack.empty()) {
-        if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
-            failure_ = "hook pack " + pack + ": " + error;
-            return false;
-        }
-    } else if (!chosen.empty()) {
-        if (!hooks::AddressTable::load_file(chosen, *table, error)) {
-            failure_ = "address table " + chosen + ": " + error;
-            return false;
-        }
-    } else if (!hooks::AddressTable::parse(embedded, *table, error)) {
-        failure_ = "embedded address table for " + build_ + ": " + error;
-        return false;
-    }
+    std::string source;
+    std::string err_source;
 
-    table->resolve_from_signatures(runtime_base_);
+    if (probed_table_ != nullptr) {
+        table = std::move(probed_table_);
+        source = "unified-signatures:" + build_;
+        err_source = "unified signature probe for " + build_;
+    } else {
+        std::vector<std::string> manifest_candidates;
+        manifest_candidates.push_back(join(data_dir_of(cfg), "hookmanifest.json"));
+        if (const char* m = kp::naming::env("HOOKMANIFEST"); m != nullptr && *m != '\0')
+            manifest_candidates.insert(manifest_candidates.begin(), m);
+        if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
+            manifest_candidates.push_back(join(dir, "hookmanifest.json"));
+
+        std::vector<std::string> pack_candidates;
+        pack_candidates.push_back(join(data_dir_of(cfg), "hookpack.json"));
+        if (const char* p = kp::naming::env("HOOKPACK"); p != nullptr && *p != '\0')
+            pack_candidates.insert(pack_candidates.begin(), p);
+        if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
+            pack_candidates.push_back(join(dir, "hookpack.json"));
+
+        std::vector<std::string> candidates;
+        candidates.push_back(join(join(data_dir_of(cfg), "addresses"), build_ + ".json"));
+        candidates.push_back(join(data_dir_of(cfg), build_ + ".json"));
+        if (const char* dir = kp::naming::env("ADDRESSES"); dir != nullptr && *dir != '\0')
+            candidates.push_back(join(dir, build_ + ".json"));
+
+        std::string manifest;
+        for (const std::string& p : manifest_candidates) {
+            if (file_exists(p)) { manifest = p; break; }
+        }
+        if (manifest.empty()) {
+            for (const std::string& p : pack_candidates) {
+                if (file_exists(p)) { pack = p; break; }
+            }
+        }
+        for (const std::string& p : candidates) {
+            if (file_exists(p)) { chosen = p; break; }
+        }
+        std::string_view embedded;
+        if (chosen.empty()) {
+            embedded = kp::generated::find_embedded_address_table(build_);
+        }
+        if (manifest.empty() && pack.empty() && chosen.empty()) {
+            if (embedded.empty()) {
+                failure_ = "no hook manifest, hook pack or address table for build \"" + build_ + "\"; looked in";
+                for (const std::string& p : manifest_candidates) failure_ += " " + p;
+                for (const std::string& p : pack_candidates) failure_ += " " + p;
+                for (const std::string& p : candidates) failure_ += " " + p;
+                failure_ += " (and no embedded table)";
+                return false;
+            }
+            log("using embedded address table for %s", build_.c_str());
+        }
+
+        if (!manifest.empty()) {
+            if (!hooks::AddressTable::load_manifest(manifest, build_, chosen, *table, error)) {
+                failure_ = "hook manifest " + manifest + ": " + error;
+                return false;
+            }
+            if (chosen.empty() && !embedded.empty()) {
+                hooks::AddressTable overlay;
+                if (!hooks::AddressTable::parse(embedded, overlay, error)) {
+                    failure_ = "embedded address table for " + build_ + ": " + error;
+                    return false;
+                }
+                table->merge_overlay(overlay);
+                log("merged embedded address table overlay for %s", build_.c_str());
+            }
+            if (!table->expected_sha256().empty() && table->expected_sha256() != image_sha256_) {
+                log("hook manifest %s was generated from sha256 %s; this image is %s -- "
+                    "binding by pattern only, ambiguous or missing sites refuse",
+                    manifest.c_str(), table->expected_sha256().c_str(), image_sha256_.c_str());
+            }
+        } else if (!pack.empty()) {
+            if (!hooks::AddressTable::load_hookpack(pack, build_, chosen, *table, error)) {
+                failure_ = "hook pack " + pack + ": " + error;
+                return false;
+            }
+            if (chosen.empty() && !embedded.empty()) {
+                hooks::AddressTable overlay;
+                if (!hooks::AddressTable::parse(embedded, overlay, error)) {
+                    failure_ = "embedded address table for " + build_ + ": " + error;
+                    return false;
+                }
+                table->merge_overlay(overlay);
+                log("merged embedded address table overlay for %s", build_.c_str());
+            }
+        } else if (!chosen.empty()) {
+            if (!hooks::AddressTable::load_file(chosen, *table, error)) {
+                failure_ = "address table " + chosen + ": " + error;
+                return false;
+            }
+        } else if (!hooks::AddressTable::parse(embedded, *table, error)) {
+            failure_ = "embedded address table for " + build_ + ": " + error;
+            return false;
+        }
+
+        table->resolve_from_signatures(runtime_base_);
+        source = !manifest.empty()
+            ? manifest
+            : (!pack.empty() ? pack : (!chosen.empty() ? chosen : ("embedded:" + build_)));
+        err_source = !manifest.empty()
+            ? ("hook manifest " + manifest)
+            : (!pack.empty() ? ("hook pack " + pack)
+                             : (!chosen.empty() ? ("address table " + chosen)
+                                                : ("embedded address table for " + build_)));
+    }
     std::size_t bound = 0;
     std::size_t missing_pattern = 0;
     std::size_t ambiguous_pattern = 0;
@@ -594,15 +702,6 @@ bool Runtime::resolve(const Config& cfg) {
         log("pattern resolve: %zu missing, %zu ambiguous (refused, left unbound)",
             missing_pattern, ambiguous_pattern);
     }
-
-    const std::string source = !manifest.empty()
-        ? manifest
-        : (!pack.empty() ? pack : (!chosen.empty() ? chosen : ("embedded:" + build_)));
-    const std::string err_source = !manifest.empty()
-        ? ("hook manifest " + manifest)
-        : (!pack.empty() ? ("hook pack " + pack)
-                         : (!chosen.empty() ? ("address table " + chosen)
-                                            : ("embedded address table for " + build_)));
     const std::vector<std::string> missing = table->unresolved_required();
     if (!missing.empty()) {
         failure_ = err_source + " leaves required sites unresolved:";
@@ -735,53 +834,65 @@ bool Runtime::install(bool multiplayer_enabled) {
     // prefers those -- they are wider than a pattern typed here and they cannot
     // drift away from the table they came from.
     auto set = std::make_unique<hooks::HookSet>();
-    set->add({"vm.run_script", run_script_detour(), {}});
-    set->add({"app.server_main_loop", main_loop_detour(), {}});
-
-    // Optional caves. HookSet::install refuses an unresolved requested site, so
-    // only add the ones this build actually bound. Named vm.run_script events
-    // stay off this list.
-    const struct {
-        const char* site;
-        void*       detour;
-    } optional[] = {
-        {"console.do_console", do_console_detour()},
-        {"event.creature", creature_event_detour()},
-        {"event.door", door_event_detour()},
-        {"event.placeable", placeable_event_detour()},
-        {"event.trigger", trigger_event_detour()},
-        {"event.module", module_event_detour()},
-        {"event.area", area_event_detour()},
-        {"event.encounter", encounter_event_detour()},
-        {"event.aoe", aoe_event_detour()},
-        {"event.store", store_event_detour()},
-        {"event.waypoint", waypoint_event_detour()},
-        {"vm.save_script_situation", save_situation_detour()},
-        {"vm.load_script_situation", load_situation_detour()},
-        // Harness caves. The client loop is where commands drain -- it is the
-        // one per-frame site that runs on the main menu. The other two keep
-        // the harness's time scale and movie switch from being undone by the
-        // engine's own per-frame calls. All three are kind=detour only in a
-        // build's generated JSON, so a table that still says `reference`
-        // leaves them uninstalled here rather than refused at install.
-        {"app.client_main_loop", client_main_loop_detour()},
-        {"app.client_frame_wrapper", client_frame_wrapper_detour()},
-        {"client.set_game_speed", kp::harness::client_set_game_speed_detour()},
-        {"client.play_movies", kp::harness::client_play_movies_detour()},
-        // K1 only. This observes mapped admission fields before the original
-        // action runs; builds without the site retain their normal route.
-        {"creature.ai_action_move_to_point", creature_move_to_point_detour()},
+    auto add_hook = [&](std::string site_name, void* detour) {
+        std::atomic<void*>* slot = hook_original_slot(site_name);
+        if (slot == nullptr) slot = kp::harness::adapter_original_slot(site_name);
+        set->add({std::move(site_name), detour, {}, slot});
     };
-    for (const auto& o : optional) {
-        // Save-situation forwarding is experimentally disableable for live
-        // crash isolation. The default remains unchanged; this switch is
-        // intentionally process-local and never affects address resolution.
-        if (std::getenv("KP_DISABLE_SAVE_HOOK") != nullptr &&
-            std::strcmp(o.site, "vm.save_script_situation") == 0)
-            continue;
-        const hooks::Site* s = table_->find(o.site);
-        if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
-            set->add({o.site, o.detour, {}});
+    add_hook("vm.run_script", run_script_detour());
+    add_hook("app.server_main_loop", main_loop_detour());
+    if (const hooks::Site* dc = table_->find("console.do_console");
+        dc != nullptr && dc->resolved && dc->kind == hooks::SiteKind::Detour) {
+        add_hook("console.do_console", do_console_detour());
+    }
+
+    // Harness caves install only when harness mode is configured (`harness_port != 0`).
+    if (harness_active_) {
+        const struct { const char* site; void* detour; } harness_hooks[] = {
+            {"app.client_main_loop", client_main_loop_detour()},
+            {"app.client_frame_wrapper", client_frame_wrapper_detour()},
+            {"client.set_game_speed", kp::harness::client_set_game_speed_detour()},
+            {"client.play_movies", kp::harness::client_play_movies_detour()},
+        };
+        for (const auto& h : harness_hooks) {
+            const hooks::Site* s = table_->find(h.site);
+            if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
+                add_hook(h.site, h.detour);
+        }
+    }
+
+    // Event / dialog / situation / save / load caves are demand-driven by default:
+    // installed lazily via sync_demand_hooks() only when loaded Lua scripts subscribe
+    // to matching events (or all at once when `hook_all_events = 1`).
+    if (hook_all_events_) {
+        const struct {
+            const char* site;
+            void*       detour;
+        } optional[] = {
+            {"event.creature", creature_event_detour()},
+            {"event.door", door_event_detour()},
+            {"event.placeable", placeable_event_detour()},
+            {"event.trigger", trigger_event_detour()},
+            {"event.module", module_event_detour()},
+            {"event.area", area_event_detour()},
+            {"event.encounter", encounter_event_detour()},
+            {"event.aoe", aoe_event_detour()},
+            {"event.store", store_event_detour()},
+            {"event.waypoint", waypoint_event_detour()},
+            {"dialog.check_script", dialog_check_script_detour()},
+            {"vm.run_script_situation", run_script_situation_detour()},
+            {"vm.save_script_situation", save_situation_detour()},
+            {"vm.load_script_situation", load_situation_detour()},
+            {"creature.ai_action_move_to_point", creature_move_to_point_detour()},
+        };
+        for (const auto& o : optional) {
+            if (std::getenv("KP_DISABLE_SAVE_HOOK") != nullptr &&
+                std::strcmp(o.site, "vm.save_script_situation") == 0)
+                continue;
+            const hooks::Site* s = table_->find(o.site);
+            if (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour)
+                add_hook(o.site, o.detour);
+        }
     }
 
     if (multiplayer_enabled) {
@@ -799,7 +910,7 @@ bool Runtime::install(bool multiplayer_enabled) {
                 failure_ = std::string("multiplayer hook unavailable: ") + hook.site;
                 return false;
             }
-            set->add({hook.site, hook.detour, {}});
+            add_hook(hook.site, hook.detour);
         }
         const hooks::Site* destination = table_->find("net.destination_net_layer");
         if (destination == nullptr || !destination->resolved ||
@@ -833,9 +944,13 @@ bool Runtime::install(bool multiplayer_enabled) {
     // rest of the process with no retry.
     {
         api::VmSites sites;
+        const std::uintptr_t delta =
+            (runtime_base_ != 0 && table_->image_base() != 0)
+                ? (runtime_base_ - table_->image_base())
+                : 0;
         auto at = [&](const char* name) -> std::uintptr_t {
             const hooks::Site* s = table_->find(name);
-            return (s != nullptr && s->resolved) ? s->addr : 0;
+            return (s != nullptr && s->resolved && s->addr != 0) ? (s->addr + delta) : 0;
         };
         sites.execute_command    = at("vm.execute_command");
         sites.stack_push_integer = at("vm.stack_push_integer");
@@ -850,6 +965,20 @@ bool Runtime::install(bool multiplayer_enabled) {
         sites.stack_pop_vector   = at("vm.stack_pop_vector");
         sites.stack_push_engine_structure = at("vm.stack_push_engine_structure");
         sites.stack_pop_engine_structure  = at("vm.stack_pop_engine_structure");
+        sites.destroy_game_defined_structure = at("vmcmd.destroy_game_defined_structure");
+        sites.exostring_dtor                 = at("exo.string_dtor");
+        if (const hooks::Site* cmds = table_->find("vmcmd.commands");
+            cmds != nullptr && cmds->resolved &&
+            cmds->kind == hooks::SiteKind::Field && cmds->offset != 0) {
+            sites.commands_offset = cmds->offset;
+        }
+        if (const hooks::Site* cnt = table_->find("vmcmd.command_count");
+            cnt != nullptr && cnt->resolved &&
+            cnt->kind == hooks::SiteKind::Field && cnt->offset != 0) {
+            sites.commands_count = cnt->offset;
+        } else if (!abi::kX64) {
+            sites.commands_count = (table_->game() == "k2") ? 0x36Du : 0x304u;
+        }
         const hooks::Site* wrapper_internal = table_->find("vm.wrapper_internal");
         const hooks::Site* command_implementer =
             table_->find("vm.internal_command_implementer");
@@ -863,6 +992,13 @@ bool Runtime::install(bool multiplayer_enabled) {
         if (sites.layout_resolved) {
             sites.wrapper_internal_offset = wrapper_internal->offset;
             sites.command_implementer_offset = command_implementer->offset;
+        }
+        if (const hooks::Site* sp = table_->find("vm.stack_pointer");
+            sp != nullptr && sp->resolved &&
+            sp->kind == hooks::SiteKind::Field && sp->offset != 0) {
+            sites.stack_pointer_offset = sp->offset;
+        } else if (sites.layout_resolved && !abi::kX64) {
+            sites.stack_pointer_offset = 0x1AC;
         }
         set_vm_sites(sites);
         log("vm: %d of 13 stack sites resolved; layout=%s; the two VM objects are captured "
@@ -886,6 +1022,7 @@ bool Runtime::install(bool multiplayer_enabled) {
 
     hooks_ = std::move(set);
     bind_originals(*hooks_);
+    hooks::native::bind(table_.get(), runtime_base_, guard_call);
     log("installed %zu hooks", hooks_->installed_count());
 
     // The harness adapter binds every engine call and field it can from the
@@ -930,6 +1067,16 @@ bool Runtime::boot_scripts(const Config& cfg) {
                 ids.remove_prefix(end + 1);
             }
             return false;
+        },
+        +[](lua_State* L, const char* site, const char* msg) -> bool {
+            lua::Script* s = lua::Script::owner(L);
+            if (s == nullptr) return false;
+            lua::Host* h = active_host();
+            const std::uint64_t tick = h != nullptr ? h->tick() : 0;
+            const unsigned budget = h != nullptr ? h->error_budget() : 8u;
+            s->record_error(site != nullptr ? site : "kp.hook",
+                            msg != nullptr ? msg : "handler failed", tick, budget);
+            return s->state() == lua::ScriptState::Quarantined;
         });
 #endif
     lua::HostConfig hc;
@@ -942,15 +1089,17 @@ bool Runtime::boot_scripts(const Config& cfg) {
     // Everything a script can call is registered here, on each fresh state.
     // The Lua host takes this as a hook precisely so it does not have to know
     // what a KOTOR routine is -- see the note on HostConfig.
-    hc.on_state_created = [game_dir = cfg.game_dir](lua_State* L) {
+    hc.on_state_created = [game_dir = cfg.game_dir, build = build_](lua_State* L) {
         // Order matters in one place only: the engine-structure metatables must
         // exist before anything can hand a script one of those handles.
         api::open_engine_structs(L);      // effect/event/location/talent handles
-        api::register_all(L);             // nwscript.call(name, ...), all 769
+        api::register_all(L);             // nwscript.call(name, ...), all 769/874
+        api::register_kp_routines(L);     // kp.vm_ready, routine, routines, engine_type, gametime
         api::memory::register_all(L);     // raw read/write, the escape hatch
 #if defined(__i386__)
         hooks::lua_bridge::register_all(L);
 #endif
+        hooks::native::register_all(L);    // kp.native.{list,resolve,bind,call}
         api::structs::register_all(L);    // named typed field access
         api::animation::register_all(L);  // native named clip clocks
         api::projectiles::register_all(L);
@@ -966,6 +1115,14 @@ bool Runtime::boot_scripts(const Config& cfg) {
 
         // Native events, metadata, harness controls and flushed kp.print output.
         api::compat::install(L, game_dir);
+        lua_getglobal(L, "kp");
+        if (lua_istable(L, -1)) {
+            if (!build.empty()) lua_pushlstring(L, build.data(), build.size());
+            else                lua_pushnil(L);
+            lua_setfield(L, -2, "build");
+        }
+        lua_pop(L, 1);
+        register_hooks_api(L);
     };
 
     // The console builds a state of its own and needs the same API on it.
@@ -984,9 +1141,17 @@ bool Runtime::boot_scripts(const Config& cfg) {
         if (!api::select_game(game))
             log("api: could not select the %s routine table; it was already handed out",
                 game == api::Game::K2 ? "K2" : "K1");
+        api::structs::set_supported(game == api::Game::K1);
     }
 
     host_ = std::make_unique<lua::Host>(hc);
+    // Register lifecycle contracts BEFORE load_all so each script's initial
+    // OnScriptLoad runs inside Host::raise_load (protected by RaiseMark)
+    // before active_host() / live() expose the Host to engine hook threads.
+    host_->set_lifecycle(find_contract("OnScriptLoad"),
+                         find_contract("OnScriptUnload"),
+                         table_ ? table_->game() : std::string(),
+                         build_);
     // Publish the host services before load_all: top-level scripts may call
     // kp.scripts during their initial execution, and those calls must see the
     // same host that owns the state. Failed starts clear these bindings before
@@ -994,47 +1159,110 @@ bool Runtime::boot_scripts(const Config& cfg) {
     api::scripts::bind_host(host_.get());
     api::motion::bind_owner_probe(motion_owner, nullptr);
     api::motion::bind_tick(motion_tick, nullptr);
+    lua::Host::set_subscription_notify(+[]() {
+        if (on_engine_thread()) Runtime::instance().sync_demand_hooks();
+    });
     std::vector<std::string> errors;
     const unsigned loaded = host_->load_all(errors);
     for (const std::string& e : errors) log("script: %s", e.c_str());
     log("loaded %u script(s) from %s", loaded, cfg.script_dir.c_str());
 
+    sync_demand_hooks();
+
     // Publish, host pointer first. Every hook body reads the live flag before
-    // it reads the host, so until the second store lands the bodies forward
-    // straight to the original and the game runs exactly as it would without us.
+    // it reads the host, and neither is visible until load_all / OnScriptLoad
+    // have finished on this worker thread.
     phase_ = Phase::Running;
     set_active_host(host_.get());
     set_live(true);
-
-    if (const events::EventContract* ev = find_contract("OnScriptLoad"); ev != nullptr) {
-        const std::vector<lua::Value> args = {
-            lua::Value::str(table_ ? table_->game() : std::string()),
-            lua::Value::str(build_),
-        };
-        host_->dispatch(*ev, args);
-    }
-    host_->set_lifecycle(find_contract("OnScriptLoad"),
-                         find_contract("OnScriptUnload"),
-                         table_ ? table_->game() : std::string(),
-                         build_);
     return true;
 }
 
+void Runtime::sync_demand_hooks() {
+    if (!hooks_ || !table_) return;
+    const struct {
+        const char* site;
+        void*       detour;
+    } demand[] = {
+        {"event.creature", creature_event_detour()},
+        {"event.door", door_event_detour()},
+        {"event.placeable", placeable_event_detour()},
+        {"event.trigger", trigger_event_detour()},
+        {"event.module", module_event_detour()},
+        {"event.area", area_event_detour()},
+        {"event.encounter", encounter_event_detour()},
+        {"event.aoe", aoe_event_detour()},
+        {"event.store", store_event_detour()},
+        {"event.waypoint", waypoint_event_detour()},
+        {"dialog.check_script", dialog_check_script_detour()},
+        {"vm.run_script_situation", run_script_situation_detour()},
+        {"vm.save_script_situation", save_situation_detour()},
+        {"vm.load_script_situation", load_situation_detour()},
+        {"creature.ai_action_move_to_point", creature_move_to_point_detour()},
+    };
+    std::unordered_set<std::string> needed;
+    if (hook_all_events_) {
+        for (const auto& d : demand) needed.insert(d.site);
+    } else if (host_ != nullptr) {
+        for (const std::string& ev_name : host_->subscribed_events()) {
+            if (const events::EventContract* c = find_contract(ev_name);
+                c != nullptr && !c->hook_site.empty()) {
+                needed.insert(c->hook_site);
+            }
+            if (ev_name == "OnPlayerSpawn") needed.insert("event.module");
+        }
+    }
+    if (harness_active_) needed.insert("creature.ai_action_move_to_point");
+
+    for (const auto& d : demand) {
+        if (std::getenv("KP_DISABLE_SAVE_HOOK") != nullptr &&
+            std::strcmp(d.site, "vm.save_script_situation") == 0)
+            continue;
+        const hooks::Site* s = table_->find(d.site);
+        const bool avail = (s != nullptr && s->resolved && s->kind == hooks::SiteKind::Detour);
+        const bool want = avail && needed.count(d.site) != 0;
+        const bool active = hooks_->has(d.site);
+        if (want && !active) {
+            std::string err;
+            if (hooks_->install_one({d.site, d.detour, {}, hook_original_slot(d.site)},
+                                    *table_, runtime_base_, err)) {
+                log("demand hook: installed %s", d.site);
+            } else {
+                log("demand hook: failed %s (%s)", d.site, err.c_str());
+            }
+        } else if (!want && active) {
+            if (auto* slot = hook_original_slot(d.site)) {
+                slot->store(nullptr, std::memory_order_release);
+            }
+            if (hooks_->uninstall_one(d.site)) {
+                log("demand hook: uninstalled %s", d.site);
+            }
+        }
+    }
+}
+
 bool Runtime::start(const Config& cfg) {
+    if (phase_ != Phase::Idle) {
+        failure_ = std::string("runtime cannot start from phase ") + to_string(phase_);
+        return false;
+    }
     // This is a worker/quiescent transition.  It is deliberately outside
     // DllMain and loader-lock callbacks; no engine thread has been latched yet.
     reset_engine_thread();
     api::engine::bind_gate(engine_gate_probe, nullptr);
     log_path_ = cfg.log_path;
     role_ = cfg.role;
+    hook_all_events_ = cfg.hook_all_events;
+    harness_active_ = (cfg.harness_port != 0);
+    multiplayer_active_ = (cfg.role != multiplayer::Role::Embedded && cfg.multiplayer_port != 0);
     set_fault_log_path(log_path_.c_str());
     platform::set_log_sink(&runtime_log_sink, nullptr);
 
-    log("ScriptForge %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
+    log("KotorJIT %s starting (%s role)", KP_VERSION, multiplayer::to_string(role_));
     if (const std::string dd = data_dir_of(cfg);
         dd.size() >= std::strlen(naming::kLegacyDataDir) &&
         dd.compare(dd.size() - std::strlen(naming::kLegacyDataDir), std::string::npos, naming::kLegacyDataDir) == 0)
-        log("note: using the legacy data folder %s (KotorPhasor was renamed to ScriptForge); "
+        log("note: using the legacy data folder %s (KotorPhasor was renamed to KotorJIT); "
             "renaming it to '%s' is optional and changes nothing else", dd.c_str(), naming::kDataDir);
 
     // Before anything can fault: the guard has to be in place before the first
@@ -1120,6 +1348,7 @@ void Runtime::stop() {
     // the cached trampoline pointers second, and only then unpatch -- uninstall
     // unmaps the trampolines, so a body still holding one would fault.
     set_live(false);
+    lua::Host::set_subscription_notify(nullptr);
     set_active_multiplayer_transport(nullptr);
     if (transport_) transport_->stop();
 
@@ -1135,6 +1364,9 @@ void Runtime::stop() {
 #if defined(__i386__)
     hooks::lua_bridge::shutdown();
 #endif
+    // After every hook is unpatched and quiesced, tear down the devtools
+    // console state so a racing pump thread can never observe lua_close.
+    kp::devtools::console().reset();
 
     // Run unload callbacks while the host service is still bound.  The
     // callbacks may inspect kp.scripts; after unload_all the host is empty and

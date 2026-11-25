@@ -434,6 +434,7 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
                     r.identity.recognised = true;
                     r.identity.build_alias = record->alias;
                     r.identity.expected_encrypted = record->encrypted;
+                    r.identity.sha256 = record->sha256;
                 }
             }
         }
@@ -495,6 +496,7 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
                     r.identity.recognised = true;
                     r.identity.build_alias = record->alias;
                     r.identity.expected_encrypted = record->encrypted;
+                    r.identity.sha256 = record->sha256;
                 }
             }
         }
@@ -505,11 +507,12 @@ LoadResult load(const std::string& module_path, const WaitPolicy& policy) {
             if (img.read_vector(mcode->va, mcode->size, live_text)) {
                 const std::string live_sha = sha256_hex(live_text.data(), live_text.size());
                 const BuildRecord* by_text = lookup_build_by_text(Format::MachO, "__text", live_sha);
-                if (by_text != nullptr && r.image_base == static_cast<std::uintptr_t>(by_text->image_base)) {
+                if (by_text != nullptr) {
                     record = by_text;
                     r.identity.recognised = true;
                     r.identity.build_alias = record->alias;
                     r.identity.expected_encrypted = record->encrypted;
+                    r.identity.sha256 = record->sha256;
                 }
             }
         }

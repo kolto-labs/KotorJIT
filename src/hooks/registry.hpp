@@ -24,6 +24,7 @@
 // installed are rolled back.
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -67,6 +68,17 @@ struct HookAbi {
     std::vector<int> observed_ret;
 };
 
+struct XrefThunk {
+    std::uint8_t              opcode = 0xE9;  // 0xE9 jmp rel32 or 0xE8 call rel32
+    std::vector<std::uint8_t> prefix;
+    std::vector<std::uint8_t> suffix;
+    std::vector<std::uint8_t> target_pattern;
+    std::vector<std::uint8_t> target_mask;
+    bool valid() const {
+        return !target_pattern.empty() && target_pattern.size() == target_mask.size();
+    }
+};
+
 struct Site {
     HookAbi abi;
     std::string    name;      // logical key, e.g. "vm.run_script"
@@ -96,7 +108,9 @@ struct Site {
     // a recorded VA is never consulted for it.
     std::vector<std::uint8_t> pattern;
     std::vector<std::uint8_t> pattern_mask;
+    XrefThunk      xref_thunk;
     bool           bound_from_pattern = false;
+    bool           bound_from_xref = false;
     // Manifest `hook.safe == "refuse"`: static analysis says the prologue
     // cannot be detoured. An overlay may not promote such a site to Detour.
     bool           hook_refused = false;
@@ -115,6 +129,14 @@ public:
     static bool parse(std::string_view json, AddressTable& out, std::string& error);
     static bool parse(std::string_view json, const std::string& build_slug,
                       AddressTable& out, std::string& error);
+    // Probe a kotorjit.unified-signatures/v1 JSON document against live
+    // bound executable regions for a plaintext unrecognised game binary.
+    static bool probe_unified(std::string_view unified_json,
+                              std::string_view format,
+                              std::uintptr_t runtime_base,
+                              std::uintptr_t image_base,
+                              AddressTable& out,
+                              std::string& error);
     // Flatten instances for `build_slug`. Overlay is the optional
     // data/addresses/<build>.json — expected_bytes / kind / required only.
     // Does not invent bytes.
@@ -190,6 +212,9 @@ struct HookRequest {
     // guarantee -- the generator writes the site's full displaced prologue, and
     // verification is only as wide as the pattern it is given.
     std::vector<std::uint8_t> expect;
+    // Optional slot published with release ordering right before the target JMP
+    // is written (and cleared back to null before the trampoline is unmapped).
+    std::atomic<void*>*       original_slot = nullptr;
 };
 
 // A set of hooks that install and uninstall together.
@@ -210,6 +235,12 @@ public:
     // site is unresolved, or rolls everything back if a patch fails.
     bool install(const AddressTable&, std::uintptr_t runtime_base, std::string& error);
 
+    bool install_one(const HookRequest&, const AddressTable&, std::uintptr_t runtime_base,
+                     std::string& error);
+    bool uninstall_one(std::string_view site);
+    bool has(std::string_view site) const;
+    std::vector<std::string> active_names() const;
+
     void uninstall();
 
     // Trampoline entry for a site: the address a hook body calls to reach the
@@ -223,6 +254,7 @@ private:
     struct Installed {
         std::string name;
         std::unique_ptr<Detour> detour;
+        std::atomic<void*>* original_slot = nullptr;
     };
 
     std::vector<HookRequest> requests_;

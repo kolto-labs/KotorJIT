@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve ScriptForge's logical hook sites to concrete addresses, per game build.
+"""Resolve KotorJIT's logical hook sites to concrete addresses, per game build.
 
 Addresses are data. Nothing in src/ ever hardcodes a VA; this script reads the
 logical site manifest (data/hooksites.toml) and the reverse-engineering corpus,
@@ -128,8 +128,7 @@ BUILDS = {
         # optional here: the runtime loses the in-game `lua` command on this
         # build and keeps everything else, rather than refusing to install.
         "optional_sites": ["console.do_console"],
-        "reject_cross_placed": True,
-        "note": "Native Aspyr ELF, EXEC (not PIE). VM entry points hand-adjudicated.",
+        "note": "Native Aspyr ELF, EXEC (not PIE). VM, event, dialog, and main-loop entry points adjudicated and signature-bound.",
     },
     "k2_mac": {
         "symbol_source": "TSL__k2_mac_swkotor2.app",
@@ -472,7 +471,7 @@ def image_facts(spec: dict, sentinel_va: int | None) -> dict:
     """
     import hashlib
     ref = spec.get("reference_image")
-    out: dict = {"reference_image": str(ref) if ref else None}
+    out: dict = {}
     if not ref or not Path(ref).exists():
         out["error"] = "reference image not available"
         return out

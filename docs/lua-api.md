@@ -6,8 +6,6 @@ Generated from `data/events.toml`. Do not edit by hand.
 
 Native registration uses `kp.events.register(kp.events.OnTick, handler)`. The global On* definitions below remain supported as legacy dispatcher discovery. Explicit bindings take precedence; `kp.events.unregister` restores a discovered global handler. See [the namespace migration](api-dialects.md).
 
-`register` returns `true` only when the handler can actually be called: `false` means either the constant does not exist for this game, or the event exists but nothing in this build ever raises it (see `docs/user/api-status.md` "Dead names", e.g. `OnCreatureDamaged`). Either way a Warn is logged once, naming the event, so a script can tell "armed" from "silently inert" without guessing.
-
 Define only the callbacks you want. Anything you leave out costs nothing.
 
 ```lua
@@ -107,8 +105,8 @@ Script slot: dialog node Active/StartingConditional resref. Return false to stop
 
 | argument | type | source |
 |---|---|---|
-| `script_name` | string | arg1 CExoString* |
-| `speaker` | object | arg2 ulong |
+| `script_name` | string | CResRef* arg2 |
+| `speaker` | object | CWSObject* arg1 |
 
 Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
 
@@ -1020,6 +1018,27 @@ Object type: creature. Script slot: arbitrary, supplied by the client message. R
 | `creature` | object | the sending player's creature |
 
 Returns: bool. Returning false stops the game's own handler.
+
+#### `OnScriptSituation(object, has_object, relevant)`
+
+Delayed/assigned script closure (DelayCommand/AssignCommand) is about to resume. Return false to cancel execution.
+
+| argument | type | source |
+|---|---|---|
+| `object` | object | arg2 ulong |
+| `has_object` | int | arg3 int |
+
+Returns: bool. If no script answers, the result is `true`. Returning false stops the game's own handler.
+
+#### `OnPlayerSpawn(player, relevant)`
+
+Player creature spawned or entered module control.
+
+| argument | type | source |
+|---|---|---|
+| `player` | object | player creature object id |
+
+Returns: nothing. 
 
 ### Medium confidence
 

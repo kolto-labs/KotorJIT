@@ -25,6 +25,10 @@
     {"name":"CServerExoApp::GetPlayerCreatureId","addr":"0x0051c8f0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2791; exact 22-byte/10-instruction shape."}},
     {"name":"CServerExoApp::GetGameObject","addr":"0x0051c0a0","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.3200; exact 62-byte/21-instruction shape."}},
     {"name":"CSWSObject::SetPosition","addr":"0x00543f50","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2594; exact 475-byte, 15-block, 5-callee, 130-instruction shape."}},
-    {"name":"CServerExoApp::GetModule","addr":"0x0051bd90","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2791; exact 22-byte/10-instruction shape."}}
+    {"name":"CServerExoApp::GetModule","addr":"0x0051bd90","verdict":"accept","confidence":0.99,"evidence":{"cross_build":"v1 score 1.0 margin 0.2791; exact 22-byte/10-instruction shape."}},
+    {"name":"CVirtualMachineInternal::stack_pointer","kind":"field","owner":"CVirtualMachineInternal","addr":"0x00000000","offset":"0x1ac","size":4,"verdict":"accept","confidence":1.0,"evidence":{"disassembly":"K2 Steam mirrors K2 GOG CVirtualMachineStack layout at [CVirtualMachineInternal+0x1ac]."}},
+    {"name":"CSWVirtualMachineCommands::DestroyGameDefinedStructure","addr":"0x00669650","verdict":"accept","confidence":1.0,"evidence":{"signature_transfer":"Unique masked pattern from K2 GOG 0x0077ec30 (558bec83ec44894dcc837d0800) matched 1 hit at 0x00669650 on Steam."}},
+    {"name":"CExoString::~CExoString","addr":"0x00733780","verdict":"accept","confidence":1.0,"evidence":{"signature_transfer":"Unique masked pattern from K2 GOG 0x00605890 matched 1 hit at 0x00733780 on Steam."}},
+    {"name":"CSWSDialog::CheckScript","addr":"0x006c7f90","verdict":"accept","confidence":1.0,"evidence":{"signature_transfer":"Unique masked pattern from K2 GOG 0x00750ca0 (48-byte SEH+CResRef check prologue) matched 1 hit at 0x006c7f90 on Steam."}}
   ]
 }

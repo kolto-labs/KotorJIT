@@ -79,6 +79,7 @@ const char kSeqType[]  = "kp.struct.sequence";
 const char kUnverifiedKey = 0;
 
 AddressResolver    g_resolver = nullptr;
+bool               g_structs_supported = kStructsSupported;
 unsigned long long g_writes   = 0;
 
 // --------------------------------------------------------------- raw reads --
@@ -996,9 +997,9 @@ std::uintptr_t address_arg(lua_State* L, int index) {
 }
 
 int l_at(lua_State* L) {
-    if (!kStructsSupported)
+    if (!g_structs_supported)
         return luaL_error(L, "kp.struct is unavailable on this build: its offsets are 32-bit K1 "
-                             "layouts. Use kp.mem for raw reads on 64-bit builds.");
+                             "layouts. Use kp.mem for raw reads on K2 or 64-bit builds.");
     // A zero address is accepted rather than refused. It is what a failed
     // pointer chase yields, and every read through the resulting view returns
     // nil, which is the answer a script can branch on.
@@ -1008,9 +1009,9 @@ int l_at(lua_State* L) {
 }
 
 int l_view(lua_State* L) {
-    if (!kStructsSupported)
+    if (!g_structs_supported)
         return luaL_error(L, "kp.struct is unavailable on this build: its offsets are 32-bit K1 "
-                             "layouts. Use kp.mem for raw reads on 64-bit builds.");
+                             "layouts. Use kp.mem for raw reads on K2 or 64-bit builds.");
     // Guarded the same way an address is. Converting a NaN or an out-of-range
     // double to an integer type is undefined, and an object id arrives from
     // wherever the script got it.
@@ -1266,6 +1267,12 @@ const Layout* find(const char* name) {
 }
 
 void set_address_resolver(AddressResolver r) { g_resolver = r; }
+
+void set_supported(bool supported) {
+    g_structs_supported = kStructsSupported && supported;
+}
+
+bool is_supported() { return g_structs_supported; }
 
 unsigned long long writes_performed() { return g_writes; }
 

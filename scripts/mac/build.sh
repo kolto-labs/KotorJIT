@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Build libscriptforge.dylib for the x86_64 macOS Steam builds of KOTOR 1 and 2.
+# Build libkotorjit.dylib for the x86_64 macOS Steam builds of KOTOR 1 and 2.
 #
 # Everything is -arch x86_64, deployment 10.13: the retail games are x86_64,
 # and on Apple silicon they run under Rosetta 2, so the runtime we inject must
 # match. Run this on a Mac with Xcode Command Line Tools. No network is needed;
 # LuaJIT and Dear ImGui are vendored under third_party/.
 #
-#   scripts/mac/build.sh              # builds build-mac/libscriptforge.dylib
+#   scripts/mac/build.sh              # builds build-mac/libkotorjit.dylib
 #   scripts/mac/build.sh clean
 #
-# Output: build-mac/libscriptforge.dylib (ad-hoc signed). Install it with
+# Output: build-mac/libkotorjit.dylib (ad-hoc signed). Install it with
 # scripts/mac/install_to_game.sh.
 set -euo pipefail
 
@@ -17,7 +17,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="$ROOT/build-mac"
 LJ="$ROOT/third_party/luajit"
 ARCH=x86_64
-MIN=10.13
+MIN=10.15
 CXX="${CXX:-clang++}"
 CC="${CC:-clang}"
 
@@ -25,13 +25,14 @@ CC="${CC:-clang}"
 
 case "$(uname -s)" in Darwin) ;; *)
   echo "build.sh must run on macOS with Xcode Command Line Tools." >&2; exit 1;; esac
+[[ -d "$LJ/src" ]] || { echo "missing $LJ/src; clone LuaJIT v2.1 into third_party/luajit first." >&2; exit 1; }
 mkdir -p "$OUT/obj"
 
 # --- LuaJIT: x86_64 static ---------------------------------------------------
 # GC64 is LuaJIT's default on x86_64. The build host tool (buildvm) must also be
 # x86_64 so it runs under Rosetta on Apple silicon, hence HOST_CC too.
 LIBLUAJIT="$LJ/src/libluajit.a"
-if [[ ! -f "$LIBLUAJIT" ]]; then
+if [[ ! -f "$LIBLUAJIT" ]] || ! lipo -info "$LIBLUAJIT" 2>/dev/null | grep -q x86_64; then
   echo ">> building LuaJIT ($ARCH static)"
   make -C "$LJ" clean >/dev/null 2>&1 || true
   make -C "$LJ" -j"$(sysctl -n hw.ncpu)" BUILDMODE=static \
@@ -42,14 +43,19 @@ fi
 # --- source set --------------------------------------------------------------
 # Everything the shipping runtime uses, minus the files for other platforms and
 # ABIs. The exclusions mirror the CMake source lists: no Windows/Linux platform
-# layer, no i386 detour engine or arm32, no binkw32 proxy, and the i386-only
-# harness adapters are replaced by engine_unsupported.cpp.
-mapfile -t SRCS < <(cd "$ROOT" && find src -name '*.cpp' \
+# layer, no i386 detour engine/bridge or arm32, no binkw32 proxy, no Windows
+# launcher, and the i386-only harness adapters are replaced by engine_unsupported.cpp.
+SRCS=()
+while IFS= read -r f; do
+  SRCS+=("$f")
+done < <(cd "$ROOT" && find src -name '*.cpp' \
   ! -path 'src/platform/platform_win32.cpp' \
   ! -path 'src/platform/platform_linux.cpp' \
   ! -path 'src/proxy/*' \
   ! -path 'src/launcher/*' \
   ! -path 'src/hooks/trampoline.cpp' \
+  ! -path 'src/hooks/lua_bridge.cpp' \
+  ! -path 'src/hooks/lua_stub.cpp' \
   ! -path 'src/hooks/arm32/*' \
   ! -path 'src/harness/engine_k1.cpp' \
   ! -path 'src/harness/engine_k2.cpp' \
@@ -66,6 +72,7 @@ SRCS+=(
 # try/catch so a C++ throw on a game thread becomes a logged, contained return
 # instead of unwinding into game frames that have no unwind info.
 CXXFLAGS=(-std=c++20 -O2 -DNDEBUG -arch "$ARCH" -mmacosx-version-min="$MIN"
+          -ffile-prefix-map="$ROOT"=."
           -fvisibility=hidden -Wall -Wextra -Wno-unused-parameter
           -I"$ROOT/src" -I"$LJ/src" -I"$ROOT/third_party/imgui")
 
@@ -82,10 +89,10 @@ done
 # stub resolver while a code page is briefly writable, and lazy binding is the
 # one thing that could. install_name @executable_path so a copy placed beside
 # the game resolves; DYLD_INSERT_LIBRARIES overrides that with the real path.
-DYLIB="$OUT/libscriptforge.dylib"
-echo ">> linking libscriptforge.dylib"
+DYLIB="$OUT/libkotorjit.dylib"
+echo ">> linking libkotorjit.dylib"
 "$CXX" -arch "$ARCH" -mmacosx-version-min="$MIN" -dynamiclib \
-  -install_name "@executable_path/libscriptforge.dylib" \
+  -install_name "@executable_path/libkotorjit.dylib" \
   -Wl,-bind_at_load \
   -o "$DYLIB" "${OBJS[@]}" "$LIBLUAJIT" \
   -framework OpenGL -framework Cocoa -lobjc -lc++

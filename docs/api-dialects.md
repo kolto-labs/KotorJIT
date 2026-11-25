@@ -25,7 +25,7 @@ kp.events.unregister(kp.events.OnTick)
 
 Registration accepts a function or a script-owned global function name. The dispatcher still discovers global On* callbacks for legacy compatibility. Explicit registration wins; unregister restores a discovered global handler. Script-owned `priority` remains loader metadata. Neither behavior exports a bare host facility.
 
-The 111 event constants below come from the event catalog.
+The 113 event constants below come from the event catalog.
 
 | constant | dispatched event |
 |---|---|
@@ -140,3 +140,5 @@ The 111 event constants below come from the event catalog.
 | `kp.events.OnAreaTransitionFail` | `OnAreaTransitionFail` |
 | `kp.events.OnItemUse` | `OnItemUse` |
 | `kp.events.OnClientRequestedScript` | `OnClientRequestedScript` |
+| `kp.events.OnScriptSituation` | `OnScriptSituation` |
+| `kp.events.OnPlayerSpawn` | `OnPlayerSpawn` |

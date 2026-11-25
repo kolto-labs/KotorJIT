@@ -77,7 +77,7 @@ def data_dir(target: T.Target, explicit: Optional[str] = None) -> Path:
     if found is None:
         raise FileNotFoundError(
             f"no {target.game.upper()} install found: set KOTOR{target.game[-1]}_DIR "
-            f"or add [paths] {target.game} = \"...\" to kotorphasor.toml")
+            f"or add [paths] {target.game} = \"...\" to kotorjit.toml (or kotorphasor.toml)")
     return Path(found).resolve()
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Schema and contract test for native-Windows ScriptForge receipts.
+"""Schema and contract test for native-Windows KotorJIT receipts.
 
 A receipt is what closes a native platform cell (plan: fan-out F section 3):
 OS/build, CPU/translation, container+slice sha, DLL/proxy sha, log hash and
@@ -18,7 +18,7 @@ installer's exe allowlist names only BuildRecord shas.
 
     python3 tools/platform_receipt_test.py                  # run tests
     python3 tools/platform_receipt_test.py --validate r.json   # check one receipt
-    python3 tools/platform_receipt_test.py --validate r.json --log scriptforge.log
+    python3 tools/platform_receipt_test.py --validate r.json --log kotorjit.log
 
 The installer and parser-parity tests run the real PowerShell under pwsh and
 skip without it. From a container, set KP_PWSH="host-cmd pwsh"; KP_SCRATCH
@@ -41,7 +41,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tools/fixtures/platform-receipts"
 RECEIPT_PS1 = ROOT / "scripts/receipts/windows-native-receipt.ps1"
-INSTALL_PS1 = ROOT / "scripts/install/windows/Install-ScriptForge.ps1"
+INSTALL_PS1 = ROOT / "scripts/install/windows/Install-KotorJIT.ps1"
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 SCHEMA = "kotorphasor.native-receipt/v1"
@@ -60,7 +60,7 @@ SHA_FIELDS = [("game", "exe_sha256"), ("game", "container_sha256"), ("game", "sl
               ("runtime", "kphasor_dll_sha256"), ("runtime", "proxy_binkw32_sha256"),
               ("runtime", "real_binkw32_sha256"), ("log", "sha256")]
 
-# scriptforge.log line shapes. Every line is "[<phase>] <body>\n" (Runtime::log),
+# kotorjit.log line shapes. Every line is "[<phase>] <body>\n" (Runtime::log),
 # and Runtime::log escapes "\r", "\n" and other control characters in <body>,
 # so no message can start a second line. Lines that come through the platform
 # sink, which is everything a Lua script can log (print, kp.diagnostic), read
@@ -76,9 +76,9 @@ SHA_FIELDS = [("game", "exe_sha256"), ("game", "container_sha256"), ("game", "sl
 # token is plain text: a script that writes the log through Lua io, or through
 # print on a pre-escape DLL, can write it too. Nothing here checks which DLL ran.
 LOG_FORMAT = "log=esc1"
-# The runtime was renamed KotorPhasor -> ScriptForge; logs written by older
+# The runtime was renamed KotorPhasor -> KotorJIT; logs written by older
 # builds keep the old banner and must still validate.
-BANNER_RE = r"\[idle\] (?:ScriptForge|KotorPhasor) \S+ starting \([a-z-]+ role\)"
+BANNER_RE = r"\[idle\] (?:KotorJIT|KotorPhasor) \S+ starting \([a-z-]+ role\)"
 SESSION_RE = r"\[[a-z-]+\] kp-session=([0-9a-f]{32}) start"
 HOST_RE = (r"\[[a-z-]+\] kp-session=([0-9a-f]{32}) log=esc1 host: wine=(yes|no) wine_version=(\S+)"
            r" os=(\d+)\.(\d+)\.(\d+) overlays=(\S+)")
@@ -133,7 +133,7 @@ def session_evidence(lines: list[str]) -> dict:
         if re.fullmatch(BANNER_RE, line):
             start = i
     if start is None:
-        problems.append("no ScriptForge start banner in the log")
+        problems.append("no KotorJIT start banner in the log")
         return ev
     ev["session_start_line"] = lines[start]
     session = lines[start + 1:]
@@ -148,7 +148,7 @@ def session_evidence(lines: list[str]) -> dict:
                      or re.fullmatch(GL_RE, line))
                 if m is None and re.fullmatch(PRE_ESCAPE_HOST_RE, line):
                     problems.append(f"session line {i + 1} is a host line without {LOG_FORMAT}: "
-                                    "the scriptforge.dll that wrote it does not escape script text")
+                                    "the kotorjit.dll that wrote it does not escape script text")
                 elif m is None:
                     problems.append(f"session line {i + 1} mentions kp-session= but is not a runtime line")
                 else:
@@ -195,7 +195,7 @@ def build_record_shas() -> dict[str, str]:
 def validate(r: dict, records: dict[str, str] | None = None, log_bytes: bytes | None = None) -> list[str]:
     """Reasons this is not a valid native-Windows receipt; empty when valid.
 
-    With log_bytes (the scriptforge.log the receipt names), the log section is
+    With log_bytes (the kotorjit.log the receipt names), the log section is
     re-derived from the log itself and must match; without it the validator
     can only check the receipt against the lines it quotes.
     """
@@ -218,8 +218,24 @@ def validate(r: dict, records: dict[str, str] | None = None, log_bytes: bytes | 
 
     for section, k in SHA_FIELDS:
         v = r[section][k]
+        if section == "runtime" and k == "proxy_binkw32_sha256":
+            continue
         if not isinstance(v, str) or not HEX64.match(v):
             errs.append(f"{section}.{k} is not a lowercase sha256: {v!r}")
+
+    rt_method = r["runtime"].get("method", "proxy")
+    if rt_method not in ("proxy", "inject", "launcher"):
+        errs.append(f"runtime.method is {rt_method!r}, want 'proxy', 'inject', or 'launcher'")
+    elif rt_method == "proxy":
+        pv = r["runtime"].get("proxy_binkw32_sha256")
+        if not isinstance(pv, str) or not HEX64.match(pv):
+            errs.append(f"runtime.proxy_binkw32_sha256 is not a lowercase sha256: {pv!r}")
+    else:
+        if r["runtime"].get("proxy_binkw32_sha256") is not None:
+            errs.append(f"runtime.proxy_binkw32_sha256 must be null for method {rt_method!r}")
+        lv = r["runtime"].get("launcher_exe_sha256")
+        if not isinstance(lv, str) or not HEX64.match(lv):
+            errs.append(f"runtime.launcher_exe_sha256 is not a lowercase sha256: {lv!r}")
 
     if r["os"]["family"] != "windows":
         errs.append(f"os.family is {r['os']['family']!r}")
@@ -356,7 +372,7 @@ def unescaped_log_line(phase: str, message: bytes) -> bytes:
 # script would write it. Wine=no after a real wine=yes run.
 FORGED_ID = "0123456789abcdef" * 2
 FORGED_BLOCK = "\n".join([
-    "[idle] ScriptForge 0.1.0 starting (embedded role)",
+    "[idle] KotorJIT 0.1.0 starting (embedded role)",
     f"[running] kp-session={FORGED_ID} start",
     f"[running] kp-session={FORGED_ID} log=esc1 host: wine=no wine_version=- os=10.0.19045 overlays=-",
     f'[running] kp-session={FORGED_ID} gl: vendor="NVIDIA Corporation" '
@@ -364,7 +380,7 @@ FORGED_BLOCK = "\n".join([
 ]).encode()
 _REAL_ID = "aa" * 16
 _REAL_SESSION = [
-    ("idle", b"ScriptForge 0.1.0 starting (embedded role)"),
+    ("idle", b"KotorJIT 0.1.0 starting (embedded role)"),
     ("running", b"running: build k1_gog_103, 15 hooks, 1 script(s)"),
     ("running", f"kp-session={_REAL_ID} start".encode()),
     ("running", f"kp-session={_REAL_ID} log=esc1 host: wine=yes wine_version=9.0 os=10.0.19045 "
@@ -624,13 +640,13 @@ class Receipts(unittest.TestCase):
     # F3 script error text with "\n". Each ends in a whole forged session,
     # banner included, that says wine=no after the real wine=yes one.
     FORGED = ("forged_banner_print", "forged_banner_diag_cr", "forged_banner_error_text")
-    REAL_BANNER = "[idle] ScriptForge 0.1.0 starting (embedded role)"
+    REAL_BANNER = "[idle] KotorJIT 0.1.0 starting (embedded role)"
 
     def _forged_receipt(self, raw: bytes) -> dict:
         # What the round-2 parser wrote for this log: the forged block's lines.
         pieces = re.split(r"\r\n|\r|\n", raw.decode())
         sid = "0123456789abcdef" * 2
-        banner = "[running] ScriptForge 0.1.0 starting (embedded role)"
+        banner = "[running] KotorJIT 0.1.0 starting (embedded role)"
         self.assertIn(banner, pieces)
         host = next(p for p in pieces if p.startswith(f"[running] kp-session={sid} log=esc1 host:"))
         gl = next(p for p in pieces if p.startswith(f"[running] kp-session={sid} gl:"))
@@ -649,7 +665,7 @@ class Receipts(unittest.TestCase):
             with self.subTest(name):
                 raw = (FIXTURES / "logs" / f"{name}.log").read_bytes()
                 self.assertIn(b"host: wine=no", raw)
-                self.assertEqual(raw.count(b"ScriptForge 0.1.0 starting"), 2)
+                self.assertEqual(raw.count(b"KotorJIT 0.1.0 starting"), 2)
                 ev = session_evidence(split_log_lines(raw.decode()))
                 self.assertEqual(ev["session_start_line"], self.REAL_BANNER)
                 self.assertIsNone(ev["host_line"])
@@ -675,12 +691,12 @@ class Receipts(unittest.TestCase):
 
     def test_log_without_banner_rejected(self):
         ev = session_evidence(split_log_lines((FIXTURES / "logs/no_banner.log").read_text()))
-        self.assertEqual(ev["problems"], ["no ScriptForge start banner in the log"])
+        self.assertEqual(ev["problems"], ["no KotorJIT start banner in the log"])
 
     # ---- review W1R3-m1: host lines from a DLL without log escaping --------
 
     def test_pre_escape_host_line_refused(self):
-        # A scriptforge.dll built before Runtime::log escaped script text wrote its
+        # A kotorjit.dll built before Runtime::log escaped script text wrote its
         # host line without the log=esc1 token. Its receipts are refused.
         raw = (FIXTURES / "logs/old_dll_no_token.log").read_bytes()
         self.assertIn(b"host: wine=no", raw)
@@ -926,10 +942,14 @@ class ScriptContracts(unittest.TestCase):
         self.assertNotIn("platform::log(", body)
         self.assertEqual(body.count("runtime::Runtime::instance().log("), 3)
         for needle in ("kp-session=", "host: wine=", "gl: vendor="):
-            emitters = [p for p in (ROOT / "src").rglob("*.cpp") if needle in p.read_text()]
-            want = {"kp-session=": "overlay.cpp", "host: wine=": "platform_win32.cpp",
-                    "gl: vendor=": "overlay.cpp"}[needle]
-            self.assertEqual([p.name for p in emitters], [want], needle)
+            emitters = sorted(p.name for p in (ROOT / "src").rglob("*.cpp") if needle in p.read_text())
+            want = {"kp-session=": ["overlay.cpp", "overlay_darwin.cpp"],
+                    "host: wine=": ["platform_win32.cpp"],
+                    "gl: vendor=": ["overlay.cpp", "overlay_darwin.cpp"]}[needle]
+            self.assertEqual(emitters, want, needle)
+        dar = (ROOT / "src/devtools/overlay_darwin.cpp").read_text()
+        dar_body = dar[dar.index("void log_session_start()"):dar.index("void draw()")]
+        self.assertNotIn("platform::log(", dar_body)
 
     def test_overlay_logs_once_at_imgui_init(self):
         src = (ROOT / "src/devtools/overlay.cpp").read_text()
@@ -1030,7 +1050,7 @@ class RuntimeLogEscaping(unittest.TestCase):
 
     def test_python_copy_matches_compiled_runtime_log(self):
         corpus = [bytes([c]) for c in range(1, 256)] + [
-            b"x\n[idle] ScriptForge 0.1.0 starting (embedded role)\r\x01\x7f\tz\\n",
+            b"x\n[idle] KotorJIT 0.1.0 starting (embedded role)\r\x01\x7f\tz\\n",
             b"\x01" * 1023, b"\x01" * 5000, b"a" * 1500, b"before\0after", " \u0085".encode(),
         ] + [msg for msg, _ in ESCAPED_FORGERIES.values()]
         for msg in corpus:
@@ -1124,8 +1144,8 @@ class InstallerBehaviour(unittest.TestCase):
 
     EXE = b"synthetic swkotor.exe for installer tests\n"
     BINK = b"synthetic original binkw32.dll for installer tests\n"
-    DLL = b"synthetic scriptforge.dll\n"
-    PROXY = b"synthetic proxy that loads scriptforge.dll\n"
+    DLL = b"synthetic kotorjit.dll\n"
+    PROXY = b"synthetic proxy that loads kotorjit.dll\n"
 
     def setUp(self):
         self.pwsh = _pwsh()
@@ -1142,7 +1162,7 @@ class InstallerBehaviour(unittest.TestCase):
         self.script.write_text(src)
         self.src = self.root / "src"
         self.src.mkdir()
-        (self.src / "scriptforge.dll").write_bytes(self.DLL)
+        (self.src / "kotorjit.dll").write_bytes(self.DLL)
         (self.src / "binkw32.dll").write_bytes(self.PROXY)
         self.addr = self.root / "addr"
         self.addr.mkdir()
@@ -1173,7 +1193,7 @@ class InstallerBehaviour(unittest.TestCase):
         self.assertEqual(rc, 0, out)
 
     def manifest_path(self) -> Path:
-        return self.game / "scriptforge" / "install-manifest.json"
+        return self.game / "kotorjit" / "install-manifest.json"
 
     def edit(self, fn):
         p = self.manifest_path()
@@ -1203,11 +1223,11 @@ class InstallerBehaviour(unittest.TestCase):
         cases = {
             "dot (T1)": ".", "dotdot (T9)": "..", "null": None, "empty": "",
             "rooted absolute": str(self.root / "games"), "rooted drive": "C:\\",
-            "rooted backslash": "\\scriptforge\\backup\\20260101T000000Z",
+            "rooted backslash": "\\kotorjit\\backup\\20260101T000000Z",
             "../victim": "../victim.txt", "..\\victim": "..\\victim.txt",
-            "traversal inside prefix": "scriptforge/backup/20260101T000000Z/../../..",
-            "own dir, no stamp": "scriptforge/backup", "absolute victim": victim,
-            "scripts dir": "scriptforge/scripts", "stream": "scriptforge/backup/20260101T000000Z:x",
+            "traversal inside prefix": "kotorjit/backup/20260101T000000Z/../../..",
+            "own dir, no stamp": "kotorjit/backup", "absolute victim": victim,
+            "scripts dir": "kotorjit/scripts", "stream": "kotorjit/backup/20260101T000000Z:x",
         }
         for label, value in cases.items():
             with self.subTest(label):
@@ -1219,7 +1239,7 @@ class InstallerBehaviour(unittest.TestCase):
         cases = {
             "../victim (T2)": "../victim.txt", "..\\victim": "..\\victim.txt",
             "absolute victim": str(games / "victim.txt"), "dot": ".", "empty": "", "null": None,
-            "nested traversal": "scriptforge/../../victim.txt",
+            "nested traversal": "kotorjit/../../victim.txt",
         }
         for label, value in cases.items():
             with self.subTest(label):
@@ -1228,7 +1248,7 @@ class InstallerBehaviour(unittest.TestCase):
 
     def test_backup_file_tampering_refused_nothing_deleted(self):
         cases = {"../victim.dll": "../victim.dll", "..\\victim.dll": "..\\victim.dll",
-                 "other folder": "scriptforge/scripts/binkw32.dll", "null": None}
+                 "other folder": "kotorjit/scripts/binkw32.dll", "null": None}
         for label, value in cases.items():
             with self.subTest(label):
                 def mutate(m, v=value):
@@ -1243,8 +1263,8 @@ class InstallerBehaviour(unittest.TestCase):
         before = self.snapshot()
         self.install()
         m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
-        self.assertRegex(m["backup_dir"], r"^scriptforge[\\/]backup[\\/]\d{8}T\d{6}Z$")
-        tables = sorted(p.name for p in (self.game / "scriptforge" / "addresses").iterdir())
+        self.assertRegex(m["backup_dir"], r"^kotorjit[\\/]backup[\\/]\d{8}T\d{6}Z$")
+        tables = sorted(p.name for p in (self.game / "kotorjit" / "addresses").iterdir())
         self.assertEqual(tables, ["k1_gog_103.json"], "only the detected build's table")
         rc, out = self.run_ps("-Action", "Status")
         self.assertEqual(rc, 0, out)
@@ -1253,25 +1273,25 @@ class InstallerBehaviour(unittest.TestCase):
         rc, out = self.run_ps("-Action", "Uninstall")
         self.assertEqual(rc, 0, out)
         after = self.snapshot()
-        self.assertEqual(after.pop("nest/game/scriptforge"), "dir")
-        self.assertEqual(after.pop("nest/game/scriptforge/scripts"), "dir")
+        self.assertEqual(after.pop("nest/game/kotorjit"), "dir")
+        self.assertEqual(after.pop("nest/game/kotorjit/scripts"), "dir")
         self.assertEqual(before, after)
 
     def test_missing_backup_falls_back_to_verified_real_dll(self):
         # Review T3: the backup folder is gone but binkw32_real.dll is the
         # hash-verified original.
         self.install()
-        shutil.rmtree(self.game / "scriptforge" / "backup")
+        shutil.rmtree(self.game / "kotorjit" / "backup")
         rc, out = self.run_ps("-Action", "Uninstall")
         self.assertEqual(rc, 0, out)
         self.assertEqual(_sha((self.game / "binkw32.dll").read_bytes()), _sha(self.BINK))
         self.assertFalse((self.game / "binkw32_real.dll").exists())
-        self.assertFalse((self.game / "scriptforge.dll").exists())
+        self.assertFalse((self.game / "kotorjit.dll").exists())
         self.assertFalse(self.manifest_path().exists())
 
     def test_missing_backup_and_changed_real_dll_refused(self):
         self.install()
-        shutil.rmtree(self.game / "scriptforge" / "backup")
+        shutil.rmtree(self.game / "kotorjit" / "backup")
         (self.game / "binkw32_real.dll").write_bytes(b"not the original\n")
         before = self.snapshot()
         rc, out = self.run_ps("-Action", "Uninstall")
@@ -1286,7 +1306,7 @@ class InstallerBehaviour(unittest.TestCase):
 
     def test_manifest_shape_tampering_refused_nothing_deleted(self):
         def act_arr(m):
-            f = self._entry(m, "scriptforge.dll")
+            f = self._entry(m, "kotorjit.dll")
             f.update(action=["created", "replaced"], original_sha256=f["sha256"], backup="chitin.key")
 
         def dup_other_sep(m):
@@ -1297,19 +1317,19 @@ class InstallerBehaviour(unittest.TestCase):
         cases = {
             "backup_dir one-element array (M1)": lambda m: m.__setitem__("backup_dir", [m["backup_dir"]]),
             "action array (M2)": act_arr,
-            "action number": lambda m: self._entry(m, "scriptforge.dll").__setitem__("action", 1),
-            "path array": lambda m: self._entry(m, "scriptforge.dll").__setitem__("path", ["scriptforge.dll"]),
-            "sha256 array (M8)": lambda m: self._entry(m, "scriptforge.dll").__setitem__(
-                "sha256", [self._entry(m, "scriptforge.dll")["sha256"]]),
+            "action number": lambda m: self._entry(m, "kotorjit.dll").__setitem__("action", 1),
+            "path array": lambda m: self._entry(m, "kotorjit.dll").__setitem__("path", ["kotorjit.dll"]),
+            "sha256 array (M8)": lambda m: self._entry(m, "kotorjit.dll").__setitem__(
+                "sha256", [self._entry(m, "kotorjit.dll")["sha256"]]),
             "schema array (M8)": lambda m: m.__setitem__("schema", [m["schema"]]),
             "no replaced entry (M4)": lambda m: m.__setitem__(
                 "files", [f for f in m["files"] if f["action"] == "created"]),
-            "files is one object (M4)": lambda m: m.__setitem__("files", self._entry(m, "scriptforge.dll")),
+            "files is one object (M4)": lambda m: m.__setitem__("files", self._entry(m, "kotorjit.dll")),
             "duplicate created entry (M5)": lambda m: m["files"].insert(1, dict(m["files"][1])),
             "duplicate by other separator (M5)": dup_other_sep,
             "backup_dir trailing newline (M7)": lambda m: m.__setitem__("backup_dir", m["backup_dir"] + "\n"),
-            "created path trailing newline (M7)": lambda m: self._entry(m, "scriptforge.dll").__setitem__(
-                "path", "scriptforge.dll\n"),
+            "created path trailing newline (M7)": lambda m: self._entry(m, "kotorjit.dll").__setitem__(
+                "path", "kotorjit.dll\n"),
         }
         for label, mutate in cases.items():
             with self.subTest(label):
@@ -1324,7 +1344,7 @@ class InstallerBehaviour(unittest.TestCase):
             m["files"].remove(real)
             m["files"].append(real)
         self.edit(reorder)
-        shutil.rmtree(self.game / "scriptforge" / "backup")
+        shutil.rmtree(self.game / "kotorjit" / "backup")
         rc, out = self.run_ps("-Action", "Uninstall")
         self.assertEqual(rc, 0, out)
         self.assertEqual(_sha((self.game / "binkw32.dll").read_bytes()), _sha(self.BINK))
@@ -1345,18 +1365,18 @@ class InstallerBehaviour(unittest.TestCase):
             stamp.symlink_to(outside, target_is_directory=True)
 
         def link_own_dir(m):
-            own = self.game / "scriptforge"
+            own = self.game / "kotorjit"
             shutil.move(str(own), str(outside))
             (outside / "scripts" / "mine.lua").write_bytes(b"-- mine\n")
             own.symlink_to(outside, target_is_directory=True)
 
         def link_addresses(m):
-            addr = self.game / "scriptforge" / "addresses"
+            addr = self.game / "kotorjit" / "addresses"
             shutil.move(str(addr), str(outside))
             addr.symlink_to(outside, target_is_directory=True)
 
         for label, mutate in (("backup stamp is a link (S1)", link_backup_stamp),
-                              ("scriptforge is a link (S2)", link_own_dir),
+                              ("kotorjit is a link (S2)", link_own_dir),
                               ("addresses is a link", link_addresses)):
             with self.subTest(label):
                 self.assert_refused_untouched(label, mutate)
@@ -1368,6 +1388,102 @@ class InstallerBehaviour(unittest.TestCase):
         self.assertNotEqual(rc, 0, out)
         self.assertIn("backup_dir", out)
 
+    def test_inject_method_round_trip_and_tamper_refusal(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        before = self.snapshot()
+        # With -Method Auto and kotorjit-launch.exe present, unpacked k1_gog_103 chooses Inject.
+        rc, out = self.run_ps("-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "inject")
+        self.assertEqual(m["backup_dir"], "")
+        # Original binkw32.dll must remain untouched in Inject mode.
+        self.assertEqual(_sha((self.game / "binkw32.dll").read_bytes()), _sha(self.BINK))
+        self.assertFalse((self.game / "binkw32_real.dll").exists())
+        self.assertTrue((self.game / "kotorjit-launch.exe").exists())
+
+        rc, out = self.run_ps("-Action", "Status")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("inject", out)
+
+        rc, out = self.run_ps("-Action", "Uninstall")
+        self.assertEqual(rc, 0, out)
+        after = self.snapshot()
+        self.assertEqual(after.pop("nest/game/kotorjit"), "dir")
+        self.assertEqual(after.pop("nest/game/kotorjit/scripts"), "dir")
+        self.assertEqual(before, after)
+
+    def test_inject_manifest_tampering_refused(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        self.fresh()
+        rc, out = self.run_ps("-Method", "Inject", "-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        for label, mutate in (
+            ("unexpected backup_dir", lambda m: m.__setitem__("backup_dir", "kotorjit/backup/20260101T000000Z")),
+            ("unexpected bink_original_sha256", lambda m: m.__setitem__("bink_original_sha256", _sha(self.BINK))),
+            ("unknown method", lambda m: m.__setitem__("method", "magic")),
+        ):
+            with self.subTest(label):
+                before_m = self.manifest_path().read_text(encoding="utf-8-sig")
+                self.edit(mutate)
+                before_snap = self.snapshot()
+                rc, out = self.run_ps("-Action", "Uninstall")
+                self.assertNotEqual(rc, 0, out)
+                self.assertEqual(before_snap, self.snapshot())
+                self.manifest_path().write_text(before_m, encoding="utf-8")
+
+    def test_steam_k1_auto_picks_proxy_even_with_launcher(self):
+        (self.src / "kotorjit-launch.exe").write_bytes(b"synthetic launcher exe\n")
+        (self.addr / "k1_steam_103.json").write_text('{"build": "k1_steam_103"}\n')
+        steam_exe = b"synthetic steam swkotor.exe\n"
+        steam_sha = _sha(steam_exe)
+        src_text = Path(os.environ.get("KP_INSTALL_PS1", INSTALL_PS1)).read_text()
+        src_text = src_text.replace("$ExeAllowlist = @{\n",
+                                    f"$ExeAllowlist = @{{\n    '{steam_sha}' = 'k1_steam_103'\n", 1)
+        src_text = src_text.replace("$BinkAllowlist = @{\n",
+                                    f"$BinkAllowlist = @{{\n    '{_sha(self.BINK)}' = 'test bink'\n", 1)
+        self.script.write_text(src_text)
+        (self.game / "swkotor.exe").write_bytes(steam_exe)
+        rc, out = self.run_ps("-SourceDir", str(self.src), "-AddressDir", str(self.addr))
+        self.assertEqual(rc, 0, out)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "proxy")
+        self.assertEqual(m["game"]["build"], "k1_steam_103")
+
+    def test_release_zip_root_layout_auto_resolves_without_dirs(self):
+        flat = Path(tempfile.mkdtemp(prefix="kj_ps1_flat."))
+        self.addCleanup(shutil.rmtree, flat, True)
+        flat_script = flat / "Install-KotorJIT.ps1"
+        flat_script.write_text(self.script.read_text())
+        (flat / "kotorjit.dll").write_bytes(self.DLL)
+        (flat / "binkw32.dll").write_bytes(self.PROXY)
+        (flat / "data" / "addresses").mkdir(parents=True)
+        (flat / "data" / "addresses" / "k1_gog_103.json").write_text('{"build": "k1_gog_103"}\n')
+        cmd = self.pwsh + ["-NoProfile", "-NonInteractive", "-File", str(flat_script),
+                           "-GameDir", str(self.game)]
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        self.assertEqual(out.returncode, 0, out.stdout + out.stderr)
+        m = json.loads(self.manifest_path().read_text(encoding="utf-8-sig"))
+        self.assertEqual(m["method"], "proxy")
+        self.assertEqual(m["game"]["build"], "k1_gog_103")
+
+
+class InjectReceiptValidation(unittest.TestCase):
+    def test_inject_receipt_validates_and_requires_launcher_sha(self):
+        r = json.loads(json.dumps(load("native_pass")))
+        r["runtime"] = {
+            "method": "inject",
+            "kphasor_dll_sha256": r["runtime"]["kphasor_dll_sha256"],
+            "proxy_binkw32_sha256": None,
+            "real_binkw32_sha256": r["runtime"]["real_binkw32_sha256"],
+            "launcher_exe_sha256": "5" * 64,
+            "install_manifest_sha256": r["runtime"].get("install_manifest_sha256"),
+        }
+        self.assertEqual(validate(r), [])
+        bad = json.loads(json.dumps(r))
+        bad["runtime"]["launcher_exe_sha256"] = None
+        self.assertTrue(any("launcher_exe_sha256" in e for e in validate(bad)))
+
 
 if __name__ == "__main__":
     if len(sys.argv) in (3, 5) and sys.argv[1] == "--validate":
@@ -1375,7 +1491,7 @@ if __name__ == "__main__":
         log_bytes = None
         if len(sys.argv) == 5:
             if sys.argv[3] != "--log":
-                sys.exit("usage: --validate receipt.json [--log scriptforge.log]")
+                sys.exit("usage: --validate receipt.json [--log kotorjit.log]")
             log_bytes = Path(sys.argv[4]).read_bytes()
         errs = validate(json.loads(Path(sys.argv[2]).read_text(encoding="utf-8-sig")), log_bytes=log_bytes)
         for e in errs:

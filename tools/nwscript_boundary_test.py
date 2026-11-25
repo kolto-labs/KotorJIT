@@ -124,6 +124,17 @@ def violations(text: str) -> list[tuple[str, int, str]]:
     found: list[tuple[str, int, str]] = []
     for label, pattern in FORBIDDEN + ROUTINE_PATTERNS:
         for match in pattern.finditer(text):
+            if label == "dotted member on removed host root":
+                before = text[max(0, match.start() - 16) : match.start()]
+                after = text[match.end() : match.end() + 32]
+                matched = match.group(0)
+                if re.search(r"\bawait\s+$", before) and (
+                    (matched == "kotor.lua" and after.startswith(".evaluate("))
+                    or (matched == "kotor.console" and after.startswith(".cancel("))
+                ):
+                    continue
+                if matched == "kotor.k1" and before.endswith('"') and after.startswith('.model-scale.v1"'):
+                    continue
             line_number = text.count("\n", 0, match.start()) + 1
             excerpt = " ".join(match.group(0).split())
             found.append((label, line_number, excerpt))
@@ -164,6 +175,9 @@ def self_test() -> int:
         "standard math": "return math.log(10)",
         "bridge context": "nwscript.with_caller(7, function() end)",
         "explicit routine bridge": "return nwscript.call('GetFirstPC')",
+        "browser devtools lua client": "await kotor.lua.evaluate('kp.obj.pc()')",
+        "browser devtools cancel client": "await kotor.console.cancel({runtime, session, request})",
+        "hookpack operation id": 'table_->has_operation("kotor.k1.model-scale.v1")',
     }
     failures: list[str] = []
     for name, text in forbidden_examples.items():

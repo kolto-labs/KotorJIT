@@ -1,12 +1,12 @@
 # Object blaster Stage 3: select placeable models for the disruptor bolt from the F12 console
 #
 # Declared inputs. Check them before launch; the route cannot hash its runtime.
-#   runtime   scriptforge.dll sha256 165f00008e8633173127de990668f6f93906e461fe96c94833f47a45fff55b9c
+#   runtime   kotorjit.dll sha256 165f00008e8633173127de990668f6f93906e461fe96c94833f47a45fff55b9c
 #             frozen projectile build, passed with --build-dir
 #             /home/brunner56/kp-live-20260922/frozen-projectile-visual2 . session.log must
 #             report runtime 165f00008e86. Never copy it into the repository.
 #   fixture   private blaster_fixture.lua (projectile-research), deployed console-only to
-#             scriptforge/console-examples/blaster_fixture.lua
+#             kotorjit/console-examples/blaster_fixture.lua
 #   save      owned "000001 - AUTOSAVE" with an unequipped single disruptor pistol
 #             (base item 16, ammunition row 3 "Disruptor")
 #
@@ -73,7 +73,7 @@ open = true
 [[step]]
 label = "F12: borrow the disruptor and spawn the disposable target"
 do = "console_command"
-code = "blaster_fixture=dofile('scriptforge/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
+code = "blaster_fixture=dofile('kotorjit/console-examples/blaster_fixture.lua'); blaster_fixture.begin(); return true"
 contains = ["boolean: true"]
 
 [[step]]

@@ -29,6 +29,7 @@ if(KP_MINGW_CXX)
         OUTPUT ${KP_BINKW32}
         COMMAND ${CMAKE_COMMAND} -E env TMPDIR=${KP_COMPILER_TMPDIR}
                 ${KP_MINGW_CXX} -std=c++20 -Wall -Wextra -O2 -shared
+                -ffile-prefix-map=${CMAKE_SOURCE_DIR}=.
                 -o ${KP_BINKW32}
                 "${KP_PROXY_DIR}/binkw32.cpp" "${KP_PROXY_DIR}/binkw32.def"
                 -static -static-libgcc -static-libstdc++

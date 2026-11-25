@@ -216,6 +216,25 @@ class ElfNeeded(unittest.TestCase):
         self.assertTrue(os.access(exe, os.X_OK))
         self.assertEqual(self.run_exe(exe, libdir=self.tmp).stdout.split(), ["SFLIB", "MAIN"])
 
+    def test_conflicting_basename_is_rejected(self) -> None:
+        exe = self.build_exe("app", "-no-pie")
+        patched, changed = elf_needed.add_needed(exe.read_bytes(), LIBNAME)
+        self.assertTrue(changed)
+        with self.assertRaises(elf_needed.ElfError):
+            elf_needed.add_needed(patched, "$ORIGIN/" + LIBNAME)
+
+    def test_cli_remove_drops_needed_and_keeps_binary_runnable(self) -> None:
+        exe = self.build_exe("app", "-no-pie")
+        tool = [sys.executable, str(ROOT / "tools" / "elf_needed.py")]
+        r = subprocess.run([*tool, "add", str(exe), "$ORIGIN/" + LIBNAME], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(subprocess.run([*tool, "check", str(exe), "$ORIGIN/" + LIBNAME]).returncode, 0)
+        r = subprocess.run([*tool, "remove", str(exe), "$ORIGIN/" + LIBNAME], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertNotEqual(subprocess.run([*tool, "check", str(exe), "$ORIGIN/" + LIBNAME]).returncode, 0)
+        self.assertTrue(os.access(exe, os.X_OK))
+        self.assertEqual(self.run_exe(exe).stdout.split(), ["MAIN"])
+
 
 if __name__ == "__main__":
     unittest.main()

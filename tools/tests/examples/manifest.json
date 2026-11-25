@@ -136,7 +136,7 @@
     },
     {
       "path": "coverage/10_cover.lua",
-      "sha256": "bcf5df81df8c2f701134ca18834aa0fdc27628e34896846a7ea5bf04dccf4b20",
+      "sha256": "94dbc793e048b11c0487cb4157830e8b8b7df93306c7513870e5f0fc7c0cdfbe",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -1029,7 +1029,7 @@
     },
     {
       "path": "multiplayer/10_avatar_sync.lua",
-      "sha256": "4570c7db3f54017aab5bb19763f6fa744ebd0685d8e662f9a698110b8ef36e9b",
+      "sha256": "15fd0a63793bf822d41de1d415f6b0ef84cbd87086df323c93a23dd1b3715440",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"
@@ -1127,7 +1127,7 @@
     },
     {
       "path": "probe/10_position_trace.lua",
-      "sha256": "bbb34b12998b8f26c30ace77314306c649cdbc016527c2650b4af3c300a992ad",
+      "sha256": "be4405cd441712b22fc965ce1ee6ed0cc0a5e2397bcfe25ea3cc3f8ab40e390c",
       "syntax": {
         "status": "required",
         "evidence": "generated host receipt"

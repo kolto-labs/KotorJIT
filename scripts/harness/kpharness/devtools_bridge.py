@@ -147,7 +147,7 @@ class Bridge:
 
 
 class _Handler(http.server.BaseHTTPRequestHandler):
-    server_version = "ScriptForgeDevtools/1"
+    server_version = "KotorJITDevtools/1"
 
     def setup(self) -> None:
         super().setup()

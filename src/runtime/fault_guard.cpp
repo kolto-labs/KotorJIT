@@ -138,7 +138,7 @@ std::size_t append_hex(char* out, std::size_t cap, std::size_t at, std::uintptr_
 
 void emit(const char* line, std::size_t len) {
 #if defined(_WIN32)
-    HANDLE f = CreateFileA(g_log_path[0] ? g_log_path : "scriptforge.log",
+    HANDLE f = CreateFileA(g_log_path[0] ? g_log_path : "kotorjit.log",
                            FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE,
                            nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (f == INVALID_HANDLE_VALUE) return;
@@ -146,7 +146,7 @@ void emit(const char* line, std::size_t len) {
     WriteFile(f, line, static_cast<DWORD>(len), &written, nullptr);
     CloseHandle(f);
 #else
-    const int fd = ::open(g_log_path[0] ? g_log_path : "scriptforge.log",
+    const int fd = ::open(g_log_path[0] ? g_log_path : "kotorjit.log",
                           O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd < 0) return;
     const ssize_t ignored = ::write(fd, line, len);
@@ -521,6 +521,24 @@ void FaultFrame::note_fault() {
                             static_cast<unsigned long>(tf.fault_addr),
                             static_cast<unsigned long>(tf.fault_pc),
                             static_cast<unsigned long>(tf.fault_code));
+}
+
+bool guard_call(const char* label, void (*work)(void*), void* ctx) {
+    if (work == nullptr) return false;
+    FaultFrame frame(label, nullptr);
+    volatile bool ok = true;
+    if (setjmp(*static_cast<jmp_buf*>(frame.buf())) != 0) {
+        ok = false;
+        const ThreadFrames& tf = t_frames;
+        Runtime::instance().log("kp.native fault in \"%s\": address 0x%08lx, pc 0x%08lx, code 0x%lx",
+                                label != nullptr ? label : "(unnamed)",
+                                static_cast<unsigned long>(tf.fault_addr),
+                                static_cast<unsigned long>(tf.fault_pc),
+                                static_cast<unsigned long>(tf.fault_code));
+    } else {
+        work(ctx);
+    }
+    return ok;
 }
 
 }  // namespace kp::runtime

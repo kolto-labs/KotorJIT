@@ -1,6 +1,6 @@
-# Use ScriptForge 0.1.0
+# Use KotorJIT 0.1.0
 
-ScriptForge is a Lua host that loads with Knights of the Old Republic. It sees the game's own script events and lets you call most engine routines from Lua.
+KotorJIT is a Lua host that loads with Knights of the Old Republic. It sees the game's own script events and lets you call most engine routines from Lua.
 
 This folder is for people writing scripts. Internal design notes stay in `docs/` next to this directory.
 Where months of KotOR reverse-engineering / byte-exact recovery live:
@@ -9,10 +9,10 @@ Where months of KotOR reverse-engineering / byte-exact recovery live:
 
 ```mermaid
 flowchart TD
-    A[Start the game] --> B[binkw32.dll loads scriptforge.dll]
-    B --> C[Identify the executable]
+    A[Start the game] --> B[Loader: kotorjit-launch.exe, KPM .kpatch, DT_NEEDED, or binkw32.dll]
+    B --> C[Runtime loads and verifies exact build/code hashes]
     C --> D[Install 15 hooks]
-    D --> E[Load .lua files from scriptforge/scripts]
+    D --> E[Load .lua files from kotorjit/scripts]
     E --> F[OnScriptLoad]
     F --> G[OnTick / OnRunScript / EventHandler names]
     G --> H[Your functions run]
@@ -40,10 +40,10 @@ The Steam K1 executable is encrypted on disk. The runtime waits until the game d
 
 ## Read the log
 
-After a boot, open `<game>/scriptforge.log`. A healthy start looks like this:
+After a boot, open `<game>/kotorjit.log`. A healthy start looks like this:
 
 ```
-ScriptForge 0.1.0 starting
+KotorJIT 0.1.0 starting
 installed 15 hooks
 api: registered nwscript.call for 769 engine routines
 running: build k1_steam_103_unpacked, 15 hooks, N script(s)

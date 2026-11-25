@@ -47,15 +47,15 @@ import kpdiscover  # noqa: E402
 
 # How our rows identify themselves. A reader who wants to discount everything
 # this project contributed can filter on this one string.
-METHOD = "scriptforge:adjudicated:v1"
-PROVENANCE = "scriptforge"
+METHOD = "kotorjit:adjudicated:v1"
+PROVENANCE = "kotorjit"
 
 # The prefix is load-bearing, not cosmetic. kx/propagate.py starts each run with
 #     DELETE FROM identity WHERE method LIKE 'match:<run>:%'
 # and then refuses to write over any address whose identity method does NOT begin
 # with 'match:'. So a method outside that namespace is both preserved across runs
 # and treated as a fixed point the matcher may not contradict. Naming ours
-# 'match:scriptforge' would silently delete every contribution on the next run.
+# 'match:kotorjit' would silently delete every contribution on the next run.
 assert not METHOD.startswith("match:"), (
     "METHOD must stay outside the 'match:' namespace or kx/propagate.py will "
     "delete these rows at the start of its next run")
@@ -221,11 +221,11 @@ def write_notes(wh: Path, plan: dict, applied: bool) -> Path:
     """The reasoning, which a row cannot carry."""
     d = wh / "findings"
     d.mkdir(parents=True, exist_ok=True)
-    out = d / "scriptforge-findings.md"
+    out = d / "kotorjit-findings.md"
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     steam_sha = "34e6d971c034222a417995d8e1e8fdd9f8781795c9c289bd86c499a439f34c88"
-    body = f"""# Findings contributed by ScriptForge
+    body = f"""# Findings contributed by KotorJIT
 
 Last written {stamp}. Rows carry `identity.method = '{METHOD}'`, so everything
 this project contributed can be filtered or discounted as one set.

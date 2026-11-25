@@ -1,6 +1,6 @@
 # The Steam KOTOR 1 build, and why GOG addresses work on it
 
-Every address ScriptForge uses for KOTOR 1 was derived from the GOG build. The primary
+Every address KotorJIT uses for KOTOR 1 was derived from the GOG build. The primary
 target is the Steam build. Here is why that is sound, and what the Steam wrapper is.
 
 ## The Steam executable is encrypted on disk

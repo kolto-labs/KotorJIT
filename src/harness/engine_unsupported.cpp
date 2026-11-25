@@ -100,6 +100,7 @@ std::unique_ptr<EngineAdapter> make_adapter(const hooks::AddressTable&, std::uin
 // defined for the unconditional reference in runtime.cpp's optional[] table.
 void* client_set_game_speed_detour() { return nullptr; }
 void* client_play_movies_detour() { return nullptr; }
+std::atomic<void*>* adapter_original_slot(std::string_view) { return nullptr; }
 void bind_adapter_originals(const hooks::HookSet&) {}
 
 }  // namespace kp::harness
